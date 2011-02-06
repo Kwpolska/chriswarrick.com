@@ -13,7 +13,7 @@ $from = $_GET['name'].' <'.$_GET['mail'].'>';
 ob_start();
 var_dump($_GET);
 $dump = ob_end_flush();
-$message = $_GET['message'].PHP_EOL.'---'.PHP_EOL.'      Sent by: '.$_SERVER['REMOTE_ADDR'].PHP_EOL.'      Sent at: '.date(DATE_RFC850).PHP_EOL.'Dump of $_GET: '.$dump;
+$message = $_GET['message'].PHP_EOL.'---'.PHP_EOL.'      Sent by: '.$_SERVER['REMOTE_ADDR'].PHP_EOL.'      Sent at: '.date('l, F jS, Y g:i:s A').PHP_EOL.'Dump of $_GET: '.$dump;
 $head = "From: ".$from.PHP_EOL."MIME-Version: 1.0".PHP_EOL."Content-Type: text/plain; charset=UTF-8".PHP_EOL."Content-Transfer-Encoding: 8bit";
 mail('Kwpolska <kwpolska@kwpolska.co.cc>', $subject, $message, $head) or showError("Failed to send the form. Please spam me through my generic mail.");
 echo ' sent.<br>This window will close itself in 3 seconds.<script type="text/javascript">setTimeout(\'Modalbox.hide()\',3000);</script>';
