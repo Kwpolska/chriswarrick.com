@@ -3,50 +3,51 @@ layout: plpost
 title: Jekyll dla Bystrzaków
 category: polish
 ---
-**This post is an introduction to Jekyll, an awesome, <q>simple, blog aware, static site generator</q>. It&#8217;s a how-to helping you in setting up Jekyll.**
+**Ten post jest wstępem do Jekylla, świetnego, <q>prostego, blogowego genneratora stron statycznych</q> Jest to how-to pomagające w instalacji Jekylla.**
 
-## About Jekyll
+## O Jekyllu
 > # Jekyll
 >
 > By Tom Preston-Werner, Nick Quaranto, and many awesome contributors!
 >
 > Jekyll is a simple, blog aware, static site generator. It takes a template directory (representing the raw form of a website), runs it through Textile or Markdown and Liquid converters, and spits out a complete, static website suitable for serving with Apache or your favorite web server. This is also the engine behind [GitHub Pages][], which you can use to host your project&#8217;s page or blog right here from GitHub.
-(A quote from the README)
-## Step 1: Install Jekyll
+(Cytat z README)
 
-First of, you have to install Jekyll. You can do it either on your server or on your home machine, if you&#8217;ll develop a crazy way to [deploy][] it. Another way is to use [GitHub Pages][]. On Linux, you can do it like this:
+## Krok 1. Zainstaluj Jekylla
+
+Na początku musisz zainstalować Jekylla (a czego się spodziewałeś?). Możesz t zrobić na swoim serwerze lub na swoim domowym komputerze, jeśli znajdziesz zwadiowany sposób [wdrożenia][deploy] takiej implementacji. Innym sposobem jest użycie [GitHub Pages][]. Na linuksie, możesz to zrobić w ten sposób:
     gem install jekyll --user-install
-If you have problems, you might have to install an approperiate package. The [Jekyll Wiki][wiki] has more information about it: [Jekyll Wiki: Install][install]
+Jeśli masz problemy, naprawdopodoniej musisz zainstalować odopwiedni pakiet. [Jekyll Wiki][Wiki Jekylla] ma więcej inforacji na ten temat: [Jekyll Wiki: Install][install]
 
-## Step 2: Configure Jekyll and prepare the directories
+## Krok 2: Skonfiguruj Jekylla i przygotuj katalogi
 
-Create a directory for it. I&#8217;m using `~/jekyll`. Go into that directory and create two directories and two files. The directories are `_layouts` and `_posts`. The files are `_config.yml` and `index.html`. If you want, you can create a `_site` directory. Now, you have to fill them with content.
+Stwórz katalog dla Jekylla. Ja używam `~/jekyll`. Wejdź do niego i stwórz dwa katalogi i dwa pliki. Katalogi to `_layouts` i `_posts`. Pliki to `_config.yml` i `index.html`. Jeśli chcesz, możesz utworzyć katalog `_site`.
 
-The directory `_layouts` stores layouts of your site. You can have a different layout for your home page, posts or pages. You can use template data (see below). The files shall be HTML files **with .yml extension**.
+Katalog `_layouts` przechowuje style twojej strony. Możesz mieć rózne style dla swojej strony głównej, postów lub stron. Możesz używać danych szablonów (patrz niżej). Pliki powinny być w HTML-u, ale **muszą mieć rozszerzenie .yml**.
 
-The directory `_posts` is a place for your post written in Markdown or Textile. It must begin with the [YAML Front Matter][yaml]. The file name must be as follows: `YEAR-MO-DD-the-name-of-the-post-that-will-be-used-in-the-url.PARSER`, where `YEAR` is current year, `MO` is current month, `DD` is the day and `PARSER` is either `markdown` or `textile`.
+Katalog `_posts` przechowuje twoje posty zapisane w Markdownie lub w Textile. Musi zaczynać się od [YAML Front Matter][yaml]. Plik musi być nazwany jak następuje: `YEAR-MO-DD-the-name-of-the-post-that-will-be-used-in-the-url.PARSER`, gdzie `YEAR` to rok, `MO` to miesiąc, `DD` to dzień a `PARSER` to `markdown` lub `textile`.
 
-The file `_config.yml` is the configuration of Jekyll. You can find more information at the awesome Jekyll Wiki in the article [Configuration][].
+Plik `_config.yml` jest plikiem konfiguracyjnym Jekylla. Możesz dowiedzieć się więcej na świetnym Jekyll Wiki w artykule [Konfiguracja][Configuration].
 
-The file `index.html` is the main page of your blog. It must begin with the [YAML Front Matter][yaml]. You can see a sample one here: [A sample Jekyll index.html][index]. This is a modded version of my own index.
+Plik `index.html` to strona główna bloga. Musi zaczynać się od [YAML Front Matter][yaml]. Możesz zobaczyć mój tutaj: [Mój index.html][index].
 
-### Template data
+### Dane szablonów
 
-The template data are elements inserted into layouts and generic pages. Some of the most important are `content` and `title`. You can learn about all of them in a Wiki article, called [Template Data][tdata].
+Dane szablonów są elementami wstawianymi do styli i do zwykłych stron. Najważniejsze to `content` i `title`. Możesz poznać je wszystkie w artykule na wiki nazwanym [Template Data][tdata].
 
-## Step 3: Continue making the site
+## Krok 3: Kontynuuj tworzenie strony
 
-Now you shall continue making your blog. You can make some feeds, pages, layouts, CSS templates and write posts OR import posts from your existing blog.
+Teraz możesz kontynuować tworzenie swojej strony. Możesz utworzyć feedy, strony, style, szablony CSS i pisać posty LUB importować treść z istniejącego bloga.
 
-## Step 4: Generate your site
+## Krok 4: Wygeneruj swoją stronę
 
-Unless you&#8217;re using GitHub Pages, you must generate the page. It&#8217;s easy, you must use the `jekyll` shell command and you get Jekyll in the directory, which you&#8217;ve set in the config file. If you&#8217;re using GH Pages, you just have to push into your repository.
+Jeśli nie używasz [GitHub Pages][], musisz teraz wygenerować stronę. Musisz użyć komendy `jekyll` i otrzymasz Jekyll w katalogu ustawionym w konfiguracji. Przy [GitHub Pages][] wystarczy zaktualizować repozytorium.
 
-## Why use Jekyll?
+## Dlaczego używać Jekylla?
 
-Jekyll is awesome, because it generates *static* webpages with use of Markdown. This makes this post&#8217;s original source easily readable. Below this paragraph, I&#8217;ve got all the links that I used in this post.
+Jekyll jest świetny, ponieważ generuje on strony *statycczne* przy użyciu Markdowna. Sprawia to, że kod jest czytelny. Pod tym paragrafem znajdują się wszystkie linki z tego posta.
 
-    [index]:         http://kwpolska.co.cc/blog-content/sampleindex.txt "Sample Jekyll index.html"
+    [index]:         https://github.com/Kwpolska/kwsblog/blob/master/index.html "Mój index.html"
     [github pages]:  http://pages.github.com "GitHub Pages"
     [wiki]:          http://github.com/mojombo/jekyll/wiki "Jekyll Wiki"
     [install]:       https://github.com/mojombo/jekyll/wiki/Install "Jekyll Wiki: Install"
@@ -55,9 +56,9 @@ Jekyll is awesome, because it generates *static* webpages with use of Markdown. 
     [yaml]:          https://github.com/mojombo/jekyll/wiki/YAML-Front-Matter "Jekyll Wiki: YAML Front Matter"
     [tdata]:         https://github.com/mojombo/jekyll/wiki/Template-Data "Jekyll Wiki: Liquid template data"
 
-There are a lot of other awesome things in it.
+Ale to nie wszystko. Jest wiele innych interesujących rzeczy w Jekyllu.
 
-[index]:         http://kwpolska.co.cc/blog-content/sampleindex.txt "Sample Jekyll index.html"
+[index]:         https://github.com/Kwpolska/kwsblog/blob/master/index.html "Mój index.html"
 [github pages]:  http://pages.github.com "GitHub Pages"
 [wiki]:          http://github.com/mojombo/jekyll/wiki "Jekyll Wiki"
 [install]:       https://github.com/mojombo/jekyll/wiki/Install "Jekyll Wiki: Install"
