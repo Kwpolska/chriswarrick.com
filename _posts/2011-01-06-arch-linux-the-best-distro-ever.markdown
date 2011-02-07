@@ -48,7 +48,7 @@ The installation is easy. Boot the CD, login as root, use the `km` command if no
 [Pacman]:                            https://wiki.archlinux.org/index.php/Pacman "Pacman"
 [AUR]:                               http://aur.archlinux.org/ "AUR"
 [ArchWiki: AUR]:                     https://wiki.archlinux.org/index.php/Arch_User_Repository "ArchWiki: Arch User Repository"
-[my rc.conf]:                        http://kwpolska.co.cc/blog-content/rc.conf "My rc.conf"
+[my rc.conf]:                        http://kwpolska.co.cc/privpastebin/index.php?id=1297105122.9 "My rc.conf"
 [IRC]:                               https://wiki.archlinux.org/index.php/IRC_Channel "IRC Channel"
 [Forums]:                            https://bbs.archlinux.org "Forums"
 [MLs]:                               http://mailman.archlinux.org/mailman/listinfo/ "Mailing Lists"

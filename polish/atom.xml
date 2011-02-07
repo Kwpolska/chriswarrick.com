@@ -4,7 +4,7 @@ layout: nil
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
  
- <title>Kw's Blog</title>
+ <title>Blog Kw</title>
  <link href="http://kwpolska.co.cc/atom.xml" rel="self"/>
  <link href="http://kwpolska.co.cc/"/>
  <updated>{{ site.time | date_to_xmlschema }}</updated>
@@ -15,7 +15,7 @@ layout: nil
  </author>
 
  {% for post in site.posts %}
- {% unless post.category == "polish" %}
+ {% if post.category == "polish" %}
  <entry>
    <title>{{ post.title }}</title>
    <link href="http://kwpolska.co.cc{{ post.url }}"/>
@@ -23,7 +23,7 @@ layout: nil
    <id>http://kwpolska.co.cc{{ post.id }}</id>
    <content type="html">{{ post.content | strip_html | xml_escape | truncatewords: 25 }}</content>
  </entry>
- {% endunless %}
+ {% endif %}
  {% endfor %}
  
 </feed>

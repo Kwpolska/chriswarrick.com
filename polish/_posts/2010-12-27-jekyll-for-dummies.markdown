@@ -1,7 +1,7 @@
 ---
-layout: post
-title: Jekyll for Dummies
-category: jekyll
+layout: plpost
+title: Jekyll dla Bystrzaków
+category: polish
 ---
 **This post is an introduction to Jekyll, an awesome, <q>simple, blog aware, static site generator</q>. It&#8217;s a how-to helping you in setting up Jekyll.**
 
@@ -28,7 +28,7 @@ The directory `_posts` is a place for your post written in Markdown or Textile. 
 
 The file `_config.yml` is the configuration of Jekyll. You can find more information at the awesome Jekyll Wiki in the article [Configuration][].
 
-The file `index.html` is the main page of your blog. It must begin with the [YAML Front Matter][yaml]. You can see mine here: [My index.html][index].
+The file `index.html` is the main page of your blog. It must begin with the [YAML Front Matter][yaml]. You can see a sample one here: [A sample Jekyll index.html][index]. This is a modded version of my own index.
 
 ### Template data
 
@@ -46,7 +46,7 @@ Unless you&#8217;re using GitHub Pages, you must generate the page. It&#8217;s e
 
 Jekyll is awesome, because it generates *static* webpages with use of Markdown. This makes this post&#8217;s original source easily readable. Below this paragraph, I&#8217;ve got all the links that I used in this post.
 
-    [index]:         https://github.com/Kwpolska/kwsblog/blob/master/index.html "My index.html"
+    [index]:         http://kwpolska.co.cc/blog-content/sampleindex.txt "Sample Jekyll index.html"
     [github pages]:  http://pages.github.com "GitHub Pages"
     [wiki]:          http://github.com/mojombo/jekyll/wiki "Jekyll Wiki"
     [install]:       https://github.com/mojombo/jekyll/wiki/Install "Jekyll Wiki: Install"
@@ -57,7 +57,7 @@ Jekyll is awesome, because it generates *static* webpages with use of Markdown. 
 
 There are a lot of other awesome things in it.
 
-[index]:         https://github.com/Kwpolska/kwsblog/blob/master/index.html "My index.html"
+[index]:         http://kwpolska.co.cc/blog-content/sampleindex.txt "Sample Jekyll index.html"
 [github pages]:  http://pages.github.com "GitHub Pages"
 [wiki]:          http://github.com/mojombo/jekyll/wiki "Jekyll Wiki"
 [install]:       https://github.com/mojombo/jekyll/wiki/Install "Jekyll Wiki: Install"
