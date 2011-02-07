@@ -1,7 +1,7 @@
 --- 
 layout: plpost
 title: Kradzież haseł do skrzynek - FAIL.
-category: polish
+categories: [polish, wordpress]
 wordpress_id: 206
 wordpress_url: http://kwpolska.co.cc/?p=206
 ---

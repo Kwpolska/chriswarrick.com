@@ -1,7 +1,7 @@
 --- 
 layout: plpost
 title: YouTube - the best of... I
-category: polish
+categories: [polish, wordpress]
 wordpress_id: 248
 wordpress_url: http://kwpolska.co.cc/?p=248
 ---

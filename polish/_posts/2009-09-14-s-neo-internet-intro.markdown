@@ -1,7 +1,7 @@
 --- 
 layout: plpost
 title: S:Neo-Internet - intro
-category: polish
+categories: [polish, wordpress]
 wordpress_id: 8
 wordpress_url: http://blogkw.wordpress.com/?p=6
 ---

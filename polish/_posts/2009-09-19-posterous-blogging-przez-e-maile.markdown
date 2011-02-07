@@ -1,7 +1,7 @@
 --- 
 layout: plpost
 title: Posterous - blogging przez e-maile
-category: polish
+categories: [polish, wordpress]
 wordpress_id: 102
 wordpress_url: http://kwpolska.co.cc/?p=102
 ---

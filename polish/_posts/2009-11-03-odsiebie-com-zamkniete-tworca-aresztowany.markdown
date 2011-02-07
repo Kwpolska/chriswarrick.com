@@ -1,7 +1,7 @@
 --- 
 layout: plpost
 title: OdSiebie.com zamknięte - twórca aresztowany
-category: polish
+categories: [polish, wordpress]
 wordpress_id: 273
 wordpress_url: http://kwpolska.co.cc/?p=273
 ---

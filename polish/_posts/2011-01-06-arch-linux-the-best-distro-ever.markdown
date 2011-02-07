@@ -1,7 +1,7 @@
 ---
 layout: plpost
 title: 'Arch Linux: Najlepsza dystrybucja linuksa.'
-category: polish
+categories: [polish, linux]
 ---
 **Używam linuksa od roku 2007. Używałem wielu dystrybucji (w kolejności): [Mandriva][], [Ubuntu][], [openSuSE][], [Fedora][], i tylko w [VirtualBoksie][VirtualBox]: [Debian][] i [Linux Mint][]. Ale od dwóch miesięcy na obu listach jest nowe distro (najpierw testowałem je w VirtualBoksie, a potem postawiłem je na prawdziwej maszynie): [Arch Linux][].**
 

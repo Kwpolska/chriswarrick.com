@@ -1,7 +1,7 @@
 --- 
 layout: plpost
 title: Oszustwa SMS Premium
-category: polish
+categories: [polish, wordpress]
 wordpress_id: 466
 wordpress_url: http://kwpolska.co.cc/?p=466
 ---

@@ -1,7 +1,7 @@
 ---
 title: Przejście na HTML5
 layout: plpost
-category: polish
+categories: [polish, webmastering]
 ---
 <figure><a href="http://www.w3.org/html/logo/">
 <img src="http://www.w3.org/html/logo/badge/html5-badge-h-css3-semantics.png" alt="HTML5 Powered with CSS3 / Styling, and Semantics" title="HTML5 Powered with CSS3 / Styling, and Semantics">

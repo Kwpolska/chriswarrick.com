@@ -1,7 +1,7 @@
 --- 
 layout: plpost
 title: S:Neo-Internet II
-category: polish
+categories: [polish, wordpress]
 wordpress_id: 49
 wordpress_url: http://kwpolska.co.cc/?p=49
 ---

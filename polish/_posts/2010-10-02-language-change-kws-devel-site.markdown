@@ -1,7 +1,7 @@
 --- 
 layout: plpost
 title: Language change + Kw's Devel Site
-category: polish
+categories: [polish, wordpress]
 wordpress_id: 603
 wordpress_url: http://kwpolska.co.cc/?p=603
 ---

@@ -1,7 +1,7 @@
 --- 
 layout: plpost
 title: Opera sucks?
-category: polish
+categories: [polish, wordpress]
 wordpress_id: 166
 wordpress_url: http://kwpolska.co.cc/?p=166
 ---

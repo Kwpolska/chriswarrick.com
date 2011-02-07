@@ -1,7 +1,7 @@
 --- 
 layout: plpost
 title: Post pierwszy
-category: polish
+categories: [polish, wordpress]
 wordpress_id: 6
 wordpress_url: http://blogkw.wordpress.com/?p=4
 ---

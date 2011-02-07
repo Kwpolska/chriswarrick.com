@@ -1,7 +1,7 @@
 --- 
 layout: plpost
 title: "S: Windows Vista/7 I: Dlaczego nigdy nie kupię Windows 7 i Visty"
-category: polish
+categories: [polish, wordpress]
 wordpress_id: 361
 wordpress_url: http://kwpolska.co.cc/?p=361
 ---

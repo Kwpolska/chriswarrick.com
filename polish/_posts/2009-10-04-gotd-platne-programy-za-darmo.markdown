@@ -1,7 +1,7 @@
 --- 
 layout: plpost
 title: "GotD - płatne programy za darmo."
-category: polish
+categories: [polish, wordpress]
 wordpress_id: 190
 wordpress_url: http://kwpolska.co.cc/?p=190
 ---
