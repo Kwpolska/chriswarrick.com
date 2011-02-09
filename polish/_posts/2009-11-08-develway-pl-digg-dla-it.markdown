@@ -1,7 +1,7 @@
 --- 
 layout: plpost
 title: Develway.pl - &#039;Digg&#039; dla IT
-categories: [polish, wordpress]
+category: polish
 wordpress_id: 333
 wordpress_url: http://kwpolska.co.cc/?p=333
 ---

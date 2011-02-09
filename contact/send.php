@@ -8,7 +8,7 @@ if ($captcha != md5($_GET['captcha'])) showError("This is not the right CAPTCHA 
 echo " bypassed.<br><strong>Checking the fields...</strong>";
 if ($_GET['name'] == '' || $_GET['mail'] == '' || $_GET['subject'] == '' || $_GET['message'] == '') showError('You haven\'t filled all the fields.');
 echo "all filled.<br><strong>Sending...</strong>";
-$subject = 'Blog Kw: '.$_GET['subject'];
+$subject = '[KBCF] '.$_GET['subject'];
 $from = $_GET['name'].' <'.$_GET['mail'].'>';
 ob_start();
 var_dump($_GET);

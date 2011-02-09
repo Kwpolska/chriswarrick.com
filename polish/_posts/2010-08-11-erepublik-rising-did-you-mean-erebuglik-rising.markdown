@@ -1,7 +1,7 @@
 --- 
 layout: plpost
 title: "eRepublik Rising - did you mean: eReBUGlik Ri$ing?"
-categories: [polish, wordpress]
+category: polish
 wordpress_id: 486
 wordpress_url: http://kwpolska.co.cc/?p=486
 ---

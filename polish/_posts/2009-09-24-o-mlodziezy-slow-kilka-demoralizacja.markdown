@@ -1,7 +1,7 @@
 --- 
 layout: plpost
 title: O młodzieży słów kilka - demoralizacja.
-categories: [polish, wordpress]
+category: polish
 wordpress_id: 143
 wordpress_url: http://kwpolska.co.cc/?p=143
 ---

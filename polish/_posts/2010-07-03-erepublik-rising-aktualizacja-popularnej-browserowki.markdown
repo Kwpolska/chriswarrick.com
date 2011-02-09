@@ -1,7 +1,7 @@
 --- 
 layout: plpost
 title: eRepublik Rising - aktualizacja popularnej browserówki.
-categories: [polish, wordpress]
+category: polish
 wordpress_id: 478
 wordpress_url: http://kwpolska.co.cc/?p=478
 ---

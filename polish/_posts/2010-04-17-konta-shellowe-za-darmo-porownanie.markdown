@@ -1,7 +1,7 @@
 --- 
 layout: plpost
 title: "[UPD] Konta shellowe za darmo - porównanie."
-categories: [polish, wordpress]
+category: polish
 wordpress_id: 447
 wordpress_url: http://kwpolska.co.cc/?p=447
 ---

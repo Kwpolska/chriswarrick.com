@@ -1,7 +1,7 @@
 --- 
 layout: plpost
 title: "S: Windows Vista/7 II: Mechanizm UAC nie jest zły!"
-categories: [polish, wordpress]
+category: polish
 wordpress_id: 369
 wordpress_url: http://kwpolska.co.cc/?p=369
 ---

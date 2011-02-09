@@ -1,7 +1,7 @@
 --- 
 layout: plpost
 title: Emo Martynka - review.
-categories: [polish, wordpress]
+category: polish
 wordpress_id: 430
 wordpress_url: http://kwpolska.co.cc/?p=430
 ---

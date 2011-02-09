@@ -1,7 +1,7 @@
 --- 
 layout: plpost
 title: Rest in Peace, Devilroot.pl
-categories: [polish, wordpress]
+category: polish
 wordpress_id: 473
 wordpress_url: http://kwpolska.co.cc/?p=473
 ---

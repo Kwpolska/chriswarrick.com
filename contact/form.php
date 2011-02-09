@@ -2,7 +2,7 @@
 <fieldset>
 <legend>Contact</legend>
 <div><input type="submit" value="Submit" style="float: left;" onclick="Modalbox.show('http://kwpolska.co.cc/contact/send.php', {title: 'Sending...', params: Form.serialize('myform'), width: 600 }); return false;"><input type="button" value="Back" onclick="Modalbox.show('http://kwpolska.co.cc/contact/', {title: 'Contact', width: 600}); return false;"></div>
-<div><label for="mail">Mail addr.:</label> <input id="mail" name="mail"></div>
+<div><label for="mail">Mail addr.:</label> <input id="mail" name="mail" type="email"></div>
 <div><label for="name">Name:</label> <input id="name" name="name"></div>
 <div><label for="subject">Subject:</label> <input name="subject" id="subject"></div>
 <div style="text-align: center;"><textarea name="message" id="message" rows="24" cols="70"></textarea></div>

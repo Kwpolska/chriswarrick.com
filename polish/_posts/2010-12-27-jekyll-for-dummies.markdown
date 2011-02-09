@@ -17,7 +17,7 @@ category: polish
 
 Na początku musisz zainstalować Jekylla (a czego się spodziewałeś?). Możesz t zrobić na swoim serwerze lub na swoim domowym komputerze, jeśli znajdziesz zwadiowany sposób [wdrożenia][deploy] takiej implementacji. Innym sposobem jest użycie [GitHub Pages][]. Na linuksie, możesz to zrobić w ten sposób:
     gem install jekyll --user-install
-Jeśli masz problemy, naprawdopodoniej musisz zainstalować odopwiedni pakiet. [Jekyll Wiki][Wiki Jekylla] ma więcej inforacji na ten temat: [Jekyll Wiki: Install][install]
+Jeśli masz problemy, naprawdopodoniej musisz zainstalować odopwiedni pakiet. [Wiki Jekylla][wiki] ma więcej inforacji na ten temat: [Jekyll Wiki: Install][install]
 
 ## Krok 2: Skonfiguruj Jekylla i przygotuj katalogi
 

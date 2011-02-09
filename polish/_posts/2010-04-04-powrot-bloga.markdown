@@ -1,7 +1,7 @@
 --- 
 layout: plpost
 title: Powrót bloga!
-categories: [polish, wordpress]
+category: polish
 wordpress_id: 424
 wordpress_url: http://kwpolska.co.cc/?p=424
 ---

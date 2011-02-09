@@ -1,7 +1,7 @@
 --- 
 layout: plpost
 title: Spam moich marzeń
-categories: [polish, wordpress]
+category: polish
 wordpress_id: 177
 wordpress_url: http://kwpolska.co.cc/?p=177
 ---

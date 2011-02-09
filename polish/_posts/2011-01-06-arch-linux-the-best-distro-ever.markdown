@@ -1,7 +1,7 @@
 ---
 layout: plpost
 title: 'Arch Linux: Najlepsza dystrybucja linuksa.'
-categories: [polish, linux]
+category: polish
 ---
 **Używam linuksa od roku 2007. Używałem wielu dystrybucji (w kolejności): [Mandriva][], [Ubuntu][], [openSuSE][], [Fedora][], i tylko w [VirtualBoksie][VirtualBox]: [Debian][] i [Linux Mint][]. Ale od dwóch miesięcy na obu listach jest nowe distro (najpierw testowałem je w VirtualBoksie, a potem postawiłem je na prawdziwej maszynie): [Arch Linux][].**
 
@@ -20,7 +20,7 @@ Menadżrem pakietów jest `pacman`. Posiada specyficzną składnię. [Repozytori
 Dystrybucja jest he distro is <q>w zamiarze prosta, elegancka, wszechstronna i praktyczna (intended to be simple, elegant, versatile and expedient)</q>, jak głosi [The Arch Way v2.0][tawv2]. Możesz też zobaczyć [The Arch Way v1.0][tawv1].
 
 ## Powód 4. `/etc/rc.conf`
-`/etc/rc.conf` jest głównym plikiem konfiguracyjnym. Mój możesz zobaczyć tutaj: [Mój rc.conf][]
+`/etc/rc.conf` jest głównym plikiem konfiguracyjnym. Mój możesz zobaczyć tutaj: [Mój rc.conf][rcc]
 
 ## Powód 5. Społeczność: [IRC][], [Forum][Forums], [Listy mailingowe][MLs] i [e-zine The Rolling Release][The Rolling Release e-zine]
 Arch Linux ma mocną społeczność: dużo ludzi można znaleźć na [IRC-u][IRC], na [forach][Forums] i na [listach mailingowych][MLs]. Istnieje też polska społeczność - [forum][] i [planeta][] archlinux.pl.
@@ -49,7 +49,7 @@ Instalacja jest prosta. Zabootuj z płyty CD, zaloguj się jako root, użyj kom
 [Pacman]:                            https://wiki.archlinux.org/index.php/Pacman "Pacman"
 [AUR]:                               http://aur.archlinux.org/ "AUR"
 [ArchWiki: AUR]:                     https://wiki.archlinux.org/index.php/Arch_User_Repository "ArchWiki: Arch User Repository"
-[my rc.conf]:                        http://kwpolska.co.cc/privpastebin/index.php?id=1297105122.9 "Mój rc.conf"
+[rcc]:                               http://kwpolska.co.cc/privpastebin/index.php?id=1297105122.9 "Mój rc.conf"
 [IRC]:                               https://wiki.archlinux.org/index.php/IRC_Channel "IRC Channel"
 [Forums]:                            https://bbs.archlinux.org "Forums"
 [MLs]:                               http://mailman.archlinux.org/mailman/listinfo/ "Mailing Lists"
