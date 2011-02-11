@@ -11,3 +11,4 @@ This is not the first time when I’m making a bilingual blog. Old KwPortal “b
 > This is some random KwPortal post.
 > <hr>
 > To jest dowolny post w KwPortalu.
+{% bilingual %}
