@@ -7,7 +7,12 @@ echo "<strong>Checking CAPTCHA...</strong>";
 if ($captcha != md5($_GET['captcha'])) showError("This is not the right CAPTCHA phrase.");
 echo " bypassed.<br><strong>Checking the fields...</strong>";
 if ($_GET['name'] == '' || $_GET['mail'] == '' || $_GET['subject'] == '' || $_GET['message'] == '') showError('You haven\'t filled all the fields.');
-echo "all filled.<br><strong>Sending...</strong>";
+echo "all filled.<br><strong>Testing for SPAM...</strong>";
+include_once "/home/Kwpolska/www/sblamtest.php";
+$sblam = sblamtestpost();
+if ($sblam > 0) showError('Your message is SPAM. <a href="'.sblamreporturl().'">Report an error</a>");
+
+echo "bypassed.<br><strong>Sending...</strong>";
 $subject = '[KBCF] '.$_GET['subject'];
 $from = $_GET['name'].' <'.$_GET['mail'].'>';
 ob_start();

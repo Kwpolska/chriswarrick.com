@@ -11,4 +11,5 @@
 <div><em>Your IP address will be saved.</em></div>
 <div><input type="submit" value="Submit" style="float: left;" onclick="Modalbox.show('http://kwpolska.co.cc/contact/send.php', {title: 'Sending...', params: Form.serialize('myform'), width: 600 }); return false;"><input type="button" value="Back" onclick="Modalbox.show('http://kwpolska.co.cc/contact/', {title: 'Contact', width: 600}); return false;"</div>
 </fieldset>
+<script src="sblam.js.php" type="text/javascript"></script>
 </form>
