@@ -12,8 +12,11 @@ title: unpacker
 Unpacker is a llttle utility made for unpacking various archives. Supported archives:
 
 * tar.gz/tgz
-* tbz2/tar.bz2
+* tar.bz2/tbz2
 * tar.lzma
+* tar.xz
+* lzma
+* xz
 * bz2
 * rar
 * gz
