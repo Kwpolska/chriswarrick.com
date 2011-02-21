@@ -12,6 +12,7 @@ title: KwBot
 <li><strong><code>commands</code></strong> &mdash; pokazuje komendy bota.</li>
 <li><strong><code>more</code></strong> &mdash; pokazuje dalszą część wiadomości zakończonej <em>(X more messages)</em></li>
 <li><strong><code>g</code>, <code>google</code></strong> &mdash; przeszukuje Google.</li>
+<li><strong><code>tiny</code></strong> &mdash; skraca URL za pomocą <a href="http://tinyurl.com">tinyurl.com</a>.</li>
 <li><strong><code>title</code></strong> &mdash; pokazuje tytuł linku.</li>
 <li><strong><code>tr</code>, <code>translate</code></strong> &mdash; tłumaczy przez Google Translate.</li>
 <li><strong><code>seen</code></strong> &mdash; pokazuje ostatnią wiadomość użytkownika na kanale i datę wysłania.</li>

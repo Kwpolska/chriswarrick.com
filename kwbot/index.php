@@ -12,6 +12,7 @@ title: KwBot
 <li><strong><code>commands</code></strong> &mdash; shows bots commands.</li>
 <li><strong><code>more</code></strong> &mdash; shows rest of the message which ends with <em>(X more messages)</em></li>
 <li><strong><code>g</code>, <code>google</code></strong> &mdash; searches Google.</li>
+<li><strong><code>tiny</code></strong> &mdash; shortens an URL with <a href="http://tinyurl.com">tinyurl.com</a>.</li>
 <li><strong><code>title</code></strong> &mdash; shows the link&#8217;s title.</li>
 <li><strong><code>tr</code>, <code>translate</code></strong> &mdash; translates with Google Translate.</li>
 <li><strong><code>seen</code></strong> &mdash; returns lastest user message on channel and date of sending.</li>
