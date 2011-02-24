@@ -18,6 +18,7 @@ The package manager is `pacman`. It has a specific syntax. The [Arch User Reposi
 
 ## Reason 3. [The Arch Way][tawv2]
 The distro is <q>intended to be simple, elegant, versatile and expedient</q>, as [The Arch Way v2.0][tawv2] states. You can also see [The Arch Way v1.0][tawv1].
+
 ## Reason 4. `/etc/rc.conf`
 `/etc/rc.conf` is the main configuration file. You can see mine here: [My rc.conf][]
 
