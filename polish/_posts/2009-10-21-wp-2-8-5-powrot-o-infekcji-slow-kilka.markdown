@@ -1,7 +1,7 @@
 --- 
-layout: plpost
+layout: post
 title: "Wordpress 2.8.5, powr\xC3\xB3t, o infekcji s\xC5\x82\xC3\xB3w kilka"
-category: polish
+category: wordpress
 wordpress_id: 219
 wordpress_url: http://kwpolska.co.cc/?p=219
 ---

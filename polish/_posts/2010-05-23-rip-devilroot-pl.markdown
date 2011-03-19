@@ -1,12 +1,14 @@
 --- 
-layout: plpost
+layout: post
 title: Rest in Peace, Devilroot.pl
-category: polish
+category: wordpress
 wordpress_id: 473
 wordpress_url: http://kwpolska.co.cc/?p=473
 ---
 Dzisiaj nad ranem devilroot.pl został zamknięty. Powróci w formie płatnej. Płatnej Premium SMS-ami (o zgrozo, przecież wczoraj była o nich tu mowa!) Dodatkowe informacje znajdziecie za niedługo na <http://devilroot.pl> oraz w rozwinięciu postu.
+
 Poniżej list od administracji rozesłany do wszystkich użytkowników:
+
 >Witaj $USER!
 >
 >Jesteśmy dumni i wdzięczni, iż stabilnie mogliśmy służyć użytkownikom przez 3 miesiące, oraz z tego, że Ty także pomogłeś w rozwoju.

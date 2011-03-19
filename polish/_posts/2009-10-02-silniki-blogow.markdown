@@ -1,7 +1,7 @@
 --- 
-layout: plpost
+layout: post
 title: Silniki blogów
-category: polish
+category: wordpress
 wordpress_id: 183
 wordpress_url: http://kwpolska.co.cc/?p=183
 ---

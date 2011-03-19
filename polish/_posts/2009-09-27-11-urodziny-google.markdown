@@ -1,7 +1,7 @@
 --- 
-layout: plpost
+layout: post
 title: 11. urodziny Google
-category: polish
+category: wordpress
 wordpress_id: 175
 wordpress_url: http://kwpolska.co.cc/bez-kategorii/11-urodziny-google/
 ---
