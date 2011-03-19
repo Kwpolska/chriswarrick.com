@@ -1,14 +1,16 @@
 ---
-layout: nil
+layout: projects
 title: KWD
 ---
-**Name:** KWD <input type='button' value='Back' onclick="Modalbox.show('http://kwpolska.co.cc/projects/kru/', {title: 'KRU', width: 600}); return false;" />  
+**Name:** KWD  
 **License:** GPLv3  
 **[Download](https://github.com/downloads/Kwpolska/kru/kwd.tar.gz)**
 
 ## Description
 KWD helps generating READMEs. All clean and in the same style, like the one included below (also the README for KWD).
+
 ### README.md
+
 KWD. First steps in Perl.
 ==============
 
@@ -37,6 +39,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #### Markdown source code
+
     KWD. First steps in Perl.
     ==============
     

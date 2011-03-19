@@ -1,14 +1,16 @@
 ---
-layout: nil
+layout: projects
 title: Git Commiter
 ---
-**Name:** Git Commiter <input type='button' value='Back' onclick="Modalbox.show('http://kwpolska.co.cc/projects/kru/', {title: 'KRU', width: 600}); return false;" />  
+**Name:** Git Commiter  
 **License:** GPLv3  
 **[Download](https://github.com/downloads/Kwpolska/kru/gitcommiter.tar.gz)**
 
 ## Description
 This utility commits everything in your git repos.
+
 ### README.md
+
 Git Commiter. Commiting all at once.
 ==============
 

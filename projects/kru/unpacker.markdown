@@ -1,9 +1,9 @@
 ---
-layout: nil
+layout: projects
 title: unpacker
 ---
 
-**Name:** unpacker <input type='button' value='Back' onclick="Modalbox.show('http://kwpolska.co.cc/projects/kru/', {title: 'KRU', width: 600}); return false;" />  
+**Name:** unpacker    
 **License:** PD  
 **[Download](https://github.com/downloads/Kwpolska/kru/unpacker.tar.gz)**
 
@@ -27,6 +27,7 @@ Unpacker is a llttle utility made for unpacking various archives. Supported arch
 * cab
 
 ### README.md
+
 Unpack. Tiny little script to unpack archives.
 ==============
 

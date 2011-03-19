@@ -1,8 +1,8 @@
 ---
-layout: nil
+layout: projects
 title: KwPortal
 ---
-**Name:** KwPortal <input type='button' value='Back' onclick="Modalbox.show('http://kwpolska.co.cc/projects/', {title: 'Projects', width: 600}); return false;" />  
+**Name:** KwPortal  
 **License:** GPLv3  
 **[Download](https://github.com/Kwpolska/kwportal/tarball/master)**
 

@@ -6,6 +6,7 @@ title: Kw&#8217;s Mail Hide Trick
 ## An example
 <style type="text/css">.mail:before { content: "It'sa me, Mario!" }</style>
 <span class="mail"></span>
+
 ### I can&#8217;t see anything above!
 Internet Explorer 7 or older? I know. It is too stupid. A **good** browser will show &#8220;It'sa me, Mario!&#8221;.
 

@@ -1,14 +1,16 @@
 ---
-layout: nil
+layout: projects
 title: PKGBUILDer
 ---
-**Name:** PKGBUILDer <input type='button' value='Back' onclick="Modalbox.show('http://kwpolska.co.cc/projects/kru/', {title: 'KRU', width: 600}); return false;" />  
+**Name:** PKGBUILDer  
 **License:** GPLv3  
 **[Download](https://github.com/downloads/Kwpolska/kru/pkgbuilder.tar.gz)**
 
 ## Description
 The utility helps installing packages from AUR. Quicker than an AUR helper.
+
 ### README.md
+
 PKGBUILDer. Not an AUR helper.
 ==============
 

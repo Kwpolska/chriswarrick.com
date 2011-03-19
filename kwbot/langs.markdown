@@ -1,6 +1,6 @@
 ---
 layout: page
-title: KwBot's Translate Languages
+title: KwBot’s Translate Languages
 ---
 The following languages are supported:
 

@@ -1,8 +1,8 @@
 ---
-layout: nil
+layout: projects
 title: KwInstaller
 ---
-**Name:** KwInstaller <input type='button' value='Back' onclick="Modalbox.show('http://kwpolska.co.cc/projects/kru/', {title: 'KRU', width: 600}); return false;" />  
+**Name:** KwInstaller  
 **License:** GPLv3  
 **[Download](https://github.com/downloads/Kwpolska/kru/kwinstaller.tar.gz)**
 

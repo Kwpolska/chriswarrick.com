@@ -1,8 +1,8 @@
 ---
-layout: nil
+layout: projects
 title: Lanyon
 ---
-**Name:** Lanyon <input type='button' value='Back' onclick="Modalbox.show('http://kwpolska.co.cc/projects/', {title: 'Projects', width: 600}); return false;" />  
+**Name:** Lanyon  
 **License:** GPLv3  
 **[Download](https://github.com/Kwpolska/lanyon/tarball/master)**
 
@@ -10,6 +10,7 @@ title: Lanyon
 An easy &#8220;ACP&#8221; for Jekyll.
 
 ### README.md
+
 Lanyon. A Jekyll WebUI.
 ==============
 

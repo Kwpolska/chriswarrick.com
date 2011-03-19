@@ -1,8 +1,8 @@
 ---
-layout: nil
+layout: projects
 title: syu
 ---
-**Name:** syu <input type='button' value='Back' onclick="Modalbox.show('http://kwpolska.co.cc/projects/kru/', {title: 'KRU', width: 600}); return false;" />  
+**Name:** syu  
 **License:** GPLv3  
 **[Download](https://github.com/downloads/Kwpolska/kru/syu.tar.gz)**
 
@@ -10,6 +10,7 @@ title: syu
 Syu is an Arch Linux updater. It can also update time.
 
 ### README.md
+
 Kw's Maintenance Script (syu). Updating your Arch Linux since 1901.
 ==============
 

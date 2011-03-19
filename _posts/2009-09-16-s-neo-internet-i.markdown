@@ -6,7 +6,7 @@ wordpress_id: 15
 wordpress_url: http://blogkw.wordpress.com/?p=15
 ---
   Na Epulsie, dzieci do lat 10 opisują różne przeżycia. Jakie, możecie zobaczyć troszkę niżej. Najpierw, opiszmy ich główne tematy.
-</p>
+
 *   idiotyczne pytania
 *   "przyjaciółka mnie nie lubi, co zrobić?"
 *   "czym się różni..." z rzeczami prostymi, przykład: 16 latka się pyta o różnice między **chrześcijaństwem a katolictwem!**
@@ -20,6 +20,6 @@ wordpress_url: http://blogkw.wordpress.com/?p=15
     > sprzedam to konto za 100 pulsarow 
     >   tez_mam_nick (8), znalezione przez użytkownika YouTube lilusia12
 
-*   idiotyczne myślenie, że są *"sexii"* itp.
+*   idiotyczne myślenie, że są *"sexii"* itp.  
 [YouTube - playlista][1]
 [1]: http://www.youtube.com/view_play_list?p=2508E32EDA3B1816

@@ -1,0 +1,4 @@
+var _gaq=_gaq||[];_gaq.push(["_setAccount","UA-11937989-1"]);_gaq.push(["_trackPageview"]);(function(){var b=document.createElement("script");b.type="text/javascript";b.async=true;b.src=("https:"==document.location.protocol?"https://ssl":"http://www")+".google-analytics.com/ga.js";var a=document.getElementsByTagName("script")[0];a.parentNode.insertBefore(b,a)})();
+function getFile(a,f){var d;if(window.XMLHttpRequest){d=new XMLHttpRequest()}else{d=new ActiveXObject("Microsoft.XMLHTTP")}d.onreadystatechange=function(){if(d.readyState==4&&d.status==200){document.getElementById(f).innerHTML=d.responseText}else{document.getElementById(f).innerHTML='<img src="/images/spinner.gif" alt="Loading..."><br>Loading...<br>Please wait a short moment or use the direct non-AJAX URL.'}};var c=new Date();var e=c.getTime();var b=a+"?rand="+e;d.open("GET",b,true);d.send()};
+
+/*! getFile() is under GPLv3. See ./ajax.js for full version. !*/

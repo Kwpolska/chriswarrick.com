@@ -10,8 +10,9 @@ category: jekyll
 >
 > By Tom Preston-Werner, Nick Quaranto, and many awesome contributors!
 >
-> Jekyll is a simple, blog aware, static site generator. It takes a template directory (representing the raw form of a website), runs it through Textile or Markdown and Liquid converters, and spits out a complete, static website suitable for serving with Apache or your favorite web server. This is also the engine behind [GitHub Pages][], which you can use to host your project&#8217;s page or blog right here from GitHub.
+> Jekyll is a simple, blog aware, static site generator. It takes a template directory (representing the raw form of a website), runs it through Textile or Markdown and Liquid converters, and spits out a complete, static website suitable for serving with Apache or your favorite web server. This is also the engine behind [GitHub Pages][], which you can use to host your project&#8217;s page or blog right here from GitHub.  
 (A quote from the README)
+
 ## Step 1: Install Jekyll
 
 First of, you have to install Jekyll. You can do it either on your server or on your home machine, if you&#8217;ll develop a crazy way to [deploy][] it. Another way is to use [GitHub Pages][]. On Linux, you can do it like this:
