@@ -3,21 +3,22 @@ layout: ajax
 title: KRU
 ---
 **Name:** KRU (Kw's Random Utils)  
-**License:** mostly GPLv3, 2 projects under PD  
-**[Download][1]**
+**License:** mostly GPLv3, some projects under PD  
+**[Download all subprojects][1]**
 
 ## Description
 
 This is a repo for all my smaller projects (in order of creation):
 
-*   [KwInstaller][2]
-*   [KWD][3]
-*   [KPG][4]
-*   [Git Commiter][5]
-*   [PKGBUILDer][6]
-*   [unpacker][7]
-*   [sha512sum][8]
-*   [syu][9]
+* [KwInstaller][2]
+* [KWD][3]
+* [KPG][4]
+* [Git Commiter][5]
+* [PKGBUILDer][6]
+* [unpacker][7]
+* [sha512sum][8]
+* [syu][9]
+* miniutils (a collection of small utilities licensed under PD)
 
 ### README.md
 

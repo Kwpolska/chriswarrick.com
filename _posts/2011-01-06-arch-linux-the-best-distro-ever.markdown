@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 'Arch Linux: The Best Linux Distro Ever.'
-category: linux
+category: gnulinux
 ---
 **I&#8217;m using Linux since 2007. I&#8217;ve been on many distros (in order): [Mandriva][], [Ubuntu][], [openSuSE][], [Fedora][], and only in [VirtualBox][]: [Debian][] and [Linux Mint][]. But since two months there is another distro in both lists (I tested it out on VirtualBox and then set it up on the actual machine): [Arch Linux][].**
 

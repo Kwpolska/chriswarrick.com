@@ -41,8 +41,8 @@ switch($_GET['action']) {
       $chars              = 'ABCDEFGHIJKLMNPQRSTUVWXYZ123456789'; //Ain't using 0 and O to prevent confusion.
       $phrase             = $chars[rand(0, strlen($chars)-1)].$chars[rand(0, strlen($chars)-1)].$chars[rand(0, strlen($chars)-1)].$chars[rand(0, strlen($chars)-1)].$chars[rand(0, strlen($chars)-1)].$chars[rand(0, strlen($chars)-1)]; //this code is not very good, but I don't care. Have a suggestion? Mail me.
       $_SESSION['phrase'] = md5($phrase); //This is idiot-proof.
-      echo '<h1>Kw\'s Captcha</h1>'.PHP_EOL.'<strong>Decode the following code using (in Unix) <code>echo \''.base64_encode($phrase).'\' | base64 -d</code></strong>:'.PHP_EOL;
-      echo '<strong>Your code is:</strong> <code>'.base64_encode($phrase).'</code>';
+      echo '<h1>Kw\'s Captcha</h1>'.PHP_EOL.'<strong>Decode the following code using (in Unix) <code>echo \'YOUR PHRASE\' | base64 -d</code></strong>:<br>';
+      echo '<code>'.base64_encode($phrase).'</code>';
       break;
    default:
       // We weren't asked to provide the images. We must provide the phrase.

@@ -12,14 +12,14 @@
 <link rel="alternate" href="/atom.xml" type="application/atom+xml" title="Atom feed">
 <link rel="alternate" href="/rss.xml" type="application/rss+xml" title="RSS feed">
 <link rel="shortcut icon" href="/favicon.ico">
-<title>{{ page.title }} &#151; Kw&#8217;s Home</title>
+<title>{{ page.title }} — Kw’s Home</title>
 </head>
 <body>
-<div id="header"><div id="menu-cnt">
+<header><nav>
     <ul id="menu1">
         <li><a href="/projects/" title="Projects">Projects</a></li>
-        <li><a href="/blog/" title="Blog stuff">Blog stuff</a></li>
-        <li><a href="/polish/" title="Polish">Polish</a></li>
+        <li><a href="/search/" title="Search">Search</a></li>
+        <li><a href="/feed/" title="Feed">Feed</a></li>
     </ul>
     <div id="logo"><a href="http://kwpolska.co.cc"><img src="/images/transparent.png" alt="Kw"></a></div>
     <ul id="menu2">
@@ -27,40 +27,40 @@
         <li><a href="/posts/" title="Archives">Archives</a></li>
         <li><a href="/kwbot/" title="KwBot">KwBot</a></li>
     </ul>
-    </div><h1 class="clear">{{ page.title }}</h1>
-</div>
-<div id="content">
-<div class="post">
-<div class="title">
+    </nav><h1 class="clear">{{ page.title }}</h1>
+</header>
+<section>
+<article>
+<header>
 <h1><a href="{{ page.url }}">{{ page.title }}</a></h1>
-<div class="date">Published <time datetime="{{ page.date | date: "%Y-%m-%d" }}">{{ page.date | date site.time, "%b %d, %Y"  }}</time> under <a href="http://kwpolska.co.cc/{{ page.category }}/">{{ page.category }}</a></div>
-</div>
+Published <time datetime="{{ page.date | date: "%Y-%m-%d" }}">{{ page.date | date_to_string }}</time> under <a href="http://kwpolska.co.cc/{{ page.category }}/">{{ page.category }}</a>
+</header>
 <div class="text">
 {{ content }}
 </div>
-<div class="pfooter"><a href="#comments">Comments</a></div>
-</div>
+<footer><a href="{{ page.url }}#rel" title="Related posts for {{ page.title }}">Related posts</a> | <a href="{{ page.url }}#comments" title="Comments for {{ page.title }}">Comments</a></footer>
+</article>
 
-<div class="post">
-<div class="title">
+<article>
+<header>
 <h1 id="rel">Related posts</h1>
-<div class="date">Generated automatically by Jekyll. Might not be right.</div>
-</div>
+Generated automatically by Jekyll. Might not be right.
+</header>
 <div class="text">
-      <ul class="posts">
-      {% for post in site.related_posts limit:3 %}
-         <li class="{% cycle 'one', 'two' %}"><a href="{{ post.url }}">{{ post.title }}</a></li>
-      {% endfor %}
-   </ul>
+<ul class="posts">
+{% for post in site.related_posts limit:3 %}
+    <li class="{% cycle 'one', 'two' %}"><a href="{{ post.url }}">{{ post.title }}</a></li>
+{% endfor %}
+</ul>
 </div>
-<div class="pfooter">I hope you&#8217;ll enjoy them.</div>
-</div>
+<footer>I hope you’ll enjoy them.</footer>
+</article>
 
-<div class="post">
-<div class="title">
+<article>
+<header>
 <h1 id="comments">Comments</h1>
-<div class="date">You shall leave one NOW.</div>
-</div>
+You shall leave one NOW.
+</header>
 <div class="text">
 <div id="disqus_thread">
 <script type="text/javascript">
@@ -80,11 +80,11 @@
 </script> <noscript>Please enable JavaScript to view the <a href=
 "http://disqus.com/?ref_noscript">comments powered by
 Disqus.</a></noscript></div></div>
-<div class="pfooter">Comments under this post are brought to you by
+<footer>Comments under this post are brought to you by
 <a href="http://disqus.com" class=
-"dsq-brlink"><strong>DISQUS</strong></a>.</div>
-</div>
-</div>
-<div id="footer">Copyright &copy; 2009-2011 Kwpolska. Brought to you by <a href="http://jekyllrb.com">Jekyll</a>. Licensed under <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/">CC BY-NC-ND</a>. Last update: {{ site.time | date site.time, "%b %d, %Y" }}.</div>
+"dsq-brlink"><strong>DISQUS</strong></a>.</footer>
+</article>
+</section>
+<footer>Copyright © 2009-2011 Kwpolska. Brought to you by <a href="http://jekyllrb.com">Jekyll</a>. Licensed under <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/">CC BY-NC-ND</a>. Last update: {{ site.time | date site.time, "%b %d, %Y" }}.</footer>
 </body>
 </html>

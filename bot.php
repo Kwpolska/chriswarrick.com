@@ -3,10 +3,10 @@ header('Content-type: image/png');
 //Kw's Bot Status Checker
 //Copyright Kwpolska 2010.
 $tim = date("H:i:s");
-if (file_exists('/home/Kwpolska/pid.KwBot')) {
-$txt = "STATUS: on ($tim CET)";
+if (file_exists('/home/Kwpolska/kwbot/pid')) {
+$txt  = "STATUS: on ($tim CEST)";
 } else {
-$txt = "STATUS: off ($tim)";
+$txt = "STATUS: off ($tim CEST)";
 }
 $img = imagecreatetruecolor(250, 20);
 $blk = imagecolorallocate($img,   0,  0,  0);

@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Zsh — A Shell For The Power Users.
-category: linux
+category: gnulinux
 ---
 **What’s the most important non-kernel piece of software in UNIX-like OSes? The shell. A good shell.**
 
@@ -56,6 +56,7 @@ Do you want to use the basic `more` to read a file? Just say `<filename` and you
 
 Wish to use some keys for special text operations? You can use bindkeys. I’m binding these keystrokes:
 
+    {% highlight bash %}
     bindkey "\e[1~" beginning-of-line       # Home
     bindkey "\e[4~" end-of-line             # End
     bindkey "\e[5~" beginning-of-history    # PageUp
@@ -69,8 +70,8 @@ Wish to use some keys for special text operations? You can use bindkeys. I’m b
     bindkey "^[[2~" quoted-insert           # Ins
     bindkey "^[[3~" delete-char             # Del
     bindkey "^[[1;5D" backward-word         # ^Left
-    bindkey "^[[1;5C" forward-word          # ^Right
-{:lang="zsh"}
+    bindkey "^[[1;5C" forward-word          # ^Right{% endhighlight %}
+
 
 ## Getting The Help
 
@@ -94,7 +95,7 @@ You can find some information at <http://zsh.sourceforge.net/>.
 
 ### The Man Page aka *Because zsh contains many features, the zsh manual has been split into a number of sections*
 
-The `zsh` man page just tells you the most important thing and informs you about other sections. If you aren’t sure where to search, try `man zshall`. 
+The `zsh` man page just tells you the most important things and informs you about other sections. If you aren’t sure where to search, try `man zshall`. 
 
            zsh          Zsh overview
            zshroadmap   Informal introduction to the manual
