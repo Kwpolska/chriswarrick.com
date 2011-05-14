@@ -1,5 +1,4 @@
-function getFile(filename, elementtoupdate)
-{
+function getFile(filename, elementtoupdate) {
     var xmlhttp;
     if (window.XMLHttpRequest)
     {
@@ -24,3 +23,19 @@ function getFile(filename, elementtoupdate)
     xmlhttp.open("GET", url, true);
     xmlhttp.send();
 }
+
+function closeAjaxBox() {
+    document.childNodes[1].removeChild(document.getElementById('msgbox'));
+}
+
+function ajaxBox(url, title) {
+    closeAjaxBox();
+    var newdiv = document.createElement('div');
+    newdiv.setAttribute('id', 'msgbox');
+    document.childNodes[1].appendChild(newdiv);
+    var base = '<div id="header"><h1>'+title+'</h1><button onclick="closeAjaxBox();">Close</button></div><div id="msgboxcontents"></div>';
+    document.getElementById('msgbox').innerHTML=base;
+    getFile(url, 'msgboxcontents');
+}
+
+

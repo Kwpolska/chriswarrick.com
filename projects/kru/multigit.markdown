@@ -1,26 +1,22 @@
 ---
+title: MultiGit
 layout: projects
-title: Git Commiter
 ---
-**Name:** Git Commiter  
+**Name:** MultiGit  
 **License:** GPLv3  
-**[Download](https://github.com/downloads/Kwpolska/kru/gitcommiter.tar.gz)**
+**[Download](https://github.com/downloads/Kwpolska/kru/multigit.tar.gz)**
 
-## Description
-This utility commits everything in your git repos.
-
-### README.md
-
-Git Commiter. Commiting all at once.
+MultiGit.  Updating all at once.
 ==============
 
 PURPOSE
 -------
-This tool automatically commits all changes to your git repositories when you'll start it. The script requires you to have a special dir for repos.
+These tools run specific git commands.  The script requires a special dir for
+repos.  (~/git by default)
 
 INSTALLATION
 ------------
-Copy it to /usr/bin or ~/bin. You may need to change the interpreter.
+Copy it to /usr/bin or ~/bin.  You may need to change the interpreter.
 
 NOTES
 -----

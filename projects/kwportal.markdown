@@ -6,17 +6,13 @@ title: KwPortal
 **License:** GPLv3  
 **[Download](https://github.com/Kwpolska/kwportal/tarball/master)**
 
-## Description
-A tiny portal, rewritten from scratch.
-
-### README.md
-
-KwPortal. Old project, new life.
+KwPortal.  Old project, new life.
 ==============
 
 PURPOSE
 -------
-The original KwPortal Renoir was serving for my old devpage. The project was later cancelled.
+The original KwPortal Renoir was serving for my old devpage.  The project was
+later cancelled.  This is a brand new version.
 
 INSTALLATION
 ------------

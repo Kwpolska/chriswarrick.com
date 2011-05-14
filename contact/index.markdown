@@ -22,12 +22,12 @@ I am a PHP (mid-advanced), perl (basics) and bash scripter.  You can find some o
 
 ## Contact
 
-* **[the contact form][1]**
+* **[the contact form][]**
 * by mail — kwpolska \[using google apps at\] kwpolska.co.cc
 * **by Jabber/XMPP** — kwpolska  \[using the great services at\] aqq.eu
 * by Gadu-Gadu, the world&#8217;s worst communicator — seven million five hundred twenty-one thousand four hundred five
 * **by IRC** — Kwpolska @ freenode.
-* **by Twitter** — [@Kwpolska][2].
+* **by Twitter** — [@Kwpolska][twitter].
 
 Visit my:
 

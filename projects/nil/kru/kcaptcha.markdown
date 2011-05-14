@@ -1,30 +1,27 @@
 ---
+title: KCAPTCHA
 layout: ajax
-title: Git Commiter
 ---
-**Name:** Git Commiter  
+**Name:** Kw's Captcha  
 **License:** GPLv3  
-**[Download](https://github.com/downloads/Kwpolska/kru/gitcommiter.tar.gz)**
+**[Download](https://github.com/downloads/Kwpolska/kru/kcaptcha.tar.gz)**
 
-## Description
-This utility commits everything in your git repos.
-
-### README.md
-
-Git Commiter. Commiting all at once.
+Kw's CAPTCHA.  Basic CAPTCHA for everybody.
 ==============
 
 PURPOSE
 -------
-This tool automatically commits all changes to your git repositories when you'll start it. The script requires you to have a special dir for repos.
+This is a little CAPTCHA implementation.
 
 INSTALLATION
 ------------
-Copy it to /usr/bin or ~/bin. You may need to change the interpreter.
+Copy captcha.php file somewhere and edit it if you need.  For figlet support,
+install `Text_Figlet` from PEAR.
 
-NOTES
+USAGE
 -----
-gitcommiter passes all arguments to "git commit" commands.
+Insert an image to captcha.php?action=img.  For text browsers, you can link to
+captcha.php?action=img or captcha.php?action=figlet.
 
 COPYRIGHT
 ---------

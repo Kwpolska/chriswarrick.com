@@ -1,15 +1,10 @@
 ---
-layout: ajax
 title: PKGBUILDer
+layout: ajax
 ---
 **Name:** PKGBUILDer  
 **License:** GPLv3  
 **[Download](https://github.com/downloads/Kwpolska/kru/pkgbuilder.tar.gz)**
-
-## Description
-The utility helps installing packages from AUR. Quicker than an AUR helper.
-
-### README.md
 
 PKGBUILDer. Not an AUR helper.
 ==============

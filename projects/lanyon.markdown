@@ -6,25 +6,23 @@ title: Lanyon
 **License:** GPLv3  
 **[Download](https://github.com/Kwpolska/lanyon/tarball/master)**
 
-## Description
-An easy &#8220;ACP&#8221; for Jekyll.
-
-### README.md
-
 Lanyon. A Jekyll WebUI.
 ==============
 
 PURPOSE
 -------
-This is a little project intended to help Jekyll users administrate their blogs without using FTP/SSH.
+This is a little project intended to help Jekyll users administrate their blogs
+without using FTP/SSH.
 
 INSTALLATION
 ------------
-Edit config.php. You can generate a password using sha512sum.php (The shell command *WILL NOT* work.)
+Edit config.php.  You can generate a password using sha512sum.php (Running it
+from a shell *WILL NOT* work.)
 
 NOTES
 -----
-The project name comes from the book “Strange Case of Dr Jekyll and Mr Hyde”. Dr Hastie Lanyon was a friend of Jekyll.
+The project name comes from the book “Strange Case of Dr Jekyll and Mr Hyde”.
+Dr Hastie Lanyon was a friend of Dr Jekyll.
 
 COPYRIGHT
 ---------

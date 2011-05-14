@@ -1,22 +1,27 @@
 ---
-layout: ajax
-title: KwPortal
+title: KCAPTCHA
+layout: projects
 ---
-**Name:** KwPortal  
+**Name:** Kw's Captcha  
 **License:** GPLv3  
-**[Download](https://github.com/Kwpolska/kwportal/tarball/master)**
+**[Download](https://github.com/downloads/Kwpolska/kru/kcaptcha.tar.gz)**
 
-KwPortal.  Old project, new life.
+Kw's CAPTCHA.  Basic CAPTCHA for everybody.
 ==============
 
 PURPOSE
 -------
-The original KwPortal Renoir was serving for my old devpage.  The project was
-later cancelled.  This is a brand new version.
+This is a little CAPTCHA implementation.
 
 INSTALLATION
 ------------
-Check out INSTALL.
+Copy captcha.php file somewhere and edit it if you need.  For figlet support,
+install `Text_Figlet` from PEAR.
+
+USAGE
+-----
+Insert an image to captcha.php?action=img.  For text browsers, you can link to
+captcha.php?action=img or captcha.php?action=figlet.
 
 COPYRIGHT
 ---------

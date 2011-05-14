@@ -1,22 +1,26 @@
 ---
+title: MultiGit
 layout: ajax
-title: KwPortal
 ---
-**Name:** KwPortal  
+**Name:** MultiGit  
 **License:** GPLv3  
-**[Download](https://github.com/Kwpolska/kwportal/tarball/master)**
+**[Download](https://github.com/downloads/Kwpolska/kru/multigit.tar.gz)**
 
-KwPortal.  Old project, new life.
+MultiGit.  Updating all at once.
 ==============
 
 PURPOSE
 -------
-The original KwPortal Renoir was serving for my old devpage.  The project was
-later cancelled.  This is a brand new version.
+These tools run specific git commands.  The script requires a special dir for
+repos.  (~/git by default)
 
 INSTALLATION
 ------------
-Check out INSTALL.
+Copy it to /usr/bin or ~/bin.  You may need to change the interpreter.
+
+NOTES
+-----
+gitcommiter passes all arguments to "git commit" commands.
 
 COPYRIGHT
 ---------

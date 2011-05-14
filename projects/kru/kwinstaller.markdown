@@ -1,28 +1,23 @@
 ---
-layout: projects
 title: KwInstaller
+layout: projects
 ---
 **Name:** KwInstaller  
 **License:** GPLv3  
 **[Download](https://github.com/downloads/Kwpolska/kru/kwinstaller.tar.gz)**
 
-## Description
-The easiest installer ever made in PHP.
-
-###README.md
-
-KwInstaller. Easy as 1-2-3.
+KwInstaller.  Easy as 1-2-3.
 ==============
 
 PURPOSE
 -------
-Made for kwpastebin. Small installer. And nothing else.
+Small installer.  And nothing else.
 
 INSTALLATION
 ------------
 1. Edit it.
 2. Copy it.
-3. Try it.
+3. Use it.
 
 COPYRIGHT
 ---------
