@@ -29,7 +29,6 @@ function closeAjaxBox() {
 }
 
 function ajaxBox(url, title) {
-    closeAjaxBox();
     var newdiv = document.createElement('div');
     newdiv.setAttribute('id', 'msgbox');
     document.childNodes[1].appendChild(newdiv);
