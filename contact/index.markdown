@@ -2,7 +2,17 @@
 layout: page
 title: Contact/About Me
 ---
-I am a PHP (mid-advanced), perl (basics) and bash scripter.  You can find some of my projects at github (see below).
+I am a PHP, Perl, Python and bash scripter.  You can find some of my projects at github (see below).
+
+## Contact
+
+* **[the contact form][]**
+* by mail — kwpolska \[using google apps at\] kwpolska.co.cc
+* **by Jabber/XMPP** — kwpolska  \[using the great services at\] aqq.eu
+* by Gadu-Gadu, the world&#8217;s worst communicator — seven million five hundred twenty-one thousand four hundred five
+* **by IRC** — Kwpolska @ freenode.
+* **by Twitter** — [@Kwpolska][twitter].
+
 
 ## Bio
 
@@ -19,17 +29,6 @@ I am a PHP (mid-advanced), perl (basics) and bash scripter.  You can find some o
 * blip —  ^[kwpolska][blip]
 * github — [Kwpolska][github]
 * Geek code: [kwpolska.geek][]
-
-## Contact
-
-* **[the contact form][]**
-* by mail — kwpolska \[using google apps at\] kwpolska.co.cc
-* **by Jabber/XMPP** — kwpolska  \[using the great services at\] aqq.eu
-* by Gadu-Gadu, the world&#8217;s worst communicator — seven million five hundred twenty-one thousand four hundred five
-* **by IRC** — Kwpolska @ freenode.
-* **by Twitter** — [@Kwpolska][twitter].
-
-Visit my:
 
 
  [kwpolska.asc]:     http://kwpolska.co.cc/pub/kwpolska.asc  "kwpolska.asc"

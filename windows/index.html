@@ -1,0 +1,38 @@
+---
+layout: category
+title: windows
+category: windows
+---
+{% for post in paginator.posts %}
+<div class="post">
+<div class="title">
+<h1><a href="{{ post.url }}">{{ post.title }}</a></h1>
+<div class="date">Published <time datetime="{{ post.date | date: "%Y-%m-%d" }}">{{ post.date | date_to_string }}</time> under <a href="http://kwpolska.co.cc/{{ post.category }}/">{{ post.category }}</a></div>
+</div>
+<div class="text">
+{{ post.content }}
+</div>
+<div class="pfooter"><a href="{{ post.url }}#rel" title="Related posts for {{ post.title }}">Related posts</a> | <a href="{{ post.url }}#comments" title="Comments for {{ post.title }}">Comments</a></div> </div>{% endfor %}
+<div id="postsftr">
+<strong>
+  {% if paginator.previous_page %}
+    {% if paginator.previous_page == 1 %}
+      <a href="../">«</a>
+    {% else %}
+      <a href="../page{{ paginator.previous_page }}">«</a>
+    {% endif %}
+  {% else %}
+    «
+  {% endif %}
+</strong>&nbsp;This is the page <strong>{{ paginator.page }}</strong> out of <strong>{{ paginator.total_pages }}</strong>.<strong>&nbsp;
+  {% if paginator.next_page %}
+    {% if paginator.page == 1 %}
+      <a href="./page{{ paginator.next_page }}/">»</a>
+    {% else %}
+      <a href="../page{{ paginator.next_page }}/">»</a>
+    {% endif %}
+  {% else %}
+    »
+  {% endif %}
+</strong>
+</div>

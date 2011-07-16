@@ -7,6 +7,8 @@ category: gnulinux
 
 I’m working with UNIX-like OSes a long time. I wasn’t using a shell all the time, but the black window with a monospace font was seen more often on my screen with time. A black window with `bash` in it. Are you wondering why? They set it as the default shell. And some users might not bother with changing their settings or testing other shells.
 
+<moar></moar>
+
 ## `user@localhost:~$ zsh`
 
 Are you still using bash? Switch over to zsh and learn why it’s better. Let’s begin with a reason list.

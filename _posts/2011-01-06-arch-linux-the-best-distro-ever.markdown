@@ -5,6 +5,8 @@ category: gnulinux
 ---
 **I&#8217;m using Linux since 2007. I&#8217;ve been on many distros (in order): [Mandriva][], [Ubuntu][], [openSuSE][], [Fedora][], and only in [VirtualBox][]: [Debian][] and [Linux Mint][]. But since two months there is another distro in both lists (I tested it out on VirtualBox and then set it up on the actual machine): [Arch Linux][].**
 
+<!--more-->
+
 Arch Linux is a Linux distribution by Judd Vinet and Aaron Griffin, existing since 2002, intended to be simple, elegant, versatile and expedient (See Reason #3). It uses pacman as the package manager. It&#8217;s a rolling-release distro, that means there are only new CD images released, you get updates even if you&#8217;ve installed Arch Linux v0.1. The current CD release is **2010.05**.
 
 # What makes it so awesome?

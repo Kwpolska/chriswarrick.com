@@ -5,6 +5,8 @@ category: jekyll
 ---
 **This post is an introduction to Jekyll, an awesome, <q>simple, blog aware, static site generator</q>. It&#8217;s a how-to helping you in setting up Jekyll.**
 
+<!--more-->
+
 ## About Jekyll
 > # Jekyll
 >

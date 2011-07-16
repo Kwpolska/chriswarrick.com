@@ -10,6 +10,7 @@ Category          | Description
 [Jekyll][2]       | Posts about Jekyll.
 [GNU/Linux][3]    | Posts about GNU/Linux.
 [Webmastering][5] | Posts about webmastering.
+[Windows][7]      | Posts about Microsoft Windows.
 [WordPress][6]    | Old posts from the WordPress age.
 
 <!--[Polish][4]       | Posts in Polish.-->
@@ -20,3 +21,4 @@ Category          | Description
  [4]: /polish/       "Polish"
  [5]: /webmastering/ "Webmastering"
  [6]: /wordpress/    "WordPress"
+ [7]: /windows/      "Windows"

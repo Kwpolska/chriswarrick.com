@@ -3,17 +3,23 @@
 //Copyright Kwpolska 2010. Licensed on GPLv3.
 include_once './config.php';
 ob_start();
+if(!isset($_COOKIE['kwpstln'])) setcookie('kwpstln', 1, 2147483640);
 ?>
 <form action="send.php" method="post">
 <div id="form">
 <textarea name="code" rows="24" cols="80"></textarea><br>
 <select name="lng"> 
 <optgroup label="Popular">
-<option>bash</option> <option>c</option> <option>cpp</option> <option>csharp</option> <option>css</option> <option>html4strict</option> <option>java5</option> <option>java</option> <option>javascript</option> <option>php</option> <option>perl</option> <option>python</option> <option>rails</option> <option>ruby</option> <option>sql</option> <option selected="selected">text</option>
+<option>bash</option> <option>c</option> <option>cpp</option>
+<option>csharp</option> <option>css</option> <option>html4strict</option>
+<option>java5</option> <option>java</option> <option>javascript</option>
+<option>php</option> <option>perl</option> <option>python</option>
+<option>rails</option> <option>ruby</option> <option>sql</option> <option
+selected="selected">text</option>
 </optgroup>
 <optgroup label="#"><option>4cs</option>
 <optgroup label="A"><option>abap</option> <option>actionscript3</option> <option>actionscript</option> <option>ada</option> <option>apache</option> <option>applescript</option> <option>apt_sources</option> <option>asm</option> <option>asp</option> <option>autoconf</option> <option>autohotkey</option> <option>autoit</option> <option>avisynth</option> <option>awk</option>
-<optgroup label="B"><option>bash</option> <option>basic4gl</option> <option>bf</option> <option>bibtex</option> <option>blitzbasic</option> <option>bnf</option> <option>boo</option> 
+<optgroup label="B"><option>basic4gl</option> <option>bf</option> <option>bibtex</option> <option>blitzbasic</option> <option>bnf</option> <option>boo</option> 
 <optgroup label="C"><option>caddcl</option> <option>cadlisp</option> <option>cfdg</option> <option>cfm</option> <option>chaiscript</option> <option>cil</option> <option>clojure</option> <option>c_mac</option> <option>cmake</option> <option>cobol</option> <option>cpp-qt</option> <option>cuesheet</option>
 <optgroup label="D"><option>dcs</option> <option>delphi</option> <option>diff</option> <option>div</option> <option>dos</option> <option>dot</option> <option>d</option>
 <optgroup label="E"><option>ecmascript</option> <option>eiffel</option> <option>email</option> <option>erlang</option>
@@ -36,40 +42,63 @@ ob_start();
 <optgroup label="V"><option>vala</option> <option>vbnet</option> <option>vb</option> <option>verilog</option> <option>vhdl</option> <option>vim</option> <option>visualfoxpro</option> <option>visualprolog</option> <option>whitespace</option>
 <optgroup label="W"><option>whois</option> <option>winbatch</option></optgroup>
 <optgroup label="X"><option>xbasic</option> <option>xml</option> <option>xorg_conf</option> <option>xpp</option></optgroup>
-<optgroup label="Z"><option>z80</option></optgroup> </select> <input type="text" name="desc"> &mdash; <input type="submit" value="SEND">
+<optgroup label="Z"><option>z80</option></optgroup> </select>
+&mdash; Description: <input type="text" name="desc"> &mdash; <input
+type="submit" value="SEND">
 </div>
 <input type="hidden" name="key" value="<?php $_GET['key']; ?>">
 </form>
 <?php
 $content = ob_get_clean();
 
-if ($open == false && $_GET['key'] != $closedkey) $content = 'Posting is locked and you haven\'t provided a valid key. <form action="index.php" method="GET"><input type="text" name="key"> <input type="submit" value="UNLOCK"></form>';
+if ($open == false && $_GET['key'] != $closedkey) $content = 'Posting is locked
+and you haven\'t provided a valid key. <form action="index.php"
+method="GET"><input type="text" name="key"> <input type="submit"
+value="UNLOCK"></form>';
 
 if(isset($_GET['id'])) {
-      include_once './geshi.php';
-      ob_start();
-      try
-      {
-      $pdo = new PDO($dbdsn, $dbusr, $dbpwd, array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));
-      $pdo -> setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    include_once './geshi.php';
+    ob_start();
+    try {
+        $pdo = createPDO();
+        $pdo -> setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $stmt = $pdo->prepare('SELECT * FROM `'.$dbtbl.'` WHERE
+                               `pasteid` = ?');
+        //fields: pasteid, code, language, timestamp, dsc, rmable, rmid
+        $stmt->execute(array($_GET['id']));
+        $obj = $stmt->fetch(PDO::FETCH_OBJ);
+        $dsc = $obj->dsc;
+        if($dsc == '') $dsc .= 'no user notes';
+        echo '<a href="./plain.php?id='.$_GET['id'].'">plaintext</a> &mdash; <a
+        href="./dl.php?id='.$_GET['id'].'">download</a> &mdash; added '.date('F
+        jS, Y \a\t h:i:s A T', $obj->timestamp).' &mdash; <em>'.$dsc.'</em>
+        &mdash; <a href="./lnumbers.php?id='.$_GET['id'].'">Toggle line
+        numbers</a> &mdash; hilighted by <a
+        href="http://qbnz.com/highlighter/">GeSHi</a><br>';
+        $geshi = new GeSHI($obj->code, $obj->language);
 
-      $stmt = $pdo -> prepare('SELECT code, language, dsc FROM `'.$dbtbl.'` WHERE `timestamp` = ?');
-      $stmt->execute(array($_GET['id']));
-      $obj = $stmt->fetch(PDO::FETCH_OBJ);
-      $timestamp = substr($_GET['id'], 0, -2);
-      $dsc = $obj->dsc;
-      if($dsc == '') $dsc .= 'no user notes';
-      echo '<a href="./plain.php?id='.$_GET['id'].'">plaintext</a> &mdash; <a href="./dl.php?id='.$_GET['id'].'">download</a> &mdash; added '.date('F jS, Y \a\t h:i:s A T', $timestamp).' &mdash; <em>'.$dsc.'</em> &mdash; hilighted by <a href="http://qbnz.com/highlighter/">GeSHi</a><br>';
-      $geshi = new GeSHI($obj->code, $obj->language);
-      $geshi->enable_line_numbers(GESHI_FANCY_LINE_NUMBERS, 2); $geshi->set_line_style('background: #fcfcfc;', 'background: #f0f0f0;'); //this determines the line styles; even = grey, odd - white-ish.
-      echo $geshi->parse_code();
-      $stmt -> closeCursor();
-      }
-      catch(PDOException $e)
-      {
-         echo 'ERROR: ' . $e->getMessage();
-      }
-      $content = ob_get_clean();
+        $geshi->enable_line_numbers(GESHI_FANCY_LINE_NUMBERS, 2);
+        $geshi->set_line_style('background: #fff;', 'background: #f0f0f0;');
+        //this determines the line styles.  odd (white)          even (grey)
+        if($_COOKIE['kwpstln'] == 0) {
+            $geshi->enable_line_numbers(GESHI_NO_LINE_NUMBERS);
+        }
+        echo $geshi->parse_code();
+        if($obj->rmable == '1') {
+            echo "Removal ID: ".$obj->rmid.'<br>';
+            echo "You can use the id at the deletion page.  Don't share it.  
+            The ID willn't show up anymore.";
+            $stmt->closeCursor();
+            $stmt = $pdo->prepare('UPDATE `'.$dbtbl.'` SET `rmable` = 0
+            WHERE `pasteid` = ?');
+            $stmt->execute(array($_GET['id']));
+         } 
+        $stmt->closeCursor(); // cheating.  I have to close either the select
+    }                         // or update.
+    catch(PDOException $e) {
+        echo 'ERROR: ' . $e->getMessage();
+    }
+    $content = ob_get_clean();
 }
 
 savant();

@@ -2,7 +2,7 @@
 layout: ajax
 title: Projects
 ---
-**I’ve done some PHP, bash and Perl projects. You can browse all of them here or at [github][1].**
+**I’ve made some PHP, bash, Perl and Python stuff. You can browse all of them here or at [GitHub][1].**
 
 *   [KwPastebin][2]
 *   [KwPortal][3]
@@ -17,18 +17,20 @@ title: Projects
     *   [syu][12]
     *   [KCAPTCHA][13]
 *   [Lanyon][14]
+*   [Kw’s Supybot Plugins][15]
 
  [1]:  https://github.com/Kwpolska "My github page"
- [2]:  http://kwpolska.co.cc/projects/kwpastebin/ "KwPastebin"
- [3]:  http://kwpolska.co.cc/projects/kwportal/ "KwPortal"
- [4]:  http://kwpolska.co.cc/projects/kru/ "KRU"
- [5]:  http://kwpolska.co.cc/projects/kru/kwinstaller/ "KwInstaller"
- [6]:  http://kwpolska.co.cc/projects/kru/kwd/ "KWD"
- [7]:  http://kwpolska.co.cc/projects/kru/kpg/ "KPG"
- [8]:  http://kwpolska.co.cc/projects/kru/gitcommiter/ "Git Commiter"
- [9]:  http://kwpolska.co.cc/projects/kru/pkgbuilder/ "PKGBUILDer"
- [10]: http://kwpolska.co.cc/projects/kru/unpacker/ "unpacker"
- [11]: http://kwpolska.co.cc/projects/kru/sha512sum/ "sha512sum"
- [12]: http://kwpolska.co.cc/projects/kru/syu/ "syu"
- [13]: http://kwpolska.co.cc/projects/kru/kcaptcha "KCAPTCHA"
- [14]: http://kwpolska.co.cc/projects/lanyon/ "Lanyon"
+ [2]:  /projects/kwpastebin/ "KwPastebin"
+ [3]:  /projects/kwportal/ "KwPortal"
+ [4]:  /projects/kru/ "KRU"
+ [5]:  /projects/kru/kwinstaller/ "KwInstaller"
+ [6]:  /projects/kru/kwd/ "KWD"
+ [7]:  /projects/kru/kpg/ "KPG"
+ [8]:  /projects/kru/gitcommiter/ "Git Commiter"
+ [9]:  /projects/kru/pkgbuilder/ "PKGBUILDer"
+ [10]: /projects/kru/unpacker/ "unpacker"
+ [11]: /projects/kru/sha512sum/ "sha512sum"
+ [12]: /projects/kru/syu/ "syu"
+ [13]: /projects/kru/kcaptcha "KCAPTCHA"
+ [14]: /projects/lanyon/ "Lanyon"
+ [15]: /projects/kwsupyplugs/ "KwSupyPlugs"

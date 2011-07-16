@@ -2,34 +2,34 @@
 layout: home
 title: Home
 ---
-{% for post in paginator.posts %}
+{% for page in paginator.posts %}
 <article>
 <header>
-<h1><a href="{{ post.url }}">{{ post.title }}</a></h1>
-Published <time datetime="{{ post.date | date: "%Y-%m-%d" }}">{{ post.date | date_to_string }}</time> under <a href="http://kwpolska.co.cc/{{ post.category }}/">{{ post.category }}</a>
+<h1><a href="{{ page.url }}">{{ page.title }}</a></h1>
+Published <time datetime="{{ page.date | date: "%Y-%m-%d" }}">{{ page.date | date_to_string }}</time> under <a href="http://kwpolska.co.cc/{{ page.category }}/">{{ page.category }}</a>
 </header>
 <div class="text">
-{{ post.content }}
+    {{ page.content }}
 </div>
-<footer><a href="{{ post.url }}#rel" title="Related posts for {{ post.title }}">Related posts</a> | <a href="{{ post.url }}#comments" title="Comments for {{ post.title }}">Comments</a></footer>
+<footer><a href="{{ page.url }}#rel" title="Related pages for {{ page.title }}">Related pages</a> | <a href="{{ page.url }}#comments" title="Comments for {{ page.title }}">Comments</a></footer>
 </article>
 {% endfor %}
 <footer id="pfooter">
 <strong>
-  {% if paginator.previous_page %}
+    {% if paginator.previous_page %}
     {% if paginator.previous_page == 1 %}
-      <a href="/">«</a>
+    <a href="/">«</a>
     {% else %}
-      <a href="/page{{ paginator.previous_page }}">«</a>
+    <a href="/page{{ paginator.previous_page }}">«</a>
     {% endif %}
-  {% else %}
+    {% else %}
     «
-  {% endif %}
-</strong>&nbsp;This is the page <strong>{{ paginator.page }}</strong> out of <strong>{{ paginator.total_pages }}</strong>.<strong>&nbsp;
-  {% if paginator.next_page %}
+    {% endif %}
+    </strong>&nbsp;This is the page <strong>{{ paginator.page }}</strong> out of <strong>{{ paginator.total_pages }}</strong>.<strong>&nbsp;
+    {% if paginator.next_page %}
     <a href="/page{{ paginator.next_page }}/">»</a>
-  {% else %}
+    {% else %}
     »
-  {% endif %}
+    {% endif %}
 </strong>
 </footer>
