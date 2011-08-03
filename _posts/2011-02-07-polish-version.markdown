@@ -2,7 +2,7 @@
 layout: post
 category: blog
 ---
-**The blog is now available in Polish in an open beta. You can test it here: <http://kwpolska.co.cc/polish/>.**
+**The blog is now available in Polish in an open beta. You can test it here: <http://kwpolska.tk/polish/>.**
 
 Why am I doing that? I want to make it readable for Poles who don't know English. My blog was rejected from a contest because of English content.
 

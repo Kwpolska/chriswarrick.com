@@ -6,20 +6,25 @@ layout: projects
 **License:** GPLv3  
 **[Download](https://github.com/downloads/Kwpolska/kru/pkgbuilder.tar.gz)**
 
-PKGBUILDer. Not an AUR helper.
+PKGBUILDer.  Easy AUR helper-like script.
 ==============
 
 PURPOSE
 -------
-This tool helps installing packages from AUR (Arch User Repository) without using a helper.
+This tool is a basic AUR helper.  Version 2 in Py3K.
 
 INSTALLATION
 ------------
-Copy it to /usr/bin or ~/bin. You shall use it in a special directory.
+Copy it to /usr/bin or ~/bin.  You shall use it in a special directory.
+
+NOTES
+-----
+This is Version 2 of PKGBUILDer.  The original Perl version is included,
+but it shall not be used.
 
 COPYRIGHT
 ---------
-Copyright (C) 2010 Kwpolska.
+Copyright (C) 2011 Kwpolska.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

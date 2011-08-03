@@ -9,8 +9,8 @@ Category          | Description
 [Blog][1]         | Posts about the blog.
 [Jekyll][2]       | Posts about Jekyll.
 [GNU/Linux][3]    | Posts about GNU/Linux.
+[Programming][4]  | Posts about programming/scripting.
 [Webmastering][5] | Posts about webmastering.
-[Windows][7]      | Posts about Microsoft Windows.
 [WordPress][6]    | Old posts from the WordPress age.
 
 <!--[Polish][4]       | Posts in Polish.-->
@@ -18,7 +18,7 @@ Category          | Description
  [1]: /blog/         "Blog"
  [2]: /jekyll/       "Jekyll"
  [3]: /gnulinux/     "GNU/Linux"
- [4]: /polish/       "Polish"
+ [4]: /programming/  "Prorgramming"
  [5]: /webmastering/ "Webmastering"
  [6]: /wordpress/    "WordPress"
  [7]: /windows/      "Windows"

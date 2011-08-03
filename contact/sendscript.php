@@ -25,7 +25,7 @@ $message = wordwrap($message, 70); //to satisfy RFC 2822 (Internet Message
 $head = "From: ".$from.PHP_EOL."MIME-Version: 1.0".PHP_EOL."Content-Type:
 text/plain; charset=UTF-8".PHP_EOL."Content-Transfer-Encoding: 8bit";
 echo " passed.\nSending...";
-mail('Kwpolska <kwpolska@kwpolska.co.cc>', $subject, $message, $head) or
+mail('Kwpolska <kwpolska@kwpolska.tk>', $subject, $message, $head) or
 showError("Failed to send the form. Please spam me through my generic mail.");
 echo " sent.\nKBCF sending script finished its work.";
 session_destroy(); // kill the session.

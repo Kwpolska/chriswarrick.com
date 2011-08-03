@@ -7,7 +7,7 @@ I am a PHP, Perl, Python and bash scripter.  You can find some of my projects at
 ## Contact
 
 * **[the contact form][]**
-* by mail — kwpolska \[using google apps at\] kwpolska.co.cc
+* by mail — kwpolska \[using google apps at\] kwpolska.tk
 * **by Jabber/XMPP** — kwpolska  \[using the great services at\] aqq.eu
 * by Gadu-Gadu, the world&#8217;s worst communicator — seven million five hundred twenty-one thousand four hundred five
 * **by IRC** — Kwpolska @ freenode.
@@ -31,9 +31,9 @@ I am a PHP, Perl, Python and bash scripter.  You can find some of my projects at
 * Geek code: [kwpolska.geek][]
 
 
- [kwpolska.asc]:     http://kwpolska.co.cc/pub/kwpolska.asc  "kwpolska.asc"
- [kwpolska.geek]:    http://kwpolska.co.cc/pub/kwpolska.geek "kwpolska.geek"
- [the contact form]: http://kwpolska.co.cc/contact/form.php  "Contact Form"
+ [kwpolska.asc]:     http://kwpolska.tk/pub/kwpolska.asc  "kwpolska.asc"
+ [kwpolska.geek]:    http://kwpolska.tk/pub/kwpolska.geek "kwpolska.geek"
+ [the contact form]: http://kwpolska.tk/contact/form.php  "Contact Form"
  [twitter]:          http://twitter.com/Kwpolska             "Twitter"
  [youtube]:          http://www.youtube.com/user/Kwpolska    "YouTube"
  [blip]:             http://kwpolska.blip.pl/                "Blip"

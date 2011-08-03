@@ -23,4 +23,4 @@ Nie każdy publikuje te dane, nie każdemu chce się czytać bełkot. Dlatego nu
 
 Wystarczy, że skorzystasz z Google. Może uda znaleźć Ci się tą zawartość *za darmo*?
 
- [1]: /blog-content/sms.html
+ [1]: https://spreadsheets.google.com/spreadsheet/pub?hl=en_US&hl=en_US&key=0AjrMNuhf_t4wdHZpN19yamEzMW01dG5rSGE5UFZFSHc&output=html

@@ -14,6 +14,6 @@ title: KwBot
 <li><strong><code>g</code></strong> &mdash; searches Google.</li>
 <li><strong><code>tiny</code>, <code>bitly</code></strong> &mdash; shortens an URL with <a href="http://kwpl.tk">kwpl.tk</a>.</li>
 <li><strong><code>title</code></strong> &mdash; shows the link&#8217;s title.</li>
-<li><strong><code>tr</code></strong> &mdash; translates with Google Translate. (<a href="http://kwpolska.co.cc/kwbot/langs/">Supported Languages</a>)</li>
+<li><strong><code>tr</code></strong> &mdash; translates with Google Translate. (<a href="http://kwpolska.tk/kwbot/langs/">Supported Languages</a>)</li>
 <li><strong><code>seen</code></strong> &mdash; returns lastest user message on channel and date of sending.</li>
 </ul>

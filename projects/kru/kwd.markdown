@@ -6,7 +6,7 @@ layout: projects
 **License:** GPLv3  
 **[Download](https://github.com/downloads/Kwpolska/kru/kwd.tar.gz)**
 
-KWD.  Awesome READMEs in 10 secs.
+KWD.  Awesome READMEs in 10 seconds flat.
 ==============
 
 PURPOSE
@@ -17,9 +17,16 @@ INSTALLATION
 ------------
 Check out INSTALL.md.
 
+NOTES
+-----
+There are two versions of KWD available: the Python version and the
+original Perl version.  The Perl version is in original-perl/
+directory.  The Python version (KWD2/KWD v2) is the current version.
+If you can, use the Python version.
+
 COPYRIGHT
 ---------
-Copyright (C) 2010 Kwpolska.
+Copyright (C) 2010-2011 Kwpolska.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
