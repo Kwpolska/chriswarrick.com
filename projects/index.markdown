@@ -2,14 +2,13 @@
 layout: projects
 title: Projects
 ---
-**I’ve made some PHP, bash, Perl and Python stuff. You can browse all of them here or at [GitHub][1].**
+**I’ve made some PHP, Python and bash stuff. You can browse all of them here or at [GitHub][1].**
 
 *   [KwPastebin][2]
 *   [KwPortal][3]
 *   [KRU][4] 
     *   [KwInstaller][5]
     *   [KWD][6]
-    *   [KPG][7]
     *   [MultiGit][8]
     *   [PKGBUILDer][9]
     *   [unpacker][10]

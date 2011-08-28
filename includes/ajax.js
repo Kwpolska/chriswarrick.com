@@ -2,7 +2,7 @@ function getFile(fileName, elementToUpdate) {
     $.ajaxSetup ({
         cache: false
     });
-    var ajax_load = "<img src='images/spinner.gif' alt=\"Loading...\">";
+    var ajax_load = "<img src='/images/spinner.gif' alt=\"Loading...\">";
 
     var loadUrl = fileName;
     $(elementToUpdate).html(ajax_load).load(loadUrl);

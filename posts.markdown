@@ -7,6 +7,7 @@ The blog consists of 6 categories:
 Category          | Description
 ------------------|-----------------------------------
 [Blog][1]         | Posts about the blog.
+[Intrernet][7]    | Posts about stuff in the Internet.
 [Jekyll][2]       | Posts about Jekyll.
 [GNU/Linux][3]    | Posts about GNU/Linux.
 [Programming][4]  | Posts about programming/scripting.
@@ -21,4 +22,4 @@ Category          | Description
  [4]: /programming/  "Prorgramming"
  [5]: /webmastering/ "Webmastering"
  [6]: /wordpress/    "WordPress"
- [7]: /windows/      "Windows"
+ [7]: /internet/     "Internet"

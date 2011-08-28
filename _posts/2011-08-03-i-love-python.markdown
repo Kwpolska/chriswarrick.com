@@ -20,14 +20,14 @@ The Perl version (search in the repo, linked above) had 56 lines.  In
 short, it did something like this (rewritten to bash):
 
     {% highlight bash %}
-    function generate(package) {
-        wget http://aur.archlinux.org/$package/$package.tar.gz
-        tar -xzvf $package.tar.gz
-        cd $package
-        makepkg -si
-        cd ..
-    }
-    for package in $@, do generate(package); done{% endhighlight %}
+function generate(package) {
+    wget http://aur.archlinux.org/$package/$package.tar.gz
+    tar -xzvf $package.tar.gz
+    cd $package
+    makepkg -si
+    cd ..
+}
+for package in $@, do generate(package); done{% endhighlight %}
 
 This code is really, REALLY bad.  But it worked for me, because the
 “normal” AUR helpers were slow.  I wanted to do something about it.  I put

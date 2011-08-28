@@ -22,7 +22,10 @@ NOTES
 There are two versions of KWD available: the Python version and the
 original Perl version.  The Perl version is in original-perl/
 directory.  The Python version (KWD2/KWD v2) is the current version.
-If you can, use the Python version.
+You can convert your files using 1to2.py.
+
+KWD stores config, licenses and the template in ~/.kwd/ (created by
+the config script).
 
 COPYRIGHT
 ---------

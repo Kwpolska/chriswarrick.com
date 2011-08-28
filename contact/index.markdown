@@ -2,7 +2,7 @@
 layout: page
 title: Contact/About Me
 ---
-I am a PHP, Perl, Python and bash scripter.  You can find some of my projects at github (see below).
+I am a PHP, Python, Perl and Bash scripter.  You can find some of my projects at github (see below).
 
 ## Contact
 
@@ -26,7 +26,7 @@ I am a PHP, Perl, Python and bash scripter.  You can find some of my projects at
 * GPG key: 0x5EAAEA16 (`gpg --keyserver hkp://keys.gnupg.net --recv-key 0x5EAAEA16`, [kwpolska.asc][])
 * **Twitter** — [@Kwpolska][twitter]
 * **YouTube** — [Kwpolska][youtube]
-* blip —  ^[kwpolska][blip]
+* tumblr — [kwpolska @ tumblr.][tumblr]
 * github — [Kwpolska][github]
 * Geek code: [kwpolska.geek][]
 
@@ -34,8 +34,7 @@ I am a PHP, Perl, Python and bash scripter.  You can find some of my projects at
  [kwpolska.asc]:     http://kwpolska.tk/pub/kwpolska.asc  "kwpolska.asc"
  [kwpolska.geek]:    http://kwpolska.tk/pub/kwpolska.geek "kwpolska.geek"
  [the contact form]: http://kwpolska.tk/contact/form.php  "Contact Form"
- [twitter]:          http://twitter.com/Kwpolska             "Twitter"
- [youtube]:          http://www.youtube.com/user/Kwpolska    "YouTube"
- [blip]:             http://kwpolska.blip.pl/                "Blip"
- [github]:           http://github.com/Kwpolska              "GitHub"
-
+ [twitter]:          http://twitter.com/Kwpolska          "Twitter"
+ [youtube]:          http://www.youtube.com/user/Kwpolska "YouTube"
+ [tumblr]:           http://kwpolska.tumblr.com/          "Tumblr"
+ [github]:           http://github.com/Kwpolska           "GitHub"

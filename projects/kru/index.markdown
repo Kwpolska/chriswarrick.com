@@ -12,7 +12,6 @@ This is a repo for all my smaller projects (in order of creation):
 
 * [KwInstaller][2]
 * [KWD][3]
-* [KPG][4]
 * [MultiGit][5] (previously Git Commiter)
 * [PKGBUILDer][6]
 * [unpacker][7]
