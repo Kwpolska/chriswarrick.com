@@ -1,0 +1,85 @@
+{% block predoctype %}{% endblock %}<!DOCTYPE html>
+<!-- https://github.com/paulirish/html5-boilerplate/blob/master/index.html -->
+<!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ -->
+<!--[if lt IE 7 ]> <html lang="en" class="no-js ie6"> <![endif]-->
+<!--[if IE 7 ]>    <html lang="en" class="no-js ie7"> <![endif]-->
+<!--[if IE 8 ]>    <html lang="en" class="no-js ie8"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--> <html lang="en" class="no-js"> <!--<![endif]-->
+<head lang="en">
+{% block starthead %}{% endblock starthead %}
+    <meta charset="UTF-8">
+    <title>{% block title %}{{ resource.meta.title }}{% endblock %} — Kw’s Home</title>
+    <meta name="description" content="{{ resource.meta.description }}">
+    <meta name="author" content="{{ resource.meta.author }}">
+    <!--  Mobile viewport optimized: j.mp/bplateviewport -->
+    <meta name="viewport" content="{{ resource.meta.viewport }}">
+
+    <link rel="canonical" href="{{ content_url(resource.meta.url) }}">
+    <link rel="home" href="http://kwpolska.tk">
+    <link rel="prev" href="{{ content_url(resource.prev_by_time.url) }}">
+    <link rel="next" href="{{ content_url(resource.next_by_time.url) }}">
+
+    {% block favicons %}
+    <link rel="shortcut icon" href="{{ media_url('favicon.ico') }}">
+    <link rel="apple-touch-icon" href="{{ media_url('apple-touch-icon.png') }}">
+    {% endblock favicons %}
+
+    {% block css %}
+    <link rel="stylesheet" href="{{ media_url('css/style.css') }}">
+    <!--link rel="stylesheet" href="{{ media_url('css/syntax.css') }}">-->
+    {% endblock css %}
+
+    {% block headjs %}
+      <script src="{{ media_url('js/libs/modernizr-2.0.6.min.js') }}"></script>
+    {% endblock headjs %}
+    {% block endhead %}{% endblock endhead %}
+</head>
+<body id="{{ resource.meta.id if resource.meta.id else resource.slug }}">
+{% block content %}
+    {% block header %}
+    <header>
+        {% block nav %}
+        <nav id="sitenav">
+            <div id="logo"><a href="http://kwpolska.tk"><img src="http://kwcdn.tk/images/transparent.png" alt="Kw"></a></div>
+            {% block menu %}
+            {% from "macros.j2" import render_nav with context %}
+            {{ render_nav(menu, 'main_nav') }}
+            {% endblock %}
+            <h1 id="sitetitle">{{ resource.meta.title }}</h1>
+        {% endblock nav %}
+        </nav>
+    </header>
+    {% endblock header %}
+
+    {% block container %}
+    <section class="content">
+{% block main %}
+{% endblock main %}
+    </section>
+    {% endblock container %}
+    <footer>Copyright © 2009-2011 Kwpolska. Brought to you by <a href="http://hyde.github.com">Hyde</a>.  Licensed under <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/">CC BY-NC-ND</a>.</footer>
+{% endblock content %}
+{% block js %}
+    <!-- Javascript at the bottom for fast page loading -->
+    {% block jquery %}
+    <!-- Grab Google CDN's jQuery, with a protocol relative URL; fall back to local if necessary -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.js"></script>
+    <script>window.jQuery || document.write('<script src="js/libs/jquery-1.6.4.min.js">\x3C/script>')</script>
+    {% endblock jquery %}
+
+    {% block scripts %}
+    {% endblock scripts %}
+
+
+    <!--[if lt IE 7 ]>
+      <script src="js/libs/dd_belatedpng.js"></script>
+      <script>DD_belatedPNG.fix('img, .png_bg'); // Fix any <img> or .png_bg bg-images. Also, please read goo.gl/mZiyb </script>
+    <![endif]-->
+
+    {% block analytics %}
+    {% include "analytics.j2" %}
+    {% endblock analytics %}
+
+{% endblock js %}
+</body>
+</html>

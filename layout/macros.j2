@@ -1,0 +1,47 @@
+{% macro render_excerpt(res, class=None) %}
+{% refer to res.url as post %}
+<article>
+<header>
+<h1><a href="{{ content_url(res.url|replace('-', '/', 3)|replace('.html', '/')) }}/">{{ res.meta.title }}</a></h1>
+<div>Published <time datetime="{{ res.meta.created.strftime('%Y-%m-%d') }}">{{ res.meta.created.strftime('%B %d, %Y') }}</time></div>
+<div class="tags">Tags: {% for tag in res.meta.tags %}<a href="{{ content_url('blog/tags/'~tag~'.html') }}">{{ tag }}</a>; {% endfor %}</div>
+</header>
+<div class="text clearfix">
+<p>{{ post.image }}</p>
+{{ post.excerpt|markdown|typogrify }}
+</div>
+<footer><a href="{{ content_url(res.url|replace('-', '/', 3)|replace('.html', '/')) }}/" title="{{ res.meta.title }}" class="more">Read More</a> <a href="{{ content_url(res.url) }}#comments" title="Comments for {{ res.meta.title }}" class="comments">Comments</a></footer>
+</article>
+{% endmacro %}
+
+{% macro render_nav(menu, cls=None, forceditem=None) -%}
+{% if menu -%}
+    <ul>
+        {% for item in menu -%}
+        {% set active = False -%}
+        {% if item.type == 'page' -%}
+            {% set active = (resource.url ==
+                site.content.resource_from_relative_path(item.url).url) -%}
+        {% else -%}
+            {% set active = (node ==
+                site.content.node_from_relative_path(item.url)) -%}
+        {%- endif %}
+        {% if forceditem == item.name %}
+            {% set active = forceditem %}
+        {% endif %}
+        {% set classes = ['menuitem'] -%}
+        {% do classes.append('active') if active -%}
+        {% do classes.append(item.css_class) if item.css_class -%}
+        <li>
+            <a title="{{ item.description }}"
+                class="{{ classes|join(' ') }}"
+                href="{{ content_url(item.url|replace('index.html', '')|replace('index.php', '')) }}">
+                {{ item.name }}
+            </a>
+        </li>
+
+        {%- endfor %}
+    </ul>
+{%- endif %}
+{%- endmacro %}
+

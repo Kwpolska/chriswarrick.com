@@ -1,0 +1,26 @@
+{% from "macros.j2" import render_excerpt, render_post with context %}
+{% filter forceescape -%}[
+{% for res in resource.node.walk_resources_sorted_by_time() %}
+ {"title": "{ res.meta.title }}",
+  "author": "{{ res.meta.author }}",
+  "link": "http://kwpolska.tk{{ content_url(res.url|replace('-', '/', 3)|replace('.html', '/')) }}/",
+  "created": "{{ res.meta.created|xmldatetime }}",
+  "tags": [{% for tag in res.meta.tags %}
+           "{{ tag }}",
+{% endfor %}           "KwsBlog"
+          ],
+  "image": "{{ article.image }}",
+  "excerpt": "{{ article.excerpt }},
+  "excerpthtml": "{{ article.excerpt|markdown|typogrify }}",
+  "content": "{{ article.content|markdown|typogrify }}"
+ },
+{% endfor %}
+
+ {"type": "kwjson2/blog",
+  "title": "{% block title %}{{ resource.meta.title|default(feed_title) }}{% endblock %}",
+  "self": "http://kwpolska.tk{{ content.url(resource.url) }}",
+  "site": "http://kwpolska.tk{{ content.url('') }}",
+  "updated": "{{ time_now|xmldatetime }}",
+  "copyright": "Copyright (C) 2011 Kwpolska.  Licensed under CC BY-NC-ND."
+ }
+]{%- endfilter %}
