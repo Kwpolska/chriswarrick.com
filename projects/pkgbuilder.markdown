@@ -1,27 +1,42 @@
 ---
-layout: ajax
-title: Kw's Supybot Plugins
+title: PKGBUILDer
+layout: projects
 ---
-**Name:** Kw's Supybot Plugins  
-**License:** 3-clause BSD  
-**[Download](https://github.com/Kwpolska/kwsupyplugs/tarball/master)**  
+**Name:** PKGBUILDer  
+**License:** GPLv3  
+**Download:**
 
-Kw's Supybot Plugins.  Useless addons to your supy.
-==============
+ * [PyPI (recommended)](http://pypi.python.org/pypi/pkgbuilder)
+ * [git master branch](https://github.com/Kwpolska/pkgbuilder/tarball/master)
+
+PKGBUILDer.  A Python AUR helper/library.
+=========================================
 
 PURPOSE
 -------
-These plugins are being ran by my bot, KwBot, idling in some channels on freenode.
+Building and installing AUR packages.
 
 INSTALLATION
 ------------
+Copy pkgbuilder.py to /usr/bin or ~/bin.  You need to install
+pyalpm from [extra] and python3-aur from the AUR.
 
-Put the plugins you want to `/usr/lib/python2.X/site-packages/supybot/plugins`
-(or wherever it may be).  Ask your bot to load them.
+NOTES
+-----
+This is Version 2 of PKGBUILDer.  The original Perl version is included,
+but it shall not be used.
+
+Version 2.1 is a big leap forward.  It introduces many new features.
+It is now stable.  It is now available as an AUR and PyPI package.
+
+The -S (DS.pacman) parameter adds pacman wrapper compatibility.
+
+For more info, refer to the pkgbuilder(8) man page or HTML docs in
+docs/html.
 
 COPYRIGHT
 ---------
-Copyright (c) 2011, Kwpolska
+Copyright (C) 2011, Kwpolska
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without

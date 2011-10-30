@@ -9,14 +9,13 @@ title: Projects
 *   [KRU][4] 
     *   [KwInstaller][5]
     *   [KWD][6]
-    *   [MultiGit][8]
-    *   [PKGBUILDer][9]
+    *   [MultiGit][8] (previously Git Commiter)
     *   [unpacker][10]
     *   [sha512sum][11]
     *   [syu][12]
     *   [KCAPTCHA][13]
-*   [Lanyon][14]
-*   [Kw’s Supybot Plugins][15]
+    *   [Lanyon][14] (originally standalone)
+*   [PKGBUILDer][9] (originally a part of KRU)
 
  [1]:  https://github.com/Kwpolska "My github page"
  [2]:  /projects/kwpastebin/ "KwPastebin"
@@ -26,10 +25,10 @@ title: Projects
  [6]:  /projects/kru/kwd/ "KWD"
  [7]:  /projects/kru/kpg/ "KPG"
  [8]:  /projects/kru/gitcommiter/ "Git Commiter"
- [9]:  /projects/kru/pkgbuilder/ "PKGBUILDer"
+ [9]:  /projects/pkgbuilder/ "PKGBUILDer"
  [10]: /projects/kru/unpacker/ "unpacker"
  [11]: /projects/kru/sha512sum/ "sha512sum"
  [12]: /projects/kru/syu/ "syu"
- [13]: /projects/kru/kcaptcha "KCAPTCHA"
- [14]: /projects/lanyon/ "Lanyon"
- [15]: /projects/kwsupyplugs/ "KwSupyPlugs"
+ [13]: /projects/kru/kcaptcha/ "KCAPTCHA"
+ [14]: /projects/kru/lanyon/ "Lanyon"
+

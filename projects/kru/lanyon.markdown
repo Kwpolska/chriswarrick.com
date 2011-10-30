@@ -1,10 +1,10 @@
 ---
-layout: projects
 title: Lanyon
+layout: projects
 ---
 **Name:** Lanyon  
 **License:** GPLv3  
-**[Download](https://github.com/Kwpolska/lanyon/tarball/master)**
+**[Download](https://github.com/downloads/Kwpolska/kru/lanyon.tar.gz)**
 
 Lanyon. A Jekyll WebUI.
 ==============

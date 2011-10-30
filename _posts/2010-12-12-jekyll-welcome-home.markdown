@@ -14,4 +14,4 @@ This is a jekyll post. *I* can use Markdown. **You** cannot. And for the sake of
 
 You can see a [comparison of Jekyll and WordPress posts][3]).
 
- [3]: http://kwpolska.tk/blog-content/htmlvsmd.html
+ [3]: http://kwcdn.tk/blog-content/htmlvsmd.html

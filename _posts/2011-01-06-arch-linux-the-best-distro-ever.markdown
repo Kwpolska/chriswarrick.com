@@ -7,7 +7,7 @@ category: gnulinux
 
 <!--more-->
 
-Arch Linux is a Linux distribution by Judd Vinet and Aaron Griffin, existing since 2002, intended to be simple, elegant, versatile and expedient (See Reason #3). It uses pacman as the package manager. It&#8217;s a rolling-release distro, that means there are only new CD images released, you get updates even if you&#8217;ve installed Arch Linux v0.1. The current CD release is **2010.05**.
+Arch Linux is a Linux distribution by Judd Vinet and Aaron Griffin, existing since 2002, intended to be simple, elegant, versatile and expedient (See Reason #3). It uses pacman as the package manager. It&#8217;s a rolling-release distro, that means there are only new CD images released, you get updates even if you&#8217;ve installed Arch Linux v0.1. The current CD release is **2011.08.19** (updated 8/28/11 1:48pm).
 
 # What makes it so awesome?
 There are six things that makes it the best distro:
@@ -30,7 +30,7 @@ Arch Linux has a strong community: there are many people on the [IRC channel][IR
 ## Reason 6. The rolling-release model
 Arch uses an rolling-release model, described above (and quoted below).
 
-> It&#8217;s a rolling-release distro, that means there are only new CD images released, you get updates even if you&#8217;ve installed Arch Linux v0.1. The current CD release is **2010.05**.
+> It&#8217;s a rolling-release distro, that means there are only new CD images released, you get updates even if you&#8217;ve installed Arch Linux v0.1. The current CD release is **2011.08.19** (updated 8/28/11 1:48pm).
 
 <hr>
 

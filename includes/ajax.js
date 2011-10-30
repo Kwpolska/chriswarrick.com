@@ -2,10 +2,10 @@ function getFile(fileName, elementToUpdate) {
     $.ajaxSetup ({
         cache: false
     });
-    var ajax_load = "<img src='/images/spinner.gif' alt=\"Loading...\">";
+    var ajax_load = "<img src='http://kwcdn.tk/images/spinner.gif' alt='Loading...'>";
 
     var loadUrl = fileName;
-    $(elementToUpdate).html(ajax_load).load(loadUrl);
+    $('#projectinfo').html(ajax_load).load(loadUrl);
 }
 
 
@@ -20,5 +20,5 @@ function ajaxBox(url, title) {
       var base = '<div id="header"><h1>'+title+'</h1><button onclick="closeAjaxBox();">Close</button></div><div id="msgboxcontents">Loading...</div>';*/
     newdiv.innerHTML='<div id="header"><h1>'+title+'</h1><button onclick="closeAjaxBox();">Close</button></div><div id="msgboxcontents">Loading...</div>';
     document.childNodes[1].appendChild(newdiv);
-    getFile(url, 'msgboxcontents');
+    getFile(url, '#msgboxcontents');
 }
