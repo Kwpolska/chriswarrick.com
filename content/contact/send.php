@@ -1,7 +1,8 @@
-
-layout: page-cform
+---
+extends: base-cform.j2
+default_block: main
 title: Contact Form
-
+---
 <?php
 /*require_once '/home/Kwpolska/www/captcha.php';*/
 function showError($contents) { //very helpful functionality.
