@@ -42,6 +42,7 @@ function vfbpauth() {
                 if(data == '{"vfbpjs": "results", "auth": "true"}') {
                     $('#vfbpjsresults').html = 'Authenticated as a human being! (or a bot with JS support)';
                     $('[name="vfbpq"]').val('[ignored]');
+                    document.write('WORKS, now make those other two jerks above me do the same');
                 } else {
                     $('#vfbpjsresults').html = 'JS authentication failed, retrying...';
                     vfbpauth();
