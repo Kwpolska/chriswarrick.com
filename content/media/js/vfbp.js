@@ -39,7 +39,7 @@ function vfbpauth() {
 	$.post("http://kwpolska.tk/contact/antibot.php",
 			{'json': '{"vfbpjs": "auth", "token" = "'+$('[name="vfbpjstoken"]').val()+'"}'},
 			function(data) {
-				echo(data);
+				document.write(data);
 				if(data.auth == true) {
 					$('#vfbpjsresults').html = 'Authenticated as a human being! (or a bot with JS support)';
 					$('[name="vfbpq"]').val('[ignored]');
