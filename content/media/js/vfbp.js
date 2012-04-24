@@ -33,24 +33,23 @@
  */
 
 function vfbpauth() {
-	$.ajaxSetup ({
+    $.ajaxSetup ({
         cache: false
     });
-	$.post("http://kwpolska.tk/contact/antibot.php",
-			{'json': '{"vfbpjs": "auth", "token": "'+$('[name="vfbpjstoken"]').val()+'"}'},
-			function(data) {
-				document.write($.parseJSON(data));
-				if($.parseJSON(data).auth == "true") {
-					$('#vfbpjsresults').html = 'Authenticated as a human being! (or a bot with JS support)';
-					$('[name="vfbpq"]').val('[ignored]');
-				} else {
-					$('#vfbpjsresults').html = 'JS authentication failed, retrying...';
-					vfbpauth();
-				}
-			});
+    $.post("http://kwpolska.tk/contact/antibot.php",
+            {'json': '{"vfbpjs": "auth", "token": "'+$('[name="vfbpjstoken"]').val()+'"}'},
+            function(data) {
+                if(data == ''{"vfbpjs": "results", "auth": "true"}'') {
+                    $('#vfbpjsresults').html = 'Authenticated as a human being! (or a bot with JS support)';
+                    $('[name="vfbpq"]').val('[ignored]');
+                } else {
+                    $('#vfbpjsresults').html = 'JS authentication failed, retrying...';
+                    vfbpauth();
+                }
+            });
 }
 
 $(document).ready(function() {
-	$('#vfbpjsresults').html = 'JavaScript detected: attempting anti-bot authentication...';
-	vfbpauth();
+    $('#vfbpjsresults').html = 'JavaScript detected: attempting anti-bot authentication...';
+    vfbpauth();
 });
