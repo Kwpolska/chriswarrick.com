@@ -4,7 +4,7 @@ default_block: main
 title: Contact Form
 description: Want to talk to me?  Go for it.  Here’s the right form.
 ---
-<script src="/media/vfbp.js"></script>
+<script src="/media/js/vfbp.js"></script>
 <style>label {display: inline;}</style>
 <form action="/contact/send.php" method="post" id="form">
     <article>
