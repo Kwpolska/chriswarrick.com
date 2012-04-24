@@ -40,7 +40,7 @@ function vfbpauth() {
 			{'json': '{"vfbpjs": "auth", "token" = "'+$('[name="vfbpjstoken"]').val()+'"}'},
 			function(data) {
 				document.write(data);
-				if(data.auth == true) {
+				if(data.auth == "true") {
 					$('#vfbpjsresults').html = 'Authenticated as a human being! (or a bot with JS support)';
 					$('[name="vfbpq"]').val('[ignored]');
 				} else {
