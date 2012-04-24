@@ -38,9 +38,9 @@ function vfbpauth() {
     });
 	$.post("http://kwpolska.tk/contact/antibot.php",
 			{'json': '{"vfbpjs": "auth", "token" = "'+$('[name="vfbpjstoken"]').val()+'"}'},
-			function(jsondata) {
-				data = $.parseJSON(jsondata);
-				if(data.auth == "true") {
+			function(data) {
+				var rdata = $.parseJSON(data);
+				if(rdata.auth == "true") {
 					$('#vfbpjsresults').html = 'Authenticated as a human being! (or a bot with JS support)';
 					$('[name="vfbpq"]').val('[ignored]');
 				} else {
