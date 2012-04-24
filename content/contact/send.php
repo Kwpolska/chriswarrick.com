@@ -13,10 +13,6 @@ echo "<strong>Checking anti-bot protection... [VFBPJS v2]</strong>";
 /*if ($captcha != md5($_POST['captcha'])) showError("This is not the right
 CAPTCHA phrase."); //md5 = idiot-proof*/
 
-if ($_SESSION['vfbpjstoken'] != $_POST['vfbpjstoken']) {
-    showError("DO NOT HACK THE PAGE SOURCE!  As a punishment, not sending.".$_SESSION['vfbpjstoken'].' vs '.$_POST['vfbpjstoken']);
-}
-
 if ($_SESSION['vfbpjsauth'] != true && $_GET['vfbpq'] != $_SESSION['vfbpfnum']) {
     showError("No valid authentication.");
 }
