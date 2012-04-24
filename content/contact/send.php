@@ -5,18 +5,25 @@ title: Contact Form
 <?php
 /*require_once '/home/Kwpolska/www/captcha.php';*/
 function showError($contents) { //very helpful functionality.
-    die ("failed.<br><div class=\"error\"><strong>ERROR:</strong>
+    die (" failed.<br><div class=\"error\"><strong>ERROR:</strong>
          $contents</div>");
 }
-echo "<strong>Checking anti-bot question...</strong>";
+echo "<strong>Checking anti-bot protection... [VFBPJS v2]</strong>";
 /*if ($captcha != md5($_POST['captcha'])) showError("This is not the right
 CAPTCHA phrase."); //md5 = idiot-proof*/
-if ($_GET['abq'] != $_SESSION['fnum']) showError('This is not the valid
-answer.');
-echo " correct.<br><strong>Checking the fields...</strong>";
+
+if ($_SESSION['vfbpjstoken'] != $_POST['vfbpjstoken']) {
+    showError("DO NOT HACK THE PAGE SOURCE!  As a punishment, not sending.");
+}
+
+if ($_SESSION['vfbpjsauth'] != true && $_GET['vfbpq'] != $_SESSION['vfbpfnum']) {
+    showError("No valid authentication.");
+}
+
+echo " authenticated.<br><strong>Checking the fields...</strong>";
 if ($_POST['name'] == '' || $_POST['mail'] == '' || $_POST['subject'] == '' ||
 $_POST['message'] == '') showError('You haven\'t filled all the fields.');
-echo "all filled.<br><strong>Sending...</strong>";
+echo " all filled.<br><strong>Sending...</strong>";
 $subject = '[KBCF] '.$_POST['subject']; //I'm filtering my mail for [KBCF]
 $from = $_POST['name'].' <'.$_POST['mail'].'>';
 $dump = printf($_POST, true); //just in case...
@@ -30,7 +37,7 @@ $head = "From: ".$from.PHP_EOL."MIME-Version: 1.0".PHP_EOL."Content-Type:
 text/plain; charset=UTF-8".PHP_EOL."Content-Transfer-Encoding: 8bit";
 mail('Kwpolska <kwpolska@kwpolska.tk>', $subject, $message, $head) or
 showError("Failed to send the form. Please spam me through my generic mail.");
-echo ' sent.<br>Thanks for sending the message.';
+echo ' sent.<br>Thanks for your message.';
 session_destroy(); // kill the session.
 session_unset();
 ?>
