@@ -62,13 +62,13 @@ $_SESSION['vfbpjsauth'] = false;
 
 if(isset($_POST['json'])) {
     # JSON scheme:
-    # {"vfbpjs": "auth", "token" = "TOKEN"}
+    # {"vfbpjs": "auth", "token": "TOKEN"}
     $json = json_decode($_POST['json']);
     if($json['token'] = $_SESSION['vfbpjstoken']) {
         $_SESSION['vfbpjsauth'] = true;
-        echo '{"vfbpjs": "results", "auth" = "true"}';
+        echo '{"vfbpjs": "results", "auth": "true"}';
     } else {
-        echo '{"vfbpjs": "results", "auth" = "false"}';
+        echo '{"vfbpjs": "results", "auth": "false"}';
     }
 }
 ?>

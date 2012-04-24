@@ -37,10 +37,10 @@ function vfbpauth() {
         cache: false
     });
 	$.post("http://kwpolska.tk/contact/antibot.php",
-			{'json': '{"vfbpjs": "auth", "token" = "'+$('[name="vfbpjstoken"]').val()+'"}'},
+			{'json': '{"vfbpjs": "auth", "token": "'+$('[name="vfbpjstoken"]').val()+'"}'},
 			function(data) {
-				var rdata = $.parseJSON(data);
-				if(rdata.auth == "true") {
+				document.write($.parseJSON(data));
+				if($.parseJSON(data).auth == "true") {
 					$('#vfbpjsresults').html = 'Authenticated as a human being! (or a bot with JS support)';
 					$('[name="vfbpq"]').val('[ignored]');
 				} else {
