@@ -55,6 +55,7 @@ $_SESSION['let'] = chr($_SESSION['num'] + 64);
 $numbers = Array('first', 'second', 'third', 'fourth', 'fifth', 'sixth');
 $_SESSION['vfbpfnum'] = $numbers[$_SESSION['num'] - 1];
 
+/*
 ### AUTHENTICATION METHOD #2: AJAX.
 
 $token = uniqid('vfbp_');
@@ -71,5 +72,5 @@ if(isset($_POST['json'])) {
     } else {
         echo '{"vfbpjs": "results", "auth": "false"}';
     }
-}
+}*/
 ?>

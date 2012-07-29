@@ -15,8 +15,7 @@ description: Want to talk to me?  Go for it.  Here’s the right form.
             <label for="vfbpq"><code style="border: none;"><?php echo $_SESSION['let']; ?></code> is the</label> <input id="vfbpq" name="vfbpq" required class="required" style="width: 75px;"> letter of the alphabet.*<br>
             <input type="hidden" name="vfbpjstoken" id="vfbpjstoken" value="<?php echo $_SESSION['vfbpjstoken'] ?>">
             <input type="submit" value="Submit" style="float: right;" id="submit">
-            Your IP address will be saved.  All fields are required.<br>* please insert an ordinal number, eg. "first".<br>Anti-spam protection: field above or JS.  JS auth status:<br>
-            <div id="vfbpjsresults">No JavaScript or page not loaded yet.</div>
+            Your IP address will be saved.  All fields are required.<br>* please insert an ordinal number, eg. "first".
         </footer>
     </article>
 </form>
