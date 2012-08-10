@@ -1,9 +1,3 @@
----
-title: Projects/KRU/KWD
-extends: projects.j2
-default_block: main_project
-description: Awesome READMEs in 10 seconds flat.
----
 **Name:** KWD  
 **License:** 3-clause BSD  
 **[Download](https://github.com/downloads/Kwpolska/kru/kwd.tar.gz)**

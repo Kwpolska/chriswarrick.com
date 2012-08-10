@@ -1,6 +1,6 @@
-/*! Copyright (C) 2011, Kwpolska.  Licensed under the 3-clause BSD License. !*/
+/*! Copyright (C) 2011-2012, Kwpolska.  Licensed under the 3-clause BSD License. !*/
 
-/* Copyright (C) 2011, Kwpolska
+/* Copyright (C) 2011-2012, Kwpolska.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,6 +37,7 @@ projectlist = {
     '/projects/kwpastebin/': ['KwPastebin', 'kwpastebin'],
     '/projects/kwportal/': ['KwPortal', 'kwportal'],
     '/projects/pkgbuilder/': ['PKGBUILDer', 'pkgbuilder'],
+    '/projects/trashman/': ['Trashman', 'trashman'],
     '/projects/kru/': ['KRU', 'kru'],
     '/projects/kru/kwinstaller/': ['KRU/KwInstaller', 'kru/kwinstaller'],
     '/projects/kru/kwd/': ['KRU/KWD', 'kru/kwd'],
@@ -67,7 +68,7 @@ function loadProject(title, id, pushstate) {
         $(document).attr('title', 'Projects/'+title+' — Kw’s Home');
         $('#sitetitle').html('Projects/'+title);
         if (pushstate != false) {
-            history.pushState({ path: 'http://kwpolska.tk/projects/'+urlid+'/' }, '', 'http://kwpolska.tk/projects/'+id+'/');
+            history.pushState({ path: 'http://kwpolska.tk/projects/'+urlid+'/' }, '', 'http://kwpolska.tk/projects/'+urlid+'/');
         }
     }
 

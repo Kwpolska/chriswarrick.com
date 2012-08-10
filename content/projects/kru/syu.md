@@ -1,35 +1,33 @@
----
-title: Projects/KRU/KWD
-extends: projects.j2
-default_block: main_project
-description: Awesome READMEs in 10 seconds flat.
----
-**Name:** KWD  
+**Name:** syu  
 **License:** 3-clause BSD  
-**[Download](https://github.com/downloads/Kwpolska/kru/kwd.tar.gz)**
+**[Download](https://github.com/downloads/Kwpolska/kru/syu.tar.gz)**
 
-KWD.  Awesome READMEs in 10 seconds flat.
+syu.  Maintaining your Arch Linux since 1901.
 ==============
 
 PURPOSE
 -------
-This project was made for speeding up making all the READMEs.
+This script can do much more than just an update:
+
+    usage: syu [-h] [-t] [-l] [-o] [-r] [-c] [-a]
+
+    default behavior: Perform an update (pacman -Syu + pkgbuilder -Syu).
+    optional arguments:
+      -h, --help      show this message and exit
+      -t, --time      update time using NTP and exit
+      -l, --lock      unlock the pacman databas and exit
+      -o, --optimize  optimize the pacman database and exit
+      -r, --reflect   reflect the mirrors
+      -c, --cron      perform a cron-friendly update (NTP + pacman -Sy)
+      -a, --noaur     don't use pkgbuilder while updating.
 
 INSTALLATION
 ------------
-Check out INSTALL.md.
-
-NOTES
------
-The Python version (KWD2/KWD v2) is the current version.
-You can convert your files using 1to2.py.
-
-KWD stores config, licenses and the template in ~/.kwd/ (created by
-./configure.py).
+Copy it to somewhere in your $PATH.
 
 COPYRIGHT
 ---------
-Copyright (C) 2010-2012, Kwpolska.
+Copyright (C) 2011-2012, Kwpolska.
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
