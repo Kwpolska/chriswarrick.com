@@ -40,13 +40,18 @@ Type the name of the stylesheet you want.'
             testfor = raw_input('> ')
             colorf = findcolor(testfor)
 
-    return '<link rel="stylesheet" href="{{ media_url(\'css/%s\')\
-}}">' % colorf
+    colorf = os.path.basename(colorf)
+
+    return ['<link rel="stylesheet" href="{{ media_url(\'css/%s\')\
+}}">' % colorf,
+            '<link rel="stylesheet" href="{{ media_url(\'css/lite/%s\')\
+}}">' % colorf]
 
 
 def changecolor(color):
     ncolor = findcolor(color)
-    open('/home/kwpolska/hyde/layout/css.j2', 'w').write(ncolor)
+    open('/home/kwpolska/hyde/layout/css.j2', 'w').write(ncolor[0])
+    open('/home/kwpolska/hyde/layout/css-lite.j2', 'w').write(ncolor[1])
 
 if __name__ == '__main__':
     try:
