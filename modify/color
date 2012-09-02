@@ -11,8 +11,10 @@ import sys
 import glob
 import os.path
 
+
 def findcolor(color):
-    matches = glob.glob('/home/kwpolska/hyde/content/media/css/{0}*'.format(color)) #searching for the color in the CSS dir
+    matches = glob.glob('/home/kwpolska/hyde/content/media/css/{0}*'.format(
+        color))  # searching for the color in the CSS directory
     if len(matches) == 1:
         colorf = matches[0]
     elif len(matches) == 0:
@@ -24,21 +26,23 @@ def findcolor(color):
             if i.endswith('.min.css'):
                 sresults.append(i)
 
-
         if len(sresults) == 1:
             colorf = sresults[0]
         else:
             ask = True
 
-        if ask == True:
-            print 'There is more than one stylesheet matching.  Type the name of the stylesheet you want.'
+        if ask:
+            print 'There is more than one stylesheet matching.  \
+Type the name of the stylesheet you want.'
             print 'Matches:'
             for i in matches:
                 print os.path.basename(i)
             testfor = raw_input('> ')
             colorf = findcolor(testfor)
 
-    return """<link rel="stylesheet" href="{{ media_url('css/%s') }}">""" % colorf
+    return '<link rel="stylesheet" href="{{ media_url(\'css/%s\')\
+}}">' % colorf
+
 
 def changecolor(color):
     ncolor = findcolor(color)
