@@ -1,11 +1,12 @@
 #!/usr/bin/python2
-#hyde/modify blognotice
-#Copyright 2012 Kwpolska.
-#usage: ./blognotice
+# -*- coding: utf-8 -*-
+# hyde/modify blognotice
+# Copyright © 2012 Kwpolska.
+# usage: ./blognotice.py
 
 """hyde/moficy blognotce
-Copyright 2012 Kwpolska.
-usage: ./blognotice"""
+Copyright © 2012 Kwpolska.
+usage: ./blognotice.py"""
 
 import sys
 

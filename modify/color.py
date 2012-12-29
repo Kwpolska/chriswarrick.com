@@ -1,11 +1,12 @@
 #!/usr/bin/python2
-#hyde/modify color
-#Copyright 2012 Kwpolska.
-#usage: ./color STYLESHEET
+# -*- coding: utf-8 -*-
+# hyde/modify color
+# Copyright © 2012 Kwpolska.
+# usage: ./color.py STYLESHEET
 
 """hyde/modify color
-Copyright 2012 Kwpolska.
-usage: ./color STYLESHEET"""
+Copyright © 2012 Kwpolska.
+usage: ./color.py STYLESHEET"""
 
 import sys
 import glob
