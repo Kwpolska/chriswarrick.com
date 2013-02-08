@@ -1,5 +1,5 @@
 .. title: Nikola — The Best Blog Engine Ever!
-.. slug: nikola-the-best-blog-engine-ever
+.. slug: 2013-02-08-nikola-the-best-blog-engine-ever
 .. date: 2013/02/08 14:01:51
 .. tags: Nikola, blog, Python
 .. link:
@@ -59,7 +59,8 @@ RST, but that’s not a problem.
 Plans for the future
 ====================
 
-I did transition the blog, but not everything is done yet.
+I did transition the blog, but not everything is done yet.  I need to create a
+**Contact form** and a **Project page**.  Both should be done by Sunday.
 
 .. _Nikola: http://nikola.ralsina.com.ar/
 .. _Planet Python: http://planet.python.org/
