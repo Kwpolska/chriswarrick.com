@@ -1,0 +1,36 @@
+## -*- coding: utf-8 -*-
+<%namespace name="helper" file="post_helper.tmpl"/>
+<%namespace name="disqus" file="disqus_helper.tmpl"/>
+<%inherit file="base.tmpl"/>
+<%block name="content">
+    ${helper.html_pager(post)}
+    <article class="postbox" id="article">
+    <header class="page-header">
+    <h1><a href="${post.permalink(lang)}">${post.title(lang)}</a>
+    <small>
+        ${post.date.strftime(date_format)} <br> ${helper.html_tags(post)}
+    </small>
+    </h1>
+    </header>
+    <div class="text">
+    ${post.text(lang)}
+    </div>
+    <footer><a href="#disqus_thread">comments</a></footer>
+    </article>
+
+    <article class="postbox" id="comments">
+    <header class="page-header">
+    <h1>Comments <small>Brought to you by <a href="http://disqus.com">DISQUS</a>.</small></h1>
+    </header>
+    <div class="text">
+    ${disqus.html_disqus(post.permalink(absolute=True), post.title(lang), post.permalink(absolute=False))}
+    </div>
+    <footer>leave a comment above.</footer>
+    </article>
+</%block>
+
+<%block name="sourcelink">
+    <li>
+    <a href="${post.pagenames[lang]+post.source_ext()}" id="sourcelink">${messages[lang]["Source"]}</a>
+    </li>
+</%block>
