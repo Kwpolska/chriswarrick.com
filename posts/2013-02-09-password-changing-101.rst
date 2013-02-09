@@ -88,6 +88,10 @@ Microsoft
     for Windows 8, making it even less secure, considering that `passwords are
     saved using a reversible encryption method if you use the fancy new
     authentication methods (PIN/Picture Password) <http://arstechnica.com/security/2012/10/experts-windows-8-features-make-account-passwords-easier-to-steal/>`!
+PayPal
+    I trust them with my money, but they believe that my password is weak (1/3)
+    and have a 20 character limit.  I took the half and added a ``!`` so they
+    would let me use it.
 Steam
     You need to do it from within the desktop app.  Which crashes for me under
     Linux due to a recent update.  And I need to do important work under Linux.
