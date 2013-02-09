@@ -20,7 +20,7 @@ Other contact methods
 
 * **by mail** — kwpolska [using Google apps at] kwpolska.tk (or kwpolska
   [using the great services at] gmail.com)
-* by Jabber/XMPP — kwpolska \[using the great services at\] gmail.com
+* by Jabber/XMPP/Google Talk — kwpolska \[using the great services at\] gmail.com
 * by Gadu-Gadu, the world&#8217;s worst communicator — seven million five hundred twenty-one thousand four hundred five
 * **by IRC** — Kwpolska@freenode; Kwpolska@rizon.
 * **by Twitter** — `@Kwpolska <https://twitter.com/Kwpolska>`_

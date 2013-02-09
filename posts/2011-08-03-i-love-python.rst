@@ -7,7 +7,7 @@
 .. raw:: html
 
     <figure>
-    <a href="http://python.org" title="Python"><img src="http://kwcdn.tk/blog-content/logos/python.png" alt="Python logo"></a>
+    <a href="http://python.org" title="Python"><img src="http://kwpolska.tk/blog-content/logos/python.png" alt="Python logo"></a>
     <figcaption>Python logo</figcaption>
     </figure>
 
