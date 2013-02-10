@@ -1,5 +1,5 @@
 .. title: Password Changing 101
-.. slug: password-changing-101
+.. slug: 2013-02-09-password-changing-101
 .. date: 2013/02/09 13:26:04
 .. tags: Internet, password, rant
 .. link: 
