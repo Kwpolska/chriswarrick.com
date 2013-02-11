@@ -1,25 +1,21 @@
-.. title: Contact/About Me
+.. title: Contact
 .. slug: contact
 .. date: 2013-02-07 00:00:00
 .. link: 
 .. description: 
 
 
-I am a Pythonista (also writing {ba,z,}sh scripts and, unfortunately, PHP).  You can find some of my projects at GitHub (see below).
+I am a Pythonista (also writing {ba,z,}sh scripts and, unfortunately, PHP).  You can find some of my projects at `GitHub <https://github.com/Kwpolska>`_.
 
 .. TEASER_END
 
 Contact Form
 ============
 
-Not yet ready, please use a method from below.  Sorry for the
-inconvenience.
-
-
 .. raw:: html
 
     <form id="contact" class="form-horizontal" action="php/contact-send.php" method="POST">
-      <div id="errors-go-here"></div>
+      <div id="messages-go-here"></div>
       <div class="control-group" id="cg-name">
         <label class="control-label" for="name">Name</label>
         <div class="controls">
@@ -39,9 +35,7 @@ inconvenience.
         </div>
       </div>
       <div class="control-group" id="cg-sqrt">
-        <label class="control-label" for="sqrt"><img
-        alt="sqrt(16) = " title="sqrt(16) = "
-        src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADcAAAAUBAMAAADbzbjtAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAu0SIZiKZEd3MM6ruVXe8k8wzAAAAvUlEQVR4Xq3NOwrCQABF0ZeZFBELP6CtMYVglcraEcE2ARdgwAU4uAIbETu7tKms7GzsYm2bDbgDIWKtJjMIGcdU3vbAe/hUe8qgySvDEL8zgxK0/BKcAH0A+7atwTVGMUAudKe/dAGLUc13xc/R+3omG6CHHIfjIy9icgdaAjvXagDQRlYk9ARSl8jNB4q5zLAFLkBSBY1VFwJvb1RmzbQpcRbRM5S22eU0nvs0PDAVvexy6TgcyQBqFH/uBRUaMPEfWp7UAAAAAElFTkSuQmCC"></label>
+        <label class="control-label" for="sqrt">sqrt(16) = </label>
         <div class="controls">
           <input type="number" name="sqrt" id="sqrt" placeholder="sqrt(16) = ">
         </div>
@@ -66,7 +60,7 @@ Other contact methods
 * **by mail** — kwpolska [using Google apps at] kwpolska.tk (or kwpolska
   [using the great services at] gmail.com)
 * by Jabber/XMPP/Google Talk — kwpolska \[using the great services at\] gmail.com
-* by Gadu-Gadu, the world&#8217;s worst communicator — seven million five hundred twenty-one thousand four hundred five
+* by Gadu-Gadu, the world’s worst communicator — seven million five hundred twenty-one thousand four hundred five
 * **by IRC** — Kwpolska@freenode; Kwpolska@rizon.
 * **by Twitter** — `@Kwpolska <https://twitter.com/Kwpolska>`_
 

@@ -1,5 +1,4 @@
 <?php
-header('Content-Type: text/plain');
 $emptyfields = array();
 
 if (empty($_POST['name'])) {
@@ -23,22 +22,21 @@ if (empty($_POST['sqrt'])) {
 }
 
 if ((int)$_POST['sqrt'] !== 4) {
-    die(json_encode(array('status' => 'sqrt')));
+    die('<strong>Failed!</strong>  Reason: wrong answer to sqrt(16) security question.');
 }
 
 if (empty($emptyfields)) {
     $from = $_POST['name'].' <'.$_POST['mail'].'>';
     $message = wordwrap($message, 70);
-    $head = "From: ".$from.PHP_EOL."MIME-Version: 1.0".PHP_EOL."Content-Type:
-        text/plain; charset=UTF-8".PHP_EOL."Content-Transfer-Encoding: 8bit";
-    $ret = mail('Kwpolska <kwpolska@kwpolska.tk>', $_POST['subject'], $_POST['message'], $head);
+    $head = "From: ".$from.PHP_EOL."MIME-Version: 1.0".PHP_EOL."Content-Type: text/plain; charset=UTF-8".PHP_EOL."Content-Transfer-Encoding: 8bit";
+    $ret = mail('Kwpolska <blogform@kwpolska.tk>', $_POST['subject'], $message, $head);
 
     if ($ret == true) {
-        echo json_encode(array('status' => 'ok'));
+        echo '<strong>Done!</strong>  Your message was successfully sent.';
     } else {
-        echo json_encode(array('status' => 'error'));
+        echo '<strong>Failed!</strong>  An unknown error occurred.';
     }
 } else {
-    echo json_encode(array('status' => 'fields', 'empty' => $emptyfields));
+    echo '<strong>Failed!</strong>  The following fields were empty: '.implode(', ', $emptyfields).'.';
 }
 ?>

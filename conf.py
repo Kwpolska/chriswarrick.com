@@ -42,6 +42,7 @@ post_pages = (
     ("posts/*.rst", "blog", "post.tmpl", True),
     ("stories/*.rst", "", "story.tmpl", False),
     ("stories/*.html", "", "story.tmpl", False),
+    ("stories/*.php", "", "story.tmpl", False),
 )
 
 # One or more folders containing files to be copied as-is into the output.
@@ -65,7 +66,7 @@ post_compilers = {
     "bbcode": ('.bb',),
     "wiki": ('.wiki',),
     "ipynb": ('.ipynb',),
-    "html": ('.html', '.htm')
+    "html": ('.html', '.htm'),
     }
 
 # Nikola is multilingual!
@@ -237,7 +238,7 @@ DISQUS_FORUM = 'kwpolska'
 # Create index.html for story folders?
 STORY_INDEX = True
 # Enable comments on story pages?
-COMMENTS_IN_STORIES = True
+COMMENTS_IN_STORIES = False
 # Enable comments on picture gallery pages?
 COMMENTS_IN_GALLERIES = True
 
