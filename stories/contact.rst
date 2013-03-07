@@ -1,8 +1,8 @@
 .. title: Contact
-.. slug: contact
+.. slug: index
 .. date: 2013-02-07 00:00:00
 .. link: 
-.. description: 
+.. description: Contact me!
 
 
 I am a Pythonista (also writing {ba,z,}sh scripts and, unfortunately, PHP).  You can find some of my projects at `GitHub <https://github.com/Kwpolska>`_.
