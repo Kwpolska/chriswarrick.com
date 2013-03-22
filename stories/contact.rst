@@ -15,7 +15,6 @@ Contact Form
 .. raw:: html
 
     <form id="contact" class="form-horizontal" action="php/contact-send.php" method="POST">
-      <div id="messages-go-here"></div>
       <div class="control-group" id="cg-name">
         <label class="control-label" for="name">Name</label>
         <div class="controls">
@@ -51,7 +50,7 @@ Contact Form
         </div>
       </div>
     </form>
-    <script src="/assets/js/contact.js"></script>
+    <script src="/assets/js/contact.min.js"></script>
 
 
 Other contact methods
