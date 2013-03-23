@@ -5,7 +5,7 @@
 .. description: Contact me!
 
 
-I am a Pythonista (also writing {ba,z,}sh scripts and, unfortunately, PHP).  You can find some of my projects at `GitHub <https://github.com/Kwpolska>`_.
+I am a Pythonista.  You can find some of my projects at `GitHub <https://github.com/Kwpolska>`_.
 
 .. TEASER_END
 
