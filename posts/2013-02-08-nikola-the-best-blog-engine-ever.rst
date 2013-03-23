@@ -25,7 +25,7 @@ How?
 
 .. raw:: html
 
-    <blockqoute>
+    <blockquote>
 
 After you have Nikola installed:
 
