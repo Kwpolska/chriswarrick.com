@@ -251,13 +251,12 @@ def generic_rss_renderer(lang, title, link, description, timeline, output_path,
     """Takes all necessary data, and renders a RSS feed in output_path."""
     items = []
     for post in timeline[:10]:
-        pl = post.permalink(lang, absolute=True)
-        plink = '/'.join((pl[:28], pl[29:31], pl[32:34], pl[35:-5], ''))
+        plinko = '/'.join((pl[:28], pl[29:31], pl[32:34], pl[35:-5], ''))
         args = {
             'title': post.title(lang),
-            'link': plink,
+            'link': plinko,
             'description': post.text(lang, teaser_only=rss_teasers),
-            'guid': plink,
+            'guid': plinko,
             # PyRSS2Gen's pubDate is GMT time.
             'pubDate': (post.date if post.date.tzinfo is None else
                         post.date.astimezone(pytz.timezone('UTC'))),
@@ -406,6 +405,15 @@ def to_datetime(value, tzinfo=None):
             return tzinfo.localize(dt)
         except ValueError:
             pass
+    # So, let's try dateutil
+    try:
+        from dateutil import parser
+        dt = parser.parse(value)
+        if tzinfo is None:
+            return dt
+        return tzinfo.localize(dt)
+    except ImportError:
+        raise ValueError('Unrecognized date/time: {0!r}, try installing dateutil...'.format(value))
     raise ValueError('Unrecognized date/time: {0!r}'.format(value))
 
 
@@ -422,7 +430,7 @@ def apply_filters(task, filters):
             if isinstance(key, (tuple, list)):
                 if ext in key:
                     return value
-            elif isinstance(key, (str, bytes)):
+            elif isinstance(key, (bytes_str, unicode_str)):
                 if ext == key:
                     return value
             else:
