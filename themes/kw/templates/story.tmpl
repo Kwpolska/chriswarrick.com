@@ -10,7 +10,10 @@
     <%
     from nikola.post import TEASER_REGEXP
     teaser_split = TEASER_REGEXP.split(post.text(lang))
-    pdata = u'<div class="lead">{0}</div>{1}'.format(teaser_split[0], teaser_split[3])
+    try:
+        pdata = u'<div class="lead">{0}</div>{1}'.format(teaser_split[0], teaser_split[3])
+    except IndexError:
+        pdata = post.text(lang)
     %>
     ${pdata}
 <!--
