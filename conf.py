@@ -16,7 +16,7 @@ SITE_URL = "http://kwpolska.tk"
 BASE_URL = "http://kwpolska.tk"
 BLOG_EMAIL = "kwpolska@kwpolska.tk"
 BLOG_DESCRIPTION = "A blog about everything and nothing."
-
+CODE_COLOR_SCHEME = 'friendly'
 
 # post_pages contains (wildcard, destination, template, use_in_feed) tuples.
 #
@@ -140,8 +140,8 @@ SIDEBAR_LINKS = {
             ('/' + os.path.join(ARCHIVE_PATH, ARCHIVE_FILENAME), 'Archives'),
             ('/blog/tags/index.html', 'Tags'),
             ('/contact/index.html', 'Contact'),
-            ('http://kwpolska.github.com/projects/', 'Projects <i class="icon-external-link"></i>'),
-            ('http://kwpolska.github.com/', 'GitHub Page <i class="icon-external-link"></i>'),
+            ('http://kwpolska.github.io/projects/', 'Projects <i class="icon-external-link"></i>'),
+            ('http://kwpolska.github.io/', 'GitHub Page <i class="icon-external-link"></i>'),
             ('/search/index.html', 'Search'),
         )
 }
