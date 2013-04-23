@@ -9,52 +9,8 @@ I am a Pythonista.  You can find some of my projects at `GitHub <https://github.
 
 .. TEASER_END
 
-Contact Form
-============
-
-.. raw:: html
-
-    <form id="contact" class="form-horizontal" action="php/contact-send.php" method="POST">
-      <div class="control-group" id="cg-name">
-        <label class="control-label" for="name">Name</label>
-        <div class="controls">
-          <input type="text" id="name" name="name" placeholder="Name">
-        </div>
-      </div>
-      <div class="control-group" id="cg-mail">
-        <label class="control-label" for="mail">Mail address</label>
-        <div class="controls">
-          <input type="email" name="mail" id="mail" placeholder="Mail address">
-        </div>
-      </div>
-      <div class="control-group" id="cg-subject">
-        <label class="control-label" for="subject">Subject</label>
-        <div class="controls">
-          <input type="text" name="subject" id="subject" placeholder="Subject">
-        </div>
-      </div>
-      <div class="control-group" id="cg-sqrt">
-        <label class="control-label" for="sqrt">sqrt(16) = </label>
-        <div class="controls">
-          <input type="number" name="sqrt" id="sqrt" placeholder="sqrt(16) = ">
-        </div>
-      </div>
-      <div class="control-group" id="cg-message">
-        <div class="controls">
-          <textarea rows="5" id="message" name="message" placeholder="Your message"></textarea>
-        </div>
-      </div>
-      <div class="control-group">
-        <div class="controls">
-          <p><input type="submit" class="btn btn-large btn-primary"></p>
-        </div>
-      </div>
-    </form>
-    <script src="/assets/js/contact.min.js"></script>
-
-
-Other contact methods
-=====================
+Contact me:
+===========
 
 * **by mail** — kwpolska [using Google apps at] kwpolska.tk (or kwpolska
   [using the great services at] gmail.com)
