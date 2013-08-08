@@ -1,7 +1,5 @@
 ## -*- coding: utf-8 -*-
 
-<%def name="nice_url(post)">${post.permalink(lang)[:10]}/${post.permalink(lang)[11:13]}/${post.permalink(lang)[14:16]}/${post.permalink(lang)[17:]}</%def>
-
 <%def name="html_title()">
     <h1>${title}</h1>
     % if link:
@@ -14,7 +12,7 @@
     %if len(translations) > 1:
         %for langname in translations.keys():
             %if langname != lang and post.is_translation_available(langname):
-                <a href="${nice_url(post)}">${messages[langname]["Read in English"]}</a>
+                <a href="${post.permalink(lang)}">${messages[langname]["Read in English"]}</a>
             %endif
         %endfor
     %endif
@@ -33,12 +31,12 @@
     <ul class="pager">
     %if post.prev_post:
         <li class="previous">
-            <a href="${nice_url(post.prev_post)}">&larr; ${messages[lang]["Previous post"]}</a>
+            <a href="${post.prev_post.permalink(lang)}">&larr; ${messages[lang]["Previous post"]}</a>
         </li>
     %endif
     %if post.next_post:
         <li class="next">
-            <a href="${nice_url(post.next_post)}">${messages[lang]["Next post"]} &rarr;</a>
+            <a href="${post.next_post.permalink(lang)}">${messages[lang]["Next post"]} &rarr;</a>
         </li>
     %endif
     </ul>
