@@ -138,13 +138,13 @@ SLUG_TAG_PATH = True
 # You should provide a key-value pair for each used language.
 SIDEBAR_LINKS = {
     DEFAULT_LANG: (
-            ('/' + os.path.join(ARCHIVE_PATH, ARCHIVE_FILENAME), 'Archives'),
-            ('/blog/tags/', 'Tags'),
-            ('/contact/', 'Contact'),
-            ('http://kwpolska.github.io/projects/', 'Projects <i class="icon-external-link"></i>'),
-            ('http://kwpolska.github.io/', 'GitHub Page <i class="icon-external-link"></i>'),
-            ('/search/', 'Search'),
-        )
+        ('/' + os.path.join(ARCHIVE_PATH, ARCHIVE_FILENAME), 'Archives'),
+        ('/blog/tags/', 'Tags'),
+        ('/contact/', 'Contact'),
+        ('http://kwpolska.github.io/projects/', 'Projects <i class="icon-external-link"></i>'),
+        ('http://kwpolska.github.io/', 'GitHub Page <i class="icon-external-link"></i>'),
+        ('/search/', 'Search'),
+    )
 }
 
 # A list of redirection tuples, [("foo/from.html", "/bar/to.html")].
