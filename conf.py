@@ -138,8 +138,7 @@ SLUG_TAG_PATH = True
 # You should provide a key-value pair for each used language.
 SIDEBAR_LINKS = {
     DEFAULT_LANG: (
-            #('/' + os.path.join(ARCHIVE_PATH, ARCHIVE_FILENAME), 'Archives'),
-            ('/' + os.path.join(ARCHIVE_PATH), 'Archives'),
+            ('/' + os.path.join(ARCHIVE_PATH, ARCHIVE_FILENAME), 'Archives'),
             ('/blog/tags/', 'Tags'),
             ('/contact/', 'Contact'),
             ('http://kwpolska.github.io/projects/', 'Projects <i class="icon-external-link"></i>'),
