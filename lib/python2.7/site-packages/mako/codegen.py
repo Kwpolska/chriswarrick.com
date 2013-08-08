@@ -11,6 +11,8 @@ import time
 import re
 from mako.pygen import PythonPrinter
 from mako import util, ast, parsetree, filters, exceptions
+from mako import compat
+
 
 MAGIC_NUMBER = 8
 
@@ -25,12 +27,13 @@ def compile(node,
                 default_filters=None,
                 buffer_filters=None,
                 imports=None,
+                future_imports=None,
                 source_encoding=None,
                 generate_magic_comment=True,
                 disable_unicode=False,
                 strict_undefined=False,
                 enable_loop=True,
-                reserved_names=()):
+                reserved_names=frozenset()):
 
     """Generate module source code given a parsetree node,
       uri, and optional source filename"""
@@ -39,7 +42,7 @@ def compile(node,
     # a bytestring itself, as we will be embedding it into
     # the generated source and we don't want to coerce the
     # result into a unicode object, in "disable_unicode" mode
-    if not util.py3k and isinstance(source_encoding, unicode):
+    if not compat.py3k and isinstance(source_encoding, compat.text_type):
         source_encoding = source_encoding.encode(source_encoding)
 
 
@@ -52,6 +55,7 @@ def compile(node,
                                             default_filters,
                                             buffer_filters,
                                             imports,
+                                            future_imports,
                                             source_encoding,
                                             generate_magic_comment,
                                             disable_unicode,
@@ -68,6 +72,7 @@ class _CompileContext(object):
                     default_filters,
                     buffer_filters,
                     imports,
+                    future_imports,
                     source_encoding,
                     generate_magic_comment,
                     disable_unicode,
@@ -79,6 +84,7 @@ class _CompileContext(object):
         self.default_filters = default_filters
         self.buffer_filters = buffer_filters
         self.imports = imports
+        self.future_imports = future_imports
         self.source_encoding = source_encoding
         self.generate_magic_comment = generate_magic_comment
         self.disable_unicode = disable_unicode
@@ -97,7 +103,6 @@ class _GenerateRenderMethod(object):
         self.compiler = compiler
         self.node = node
         self.identifier_stack = [None]
-
         self.in_def = isinstance(node, (parsetree.DefTag, parsetree.BlockTag))
 
         if self.in_def:
@@ -153,7 +158,6 @@ class _GenerateRenderMethod(object):
         inherit = []
         namespaces = {}
         module_code = []
-        encoding = [None]
 
         self.compiler.pagetag = None
 
@@ -187,6 +191,9 @@ class _GenerateRenderMethod(object):
             self.printer.writeline("# -*- encoding:%s -*-" %
                                     self.compiler.source_encoding)
 
+        if self.compiler.future_imports:
+            self.printer.writeline("from __future__ import %s" %
+                                   (", ".join(self.compiler.future_imports),))
         self.printer.writeline("from mako import runtime, filters, cache")
         self.printer.writeline("UNDEFINED = runtime.UNDEFINED")
         self.printer.writeline("__M_dict_builtin = dict")
@@ -236,7 +243,7 @@ class _GenerateRenderMethod(object):
         elif len(namespaces):
             self.write_namespaces(namespaces)
 
-        return main_identifiers.topleveldefs.values()
+        return list(main_identifiers.topleveldefs.values())
 
     def write_render_callable(self, node, name, args, buffered, filtered,
             cached):
@@ -321,7 +328,7 @@ class _GenerateRenderMethod(object):
 
 
         for node in namespaces.values():
-            if node.attributes.has_key('import'):
+            if 'import' in node.attributes:
                 self.compiler.has_ns_imports = True
             self.write_source_comment(node)
             if len(node.nodes):
@@ -456,8 +463,8 @@ class _GenerateRenderMethod(object):
         if toplevel and getattr(self.compiler, 'has_ns_imports', False):
             self.printer.writeline("_import_ns = {}")
             self.compiler.has_imports = True
-            for ident, ns in self.compiler.namespaces.iteritems():
-                if ns.attributes.has_key('import'):
+            for ident, ns in self.compiler.namespaces.items():
+                if 'import' in ns.attributes:
                     self.printer.writeline(
                             "_mako_get_namespace(context, %r)."\
                                     "_populate(_import_ns, %r)" %
@@ -691,21 +698,21 @@ class _GenerateRenderMethod(object):
                 "cache._ctx_get_or_create("\
                 "%s, lambda:__M_%s(%s),  context, %s__M_defname=%r)" % \
                             (cachekey, name, ','.join(pass_args),
-                            ''.join(["%s=%s, " % (k,v)
+                            ''.join(["%s=%s, " % (k, v)
                             for k, v in cache_args.items()]),
                             name
                             )
             # apply buffer_filters
             s = self.create_filter_callable(self.compiler.buffer_filters, s,
                                             False)
-            self.printer.writelines("return " + s,None)
+            self.printer.writelines("return " + s, None)
         else:
             self.printer.writelines(
                     "__M_writer(context.get('local')."
                     "cache._ctx_get_or_create("\
                     "%s, lambda:__M_%s(%s), context, %s__M_defname=%r))" %
                     (cachekey, name, ','.join(pass_args),
-                    ''.join(["%s=%s, " % (k,v)
+                    ''.join(["%s=%s, " % (k, v)
                         for k, v in cache_args.items()]),
                     name,
                     ),
@@ -784,10 +791,10 @@ class _GenerateRenderMethod(object):
             #          and end control lines, and
             #    3) any control line with no content other than comments
             if not children or (
-                    util.all(isinstance(c, (parsetree.Comment,
+                    compat.all(isinstance(c, (parsetree.Comment,
                                             parsetree.ControlLine))
                              for c in children) and
-                    util.all((node.is_ternary(c.keyword) or c.isend)
+                    compat.all((node.is_ternary(c.keyword) or c.isend)
                              for c in children
                              if isinstance(c, parsetree.ControlLine))):
                 self.printer.writeline("pass")

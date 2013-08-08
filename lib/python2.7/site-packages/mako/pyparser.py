@@ -10,11 +10,11 @@ Parsing to AST is done via _ast on Python > 2.5, otherwise the compiler
 module is used.
 """
 
-from StringIO import StringIO
-from mako import exceptions, util
+from mako import exceptions, util, compat
+from mako.compat import StringIO
 import operator
 
-if util.py3k:
+if compat.py3k:
     # words that cannot be assigned to (notably
     # smaller than the total keys in __builtins__)
     reserved = set(['True', 'False', 'None', 'print'])
@@ -33,7 +33,7 @@ else:
 try:
     import _ast
     util.restore__ast(_ast)
-    import _ast_util
+    from mako import _ast_util
 except ImportError:
     _ast = None
     from compiler import parse as compiler_parse
@@ -48,14 +48,14 @@ def parse(code, mode='exec', **exception_kwargs):
         if _ast:
             return _ast_util.parse(code, '<unknown>', mode)
         else:
-            if isinstance(code, unicode):
+            if isinstance(code, compat.text_type):
                 code = code.encode('ascii', 'backslashreplace')
             return compiler_parse(code, mode)
-    except Exception, e:
+    except Exception:
         raise exceptions.SyntaxException(
                     "(%s) %s (%r)" % (
-                        e.__class__.__name__,
-                        e,
+                        compat.exception_as().__class__.__name__,
+                        compat.exception_as(),
                         code[0:50]
                     ), **exception_kwargs)
 
@@ -92,7 +92,7 @@ if _ast:
                 self.visit(n)
             self.in_assign_targets = in_a
 
-        if util.py3k:
+        if compat.py3k:
 
             # ExceptHandler is in Python 2, but this block only works in
             # Python 3 (and is required there)
@@ -544,7 +544,7 @@ else:
     class walker(visitor.ASTVisitor):
 
         def dispatch(self, node, *args):
-            print 'Node:', str(node)
+            print('Node:', str(node))
 
             # print "dir:", dir(node)
 

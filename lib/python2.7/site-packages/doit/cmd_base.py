@@ -2,6 +2,8 @@ import inspect
 import sys
 
 from .cmdparse import CmdOption, CmdParse
+from .exceptions import InvalidCommand
+from .dependency import backend_map
 from . import loader
 
 
@@ -86,6 +88,17 @@ opt_depfile = {'name': 'dep_file',
                'default': ".doit.db",
                'help': "file used to save successful runs"
                }
+
+# dependency file DB backend
+opt_backend = {
+    'name': 'backend',
+    'short':'',
+    'long': 'backend',
+    'type': str,
+    'default': "dbm",
+    'help': ("Select dependency file backend." +
+             "Available options dbm, json, sqlite3. [default: %(default)s]")
+}
 
 
 #### options related to dodo.py
@@ -181,13 +194,15 @@ class DoitCmdBase(Command):
     cmd_options => list of option dictionary (see CmdOption)
     _execute => method, argument names must be option names
     """
-    base_options = (opt_depfile,)
+    base_options = (opt_depfile, opt_backend)
 
-    def __init__(self, task_loader=None, dep_file=None, config=None,
-                 task_list=None, sel_tasks=None, outstream=None):
+    def __init__(self, task_loader=None, dep_file=None, backend=None,
+                 config=None, task_list=None, sel_tasks=None, outstream=None):
         """this initializer is usually just used on tests"""
         self._loader = task_loader or TaskLoader()
         Command.__init__(self)
+        # TODO: helper to test code should not be here
+        self.dep_class = backend_map.get(backend)
         self.dep_file = dep_file   # (str) filename usually '.doit.db'
         self.config = config or {} # config from dodo.py & cmdline
         self.task_list = task_list # list of tasks
@@ -209,13 +224,14 @@ class DoitCmdBase(Command):
         """load dodo.py, set attributes and call self._execute"""
         self.task_list, self.config = self._loader.load_tasks(self, params,
                                                               args)
+        self.sel_tasks = args or self.config.get('default_tasks')
 
         # merge config values into params
         params.update_defaults(self.config)
         self.dep_file = params['dep_file']
+        self.dep_class = backend_map.get(params['backend'])
         params['pos_args'] = args # hack
         params['continue_'] = params.get('continue') # hack
-        self.sel_tasks = args or self.config.get('default_tasks')
 
         # magic - create dict based on signature of _execute method
         args_name = inspect.getargspec(self._execute)[0]
@@ -223,4 +239,46 @@ class DoitCmdBase(Command):
         return self._execute(**exec_params)
 
 
+# helper functions to find list of tasks
 
+
+def check_tasks_exist(tasks, name_list):
+    """check task exist"""
+    if not name_list:
+        return
+    for task_name in name_list:
+        if task_name not in tasks:
+            msg = "'%s' is not a task."
+            raise InvalidCommand(msg % task_name)
+
+
+# this is used by commands that do not execute tasks (list, clean, forget...)
+def tasks_and_deps_iter(tasks, sel_tasks, yield_duplicates=False):
+    """iterator of select_tasks and its dependencies
+    @param tasks (dict - Task)
+    @param sel_tasks(list - str)
+    """
+    processed = set() # str - task name
+    to_process = set(sel_tasks) # str - task name
+    # get initial task
+    while to_process:
+        task = tasks[to_process.pop()]
+        processed.add(task.name)
+        yield task
+        # FIXME this does not take calc_dep into account
+        for task_dep in task.task_dep + task.setup_tasks:
+            if (task_dep not in processed) and (task_dep not in to_process):
+                to_process.add(task_dep)
+            elif yield_duplicates:
+                yield tasks[task_dep]
+
+
+def subtasks_iter(tasks, task):
+    """find all subtasks for a given task
+    @param tasks (dict - Task)
+    @param task (Task)
+    """
+    for name in task.task_dep:
+        dep = tasks[name]
+        if dep.is_subtask:
+            yield dep

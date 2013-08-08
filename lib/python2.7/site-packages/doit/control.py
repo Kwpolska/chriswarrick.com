@@ -1,6 +1,7 @@
 """Control tasks execution order"""
 import fnmatch
 from collections import deque
+import six
 
 from .exceptions import InvalidTask, InvalidCommand, InvalidDodoFile
 from .task import Task
@@ -51,7 +52,7 @@ class TaskControl(object):
             self._def_order.append(task.name)
 
         # expand wild-card task-dependencies
-        for task in self.tasks.itervalues():
+        for task in six.itervalues(self.tasks):
             for pattern in task.wild_dep:
                 task.task_dep.extend(self._get_wild_tasks(pattern))
 
@@ -62,7 +63,7 @@ class TaskControl(object):
     def _check_dep_names(self):
         """check if user input task_dep or setup_task that doesnt exist"""
         # check task-dependencies exist.
-        for task in self.tasks.itervalues():
+        for task in six.itervalues(self.tasks):
             for dep in task.task_dep:
                 if dep not in self.tasks:
                     msg = "%s. Task dependency '%s' does not exist."
@@ -78,7 +79,7 @@ class TaskControl(object):
         """get task_dep based on file_dep on a target from another task"""
         # 1) create a dictionary associating every target->task. where the task
         # builds that target.
-        for task in self.tasks.itervalues():
+        for task in six.itervalues(self.tasks):
             for target in task.targets:
                 if target in self.targets:
                     msg = ("Two different tasks can't have a common target." +
@@ -88,7 +89,7 @@ class TaskControl(object):
                 self.targets[target] = task.name
         # 2) now go through all dependencies and check if they are target from
         # another task.
-        for task in self.tasks.itervalues():
+        for task in six.itervalues(self.tasks):
             self.add_implicit_task_dep(self.targets, task, task.file_dep)
 
 
@@ -173,14 +174,13 @@ class TaskControl(object):
             self.selected_tasks = self._def_order
 
 
-    def task_dispatcher(self, include_setup=False):
+    def task_dispatcher(self):
         """return a TaskDispatcher generator
         """
         assert self.selected_tasks is not None, \
             "must call 'process' before this"
 
-        return TaskDispatcher(self.tasks, self.targets, self.selected_tasks,
-                              include_setup)
+        return TaskDispatcher(self.tasks, self.targets, self.selected_tasks)
 
 
 
@@ -261,14 +261,10 @@ class TaskDispatcher(object):
     """Dispatch another task to be selected/executed, mostly handle with MP
 
     Note that a dispatched task might not be ready to be executed.
-
-    @ivar include_setup: (bool) when True tasks wont be execute so
-                         do not wait for task deps.
     """
-    def __init__(self, tasks, targets, selected_tasks, include_setup=False):
+    def __init__(self, tasks, targets, selected_tasks):
         self.tasks = tasks
         self.targets = targets
-        self.include_setup = include_setup
 
         self.nodes = {} # key task-name, value: ExecNode
         # queues
@@ -349,7 +345,7 @@ class TaskDispatcher(object):
             self._node_add_wait_run(node, node.task_dep)
             node.task_dep = []
 
-            if (node.wait_run or node.wait_run_calc) and not self.include_setup:
+            if (node.wait_run or node.wait_run_calc):
                 yield 'wait'
             else:
                 break
@@ -367,7 +363,7 @@ class TaskDispatcher(object):
                 yield "wait"
 
             # if this task should run, so schedule setup-tasks before itself
-            if node.run_status == 'run' or self.include_setup:
+            if node.run_status == 'run':
                 for setup_task in this_task.setup_tasks:
                     yield self._gen_node(node, setup_task)
                 self._node_add_wait_run(node, this_task.setup_tasks)
@@ -493,8 +489,5 @@ class TaskDispatcher(object):
             # got 'wait', add ExecNode to waiting queue
             else:
                 assert next_step == "wait"
-                # skip all waiting tasks, just getting a list of tasks...
-                if not self.include_setup:
-                    self.waiting.add(node)
-                    node = None
-
+                self.waiting.add(node)
+                node = None

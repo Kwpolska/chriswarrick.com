@@ -1,4 +1,4 @@
-# $Id: admonitions.py 7072 2011-07-06 15:52:30Z milde $
+# $Id: admonitions.py 7681 2013-07-12 07:52:27Z milde $
 # Author: David Goodger <goodger@python.org>
 # Copyright: This module has been placed in the public domain.
 
@@ -35,7 +35,10 @@ class BaseAdmonition(Directive):
             title_text = self.arguments[0]
             textnodes, messages = self.state.inline_text(title_text,
                                                          self.lineno)
-            admonition_node += nodes.title(title_text, '', *textnodes)
+            title = nodes.title(title_text, '', *textnodes)
+            title.source, title.line = (
+                    self.state_machine.get_source_and_line(self.lineno))
+            admonition_node += title
             admonition_node += messages
             if not 'classes' in self.options:
                 admonition_node['classes'] += ['admonition-' +

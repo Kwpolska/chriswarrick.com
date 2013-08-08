@@ -1,5 +1,5 @@
 .. title: Contact
-.. slug: index
+.. slug: contact
 .. date: 2013-02-07 00:00:00
 .. link: 
 .. description: Contact me!

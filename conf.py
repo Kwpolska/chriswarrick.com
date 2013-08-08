@@ -17,6 +17,7 @@ BASE_URL = "http://kwpolska.tk"
 BLOG_EMAIL = "kwpolska@kwpolska.tk"
 BLOG_DESCRIPTION = "A blog about everything and nothing."
 CODE_COLOR_SCHEME = 'friendly'
+PRETTY_URLS=True
 
 # post_pages contains (wildcard, destination, template, use_in_feed) tuples.
 #
@@ -45,8 +46,8 @@ post_pages = (
     ("stories/*.html", "", "story.tmpl", False),
     ("stories/*.php", "", "story.tmpl", False),
     # Special page overrides.
-    ("stories/contact.rst", "contact", "story.tmpl", False),
-    ("stories/search.html", "search", "story.tmpl", False),
+    #("stories/contact.rst", "contact", "story.tmpl", False),
+    #("stories/search.html", "search", "story.tmpl", False),
 )
 
 # One or more folders containing files to be copied as-is into the output.
@@ -137,12 +138,13 @@ SLUG_TAG_PATH = True
 # You should provide a key-value pair for each used language.
 SIDEBAR_LINKS = {
     DEFAULT_LANG: (
-            ('/' + os.path.join(ARCHIVE_PATH, ARCHIVE_FILENAME), 'Archives'),
-            ('/blog/tags/index.html', 'Tags'),
-            ('/contact/index.html', 'Contact'),
+            #('/' + os.path.join(ARCHIVE_PATH, ARCHIVE_FILENAME), 'Archives'),
+            ('/' + os.path.join(ARCHIVE_PATH), 'Archives'),
+            ('/blog/tags/', 'Tags'),
+            ('/contact/', 'Contact'),
             ('http://kwpolska.github.io/projects/', 'Projects <i class="icon-external-link"></i>'),
             ('http://kwpolska.github.io/', 'GitHub Page <i class="icon-external-link"></i>'),
-            ('/search/index.html', 'Search'),
+            ('/search/', 'Search'),
         )
 }
 

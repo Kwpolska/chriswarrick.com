@@ -1,5 +1,5 @@
-# -*- coding: utf8 -*-
-# $Id: lt.py 7119 2011-09-02 13:00:23Z milde $
+# -*- coding: utf-8 -*-
+# $Id: lt.py 7668 2013-06-04 12:46:30Z milde $
 # Author: Dalius Dobravolskas <dalius.do...@gmail.com>
 # Copyright: This module has been placed in the public domain.
 

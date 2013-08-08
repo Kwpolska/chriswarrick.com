@@ -3,7 +3,9 @@
 import os
 import sys
 import inspect
+import six
 
+from .compat import is_bound_method
 from .exceptions import InvalidTask, InvalidCommand, InvalidDodoFile
 from .task import Task, dict_to_task
 
@@ -100,16 +102,28 @@ def load_tasks(dodo_module, command_names=()):
     funcs = []
     prefix_len = len(TASK_STRING)
     # get all functions defined in the module
-    for name, ref in dodo_module.iteritems():
-        # ignore functions that are not a task (by its name)
+    for name, ref in six.iteritems(dodo_module):
+
+        # function is a task creator because of its name
         if inspect.isfunction(ref) and name.startswith(TASK_STRING):
             # remove TASK_STRING prefix from name
             task_name = name[prefix_len:]
+
+        # object is a task creator because it contains the special method
         elif hasattr(ref, 'create_doit_tasks'):
             ref = ref.create_doit_tasks
+            # If create_doit_tasks is a method, it should be called only
+            # if it is bounded to an object.
+            # This avoids calling it for the class definition.
+            argspec = inspect.getargspec(ref)
+            if len(argspec.args) != (1 if is_bound_method(ref) else 0):
+                continue
             task_name = name
+
+        # ignore functions that are not a task creator
         elif True: # coverage can't get "else: continue"
             continue
+
         # tasks cant have name of commands
         if task_name in command_names:
             msg = ("Task can't be called '%s' because this is a command name."+
@@ -224,7 +238,7 @@ def generate_tasks(func_name, gen_result, gen_doc=None):
             _generate_task_from_yield(tasks, func_name, task_dict, x_doc)
 
         if tasks:
-            return tasks.values()
+            return list(six.itervalues(tasks))
         else:
             # special case task_generator did not generate any task
             # create an empty group task
@@ -236,7 +250,3 @@ def generate_tasks(func_name, gen_result, gen_doc=None):
     raise InvalidTask(
         "Task '%s'. Must return a dictionary or generator. Got %s" %
         (func_name, type(gen_result)))
-
-
-
-

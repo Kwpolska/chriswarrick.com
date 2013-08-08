@@ -1,8 +1,14 @@
+.. title: The Nikola Handbook
+.. slug: handbook
+.. date: 2012/03/30 23:00
+.. tags:
+.. link:
+.. description:
+
 The Nikola Handbook
 ===================
 
-:Version: 5.4.2
-:Author: Roberto Alsina <ralsina@netmanagers.com.ar>
+:Version: 5.5.1
 
 .. class:: alert alert-info pull-right
 
@@ -12,7 +18,7 @@ The Nikola Handbook
 All You Need to Know
 --------------------
 
-After you have Nikola installed:
+After you have Nikola `installed <#installing-nikola>`_:
 
 Create a empty site:
     ``nikola init mysite``
@@ -84,10 +90,10 @@ Getting Help
 ------------
 
 * Feel free to contact me at ralsina@netmanagers.com.ar for questions about Nikola.
-* You can file bugs at `the issue tracker <http://code.google.com/p/nikola-generator/issues/list>`__
+* You can file bugs at `the issue tracker <https://github.com/ralsina/nikola/issues>`__
 * You can discuss Nikola at the `nikola-discuss google group <http://groups.google.com/group/nikola-discuss>`_
 * You can subscribe to `the Nikola Blog <http://nikola.ralsina.com.ar/blog>`_
-* You can follow `Nikola on Twitter <https://twitter.com/#!/nikolagenerator>`_
+* You can follow `Nikola on Twitter <https://twitter.com/nikolagenerator>`_
 
 Why Static?
 -----------
@@ -112,8 +118,8 @@ Security
     A smaller software stack implies less security risk.
 
 Obsolescense
-    If you create a site using (for example) Wordpress, what happens when Wordpress
-    releases a new version? You have to update your Wordpress. That is not optional,
+    If you create a site using (for example) WordPress, what happens when WordPress
+    releases a new version? You have to update your WordPress. That is not optional,
     because of security and support issues. If I release a new version of Nikola, and
     you don't update, *nothing* happens. You can continue to use the version you
     have now forever, no problems.
@@ -197,21 +203,23 @@ Longer version:
 #. Get `Nikola <http://nikola.ralsina.com.ar/>`_
 #. Install dependencies. To do that, either:
 
-   #. ``pip install -r requirements.txt`` or...
+   #. ``pip install -r requirements.txt`` (or ``requirements-full.txt`` for extra stuff) and ``pip install .`` or...
    #. Install your distribution's packages for all the things
       mentioned below, if they exist, or...
-   #. Get all of these manually (but why?, use requirements.txt):
+   #. Get all of these manually (but why?, use pip):
 
-      #. Get python, if you don't have it.
+      #. Get Python, if you don't have it.
       #. Get `doit <http://pydoit.org>`_
       #. Get `docutils <http://docutils.sf.net>`_
       #. Get `Mako <http://makotemplates.org>`_
-      #. Get `PIL <http://www.pythonware.com/products/pil/>`_ (or Pillow)
+      #. Get `Pillow <http://python-imaging.github.io/>`_
       #. Get `Pygments <http://pygments.org/>`_
       #. Get `unidecode <http://pypi.python.org/pypi/Unidecode/>`_
       #. Get `lxml <http://lxml.de/>`_
       #. Get `yapsy <http://yapsy.sourceforge.net>`_
-      #. Get `configparser <http://pypi.python.org/pypi/configparser/3.2.0r3>`_
+      #. Get `PyRSS2Gen <http://www.dalkescientific.com/Python/PyRSS2Gen.html>`_
+      #. Get `pytz <http://pytz.sourceforge.net/>`_
+      #. If using Python 2, get `configparser <http://pypi.python.org/pypi/configparser/3.2.0r3>`_
 
 #. run ``python setup.py install``
 
@@ -276,9 +284,9 @@ all the pages again, unless you changed something that the page requires. So, if
 the text of a post, or its title, that post page, and all index pages where it is mentioned,
 will be recreated. If you change the post page template, then all the post pages will be rebuilt.
 
-Nikola is mostly a series of doit *tasks*, and you can see them by doing ``nikola build list``::
+Nikola is mostly a series of doit *tasks*, and you can see them by doing ``nikola list``::
 
-    $ nikola build list
+    $ nikola list
     Scanning posts  . . done!
     build_bundles
     copy_assets
@@ -306,30 +314,34 @@ Nikola also has other commands besides ``build``::
     $ nikola help
     Nikola
     Available commands:
-      nikola auto            automatically execute tasks when a dependency changes
-      nikola bootswatch_theme                Given a swatch name and a parent theme, creates a custom theme.
-      nikola build           run tasks
-      nikola check           Check links and files in the generated site.
-      nikola clean           clean action / remove targets
-      nikola console                 A short explanation.
-      nikola deploy                  Deploy the site.
-      nikola dumpdb                  dump dependency DB
-      nikola forget                  clear successful run status from internal DB
-      nikola help            show help
-      nikola ignore                  ignore task (skip) on subsequent runs
-      nikola import_blogger                  Import a blogger dump.
-      nikola import_wordpress                Import a wordpress dump.
-      nikola init            Create a Nikola site in the specified folder.
-      nikola install_theme           Install theme into current site.
-      nikola list            list tasks from dodo file
-      nikola new_post                Create a new blog post or site page.
-      nikola run             run tasks
-      nikola serve           Start the test webserver.
-      nikola strace                  use strace to list file_deps and targets
+      nikola auto                 automatically execute tasks when a dependency changes
+      nikola bootswatch_theme     given a swatch name from bootswatch.com and a parent theme, creates a custom theme
+      nikola build                run tasks
+      nikola check                check links and files in the generated site
+      nikola clean                clean action / remove targets
+      nikola console              start an interactive python console with access to your site and configuration
+      nikola deploy               deploy the site
+      nikola dumpdb               dump dependency DB
+      nikola forget               clear successful run status from internal DB
+      nikola help                 show help
+      nikola ignore               ignore task (skip) on subsequent runs
+      nikola import_blogger       import a blogger dump
+      nikola import_feed          import a RSS/Atom dump
+      nikola import_wordpress     import a WordPress dump
+      nikola init                 create a Nikola site in the specified folder
+      nikola install_theme        install theme into current site
+      nikola list                 list tasks from dodo file
+      nikola mincss               apply mincss to the generated site
+      nikola new_post             create a new blog post or site page
+      nikola run                  run tasks
+      nikola serve                start the test webserver
+      nikola strace               use strace to list file_deps and targets
+      nikola version              print the Nikola version number
 
-      nikola help              show help / reference
-      nikola help <command>    show command usage
-      nikola help <task-name>  show task usage
+      nikola help                 show help / reference
+      nikola help <command>       show command usage
+      nikola help <task-name>     show task usage
+
 
 The ``serve`` command starts a web server so you can see the site you are creating::
 
@@ -412,6 +424,9 @@ supports them (for example: ``.. author: John Doe``)
 
            .. template: story.tmpl
 
+       That template needs to either be part of the theme, or be placed in a ``templates/``
+       folder inside your site.
+
    password
        The post will be encrypted and invisible until the reader enters the password.
        Also, the post's sourcecode will not be available.
@@ -428,11 +443,11 @@ supports them (for example: ``.. author: John Doe``)
         2012/09/15 19:52:05
 
 If you are writing a multilingual site, you can also create a per-language
-post file (for example: ``how-to-make-money.txt.es``). This one can have two
-lines of metadata:
+post file (for example: ``how-to-make-money.txt.es``). This one can replace
+metadata of the default language, for example:
 
-1) The translated title for the post or page
-2) A translated version of the pagename
+* The translated title for the post or page
+* A translated version of the pagename
 
 You can edit these files with your favourite text editor, and once you are happy
 with the contents, generate the pages as explained in `Getting Started`_
@@ -538,6 +553,15 @@ If you add a "draft" tag to a post, then it will not be shown in indexes and fee
 It *will* be compiled, and if you deploy it it *will* be made available, so use
 with care.
 
+Also if a post has a date in the future, it will not be shown in indexes until you rebuild after
+that date.
+
+Retired Posts
+~~~~~~~~~~~~~
+
+If you add a "retired" tag to a post, then it will not be shown in indexes and feeds.
+It *will* be compiled, and if you deploy it it *will* be made available, so it will
+not generate 404s for people who had linked to it.
 
 Creating a Page
 ---------------
@@ -669,8 +693,8 @@ it available for download. Nikola has a builtin theme download/install mechanism
     blogtxt
     readable
 
-    $ nikola install_theme -n blogtxt
-    Downloading: http://nikola.ralsina.com.ar/themes/blogtxt.zip
+    $ nikola install_theme blogtxt
+    Downloading: http://themes.nikola.ralsina.com.ar/themes/blogtxt.zip
     Extracting: blogtxt into themes
 
 And there you are, you now have themes/blogtxt installed. It's very rudimentary, but it
@@ -874,7 +898,7 @@ Soundcloud
 
 This directive lets you share music from http://soundcloud.com You first need to get the
 ID for the piece, which you can find in the "share" link. For example, if the
-Wordpress code starts like this::
+WordPress code starts like this::
 
     [soundcloud url="http://api.soundcloud.com/tracks/78131362"
 
@@ -905,6 +929,21 @@ To use this, you have to put your source code files inside ``listings`` or whate
 Will include the source code from ``foo.py``, highlight its syntax in python mode,
 and also create a ``listings/foo.py.html`` page and the listing will have a title linking to it.
 
+Listings support a few extra options so that you can display a fragment instead of the whole
+file in a document:
+
+start-at
+    Takes a string, and starts displaying the code at the first line that matches it.
+start-before
+    Takes a string, and starts displaying the code right before the first line that matches it.
+end-at
+    Takes a string, and stops displaying the code at the first line that matches it.
+end-before
+    Takes a string, and stops displaying the code right before the first line that matches it.
+
+If you set start-at and start-before, start-at wins. If you set end-at and end-before, end-at wins.
+If you make it so your listing ends before it starts, it's frowned upon and nothing will be shown.
+
 Gist
 ~~~~
 
@@ -924,8 +963,6 @@ Slideshows
 To create an image slideshow, you can use the ``slides`` directive. For example::
 
     .. slides::
-       :preload:
-       :play: 350
 
        /galleries/demo/tesla_conducts_lg.jpg
        /galleries/demo/tesla_lightning2_lg.jpg
@@ -933,24 +970,44 @@ To create an image slideshow, you can use the ``slides`` directive. For example:
        /galleries/demo/tesla_lightning1_lg.jpg
        /galleries/demo/tesla_tower1_lg.jpg
 
-This is based on `slidejs <http://slidesjs.com/>`_ and it supports
-`the options described there <http://slidesjs.com/#options>`_ with one minor tweak to make them
-fit in docutils convention: If the option takes a boolean value, you just have to add it or not. For example,
-to enable preloading, just use the ``:preload:`` option.
+Chart
+~~~~~
 
-If the option takes any other kind of argument, just use it after the option, like ``play`` in the
-above example.
+This directive is a thin wrapper around `Pygal <http://pygal.org/>`_ and will produce charts
+as SVG files embedded directly in your pages.
 
-Importing Your Wordpress Site Into Nikola
+Here's an example of how it works::
+
+            .. chart:: Bar
+               :title: 'Browser usage evolution (in %)'
+               :x_labels: ["2002", "2003", "2004", "2005", "2006", "2007"]
+
+               'Firefox', [None, None, 0, 16.6, 25, 31]
+               'Chrome',  [None, None, None, None, None, None]
+               'IE',      [85.8, 84.6, 84.7, 74.5, 66, 58.6]
+               'Others',  [14.2, 15.4, 15.3, 8.9, 9, 10.4]
+
+The argument passed next to the directive (Bar in that example) is the type of chart, and can be one of
+Line, StackedLine, Bar, StackedBar, HorizontalBar, XY, DateY, Pie, Radar, Dot, Funnel, Gauge, Pyramid. For
+examples of what each kind of graph is, `check here <http://pygal.org/chart_types/>`_
+
+It can take *a lot* of options to let you customize the charts (in the example, title and x_labels).
+You can use any option described in `the pygal docs <http://pygal.org/basic_customizations/>`_
+
+Finally, the content of the directive is the actual data, in the form of a label and
+a list of values, one series per line.
+
+
+Importing Your WordPress Site Into Nikola
 -----------------------------------------
 
-If you like Nikola, and want to start using it, but you have a Wordpress blog, Nikola
+If you like Nikola, and want to start using it, but you have a WordPress blog, Nikola
 supports importing it. Here's the steps to do it:
 
 1) Get a XML dump of your site [#]_
-2) nikola import_wordpress -f mysite.wordpress.2012-12-20.xml
+2) nikola import_wordpress mysite.wordpress.2012-12-20.xml
 
-After some time, this will crate a ``new_site`` folder with all your data. It currently supports
+After some time, this will create a ``new_site`` folder with all your data. It currently supports
 the following:
 
 * All your posts and pages
@@ -963,7 +1020,7 @@ the following:
   This is also useful for Disqus thread migration!
 
 * Will try to convert the content of your posts. This is *not* error free, because
-  wordpress uses some unholy  mix of HTML and strange things. Currently we are treating it
+  WordPress uses some unholy  mix of HTML and strange things. Currently we are treating it
   as markdown, which does a reasonabe job of it.
 
   You will find your old posts in ``new_site/posts/post-title.wp`` in case you need to fix
@@ -976,7 +1033,7 @@ about it.
 .. [#] The dump needs to be in 1.2 format. You can check by reading it, it should say
        ``xmlns:excerpt="http://wordpress.org/export/1.2/excerpt/"`` near the top of the
        file. If it says ``1.1`` instead of ``1.2`` you will have to update your
-       wordpress before dumping.
+       WordPress before dumping.
 
        Other versions may or may not work.
 
@@ -986,7 +1043,7 @@ Importing To A Custom Location Or Into An Existing Site
 It is possible to either import into a location you desire or into an already existing Nikola site.
 To do so you can specify a location after the dump.::
 
-    $ nikola import_wordpress -f mysite.wordpress.2012-12-20.xml -o import_location
+    $ nikola import_wordpress  mysite.wordpress.2012-12-20.xml -o import_location
 
 With this command Nikola will import into the folder ``import_location``.
 
@@ -1051,10 +1108,15 @@ aggregate. The format is very simple::
 #. Lines that start with http are feed URLs.
 #. URL lines have to be followed by the "real name" of the feed.
 
-FIXME: explain the planetoid theme stuff
-
 After all that is in place, just run ``nikola build`` and you'll get
 a planet.
+If you run ``nikola build`` for the first time you need to actually issue
+the command three times until the planet is build.
+
+There is a special theme for the planets called `site-planetoid`. To use
+this set `THEME` in your ``conf.py`` to ``'site-planetoid'``.
+This is special in the case that it redirects users to the original URL of the post
+when they try to open a post.
 
 Local Search
 ~~~~~~~~~~~~
@@ -1065,8 +1127,7 @@ search will be performed client side.
 
 This plugin implements a Tipue-based local search for your site.
 
-To use it, copy task_localsearch.plugin and task_localsearch
-into a plugins/ folder in your nikola site.
+To use it, enable local_search in ENABLED_EXTRAS in your sites conf.py
 
 After you build your site, you will have several new files in assets/css and assets/js
 and a tipue_search.html that you can use as a basis for using this in your site.
@@ -1101,6 +1162,9 @@ Here's a set of example settings for conf.py that should work nicely with the "s
     <link rel="stylesheet" type="text/css" href="/assets/css/tipuesearch.css">
     <div id="tipue_search_content" style="margin-left: auto; margin-right: auto; padding: 20px;"></div>
     """
+
+    ENABLED_EXTRAS = [ 'local_search' ]
+
 
 The <div> in EXTRA_HEAD_DATA is a hack but it will migrate into the <body> of the
 documents thanks to magic, and will hold the search results after the user searches.
