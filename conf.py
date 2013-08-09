@@ -126,6 +126,7 @@ INDEX_PATH = ""
 # output / TRANSLATION[lang] / ARCHIVE_PATH / YEAR / index.html
 ARCHIVE_PATH = "blog"
 ARCHIVE_FILENAME = "index.html"
+CREATE_MONTHLY_ARCHIVE = True
 # Final locations are:
 # output / TRANSLATION[lang] / RSS_PATH / rss.xml
 RSS_PATH = ""
