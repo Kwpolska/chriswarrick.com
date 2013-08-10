@@ -45,6 +45,7 @@ post_pages = (
     ("stories/*.rst", "", "story.tmpl", False),
     ("stories/*.html", "", "story.tmpl", False),
     ("stories/*.php", "", "story.tmpl", False),
+    ("stories/err/*.html", "err", "err.tmpl", False),
     # Special page overrides.
     #("stories/contact.rst", "contact", "story.tmpl", False),
     #("stories/search.html", "search", "story.tmpl", False),
