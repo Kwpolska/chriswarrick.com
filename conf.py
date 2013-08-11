@@ -17,10 +17,10 @@ BASE_URL = "http://kwpolska.tk"
 BLOG_EMAIL = "kwpolska@kwpolska.tk"
 BLOG_DESCRIPTION = "A blog about everything and nothing."
 CODE_COLOR_SCHEME = 'friendly'
-PRETTY_URLS=True
-HIDE_SOURCELINK=True
-COPY_SOURCES=False
-
+PRETTY_URLS = True
+HIDE_SOURCELINK = True
+COPY_SOURCES = False
+READ_MORE_LINK = ''
 # post_pages contains (wildcard, destination, template, use_in_feed) tuples.
 #
 # The wildcard is used to generate a list of reSt source files
