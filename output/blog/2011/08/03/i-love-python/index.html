@@ -1,0 +1,318 @@
+<!DOCTYPE html><html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta charset="utf-8">
+    <meta name="description" content="A word about Python.">
+    <meta name="author" content="Chris “Kwpolska” Warrick">
+    <title>I love Python! — Kw’s Blog</title>
+    <link href="../../../../../assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../../../../assets/css/code.css" rel="stylesheet">
+    <link href="../../../../../assets/css/slides.css" rel="stylesheet">
+    <link href="../../../../../assets/css/theme.css" rel="stylesheet">
+    <link href="../../../../../assets/css/kw.css" rel="stylesheet">
+    <link href="../../../../../assets/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../../../../../assets/css/bootstrap-responsive.min.css" rel="stylesheet">
+    <link href="../../../../../assets/css/jquery.fancybox.css" rel="stylesheet" media="screen">
+    <link href="../../../../../assets/css/jquery.fancybox-thumbs.css" rel="stylesheet" media="screen">
+    <link href="../../../../../assets/css/jquery.fancybox-buttons.css" rel="stylesheet" media="screen">
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+            <link rel="alternate" type="application/rss+xml" title="RSS (en)" href="../../../../../rss.xml">
+            <link rel="icon" href="../../../../../favicon.ico" sizes="16x16">
+
+    
+    
+    <script src="../../../../../assets/js/jquery-1.7.2.min.js"></script>
+</head>
+<body>
+<!-- Menubar -->
+<header class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </a>
+
+            <a class="brand" href="../../../../../">
+            <img src="../../../../../assets/img/logo.png"> Kw’s Blog
+            </a>
+            <!-- Everything you want hidden at 940px or less, place within here -->
+            <div class="nav-collapse collapse">
+                <ul class="nav">
+                    
+            <li><a href="../../../../index.html">Archives</a>
+            </li><li><a href="../../../../tags/">Tags</a>
+            </li><li><a href="../../../../../contact/">Contact</a>
+            </li><li><a href="http://kwpolska.github.io/projects/">Projects <i class="icon-external-link"></i></a>
+            </li><li><a href="http://kwpolska.github.io/">GitHub Page <i class="icon-external-link"></i></a>
+            </li><li><a href="../../../../../search/">Search</a>
+
+                </li></ul>
+                <ul class="nav pull-right">
+                
+                
+                
+    <li>
+    <a href="i-love-python.rst" id="sourcelink">Source</a>
+    </li>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+</header>
+<!-- End of Menubar -->
+<section class="container-fluid" id="container-fluid">
+    <!--Body content-->
+    <div class="row-fluid">
+    <div class="span2"></div>
+    <div class="span8">
+    <div id="alertbox"></div>
+    
+    
+    <ul class="pager">
+        <li class="previous">
+            <a href="../../../03/05/zsh-a-shell-for-the-power-users/">← Previous post</a>
+        </li>
+        <li class="next">
+            <a href="../../28/youtubes-cosmic-panda-sucks/">Next post →</a>
+        </li>
+    </ul>
+
+    <article class="postbox" id="article">
+    <header class="page-header">
+    <h1><a href=".">I love Python!</a>
+    <small>
+        2011-08-03 00:00 <br> 
+            <a class="tag" href="../../../../tags/python.html"><span class="badge badge-info">python</span></a>
+            <a class="tag" href="../../../../tags/programming.html"><span class="badge badge-info">programming</span></a>
+            <a class="tag" href="../../../../tags/projects.html"><span class="badge badge-info">projects</span></a>
+
+    </small>
+    </h1>
+    </header>
+    <div class="text">
+    
+    <div class="lead"><figure>
+<a href="http://python.org" title="Python"><img src="http://kwpolska.tk/blog-content/logos/python.png" alt="Python logo"></a>
+<figcaption>Python logo</figcaption>
+</figure><p>I recently started writing <a class="reference external" href="http://python.org">Python</a> code. And I love it.</p>
+</div>
+<p>If you’d ask me a week ago about Python, I’d say “meh.”  Python3K?  I
+wouldn’t be happy about it.  Sunday evening?  I love both.</p>
+<div class="section" id="one-project-rewritten">
+<h2>One project, rewritten</h2>
+<p>I wrote a new project.  Or rather re-wrote a Perl “project”.</p>
+<p>The project, once a little help for building AUR packages, now is almost
+a fully-featured AUR helper (it has no update function, but I will
+write one soon).  It’s the <a class="reference external" href="https://github.com/Kwpolska/pkgbuilder">PKGBUILDer</a>.</p>
+<p>The Perl version (search in the repo, linked above) had 56 lines.  In
+short, it did something like this (rewritten to bash):</p>
+<pre class="literal-block">
+function generate(package) {
+    pk=${package:0:2}
+    wget http://aur.archlinux.org/$pk/$package.tar.gz
+    tar -xzvf $package.tar.gz
+    cd $package
+    makepkg -si
+    cd ..
+}
+
+for package in $@, do generate(package); done
+</pre>
+<p>This code is really, REALLY bad.  But it worked for me, because the “normal”
+AUR helpers were slow.  I wanted to do something about it.  I put an entry on
+my TODO list about it.  A few months later I decided to do it.  The TODO list
+entry said “write build.py”.  I wanted to use Python because I wanted to learn
+it.  In fact, I began <em>loving</em> Python.</p>
+<p>The Perl version had 56 lines.  A shortened version of it in Bash took only 10
+(I skipped a few features, the full version would be around 20 lines or so.)
+Take a guess: how long is the Python version? 30 lines?  100?  No.  300 lines.
+How could this happen?  No, <em>not</em> because Python is a pain in the ass to write.
+It was because I could implement new, great features EASILY.  The original
+version could only download a package and build it.  What if the package didn’t
+exist?  The library responsible for untarring it would throw an error.  And
+even if makepkg had a problem with building the package, the script would
+happily inform the user that it was successfully bulit…  What are the new
+features, you may ask?  Install validation, i.e.  checking if the package is
+installed or not.  Package searching, sanity checks, dependency solving…  This
+is great.  If I’d like to write it in Perl, it will take me ages and I’m not
+sure if there is any libalpm wrapper.</p>
+<p>If you think that you can rewrite it in Perl, sure, go for it, if you will:</p>
+<blockquote>
+<ul class="simple">
+<li>find a working libalpm wrapper or write one yourself</li>
+<li>port python3-aur (it heps with the XML-RPC of the AUR) to perl</li>
+<li>implement EVERY feature of the Py3K version</li>
+<li>give me the code and tell me how long did you write it</li>
+</ul>
+</blockquote>
+<p>Done?  Great then, <a class="reference external" href="../../../../../contact/">contact me</a>!</p>
+</div>
+<div class="section" id="documentation">
+<h2>Documentation</h2>
+<p>Python has the friendliest web documentation ever.  PHP’s looks a bit
+harsh.  Perl’s is not easy to search.</p>
+<p>Time for a real world example:  I want to learn how to write a specific
+function in Perl, PHP and Python.  This function would print the argument.
+For example, in C:</p>
+<pre class="code cpp literal-block">
+<span class="cp">#include &lt;stdio.h&gt;
+</span><span class="kt">void</span> <span class="nf">writeStuff</span><span class="p">(</span><span class="n">text</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"Input: %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">text</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">writeStuff</span><span class="p">(</span><span class="s">"some stuff to print"</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+<p>Notice: by “searching” in docs I mean reading the page and looking for
+a thing.</p>
+<p><strong>Perl:</strong> Let’s begin at &lt;<a class="reference external" href="http://perl.org">http://perl.org</a>&gt;. Documentation tab, Tutorials.
+I need to define a function.  Nothing seems to help me.  I look at the
+sidebar and find <em>Reference/Functions</em>.  Great, that’s what I need, so i
+click it…  I can’t see anything about functions.  Langauge reference?
+Nothing.  I ask Google and I learn that Perl names them <em>subroutines</em>.  I
+check the Language reference:  it’s the sub function, now I can define my
+function and call it.  printf?  Let’s look it up in the Functions list.
+We’re done.</p>
+<pre class="code perl literal-block">
+<span class="k">sub </span><span class="nf">writeStuff</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="nv">$text</span> <span class="o">=</span> <span class="nb">shift</span><span class="p">;</span>
+    <span class="nb">printf</span><span class="p">(</span><span class="s">"Input: %s\n"</span><span class="p">,</span> <span class="nv">$text</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">writeStuff</span><span class="p">(</span><span class="s">"some stuff to print"</span><span class="p">);</span>
+</pre>
+<p>Perl’s documentation is anywhere near user-friendliness.</p>
+<p><strong>PHP:</strong> &lt;<a class="reference external" href="http://php.net">http://php.net</a>&gt;.  Why is the <em>documentation</em> link so small?
+Anyways, I need functions.  Language Refernce/Functions.  Here we go, one
+more click and I know how to make a function.  And I guess that I’ll have
+to search the Function Reference.  I find text processing, go for Strings
+and I can happily see printf.  Take a look and we can write this:</p>
+<pre class="code php literal-block">
+<span class="cp">&lt;?php</span>
+<span class="k">function</span> <span class="nf">writeStuff</span><span class="p">(</span><span class="nv">$text</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nb">printf</span><span class="p">(</span><span class="s2">"Input: %s</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span> <span class="nv">$text</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="nx">writeStuff</span><span class="p">(</span><span class="s2">"some stuff to print"</span><span class="p">);</span>
+<span class="cp">?&gt;</span>
+</pre>
+<p><strong>Python:</strong> &lt;<a class="reference external" href="http://python.org/">http://python.org/</a>&gt;.  Documentation element exists in the
+menu.  I click it.  They offer me a nice tutorial, so I’ll check it out.
+I scan through the Table of Contents and I see a chapter called Defining
+Functions.  Great, it will work.  Now I go back to the ToC and, because
+this is a tutorial rather than a reference, and I can see chapter <em>7.1:
+Fancier output formatting</em>.  I want to have %s as in other languages, so
+I skip this one and see <em>Old string formatting</em>, which uses the %s.  Now,
+assuming they indented the code on purpose because there are no braces,
+I can write:</p>
+<pre class="code python literal-block">
+<span class="k">def</span> <span class="nf">writeStuff</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+    <span class="k">print</span> <span class="s">"Input: </span><span class="si">%s</span><span class="s">"</span> <span class="o">%</span> <span class="n">text</span>
+
+<span class="n">writeStuff</span><span class="p">(</span><span class="s">"some stuff to print"</span><span class="p">)</span>
+</pre>
+<p>All of them work and output <tt class="docutils literal">Input: some stuff to print</tt> followed by a
+newline.  The original C example had 8 lines.  Perl made it in 5, PHP
+in 6 (or 4 if you won’t count the PHP tags), Python used only 3.</p>
+<p>Which documentation is the most HUMAN-friendly?  Python’s.  Which is the
+worst? Perl’s.</p>
+</div>
+<div class="section" id="nothing-is-flawless">
+<h2>Nothing is flawless</h2>
+<p>Everything has some flaws.  What is it in Python, then?
+<a class="reference external" href="http://wiki.python.org/moin/Python2orPython3">Existence of two concurrent versions</a>.</p>
+<p>Most distros and projects use Py2K, while some of them offer Py3K (or both.)
+The <a class="reference external" href="https://github.com/Kwpolska/pkgbuilder">PKGBUILDer</a> is in Py3K, because it requires <tt class="docutils literal">pyalpm</tt> and the <tt class="docutils literal">AUR</tt>
+module (I could rewrite the AUR module in Py2K, but pyalpm is much harder to
+modify.  UPDATE 2012-08-04: it was re-implemented by me several releases ago,
+in version 2.1.0, released over a month after this post)  My other projects
+(like KWDv2, another rewrite, this time with minimal changes and 30% less code
+or my first ever Python project, trash.py, a partial XDG trash standard
+implementation) use the old Py2K (usually v2.6, because I need compatibility
+with my shell server.)</p>
+<p>I would rewrite this blog into <a class="reference external" href="https://www.djangoproject.com/">Django</a> if I’d <em>own</em> a VPS or a dedicated
+server. (update 2011-10-20: this blog is now based on hyde, jekyll’s evil twin
+in Python.  Update 2013-02-08: Now using Nikola, even better engine, yet still
+in Python.)</p>
+</div>
+    </div>
+    <footer><a href="index.html#disqus_thread">comments</a></footer>
+    </article>
+
+    <article class="postbox" id="comments">
+    <header class="page-header">
+    <h1>Comments <small>Brought to you by <a href="http://disqus.com">DISQUS</a>.</small></h1>
+    </header>
+    <div class="text">
+  <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'kwpolska'; // required: replace example with your forum shortname
+        var disqus_url = 'http://kwpolska.tk/blog/2011/08/03/i-love-python/';
+        var disqus_title = 'I love Python!';
+        var disqus_identifier = '/blog/2011/08/03/i-love-python/';
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    </div>
+    <footer>leave a comment above.</footer>
+    </article>
+
+    </div>
+    </div>
+    <!--End of body content-->
+</section>
+<footer class="footerbox">
+    <footer>generated by
+<a href="http://nikola.ralsina.com.ar">nikola</a>, the python static site generator<br>
+copyright © 2009-2013 <a href="../../../../../contact/">Chris “Kwpolska” Warrick</a><br>
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/">CC BY-NC-ND</a></footer>
+</footer>
+
+
+
+<!-- asynchronous google analytics: mathiasbynens.be/notes/async-analytics-snippet
+       change the UA-XXXXX-X to be your site's ID -->
+<script>
+    var _gaq = [['_setAccount', 'UA-11937989-1'], ['_trackPageview']];
+    (function(d, t) {
+    var g = d.createElement(t),
+        s = d.getElementsByTagName(t)[0];
+    g.async = true;
+    g.src = ('https:' == location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    s.parentNode.insertBefore(g, s);
+    })(document, 'script');
+</script>
+
+    <script src="../../../../../assets/js/jquery.colorbox-min.js"></script>
+    <script src="../../../../../assets/js/slides.min.jquery.js"></script>
+    <script src="../../../../../assets/js/cookies.min.js"></script>
+    <script src="../../../../../assets/js/bootstrap.min.js"></script>
+    <script src="../../../../../assets/js/jquery.mousewheel-3.0.6.pack.js"></script>
+    <script src="../../../../../assets/js/jquery.fancybox.pack.js"></script>
+    <script src="../../../../../assets/js/jquery.fancybox-buttons.js"></script>
+    <script src="../../../../../assets/js/jquery.fancybox-media.js"></script>
+    <script src="../../../../../assets/js/jquery.fancybox-thumbs.js"></script>
+    <script>
+        $(document).ready(function() {
+            $(".fancybox").fancybox();
+            i_love_eu();
+        });
+    </script>
+</body>
+</html>
