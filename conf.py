@@ -18,6 +18,8 @@ BLOG_EMAIL = "kwpolska@kwpolska.tk"
 BLOG_DESCRIPTION = "A blog about everything and nothing."
 CODE_COLOR_SCHEME = 'friendly'
 PRETTY_URLS=True
+HIDE_SOURCELINK=True
+COPY_SOURCES=False
 
 # post_pages contains (wildcard, destination, template, use_in_feed) tuples.
 #
