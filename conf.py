@@ -346,7 +346,7 @@ SITEMAP_INCLUDE_FILELESS_DIRS = True
 PRETTY_URLS = True
 
 # Publish future dated posts right away instead of scheduling them
-FUTURE_IS_NOW = True
+FUTURE_IS_NOW = False
 
 # Do you want a add a Mathjax config file?
 # MATHJAX_CONFIG = ""
