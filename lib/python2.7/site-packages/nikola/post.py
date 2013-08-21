@@ -33,8 +33,12 @@ import re
 import string
 
 import lxml.html
+try:
+    import pyphen
+except ImportError:
+    pyphen = None
 
-from .utils import (to_datetime, slugify, bytes_str, Functionary, LocaleBorg)
+from .utils import (to_datetime, slugify, bytes_str, Functionary, LocaleBorg, unicode_str)
 
 __all__ = ['Post']
 
@@ -51,6 +55,7 @@ class Post(object):
         translations, default_lang, base_url, messages, template_name,
         file_metadata_regexp=None, strip_indexes=False, index_file='index.html',
         tzinfo=None, current_time=None, skip_untranslated=False, pretty_urls=False,
+        hyphenate=False,
     ):
         """Initialize post.
 
@@ -80,6 +85,7 @@ class Post(object):
         self.skip_untranslated = skip_untranslated
         self._template_name = template_name
         self.is_two_file = True
+        self.hyphenate = hyphenate
 
         default_metadata = get_meta(self, file_metadata_regexp)
 
@@ -304,7 +310,7 @@ class Post(object):
         else:
             return '.'.join((self.base_path, sorted(self.translated_to)[0]))
 
-    def text(self, lang=None, teaser_only=False, strip_html=False):
+    def text(self, lang=None, teaser_only=False, strip_html=False, really_absolute=False):
         """Read the post file for that language and return its contents.
 
         teaser_only=True breaks at the teaser marker and returns only the teaser.
@@ -328,7 +334,12 @@ class Post(object):
                 return ""
             # let other errors raise
             raise(e)
-        document.make_links_absolute(self.permalink(lang=lang))
+        base_url = self.permalink(lang=lang, absolute=really_absolute)
+        document.make_links_absolute(base_url)
+
+        if self.hyphenate:
+            hyphenate(document, lang)
+
         data = lxml.html.tostring(document, encoding='unicode')
         # data here is a full HTML doc, including HTML and BODY tags
         # which is not ideal (Issue #464)
@@ -345,10 +356,11 @@ class Post(object):
             if teaser != data:
                 if TEASER_REGEXP.search(data).groups()[-1]:
                     teaser += '<p class="more"><a href="{0}">{1}</a></p>'.format(
-                        self.permalink(lang), TEASER_REGEXP.search(data).groups()[-1])
+                        self.permalink(lang, absolute=really_absolute),
+                        TEASER_REGEXP.search(data).groups()[-1])
                 else:
                     teaser += READ_MORE_LINK.format(
-                        link=self.permalink(lang),
+                        link=self.permalink(lang, absolute=really_absolute),
                         read_more=self.messages[lang]["Read more"])
                 # This closes all open tags and sanitizes the broken HTML
                 document = lxml.html.fromstring(teaser)
@@ -575,8 +587,8 @@ def get_meta(post, file_metadata_regexp=None, lang=None):
 
         if 'slug' not in meta:
             # If no slug is found in the metadata use the filename
-            meta['slug'] = slugify(os.path.splitext(
-                os.path.basename(post.source_path))[0])
+            meta['slug'] = slugify(unicode_str(os.path.splitext(
+                os.path.basename(post.source_path))[0]))
 
         if 'title' not in meta:
             # If no title is found, use the filename without extension
@@ -584,3 +596,34 @@ def get_meta(post, file_metadata_regexp=None, lang=None):
                 os.path.basename(post.source_path))[0]
 
     return meta
+
+
+def hyphenate(dom, lang):
+    if pyphen is not None:
+        hyphenator = pyphen.Pyphen(lang=lang)
+        for tag in ('p', 'div', 'li', 'span'):
+            for node in dom.xpath("//%s" % tag):
+                insert_hyphens(node, hyphenator)
+    return dom
+
+
+def insert_hyphens(node, hyphenator):
+    textattrs = ('text', 'tail')
+    if isinstance(node, lxml.etree._Entity):
+        # HTML entities have no .text
+        textattrs = ('tail',)
+    for attr in textattrs:
+        text = getattr(node, attr)
+        if not text:
+            continue
+        new_data = ' '.join([hyphenator.inserted(w, hyphen=u'\u00AD')
+                             for w in text.split()])
+        # Spaces are trimmed, we have to add them manually back
+        if text[0].isspace():
+            new_data = ' ' + new_data
+        if text[-1].isspace():
+            new_data += ' '
+        setattr(node, attr, new_data)
+
+    for child in node.iterchildren():
+        insert_hyphens(child, hyphenator)

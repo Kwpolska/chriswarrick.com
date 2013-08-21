@@ -377,7 +377,11 @@ FUTURE_IS_NOW = False
 
 # Enable Addthis social buttons?
 # Defaults to true
-ADD_THIS_BUTTONS = False
+#ADD_THIS_BUTTONS = False
+
+# Content of the AddThis code, customize it to fit your needs
+# Visit addthis.com to generate code samples
+SOCIAL_BUTTONS_CODE = ''
 
 # Hide link to source for the posts?
 HIDE_SOURCELINK = True
@@ -553,6 +557,9 @@ USE_BUNDLES = False
 # List of regular expressions, links matching them will always be considered
 # valid by "nikola check -l"
 # LINK_CHECK_WHITELIST = []
+
+# If set to True, enable optional hyphenation in your posts (requires pyphen)
+# HYPHENATE = False
 
 # Put in global_context things you want available on all your templates.
 # It can be anything, data, functions, modules, etc.
