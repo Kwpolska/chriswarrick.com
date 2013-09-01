@@ -1,0 +1,298 @@
+<!DOCTYPE html><html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta charset="utf-8">
+    <meta name="description" content="A short how-to on installing MPD on Windows.">
+    <meta name="author" content="Chris “Kwpolska” Warrick">
+    <title>Adventures in Windows: Music Player Daemon — Kw’s Blog</title>
+    <link href="../../../../../assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../../../../assets/css/code.css" rel="stylesheet">
+    <link href="../../../../../assets/css/slides.css" rel="stylesheet">
+    <link href="../../../../../assets/css/theme.css" rel="stylesheet">
+    <link href="../../../../../assets/css/kw.css" rel="stylesheet">
+    <link href="../../../../../assets/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../../../../../assets/css/bootstrap-responsive.min.css" rel="stylesheet">
+    <link href="../../../../../assets/css/jquery.fancybox.css" rel="stylesheet" media="screen">
+    <link href="../../../../../assets/css/jquery.fancybox-thumbs.css" rel="stylesheet" media="screen">
+    <link href="../../../../../assets/css/jquery.fancybox-buttons.css" rel="stylesheet" media="screen">
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+            <link rel="alternate" type="application/rss+xml" title="RSS (en)" href="../../../../../rss.xml">
+            <link rel="icon" href="../../../../../favicon.ico" sizes="16x16">
+
+    
+    
+    <script src="../../../../../assets/js/jquery-1.7.2.min.js"></script>
+</head>
+<body>
+<!-- Menubar -->
+<header class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </a>
+
+            <a class="brand" href="../../../../../">
+            <img src="../../../../../assets/img/logo.png"> Kw’s Blog
+            </a>
+            <!-- Everything you want hidden at 940px or less, place within here -->
+            <div class="nav-collapse collapse">
+                <ul class="nav">
+                    
+            <li><a href="../../../../">Archives</a>
+            </li><li><a href="../../../../tags/">Tags</a>
+            </li><li><a href="../../../../../contact/">Contact</a>
+            </li><li><a href="http://kwpolska.github.io/projects/">Projects <i class="icon-external-link"></i></a>
+            </li><li><a href="http://kwpolska.github.io/">GitHub Page <i class="icon-external-link"></i></a>
+            </li><li><a href="../../../../../search/">Search</a>
+
+                </li></ul>
+                <ul class="nav pull-right">
+                
+                
+                
+    <li>
+    <a href="mpd-on-windows.rst" id="sourcelink">Source</a>
+    </li>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+</header>
+<!-- End of Menubar -->
+<section class="container-fluid" id="container-fluid">
+    <!--Body content-->
+    <div class="row-fluid">
+    <div class="span2"></div>
+    <div class="span8">
+    <div id="alertbox"></div>
+    
+    
+    <ul class="pager">
+        <li class="previous">
+            <a href="../../../02/09/password-changing-101/">← Previous post</a>
+        </li>
+    </ul>
+
+    <article class="postbox" id="article">
+    <header class="page-header">
+    <h1><a href=".">Adventures in Windows: Music Player Daemon</a>
+    <small>
+        2013-09-01 19:15 <br> 
+
+    </small>
+    </h1>
+    </header>
+    <div class="text">
+    
+    <div class="lead"><p>Recently, I had to reinstall Windows.  One of the things I had to set up
+was MPD, the <a class="reference external" href="http://musicpd.org/">Music Player Daemon</a>.</p>
+<p>This is a short guide on how to do this.</p>
+</div>
+<div class="section" id="step-1-get-mpd-and-mpc">
+<h2>Step 1: get MPD and MPC</h2>
+<p>Download <a class="reference external" href="http://musicpd.org/download/win32/">MPD</a> (<tt class="docutils literal"><span class="pre">mpd-x.y.z-win32.zip</span></tt>, replacing <tt class="docutils literal">x.y.z</tt> with whatever is the current available version of this file) and <a class="reference external" href="http://musicpd.org/download/mpc/">MPC</a> (<tt class="docutils literal"><span class="pre">mpc-x.y-win32-zip</span></tt>).  I suggest using
+<tt class="docutils literal"><span class="pre">C:\mpd</span></tt> as your base path.  This post assumes you actually used this
+value.</p>
+<p>Put everything from the <tt class="docutils literal"><span class="pre">/mpd-x.y.z-win32/bin/</span></tt> directory of the
+<tt class="docutils literal"><span class="pre">mpd-x.y.z-win32.zip</span></tt> archive into your base path (<tt class="docutils literal"><span class="pre">C:\mpd</span></tt>).  From
+the <tt class="docutils literal"><span class="pre">mpc-x.y-win32.zip</span></tt> archive, take <tt class="docutils literal">mpc.exe</tt> and
+<tt class="docutils literal"><span class="pre">libmpdclient-2.dll</span></tt> and put them there.</p>
+</div>
+<div class="section" id="step-1-5-optional-but-recommended-get-gmpc">
+<h2>Step 1.5 (optional, but recommended): get GMPC</h2>
+<p>If you want a nice, easy, graphical interface for MPD, you should install
+GMPC, the <a class="reference external" href="http://gmpclient.org/">Gnome Music Player Client</a>.  The installation is very
+straightforward, so I’ll leave the details out.</p>
+</div>
+<div class="section" id="step-2-create-a-config-file">
+<h2>Step 2: create a config file</h2>
+<p>You need to create a configuration file.  A sample one is included in
+<tt class="docutils literal"><span class="pre">/mpd-x.y.z-win32/doc/mpdconf.sample</span></tt>.  Use the <tt class="docutils literal">winmm</tt> output type.</p>
+<p><strong>Warning:</strong> Windows Notepad will not work, because it does not understand
+Unix-style line endings (<tt class="docutils literal">\n</tt> instead of <tt class="docutils literal">\r\n</tt>).</p>
+<p>For <tt class="docutils literal">db_file</tt> and <tt class="docutils literal">log_file</tt>, I recommend a file in <tt class="docutils literal"><span class="pre">C:\mpd\data\</span></tt>.
+I also recommend saving your config as <tt class="docutils literal"><span class="pre">C:\mpd\data\mpd.conf</span></tt> (in fact,
+this is yet another assumption we make in this guide)</p>
+<div class="section" id="multi-boot-corner-keep-parts-of-the-config-the-same">
+<h3>Multi Boot Corner: keep parts of the config the same</h3>
+<p>Because I have a dual-boot system, there are some directions for
+multi-boot users.</p>
+<p>Your <tt class="docutils literal">music_directory</tt>, <tt class="docutils literal">playlist_directory</tt> and <tt class="docutils literal">state_file</tt> <em>must</em> be the same on all the systems in your multi-boot environment.  It is recommended to use the same <tt class="docutils literal">db_file</tt>.</p>
+<p>Your audio outputs must have the same names.</p>
+</div>
+</div>
+<div class="section" id="step-3-test-your-configuration">
+<h2>Step 3: test your configuration</h2>
+<p>Open up two Command Prompt windows.  In the first one, run:</p>
+<pre class="literal-block">
+cd C:\mpd
+mpd data\mpd.conf
+</pre>
+<p>If you see this message:</p>
+<pre class="literal-block">
+Failed to load database: Failed to open database file "&lt;name&gt;": No such file or directory
+</pre>
+<p>then you can ignore it.  If you see another message, fix whatever it
+states.  You may also use <tt class="docutils literal"><span class="pre">--stdout</span></tt> or <tt class="docutils literal"><span class="pre">-v</span></tt> to get more output
+messages.</p>
+<div class="section" id="multi-boot-path">
+<h3>Multi Boot path</h3>
+<p>If you followed the Multi Boot instructions correctly, you might be
+hearing music already.  If you do not, use your other Command Prompt window and
+run:</p>
+<pre class="literal-block">
+cd C:\mpd
+mpc play
+</pre>
+<p>If it outputs the name of a song, a <tt class="docutils literal">[playing]</tt> line, all is well (if you
+cannot hear music, unmute your audio).</p>
+<p>If you do not have a mpd database yet, use the <em>Single path</em>.</p>
+<p><strong>If MPD works, press Ctrl+C in the window where you ran ``mpd
+datampd.conf.``</strong></p>
+</div>
+<div class="section" id="single-path">
+<h3>Single path</h3>
+<p>In the other Command Prompt window, run:</p>
+<pre class="literal-block">
+cd C:\mpd
+mpc update
+mpc add "FILENAME"
+mpc play
+</pre>
+<p>(FILENAME should be a name of a file in your music library.  Make sure to
+keep the quotes.)</p>
+<p>And now you should hear music.  If you do not, try to unmute, then read
+the output of <tt class="docutils literal">mpc</tt> and try to fix it.</p>
+<p><strong>If MPD works, press Ctrl+C in the window where you ran ``mpd
+datampd.conf.``</strong></p>
+</div>
+</div>
+<div class="section" id="step-3-5-test-gmpc">
+<h2>Step 3.5: test GMPC</h2>
+<p>Start the Gnome Music Player Client.  Click <em>Forward</em>, <em>Connect</em>,
+<em>Forward</em>, <em>Close</em> and all should be well.</p>
+</div>
+<div class="section" id="step-4-create-a-windows-service">
+<h2>Step 4: create a Windows service</h2>
+<p>In order to run the daemon in the <em>daemon</em> mode, i.e. hidden, you need to
+perform some extra steps.  You cannot use Startup in the Start Menu, you
+also cannot use the Run registry keys (this results in an ugly Command Prompt
+window running all the time that you cannot close or hide in the tray).</p>
+<p>How to solve this problem?  Just run it as a Windows service.  That is
+very easy to do.</p>
+<p>Open a Command Prompt window as an administrator (right-click on <em>Command
+Prompt</em> in the Start Menu/on the Start Screen and choose <em>Run as administrator</em>).</p>
+<p>In that window, run one very easy command (make sure to copy-paste this
+exactly!):</p>
+<pre class="literal-block">
+sc create mpd binPath= "c:\mpd\mpd.exe c:\mpd\data\mpd.conf"
+</pre>
+<p>If it said:</p>
+<ul class="simple">
+<li><tt class="docutils literal">[SC] CreateService SUCCESS</tt>, congratulations — you are almost done!  Skip down to <em>Service configuration.</em></li>
+<li><tt class="docutils literal">[SC] OpenSCManager FAILED 5: Access is denied.</tt>, you need an
+<strong>Administrator</strong> Command Prompt.</li>
+<li>something else, check your spelling or Google the error.</li>
+</ul>
+<div class="section" id="service-configuration">
+<h3>Service configuration</h3>
+<p>That is the easiest part of this guide.</p>
+<p>Start the <em>Services</em> console.  You can get to it by typing
+<tt class="docutils literal">services.msc</tt> into the Start Menu/Screen search (<em>Run</em> for XP or
+older).</p>
+<p>In the tool, find the <tt class="docutils literal">mpd</tt> service.  Go to the <em>Log On</em> tab, choose
+<em>This account:</em> and enter your credentials there.  Hit <em>Apply</em> and go to
+the <em>General</em> tab, on which you should choose the <em>Startup type</em> to be
+<em>Automatic (Delayed Start)</em>.  Finish by pressing <em>Start</em>.  MPD should be
+running and configured properly.  You can now hit <em>OK</em> and close the
+<em>Services</em> window, along with the command prompts you have open.</p>
+<p><strong>Warning:</strong> if you change your Windows password, you need to change your
+password in the <em>Services</em> console as well!</p>
+</div>
+<div class="section" id="just-in-case-uninstalling-the-service">
+<h3>Just in case: uninstalling the service</h3>
+<p>First off, stop the service (in the Services console or through <tt class="docutils literal">sc stop
+mpd</tt> in an administrator command prompt).</p>
+<p>Then, run <tt class="docutils literal">sc delete mpd</tt>.</p>
+</div>
+</div>
+    </div>
+    <footer><a href="index.html#disqus_thread">comments</a></footer>
+    </article>
+
+    <article class="postbox" id="comments">
+    <header class="page-header">
+    <h1>Comments <small>Brought to you by <a href="http://disqus.com">DISQUS</a>.</small></h1>
+    </header>
+    <div class="text">
+  <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'kwpolska'; // required: replace example with your forum shortname
+        var disqus_url = 'http://kwpolska.tk/blog/2013/09/01/mpd-on-windows/';
+        var disqus_title = 'Adventures in Windows: Music Player Daemon';
+        var disqus_identifier = '/blog/2013/09/01/mpd-on-windows/';
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    </div>
+    <footer>leave a comment above.</footer>
+    </article>
+
+    </div>
+    </div>
+    <!--End of body content-->
+</section>
+<footer class="footerbox">
+    <footer><p><a href="../../../../../cookies/">this site uses
+cookies.</a><br>by using this site, you agree to our cookie policy.</p><p>
+generated by <a href="http://nikola.ralsina.com.ar">nikola</a>, the python
+static site generator<br> copyright © 2009-2013 <a href="../../../../../contact/">Chris “Kwpolska” Warrick</a><br> <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/">CC
+BY-NC-ND</a></p></footer>
+</footer>
+
+
+
+<!-- asynchronous google analytics: mathiasbynens.be/notes/async-analytics-snippet
+       change the UA-XXXXX-X to be your site's ID -->
+<script>
+    var _gaq = [['_setAccount', 'UA-11937989-1'], ['_trackPageview']];
+    (function(d, t) {
+    var g = d.createElement(t),
+        s = d.getElementsByTagName(t)[0];
+    g.async = true;
+    g.src = ('https:' == location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    s.parentNode.insertBefore(g, s);
+    })(document, 'script');
+</script>
+
+    <script src="../../../../../assets/js/jquery.colorbox-min.js"></script>
+    <script src="../../../../../assets/js/slides.min.jquery.js"></script>
+    <script src="../../../../../assets/js/bootstrap.min.js"></script>
+    <script src="../../../../../assets/js/jquery.mousewheel-3.0.6.pack.js"></script>
+    <script src="../../../../../assets/js/jquery.fancybox.pack.js"></script>
+    <script src="../../../../../assets/js/jquery.fancybox-buttons.js"></script>
+    <script src="../../../../../assets/js/jquery.fancybox-media.js"></script>
+    <script src="../../../../../assets/js/jquery.fancybox-thumbs.js"></script>
+    <script>
+        $(document).ready(function() {
+            $(".fancybox").fancybox();
+        });
+    </script>
+</body>
+</html>
