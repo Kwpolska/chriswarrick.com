@@ -9,16 +9,11 @@
 %endif
     <%
     from nikola.post import TEASER_REGEXP
-    teaser_split = TEASER_REGEXP.split(post.text(lang))
+    teaser_split = TEASER_REGEXP.split(post.text())
     try:
         pdata = u'<div class="lead">{0}</div>{1}'.format(teaser_split[0], teaser_split[3])
     except IndexError:
-        pdata = post.text(lang)
+        pdata = post.text()
     %>
     ${pdata}
-<!--
-%if enable_comments:
-    ${disqus.html_disqus(post.permalink(absolute=True), post.title(lang), post.base_path)}
-%endif
--->
 </%block>

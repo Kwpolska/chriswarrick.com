@@ -1,5 +1,5 @@
 # mako/pyparser.py
-# Copyright (C) 2006-2012 the Mako authors and contributors <see AUTHORS file>
+# Copyright (C) 2006-2013 the Mako authors and contributors <see AUTHORS file>
 #
 # This module is part of Mako and is released under
 # the MIT License: http://www.opensource.org/licenses/mit-license.php
@@ -539,6 +539,27 @@ else:
                     self.buf.write(', ')
                     self.visit(a)
             self.buf.write(')')
+
+        def visitLambda(self, node, *args):
+            self.buf.write('lambda ')
+
+            argnames = list(node.argnames)
+
+            kw = arg = None
+            if node.kwargs > 0:
+                kw = argnames.pop(-1)
+            if node.varargs > 0:
+                arg = argnames.pop(-1)
+
+            if arg:
+                argnames.append("*%s" % arg)
+            if kw:
+                argnames.append("**%s" % kw)
+
+            self.buf.write(", ".join(argnames))
+
+            self.buf.write(': ')
+            self.visit(node.code)
 
 
     class walker(visitor.ASTVisitor):

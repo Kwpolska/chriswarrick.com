@@ -1,7 +1,8 @@
 .. title: PKGBUILDer Ready for Prime Time!
 .. slug: pkgbuilder-ready-for-prime-time
 .. date: 2012-07-19 16:30:00
-.. tags: projects, Python
+.. tags: projects, Python, Linux
+.. tags: Python
 .. description: My AUR helper, PKGBUILDer, is ready for prime time.  A word about it is posted here.
 
 .. class:: pull-right

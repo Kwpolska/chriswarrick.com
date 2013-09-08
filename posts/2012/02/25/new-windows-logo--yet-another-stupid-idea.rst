@@ -2,12 +2,13 @@
 .. slug: new-windows-logo-yet-another-stupid-idea
 .. date: 2012-02-25 00:00:00
 .. tags: rant, Windows, Windows 8
+.. category: Windows
 .. description: Microsoft goes apeshit once more, this time with the new Windows 8 logo.
 
 .. raw:: html
 
     <figure>
-    <img src="http://kwcdn.tk/blog-content/logos/win8.png" alt="Windows 8’s New Logo">
+    <img src="http://kwpolska.tk/blog-content/logos/win8.png" alt="Windows 8’s New Logo">
     <figcaption>Windows 8’s New Logo, picture by Microsoft (<a href="http://windowsteamblog.com/windows/b/bloggingwindows/archive/2012/02/17/redesigning-the-windows-logo.aspx">Source</a>)</figcaption>
     </figure>
 

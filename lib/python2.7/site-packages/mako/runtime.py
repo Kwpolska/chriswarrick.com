@@ -1,5 +1,5 @@
 # mako/runtime.py
-# Copyright (C) 2006-2012 the Mako authors and contributors <see AUTHORS file>
+# Copyright (C) 2006-2013 the Mako authors and contributors <see AUTHORS file>
 #
 # This module is part of Mako and is released under
 # the MIT License: http://www.opensource.org/licenses/mit-license.php
@@ -58,8 +58,22 @@ class Context(object):
 
     @property
     def kwargs(self):
-        """Return the dictionary of keyword arguments associated with this
-        :class:`.Context`.
+        """Return the dictionary of top level keyword arguments associated
+        with this :class:`.Context`.
+
+        This dictionary only includes the top-level arguments passed to
+        :meth:`.Template.render`.  It does not include names produced within
+        the template execution such as local variable names or special names
+        such as ``self``, ``next``, etc.
+
+        The purpose of this dictionary is primarily for the case that
+        a :class:`.Template` accepts arguments via its ``<%page>`` tag,
+        which are normally expected to be passed via :meth:`.Template.render`,
+        except the template is being called in an inheritance context,
+        using the ``body()`` method.   :attr:`.Context.kwargs` can then be
+        used to propagate these arguments to the inheriting template::
+
+            ${next.body(**context.kwargs)}
 
         """
         return self._kwargs.copy()
@@ -144,11 +158,18 @@ class Context(object):
         c.caller_stack = self.caller_stack
         return c
 
-    def locals_(self, d):
+    def _locals(self, d):
         """Create a new :class:`.Context` with a copy of this
-        :class:`.Context`'s current state, updated with the given dictionary."""
+        :class:`.Context`'s current state,
+        updated with the given dictionary.
 
-        if len(d) == 0:
+        The :attr:`.Context.kwargs` collection remains
+        unaffected.
+
+
+        """
+
+        if not d:
             return self
         c = self._copy()
         c._data.update(d)
@@ -173,19 +194,22 @@ class CallerStack(list):
         return self.__bool__()
 
     def __bool__(self):
-        return self._get_caller() and True or False
+        return len(self) and self._get_caller() and True or False
 
     def _get_caller(self):
         # this method can be removed once
         # codegen MAGIC_NUMBER moves past 7
         return self[-1]
+
     def __getattr__(self, key):
         return getattr(self._get_caller(), key)
+
     def _push_frame(self):
         frame = self.nextcaller or None
         self.append(frame)
         self.nextcaller = None
         return frame
+
     def _pop_frame(self):
         self.nextcaller = self.pop()
 
@@ -619,12 +643,12 @@ class ModuleNamespace(Namespace):
         if self.callables:
             for key in self.callables:
                 yield (key, self.callables[key])
-        def get(key):
-            callable_ = getattr(self.module, key)
-            return compat.partial(callable_, self.context)
-        for k in dir(self.module):
-            if k[0] != '_':
-                yield (k, get(k))
+        for key in dir(self.module):
+            if key[0] != '_':
+                callable_ = getattr(self.module, key)
+                if compat.callable(callable_):
+                    yield key, compat.partial(callable_, self.context)
+
 
     def __getattr__(self, key):
         if key in self.callables:
@@ -721,10 +745,10 @@ def _inherit_from(context, uri, calling_uri):
     ih = self_ns
     while ih.inherits is not None:
         ih = ih.inherits
-    lclcontext = context.locals_({'next':ih})
+    lclcontext = context._locals({'next': ih})
     ih.inherits = TemplateNamespace("self:%s" % template.uri,
                                 lclcontext,
-                                template = template,
+                                template=template,
                                 populate_self=False)
     context._data['parent'] = lclcontext._data['local'] = ih.inherits
     callable_ = getattr(template.module, '_mako_inherit', None)

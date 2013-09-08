@@ -1,7 +1,8 @@
 .. title: New Year’s Python Meme 2012
 .. slug: new-years-python-meme-2012
 .. date: 2012-12-29 20:40:00
-.. tags: python
+.. tags: Python
+.. category: Python
 .. description: Python is Awesome.  Now, what is awesome in it?
 
 Via `Tarek Ziadé`_.  Right after the break.

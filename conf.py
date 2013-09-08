@@ -1,7 +1,7 @@
 
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-import time
+#import time
 
 ##############################################
 # Configuration, please edit
@@ -13,7 +13,7 @@ BLOG_AUTHOR = "Chris “Kwpolska” Warrick"
 BLOG_TITLE = "Kw’s Blog"
 # This is the main URL for your site. It will be used
 # in a prominent link
-SITE_URL = "http://kwpolska.tk"
+SITE_URL = "http://kwpolska.tk/"
 # This is the URL where nikola's output will be deployed.
 # If not set, defaults to SITE_URL
 # BASE_URL = "http://nikola.ralsina.com.ar"
@@ -53,10 +53,10 @@ TRANSLATIONS = {
 
 # Links for the sidebar / navigation bar.
 # You should provide a key-value pair for each used language.
-SIDEBAR_LINKS = {
+NAVIGATION_LINKS = {
     DEFAULT_LANG: (
         ('/blog/', 'Archives'),
-        ('/blog/tags/', 'Tags'),
+        ('/blog/organizational_structures/', 'Tags and Categories'),
         ('/contact/', 'Contact'),
         ('http://kwpolska.github.io/projects/', 'Projects <i class="icon-external-link"></i>'),
         ('http://kwpolska.github.io/', 'GitHub Page <i class="icon-external-link"></i>'),
@@ -91,11 +91,12 @@ SIDEBAR_LINKS = {
 # rss feeds.
 #
 
-post_pages = (
-    ("posts/*.rst", "blog", "post.tmpl", True),
-    ("stories/*.rst", "", "story.tmpl", False),
-    ("stories/*.html", "", "story.tmpl", False),
-    ("stories/err/*.html", "err", "err.tmpl", False),
+POSTS = (("posts/*.rst", "blog", "post.tmpl"),)
+
+PAGES = (
+    ("stories/*.rst", "", "story.tmpl"),
+    ("stories/*.html", "", "story.tmpl"),
+    ("stories/err/*.html", "err", "err.tmpl"),
 )
 
 # One or more folders containing files to be copied as-is into the output.
@@ -111,7 +112,7 @@ FILES_FOLDERS = {'files': '' }
 # 'rest' is reStructuredText
 # 'markdown' is MarkDown
 # 'html' assumes the file is html and just copies it
-post_compilers = {
+COMPILERS = {
     "rest": ('.txt', '.rst'),
     "markdown": ('.md', '.mdown', '.markdown'),
     "textile": ('.textile',),
@@ -143,7 +144,7 @@ HIDE_UNTRANSLATED_POSTS = False
 # output / TRANSLATION[lang] / TAG_PATH / index.html (list of tags)
 # output / TRANSLATION[lang] / TAG_PATH / tag.html (list of posts for a tag)
 # output / TRANSLATION[lang] / TAG_PATH / tag.xml (RSS feed for a tag)
-TAG_PATH = "blog/tags"
+TAG_PATH = "blog/organizational_structures"
 
 # If TAG_PAGES_ARE_INDEXES is set to True, each tag's page will contain
 # the posts themselves. If set to False, it will be just a list of links.
@@ -311,7 +312,8 @@ BY-NC-ND</a></p></footer>"""
 # http://disqus.com, and set DISQUS_FORUM to the short name you selected.
 # If you want to disable comments, set it to False.
 # Default is "nikolademo", used by the demo sites
-DISQUS_FORUM = 'kwpolska'
+COMMENT_SYSTEM = 'disqus'
+COMMENT_SYSTEM_ID = 'kwpolska'
 
 # Create index.html for story folders?
 STORY_INDEX = True
@@ -479,7 +481,7 @@ COPY_SOURCES = False
 # in the default template (base.tmpl).
 # ANALYTICS = ""
 
-ANALYTICS = """
+BODY_END = """
 <!-- asynchronous google analytics: mathiasbynens.be/notes/async-analytics-snippet
        change the UA-XXXXX-X to be your site's ID -->
 <script>

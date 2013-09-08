@@ -2,6 +2,8 @@
 .. slug: mpd-on-windows
 .. date: 2013-09-01 19:15:00
 .. description: A short how-to on installing MPD on Windows.
+.. tags: Windows, mpd
+.. category: Windows
 
 Recently, I had to reinstall Windows.  One of the things I had to set up
 was MPD, the `Music Player Daemon`_.

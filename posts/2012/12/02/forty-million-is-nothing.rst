@@ -1,7 +1,8 @@
 .. title: Forty Million is Nothing!
 .. slug: forty-million-is-nothing
 .. date: 2012-12-02 17:00:00
-.. tags: windows, win8, rant, review
+.. tags: Windows 8, rant, review
+.. category: Windows
 .. description: 40 million, you say?  After a month?  HAH.
 
 I’ve been busy, but I now have time to write about it: in a bit over one month,

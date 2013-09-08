@@ -2,12 +2,13 @@
 .. slug: microsoft-are-you-crazy
 .. date: 2011-10-13 00:00:00
 .. tags: Windows, rant, Windows 8
+.. category: Windows
 .. description: A rant about Windows 8.
 
 .. raw:: html
 
     <figure>
-    <img src="http://kwcdn.tk/blog-content/win8.png" alt="Windows 8 Start Screen"/>
+    <img src="http://kwpolska.tk/blog-content/img/win8-oldss.png" alt="Windows 8 Start Screen"/>
     <figcaption>Windows 8, picture by Microsoft (<a href="http://build.blob.core.windows.net/media/Default/home/start.png">Source</a>)</figcaption>
     </figure>
 

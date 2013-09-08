@@ -28,7 +28,9 @@ __all__ = [
     'Command',
     'LateTask',
     'PageCompiler',
+    'RestExtension',
     'Task',
+    'TaskMultiplier',
     'TemplateSystem'
 ]
 
@@ -178,6 +180,10 @@ class PageCompiler(BasePlugin):
     def extension(self):
         """The preferred extension for the output of this compiler."""
         return ".html"
+
+
+class RestExtension(BasePlugin):
+    name = "dummy_rest_extension"
 
 
 class Importer(Command):

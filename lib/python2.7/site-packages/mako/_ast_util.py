@@ -1,5 +1,5 @@
 # mako/_ast_util.py
-# Copyright (C) 2006-2012 the Mako authors and contributors <see AUTHORS file>
+# Copyright (C) 2006-2013 the Mako authors and contributors <see AUTHORS file>
 #
 # This module is part of Mako and is released under
 # the MIT License: http://www.opensource.org/licenses/mit-license.php
@@ -658,6 +658,9 @@ class SourceGenerator(NodeVisitor):
 
     def visit_Name(self, node):
         self.write(node.id)
+
+    def visit_arg(self, node):
+        self.write(node.arg)
 
     def visit_Str(self, node):
         self.write(repr(node.s))

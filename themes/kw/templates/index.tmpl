@@ -1,29 +1,43 @@
 ## -*- coding: utf-8 -*-
 <%namespace name="helper" file="index_helper.tmpl"/>
 <%namespace name="phelper" file="post_helper.tmpl"/>
-<%namespace name="disqus" file="disqus_helper.tmpl"/>
+<%namespace name="comments" file="comments_helper.tmpl"/>
 <%inherit file="base.tmpl"/>
 <%block name="content">
-    <div class="row-fluid">
+    <div class="row">
     % for post in posts:
-    <article class="postbox span6">
+    <article class="postbox col-md-5
+    %if (loop.index + 1) % 2 == 0:
+    col-md-offset-2
+    %endif
+    ">
     <header class="page-header">
-    <h1><a href="${post.permalink(lang)}">${post.title(lang)}</a><br>
+    <h1
+    %if len(post.title()) < 30:
+    class="short-title"
+    %endif
+    ><a href="${post.permalink()}">${post.title()}</a><br>
     <small>
-        ${post.date.strftime(date_format)}<br> ${phelper.html_tags(post)}
+        <time class="published"
+        datetime="${post.date.isoformat()}">${post.date.strftime(date_format)}</time><br> ${phelper.html_tags(post)}
     </small>
     </h1>
     </header>
     <div class="text">
-    ${post.text(lang, index_teasers)}
+    ${post.text(teaser_only=index_teasers)}
     </div>
-    <footer><a href="${post.permalink(lang)}" class="morelink">more</a> — <a href="${post.permalink(lang)}#disqus_thread">comments</a></footer>
+    <footer><a href="${post.permalink()}" class="morelink">more</a>
+    % if not post.meta('nocomments'):
+        — <a href="${post.permalink()}#disqus_thread">comments</a>
+    % endif
+    </footer>
     </article>
     % if (loop.index + 1) % 2 == 0:
-    </div><div class="row-fluid">
+    </div><div class="row">
     % endif
     % endfor
     ${helper.html_pager()}
     </div>
-    ${helper.mathjax_script(post)}
+    ${comments.comment_link_script()}
+    ${helper.mathjax_script(posts)}
 </%block>

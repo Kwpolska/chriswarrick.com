@@ -1,5 +1,5 @@
 # ext/babelplugin.py
-# Copyright (C) 2006-2012 the Mako authors and contributors <see AUTHORS file>
+# Copyright (C) 2006-2013 the Mako authors and contributors <see AUTHORS file>
 #
 # This module is part of Mako and is released under
 # the MIT License: http://www.opensource.org/licenses/mit-license.php
@@ -76,9 +76,7 @@ def extract_nodes(nodes, keywords, comment_tags, options):
         elif isinstance(node, parsetree.PageTag):
             code = node.body_decl.code
         elif isinstance(node, parsetree.CallNamespaceTag):
-            attribs = ', '.join(['%s=%s' % (key, val)
-                                 for key, val in node.attributes.items()])
-            code = '{%s}' % attribs
+            code = node.expression
             child_nodes = node.nodes
         elif isinstance(node, parsetree.ControlLine):
             if node.isend:
@@ -107,9 +105,10 @@ def extract_nodes(nodes, keywords, comment_tags, options):
             translator_comments = \
                 [comment[1] for comment in translator_comments]
 
-        if not compat.py3k and isinstance(code, compat.text_type):
+        if isinstance(code, compat.text_type):
             code = code.encode('ascii', 'backslashreplace')
-        code = StringIO(code)
+
+        code = compat.byte_buffer(code)
         for lineno, funcname, messages, python_translator_comments \
                 in extract_python(code, keywords, comment_tags, options):
             yield (node.lineno + (lineno - 1), funcname, messages,
