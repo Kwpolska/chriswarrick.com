@@ -542,7 +542,7 @@ BODY_END = """
 TIMEZONE = 'Europe/Warsaw'
 
 # If webassets is installed, bundle JS and CSS to make site loading faster
-USE_BUNDLES = False
+USE_BUNDLES = True
 
 # Plugins you don't want to use. Be careful :-)
 # DISABLED_PLUGINS = ["render_galleries"]
