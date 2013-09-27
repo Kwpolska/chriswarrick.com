@@ -1,7 +1,7 @@
 .. title: YouTube’s Cosmic Panda Sucks!
 .. slug: youtubes-cosmic-panda-sucks
 .. date: 2011-08-28 00:00:00
-.. tags: YouTube, internet, rant
+.. tags: YouTube, Internet, rant
 .. description: Cosmic Panda is a new YouTube UI.  I don't like it.
 
 I played with the YouTube’s Cosmic Panda UI for a while.  I am not happy
