@@ -30,7 +30,9 @@ a fully-featured AUR helper (it has no update function, but I will
 write one soon).  It’s the PKGBUILDer_.
 
 The Perl version (search in the repo, linked above) had 56 lines.  In
-short, it did something like this (rewritten to bash)::
+short, it did something like this (rewritten to bash):
+
+.. code-block:: bash
 
     function generate(package) {
         pk=${package:0:2}
