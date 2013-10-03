@@ -32,7 +32,7 @@ from nikola import utils
 
 
 class Redirect(Task):
-    """Copy theme assets into output."""
+    """Generate redirections"""
 
     name = "redirect"
 
@@ -44,17 +44,8 @@ class Redirect(Task):
             'output_folder': self.site.config['OUTPUT_FOLDER'],
         }
 
-        if not kw['redirections']:
-            # If there are no redirections, still needs to create a
-            # dummy action so dependencies don't fail
-            yield {
-                'basename': self.name,
-                'name': 'None',
-                'uptodate': [True],
-                'actions': [],
-            }
-
-        else:
+        yield self.group_task()
+        if kw['redirections']:
             for src, dst in kw["redirections"]:
                 src_path = os.path.join(kw["output_folder"], src)
                 yield {
@@ -68,10 +59,7 @@ class Redirect(Task):
 
 
 def create_redirect(src, dst):
-    try:
-        os.makedirs(os.path.dirname(src))
-    except:
-        pass
+    utils.makedirs(os.path.dirname(src))
     with codecs.open(src, "wb+", "utf8") as fd:
         fd.write('<!DOCTYPE html><head><title>Redirecting...</title>'
                  '<meta http-equiv="refresh" content="0; '

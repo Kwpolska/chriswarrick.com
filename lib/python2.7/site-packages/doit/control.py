@@ -306,6 +306,9 @@ class TaskDispatcher(object):
                 wait_for.add(name)
             else:
                 node.parent_status(dep_node)
+                if calc:
+                    self._process_calc_dep_results(dep_node, node)
+
 
         # update ExecNode setting parent/dependent relationship
         for name in wait_for:
@@ -334,18 +337,23 @@ class TaskDispatcher(object):
         # add calc_dep & task_dep until all processed
         # calc_dep may add more deps so need to loop until nothing left
         while True:
-            for calc_dep in node.calc_dep:
-                yield self._gen_node(node, calc_dep)
-            self._node_add_wait_run(node, node.calc_dep, calc=True)
+            calc_dep_list = list(node.calc_dep)
             node.calc_dep.clear()
-
-            # add task_dep
-            for task_dep in node.task_dep:
-                yield self._gen_node(node, task_dep)
-            self._node_add_wait_run(node, node.task_dep)
+            task_dep_list = node.task_dep[:]
             node.task_dep = []
 
-            if (node.wait_run or node.wait_run_calc):
+            for calc_dep in calc_dep_list:
+                yield self._gen_node(node, calc_dep)
+            self._node_add_wait_run(node, calc_dep_list, calc=True)
+
+            # add task_dep
+            for task_dep in task_dep_list:
+                yield self._gen_node(node, task_dep)
+            self._node_add_wait_run(node, task_dep_list)
+
+            if (node.calc_dep or node.task_dep):
+                continue # pragma: no cover # coverage cant catch this #198
+            elif (node.wait_run or node.wait_run_calc):
                 yield 'wait'
             else:
                 break
@@ -427,26 +435,31 @@ class TaskDispatcher(object):
                 # calc_dep might add new deps that can be run without
                 # waiting for the completion of the remaining deps
                 is_ready = True
+                self._process_calc_dep_results(node, waiting_node)
 
-                # refresh this task dependencies with values got from calc_dep
-                values = node.task.values
-                len_task_deps = len(node.task.task_dep)
-                old_calc_dep = node.task.calc_dep.copy()
-                waiting_node.task.update_deps(values)
-                TaskControl.add_implicit_task_dep(
-                    self.targets, waiting_node.task,
-                    values.get('file_dep', []))
-
-                # update node's list of non-processed dependencies
-                new_task_dep = waiting_node.task.task_dep[len_task_deps:]
-                waiting_node.task_dep.extend(new_task_dep)
-                new_calc_dep = waiting_node.task.calc_dep - old_calc_dep
-                waiting_node.calc_dep.update(new_calc_dep)
 
             # this node can be further processed
             if is_ready and (waiting_node in self.waiting):
                 self.ready.append(waiting_node)
                 self.waiting.remove(waiting_node)
+
+
+    def _process_calc_dep_results(self, node, waiting_node):
+        # refresh this task dependencies with values got from calc_dep
+        values = node.task.values
+        len_task_deps = len(waiting_node.task.task_dep)
+        old_calc_dep = waiting_node.task.calc_dep.copy()
+        waiting_node.task.update_deps(values)
+        TaskControl.add_implicit_task_dep(
+            self.targets, waiting_node.task,
+            values.get('file_dep', []))
+
+        # update node's list of non-processed dependencies
+        new_task_dep = waiting_node.task.task_dep[len_task_deps:]
+        waiting_node.task_dep.extend(new_task_dep)
+        new_calc_dep = waiting_node.task.calc_dep - old_calc_dep
+        waiting_node.calc_dep.update(new_calc_dep)
+
 
 
     def _dispatcher_generator(self, selected_tasks):

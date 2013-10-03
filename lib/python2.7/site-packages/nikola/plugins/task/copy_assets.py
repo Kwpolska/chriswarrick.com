@@ -49,10 +49,12 @@ class CopyAssets(Task):
             "filters": self.site.config['FILTERS'],
             "code_color_scheme": self.site.config['CODE_COLOR_SCHEME'],
         }
-        flag = True
         has_code_css = False
         tasks = {}
         code_css_path = os.path.join(kw['output_folder'], 'assets', 'css', 'code.css')
+
+        yield self.group_task()
+
         for theme_name in kw['themes']:
             src = os.path.join(utils.get_theme_path(theme_name), 'assets')
             dst = os.path.join(kw['output_folder'], 'assets')
@@ -64,26 +66,14 @@ class CopyAssets(Task):
                 tasks[task['name']] = task
                 task['uptodate'] = [utils.config_changed(kw)]
                 task['basename'] = self.name
-                flag = False
                 yield utils.apply_filters(task, kw['filters'])
-
-        if flag:
-            yield {
-                'basename': self.name,
-                'name': 'None',
-                'uptodate': [True],
-                'actions': [],
-            }
 
         if not has_code_css:  # Generate it
 
             def create_code_css():
                 from pygments.formatters import get_formatter_by_name
                 formatter = get_formatter_by_name('html', style=kw["code_color_scheme"])
-                try:
-                    os.makedirs(os.path.dirname(code_css_path))
-                except:
-                    pass
+                utils.makedirs(os.path.dirname(code_css_path))
                 with codecs.open(code_css_path, 'wb+', 'utf8') as outf:
                     outf.write(formatter.get_style_defs('.code'))
                     outf.write("table.codetable { width: 100%;} td.linenos {text-align: right; width: 4em;}")
