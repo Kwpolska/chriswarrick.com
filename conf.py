@@ -562,7 +562,7 @@ USE_BUNDLES = True
 # LINK_CHECK_WHITELIST = []
 
 # If set to True, enable optional hyphenation in your posts (requires pyphen)
-HYPHENATE = False
+HYPHENATE = True
 
 # Put in global_context things you want available on all your templates.
 # It can be anything, data, functions, modules, etc.
