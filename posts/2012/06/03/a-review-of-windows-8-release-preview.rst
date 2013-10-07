@@ -267,7 +267,7 @@ This concludes my review of Windows 8 Release Preview.  I suggest looking at the
 
 .. raw:: html
 
-    <strong style="font-size: 3em;"><a href="http://kwpolska.tk/w8rpgal.html" title="Windows 8 RP Gallery">Windows 8 RP Gallery</a></strong>
+    <strong style="font-size: 3em;"><a href="http://kwpolska.tk/w8rpgal/" title="Windows 8 RP Gallery">Windows 8 RP Gallery</a></strong>
 
 If you do care about weird numbers and ratings, here you go:
 

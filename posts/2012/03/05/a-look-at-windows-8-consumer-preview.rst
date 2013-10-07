@@ -282,11 +282,11 @@ I also took a lot of screenshots.  Some of them were on the right side, but most
 
 .. raw:: html
 
-    <strong style="font-size: 3em;"><a href="http://kwpolska.tk/w8cpgal.html" title="Windows 8 Gallery">Windows 8 Gallery</a></strong>
+    <strong style="font-size: 3em;"><a href="http://kwpolska.tk/w8cpgal/" title="Windows 8 Gallery">Windows 8 Gallery</a></strong>
 
 *Thanks for reading this review.  It would be nice to share it on Twitter, Facebook, Google+ or wherever you want.  This post was brought to you by Word Web App.*
 
 .. _Microsoft’s Site: http://windows.microsoft.com/en-US/windows-8/consumer-preview
 .. _Download: http://windows.microsoft.com/en-US/windows-8/download
-.. _logo: http://kwpolska.tk/blog/2012/02/25/new-windows-logo--yet-another-stupid-idea/
+.. _logo: http://kwpolska.tk/blog/2012/02/25/new-windows-logo-yet-another-stupid-idea/
 .. _ISO: http://windows.microsoft.com/en-US/windows-8/iso

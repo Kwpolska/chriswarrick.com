@@ -330,7 +330,7 @@ examples, which are the documents used in this review.
 
 .. raw:: html
 
-    <strong style="font-size: 3em;"><a href="http://kwpolska.tk/o15gal.html" title="Office 2013 Gallery">Office 2013 Gallery</a></strong>
+    <strong style="font-size: 3em;"><a href="http://kwpolska.tk/o15gal/" title="Office 2013 Gallery">Office 2013 Gallery</a></strong>
 
 .. raw:: html
 
