@@ -60,8 +60,8 @@ NAVIGATION_LINKS = {
         ('/blog/', 'Archives'),
         ('/blog/organizational_structures/', 'Tags and Categories'),
         ('/contact/', 'Contact'),
-        ('http://kwpolska.github.io/projects/', 'Projects <i class="fa-external-link"></i>'),
-        ('http://kwpolska.github.io/', 'GitHub Page <i class="fa-external-link"></i>'),
+        ('http://kwpolska.github.io/projects/', 'Projects <i class="fa fa-external-link"></i>'),
+        ('http://kwpolska.github.io/', 'GitHub Page <i class="fa fa-external-link"></i>'),
         ('/search/', 'Search'),
     ),
 }
