@@ -7,13 +7,26 @@
     <h1>${title}</h1>
     </header>
 %endif
-    <%
-    from nikola.post import TEASER_REGEXP
-    teaser_split = TEASER_REGEXP.split(post.text())
-    try:
-        pdata = u'<div class="lead">{0}</div>{1}'.format(teaser_split[0], teaser_split[3])
-    except IndexError:
-        pdata = post.text()
-    %>
-    ${pdata}
+
+<div class="text">
+<%
+import lxml.html
+import lxml.etree
+from nikola.post import TEASER_REGEXP
+teaser_split = TEASER_REGEXP.split(post.text())
+try:
+    lead = teaser_split[0]
+    ptext = teaser_split[3]
+except IndexError:
+    lead = None
+    ptext = post.text()
+%>
+%if lead:
+<div class="lead">
+    ${lead}
+    </div>
+    </div>
+%endif
+${ptext}
+</div>
 </%block>
