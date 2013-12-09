@@ -18,6 +18,7 @@ Contact me:
 * **by IRC** — Kwpolska\@freenode; (not guaranteed) Kwpolska\@rizon.
 * **by Twitter** — `@Kwpolska <https://twitter.com/Kwpolska>`_
 
+**WARNING:** I am not available for hire.
 
 Bio
 ===
