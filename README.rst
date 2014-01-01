@@ -3,7 +3,7 @@ This is the `Kw’s Blog`_ source.
 License
 =======
 
-Copyright © 2009-2013, Kwpolska.
+Copyright © 2009-2014, Kwpolska.
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without

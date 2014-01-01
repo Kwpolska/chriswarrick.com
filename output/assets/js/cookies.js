@@ -24,7 +24,7 @@ function eraseCookie(name) {
     createCookie(name, "", -1);
 }
 
-/* code below Copyright © 2013, Kwpolska. */
+/* code below Copyright © 2013-2014, Chris “Kwpolska” Warrick. */
 
 function kill_eu() {
     createCookie('eu_lover', 'yes', 1189998819991197253);
