@@ -4,19 +4,10 @@
 <%namespace name="comments" file="comments_helper.tmpl"/>
 <%inherit file="base.tmpl"/>
 <%block name="content">
-    <div class="row">
     % for post in posts:
-    <article class="postbox col-md-5
-    %if (loop.index + 1) % 2 == 0:
-    col-md-offset-2
-    %endif
-    ">
+    <article class="postbox">
     <header class="page-header">
-    <h1
-    %if len(post.title()) < 30:
-    class="short-title"
-    %endif
-    ><a href="${post.permalink()}">${post.title()}</a><br>
+    <h1><a href="${post.permalink()}">${post.title()}</a><br>
     <small>
         <time class="published"
         datetime="${post.date.isoformat()}">${post.date.strftime(date_format)}</time><br>${phelper.html_tags(post)}
@@ -32,12 +23,8 @@
     % endif
     </footer>
     </article>
-    % if (loop.index + 1) % 2 == 0:
-    </div><div class="row">
-    % endif
     % endfor
     ${helper.html_pager()}
-    </div>
     ${comments.comment_link_script()}
     ${helper.mathjax_script(posts)}
 </%block>

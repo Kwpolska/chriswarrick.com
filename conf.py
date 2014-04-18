@@ -288,7 +288,8 @@ INDEX_TEASERS = True
 # {{            A literal { (U+007B LEFT CURLY BRACKET)
 # }}            A literal } (U+007D RIGHT CURLY BRACKET)
 # READ_MORE_LINK = '<p class="more"><a href="{link}">{read_more}…</a></p>'
-READ_MORE_LINK = ''
+INDEX_READ_MORE_LINK = ''
+RSS_READ_MORE_LINK = '<p class="more"><a href="{link}">{read_more}…</a> (remaining: {remaining_paragraph_count} paragraphs/{remaining_reading_time} minutes)</p>'
 
 # A HTML fragment describing the license, for the sidebar.
 LICENSE = """<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/">CC BY-NC-ND</a>"""
@@ -318,7 +319,7 @@ COMMENT_SYSTEM = 'disqus'
 COMMENT_SYSTEM_ID = 'kwpolska'
 
 # Create index.html for story folders?
-STORY_INDEX = True
+STORY_INDEX = False
 # Enable comments on story pages?
 COMMENTS_IN_STORIES = False
 # Enable comments on picture gallery pages?
