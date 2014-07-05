@@ -14,7 +14,7 @@ BLOG_AUTHOR = "Chris “Kwpolska” Warrick"
 BLOG_TITLE = "Chris Warrick’s Blog"
 # This is the main URL for your site. It will be used
 # in a prominent link
-SITE_URL = "http://kwpolska.tk/"
+SITE_URL = "http://chriswarrick.com/"
 # This is the URL where nikola's output will be deployed.
 # If not set, defaults to SITE_URL
 # BASE_URL = "http://nikola.ralsina.com.ar"
