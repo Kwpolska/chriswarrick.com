@@ -18,7 +18,7 @@ SITE_URL = "http://chriswarrick.com/"
 # This is the URL where nikola's output will be deployed.
 # If not set, defaults to SITE_URL
 # BASE_URL = "http://nikola.ralsina.com.ar"
-BLOG_EMAIL = "kwpolska@kwpolska.tk"
+BLOG_EMAIL = "chris@chriswarrick.com"
 BLOG_DESCRIPTION = "A blog about everything and nothing."
 
 # Nikola is multilingual!
