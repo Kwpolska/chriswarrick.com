@@ -58,10 +58,9 @@ TRANSLATIONS = {
 NAVIGATION_LINKS = {
     DEFAULT_LANG: (
         ('/blog/', 'Archives'),
-        ('/blog/tags/', 'Tags and Categories'),
+        ('/blog/tags/', 'Tags'),
         ('/contact/', 'Contact'),
         ('http://kwpolska.github.io/projects/', 'Projects <i class="fa fa-external-link"></i>'),
-        ('http://kwpolska.github.io/', 'GitHub Page <i class="fa fa-external-link"></i>'),
         ('/search/', 'Search'),
     ),
 }
