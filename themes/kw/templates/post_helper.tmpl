@@ -8,14 +8,27 @@
 
 
 <%def name="html_translations(post)">
-    %if len(translations) > 1:
-        %for langname in translations.keys():
-            %if langname != lang and post.is_translation_available(langname):
-                &nbsp;&nbsp;|&nbsp;&nbsp;
-                <a href="${post.permalink(langname)}">${messages("Read in English", langname)}</a>
-            %endif
-        %endfor
-    %endif
+<%
+len_translations = 0
+for langname in translations.keys():
+    if post.is_translation_available(langname):
+        len_translations += 1
+%>
+% if len_translations > 1:
+    <span class="metadata posttranslations translations">
+        % for langname in translations.keys():
+            % if post.is_translation_available(langname):
+            <a href="${post.permalink(langname)}" rel="alternate" hreflang="${langname}"><span class="badge
+                % if langname == lang:
+                    badge-lang-current
+                % else:
+                    badge-lang
+                % endif
+">${messages("LANGUAGE", langname)}</span></a>
+            % endif
+        % endfor
+    </span>
+% endif
 </%def>
 
 

@@ -13,5 +13,4 @@ logged in without the need to authenticate every once in a while.
 Full disclosure
 ===============
 
-Currently, you can only get Google Analytics cookies.  Previously, you
-could also get a cookie from the old “we use cookies” message.
+Currently, you can only get Google Analytics cookies.
