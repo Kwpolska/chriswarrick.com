@@ -1,4 +1,4 @@
-.. title: Android: Speeker — moja mała aplikacja na Androida
+.. title: Speeker — moja mała aplikacja na Androida
 .. slug: speeker
 .. date: 2014-08-26 15:00:00+02:00
 .. tags: android, app, devel, programming, projects
