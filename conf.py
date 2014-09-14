@@ -298,7 +298,7 @@ INDEX_TEASERS = True
 # }}            A literal } (U+007D RIGHT CURLY BRACKET)
 # READ_MORE_LINK = '<p class="more"><a href="{link}">{read_more}…</a></p>'
 INDEX_READ_MORE_LINK = ''
-RSS_READ_MORE_LINK = '<p class="more"><a href="{link}">{read_more}…</a> (remaining: {remaining_paragraph_count} paragraphs/{remaining_reading_time} minutes)</p>'
+RSS_READ_MORE_LINK = '<p class="more"><a href="{link}">{read_more}…</a> ({remaining_paragraph_count} paragraphs remaining — a {remaining_reading_time} minutes’ read)</p>'
 
 # A HTML fragment describing the license, for the sidebar.
 LICENSE = """<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/">CC BY-NC-ND</a>"""
