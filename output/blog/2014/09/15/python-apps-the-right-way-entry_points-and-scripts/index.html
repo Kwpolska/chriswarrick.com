@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="Chris “Kwpolska” Warrick">
+    <title>Python Apps the Right Way: entry points and scripts — Chris Warrick’s Blog</title>
+    
+        <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+        <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css">
+        <link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+        <link href="../../../../../assets/css/all.css" rel="stylesheet" type="text/css">
+        <!--
+        <link href="/assets/css/jquery.fancybox.css" rel="stylesheet" media="screen">
+        <link href="/assets/css/jquery.fancybox-thumbs.css" rel="stylesheet" media="screen">
+        <link href="/assets/css/jquery.fancybox-buttons.css" rel="stylesheet" media="screen">
+        -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
+    <![endif]-->
+                <link rel="alternate" type="application/rss+xml" title="RSS (en)" href="../../../../../rss.xml">
+                <link rel="alternate" type="application/rss+xml" title="RSS (pl)" href="../../../../../pl/rss.xml">
+            <link rel="icon" href="../../../../../favicon.ico" sizes="16x16">
+
+    
+
+
+
+    
+</head>
+<body>
+<!--[if lt IE 7]>
+<div class="ie6">
+<p>Let IE 6&nbsp;die.</p>
+<small><em>(you were meant to be at Kw’s Blog)</em></small>
+</div>
+<div style="display: none !important;">
+<![endif]-->
+<!-- Menubar -->
+
+<nav class="navbar navbar-kw navbar-fixed-top" role="navigation">
+<div class="container">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#kw-navbar-collapse">
+          <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="http://chriswarrick.com/"><img src="../../../../../assets/img/logo.png" alt="[Kw]"> Chris Warrick’s Blog</a>
+    </div>
+    <div class="collapse navbar-collapse" id="kw-navbar-collapse">
+        <ul class="nav navbar-nav">
+            
+                <li>
+<a href="../../../../">Archives</a>
+                </li>
+<li>
+<a href="../../../../tags/">Tags</a>
+                </li>
+<li>
+<a href="../../../../../contact/">Contact</a>
+                </li>
+<li>
+<a href="http://kwpolska.github.io/projects/">Projects <i class="fa fa-external-link"></i></a>
+                </li>
+<li>
+<a href="../../../../../search/">Search</a>
+
+        </li>
+</ul>
+
+        <ul class="nav navbar-nav navbar-right">
+            
+                <li>
+            </li>
+<li><a href="../../../../../pl/" rel="alternate" hreflang="pl">Polski</a></li>
+
+            
+        </ul>
+    </div>
+<!-- /.navbar-collapse -->
+    </div>
+</nav>
+
+<!-- End of Menubar -->
+
+<div class="container">
+    <div class="body-content">
+        <!--Body content-->
+        <div class="row">
+            
+    <article class="postbox" id="article">
+    <header class="page-header">
+    <h1>
+<a href=".">Python Apps the Right Way: entry points and scripts</a>
+    <br>
+    <small>
+        <time class="published" datetime="2014-09-15T18:00:00+02:00">2014-09-15 18:00</time><br>
+        
+            <a class="tag" href="../../../../tags/python/"><span class="badge badge-tag">Python</span></a>
+            <a class="tag" href="../../../../tags/best-practices/"><span class="badge badge-tag">best practices</span></a>
+            <a class="tag" href="../../../../tags/devel/"><span class="badge badge-tag">devel</span></a>
+            <a class="tag" href="../../../../tags/howto/"><span class="badge badge-tag">howto</span></a>
+
+        
+
+
+    </small>
+    </h1>
+    </header>
+    <div class="text">
+    
+    <div class="lead">
+        <div>
+<p>There are mul­ti­ple ways to write an app in Python.  How­ev­er, not all of them
+pro­vide your users with the best&nbsp;ex­pe­ri­ence.</p> 
+ <p>One of the prob­lems some peo­ple en­counter is  <em>writ­ing launch scripts</em>.  The
+best way to han­dle this is the  <em>En­try Points</em>  mech­a­nism of Se­tup­tool­s, and a
+ <tt class="docutils literal">__­main__.py</tt>  file.  It’s quite easy to im­ple­men­t.  If you’re in­ter­est­ed,
+read on to learn&nbsp;more!</p> 
+ 
+        </div>
+        </div>
+    
+<div class="section" id="requirements-and-desired-results">
+<h2>Requirements and Desired&nbsp;Results</h2>
+<p>You will&nbsp;need:</p> 
+ <ul>
+<li>
+<p class="first">a Python&nbsp;project</p>  
+  </li> 
+ <li>
+<p class="first">a set­up.py file us­ing   <a class="reference external" href="https://pypi.python.org/pypi/setuptools">se­­tup­­tools</a></p>  
+  </li> 
+ <li>
+<p class="first">the fol­low­ing di­rec­­to­ry&nbsp;struc­­ture:</p>  
+  <ul class="list-nobullets"> 
+     <li>  
+      <a href="../../../../../listings/entry_points_project/"><i class="fa fa-folder-open"></i>&nbsp;en­try_­­points_pro­­jec­t/</a>  
+      </li>
+<li>  
+          <ul class="list-nobullets">  
+          <li>   
+           <a href="../../../../../listings/entry_points_project/my_project/"><i class="fa fa-folder-open"></i>&nbsp;my_pro­­­jec­t/</a>   
+               </li>
+<li>   
+               <ul class="list-nobullets">   
+                   <li>    
+                    <a href="../../../../../listings/entry_points_project/my_project/__init__.py.html"><i class="fa fa-file"></i>&nbsp;__init__.py</a>    
+                    </li>    
+                    <li>    
+                    <a href="../../../../../listings/entry_points_project/my_project/__main__.py.html"><i class="fa fa-file"></i>&nbsp;__­­­­main__.py</a>    
+                    </li>    
+                </ul>   
+               </li>   
+           <li>   
+           <a href="../../../../../listings/entry_points_project/setup.py.html"><i class="fa fa-file"></i>&nbsp;set­up.py</a>   
+           </li>   
+           </ul>  
+      </li>  
+      </ul>
+</li> 
+ </ul>
+<p>(<tt class="docutils literal">en­try_­points_pro­ject</tt>  is al­so where the README and oth­er aux­il­iary files
+­go, while  <tt class="docutils literal">my_pro­ject</tt>  con­tains all the Python&nbsp;code.)</p> 
+ <p>When you’re done, you will have a project that can be ex­e­cut­ed&nbsp;by:</p> 
+ <ul class="simple">
+<li><tt class="docutils literal">python  <span class="pre">-m</span>   my_pro­­ject</tt></li> 
+ <li><tt class="docutils literal">my_pro­ject</tt></li> 
+ </ul>
+<p>Pro­vid­ed that you have your Python di­rec­to­ry and its  <tt class="docutils literal">Script­s\</tt>  sub­di­rec­to­ry on
+the %PATH%, this will  <strong>al­so work in Win­dows</strong>.</p> 
+ </div>
+<div class="section" id="step-1-create-a-main-py-file">
+<h2>Step 1: create a <tt class="docutils literal">__main__.py</tt> file</h2>
+<p>In or­der to im­ple­ment the first de­sired re­sult, you need to cre­ate a
+ <tt class="docutils literal">__­main__.py</tt>  file in your pack­age.  This file needs to con­tain a  <tt class="docutils literal">main()</tt> 
+func­tion that takes no ar­gu­ments, and al­so a spe­cial pas­sage to de­ter­mine code
+­to&nbsp;run:</p> 
+ <p><a class="reference external" href="../../../../../listings/entry_points_project/my_project/__main__.py.html">en­try_­points_pro­jec­t/my_pro­jec­t/__­main__.py</a></p> 
+ <pre class="code python literal-block">
+<span class="kn">import</span> <span class="nn">sys</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">"""The main routine."""</span>
+    <span class="k">if</span> <span class="n">args</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="s">"This is the main routine."</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"It should do something interesting."</span><span class="p">)</span>
+
+    <span class="c"># Do argument parsing here (eg. with argparse) and anything else</span>
+    <span class="c"># you want your project to do.</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre>
+<ol class="arabic simple">
+<li>The  <tt class="docutils literal">if __­name__ == "__­main__":</tt>  id­iom, as  <a class="reference external" href="https://docs.python.org/3/library/__main__.html">doc­u­ment­ed here</a>, is used to check whether
+this is ex­e­cut­ed as the top-lev­el file, or if it has been im­port­ed by some­one
+else (in this case, ex­e­cut­ing the  <tt class="docutils literal">main()</tt>  func­tion is not al­ways&nbsp;in­tend­ed).</li> 
+ <li>The  <tt class="docutils literal">main()</tt>  func­tion must not take any ar­gu­ments, be­cause that’s how
+ <tt class="docutils literal">en­try_­points</tt>  ex­e­cutes&nbsp;things.</li> 
+ </ol>
+</div>
+<div class="section" id="step-2-adjust-setup-py-accordingly">
+<h2>Step 2: adjust <tt class="docutils literal">setup.py</tt> accordingly</h2>
+<p>This is the re­al deal: cre­ate the en­try points in your  <tt class="docutils literal">set­up.py</tt>  file.</p> 
+ <p><a class="reference external" href="../../../../../listings/entry_points_project/setup.py.html">en­try_­points_pro­jec­t/set­up.py</a></p> 
+ <pre class="code python literal-block">
+<span class="kn">from</span> <span class="nn">setuptools</span> <span class="kn">import</span> <span class="n">setup</span>
+
+<span class="n">setup</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">'my_project'</span><span class="p">,</span>
+      <span class="n">version</span><span class="o">=</span><span class="s">'0.1.0'</span><span class="p">,</span>
+      <span class="n">packages</span><span class="o">=</span><span class="p">[</span><span class="s">'my_project'</span><span class="p">],</span>
+      <span class="n">entry_points</span><span class="o">=</span><span class="p">{</span>
+          <span class="s">'console_scripts'</span><span class="p">:</span> <span class="p">[</span>
+              <span class="s">'my_project = my_project.__main__:main'</span>
+          <span class="p">]</span>
+      <span class="p">},</span>
+      <span class="p">)</span>
+</pre>
+<ol class="arabic">
+<li>
+<p class="first">You must use se­­tup­­tool­s, oth­­er­­wise this won’t&nbsp;work.</p>  
+  </li> 
+ <li>
+<p class="first">The most im­­por­­tant piece of code is the   <tt class="docutils literal">en­try_­­points</tt>   dec­la­ra­­tion&nbsp;(un­­sur­pris­ing­­ly).</p>  
+  </li> 
+ <li>
+<p class="first">The dec­la­ra­­tion&nbsp;read­­s:</p>  
+  <pre class="literal-block"> 
+<span class="dquo">"</span>­name_of_ex­e­cutable = mod­ule.with­:­func­tion_­to_ex­e­cute"
+ </pre> 
+ </li> 
+ <li>
+<p class="first">If you are de­vel­op­ing a GUI ap­­pli­­ca­­tion (in Tk­in­ter, PyQt/PySide,
+Wx­Python, PyGTK, PyGame…), you should change the dec­la­ra­­tion to
+  <tt class="docutils literal">gui_scripts</tt>.</p>  
+  </li> 
+ <li>
+<p class="first">You can cre­ate mul­ti­­ple scripts this way.  You can al­­so have mul­ti­­ple
+  <tt class="docutils literal">con­­sole_scripts</tt>     <em>and</em>     <tt class="docutils literal">gui_scripts</tt>   in one set­up&nbsp;file.</p>  
+  </li> 
+ </ol>
+<p class="text-muted">All  <a class="reference external" href="../../../../../listings/entry_points_project/">code sam­ples</a>  are Copy­right © 2014 Chris “K­w­pol­ska” War­rick and li­censed
+un­der  <a class="reference external" href="http://creativecommons.org/licenses/by-nc-nd/3.0/">CC-­BY 3.0</a>.</p> 
+ </div>
+</div>
+    </article>
+</div>
+
+    
+
+    <footer><a href="#disqus_thread">comments</a></footer>
+    
+
+    <div class="comments">
+        
+        
+        <div id="disqus_thread"></div>
+        <script>
+        var disqus_shortname ="kwpolska",
+            disqus_url="http://chriswarrick.com/blog/2014/09/15/python-apps-the-right-way-entry_points-and-scripts/",
+        disqus_title="Python Apps the Right Way: entry points and scripts",
+        disqus_identifier="cache/posts/2014/09/15/entry_points.html",
+        disqus_config = function () {
+            this.language = "en";
+        };
+        (function() {
+            var dsq = document.createElement('script'); dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+    <a href="//disqus.com" class="dsq-brlink" rel="nofollow">Comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+    </div>
+
+        </div>
+        <!--End of body content-->
+
+        <footer>
+            <p><a href="../../../../../cookies/">this site uses
+cookies.</a><br>by using this site, you agree to our cookie&nbsp;policy.</p>
+<p>
+generated by <a href="http://getnikola.com/">Nikola</a><br>
+copyright © 2009–2014 <a href="../../../../../contact/">Chris “Kwpolska” Warrick</a><br> <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/">CC&nbsp;BY-NC-ND</a></p>
+        </footer>
+    </div>
+
+
+
+            <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js" type="text/javascript"></script>
+            <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+            <script src="../../../../../assets/js/jquery.colorbox-min.js" type="text/javascript"></script>
+
+    <script type="text/javascript">jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script>
+
+<script src="../../../../../assets/js/kw.js"></script>
+<!--
+<script src="/assets/js/jquery.mousewheel-3.0.6.pack.js"></script>
+<script src="/assets/js/jquery.fancybox.pack.js"></script>
+<script src="/assets/js/jquery.fancybox-buttons.js"></script>
+<script src="/assets/js/jquery.fancybox-media.js"></script>
+<script src="/assets/js/jquery.fancybox-thumbs.js"></script>
+-->
+<!--[if lt IE 7]>
+</div>
+<![endif]-->
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-11937989-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+</body>
+</html>

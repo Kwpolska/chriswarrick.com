@@ -327,7 +327,7 @@ wygenerowano przy użyciu <a href="http://getnikola.com/">Nikola</a><br>
 copyright&nbsp;©&nbsp;2009–2014&nbsp;<a
 href="/pl/contact/">Chris “Kwpolska” Warrick</a><br> <a rel="license"
 href="http://creativecommons.org/licenses/by-nc-nd/3.0/">CC
-BY-NC-ND</a></p>""",
+BY-NC-ND</a> unless stated otherwise</p>""",
 
 }
 
