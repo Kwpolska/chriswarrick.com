@@ -9,6 +9,7 @@
 .. license: 3-clause BSD
 .. language: Java
 .. sort: 79
+.. logo: /projects/_logos/speeker.png
 
 This is a simple Android app for Text-to-Speech. It uses the default system voice.
 
