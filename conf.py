@@ -62,7 +62,7 @@ NAVIGATION_LINKS = {
         ('/blog/', 'Archives'),
         ('/blog/tags/', 'Tags'),
         ('/contact/', 'Contact'),
-        ('http://kwpolska.github.io/projects/', 'Projects <i class="fa fa-external-link"></i>'),
+        ('/projects/', 'Projects'),
         ('/search/', 'Search'),
     ),
 
@@ -70,7 +70,7 @@ NAVIGATION_LINKS = {
         ('/pl/blog/', 'Archiwum'),
         ('/pl/blog/tags/', 'Tagi'),
         ('/pl/contact/', 'Kontakt'),
-        ('http://kwpolska.github.io/projects/', 'Projekty <i class="fa fa-external-link"></i>'),
+        ('/pl/projects/', 'Projekty'),
         ('/pl/search/', 'Szukaj'),
     ),
 }
@@ -108,7 +108,11 @@ PAGES = (
     ("stories/*.rst", "", "story.tmpl"),
     ("stories/*.html", "", "story.tmpl"),
     ("stories/err/*.html", "err", "err.tmpl"),
+    ("projects/*.rst", "projects", "project.tmpl"),
 )
+
+PROJECT_PATH = 'projects'
+PROJECT_INPUTS = ('projects/*.rst',)
 
 # One or more folders containing files to be copied as-is into the output.
 # The format is a dictionary of "source" "relative destination".
