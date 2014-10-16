@@ -10,7 +10,14 @@ jest możliwość bycia zalogowanym cały czas, bez wprowadzania hasła co chwil
 
 .. TEASER_END
 
-Pełna jawność
-=============
+Full disclosure
+===============
 
-Obecnie używane są jedynie ciasteczka Google Analytics.
+Obecnie używane są jedynie ciasteczka Google Analytics oraz ciasteczko
+informujące o przyjęciu polityki cookies do wiadomości.
+
+Wyłącz ciasteczka
+=================
+
+Ciasteczka można wyłączyć w ustawieniach przeglądarki.  Dokładne instrukcje są
+dostępne w pomocy twojej przeglądarki.

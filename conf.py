@@ -202,7 +202,8 @@ REDIRECTIONS = []
 # "rsync -rav output/* joe@my.site:/srv/www/site"
 # And then do a backup, or ping pingomatic.
 # To do manual deployment, set it to []
-DEPLOY_COMMANDS = ['rsync -rav --del output/ kw-arya:/var/www']
+DEPLOY_COMMANDS = ['nikola check -l',
+                   'rsync -rav --del output/ kw-arya:/var/www']
 
 # Where the output site should be located
 # If you don't use an absolute path, it will be considered as relative

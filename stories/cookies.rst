@@ -5,7 +5,7 @@
 .. description: Cookies?  What are cookies?
 
 **Cookies** are small text files saved on your computer, containing various
-information required by the page.  The most promintent example is keeping you
+information required by the page.  The most prominent example is keeping you
 logged in without the need to authenticate every once in a while.
 
 .. TEASER_END
@@ -13,4 +13,11 @@ logged in without the need to authenticate every once in a while.
 Full disclosure
 ===============
 
-Currently, you can only get Google Analytics cookies.
+Currently, you can only get Google Analytics cookies and a cookie policy
+acknowledgement one.
+
+Disable cookies
+===============
+
+You must disable cookies in your browser’s settings.  Please check your
+browser’s help manual for more details.
