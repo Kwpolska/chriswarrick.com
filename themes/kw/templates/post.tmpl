@@ -1,60 +1,55 @@
-## -*- coding: utf-8 -*-
-<%namespace name="helper" file="post_helper.tmpl"/>
-<%namespace name="comments" file="comments_helper.tmpl"/>
-<%inherit file="base.tmpl"/>
-<%block name="extra_head">
-${helper.twitter_card_information(post)}
-% if post.meta('keywords'):
-    <meta name="keywords" content="${post.meta('keywords')|h}"/>
-% endif
-</%block>
-<%block name="content">
-    <article class="postbox" id="article">
-    <header class="page-header">
-    <h1><a href="${post.permalink()}">${post.title()}</a>
-    <br>
-    <small>
-        <time class="published" datetime="${post.date.isoformat()}">${post.date.strftime(date_format)}</time><br>
-        ${helper.html_tags(post)}
-        ${helper.html_translations(post)}
-    </small>
-    </h1>
-    </header>
-    <div class="text">
-    <%
-    import lxml.html
-    import lxml.etree
-    from nikola.post import TEASER_REGEXP
-    teaser_split = TEASER_REGEXP.split(post.text())
-    try:
-        lead = teaser_split[0]
-        ptext = teaser_split[3]
-    except IndexError:
-        lead = None
-        ptext = post.text()
-    %>
-    %if lead:
-    <div class="lead">
-        ${lead}
-        </div>
-        </div>
-    %endif
-    ${ptext}
+{#  -*- coding: utf-8 -*- #}
+{% import 'post_helper.tmpl' as helper with context %}
+{% import 'post_header.tmpl' as pheader with context %}
+{% import 'comments_helper.tmpl' as comments with context %}
+{% extends 'base.tmpl' %}
+
+{% block extra_head %}
+    {{ super() }}
+    {% if post.meta('keywords') %}
+    <meta name="keywords" content="{{ post.meta('keywords')|e }}">
+    {% endif %}
+    {% if post.description() %}
+    <meta name="description" itemprop="description" content="{{ post.description() }}">
+    {% endif %}
+    <meta name="author" content="{{ post.author() }}">
+    {% if post.prev_post %}
+        <link rel="prev" href="{{ post.prev_post.permalink() }}" title="{{ post.prev_post.title() }}" type="text/html">
+    {% endif %}
+    {% if post.next_post %}
+        <link rel="next" href="{{ post.next_post.permalink() }}" title="{{ post.next_post.title() }}" type="text/html">
+    {% endif %}
+    {{ helper.open_graph_metadata(post) }}
+    {{ helper.twitter_card_information(post) }}
+    {{ helper.meta_translations(post) }}
+{% endblock %}
+
+{% block content %}
+<article class="post-{{ post.meta('type') }} h-entry hentry postpage postbox" itemscope="itemscope" itemtype="http://schema.org/Article">
+    {{ pheader.html_post_header(post) }}
+    <div class="e-content entry-content" itemprop="articleBody text">
+    {{ post_lead_format(post) }}
     </div>
+    <aside class="postpromonav">
+    <nav>
+    {{ helper.html_pager(post) }}
+    </nav>
+    </aside>
+    {% if not post.meta('nocomments') and site_has_comments %}
+        <section class="comments">
+        <h2>{{ messages("Comments") }}</h2>
+        {{ comments.comment_form(post.permalink(absolute=True), post.title(), post._base_path) }}
+        </section>
+    {% endif %}
+    {{ helper.mathjax_script(post) }}
+</article>
+{{ comments.comment_link_script() }}
+{% endblock %}
 
-    ${helper.mathjax_script(post)}
-    <footer class="post-footer"><a href="#disqus_thread">comments</a></footer>
-    </article>
-
-    <div class="comments">
-        ${comments.comment_form(post.permalink(absolute=True), post.title(), post.base_path)}
-    </div>
-</%block>
-
-<%block name="sourcelink">
-% if not post.meta('password'):
+{% block sourcelink %}
+{% if show_sourcelink %}
     <li>
-    <a href="${post.source_link()}" id="sourcelink">${messages("Source")}</a>
+    <a href="{{ post.source_link() }}" id="sourcelink">{{ messages("Source") }}</a>
     </li>
-% endif
-</%block>
+{% endif %}
+{% endblock %}

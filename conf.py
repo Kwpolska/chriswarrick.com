@@ -107,7 +107,7 @@ POSTS = (("posts/*.rst", "blog", "post.tmpl"),)
 PAGES = (
     ("stories/*.rst", "", "story.tmpl"),
     ("stories/*.html", "", "story.tmpl"),
-    ("stories/err/*.html", "err", "err.tmpl"),
+    ("err/*.html", "err", "err.tmpl"),
     ("projects/*.rst", "projects", "project.tmpl"),
 )
 
@@ -500,7 +500,9 @@ COPY_SOURCES = False
 # is served from the NetDNA CDN
 # Set this to False if you want to host your site without requiring access to
 # external resources.
-# USE_CDN = False
+USE_CDN = True
+
+USE_CDN_WARNING = False
 
 # Extra things you want in the pages HEAD tag. This will be added right
 # before </HEAD>
@@ -590,7 +592,34 @@ USE_BUNDLES = True
 # If set to True, enable optional hyphenation in your posts (requires pyphen)
 HYPHENATE = True
 
+LOGO_URL = '/assets/img/logo.png'
+
 # Put in global_context things you want available on all your templates.
 # It can be anything, data, functions, modules, etc.
 
-GLOBAL_CONTEXT = {}
+from nikola.post import TEASER_REGEXP
+
+def post_lead_format(post):
+    teaser_split = TEASER_REGEXP.split(post.text())
+    try:
+        lead = teaser_split[0]
+        ptext = teaser_split[3]
+    except IndexError:
+        lead = None
+        ptext = post.text()
+
+    if lead:
+        return '<div class="lead">' + lead + '</div></div>' + ptext
+    else:
+        return ptext
+
+
+def len_translations(translations, post):
+    tr = 0
+    for langname in translations.keys():
+        if post.is_translation_available(langname):
+            tr += 1
+    return tr
+
+GLOBAL_CONTEXT = {'post_lead_format': post_lead_format,
+                  'len_translations': len_translations}

@@ -1,31 +1,21 @@
-## -*- coding: utf-8 -*-
-<%inherit file="post.tmpl"/>
-<%block name="content">
-%if title:
-    <header class="page-header">
-    <h1>${title}</h1>
-    </header>
-%endif
+{#  -*- coding: utf-8 -*- #}
+{% import 'post_helper.tmpl' as helper with context %}
+{% import 'post_header.tmpl' as pheader with context %}
+{% import 'comments_helper.tmpl' as comments with context %}
+{% extends 'post.tmpl' %}
 
-<div class="text">
-<%
-import lxml.html
-import lxml.etree
-from nikola.post import TEASER_REGEXP
-teaser_split = TEASER_REGEXP.split(post.text())
-try:
-    lead = teaser_split[0]
-    ptext = teaser_split[3]
-except IndexError:
-    lead = None
-    ptext = post.text()
-%>
-%if lead:
-<div class="lead">
-    ${lead}
+{% block content %}
+<article class="storypage" itemscope="itemscope" itemtype="http://schema.org/Article">
+    {{ pheader.html_post_header(post, False, False) }}
+    <div class="e-content entry-content" itemprop="articleBody text">
+    {{ post_lead_format(post) }}
     </div>
-    </div>
-%endif
-${ptext}
-</div>
-</%block>
+    {% if site_has_comments and enable_comments and not post.meta('nocomments') %}
+        <section class="comments">
+        <h2>{{ messages("Comments") }}</h2>
+        {{ comments.comment_form(post.permalink(absolute=True), post.title(), post.base_path) }}
+        </section>
+    {% endif %}
+    {{ helper.mathjax_script(post) }}
+</article>
+{% endblock %}

@@ -1,32 +1,31 @@
-## -*- coding: utf-8 -*-
-<%namespace name="helper" file="index_helper.tmpl"/>
-<%namespace name="phelper" file="post_helper.tmpl"/>
-<%namespace name="comments" file="comments_helper.tmpl"/>
-<%inherit file="base.tmpl"/>
-<%block name="content">
-    % for post in posts:
-    <article class="postbox">
-    <header class="page-header">
-    <h1><a href="${post.permalink()}">${post.title()}</a><br>
-    <small>
-        <time class="published"
-        datetime="${post.date.isoformat()}">${post.date.strftime(date_format)}</time><br>
-        ${phelper.html_tags(post)}
-        ${phelper.html_translations(post)}
-    </small>
-    </h1>
-    </header>
-    <div class="text">
-    ${post.text(teaser_only=index_teasers)}
+{#  -*- coding: utf-8 -*- #}
+{% import 'index_helper.tmpl' as helper with context %}
+{% import 'post_header.tmpl' as pheader with context %}
+{% import 'comments_helper.tmpl' as comments with context %}
+{% extends 'base.tmpl' %}
+
+{% block content %}
+<div class="postindex">
+{% for post in posts %}
+    <article class="h-entry post-{{ post.meta('type') }} postbox">
+    {{ pheader.html_post_header(post) }}
+    {% if index_teasers %}
+    <div class="p-summary entry-summary">
+    {{ post.text(teaser_only=True) }}
+    {% else %}
+    <div class="e-content entry-content">
+    {{ post.text(teaser_only=False) }}
+    {% endif %}
     </div>
-    <footer class="post-footer"><a href="${post.permalink()}" class="morelink">more</a>
-    % if not post.meta('nocomments'):
-        — <a href="${post.permalink()}#disqus_thread">comments</a>
-    % endif
+    <footer class="post-footer"><a href="{{ post.permalink() }}" class="morelink">more</a>
+    {% if not post.meta('nocomments') %}
+        — <a href="{{ post.permalink() }}#disqus_thread">comments</a>
+    {% endif %}
     </footer>
     </article>
-    % endfor
-    ${helper.html_pager()}
-    ${comments.comment_link_script()}
-    ${helper.mathjax_script(posts)}
-</%block>
+{% endfor %}
+</div>
+{{ helper.html_pager() }}
+{{ comments.comment_link_script() }}
+{{ helper.mathjax_script(posts) }}
+{% endblock %}

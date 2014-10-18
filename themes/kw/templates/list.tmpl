@@ -1,14 +1,19 @@
-## -*- coding: utf-8 -*-
-<%inherit file="base.tmpl"/>
-<%block name="content">
-        <!--Body content-->
-        <div class="postbox">
-        <h1>${title}</h1>
-        <ul>
-        % for text, link in items:
-            <li><a href="${link}">${text}</a>
-        % endfor
-        </ul>
-        </div>
-        <!--End of body content-->
-</%block>
+{#  -*- coding: utf-8 -*- #}
+{% extends 'base.tmpl' %}
+
+{% block content %}
+<article class="listpage postbox">
+    <header class="page-header">
+        <h1>{{ title }}</h1>
+    </header>
+    {% if items %}
+    <ul class="postlist">
+    {% for text, link in items %}
+        <li><a href="{{ link }}">{{ text }}</a>
+    {% endfor %}
+    </ul>
+    {% else %}
+    <p>{{ messages("Nothing found.") }}</p>
+    {% endif %}
+</article>
+{% endblock %}
