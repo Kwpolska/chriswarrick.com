@@ -10,7 +10,7 @@ from nikola import filters
 
 
 # Data about this site
-BLOG_AUTHOR = "Chris “Kwpolska” Warrick"
+BLOG_AUTHOR = "Chris Warrick"
 BLOG_TITLE = "Chris Warrick’s Blog"
 # This is the main URL for your site. It will be used
 # in a prominent link
@@ -321,7 +321,7 @@ CONTENT_FOOTER = {
 cookies.</a><br>by using this site, you agree to our cookie policy.</p><p>
 powered by <strong><a href="https://getnikola.com/">Nikola</a></strong>, <a href="http://nginx.org/">nginx</a> and <a href="https://www.digitalocean.com/">DigitalOcean</a><br>
 copyright&nbsp;©&nbsp;2009–2014&nbsp;<a
-href="/contact/">Chris “Kwpolska” Warrick</a><br> <a rel="license"
+href="/contact/">Chris Warrick</a><br> <a rel="license"
 href="http://creativecommons.org/licenses/by-nc-nd/3.0/">CC
 BY-NC-ND</a>, unless stated otherwise</p>""",
     'pl': """<p><a href="/pl/cookies/">ta strona używa ciasteczek.</a><br>
@@ -329,7 +329,7 @@ korzystając z tej strony, akceptujesz naszą politykę ciasteczek.
 </p><p>
 powered by <strong><a href="https://getnikola.com/">Nikola</a></strong>, <a href="http://nginx.org/">nginx</a> and <a href="https://www.digitalocean.com/">DigitalOcean</a><br>
 copyright&nbsp;©&nbsp;2009–2014&nbsp;<a
-href="/pl/contact/">Chris “Kwpolska” Warrick</a><br> <a rel="license"
+href="/pl/contact/">Chris Warrick</a><br> <a rel="license"
 href="http://creativecommons.org/licenses/by-nc-nd/3.0/">CC
 BY-NC-ND</a>, unless stated otherwise</p>""",
 

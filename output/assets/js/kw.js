@@ -1,5 +1,5 @@
 // Kw’s JS
-// Copyright © 2014, Chris “Kwpolska” Warrick.
+// Copyright © 2014, Chris Warrick.
 
 $(document).ready(function() {
     if (document.cookie.indexOf('kw_cookies=1') == -1) {

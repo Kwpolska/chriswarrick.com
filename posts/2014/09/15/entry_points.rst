@@ -106,5 +106,5 @@ This is the real deal: create the entry points in your ``setup.py`` file.
 
 .. class:: text-muted
 
-All `code samples </listings/entry_points_project/>`_ are Copyright © 2014 Chris “Kwpolska” Warrick and licensed
+All `code samples </listings/entry_points_project/>`_ are Copyright © 2014 Chris Warrick and licensed
 under `CC-BY 3.0 <http://creativecommons.org/licenses/by-nc-nd/3.0/>`_.
