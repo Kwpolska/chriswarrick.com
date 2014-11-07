@@ -282,6 +282,8 @@ CODE_COLOR_SCHEME = 'friendly'
 # (str used by datetime.datetime.strftime)
 DATE_FORMAT = '%Y-%m-%d %H:%M'
 
+DATE_FANCINESS = 0
+
 # FAVICONS contains (name, file, size) tuples.
 # Used for create favicon link like this:
 # <link rel="name" href="file" sizes="size"/>
