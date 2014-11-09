@@ -22,6 +22,7 @@ dokładnym).  To zmienia obie rzeczy.
 Nie ma obecnie proramu (i skończonego contentu), ale posty w serii to:
 
 1. `Speeker — moja mała aplikacja na Androida`__
+2. BONUS: `Inbox (by Google) Review`__ *(en)*
 2. Cztery Części Androida, czyli dlaczego występuje fragmentacja
 3. Andro-Bieda-Fon
 4. “*<producent>* *<model>*, subsydiowany przez *<operatora>*\”
@@ -29,6 +30,7 @@ Nie ma obecnie proramu (i skończonego contentu), ale posty w serii to:
 6. Pasuje na Wszystkie: Skalowanie w Androidzie
 
 __ /pl/blog/2014/08/26/speeker/
+__ /blog/2014/11/09/inbox-review/
 
 *Lista postów może zostać rozszerzona.*
 

@@ -251,6 +251,8 @@ FILTERS = {
 # MAX_IMAGE_SIZE = 1280
 # USE_FILENAME_AS_TITLE = True
 
+GALLERY_SORT_BY_DATE = False
+
 # #############################################################################
 # HTML fragments and diverse things that are used by the templates
 # #############################################################################

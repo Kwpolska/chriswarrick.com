@@ -23,6 +23,7 @@ There is currently no schedule (and no finalized content), but the posts in the
 series are:
 
 1. `Speeker — my little Android app`__
+2. BONUS: `Inbox (by Google) Review`__
 2. The Four Pieces of Android, or why is it so fragmented
 3. The Andro-Cheapo-Phone
 4. “A *<manufacturer>* *<model>*, Subsidized by *<carrier>*\”
@@ -30,6 +31,7 @@ series are:
 6. One System Fits All: Scaling in Android
 
 __ /blog/2014/08/26/speeker/
+__ /blog/2014/11/09/inbox-review/
 
 *The list of posts might be extended.*
 
