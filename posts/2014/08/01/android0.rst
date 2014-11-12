@@ -24,11 +24,11 @@ series are:
 
 1. `Speeker — my little Android app`__
 2. BONUS: `Inbox (by Google) Review`__
-2. The Four Pieces of Android, or why is it so fragmented
-3. The Andro-Cheapo-Phone
-4. “A *<manufacturer>* *<model>*, Subsidized by *<carrier>*\”
-5. TouchWiz makes no Sense: why OEM skins are evil
-6. One System Fits All: Scaling in Android
+3. The Four Pieces of Android, or why is it so fragmented
+4. The Andro-Cheapo-Phone
+5. “A *<manufacturer>* *<model>*, Subsidized by *<carrier>*\”
+6. TouchWiz makes no Sense: why OEM skins are evil
+7. One System Fits All: Scaling in Android
 
 __ /blog/2014/08/26/speeker/
 __ /blog/2014/11/09/inbox-review/

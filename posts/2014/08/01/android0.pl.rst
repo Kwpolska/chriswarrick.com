@@ -23,11 +23,11 @@ Nie ma obecnie proramu (i skończonego contentu), ale posty w serii to:
 
 1. `Speeker — moja mała aplikacja na Androida`__
 2. BONUS: `Inbox (by Google) Review`__ *(en)*
-2. Cztery Części Androida, czyli dlaczego występuje fragmentacja
-3. Andro-Bieda-Fon
-4. “*<producent>* *<model>*, subsydiowany przez *<operatora>*\”
-5. TouchWiz nie ma Sensu: dlaczego nakładki OEM są złe
-6. Pasuje na Wszystkie: Skalowanie w Androidzie
+3. Cztery Części Androida, czyli dlaczego występuje fragmentacja
+4. Andro-Bieda-Fon
+5. “*<producent>* *<model>*, subsydiowany przez *<operatora>*\”
+6. TouchWiz nie ma Sensu: dlaczego nakładki OEM są złe
+7. Pasuje na Wszystkie: Skalowanie w Androidzie
 
 __ /pl/blog/2014/08/26/speeker/
 __ /blog/2014/11/09/inbox-review/
