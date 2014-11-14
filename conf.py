@@ -112,7 +112,6 @@ PAGES = (
 )
 
 PROJECT_PATH = 'projects'
-PROJECT_INPUTS = ('projects/*.rst',)
 
 # One or more folders containing files to be copied as-is into the output.
 # The format is a dictionary of "source" "relative destination".
@@ -555,16 +554,16 @@ BODY_END = """
 # Uncomment and modify to following lines to match your accounts.
 # Specifying the id for either 'site' or 'creator' will be preferred
 # over the cleartext username. Specifying an ID is not necessary.
-# Displaying images is currently not supported.
-# TWITTER_CARD = {
-#     # 'use_twitter_cards': True,  # enable Twitter Cards / Open Graph
+
+
+TWITTER_CARD = {
+    'use_twitter_cards': True,  # enable Twitter Cards
 #     # 'site': '@website',  # twitter nick for the website
 #     # 'site:id': 123456,  # Same as site, but the website's Twitter user ID
 #                           # instead.
-#     # 'creator': '@username',  # Username for the content creator / author.
+    'creator': '@Kwpolska',  # Username for the content creator / author.
 #     # 'creator:id': 654321,  # Same as creator, but the Twitter user's ID.
-# }
-
+}
 
 # If you want to use formatted post time in W3C-DTF Format
 # (ex. 2012-03-30T23:00:00+02:00),
