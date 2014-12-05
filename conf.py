@@ -616,12 +616,11 @@ def post_lead_format(post):
         return ptext
 
 
-def len_translations(translations, post):
-    tr = 0
-    for langname in translations.keys():
-        if post.is_translation_available(langname):
-            tr += 1
-    return tr
+#def len_translations(translations, post):
+    #tr = 0
+    #for langname in translations.keys():
+        #if post.is_translation_available(langname):
+            #tr += 1
+    #return tr
 
-GLOBAL_CONTEXT = {'post_lead_format': post_lead_format,
-                  'len_translations': len_translations}
+GLOBAL_CONTEXT = {'post_lead_format': post_lead_format,}

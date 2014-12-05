@@ -19,7 +19,7 @@
 {% endmacro %}
 
 {% macro html_translations(post) %}
-    {% if len_translations(translations, post) > 1 %}
+    {% if post.translated_to|length > 1 %}
             {% for langname in translations.keys() %}
                 {% if post.is_translation_available(langname) %}
                 <li class="lang {% if langname == lang %} lang-current {% endif %}"><a href="{{ post.permalink(langname) }}" rel="alternate" hreflang="{{ langname }}">{{ messages("LANGUAGE", langname) }}</a></li>
@@ -29,7 +29,7 @@
 {% endmacro %}
 
 {% macro html_tags(post) %}
-    {% if post.tags or len_translations(translations, post) > 1 %}
+    {% if post.tags or post.translated_to|length > 1 %}
         <ul itemprop="keywords" class="tags">
         {% for tag in post.tags %}
            <li><a class="tag p-category" href="{{ _link('tag', tag) }}"
