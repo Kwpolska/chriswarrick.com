@@ -62,6 +62,7 @@ NAVIGATION_LINKS = {
         ('/blog/', 'Archives'),
         ('/blog/tags/', 'Tags'),
         ('/contact/', 'Contact'),
+        ('/brand/', 'Brand'),
         ('/projects/', 'Projects'),
         ('/search/', 'Search'),
     ),
@@ -70,7 +71,8 @@ NAVIGATION_LINKS = {
         ('/pl/blog/', 'Archiwum'),
         ('/pl/blog/tags/', 'Tagi'),
         ('/pl/contact/', 'Kontakt'),
-        ('/pl/projects/', 'Projekty'),
+        ('/projects/', 'Projekty'),
+        ('/brand/', 'Brand'),
         ('/pl/search/', 'Szukaj'),
     ),
 }
@@ -616,12 +618,11 @@ def post_lead_format(post):
         return ptext
 
 
-def len_translations(translations, post):
-    tr = 0
-    for langname in translations.keys():
-        if post.is_translation_available(langname):
-            tr += 1
-    return tr
+#def len_translations(translations, post):
+    #tr = 0
+    #for langname in translations.keys():
+        #if post.is_translation_available(langname):
+            #tr += 1
+    #return tr
 
-GLOBAL_CONTEXT = {'post_lead_format': post_lead_format,
-                  'len_translations': len_translations}
+GLOBAL_CONTEXT = {'post_lead_format': post_lead_format,}
