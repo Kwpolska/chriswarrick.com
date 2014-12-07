@@ -594,7 +594,7 @@ USE_BUNDLES = True
 # LINK_CHECK_WHITELIST = []
 
 # If set to True, enable optional hyphenation in your posts (requires pyphen)
-HYPHENATE = True
+HYPHENATE = False
 
 LOGO_URL = '/assets/img/logo.png'
 
