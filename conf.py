@@ -627,7 +627,7 @@ def post_lead_format(post):
 
 INDEXES_TITLE = "Blog"
 INDEXES_PAGES = ', page %d'
-INDEXES_PAGES_STATIC = False
+INDEXES_STATIC = False
 WRITE_TAG_CLOUD = False
 
 GLOBAL_CONTEXT = {'post_lead_format': post_lead_format,}
