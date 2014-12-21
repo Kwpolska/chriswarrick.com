@@ -11,7 +11,7 @@ from nikola import filters
 
 # Data about this site
 BLOG_AUTHOR = "Chris Warrick"
-BLOG_TITLE = "Chris Warrick’s Blog"
+BLOG_TITLE = "Chris Warrick"
 # This is the main URL for your site. It will be used
 # in a prominent link
 SITE_URL = "https://chriswarrick.com/"
@@ -624,5 +624,10 @@ def post_lead_format(post):
         #if post.is_translation_available(langname):
             #tr += 1
     #return tr
+
+INDEXES_TITLE = "Blog"
+INDEXES_PAGES = ', page %d'
+INDEXES_PAGES_STATIC = False
+WRITE_TAG_CLOUD = False
 
 GLOBAL_CONTEXT = {'post_lead_format': post_lead_format,}
