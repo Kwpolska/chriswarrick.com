@@ -1,7 +1,6 @@
 .. title: KwBot
 .. slug: kwbot
 .. date: 2010-01-12 00:00:00
-.. link: 
 .. description: My IRC bot.
 
 KwBot is my IRC bot.  It was originally registered on 2010-01-12 on Freenode.
@@ -30,5 +29,6 @@ Commands must be prepended with ``!``, ``KwBot:`` or ``KwBot,`` — as demonstra
 * ``ping`` — respond with ``pong``
 * ``hi`` — respond with ``Hi!``
 * ``hello`` — respond with ``Hello!``
-* ``help`` — show a message linking to this page
+* ``help`` — respond with a message linking to this page
+* ``logs`` — respond with the URL to KwBot’s logs for this channel on the Internet (if available)
 * ``tell target message`` — add the ``message`` to a queue and show it when ``target`` joins the channel next time
