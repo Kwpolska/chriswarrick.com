@@ -71,8 +71,8 @@ NAVIGATION_LINKS = {
         ('/pl/blog/', 'Archiwum'),
         ('/pl/blog/tags/', 'Tagi'),
         ('/pl/contact/', 'Kontakt'),
+        ('/pl/brand/', 'Brand'),
         ('/projects/', 'Projekty'),
-        ('/brand/', 'Brand'),
         ('/pl/search/', 'Szukaj'),
     ),
 }
