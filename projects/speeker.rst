@@ -13,7 +13,7 @@
 
 This is a simple Android app for Text-to-Speech. It uses the default system voice.
 
-See also: `screenshots <http://chriswarrick.com/galleries/speeker/>`_ and `introductory blog post <http://chriswarrick.com/blog/2014/08/26/speeker/>`_.
+See also: `screenshots <https://chriswarrick.com/galleries/speeker/>`_ and `introductory blog post <https://chriswarrick.com/blog/2014/08/26/speeker/>`_.
 
  Speeker is a very small and easy frontend to the system TTS service.  In its
  current iteration, it’s quite limited. The complete feature set is:
