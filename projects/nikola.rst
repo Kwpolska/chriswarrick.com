@@ -5,7 +5,7 @@
 .. status: 5
 .. logo: /projects/_logos/nikola.png
 .. previewimage: /projects/_banners/nikola.png
-.. link: http://getnikola.com/
+.. link: https://getnikola.com/
 .. download: https://pypi.python.org/pypi/Nikola
 .. github: https://github.com/getnikola/nikola
 .. bugtracker: https://github.com/getnikola/nikola/issues

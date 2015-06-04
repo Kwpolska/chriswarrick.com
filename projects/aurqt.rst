@@ -4,7 +4,6 @@
 .. description: A graphical AUR manager.
 .. status: 7
 .. logo: /projects/_logos/aurqt.png
-.. download: https://pypi.python.org/pypi/aurqt
 .. github: https://github.com/Kwpolska/aurqt
 .. bugtracker: https://github.com/Kwpolska/aurqt/issues
 .. role: Maintainer
@@ -13,14 +12,10 @@
 .. language: Python
 .. sort: 10
 
-aurqt is a desktop graphical interface to the AUR.  It leverages
-the power of the AUR API and the Web interface.
+aurqt, the graphical AUR manager, has been abandoned and is not available
+anymore due to multiple changes in the AUR itself and the status of the code
+base that would require a full rewrite.  I apologize for the inconvenience.
 
-aurqt depends on `PKGBUILDer <../pkgbuilder/>`_ for most features.
+aurqt depended on `PKGBUILDer <../pkgbuilder/>`_ for most features.
 
-aurqt should be installed from the AUR itself, by installing the
-``aurqt`` package::
-
-    pkgbuilder -S aurqt
-
-The project is partially abandoned and may not work properly.
+(If anyone wants to take over development, please contact me.)
