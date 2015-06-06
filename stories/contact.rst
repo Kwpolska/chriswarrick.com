@@ -13,7 +13,7 @@ Contact me:
 ===========
 
 * **by mail** — chris \[at\] chriswarrick.com
-* **by IRC** — Kwpolska\@freenode; (not guaranteed) Kwpolska\@rizon.
+* **by IRC** — Kwpolska\@freenode
 * **by Twitter** — `@Kwpolska <https://twitter.com/Kwpolska>`_
 * **on GitHub** — `Kwpolska <https://github.com/Kwpolska>`_
 * GPG key: 0x5EAAEA16 (``gpg --keyserver hkp://keys.gnupg.net --recv-key 0x5EAAEA16``)
