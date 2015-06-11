@@ -20,3 +20,5 @@ when will the process/wait finish.
 ``nap`` takes the best features from both the GNU and BSD variants of
 ``sleep``: it values BSD-style simplicity, but also supports GNU-style input
 with units (``s|m|h|d``).
+
+See also: `think — Terminal Think Music <../think/>`_

@@ -48,3 +48,5 @@ Usage
 Prepend ``think`` before the command that takes too long to execute::
 
     think sleep 120
+
+See also: `nap — sleep with a progressbar <../nap/>`_
