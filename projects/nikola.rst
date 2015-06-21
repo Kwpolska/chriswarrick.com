@@ -38,4 +38,6 @@ I am a co-maintainer of Nikola, responsible for a sizeable fraction of commits
 — but I am not the one who did the most work and came up with the idea (it was
 `Roberto Alsina <http://ralsina.me/>`_).
 
+See also: `Coil CMS <../coil/>` — a web interface for Nikola.
+
 This very website is powered by Nikola.
