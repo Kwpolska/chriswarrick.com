@@ -94,7 +94,9 @@ This is the real deal: create the entry points in your ``setup.py`` file.
 1. You must use setuptools, otherwise this won’t work.
 2. The most important piece of code is the ``entry_points`` declaration
    (unsurprisingly).
-3. The declaration reads::
+3. The declaration reads
+
+.. code:: text
 
    "name_of_executable = module.with:function_to_execute"
 
