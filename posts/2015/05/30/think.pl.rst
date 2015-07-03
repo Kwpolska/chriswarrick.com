@@ -52,7 +52,9 @@ Konfiguracja
 ------------
 
 Utwórz plik ``~/.config/think.conf`` (tam, gdzie jest ``XDG_CONFIG_HOME``),
-zawierający poniższe cztery linie::
+zawierający poniższe cztery linie:
+
+.. code:: ini
 
     [Think]
     command = play
@@ -72,6 +74,8 @@ zawierający poniższe cztery linie::
 Użycie
 ------
 
-Dodaj ``think`` przed komendą, która długo się wykonuje::
+Dodaj ``think`` przed komendą, która długo się wykonuje:
+
+.. code:: console
 
     think sleep 120

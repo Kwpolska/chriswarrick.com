@@ -51,7 +51,9 @@ users can install the ``think`` package from the AUR.
 Configuration
 -------------
 
-Create a file named ``~/.config/think.conf`` (or wherever your ``XDG_CONFIG_HOME`` is) with the following four lines::
+Create a file named ``~/.config/think.conf`` (or wherever your ``XDG_CONFIG_HOME`` is) with the following four lines:
+
+.. code:: ini
 
     [Think]
     command = play
@@ -70,6 +72,8 @@ Create a file named ``~/.config/think.conf`` (or wherever your ``XDG_CONFIG_HOME
 Usage
 -----
 
-Prepend ``think`` before the command that takes too long to execute::
+Prepend ``think`` before the command that takes too long to execute:
+
+.. code:: console
 
     think sleep 120
