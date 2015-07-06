@@ -10,6 +10,7 @@
 .. language: Java
 .. sort: 79
 .. logo: /projects/_logos/speeker.png
+.. gallery: /galleries/speeker/
 
 This is a simple Android app for Text-to-Speech. It uses the default system voice.
 
