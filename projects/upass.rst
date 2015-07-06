@@ -12,6 +12,7 @@
 .. sort: 90
 .. featured: true
 .. previewimage: /projects/_banners/upass.png
+.. gallery: /galleries/upass/
 
 ``upass`` is an interface to `pass <http://www.passwordstore.org/>`_, the standard Unix password manager.
 
