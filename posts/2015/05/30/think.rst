@@ -3,7 +3,7 @@
 .. date: 2015-06-06 14:15:00+02:00
 .. tags: Python, projects, Linux, think, app, CLI, game show, Jeopardy!
 .. category: Python
-.. link: http://github.com/Kwpolska/think
+.. link: https://github.com/Kwpolska/think
 .. description: A new project of mine: Terminal Think Music.
 .. type: text
 
