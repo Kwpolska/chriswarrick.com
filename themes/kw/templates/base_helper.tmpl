@@ -154,7 +154,7 @@ lang="{{ lang }}">
         {{ rss_link }}
     {% elif generate_rss %}
         {% if translations|length > 1 %}
-            {% for language in translations %}
+            {% for language in translations|sort %}
                 <link rel="alternate" type="application/rss+xml" title="RSS ({{ language }})" href="{{ _link('rss', None, language) }}">
             {% endfor %}
         {% else %}
@@ -164,7 +164,7 @@ lang="{{ lang }}">
 {% endmacro %}
 
 {% macro html_translations() %}
-    {% for langname in translations.keys() %}
+    {% for langname in translations|sort %}
         {% if langname != lang %}
             <li><a href="{{ abs_link(_link("root", None, langname)) }}" rel="alternate" hreflang="{{ langname }}">{{ messages("LANGUAGE", langname) }}</a></li>
         {% endif %}
