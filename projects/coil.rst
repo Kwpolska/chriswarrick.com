@@ -11,7 +11,7 @@
 .. license: 3-clause BSD
 .. featured: False
 .. language: Python
-.. sort: 94
+.. sort: 96
 
 Coil CMS is a user-friendly CMS frontend for `Nikola <../nikola/>`_ — a static site and blog generator, written in Python.
 

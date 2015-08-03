@@ -9,7 +9,7 @@
 .. role: Maintainer
 .. license: MIT
 .. language: Python
-.. sort: 50
+.. sort: 84
 
 The plugin generates state-of-the-art project pages.  It is compatible with
 `Nikola <../nikola/>`_.  It leverages existing features (story generation,

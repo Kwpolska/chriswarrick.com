@@ -255,6 +255,9 @@ FILTERS = {
 # USE_FILENAME_AS_TITLE = True
 
 GALLERY_SORT_BY_DATE = False
+IMAGE_FOLDERS = {'images': 'images',
+                 'project_banners': 'projects/_banners',
+                 'project_logos': 'projects/_logos',}
 
 # #############################################################################
 # HTML fragments and diverse things that are used by the templates

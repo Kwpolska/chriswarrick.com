@@ -9,7 +9,7 @@
 .. role: Maintainer
 .. license: 3-clause BSD
 .. language: Python
-.. sort: 90
+.. sort: 92
 .. featured: true
 .. previewimage: /projects/_banners/upass.png
 .. gallery: /galleries/upass/

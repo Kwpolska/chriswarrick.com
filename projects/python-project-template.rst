@@ -9,16 +9,12 @@
 .. role: Maintainer
 .. license: 3-clause BSD
 .. language: Python
-.. sort: 80
+.. sort: 86
 .. featured: True
 
 A template for Python projects.  It makes it easy to create new Python
 projects, with just a few replacements required.  Many things are already
 there, already prepared for you.
-
-(Just don’t get scared when you see how massive the README is.  It’d be much
-shorter in code and not in prose.  Besides, a significant portion of it is not
-text)
 
 Contents
 ========
@@ -37,8 +33,9 @@ The template contains the following files to get you started:
   script
 * ``__init__.py`` and ``template.py`` files in the Python package directory
 * A good-enough ``setup.py`` file
-* ``tests.py`` containing some *Is My Python Sane?*-style tests
-* A sample ``/usr/bin/`` script
+* ``tests/`` containing some *Is My Python Sane?*-style tests (using ``py.test``)
+* An automated global update script (``.pypt/PYPT-UPDATE``)
+* Entry points configuration ready to be uncommented
 * Addons for Qt users
 * PKGBUILDs for the Arch Linux User Repository (AUR)
 * A state-of-the-art ``release`` script, the operations of which are:
@@ -49,5 +46,6 @@ The template contains the following files to get you started:
   * copying over ``/docs/README.rst``,  ``/docs/CHANGELOG.rst`` and ``/docs/CONTRIBUTING.rst`` to ``/``
   * locale generation (via the ``.pypt/localegen`` script)
   * running ``import $project`` and the testsuite
-  * creating and uploading AUR packages
+  * uploading a source distribution and a wheel to PyPI
   * committing into git, finishing the ``git flow`` release
+  * creating a GitHub Releases entry
