@@ -4,18 +4,6 @@
 .. tags: blog, jekyll, hyde
 .. description: I changed the blog engine AGAIN.
 
-**Update 2013-02-07: Now running Nikola.**
-
-Hello there.  I have a few announcements for you.
-
-First off, I changed the blog engine.  It is now ran by Hyde, a port of Jekyll to Python (but improved).
-
-Second off, all posts from 2009 were archived.  If you are crazy and want to read them, see `2009 Archives </blog/2009/>`_.  They won’t be visible on the Blog page.
-
-Third off, the URLs of posts were changed a bit, but they are fixed by the server.
-
-Fourth off, the Projects page will get a little makeover soon.
-
-That is all.
+Update 2013-02-07: Now running Nikola.  Hyde was a mess.
 
 .. TEASER_END
