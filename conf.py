@@ -635,5 +635,6 @@ INDEXES_PAGES = {'en': ', page %d',
                  'pl': ', page %d'}
 INDEXES_STATIC = False
 WRITE_TAG_CLOUD = False
+URL_TYPE = 'full_path'
 
 GLOBAL_CONTEXT = {'post_lead_format': post_lead_format,}
