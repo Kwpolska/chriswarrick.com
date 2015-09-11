@@ -2,7 +2,7 @@
 .. slug: arch-linux-the-best-distro-ever
 .. date: 2011-01-06 00:00:00
 .. tags: Linux, Arch Linux
-.. category: Linux
+.. section: Linux
 .. description: A word about Arch Linux.
 
 I’m using Linux since 2007. I’ve been on many distros (in order): `Mandriva`_, `Ubuntu`_, `openSuSE`_, `Fedora`_, and only in `VirtualBox`_: `Debian`_ and `Linux Mint`_. But since two months there is another distro in both lists (I tested it out on VirtualBox and then set it up on the actual machine): `Arch Linux`_.

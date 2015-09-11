@@ -2,7 +2,7 @@
 .. slug: managing-tasks
 .. date: 2013-11-16 15:00:00
 .. description: My way to manage tasks.
-.. category: Personal
+.. section: Personal
 .. tags: LaTeX, GTD
 
 `Time management <http://en.wikipedia.org/wiki/Time_management>`_ is hard.

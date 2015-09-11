@@ -2,7 +2,7 @@
 .. slug: new-windows-logo-yet-another-stupid-idea
 .. date: 2012-02-25 00:00:00
 .. tags: rant, Windows, Windows 8
-.. category: Windows
+.. section: Windows
 .. description: Microsoft goes apeshit once more, this time with the new Windows 8 logo.
 
 .. raw:: html

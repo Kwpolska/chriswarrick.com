@@ -2,7 +2,7 @@
 .. slug: i-love-python
 .. date: 2011-08-03 00:00:00
 .. tags: Python, programming, projects
-.. category: Python
+.. section: Python
 .. description: A word about Python.
 
 .. raw:: html

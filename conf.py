@@ -637,4 +637,15 @@ INDEXES_STATIC = False
 WRITE_TAG_CLOUD = False
 URL_TYPE = 'full_path'
 
+THEME_COLOR = '#00aadd'
+POSTS_SECTION_COLORS = {
+    DEFAULT_LANG: {
+        'python': '#ffd43b',
+        'android-adventure': '#a4c639',
+        'windows': '#00adef',
+    }
+}
+
+POSTS_SECTION_FROM_META = True
+
 GLOBAL_CONTEXT = {'post_lead_format': post_lead_format,}

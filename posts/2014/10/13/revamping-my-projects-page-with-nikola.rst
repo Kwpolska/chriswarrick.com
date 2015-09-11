@@ -4,7 +4,7 @@
 .. tags: Python, devel, Nikola
 .. description: A tale on how I revamped my projects page.
 .. type: text
-.. category: Python
+.. section: Python
 
 A week ago, I was inspired to produce a new `projects page </projects/>`_ for
 myself.  The previous one was a trainwreck with a lot of hacks.  Also hosted on

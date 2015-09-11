@@ -4,7 +4,7 @@
 .. tags: review, Google, e-mail, android
 .. description: A short review of Inbox, the new way to use e-mail.
 .. type: text
-.. category: Internet
+.. section: Internet
 .. previewimage: /galleries/inbox-by-google/10 All done view.png
 
 I got a `Inbox`__ invite (hat tip to `Dawid Róż @dav4dav4`__) and spent a day

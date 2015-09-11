@@ -29,15 +29,14 @@
 {% endmacro %}
 
 {% macro html_tags(post) %}
-    {% if post.tags or post.translated_to|length > 1 %}
         <ul itemprop="keywords" class="tags">
+        <li class="section-bubble" style="background-color: {{ post.section_color() }}"><a href="{{ post.section_link() }}">{{ post.section_name() }}</a></li>
         {% for tag in post.tags %}
            <li><a class="tag p-category" href="{{ _link('tag', tag) }}"
            rel="tag">{{ tag }}</a></li>
         {% endfor %}
         {{ html_translations(post) }}
         </ul>
-    {% endif %}
 {% endmacro %}
 
 {% macro html_sourcelink() %}
@@ -50,7 +49,7 @@
     <header class="page-header">
     {{ html_post_title(post.title(), post, want_link) }}
     <div class="metadata">
-            {% if want_date %}<a href="{{ post.permalink() }}" rel="bookmark" class="u-published"><time class="published dt-published" datetime="{{ post.date.isoformat() }}" itemprop="datePublished" title="{{ post.formatted_date(date_format) }}">{{ post.formatted_date(date_format) }}</time></a>{% endif %}
+        {% if want_date %}<a href="{{ post.permalink() }}" rel="bookmark" class="u-published"><time class="published dt-published" datetime="{{ post.date.isoformat() }}" itemprop="datePublished" title="{{ post.formatted_date(date_format) }}">{{ post.formatted_date(date_format) }}</time></a>{% endif %}
         {{ html_tags(post) }}
     </div>
     </header>

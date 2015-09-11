@@ -2,7 +2,7 @@
 .. slug: microsoft-are-you-crazy
 .. date: 2011-10-13 00:00:00
 .. tags: Windows, rant, Windows 8
-.. category: Windows
+.. section: Windows
 .. description: A rant about Windows 8.
 
 .. raw:: html

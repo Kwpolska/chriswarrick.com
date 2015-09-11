@@ -2,7 +2,7 @@
 .. slug: sinofsky-out
 .. date: 2012-11-14 17:00:00
 .. tags: Windows, Windows 8, rant, review
-.. category: Windows
+.. section: Windows
 .. description: Steven Sinofsky is out of Microsoft!
 
 Steven Sinofsky said goodbye to Microsoft on `Monday`_.  Who is he,

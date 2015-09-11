@@ -2,7 +2,7 @@
 .. slug: upass
 .. date: 2015-07-06 14:30:00+02:00
 .. tags: Python, projects, Linux, CLI, upass, app, password
-.. category: Python
+.. section: Python
 .. link: https://github.com/Kwpolska/upass
 .. description: Bo pass jest za trudny.
 .. type: text

@@ -2,7 +2,7 @@
 .. slug: python-apps-the-right-way-entry_points-and-scripts
 .. date: 2014-09-15 18:00:00 UTC+02:00
 .. tags: Python, howto, devel, best practices
-.. category: Python
+.. section: Python
 
 There are multiple ways to write an app in Python.  However, not all of them
 provide your users with the best experience.

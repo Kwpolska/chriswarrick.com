@@ -2,7 +2,7 @@
 .. slug: systemd-is-awesome
 .. date: 2015-01-30 16:00:00+01:00
 .. tags: Linux,systemd,Arch Linux,Debian,Fedora
-.. category: Linux
+.. section: Linux
 .. description: Praise for systemd.
 .. type: text
 
