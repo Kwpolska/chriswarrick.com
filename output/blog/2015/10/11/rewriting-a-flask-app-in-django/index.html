@@ -1,0 +1,254 @@
+<html prefix="
+og: http://ogp.me/ns#
+article: http://ogp.me/ns/article#
+" lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="I spent Saturday on rewriting a Flask app in Django.">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rewriting a Flask app in Django | Chris Warrick</title>
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
+<link href="/assets/css/all.css" rel="stylesheet" type="text/css">
+<link rel="alternate" type="application/rss+xml" title="RSS (en)" href="/rss.xml">
+<link rel="alternate" type="application/rss+xml" title="RSS (pl)" href="/pl/rss.xml">
+<link rel="canonical" href="https://chriswarrick.com/blog/2015/10/11/rewriting-a-flask-app-in-django/">
+<link rel="icon" href="/favicon.ico" sizes="16x16">
+<!--[if lt IE 9]><script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]--><meta name="application-name" content="Chris Warrick">
+<meta name="msapplication-starturl" content="https://chriswarrick.com/">
+<meta name="msapplication-navbutton-color" content="#00aadd">
+<meta name="theme-color" content="#00aadd">
+<meta name="description" itemprop="description" content="I spent Saturday on rewriting a Flask app in Django.">
+<meta name="author" content="Chris Warrick">
+<link rel="prev" href="/blog/2015/07/23/ssg-speed-test/" title="Static Site Generator Speed Test (Nikola, Pelican, Hexo, Octopress)" type="text/html">
+<meta property="og:site_name" content="Chris Warrick">
+<meta property="og:title" content="Rewriting a Flask app in Django">
+<meta property="og:url" content="https://chriswarrick.com/blog/2015/10/11/rewriting-a-flask-app-in-django/">
+<meta property="og:description" content="I spent Saturday on rewriting a Flask app in Django.">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2015-10-11T17:24:43+02:00">
+<meta property="article:tag" content="Django">
+<meta property="article:tag" content="Flask">
+<meta property="article:tag" content="Internet">
+<meta property="article:tag" content="Nikola">
+<meta property="article:tag" content="Python">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:creator" content="@Kwpolska">
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-kw navbar-static-top" role="navigation"><div class="container">
+<!-- This keeps the margins nice -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-kw-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="https://chriswarrick.com/">
+                <img src="/assets/img/logo.png" alt="Chris Warrick" id="logo"><span id="blog-title">Chris Warrick</span>
+            </a>
+        </div>
+<!-- /.navbar-header -->
+        <div class="collapse navbar-collapse navbar-kw-collapse">
+            <ul class="nav navbar-nav">
+<li>
+<a href="/blog/">Archives</a>
+                </li>
+<li>
+<a href="/blog/tags/">Tags</a>
+                </li>
+<li>
+<a href="/contact/">Contact</a>
+                </li>
+<li>
+<a href="/brand/">Brand</a>
+                </li>
+<li>
+<a href="/kwbot/">KwBot</a>
+                </li>
+<li>
+<a href="/projects/">Projects</a>
+                </li>
+<li>
+<a href="/search/">Search</a>
+
+                
+            </li>
+</ul>
+<ul class="nav navbar-nav navbar-right">
+<li>            </li>
+<li><a href="https://chriswarrick.com/pl/" rel="alternate" hreflang="pl">Polski</a></li>
+
+                
+            </ul>
+</div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav><!-- End of Menubar --><div class="container" id="content">
+    <div class="body-content">
+        <!--Body content-->
+        <div class="row">
+        <div id="cookiecontainer"></div>
+            
+<article class="post-text h-entry hentry postpage postbox" itemscope="itemscope" itemtype="http://schema.org/Article"><header class="page-header"><h1 class="p-name entry-title" itemprop="headline name">
+    <a href="/blog/2015/10/11/rewriting-a-flask-app-in-django/" class="u-url">Rewriting a Flask app in&nbsp;Django</a>
+    </h1>
+
+    <div class="metadata">
+<a href="/blog/2015/10/11/rewriting-a-flask-app-in-django/" rel="bookmark" class="u-published"><time class="published dt-published" datetime="2015-10-11T17:24:43+02:00" itemprop="datePublished" title="2015-10-11 17:24">2015-10-11 17:24</time></a>                <ul itemprop="keywords" class="tags">
+<li class="section-bubble" style="background-color: #ffd43b"><a href="/python/">Python</a></li>
+           <li><a class="tag p-category" href="/blog/tags/django/" rel="tag">Django</a></li>
+           <li><a class="tag p-category" href="/blog/tags/flask/" rel="tag">Flask</a></li>
+           <li><a class="tag p-category" href="/blog/tags/internet/" rel="tag">Internet</a></li>
+           <li><a class="tag p-category" href="/blog/tags/nikola/" rel="tag">Nikola</a></li>
+           <li><a class="tag p-category" href="/blog/tags/python/" rel="tag">Python</a></li>
+        
+        </ul>
+</div>
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div class="lead"><div>
+<p>I spent Saturday on rewriting a Flask app in Django.  The app in question was
+<a class="reference external" href="https://users.getnikola.com/">Nikola Users</a>, which is a very simple CRUD
+app.  And yet, the Flask code was a mess, full of bugs and vulnerabilities.
+Eight hours later, I had a fully functional Django app that did more and fixed
+all&nbsp;problems.</p>
+</div></div>
+<div class="section" id="original-flask-app">
+<h2>Original Flask&nbsp;app</h2>
+<p>The original Flask app had a ton of problems.  In order to make it anywhere
+near useful, I would need to spend hours.  Here’s just a few of&nbsp;them:</p>
+<ul class="simple">
+<li>357 lines of spaghetti code (295 SLOC), all in one&nbsp;file</li>
+<li>No form data validation, no CSRF <a class="footnote-reference" href="/blog/2015/10/11/rewriting-a-flask-app-in-django/#id2" id="id1">[1]</a> protection (it did have XSS protection&nbsp;though)</li>
+<li>Login using Mozilla Persona, which requries JavaScript, is a bit kludgey, and
+feels desolate (and also had me store the admin e-mail list in&nbsp;code)</li>
+<li>Geopolitics issues: using country flags for&nbsp;languages</li>
+<li>A lot of things were implemented by&nbsp;hand</li>
+<li>SQLAlchemy is very&nbsp;verbose</li>
+<li>no DB migrations (makes enhancements&nbsp;harder)</li>
+<li>Languages implemented as a PostgreSQL integer&nbsp;array</li>
+<li>Adding a language required running a command-line script and <strong>restarting the
+app</strong> (languages were cached in Python dicts with no way to reload them from
+the database; that would require talking through uWSGI anyway because there
+were multiple processes&nbsp;involved)</li>
+<li>The templates were slightly hacky (the page title was set in each individual
+template and not in the view code); menus hacked together in HTML with no&nbsp;highlighting</li>
+<li>Python&nbsp;2.7</li>
+</ul>
+</div>
+<div class="section" id="the-rewrite">
+<h2>The&nbsp;rewrite</h2>
+<p>I started the process by opening <a class="reference external" href="https://docs.djangoproject.com/en/">Django documentation</a>, with its wonderful
+<a class="reference external" href="https://docs.djangoproject.com/en/1.8/intro/tutorial01/">tutorial</a>.  Now, I have written a couple basic Django apps before, but
+the majority of them didn’t do much.  In other words, I didn’t have a lot of experience.  Especially with taking user input and relationships.  It took me about 8 hours to get feature parity, and&nbsp;more.</p>
+<p>Getting all the features was really simple.  For example, to get a many-to-many
+relationship for languages, I had to write just one&nbsp;line.</p>
+<pre class="code python"><a name="rest_code_ae9d9a08bc494c6d80314eb781b22b84-1"></a><span class="n">languages</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="n">Language</span><span class="p">)</span>
+</pre>
+<p>That’s it.  I didn’t have to run through complicated SQLAlchemy documentation,
+which provides a <a class="reference external" href="http://docs.sqlalchemy.org/en/rel_1_0/orm/basic_relationships.html#many-to-many">13-line solution</a> to the same&nbsp;problem.</p>
+<p>Django also simplified New Relic integration, as the browser JS can be implemented
+using Django template&nbsp;tags.</p>
+<p>Django is not without its problems, though.  I got a very cryptic traceback
+when I did&nbsp;this:</p>
+<pre class="code python"><a name="rest_code_ee246dda529a46dd801806525015b8de-1"></a><span class="n">publish_email</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="s">"Publish e-mail"</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<a name="rest_code_ee246dda529a46dd801806525015b8de-2"></a><span class="ne">TypeError</span><span class="p">:</span> <span class="s">"BooleanField() got multiple values for argument 'required'"</span>
+</pre>
+<p>The real problem with this code?  I forgot the <tt class="docutils literal">label=</tt> keyword.  The
+problem is, the model API accepts this syntax — <tt class="docutils literal">verbose_name</tt> is the first
+argument.  (I am not actually using the labels though, I write my own form&nbsp;HTML)</p>
+<p>Still, the Django version is much cleaner.  And the best part of all?  There
+are no magic global objects (<tt class="docutils literal">g</tt>, <tt class="docutils literal">session</tt>, <tt class="docutils literal">request</tt>) and
+decorator-based views (which are a bit of syntax abuse&nbsp;IMO).</p>
+<p>In the end, I&nbsp;have:</p>
+<ul class="simple">
+<li>382 lines of code (297 SLOC) over 6 files — much cleaner, and with less long&nbsp;lines</li>
+<li>form data validation (via Django), CSRF and XSS&nbsp;protection</li>
+<li>Login using Django built-in authentication, without&nbsp;JavaScript</li>
+<li>Language codes (granted, I could’ve done that really easily back in&nbsp;Flask)</li>
+<li>Tried-and-true implementations of common&nbsp;patterns</li>
+<li>Django models are much more readable and&nbsp;friendly</li>
+<li>Django-provided DB migrations (generated&nbsp;automatically!)</li>
+<li>Languages implemented using Django many-to-many&nbsp;relationships</li>
+<li>Adding a language is possible from the Django built-in admin panel and is
+reflected immediately (no&nbsp;caching)</li>
+<li>Titles and menus in&nbsp;code</li>
+<li>Python&nbsp;3</li>
+<li>New features: featured sites; show only a specified language — were really easy to&nbsp;add</li>
+</ul>
+<table class="docutils footnote" frame="void" id="id2" rules="none">
+<colgroup>
+<col class="label">
+<col>
+</colgroup>
+<tbody valign="top"><tr>
+<td class="label"><a class="fn-backref" href="/blog/2015/10/11/rewriting-a-flask-app-in-django/#id1">[1]</a></td>
+<td>I had some <tt class="docutils literal">CSRF_ENABLED</tt> variable, but it did not seem to be actually
+used by anything.</td>
+</tr></tbody>
+</table>
+</div>
+</div>
+    </article>
+</div>
+    <aside class="postpromonav"><nav><ul class="pager hidden-print">
+<li class="previous">
+                <a href="/blog/2015/07/23/ssg-speed-test/" rel="prev" title="Static Site Generator Speed Test (Nikola, Pelican, Hexo, Octopress)">Previous&nbsp;post</a>
+            </li>
+        </ul></nav></aside><section class="comments"><h2>Comments</h2>
+                        <div id="disqus_thread"></div>
+        <script>
+        var disqus_shortname ="kwpolska",
+            disqus_url="https://chriswarrick.com/blog/2015/10/11/rewriting-a-flask-app-in-django/",
+        disqus_title="Rewriting a Flask app in Django",
+        disqus_identifier="cache/posts/2015/10/11/rewriting-a-flask-app-in-django.html",
+        disqus_config = function () {
+            this.language = "en";
+        };
+        (function() {
+            var dsq = document.createElement('script'); dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script><noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+    <a href="//disqus.com" class="dsq-brlink" rel="nofollow">Comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+        </section><script>var disqus_shortname="kwpolska";(function(){var a=document.createElement("script");a.async=true;a.src="//"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script>
+</div>
+        <!--End of body content-->
+
+        <footer class="site-footer"><p><a href="/cookies/">this site uses
+cookies.</a><br>by using this site, you agree to our cookie&nbsp;policy.</p>
+<p>
+powered by <strong><a href="https://getnikola.com/">Nikola</a></strong>, <a href="http://nginx.org/">nginx</a> and <a href="https://www.digitalocean.com/?refcode=7983689b2ecc">DigitalOcean</a><br>
+copyright © 2009–2015 <a href="/contact/">Chris Warrick</a><br><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/">CC
+BY-NC-ND</a>, unless stated&nbsp;otherwise</p>
+            
+        </footer>
+</div>
+
+
+            <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script><script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script><script src="/assets/js/all.js"></script><script>jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script><script>
+    moment.locale("en");
+    fancydates(0, "YYYY-MM-DD HH:mm");
+    </script><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-11937989-1', 'chriswarrick.com');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+
+</script>
+</body>
+</html>
