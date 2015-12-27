@@ -259,6 +259,8 @@ IMAGE_FOLDERS = {'images': 'images',
                  'project_banners': 'projects/_banners',
                  'project_logos': 'projects/_logos',}
 
+IMAGE_THUMBNAIL_SIZE = 300
+
 # #############################################################################
 # HTML fragments and diverse things that are used by the templates
 # #############################################################################
