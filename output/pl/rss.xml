@@ -1,17 +1,381 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chris Warrick</title><link>https://chriswarrick.com/</link><description>A blog about everything and nothing.</description><atom:link type="application/rss+xml" href="https://chriswarrick.com/pl/rss.xml" rel="self"></atom:link><language>pl</language><lastBuildDate>Sun, 27 Dec 2015 11:23:32 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Windows 10 November Upgrade: Windows as a (Dis-)service</title><link>https://chriswarrick.com/pl/blog/2015/12/27/windows-10-november-upgrade-windows-as-a-dis-service/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;div class="pull-right figure" style="width: 20%"&gt;
+<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0"><channel><title>Chris Warrick</title><link>https://chriswarrick.com/</link><description>A blog about everything and nothing.</description><atom:link type="application/rss+xml" href="https://chriswarrick.com/pl/rss.xml" rel="self"></atom:link><language>pl</language><lastBuildDate>Wed, 10 Feb 2016 16:56:25 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Deploying Python Web Applications with nginx and uWSGI Emperor</title><link>https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;You just wrote a great Python web application. Now, you want to share it with the world. In order to do that, you need a server, and some software to do that for you.&lt;/p&gt;
+&lt;p&gt;The following is a comprehensive guide on how to accomplish that, on multiple Linux-based operating systems, using nginx and uWSGI Emperor. It doesn’t force you to use any specific web framework — Flask, Django, Pyramid, Bottle will all work. Written for Ubuntu, Fedora and Arch Linux (should be helpful for other systems, too)&lt;/p&gt;
+&lt;!-- TEASER_END --&gt;
+&lt;div class="section" id="getting-started"&gt;
+&lt;h2&gt;Getting Started&lt;/h2&gt;
+&lt;p&gt;In order to deploy your web application, you need a server that gives you root and ssh access — in other words, a VPS (or a dedicated server, or a datacenter lease…). If you’re looking for a great VPS service for a low price, I recommend &lt;a class="reference external" href="https://www.digitalocean.com/?refcode=7983689b2ecc"&gt;DigitalOcean&lt;/a&gt; (reflink &lt;a class="footnote-reference" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id6" id="id1"&gt;[1]&lt;/a&gt;), which offers a $5/mo service &lt;a class="footnote-reference" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id7" id="id2"&gt;[2]&lt;/a&gt;. If you want to play along at home, without buying a VPS, you can create a virtual machine on your own, or use a Vagrant with a &lt;a class="reference external" href="https://getfedora.org/en/cloud/download/"&gt;Vagrant box for Fedora 23&lt;/a&gt; (I recommend disabling SELinux, more on that later).&lt;/p&gt;
+&lt;p&gt;Your server should also run a modern Linux-based operating system. I tested and wrote this guide for Ubuntu 15.10 &lt;a class="footnote-reference" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id8" id="id3"&gt;[3]&lt;/a&gt;, Fedora 23 and Arch Linux, but other Linux distributions (and perhaps *BSD) will work (in places where the instructions are split three-way, try coming up with your own, reading documentation and config files).  Unfortunately, all Linux distributions have their own ideas when it comes to running and managing nginx and UWSGI.&lt;/p&gt;
+&lt;div class="note"&gt;
+&lt;p class="first admonition-title"&gt;Note&lt;/p&gt;
+&lt;p class="last"&gt;All the commands in this tutorial are meant to be run &lt;strong&gt;as root&lt;/strong&gt; — run &lt;tt class="docutils literal"&gt;su&lt;/tt&gt; or &lt;tt class="docutils literal"&gt;sudo su&lt;/tt&gt; first to get an administrative shell.&lt;/p&gt;
+&lt;/div&gt;
+&lt;p&gt;Start by installing virtualenv, nginx and uWSGI. I recommend using your operating system packages. For uWSGI, we need the &lt;tt class="docutils literal"&gt;logfile&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;python3&lt;/tt&gt; plugins. (Arch Linux names the &lt;tt class="docutils literal"&gt;python3&lt;/tt&gt; plugin &lt;tt class="docutils literal"&gt;python&lt;/tt&gt;; the &lt;tt class="docutils literal"&gt;logfile&lt;/tt&gt; plugin may be built-in — check with your system repositories!).&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Ubuntu:&lt;/strong&gt;&lt;/p&gt;
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_0613a21273754c6f88cd41f5fdbfd829-1"&gt;&lt;/a&gt;aptitude install virtualenv python3 uwsgi uwsgi-emperor uwsgi-plugin-python3 nginx-full
+&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;Fedora:&lt;/strong&gt;&lt;/p&gt;
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_f248f6d2e5514b3ea86046e6635583d2-1"&gt;&lt;/a&gt;dnf install python3-virtualenv uwsgi uwsgi-plugin-python3 uwsgi-logger-file nginx
+&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;Arch Linux:&lt;/strong&gt;&lt;/p&gt;
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_f71d3e17f6bf4dfabf41dc21e64de76b-1"&gt;&lt;/a&gt;pacman -S python-virtualenv uwsgi uwsgi-plugin-python nginx
+&lt;/pre&gt;&lt;/div&gt;
+&lt;div class="section" id="preparing-your-application"&gt;
+&lt;h2&gt;Preparing your application&lt;/h2&gt;
+&lt;p&gt;This tutorial will work for any web framework. I will, use &lt;a class="reference external" href="https://github.com/Kwpolska/flask-demo-app"&gt;a really basic Flask app&lt;/a&gt; that has just one route (&lt;tt class="docutils literal"&gt;/&lt;/tt&gt;), a static &lt;tt class="docutils literal"&gt;hello.png&lt;/tt&gt; file and a &lt;tt class="docutils literal"&gt;favicon.ico&lt;/tt&gt; for demonstration purposes. Note that the app does not use &lt;tt class="docutils literal"&gt;app.run()&lt;/tt&gt;. While you could add it, it would be used for local development and debugging only, and would be prepended by &lt;tt class="docutils literal"&gt;if __name__ == '__main__':&lt;/tt&gt; — uWSGI doesn’t work alongside it.&lt;/p&gt;
+&lt;p&gt;The app will be installed somewhere under the &lt;tt class="docutils literal"&gt;/srv&lt;/tt&gt; directory, which is a great place to store things like this. I’ll choose &lt;tt class="docutils literal"&gt;/srv/myapp&lt;/tt&gt; for this tutorial, but for real deployments, you should use sometihing more distinguishable — the domain name is a great idea.&lt;/p&gt;
+&lt;p&gt;We’ll start by creating a virtualenv:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Ubuntu:&lt;/strong&gt;&lt;/p&gt;
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_c01ee6c7cb544852b80d38e6b6102a9b-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;cd &lt;/span&gt;srv
+&lt;a name="rest_code_c01ee6c7cb544852b80d38e6b6102a9b-2"&gt;&lt;/a&gt;virtualenv -p /usr/bin/python3 myapp
+&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;Fedora:&lt;/strong&gt;&lt;/p&gt;
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_2512c88c1fc14eefa07d43cf9c233bf2-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; /srv
+&lt;a name="rest_code_2512c88c1fc14eefa07d43cf9c233bf2-2"&gt;&lt;/a&gt;virtualenv-3.4 myapp
+&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;Arch Linux:&lt;/strong&gt;&lt;/p&gt;
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_0c708457fa6840bf8ea1892106eb12c3-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; /srv
+&lt;a name="rest_code_0c708457fa6840bf8ea1892106eb12c3-2"&gt;&lt;/a&gt;virtualenv3 myapp
+&lt;/pre&gt;&lt;p&gt;(Make sure you create a Python 3 environment!)&lt;/p&gt;
+&lt;p&gt;Now, we need to get our app there and install requirements. An example for the tutorial demo app (adjust for your clone/download path):&lt;/p&gt;
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_24d0988a9d644258bbfc883803f5d19a-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;cd &lt;/span&gt;myapp
+&lt;a name="rest_code_24d0988a9d644258bbfc883803f5d19a-2"&gt;&lt;/a&gt;cp -r ~/git/flask-demo-app appdata
+&lt;a name="rest_code_24d0988a9d644258bbfc883803f5d19a-3"&gt;&lt;/a&gt;bin/pip install -r appdata/requirements.txt
+&lt;/pre&gt;&lt;p&gt;I’m storing my application data in the &lt;tt class="docutils literal"&gt;appdata&lt;/tt&gt; subdirectory so that it doesn’t clutter the virtualenv (or vice versa).  You may also install the &lt;tt class="docutils literal"&gt;uwsgi&lt;/tt&gt; package in the virtualenv, but it’s optional.&lt;/p&gt;
+&lt;p&gt;What this directory should be depends on your web framework.  For example, for a Django app, you should have an &lt;tt class="docutils literal"&gt;appdata/manage.py&lt;/tt&gt; file (in other words, &lt;tt class="docutils literal"&gt;appdata&lt;/tt&gt; is where your app structure starts).  I also assumed that the &lt;tt class="docutils literal"&gt;appdata&lt;/tt&gt; folder should have a &lt;tt class="docutils literal"&gt;static&lt;/tt&gt; subdirectory with all static files, including &lt;tt class="docutils literal"&gt;favicon.ico&lt;/tt&gt; if you have one (we will add support for both in nginx).&lt;/p&gt;
+&lt;p&gt;At this point, you should chown this directory to the user and group your server is going to run as.  This is especially important if uwsgi and nginx run as different users (as they do on Fedora). Run one of the following commands:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Ubuntu:&lt;/strong&gt;&lt;/p&gt;
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_4ba249922efb41a996c577c35352c379-1"&gt;&lt;/a&gt;chown -R www-data:www-data /srv/myapp
+&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;Fedora:&lt;/strong&gt;&lt;/p&gt;
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_692c0e27d5014ee3ab6c33ca7c5b0536-1"&gt;&lt;/a&gt;chown -R uwsgi:nginx /srv/myapp
+&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;Arch Linux:&lt;/strong&gt;&lt;/p&gt;
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_01db886106ac4c99b89b5f63c71498d7-1"&gt;&lt;/a&gt;chown -R http:http /srv/myapp
+&lt;/pre&gt;&lt;/div&gt;
+&lt;div class="section" id="configuring-uwsgi-and-nginx"&gt;
+&lt;h2&gt;Configuring uWSGI and nginx&lt;/h2&gt;
+&lt;div class="note"&gt;
+&lt;p class="first admonition-title"&gt;Note&lt;/p&gt;
+&lt;p class="last"&gt;Parts of the configuration depend on your operating system. I tried to provide advice for Ubuntu, Fedora and Arch Linux. If you experience any issues, in particular with plugins, please consult the documentation.&lt;/p&gt;
+&lt;/div&gt;
+&lt;p&gt;We need to write a configuration file for uWSGI and nginx.&lt;/p&gt;
+&lt;div class="section" id="uwsgi-configuration"&gt;
+&lt;h3&gt;uWSGI configuration&lt;/h3&gt;
+&lt;p&gt;Start with this, but read the notes below and change the values accordingly:&lt;/p&gt;
+&lt;pre class="code ini"&gt;&lt;a name="rest_code_fb926f5ae5434a0d8f4e580c2d0f47fd-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;[uwsgi]&lt;/span&gt;
+&lt;a name="rest_code_fb926f5ae5434a0d8f4e580c2d0f47fd-2"&gt;&lt;/a&gt;&lt;span class="na"&gt;socket&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/uwsgi.sock&lt;/span&gt;
+&lt;a name="rest_code_fb926f5ae5434a0d8f4e580c2d0f47fd-3"&gt;&lt;/a&gt;&lt;span class="na"&gt;chmod-socket&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;775&lt;/span&gt;
+&lt;a name="rest_code_fb926f5ae5434a0d8f4e580c2d0f47fd-4"&gt;&lt;/a&gt;&lt;span class="na"&gt;chdir&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/appdata&lt;/span&gt;
+&lt;a name="rest_code_fb926f5ae5434a0d8f4e580c2d0f47fd-5"&gt;&lt;/a&gt;&lt;span class="na"&gt;master&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;true&lt;/span&gt;
+&lt;a name="rest_code_fb926f5ae5434a0d8f4e580c2d0f47fd-6"&gt;&lt;/a&gt;&lt;span class="na"&gt;binary-path&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/bin/uwsgi&lt;/span&gt;
+&lt;a name="rest_code_fb926f5ae5434a0d8f4e580c2d0f47fd-7"&gt;&lt;/a&gt;&lt;span class="na"&gt;virtualenv&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp&lt;/span&gt;
+&lt;a name="rest_code_fb926f5ae5434a0d8f4e580c2d0f47fd-8"&gt;&lt;/a&gt;&lt;span class="na"&gt;module&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;flaskapp:app&lt;/span&gt;
+&lt;a name="rest_code_fb926f5ae5434a0d8f4e580c2d0f47fd-9"&gt;&lt;/a&gt;&lt;span class="na"&gt;uid&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;www-data&lt;/span&gt;
+&lt;a name="rest_code_fb926f5ae5434a0d8f4e580c2d0f47fd-10"&gt;&lt;/a&gt;&lt;span class="na"&gt;gid&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;www-data&lt;/span&gt;
+&lt;a name="rest_code_fb926f5ae5434a0d8f4e580c2d0f47fd-11"&gt;&lt;/a&gt;&lt;span class="na"&gt;processes&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;1&lt;/span&gt;
+&lt;a name="rest_code_fb926f5ae5434a0d8f4e580c2d0f47fd-12"&gt;&lt;/a&gt;&lt;span class="na"&gt;threads&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;1&lt;/span&gt;
+&lt;a name="rest_code_fb926f5ae5434a0d8f4e580c2d0f47fd-13"&gt;&lt;/a&gt;&lt;span class="na"&gt;plugins&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;python3,logfile&lt;/span&gt;
+&lt;a name="rest_code_fb926f5ae5434a0d8f4e580c2d0f47fd-14"&gt;&lt;/a&gt;&lt;span class="na"&gt;logger&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;file:/srv/myapp/uwsgi.log&lt;/span&gt;
+&lt;/pre&gt;&lt;p&gt;Save this file as:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;Ubuntu: &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;/etc/uwsgi-emperor/vassals/myapp.ini&lt;/span&gt;&lt;/tt&gt;&lt;/li&gt;
+&lt;li&gt;Fedora: &lt;tt class="docutils literal"&gt;/etc/uwsgi.d/myapp.ini&lt;/tt&gt;&lt;/li&gt;
+&lt;li&gt;Arch Linux: &lt;tt class="docutils literal"&gt;/etc/uwsgi/vassals/myapp.ini&lt;/tt&gt; (create the directory first and &lt;strong&gt;chown&lt;/strong&gt; it to http: &lt;tt class="docutils literal"&gt;mkdir &lt;span class="pre"&gt;-p&lt;/span&gt; /etc/uwsgi/vassals; chown &lt;span class="pre"&gt;-R&lt;/span&gt; http:http /etc/uwsgi/vassals&lt;/tt&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The options are:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;&lt;tt class="docutils literal"&gt;socket&lt;/tt&gt; — the socket file that will be used by your application. It’s usually a file path (Unix domain socket). You could use a local TCP socket, but it’s not recommended.&lt;/li&gt;
+&lt;li&gt;&lt;tt class="docutils literal"&gt;chdir&lt;/tt&gt; — the app directory.&lt;/li&gt;
+&lt;li&gt;&lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;binary-path&lt;/span&gt;&lt;/tt&gt; — the uWSGI executable to use. Remove if you didn’t install the (optional) &lt;tt class="docutils literal"&gt;uwsgi&lt;/tt&gt; package in your virtualenv.&lt;/li&gt;
+&lt;li&gt;&lt;tt class="docutils literal"&gt;virtualenv&lt;/tt&gt; — the virtualenv for your application.&lt;/li&gt;
+&lt;li&gt;&lt;tt class="docutils literal"&gt;module&lt;/tt&gt; — the name of the module that houses your application, and the object that speaks the WSGI interface, separated by colons. This depends on your web framework:&lt;ul&gt;
+&lt;li&gt;For Flask: &lt;tt class="docutils literal"&gt;module = filename:app&lt;/tt&gt;, where &lt;tt class="docutils literal"&gt;filename&lt;/tt&gt; is the name of your Python file (without the &lt;tt class="docutils literal"&gt;.py&lt;/tt&gt; part) and &lt;tt class="docutils literal"&gt;app&lt;/tt&gt; is the &lt;tt class="docutils literal"&gt;Flask&lt;/tt&gt; object&lt;/li&gt;
+&lt;li&gt;For Django: &lt;tt class="docutils literal"&gt;module = project.wsgi:application&lt;/tt&gt;, where &lt;tt class="docutils literal"&gt;project&lt;/tt&gt; is the name of your project (directory with &lt;tt class="docutils literal"&gt;settings.py&lt;/tt&gt;).  You should also add an environment variable: &lt;tt class="docutils literal"&gt;env = DJANGO_SETTINGS_MODULE=project.settings&lt;/tt&gt;&lt;/li&gt;
+&lt;li&gt;For Bottle: &lt;tt class="docutils literal"&gt;module = filename:app&lt;/tt&gt;, where &lt;tt class="docutils literal"&gt;app = bottle.default_app()&lt;/tt&gt;&lt;/li&gt;
+&lt;li&gt;For Pyramid: &lt;tt class="docutils literal"&gt;module = filename:app&lt;/tt&gt;, where &lt;tt class="docutils literal"&gt;app = config.make_wsgi_app()&lt;/tt&gt; (make sure it’s &lt;strong&gt;not&lt;/strong&gt; in a &lt;tt class="docutils literal"&gt;if __name__ == '__main__':&lt;/tt&gt; block — the demo app does that!)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;tt class="docutils literal"&gt;uid&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;gid&lt;/tt&gt; — the names of the user account to use for your server.  Use the same values as in the &lt;tt class="docutils literal"&gt;chown&lt;/tt&gt; command above.&lt;/li&gt;
+&lt;li&gt;&lt;tt class="docutils literal"&gt;processes&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;threads&lt;/tt&gt; — control the resources devoted to this application. Because this is a simple hello app, I used one process with one thread, but for a real app, you will probably need more (you need to see what works the best; there is no algorithm to decide). Also, remember that if you use multiple processes, they don’t share data, so you need an out-of-process database if you want that.&lt;/li&gt;
+&lt;li&gt;&lt;tt class="docutils literal"&gt;plugins&lt;/tt&gt; — the list of uWSGI plugins to use. For Arch Linux, use &lt;tt class="docutils literal"&gt;plugins = python&lt;/tt&gt; (the &lt;tt class="docutils literal"&gt;logfile&lt;/tt&gt; plugin is always active).&lt;/li&gt;
+&lt;li&gt;&lt;tt class="docutils literal"&gt;logger&lt;/tt&gt; — the path to your app-specific logfile. (Other logging facilities are available, but this one is the easiest, especially for multiple applications on the same server)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;You can test your configuration by running &lt;tt class="docutils literal"&gt;uwsgi &lt;span class="pre"&gt;--ini&lt;/span&gt; /path/to/myapp.ini&lt;/tt&gt; (disable the logger for stderr output or run &lt;tt class="docutils literal"&gt;tail &lt;span class="pre"&gt;-f&lt;/span&gt; /srv/myapp/uwsgi.log&lt;/tt&gt; in another window).&lt;/p&gt;
+&lt;p&gt;If you’re using &lt;strong&gt;Fedora&lt;/strong&gt;, there are two configuration changes you need to make globally: in &lt;tt class="docutils literal"&gt;/etc/uwsgi.ini&lt;/tt&gt;, disable the &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;emperor-tyrant&lt;/span&gt;&lt;/tt&gt; option (which seems to be buggy) and set &lt;tt class="docutils literal"&gt;gid = nginx&lt;/tt&gt;.  We’ll need this so that nginx can talk to your socket.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="nginx-configuration"&gt;
+&lt;h3&gt;nginx configuration&lt;/h3&gt;
+&lt;p&gt;We need to configure our web server. Here’s a basic configuration that will get us started:&lt;/p&gt;
+&lt;p&gt;Save this file as:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;Ubuntu: &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;/etc/nginx/sites-enabled/myapp.conf&lt;/span&gt;&lt;/tt&gt;&lt;/li&gt;
+&lt;li&gt;Fedora: &lt;tt class="docutils literal"&gt;/etc/nginx/conf.d/myapp.conf&lt;/tt&gt;&lt;/li&gt;
+&lt;li&gt;Arch Linux: add &lt;tt class="docutils literal"&gt;include &lt;span class="pre"&gt;/etc/nginx/conf.d/*.conf;&lt;/span&gt;&lt;/tt&gt; to your &lt;tt class="docutils literal"&gt;http&lt;/tt&gt; directive in &lt;tt class="docutils literal"&gt;/etc/nginx/nginx.conf&lt;/tt&gt; and use &lt;tt class="docutils literal"&gt;/etc/nginx/conf.d/myapp.conf&lt;/tt&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class="code nginx"&gt;&lt;a name="rest_code_d93a2359f8f14d0f9f5da99dbac6e2d1-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;server&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_d93a2359f8f14d0f9f5da99dbac6e2d1-2"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;listen&lt;/span&gt; &lt;span class="mi"&gt;8080&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_d93a2359f8f14d0f9f5da99dbac6e2d1-3"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;server_name&lt;/span&gt; &lt;span class="s"&gt;localhost&lt;/span&gt; &lt;span class="s"&gt;myapp.local&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_d93a2359f8f14d0f9f5da99dbac6e2d1-4"&gt;&lt;/a&gt;
+&lt;a name="rest_code_d93a2359f8f14d0f9f5da99dbac6e2d1-5"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;location&lt;/span&gt; &lt;span class="s"&gt;/&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_d93a2359f8f14d0f9f5da99dbac6e2d1-6"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;include&lt;/span&gt; &lt;span class="s"&gt;uwsgi_params&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_d93a2359f8f14d0f9f5da99dbac6e2d1-7"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;uwsgi_pass&lt;/span&gt; &lt;span class="s"&gt;unix:/srv/myapp/uwsgi.sock&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_d93a2359f8f14d0f9f5da99dbac6e2d1-8"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;a name="rest_code_d93a2359f8f14d0f9f5da99dbac6e2d1-9"&gt;&lt;/a&gt;
+&lt;a name="rest_code_d93a2359f8f14d0f9f5da99dbac6e2d1-10"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;location&lt;/span&gt; &lt;span class="s"&gt;/static&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_d93a2359f8f14d0f9f5da99dbac6e2d1-11"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;alias&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/appdata/static&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_d93a2359f8f14d0f9f5da99dbac6e2d1-12"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;a name="rest_code_d93a2359f8f14d0f9f5da99dbac6e2d1-13"&gt;&lt;/a&gt;
+&lt;a name="rest_code_d93a2359f8f14d0f9f5da99dbac6e2d1-14"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;location&lt;/span&gt; &lt;span class="s"&gt;/favicon.ico&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_d93a2359f8f14d0f9f5da99dbac6e2d1-15"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;alias&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/appdata/static/favicon.ico&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_d93a2359f8f14d0f9f5da99dbac6e2d1-16"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;a name="rest_code_d93a2359f8f14d0f9f5da99dbac6e2d1-17"&gt;&lt;/a&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;p&gt;Note that this file is a very basic and rudimentary configuration. This configuration is fine for local testing, but for a real deployment, you will need to adjust it:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;set &lt;tt class="docutils literal"&gt;listen&lt;/tt&gt; to &lt;tt class="docutils literal"&gt;443 ssl&lt;/tt&gt; and create a http→https redirect on port 80 (you can get a free SSL certificate from &lt;a class="reference external" href="https://letsencrypt.org/"&gt;Let’s Encrypt&lt;/a&gt;; &lt;a class="reference external" href="https://raymii.org/s/tutorials/Strong_SSL_Security_On_nginx.html"&gt;make sure to configure SSL properly&lt;/a&gt;).&lt;/li&gt;
+&lt;li&gt;set &lt;tt class="docutils literal"&gt;server_name&lt;/tt&gt; to your real domain name&lt;/li&gt;
+&lt;li&gt;you might also want to add custom error pages, or change anything else that relates to your web server — consult other nginx guides for details&lt;/li&gt;
+&lt;li&gt;nginx might have some server already enabled by default — edit &lt;tt class="docutils literal"&gt;/etc/nginx/nginx.conf&lt;/tt&gt; to disable it&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="service-setup"&gt;
+&lt;h2&gt;Service setup&lt;/h2&gt;
+&lt;p&gt;After you’ve configured uWSGI and nginx, you need to enable and start the system services.&lt;/p&gt;
+&lt;p&gt;I’m going to use &lt;tt class="docutils literal"&gt;systemd&lt;/tt&gt; here. If your system does not support &lt;tt class="docutils literal"&gt;systemd&lt;/tt&gt;, please consult your OS documentation for instructions.&lt;/p&gt;
+&lt;div class="section" id="for-arch-linux"&gt;
+&lt;h3&gt;For Arch Linux&lt;/h3&gt;
+&lt;p&gt;All you need is:&lt;/p&gt;
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_b9a4ae2e61164cff91fe39f7152370d1-1"&gt;&lt;/a&gt;systemctl &lt;span class="nb"&gt;enable &lt;/span&gt;nginx emperor.uwsgi
+&lt;a name="rest_code_b9a4ae2e61164cff91fe39f7152370d1-2"&gt;&lt;/a&gt;systemctl start nginx emperor.uwsgi
+&lt;/pre&gt;&lt;p&gt;Verify the service is running with &lt;tt class="docutils literal"&gt;systemctl status emperor.uwsgi&lt;/tt&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="for-fedora"&gt;
+&lt;h3&gt;For Fedora&lt;/h3&gt;
+&lt;p&gt;Make sure you followed the extra note about editing &lt;tt class="docutils literal"&gt;/etc/uwsgi.ini&lt;/tt&gt; and run:&lt;/p&gt;
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_9373bb6fc35a4c03adc2dbd75cc8fe64-1"&gt;&lt;/a&gt;systemctl &lt;span class="nb"&gt;enable &lt;/span&gt;nginx uwsgi
+&lt;a name="rest_code_9373bb6fc35a4c03adc2dbd75cc8fe64-2"&gt;&lt;/a&gt;systemctl start nginx uwsgi
+&lt;/pre&gt;&lt;p&gt;Verify the service is running with &lt;tt class="docutils literal"&gt;systemctl status uwsgi&lt;/tt&gt;&lt;/p&gt;
+&lt;p&gt;This is enough to get an app working, if you disabled SELinux (if you want to do it, edit &lt;tt class="docutils literal"&gt;/etc/selinux/config&lt;/tt&gt; and reboot), but if you want to keep SELinux happy, you need to do the following:&lt;/p&gt;
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_82b55a2c5caf48b68945492fd56d90b9-1"&gt;&lt;/a&gt;setenforce 0
+&lt;a name="rest_code_82b55a2c5caf48b68945492fd56d90b9-2"&gt;&lt;/a&gt;chcon -R system_u:system_r:httpd_t:s0 /srv/myapp/appdata/static
+&lt;a name="rest_code_82b55a2c5caf48b68945492fd56d90b9-3"&gt;&lt;/a&gt;setenforce 1
+&lt;/pre&gt;&lt;p&gt;We now need to install a &lt;a class="reference external" href="https://chriswarrick.com/pub/nginx-uwsgi.pp"&gt;SELinux policy&lt;/a&gt; (that I created for this project). If it doesn’t work, look into &lt;tt class="docutils literal"&gt;audit2allow&lt;/tt&gt;.&lt;/p&gt;
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_328fcbba62f5409f972842b584769963-1"&gt;&lt;/a&gt;semodule -i nginx-uwsgi.pp
+&lt;/pre&gt;&lt;p&gt;Hopefully, this is enough. In case it isn’t, please read SELinux documentation, and check audit logs.&lt;/p&gt;
+&lt;p&gt;Also if you’re on Fedora, to make your website accessible from the outside Internet, you need to configure the built-in firewall accordingly — for ports 80/443, use:&lt;/p&gt;
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_a1b6ef93df1a4ada8b5643bbc3ff88be-1"&gt;&lt;/a&gt;firewall-cmd --add-service http
+&lt;a name="rest_code_a1b6ef93df1a4ada8b5643bbc3ff88be-2"&gt;&lt;/a&gt;firewall-cmd --add-service https
+&lt;/pre&gt;&lt;/div&gt;
+&lt;div class="section" id="for-ubuntu"&gt;
+&lt;h3&gt;For Ubuntu&lt;/h3&gt;
+&lt;p&gt;Ubuntu does not ship the uWSGI Emperor service by default. However, you can easily create it.  Copy the &lt;tt class="docutils literal"&gt;.service&lt;/tt&gt; file from the &lt;a class="reference external" href="https://uwsgi-docs.readthedocs.org/en/latest/Systemd.html#adding-the-emperor-to-systemd"&gt;uWSGI systemd documentation&lt;/a&gt; to &lt;tt class="docutils literal"&gt;/etc/systemd/system/emperor.uwsgi.service&lt;/tt&gt;.  Change the ExecStart line to:&lt;/p&gt;
+&lt;pre class="code ini"&gt;&lt;a name="rest_code_ff9289625fd04b47a437fe1cd9ecb5f7-1"&gt;&lt;/a&gt;&lt;span class="na"&gt;ExecStart&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/usr/bin/uwsgi --ini /etc/uwsgi-emperor/emperor.ini&lt;/span&gt;
+&lt;/pre&gt;&lt;p&gt;You can now reload systemd daemons and enable the services:&lt;/p&gt;
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_8eda15c668c846ac9f5500cc81ac7588-1"&gt;&lt;/a&gt;systemctl daemon-reload
+&lt;a name="rest_code_8eda15c668c846ac9f5500cc81ac7588-2"&gt;&lt;/a&gt;systemctl &lt;span class="nb"&gt;enable &lt;/span&gt;nginx emperor.uwsgi
+&lt;a name="rest_code_8eda15c668c846ac9f5500cc81ac7588-3"&gt;&lt;/a&gt;systemctl start nginx emperor.uwsgi
+&lt;/pre&gt;&lt;p&gt;Verify the service is running with &lt;tt class="docutils literal"&gt;systemctl status emperor.uwsgi&lt;/tt&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="testing-end-result"&gt;
+&lt;h2&gt;Testing — end result&lt;/h2&gt;
+&lt;p&gt;Your web service should now be running at &lt;a class="reference external" href="http://localhost:8080/"&gt;http://localhost:8080/&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;If you used the demo application, you should see something like this (complete with the favicon and image greeting):&lt;/p&gt;
+&lt;img alt="/images/nginx-uwsgi-demo.png" class="centered" src="https://chriswarrick.com/images/nginx-uwsgi-demo.png"&gt;
+&lt;p&gt;Hopefully, everything works. If it doesn’t, check nginx and uwsgi logs for details, and make sure you followed all instructions.&lt;/p&gt;
+&lt;hr class="docutils"&gt;
+&lt;p&gt;For easy linking, I set up some aliases: &lt;a class="reference external" href="https://go.chriswarrick.com/pyweb"&gt;https://go.chriswarrick.com/pyweb&lt;/a&gt; and &lt;a class="reference external" href="https://go.chriswarrick.com/uwsgi-tut"&gt;https://go.chriswarrick.com/uwsgi-tut&lt;/a&gt; (powered by a Django web application, deployed with nginx and uwsgi!)&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Update 2016-02-10 17:00 UTC:&lt;/strong&gt; This guide uses nginx and uWSGI, because they
+are considered best practices by most people. nginx is a fast, modern web
+server, with uWSGI support built in (without resorting to reverse proxying).
+uWSGI is similarly aimed at speed. The Emperor mode of uWSGI is recommended for
+init system integration by the uWSGI team, and it’s especially useful for
+multi-app deployments. (This guide is opinionated.)&lt;/p&gt;
+&lt;table class="docutils footnote" frame="void" id="id6" rules="none"&gt;
+&lt;colgroup&gt;&lt;col class="label"&gt;&lt;col&gt;&lt;/colgroup&gt;
+&lt;tbody valign="top"&gt;
+&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id1"&gt;[1]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;This reflink gives you $10 in credit, which is enough to run a server for up to two months without paying a thing. I earn $15.&lt;/td&gt;&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;table class="docutils footnote" frame="void" id="id7" rules="none"&gt;
+&lt;colgroup&gt;&lt;col class="label"&gt;&lt;col&gt;&lt;/colgroup&gt;
+&lt;tbody valign="top"&gt;
+&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id2"&gt;[2]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;If you’re in the EU (and thus have to pay VAT), or want DO to handle your backups, it will cost you a little more.&lt;/td&gt;&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;table class="docutils footnote" frame="void" id="id8" rules="none"&gt;
+&lt;colgroup&gt;&lt;col class="label"&gt;&lt;col&gt;&lt;/colgroup&gt;
+&lt;tbody valign="top"&gt;
+&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id3"&gt;[3]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;Ubuntu 14.04 LTS does not use systemd — you’re on your own (upstart services exist, figure out how to use them yourself). Note that other software might be outdated as well — proceed with care, or just use something more modern.&lt;/td&gt;&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;</description><guid>https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/</guid><pubDate>Wed, 10 Feb 2016 14:00:00 GMT</pubDate></item><item><title>Windows 10 November Upgrade: Windows as a (Dis-)service</title><link>https://chriswarrick.com/pl/blog/2015/12/27/windows-10-november-upgrade-windows-as-a-dis-service/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;div class="pull-right figure" style="width: 20%"&gt;
 &lt;a class="reference external image-reference" href="https://chriswarrick.com/images/Windows10-1511.png"&gt;&lt;img alt="/images/Windows10-1511.thumbnail.png" src="https://chriswarrick.com/images/Windows10-1511.thumbnail.png"&gt;&lt;/a&gt;
 &lt;p class="caption"&gt;The &lt;em&gt;About Windows&lt;/em&gt; screen.&lt;/p&gt;
 &lt;/div&gt;
 &lt;p&gt;I upgraded Windows 10 from the RTM version (build 10240, July 2015) to the
 &lt;em&gt;November Upgrade&lt;/em&gt; version (1511/build 10560). It took me a good two hours,
 multiple reboots, and a BSOD.&lt;/p&gt;
-&lt;p class="more"&gt;&lt;a href="https://chriswarrick.com/pl/blog/2015/12/27/windows-10-november-upgrade-windows-as-a-dis-service/"&gt;Czytaj więcej…&lt;/a&gt; (17 paragraphs remaining — a 5 minutes’ read)&lt;/p&gt;&lt;/div&gt;</description><guid>https://chriswarrick.com/pl/blog/2015/12/27/windows-10-november-upgrade-windows-as-a-dis-service/</guid><pubDate>Sun, 27 Dec 2015 11:15:00 GMT</pubDate></item><item><title>Rewriting a Flask app in Django</title><link>https://chriswarrick.com/pl/blog/2015/10/11/rewriting-a-flask-app-in-django/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;I spent Saturday on rewriting a Flask app in Django.  The app in question was
+&lt;!-- TEASER_END --&gt;
+&lt;p&gt;I upgraded to Windows 10 (from Windows 10) back in August. The upgrade
+experience was okay. The main issue I had was that the error messages were a
+bit uninformative. There was one error, Windows 10 claimed it &lt;em&gt;couldn’t check
+available disk space&lt;/em&gt;, which is a really strange way to say &lt;em&gt;your active
+partition is a Linux one and you have a Linux bootloader set up&lt;/em&gt;. But after
+switching to the Windows bootloader, it worked fine. I only had to fight a bit
+with the display drivers, but other than that, it succeeded.&lt;/p&gt;
+&lt;p&gt;Windows 10 claims to be &lt;em&gt;Windows as a Service&lt;/em&gt;: a fast update cycle with
+new Windows builds released often. Now, Linux users are accustomed to this.
+Depending on your distribution, you get new versions somewhere between “every
+day” (rolling release: &lt;a class="reference external" href="https://chriswarrick.com/blog/2011/01/06/arch-linux-the-best-distro-ever/"&gt;Arch Linux&lt;/a&gt;,
+Gentoo, Debian sid), “every 6 months” (Ubuntu, Fedora), or some other time
+scale.
+(Three months and two weeks passed between the two “general” builds of Windows 10.)
+And most of the time, the upgrades are fast and relatively painless.&lt;/p&gt;
+&lt;p&gt;With Windows 10, this is not the case. I booted to Windows yesterday, to set up
+some new hardware and mess around with the OS. It offered the upgrade in
+Windows Update. After downloading it (3 GB, according to Microsoft), it started
+installing, without success. There were no error messages, and “Error” or
+“Failed to install” were all I could get.&lt;/p&gt;
+&lt;p&gt;I found the setup log files. The error log ended with “failed to
+resurrect new system”. Which didn’t make a lot of sense to me, even though I’m
+quite proficient with this sort of things.&lt;/p&gt;
+&lt;p&gt;This can be dangerous, so I backed up my drives with Clonezilla, which is
+really useful — and it ships with the Arch Linux ISO, which helped a lot.&lt;/p&gt;
+&lt;p&gt;So, I tried my trusty friend, the Media Creation Tool. I needed it to get the
+original install to work, and it came useful now. After yet another download,
+I got a USB stick with Windows 10 on it. So, I rebooted to the installer, which
+told me I can’t use it and I need to start it from within Windows.&lt;/p&gt;
+&lt;p&gt;I rebooted back into Windows, started the installer. It took it a while to
+begin the installation process (including waiting forever to get updates,
+so I restarted the process and disabled updating now, and another long wait to
+make sure it will work on my machine), but then it went quite fast and was at 70%
+after less than 10 minutes. Sadly, that’s too good to be true. It rebooted and
+started counting from zero. 90 minutes passed since I started, and the login
+screen came up. Username, password, log in.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Hi, we’ve updated your PC.&lt;/em&gt; Six more minutes, but at long last, I got my
+desktop. There’s just one problem though: 1024×768 is not the screen resolution
+I started the install with (oddly enough, the “Updating Windows” part was
+running at 1080p for part of the process, and then went back to 768p after a
+reboot). I tried installing NVIDIA drivers, and it failed — however, Windows
+managed to install something and wanted a reboot (what is this, Windows 95?).
+Fine, let’s reboot and get a fully functional Windows environment?&lt;/p&gt;
+&lt;p&gt;:( &lt;em&gt;Your PC ran into a problem and needs to restart.&lt;/em&gt; A blue screen of death,
+on the second boot, talking about &lt;em&gt;critical structure corruption in CI.dll&lt;/em&gt;. Well, shit.
+I rebooted, but I first took a little detour to the Arch Linux USB stick I
+prepared before to get a sane bootloader back. I’ve done this before, and
+usually requires three commands.&lt;/p&gt;
+&lt;pre class="code console"&gt;&lt;a name="rest_code_1fe8bc8eef0b4b0c8212a4e967537eda-1"&gt;&lt;/a&gt;&lt;span class="gp"&gt;#&lt;/span&gt; mount /dev/sda2 /mnt
+&lt;a name="rest_code_1fe8bc8eef0b4b0c8212a4e967537eda-2"&gt;&lt;/a&gt;&lt;span class="go"&gt;Metadata kept in Windows cache, refused to mount.&lt;/span&gt;
+&lt;a name="rest_code_1fe8bc8eef0b4b0c8212a4e967537eda-3"&gt;&lt;/a&gt;&lt;span class="go"&gt;Failed to mount '/dev/sda2': Operation not permitted&lt;/span&gt;
+&lt;a name="rest_code_1fe8bc8eef0b4b0c8212a4e967537eda-4"&gt;&lt;/a&gt;&lt;span class="go"&gt;The NTFS partition is in an unsafe state. Please resume and shutdown&lt;/span&gt;
+&lt;a name="rest_code_1fe8bc8eef0b4b0c8212a4e967537eda-5"&gt;&lt;/a&gt;&lt;span class="go"&gt;Windows fully (no hibernation or fast restarting), or mount the volume&lt;/span&gt;
+&lt;a name="rest_code_1fe8bc8eef0b4b0c8212a4e967537eda-6"&gt;&lt;/a&gt;&lt;span class="go"&gt;read-only with the 'ro' mount option.&lt;/span&gt;
+&lt;/pre&gt;&lt;p&gt;Wait, what?! I remember my hard drive layout, and &lt;tt class="docutils literal"&gt;/dev/sda2&lt;/tt&gt; is my Linux
+ext4 partition! I checked &lt;tt class="docutils literal"&gt;cfdisk&lt;/tt&gt;, and apparently I now have a &lt;em&gt;Hidden NTFS WinRE&lt;/em&gt;, with Linux moved to &lt;tt class="docutils literal"&gt;/dev/sda3&lt;/tt&gt; and my extended partition moved to &lt;tt class="docutils literal"&gt;/dev/sda4&lt;/tt&gt; (what would happen if I already had four partitions?). This is typical Windows misbehaviour: &lt;strong&gt;not caring about other OSes that might be installed&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;I accepted this defeat, mounted &lt;tt class="docutils literal"&gt;/dev/sda3&lt;/tt&gt;, ran &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;arch-chroot&lt;/span&gt; /mnt&lt;/tt&gt; and
+&lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;syslinux-install_update&lt;/span&gt; &lt;span class="pre"&gt;-i&lt;/span&gt; &lt;span class="pre"&gt;-a&lt;/span&gt; &lt;span class="pre"&gt;-m&lt;/span&gt;&lt;/tt&gt; (I’m not a fan of GRUB 2, and I have a MBR
+drive layout). I should test this out by rebooting into Linux.&lt;/p&gt;
+&lt;pre class="code console"&gt;&lt;a name="rest_code_cce63de14fc34c5fa68e841ca19d8de5-1"&gt;&lt;/a&gt;&lt;span class="go"&gt;Error getting authority: Error initializing authority: Could not connect: No such file or directory (g-io-error-quark, 1)&lt;/span&gt;
+&lt;a name="rest_code_cce63de14fc34c5fa68e841ca19d8de5-2"&gt;&lt;/a&gt;&lt;span class="go"&gt;Welcome to emergency mode!&lt;/span&gt;
+&lt;/pre&gt;&lt;p&gt;systemd &lt;strong&gt;really&lt;/strong&gt; values &lt;tt class="docutils literal"&gt;/etc/fstab&lt;/tt&gt;, and you can’t boot if any entry fails
+to mount, which was the case with the Windows drive in &lt;tt class="docutils literal"&gt;/dev/sda1&lt;/tt&gt; and my
+other NTFS partition (note that the error message is very unhelpful)&lt;/p&gt;
+&lt;p&gt;I guess I have to get into Windows first. I tried booting Windows again, this
+time it worked (in glorious 1080p, which was the case on the previous boot
+too).&lt;/p&gt;
+&lt;p&gt;So, Windows re-enabled Fast Boot (a.k.a. hibernation instead of clean shutdown)
+as part of the upgrade. I hunted down the setting and restored sanity.
+But when I was doing that, I noticed things were spelt (or spelled) a bit
+differently than two hours ago. You see, the original Windows 7 system was US
+English. After the upgrade to Windows 10, I took the opportunity to install the
+British and Polish language packs (it’s a multi-user machine). Both of which
+were gone. I had to fix that, too.&lt;/p&gt;
+&lt;p&gt;And all I got out of it were colourful window borders, which are not even in my
+desired colour (Windows has a limited colour palette, even though I explicitly
+set it to &lt;a class="reference external" href="https://chriswarrick.com/brand/"&gt;#00AADD&lt;/a&gt;). What a great way to waste a Saturday!&lt;/p&gt;
+&lt;p&gt;This leaves me wondering, how does this work for Windows Insiders (Microsoft’s
+community beta testers)? Is the process better if Windows Update manages to
+perform the install? Or is it substantially faster if you’re running on a SSD?
+Perhaps the testers have dedicated machines and don’t run experimental builds
+on their daily drivers. But I doubt that, because that’s a significant
+investment without any financial gain from helping out a corporation. So,
+virtual machines? I have no idea how they cope.&lt;/p&gt;
+&lt;p&gt;By the way, &lt;tt class="docutils literal"&gt;cmd.exe&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;winver.exe&lt;/tt&gt; claims it’s &lt;em&gt;Copyright © 2016&lt;/em&gt;. Previously, Windows copyright
+notices were outdated. Now, they’re in the future.&lt;/p&gt;&lt;/div&gt;</description><guid>https://chriswarrick.com/pl/blog/2015/12/27/windows-10-november-upgrade-windows-as-a-dis-service/</guid><pubDate>Sun, 27 Dec 2015 11:15:00 GMT</pubDate></item><item><title>Rewriting a Flask app in Django</title><link>https://chriswarrick.com/pl/blog/2015/10/11/rewriting-a-flask-app-in-django/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;I spent Saturday on rewriting a Flask app in Django.  The app in question was
 &lt;a class="reference external" href="https://users.getnikola.com/"&gt;Nikola Users&lt;/a&gt;, which is a very simple CRUD
 app.  And yet, the Flask code was a mess, full of bugs and vulnerabilities.
 Eight hours later, I had a fully functional Django app that did more and fixed
 all problems.&lt;/p&gt;
-&lt;p class="more"&gt;&lt;a href="https://chriswarrick.com/pl/blog/2015/10/11/rewriting-a-flask-app-in-django/"&gt;Czytaj więcej…&lt;/a&gt; (9 paragraphs remaining — a 2 minutes’ read)&lt;/p&gt;&lt;/div&gt;</description><guid>https://chriswarrick.com/pl/blog/2015/10/11/rewriting-a-flask-app-in-django/</guid><pubDate>Sun, 11 Oct 2015 15:24:43 GMT</pubDate></item><item><title>Static Site Generator Speed Test (Nikola, Pelican, Hexo, Octopress)</title><link>https://chriswarrick.com/pl/blog/2015/07/23/ssg-speed-test/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;I tested the speed of four static site generators: Nikola, Pelican, Hexo and Octopress, in a clean environment.  Spoiler alert: Nikola won.&lt;/p&gt;
+&lt;!-- TEASER_END --&gt;
+&lt;div class="section" id="original-flask-app"&gt;
+&lt;h2&gt;Original Flask app&lt;/h2&gt;
+&lt;p&gt;The original Flask app had a ton of problems.  In order to make it anywhere
+near useful, I would need to spend hours.  Here’s just a few of
+them:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;357 lines of spaghetti code (295 SLOC), all in one file&lt;/li&gt;
+&lt;li&gt;No form data validation, no CSRF &lt;a class="footnote-reference" href="https://chriswarrick.com/pl/blog/2015/10/11/rewriting-a-flask-app-in-django/#id2" id="id1"&gt;[1]&lt;/a&gt; protection (it did have XSS protection
+though)&lt;/li&gt;
+&lt;li&gt;Login using Mozilla Persona, which requries JavaScript, is a bit kludgey, and
+feels desolate (and also had me store the admin e-mail list in code)&lt;/li&gt;
+&lt;li&gt;Geopolitics issues: using country flags for languages&lt;/li&gt;
+&lt;li&gt;A lot of things were implemented by hand&lt;/li&gt;
+&lt;li&gt;SQLAlchemy is very verbose&lt;/li&gt;
+&lt;li&gt;no DB migrations (makes enhancements harder)&lt;/li&gt;
+&lt;li&gt;Languages implemented as a PostgreSQL integer array&lt;/li&gt;
+&lt;li&gt;Adding a language required running a command-line script and &lt;strong&gt;restarting the
+app&lt;/strong&gt; (languages were cached in Python dicts with no way to reload them from
+the database; that would require talking through uWSGI anyway because there
+were multiple processes involved)&lt;/li&gt;
+&lt;li&gt;The templates were slightly hacky (the page title was set in each individual
+template and not in the view code); menus hacked together in HTML with no
+highlighting&lt;/li&gt;
+&lt;li&gt;Python 2.7&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class="section" id="the-rewrite"&gt;
+&lt;h2&gt;The rewrite&lt;/h2&gt;
+&lt;p&gt;I started the process by opening &lt;a class="reference external" href="https://docs.djangoproject.com/en/"&gt;Django documentation&lt;/a&gt;, with its wonderful
+&lt;a class="reference external" href="https://docs.djangoproject.com/en/1.8/intro/tutorial01/"&gt;tutorial&lt;/a&gt;.  Now, I have written a couple basic Django apps before, but
+the majority of them didn’t do much.  In other words, I didn’t have a lot of experience.  Especially with taking user input and relationships.  It took me about 8 hours to get feature parity, and more.&lt;/p&gt;
+&lt;p&gt;Getting all the features was really simple.  For example, to get a many-to-many
+relationship for languages, I had to write just one line.&lt;/p&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_ae9d9a08bc494c6d80314eb781b22b84-1"&gt;&lt;/a&gt;&lt;span class="n"&gt;languages&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ManyToManyField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Language&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;p&gt;That’s it.  I didn’t have to run through complicated SQLAlchemy documentation,
+which provides a &lt;a class="reference external" href="http://docs.sqlalchemy.org/en/rel_1_0/orm/basic_relationships.html#many-to-many"&gt;13-line solution&lt;/a&gt; to the same problem.&lt;/p&gt;
+&lt;p&gt;Django also simplified New Relic integration, as the browser JS can be implemented
+using Django template tags.&lt;/p&gt;
+&lt;p&gt;Django is not without its problems, though.  I got a very cryptic traceback
+when I did this:&lt;/p&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_ee246dda529a46dd801806525015b8de-1"&gt;&lt;/a&gt;&lt;span class="n"&gt;publish_email&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;forms&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;BooleanField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"Publish e-mail"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;required&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;False&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_ee246dda529a46dd801806525015b8de-2"&gt;&lt;/a&gt;&lt;span class="ne"&gt;TypeError&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;"BooleanField() got multiple values for argument 'required'"&lt;/span&gt;
+&lt;/pre&gt;&lt;p&gt;The real problem with this code?  I forgot the &lt;tt class="docutils literal"&gt;label=&lt;/tt&gt; keyword.  The
+problem is, the model API accepts this syntax — &lt;tt class="docutils literal"&gt;verbose_name&lt;/tt&gt; is the first
+argument.  (I am not actually using the labels though, I write my own form
+HTML)&lt;/p&gt;
+&lt;p&gt;Still, the Django version is much cleaner.  And the best part of all?  There
+are no magic global objects (&lt;tt class="docutils literal"&gt;g&lt;/tt&gt;, &lt;tt class="docutils literal"&gt;session&lt;/tt&gt;, &lt;tt class="docutils literal"&gt;request&lt;/tt&gt;) and
+decorator-based views (which are a bit of syntax abuse IMO).&lt;/p&gt;
+&lt;p&gt;In the end, I have:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;382 lines of code (297 SLOC) over 6 files — much cleaner, and with less long lines&lt;/li&gt;
+&lt;li&gt;form data validation (via Django), CSRF and XSS protection&lt;/li&gt;
+&lt;li&gt;Login using Django built-in authentication, without JavaScript&lt;/li&gt;
+&lt;li&gt;Language codes (granted, I could’ve done that really easily back in Flask)&lt;/li&gt;
+&lt;li&gt;Tried-and-true implementations of common patterns&lt;/li&gt;
+&lt;li&gt;Django models are much more readable and friendly&lt;/li&gt;
+&lt;li&gt;Django-provided DB migrations (generated automatically!)&lt;/li&gt;
+&lt;li&gt;Languages implemented using Django many-to-many relationships&lt;/li&gt;
+&lt;li&gt;Adding a language is possible from the Django built-in admin panel and is
+reflected immediately (no caching)&lt;/li&gt;
+&lt;li&gt;Titles and menus in code&lt;/li&gt;
+&lt;li&gt;Python 3&lt;/li&gt;
+&lt;li&gt;New features: featured sites; show only a specified language — were really easy to add&lt;/li&gt;
+&lt;/ul&gt;
+&lt;table class="docutils footnote" frame="void" id="id2" rules="none"&gt;
+&lt;colgroup&gt;&lt;col class="label"&gt;&lt;col&gt;&lt;/colgroup&gt;
+&lt;tbody valign="top"&gt;
+&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="https://chriswarrick.com/pl/blog/2015/10/11/rewriting-a-flask-app-in-django/#id1"&gt;[1]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;I had some &lt;tt class="docutils literal"&gt;CSRF_ENABLED&lt;/tt&gt; variable, but it did not seem to be actually
+used by anything.&lt;/td&gt;&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;</description><guid>https://chriswarrick.com/pl/blog/2015/10/11/rewriting-a-flask-app-in-django/</guid><pubDate>Sun, 11 Oct 2015 15:24:43 GMT</pubDate></item><item><title>Static Site Generator Speed Test (Nikola, Pelican, Hexo, Octopress)</title><link>https://chriswarrick.com/pl/blog/2015/07/23/ssg-speed-test/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;I tested the speed of four static site generators: Nikola, Pelican, Hexo and Octopress, in a clean environment.  Spoiler alert: Nikola won.&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;Disclaimer:&lt;/em&gt; author is a developer and user of Nikola.  The test environments used were the same for all four generators.&lt;/p&gt;
 &lt;div class="section" id="generators-tested"&gt;
 &lt;h2&gt;Generators tested&lt;/h2&gt;
@@ -21,28 +385,469 @@ all problems.&lt;/p&gt;
 &lt;li&gt;&lt;a class="reference external" href="https://hexo.io/"&gt;Hexo&lt;/a&gt; v3.1.1, by Tommy Chen and contributors; Node.js; MIT license&lt;/li&gt;
 &lt;li&gt;&lt;a class="reference external" href="http://octopress.org/"&gt;Octopress&lt;/a&gt; v2.0, by Brandon Mathis and contributors; Ruby; MIT license (based on Jekyll)&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p class="more"&gt;&lt;a href="https://chriswarrick.com/pl/blog/2015/07/23/ssg-speed-test/"&gt;Czytaj więcej…&lt;/a&gt; (10 paragraphs remaining — a 3 minutes’ read)&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;</description><guid>https://chriswarrick.com/pl/blog/2015/07/23/ssg-speed-test/</guid><pubDate>Thu, 23 Jul 2015 15:10:00 GMT</pubDate></item><item><title>Nowy projekt: upass — konsolowy interfejs dla pass</title><link>https://chriswarrick.com/pl/blog/2015/07/06/upass/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;a class="reference external" href="http://www.passwordstore.org/"&gt;pass&lt;/a&gt; to standardowy Uniksowy manager haseł.
+&lt;!-- TEASER_END --&gt;
+&lt;/div&gt;
+&lt;div class="section" id="setup"&gt;
+&lt;h2&gt;Setup&lt;/h2&gt;
+&lt;p&gt;Every site generator was set up in an identical &lt;strong&gt;clean&lt;/strong&gt; environment, using Ubuntu 15.04, x64, as a 512 MB DigitalOcean VM with a 20 GB SSD drive. The machine was updated, an user account with passwordless sudo was created, and &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;build-essential&lt;/span&gt;&lt;/tt&gt; was installed. Tests were run by an automated installer and timer, written in Bash and C, respectively (custom; source code is available). Pre-compiled wheels for lxml and Pillow were used for Nikola testing, because lxml cannot be compiled with less than 1.5 GB of RAM; they were built with &lt;tt class="docutils literal"&gt;pip wheel lxml pillow&lt;/tt&gt; outside of the testing environment (on a local VM). The machine was reimaged after every test. Lists of installed Python/Ruby/Node packages are available in the GitHub repo (see below).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="input"&gt;
+&lt;h2&gt;Input&lt;/h2&gt;
+&lt;p&gt;Every site generator was given the same set of 179 log files from #nikola on freenode. The raw logs contain 1209507 bytes (1.1 MiB) of plain text. The logs were processed into post files, which fit the format of each engine (reST or Markdown), containing mandatory metadata, an introductory paragraph and a code block (using &lt;tt class="docutils literal"&gt;::&lt;/tt&gt; for reST, four spaces for Markdown). One file had to be altered, because they contained the &lt;tt class="docutils literal"&gt;{{&lt;/tt&gt;  sequence, which was misinterpreted as internal templating by Hexo and Octopress — it was replaced by a harmless &lt;tt class="docutils literal"&gt;~~&lt;/tt&gt; sequence for all four generators.&lt;/p&gt;
+&lt;p&gt;The generators used default config, with one exception: highlighting was disabled for Hexo. The highlighting would cause an unfair advantage (other generators did not automatically highlight the code boxes), and led to very high build times (see table 4 in comparison spreadsheet).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="build"&gt;
+&lt;h2&gt;Build&lt;/h2&gt;
+&lt;p&gt;Sites were built a total of 110 times, in 10 cycles of 11 builds each. The first build of a cycle was a fresh build, the remaining 10 were rebuilds. Sites and cache files were removed after each cycle.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="results"&gt;
+&lt;h2&gt;Results&lt;/h2&gt;
+&lt;p&gt;Because Nikola and Hexo use incremental rebuilds, the results were compared in two groups: 11 and 10 runs.&lt;/p&gt;
+&lt;div class="section" id="average-build-times-in-seconds"&gt;
+&lt;h3&gt;Average build times (in seconds)&lt;/h3&gt;
+&lt;table class="table table-bordered table-hover"&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;#&lt;/th&gt;
+&lt;th&gt;Generator&lt;/th&gt;
+&lt;th&gt;Average of 11 runs&lt;/th&gt;
+&lt;th&gt;Average of 10 runs&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;th scope="row"&gt;1&lt;/th&gt;
+&lt;td&gt;Nikola&lt;/td&gt;
+&lt;td&gt;2.38290&lt;/td&gt;
+&lt;td&gt;2.06057&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;th scope="row"&gt;2&lt;/th&gt;
+&lt;td&gt;Pelican&lt;/td&gt;
+&lt;td&gt;2.61924&lt;/td&gt;
+&lt;td&gt;2.62352&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;th scope="row"&gt;3&lt;/th&gt;
+&lt;td&gt;Hexo&lt;/td&gt;
+&lt;td&gt;6.27361&lt;/td&gt;
+&lt;td&gt;6.21267&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;th scope="row"&gt;4&lt;/th&gt;
+&lt;td&gt;Octopress&lt;/td&gt;
+&lt;td&gt;9.57618&lt;/td&gt;
+&lt;td&gt;9.47550&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;&lt;/div&gt;
+&lt;div class="section" id="full-results"&gt;
+&lt;h3&gt;Full results&lt;/h3&gt;
+&lt;p class="lead"&gt;Full results are available in &lt;a class="reference external" href="https://chriswarrick.com/pub/ssg-test-results.ods"&gt;ods format&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="raw-results-and-configuration"&gt;
+&lt;h3&gt;Raw results and configuration&lt;/h3&gt;
+&lt;p&gt;Raw results (&lt;tt class="docutils literal"&gt;.csv&lt;/tt&gt; files from the test runner) and configuration is available in the &lt;a class="reference external" href="https://github.com/Kwpolska/ssg-test"&gt;GitHub repo&lt;/a&gt;. Log files and converted posts are not available publicly; however, they can be provided to interested parties (&lt;a class="reference external" href="https://chriswarrick.com/contact/"&gt;contact me&lt;/a&gt; to obtain them).&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="questions-and-answers"&gt;
+&lt;h2&gt;Questions and answers&lt;/h2&gt;
+&lt;div class="section" id="why-not-plain-jekyll"&gt;
+&lt;h3&gt;Why not plain Jekyll?&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;Plain Jekyll was disqualified&lt;/strong&gt; on the basis of missing many features other generators have, leading to an unfair advantage. The aim of this test was to provide similar setups for each of the four generators. Jekyll generates a very basic site that lacks some elements; a Jekyll site does not have paginated indexes, (partial) post text on indexes, any sort of archives, etc. A Jekyll site contains only one CSS file, index.html, feed.xml, and the log posts. On the other hand, sites generated by Pelican, Nikola and Hexo contain more files, which makes the builds longer and the website experience richer (archives, JS, sitemaps, tag listings).&lt;/p&gt;
+&lt;p&gt;On the basis of the above, &lt;strong&gt;Octopress&lt;/strong&gt; was chosen to represent the Jekyll universe at large. Octopress sites have more assets, a sitemap, archives and category listings — making it comparable to the other four contenders. However, tests were performed for Jekyll. The average result from 11 builds was 2.22118, while the average result from 10 builds was 2.23903. The result would land Jekyll on the 1st place for 11 builds, and on the 2nd place for 10 builds.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="why-not-myfavoritessg"&gt;
+&lt;h3&gt;Why not $MYFAVORITESSG?&lt;/h3&gt;
+&lt;p&gt;I tested only four popular generators that were easy enough to set up. I could easily extend the set if I had time and friendly enough documentation to do so. I can add a SSG, provided that:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;it’s easy to configure&lt;/li&gt;
+&lt;li&gt;it has a default config that provides a working site with a feature set comparable to other SSGs tested here (see &lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2015/07/23/ssg-speed-test/#why-not-plain-jekyll"&gt;Why not plain Jekyll?&lt;/a&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;/div&gt;</description><guid>https://chriswarrick.com/pl/blog/2015/07/23/ssg-speed-test/</guid><pubDate>Thu, 23 Jul 2015 15:10:00 GMT</pubDate></item><item><title>Nowy projekt: upass — konsolowy interfejs dla pass</title><link>https://chriswarrick.com/pl/blog/2015/07/06/upass/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;a class="reference external" href="http://www.passwordstore.org/"&gt;pass&lt;/a&gt; to standardowy Uniksowy manager haseł.
 A ja właśnie stworzyłem odrobinę przyjaźniejszy, klikalniejszy interfejs przy
 użyciu biblioteki urwid w Pythonie.&lt;/p&gt;
-&lt;p class="more"&gt;&lt;a href="https://chriswarrick.com/pl/blog/2015/07/06/upass/"&gt;Czytaj więcej…&lt;/a&gt; (8 paragraphs remaining — a 1 minutes’ read)&lt;/p&gt;&lt;/div&gt;</description><category>app</category><category>CLI</category><category>Linux</category><category>password</category><category>projects</category><category>Python</category><category>upass</category><guid>https://chriswarrick.com/pl/blog/2015/07/06/upass/</guid><pubDate>Mon, 06 Jul 2015 12:30:00 GMT</pubDate></item><item><title>Nowy projekt: think (Terminal Think Music)</title><link>https://chriswarrick.com/pl/blog/2015/05/30/think/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;Czy uruchamiasz proces, który długo się wykonuje?  Czy chcesz wiedzieć, kiedy
+&lt;!-- TEASER_END --&gt;
+&lt;p style="text-align: center; clear: both;"&gt;
+&lt;a href="https://chriswarrick.com/projects/upass/" class="btn btn-primary" style="width: 250px;"&gt;
+&lt;i class="fa fa-info-circle"&gt;&lt;/i&gt;
+Strona projektu
+&lt;/a&gt;
+&lt;/p&gt;
+&lt;p style="text-align: center; clear: both;"&gt;
+&lt;a href="https://chriswarrick.com/pl/galleries/upass/" class="btn btn-default" style="width: 250px;"&gt;
+&lt;i class="fa fa-picture-o"&gt;&lt;/i&gt;
+Zrzuty ekranu
+&lt;/a&gt;
+&lt;/p&gt;
+&lt;p style="text-align: center; clear: both;"&gt;
+&lt;a href="https://github.com/Kwpolska/upass" class="btn btn-default" style="width: 250px;"&gt;
+&lt;i class="fa fa-github"&gt;&lt;/i&gt;
+GitHub
+&lt;/a&gt;
+&lt;/p&gt;
+&lt;p style="text-align: center; clear: both;"&gt;
+&lt;a href="https://pypi.python.org/pypi/upass" class="btn btn-default" style="width: 250px;"&gt;
+&lt;i class="fa fa-download"&gt;&lt;/i&gt;
+Pobierz (PyPI)
+&lt;/a&gt;
+&lt;/p&gt;&lt;p&gt;&lt;tt class="docutils literal"&gt;upass&lt;/tt&gt; używa biblioteki urwid, co oznacza, że ma przyjazny pełnoekranowy interfejs konsolowy.
+Pokazuje strukturę katalogów (ze spłaszczonymi podkatalogami) i wywołuje
+&lt;tt class="docutils literal"&gt;pass&lt;/tt&gt; na żądanie.  (Nie używa &lt;tt class="docutils literal"&gt;pass &lt;span class="pre"&gt;-c&lt;/span&gt;&lt;/tt&gt; przez problemy z podprocesami, w
+zamian samodzielnie kopiując tekst — zauważ, że schowek &lt;strong&gt;nie zostanie
+wyczyszczony&lt;/strong&gt;)&lt;/p&gt;
+&lt;p&gt;Jeśli chcesz zobaczyć, jak wygląda &lt;tt class="docutils literal"&gt;upass&lt;/tt&gt;, odwiedź &lt;a class="reference external" href="https://chriswarrick.com/pl/galleries/upass/"&gt;galerię zrzutów ekranu&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;tt class="docutils literal"&gt;upass&lt;/tt&gt; jest ciągle rozwijany (i został pierwotnie napisany w jeden wieczór).
+Jeśli masz pomysły, znalazłeś błędy, lub chcesz pomóc, odwiedź
+&lt;a class="reference external" href="https://github.com/Kwpolska/upass"&gt;stronę na GitHubie&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Możesz zainstalować &lt;tt class="docutils literal"&gt;upass&lt;/tt&gt; z &lt;a class="reference external" href="https://pypi.python.org/pypi/upass"&gt;PyPI&lt;/a&gt; (przy uzyciu &lt;tt class="docutils literal"&gt;pip install upass&lt;/tt&gt;). Użytkownicy
+Arch Linux mogą zainstalować pakiet &lt;tt class="docutils literal"&gt;upass&lt;/tt&gt; z AUR.&lt;/p&gt;&lt;/div&gt;</description><category>app</category><category>CLI</category><category>Linux</category><category>password</category><category>projects</category><category>Python</category><category>upass</category><guid>https://chriswarrick.com/pl/blog/2015/07/06/upass/</guid><pubDate>Mon, 06 Jul 2015 12:30:00 GMT</pubDate></item><item><title>Nowy projekt: think (Terminal Think Music)</title><link>https://chriswarrick.com/pl/blog/2015/05/30/think/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;Czy uruchamiasz proces, który długo się wykonuje?  Czy chcesz wiedzieć, kiedy
 skończy pracę, gdy używasz innego Terminala/parzysz kawę?  Czy masz ulubioną
 muzykę z teleturnieju do odtworzenia gdy coś robisz?&lt;/p&gt;
 &lt;p&gt;Jeśli tak: &lt;tt class="docutils literal"&gt;think&lt;/tt&gt; jest właśnie dla ciebie.  By dowiedzieć się więcej, czytaj dalej lub &lt;a class="reference external" href="https://github.com/Kwpolska/think"&gt;odwiedź stronę na GitHubie [en]&lt;/a&gt;.&lt;/p&gt;
-&lt;p class="more"&gt;&lt;a href="https://chriswarrick.com/pl/blog/2015/05/30/think/"&gt;Czytaj więcej…&lt;/a&gt; (7 paragraphs remaining — a 1 minutes’ read)&lt;/p&gt;&lt;/div&gt;</description><category>app</category><category>CLI</category><category>game show</category><category>Jeopardy!</category><category>Linux</category><category>projects</category><category>Python</category><category>think</category><guid>https://chriswarrick.com/pl/blog/2015/05/30/think/</guid><pubDate>Sat, 06 Jun 2015 12:15:00 GMT</pubDate></item><item><title>systemd is awesome.</title><link>https://chriswarrick.com/pl/blog/2015/01/30/systemd-is-awesome/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;I recently switched distros on my server, from Debian to Fedora, to use
+&lt;!-- TEASER_END --&gt;
+&lt;p style="text-align: center; clear: both;"&gt;
+&lt;a href="https://chriswarrick.com/projects/think/" class="btn btn-primary" style="width: 250px;"&gt;
+&lt;i class="fa fa-info-circle"&gt;&lt;/i&gt;
+Strona projektu
+&lt;/a&gt;
+&lt;/p&gt;
+&lt;p style="text-align: center; clear: both;"&gt;
+&lt;a href="https://github.com/Kwpolska/think" class="btn btn-default" style="width: 250px;"&gt;
+&lt;i class="fa fa-github"&gt;&lt;/i&gt;
+GitHub
+&lt;/a&gt;
+&lt;/p&gt;
+&lt;p style="text-align: center; clear: both;"&gt;
+&lt;a href="https://github.com/Kwpolska/think/releases" class="btn btn-default" style="width: 250px;"&gt;
+&lt;i class="fa fa-download"&gt;&lt;/i&gt;
+Pobierz (GitHub)
+&lt;/a&gt;
+&lt;/p&gt;
+&lt;p style="text-align: center; clear: both;"&gt;
+&lt;a href="https://pypi.python.org/pypi/think" class="btn btn-default" style="width: 250px;"&gt;
+&lt;i class="fa fa-download"&gt;&lt;/i&gt;
+Pobierz (PyPI)
+&lt;/a&gt;
+&lt;/p&gt;&lt;div class="section" id="instalacja"&gt;
+&lt;h2&gt;Instalacja&lt;/h2&gt;
+&lt;p&gt;Możesz zainstalować &lt;tt class="docutils literal"&gt;think&lt;/tt&gt; z &lt;a class="reference external" href="https://pypi.python.org/pypi/think"&gt;PyPI&lt;/a&gt; (przy uzyciu &lt;tt class="docutils literal"&gt;pip install think&lt;/tt&gt;). Użytkownicy Arch Linux
+mogą zainstalować pakiet &lt;tt class="docutils literal"&gt;think&lt;/tt&gt; z AUR.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="konfiguracja"&gt;
+&lt;h2&gt;Konfiguracja&lt;/h2&gt;
+&lt;p&gt;Utwórz plik &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;~/.config/think.conf&lt;/span&gt;&lt;/tt&gt; (tam, gdzie jest &lt;tt class="docutils literal"&gt;XDG_CONFIG_HOME&lt;/tt&gt;),
+zawierający poniższe cztery linie:&lt;/p&gt;
+&lt;pre class="code ini"&gt;&lt;a name="rest_code_624c24f659484b4daa611903b4cea715-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;[Think]&lt;/span&gt;
+&lt;a name="rest_code_624c24f659484b4daa611903b4cea715-2"&gt;&lt;/a&gt;&lt;span class="na"&gt;command&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;play&lt;/span&gt;
+&lt;a name="rest_code_624c24f659484b4daa611903b4cea715-3"&gt;&lt;/a&gt;&lt;span class="na"&gt;file&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/home/kwpolska/Dropbox/Media/Wielka Gra.mp3&lt;/span&gt;
+&lt;a name="rest_code_624c24f659484b4daa611903b4cea715-4"&gt;&lt;/a&gt;&lt;span class="na"&gt;behavior&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;wait&lt;/span&gt;
+&lt;/pre&gt;&lt;ul class="simple"&gt;
+&lt;li&gt;&lt;tt class="docutils literal"&gt;command&lt;/tt&gt; to komenda odtwarzacza, która zostanie wywołana. Możesz użyć
+&lt;tt class="docutils literal"&gt;play&lt;/tt&gt; (z pakietu &lt;tt class="docutils literal"&gt;sox&lt;/tt&gt;) albo jakiegokolwiek innego szybkiego odtwarzacza
+muzyki działającego w konsoli.&lt;/li&gt;
+&lt;li&gt;&lt;tt class="docutils literal"&gt;file&lt;/tt&gt; to nazwa pliku, który zostanie podany jako jedyny argument do komendy odtwarzacza. Nie jest potrzebne żadne escape’owanie. Ja używam czołówki z &lt;a class="reference external" href="https://www.youtube.com/watch?v=Nnu7I3b7ZbY"&gt;Wielkiej Gry&lt;/a&gt; (BTW: właśnie dodałem wersję MP3 na pierwszą rocznicę uploadu na YouTube!), Amerykanie mogą wybrać &lt;a class="reference external" href="https://www.youtube.com/watch?v=vXGhvoekY44"&gt;Jeopardy! Think Music&lt;/a&gt; (która jest źródłem nazwy komendy), Brytyjczycy mogą wybrać temat muzyczny z &lt;a class="reference external" href="https://www.youtube.com/watch?v=M2dhD9zR6hk"&gt;Countdown&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;tt class="docutils literal"&gt;behavior&lt;/tt&gt; może być jednym z:&lt;ul&gt;
+&lt;li&gt;&lt;tt class="docutils literal"&gt;return&lt;/tt&gt; — oddaj kontrolę do terminala jak tylko program skończy działać, bez zatrzymywania muzyki&lt;/li&gt;
+&lt;li&gt;&lt;tt class="docutils literal"&gt;wait&lt;/tt&gt; — poczekaj aż muzyka się skończy przed oddaniem kontroli&lt;/li&gt;
+&lt;li&gt;&lt;tt class="docutils literal"&gt;stop&lt;/tt&gt; — zatrzymaj muzykę i oddaj kontrolę natychmiastowo&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class="section" id="uzycie"&gt;
+&lt;h2&gt;Użycie&lt;/h2&gt;
+&lt;p&gt;Dodaj &lt;tt class="docutils literal"&gt;think&lt;/tt&gt; przed komendą, która długo się wykonuje:&lt;/p&gt;
+&lt;pre class="code console"&gt;&lt;a name="rest_code_9e22d0c2074f43e4b90c9ec03fae8285-1"&gt;&lt;/a&gt;&lt;span class="go"&gt;think sleep 120&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</description><category>app</category><category>CLI</category><category>game show</category><category>Jeopardy!</category><category>Linux</category><category>projects</category><category>Python</category><category>think</category><guid>https://chriswarrick.com/pl/blog/2015/05/30/think/</guid><pubDate>Sat, 06 Jun 2015 12:15:00 GMT</pubDate></item><item><title>systemd is awesome.</title><link>https://chriswarrick.com/pl/blog/2015/01/30/systemd-is-awesome/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;I recently switched distros on my server, from Debian to Fedora, to use
 &lt;tt class="docutils literal"&gt;systemd&lt;/tt&gt; and keep it in line with my home &lt;a class="reference external" href="https://chriswarrick.com/blog/2011/01/06/arch-linux-the-best-distro-ever/"&gt;Arch Linux&lt;/a&gt; system (which was
 not reinstalled since 2010, by the way!)  Why is systemd so awesome?  Read
 on to find out.&lt;/p&gt;
-&lt;p class="more"&gt;&lt;a href="https://chriswarrick.com/pl/blog/2015/01/30/systemd-is-awesome/"&gt;Czytaj więcej…&lt;/a&gt; (12 paragraphs remaining — a 2 minutes’ read)&lt;/p&gt;&lt;/div&gt;</description><guid>https://chriswarrick.com/pl/blog/2015/01/30/systemd-is-awesome/</guid><pubDate>Fri, 30 Jan 2015 15:00:00 GMT</pubDate></item><item><title>Inbox (by Google) Review</title><link>https://chriswarrick.com/pl/blog/2014/11/09/inbox-review/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;figure&gt;&lt;img src="https://chriswarrick.com/galleries/inbox-by-google/10%20All%20done%20view.png"&gt;&lt;/figure&gt; &lt;div&gt;&lt;p&gt;I got a &lt;a class="reference external" href="http://www.google.com/inbox/"&gt;Inbox&lt;/a&gt; invite (hat tip to &lt;a class="reference external" href="https://twitter.com/dav4dav4"&gt;Dawid Róż @dav4dav4&lt;/a&gt;) and spent a day
+&lt;!-- TEASER_END --&gt;
+&lt;p&gt;&lt;em&gt;(I changed the hardware for my home system along the way.  And just copied
+everything over with ``dd``.  That’s Linux at its finest.)&lt;/em&gt;&lt;/p&gt;
+&lt;div class="section" id="user-friendly"&gt;
+&lt;h2&gt;User friendly&lt;/h2&gt;
+&lt;p&gt;The most important thing in systemd is its user friendliness.  systemd offers
+the &lt;tt class="docutils literal"&gt;systemctl&lt;/tt&gt; tool, which can be used to control all the services.  You
+can see what exactly is going on: what is running, what failed to start,
+and you can also see why if you ask &lt;tt class="docutils literal"&gt;systemctl status $SERVICE&lt;/tt&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="services"&gt;
+&lt;h2&gt;Services&lt;/h2&gt;
+&lt;div class="section" id="writing-services-is-fun"&gt;
+&lt;h3&gt;Writing services is fun&lt;/h3&gt;
+&lt;p&gt;If you want your own services, you just need to write some simple INI files.  No
+need for bash, distro-specific frameworks and whatnot.  If I have a functioning
+service written on Arch, I can just copy the file over to Fedora and blindly
+enable it — assuming I have the executables installed, it’s guaranteed to work.&lt;/p&gt;
+&lt;p&gt;And the units are tiny:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+fedora$ wc -l /usr/lib/systemd/system/nginx.service
+15 /usr/lib/systemd/system/nginx.service
+debian$ wc -l /etc/init.d/nginx
+101 /etc/init.d/nginx
+&lt;/pre&gt;
+&lt;p&gt;And you can write a bare-minimum systemd daemon in less than that – not so easy
+with &lt;tt class="docutils literal"&gt;sysvinit&lt;/tt&gt; (writing everything on one line doesn’t count!)&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="managing-personal-services"&gt;
+&lt;h3&gt;Managing personal services&lt;/h3&gt;
+&lt;p&gt;systemd also features user-specific services.  You can run any service as your
+user.  I use this to run &lt;a class="reference external" href="https://chriswarrick.com/kwbot/"&gt;KwBot&lt;/a&gt;, which was previously under control of
+&lt;tt class="docutils literal"&gt;supervisord&lt;/tt&gt; — that’s one less dependency to care about!&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="runlevels-do-not-exist"&gt;
+&lt;h3&gt;Runlevels do not exist&lt;/h3&gt;
+&lt;p&gt;systemd does away with the standard convention of runlevels.  They are replaced
+by human-friendly &lt;em&gt;targets&lt;/em&gt;.  Each unit defines its target: most use
+&lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;multi-user.target&lt;/span&gt;&lt;/tt&gt;.  It is much easier to manage.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="no-symlink-mess"&gt;
+&lt;h3&gt;No symlink mess&lt;/h3&gt;
+&lt;p&gt;Just like old sysvinit-esque systems, systemd uses symlinks to manage
+enabled/disabled services.  There is just one difference: you get just &lt;strong&gt;one&lt;/strong&gt;
+symlink in the appropriate &lt;tt class="docutils literal"&gt;.wants&lt;/tt&gt; directory.  You do not have to look into
+all the different runlevels.  &lt;tt class="docutils literal"&gt;graphical.target&lt;/tt&gt; depends on
+&lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;multi-user.target&lt;/span&gt;&lt;/tt&gt;, which in turn depends on &lt;tt class="docutils literal"&gt;basic.target&lt;/tt&gt;, which depends
+on a few more targets required to get the system up and running.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="units-can-depend-on-each-other"&gt;
+&lt;h3&gt;Units can depend on each other&lt;/h3&gt;
+&lt;p&gt;Do you have some units that require the network to be up?  Set it to be run
+after and require &lt;tt class="docutils literal"&gt;network.target&lt;/tt&gt; and call it a day.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="the-journal"&gt;
+&lt;h2&gt;The Journal&lt;/h2&gt;
+&lt;p&gt;If I want to know what is going on in my system, I can just ask &lt;tt class="docutils literal"&gt;journalctl&lt;/tt&gt;
+to show me the most recent messages.  I don’t need to read a thousand different
+log files — most things appear in the journal.  Sure, some things aren’t there
+(yet), but what I &lt;em&gt;can&lt;/em&gt; see is very useful.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="did-i-really-change-my-distro-for-all-that"&gt;
+&lt;h2&gt;Did I really change my distro for all that?&lt;/h2&gt;
+&lt;p&gt;Yes.  I got too annoyed with Debian’s idiocy.  Also, DigitalOcean doesn’t
+&lt;em&gt;really&lt;/em&gt; support Debian testing, and I cannot survive with outdated software.
+I feel much better and, more importantly, &lt;strong&gt;safer&lt;/strong&gt; with Fedora.&lt;/p&gt;
+&lt;p&gt;(also, the “Veteran Unix Admins” of Devuan are a bunch of idiots.)&lt;/p&gt;
+&lt;/div&gt;&lt;/div&gt;</description><guid>https://chriswarrick.com/pl/blog/2015/01/30/systemd-is-awesome/</guid><pubDate>Fri, 30 Jan 2015 15:00:00 GMT</pubDate></item><item><title>Inbox (by Google) Review</title><link>https://chriswarrick.com/pl/blog/2014/11/09/inbox-review/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;figure&gt;&lt;img src="https://chriswarrick.com/galleries/inbox-by-google/10%20All%20done%20view.png"&gt;&lt;/figure&gt; &lt;div&gt;&lt;p&gt;I got a &lt;a class="reference external" href="http://www.google.com/inbox/"&gt;Inbox&lt;/a&gt; invite (hat tip to &lt;a class="reference external" href="https://twitter.com/dav4dav4"&gt;Dawid Róż @dav4dav4&lt;/a&gt;) and spent a day
 with it.  The same day, I got the Material Design upgrade for Gmail.  Let’s review it.&lt;/p&gt;
-&lt;p class="more"&gt;&lt;a href="https://chriswarrick.com/pl/blog/2014/11/09/inbox-review/"&gt;Czytaj więcej…&lt;/a&gt; (25 paragraphs remaining — a 3 minutes’ read)&lt;/p&gt;&lt;/div&gt;</description><guid>https://chriswarrick.com/pl/blog/2014/11/09/inbox-review/</guid><pubDate>Sun, 09 Nov 2014 18:30:00 GMT</pubDate></item><item><title>Facebook Knows Too Much.</title><link>https://chriswarrick.com/pl/blog/2014/11/07/facebook-knows-too-much/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;This post is stating the obvious.  Facebook just scared me with some data points
+&lt;!-- TEASER_END --&gt;
+&lt;p style="text-align: center; clear: both;"&gt;
+&lt;a href="https://chriswarrick.com/galleries/inbox-by-google/" class="btn btn-primary btn-default"&gt;
+&lt;i class="fa fa-picture-o"&gt;&lt;/i&gt;
+Screenshots/Gallery
+&lt;/a&gt;
+&lt;/p&gt;&lt;p&gt;&lt;em&gt;I tested the mobile version; the web app works the same.&lt;/em&gt;&lt;/p&gt;
+&lt;div class="section" id="task-oriented-e-mail"&gt;
+&lt;h2&gt;Task-oriented e-mail&lt;/h2&gt;
+&lt;p&gt;Inbox changes how e-mail works.  E-mails are now tasks.&lt;/p&gt;
+&lt;p&gt;First off, e-mails are &lt;em&gt;bundled&lt;/em&gt; into categories (Travel, Purchases, Finance,
+Social, Updates, Forums, Promos) — the last four of which were available in
+Gmail before if you used inbox categories (the tabs).  The difference is, all
+the messages are &lt;em&gt;bundled&lt;/em&gt; in the inbox.  All the categories show up as one
+entry in the inbox view.  Also, “humans” get their own entries.  When you click
+on an entry, it expands and all the threads in this category.  You can also
+bundle other labels in the inbox, provided that there are any &lt;strong&gt;filters&lt;/strong&gt; that
+send them here (as filters are one of the main elements of Inbox)&lt;/p&gt;
+&lt;div class="section" id="actions"&gt;
+&lt;h3&gt;Actions&lt;/h3&gt;
+&lt;p&gt;There are four actions you can perform on each message.  They are:&lt;/p&gt;
+&lt;div class="section" id="pin"&gt;
+&lt;h4&gt;Pin&lt;/h4&gt;
+&lt;p&gt;A pinned message appears outside of its bundle.  It can’t be sweeped away, you
+must explicitly mark it as done.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="mark-done"&gt;
+&lt;h4&gt;Mark done&lt;/h4&gt;
+&lt;p&gt;Marking a message done is equivalent to archiving it in Gmail.  If you had a
+workflow that involved archiving things you don’t need anymore, you will find
+yourself at home in Inbox.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="snooze"&gt;
+&lt;h4&gt;Snooze&lt;/h4&gt;
+&lt;p&gt;A snoozed message disappears from your Inbox for the time being.  It will
+appear at the time you set.  Helpful for decluttering your inbox while not
+getting rid of things you need to come back to later.  The catch: no
+notifications &lt;em&gt;at all&lt;/em&gt; — you must check your inbox yourself.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="move-to"&gt;
+&lt;h4&gt;Move to…&lt;/h4&gt;
+&lt;p&gt;Inbox’s algorithms are pretty good, but sometimes you may need to move messages
+to a different bundle/label.  This lets you do just that.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="right-handed-people-do-left-handed-people-postpone"&gt;
+&lt;h3&gt;&lt;em&gt;Right-handed people do, left-handed people postpone.&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;This is something funny I was taught by Inbox.  You see, I am left-handed.
+I primarily use my phone with my left-hand (though I use a
+normal/“right-handed” computer mouse).  For me, the best way to swipe things
+away is right-to-left.  That’s how I am usually doing it in Gmail.  I can do it
+both ways, it registers as an archive.&lt;/p&gt;
+&lt;p&gt;Inbox, however, has two distinctive swipe actions: if you swipe from the left
+side, the conversation is archived (&lt;em&gt;marked done&lt;/em&gt;).  However, if you swipe from
+the right side, it will be snoozed.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="reminders"&gt;
+&lt;h3&gt;Reminders&lt;/h3&gt;
+&lt;p&gt;There are also &lt;strong&gt;Reminders&lt;/strong&gt;.  Reminders are just email-less items appearing in
+Inbox.  They don’t serve any special purpose.  Some of them, however, contain
+hints — for example, the contact data of the place mentioned in your reminder
+(if there is any).&lt;/p&gt;
+&lt;p&gt;Reminders can be snoozed, but again: there are no notifications.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="material-design-galore"&gt;
+&lt;h2&gt;Material Design Galore&lt;/h2&gt;
+&lt;p&gt;One of the parts that made me get interested in the first place is Material
+Design.  I believe in its principles.  As mentioned earlier, I also have access
+to the Gmail app with Material Design (version 5.0).  So, I can compare them
+both.&lt;/p&gt;
+&lt;p&gt;Both apps look nicely; however, Inbox is prettier.  Multiple things look and
+work better in Inbox than in Gmail.  The app feels nicer overall — mainly
+because it was redone from scratch and not just upgraded from something that’s
+around for YEARS.  Gmail works pretty much the same as it did on Friday.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="final-thoughts"&gt;
+&lt;h2&gt;Final Thoughts&lt;/h2&gt;
+&lt;p&gt;I really loved the experience.  But will Inbox ever be my main e-mail client?  &lt;strong&gt;No — at least not today.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Inbox is either minimalistic, or an unfinished piece of software.  It lacks a
+few important features — for example, you can only send HTML mail, and you
+cannot have a signature.  Moreover, you can’t have multiple From: addresses.&lt;/p&gt;
+&lt;p&gt;One thing I noticed is, Inbox &lt;strong&gt;defaults&lt;/strong&gt; to &lt;em&gt;Reply All&lt;/em&gt;.  No questions asked.  We all know &lt;a class="reference external" href="http://en.wikipedia.org/wiki/Email_storm"&gt;what Reply All leads to&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Moreover, I like e-mail the way it is.  I have very comprehensive labels, which
+are much more helpful and granular than the bundles.  I have also developed a
+perfect Priority Inbox setup: Gmail knows exactly what I care about and need
+notifications for.&lt;/p&gt;
+&lt;p&gt;Finally: I currently do my GTD in &lt;a class="reference external" href="https://www.evernote.com/"&gt;Evernote&lt;/a&gt; (via &lt;a class="reference external" href="http://www.thesecretweapon.org/"&gt;The Secret Weapon&lt;/a&gt; plus Reminders).  It’s &lt;em&gt;nicer&lt;/em&gt;, at least for me.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="aside-the-four-themes-of-android"&gt;
+&lt;h2&gt;Aside: The Four Themes of Android&lt;/h2&gt;
+&lt;blockquote class="twitter-tweet"&gt;&lt;p lang="en" dir="ltr"&gt;After spending most of the day in Material Design land, coming back to Holo apps feels weird.&lt;/p&gt;— Chris Warrick (@Kwpolska) &lt;a href="https://twitter.com/Kwpolska/status/531172678536003584"&gt;November 8, 2014&lt;/a&gt;&lt;/blockquote&gt;
+&lt;script async src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;&lt;p&gt;Modern Android has &lt;strong&gt;FOUR&lt;/strong&gt; different themes that can be encountered by the
+user.  Just look at this madness:&lt;/p&gt;
+&lt;table border="1" class="table table-bordered table-striped docutils"&gt;
+&lt;colgroup&gt;
+&lt;col width="15%"&gt;
+&lt;col width="43%"&gt;
+&lt;col width="42%"&gt;
+&lt;/colgroup&gt;
+&lt;thead valign="bottom"&gt;
+&lt;tr&gt;&lt;th class="head"&gt;Internal Name&lt;/th&gt;
+&lt;th class="head"&gt;Description&lt;/th&gt;
+&lt;th class="head"&gt;Modern usage&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody valign="top"&gt;
+&lt;tr&gt;&lt;td&gt;&lt;tt class="docutils literal"&gt;Theme&lt;/tt&gt;&lt;/td&gt;
+&lt;td&gt;the original theme of Android, last updated in Android 2.3&lt;/td&gt;
+&lt;td&gt;very old apps; games (for compatibility with older versions)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;tt class="docutils literal"&gt;Theme.Holo&lt;/tt&gt;&lt;/td&gt;
+&lt;td&gt;the Holo theme, the main theme of Android 3.0 through 4.4&lt;/td&gt;
+&lt;td&gt;most apps currently in Play Store&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;tt class="docutils literal"&gt;Theme.Material&lt;/tt&gt;&lt;/td&gt;
+&lt;td&gt;tne new Material theme, introduced in Android 5.0&lt;/td&gt;
+&lt;td&gt;newly updated apps&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;tt class="docutils literal"&gt;Theme.DeviceDefault&lt;/tt&gt;&lt;/td&gt;
+&lt;td&gt;the (ugly) theme specific to this phone’s manufacturer (eg. Samsung)&lt;/td&gt;
+&lt;td&gt;Settings and other apps written/modified by the device manufacturer&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;(The new themes are backported to old versions in the Android Support Library.)&lt;/p&gt;
+&lt;p&gt;You can easily find apps in all four styles on a typical Android device.  Apps looking differently.  Nobody cares about consistency in the Android world…&lt;/p&gt;
+&lt;p style="text-align: center; clear: both;"&gt;
+&lt;a href="https://chriswarrick.com/galleries/inbox-by-google/" class="btn btn-primary btn-default"&gt;
+&lt;i class="fa fa-picture-o"&gt;&lt;/i&gt;
+Screenshots/Gallery
+&lt;/a&gt;
+&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;</description><guid>https://chriswarrick.com/pl/blog/2014/11/09/inbox-review/</guid><pubDate>Sun, 09 Nov 2014 18:30:00 GMT</pubDate></item><item><title>Facebook Knows Too Much.</title><link>https://chriswarrick.com/pl/blog/2014/11/07/facebook-knows-too-much/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;This post is stating the obvious.  Facebook just scared me with some data points
 it has about me.  Full story, right after the break.&lt;/p&gt;
-&lt;p class="more"&gt;&lt;a href="https://chriswarrick.com/pl/blog/2014/11/07/facebook-knows-too-much/"&gt;Czytaj więcej…&lt;/a&gt; (11 paragraphs remaining — a 2 minutes’ read)&lt;/p&gt;&lt;/div&gt;</description><guid>https://chriswarrick.com/pl/blog/2014/11/07/facebook-knows-too-much/</guid><pubDate>Fri, 07 Nov 2014 19:20:00 GMT</pubDate></item><item><title>Revamping My Projects Page with Nikola</title><link>https://chriswarrick.com/pl/blog/2014/10/13/revamping-my-projects-page-with-nikola/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;A week ago, I was inspired to produce a new &lt;a class="reference external" href="https://chriswarrick.com/projects/"&gt;projects page&lt;/a&gt; for
+&lt;!-- TEASER_END --&gt;
+&lt;p&gt;Today’s &lt;em&gt;abundance of knowledge&lt;/em&gt; as presented by Facebook comes from Facebook’s
+&lt;em&gt;stranger familiarization&lt;/em&gt; feature.  Fancy made-up words aside, it’s the
+notifications of the form:&lt;/p&gt;
+&lt;blockquote&gt;
+Jaime Lannister &lt;strong&gt;(friends with Cersei Lannister)&lt;/strong&gt; liked your photo.&lt;/blockquote&gt;
+&lt;p&gt;Now, I hadn’t gotten to see these sort of notices too often.  The first time I
+encountered those, Facebook chose some &lt;strong&gt;bad&lt;/strong&gt; examples.  A human, given my
+friends list — complete with some basic data and descriptions — could have
+easily devised a better one.&lt;/p&gt;
+&lt;p&gt;But that was long ago.  Facebook’s knowledge of me has improved &lt;em&gt;vastly&lt;/em&gt;.  You
+should see my face back when I received another notification lately.  Facebook
+chose a mutual friend out of ten possibilities.  And boy, had they nailed it.
+Now, with my memory of the previous occurrence, I thought it was a good guess.
+A guess, as I I believed it was just good ol’ &lt;tt class="docutils literal"&gt;/dev/urandom&lt;/tt&gt; supplemented by
+the 10% probability resulting in this serendipitous output.&lt;/p&gt;
+&lt;p&gt;Now, this happened yet again yesterday.  Two distinct people, one identical
+suggestion.  A perfect one at that.  This would be too good.  The probability
+was kinda lower this time.  And yet, it came up with a perfect choice.&lt;/p&gt;
+&lt;p&gt;How this happened is beyond me.  It looks like this is &lt;strong&gt;not random&lt;/strong&gt;.  It’s an
+algorithm.  Facebook probably has some sort of lookup table, matching my
+friends with some fancy &lt;em&gt;likability&lt;/em&gt; coefficient — probably calculated from
+chat history, or likes, or the vast archives Facebook has.&lt;/p&gt;
+&lt;p&gt;I’d love to see what Facebook thinks about me.  I might even contribute better
+numbers, as they &lt;em&gt;might&lt;/em&gt; be wrong — then again, I have absolutely no idea what
+they are.&lt;/p&gt;
+&lt;p&gt;If anyone from Facebook is listening: I’d love to see the data you use for this
+algorithm — and possibly many others.&lt;/p&gt;
+&lt;div class="section" id="bonus-downloading-my-data"&gt;
+&lt;h2&gt;Bonus: downloading my data&lt;/h2&gt;
+&lt;p&gt;I actually requested my Facebook data archive right now.  One of the
+information included was &lt;em&gt;Mobile Network Connection Quality&lt;/em&gt;.  It shows the
+average bandwidth and round-trip time of my HSPA+ mobile networks and Wi-Fi
+networks (collectively).  Here’s a question: &lt;strong&gt;WHY&lt;/strong&gt; does Facebook care?!  What is
+the purpose of collecting this information?  They can’t do anything about it,
+unless they were to send complaints to the service providers.  Which they
+cannot.&lt;/p&gt;
+&lt;p&gt;Digging through the archive even further, Facebook seems to fail with ads (that
+I don’t see anyways…)  How can I fix it?  The tags are completely wrong and not
+valid for yours truly…  They should at least &lt;strong&gt;try&lt;/strong&gt; to show me valid
+advertisements.  Here is a sample of what was chosen:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;&lt;strong&gt;#Censorship.&lt;/strong&gt;  Not really.  I don’t have anything to do with censorship at
+all.  It actually comes from a page I liked, that doesn’t really do any
+anti-censorship activism.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;#[my city here].&lt;/strong&gt;  &lt;strong&gt;#[a video game].&lt;/strong&gt;  Both make sense.  I actually
+liked pages related to both.  (Though I liked the second game of the series
+and the tag is for the first, or — at worst — all games collectively.)&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;#[a movie I HAVE NEVER SEEN]&lt;/strong&gt;.  Facebook failed at getting the reference
+yet again.  The title of the movie appears in the name of a page — but they
+are not related at all.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;#[a South Hemisphere company I never heard of.]&lt;/strong&gt;  I actually see the
+reference after looking at my likes and their Wikipedia page.  It’s &lt;strong&gt;very invalid&lt;/strong&gt;.&lt;/li&gt;
+&lt;li&gt;…and many more incorrect things I do not care about.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;You would have thought Facebook has developed algorithms to devise correct
+&lt;strong&gt;ads&lt;/strong&gt; — the thing their money comes from…&lt;/p&gt;
+&lt;p&gt;I still do not understand all this.&lt;/p&gt;
+&lt;/div&gt;&lt;/div&gt;</description><guid>https://chriswarrick.com/pl/blog/2014/11/07/facebook-knows-too-much/</guid><pubDate>Fri, 07 Nov 2014 19:20:00 GMT</pubDate></item><item><title>Revamping My Projects Page with Nikola</title><link>https://chriswarrick.com/pl/blog/2014/10/13/revamping-my-projects-page-with-nikola/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;A week ago, I was inspired to produce a new &lt;a class="reference external" href="https://chriswarrick.com/projects/"&gt;projects page&lt;/a&gt; for
 myself.  The previous one was a trainwreck with a lot of hacks.  Also hosted on
 GitHub Pages for some reason.&lt;/p&gt;
-&lt;p class="more"&gt;&lt;a href="https://chriswarrick.com/pl/blog/2014/10/13/revamping-my-projects-page-with-nikola/"&gt;Czytaj więcej…&lt;/a&gt; (6 paragraphs remaining — a 1 minutes’ read)&lt;/p&gt;&lt;/div&gt;</description><guid>https://chriswarrick.com/pl/blog/2014/10/13/revamping-my-projects-page-with-nikola/</guid><pubDate>Mon, 13 Oct 2014 12:15:00 GMT</pubDate></item><item><title>Python Apps the Right Way: entry points and scripts</title><link>https://chriswarrick.com/pl/blog/2014/09/15/python-apps-the-right-way-entry_points-and-scripts/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;There are multiple ways to write an app in Python.  However, not all of them
-provide your users with the best experience.&lt;/p&gt;
-&lt;p&gt;One of the problems some people encounter is &lt;em&gt;writing launch scripts&lt;/em&gt;.  The
-best way to handle this is the &lt;em&gt;Entry Points&lt;/em&gt; mechanism of Setuptools, and a
-&lt;tt class="docutils literal"&gt;__main__.py&lt;/tt&gt; file.  It’s quite easy to implement.  If you’re interested,
-read on to learn more!&lt;/p&gt;
-&lt;p class="more"&gt;&lt;a href="https://chriswarrick.com/pl/blog/2014/09/15/python-apps-the-right-way-entry_points-and-scripts/"&gt;Czytaj więcej…&lt;/a&gt; (12 paragraphs remaining — a 1 minutes’ read)&lt;/p&gt;&lt;/div&gt;</description><guid>https://chriswarrick.com/pl/blog/2014/09/15/python-apps-the-right-way-entry_points-and-scripts/</guid><pubDate>Mon, 15 Sep 2014 16:00:00 GMT</pubDate></item></channel></rss>
+&lt;!-- TEASER_END --&gt;
+&lt;p&gt;So, considering I’m so invested in &lt;a class="reference external" href="https://getnikola.com/"&gt;Nikola&lt;/a&gt; already,
+I produced the &lt;a class="reference external" href="http://plugins.getnikola.com/#projectpages"&gt;projectpages plugin&lt;/a&gt;
+and also made it publicly available.  The plugin produces two files,
+&lt;tt class="docutils literal"&gt;projects/index.html&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;projects/projects.json&lt;/tt&gt;, and also enforces a
+specific framework for the stories used for the individual projects, because
+all the metadata are taken from special meta fields.&lt;/p&gt;
+&lt;p&gt;In Nikola, post metadata is completely arbitrary (in fact, that’s my fault; I
+&lt;a class="reference external" href="https://github.com/getnikola/nikola/pull/304"&gt;contributed the feature&lt;/a&gt; back in February 2013).
+You can put anything you want, and Nikola will let any plugin and template use the information in any way it likes.&lt;/p&gt;
+&lt;p&gt;And that is basically the gist of the projectpages plugin.  Using some specific
+&lt;a class="reference external" href="https://github.com/getnikola/plugins/tree/master/v7/projectpages#meta-fields"&gt;meta fields&lt;/a&gt;,
+the plugin produces all the files.  It also provides ready-made templates for
+the story pages (though the default templates are designed to fit my site
+only).&lt;/p&gt;
+&lt;p&gt;This plugin is basically a special index page generator.  It takes all the
+stories in the designated projects directory, looks at the metadata, and
+lists them in a nice format (slider of featured projects + a list of everything
+else that is not hidden).  Everything automated and done for you, as is always
+with Nikola — which values simplicity and ease of use.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;The result:&lt;/strong&gt; a pretty &lt;strong&gt;&lt;a href="https://chriswarrick.com/projects/"&gt;projects page&lt;/a&gt;&lt;/strong&gt;.  And some good OSS work done.&lt;/p&gt;&lt;p&gt;PS. I just underwent a move to &lt;a class="reference external" href="https://www.digitalocean.com/"&gt;DigitalOcean&lt;/a&gt;
+and I love them.  Moreover, this blog is proudly &lt;em&gt;HTTPS only&lt;/em&gt; as of yesterday.&lt;/p&gt;&lt;/div&gt;</description><guid>https://chriswarrick.com/pl/blog/2014/10/13/revamping-my-projects-page-with-nikola/</guid><pubDate>Mon, 13 Oct 2014 12:15:00 GMT</pubDate></item></channel></rss>

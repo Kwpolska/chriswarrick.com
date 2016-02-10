@@ -1,10 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Chris Warrick (Nikola)</title><link>https://chriswarrick.com/</link><description></description><atom:link href="https://chriswarrick.com/blog/tags/nikola.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Sun, 11 Oct 2015 17:39:34 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Rewriting a Flask app in Django</title><link>https://chriswarrick.com/blog/2015/10/11/rewriting-a-flask-app-in-django/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;I spent Saturday on rewriting a Flask app in Django.  The app in question was
+<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>Chris Warrick (Nikola)</title><link>https://chriswarrick.com/</link><description></description><atom:link href="https://chriswarrick.com/blog/tags/nikola.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Wed, 10 Feb 2016 13:42:32 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Rewriting a Flask app in Django</title><link>https://chriswarrick.com/blog/2015/10/11/rewriting-a-flask-app-in-django/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;I spent Saturday on rewriting a Flask app in Django.  The app in question was
 &lt;a class="reference external" href="https://users.getnikola.com/"&gt;Nikola Users&lt;/a&gt;, which is a very simple CRUD
 app.  And yet, the Flask code was a mess, full of bugs and vulnerabilities.
 Eight hours later, I had a fully functional Django app that did more and fixed
 all problems.&lt;/p&gt;
-&lt;p class="more"&gt;&lt;a href="https://chriswarrick.com/blog/2015/10/11/rewriting-a-flask-app-in-django/"&gt;Read more…&lt;/a&gt; (9 paragraphs remaining — a 2 minutes’ read)&lt;/p&gt;&lt;/div&gt;</description><category>Django</category><category>Flask</category><category>Internet</category><category>Nikola</category><category>Python</category><guid>https://chriswarrick.com/blog/2015/10/11/rewriting-a-flask-app-in-django/</guid><pubDate>Sun, 11 Oct 2015 15:24:43 GMT</pubDate></item><item><title>Static Site Generator Speed Test (Nikola, Pelican, Hexo, Octopress)</title><link>https://chriswarrick.com/blog/2015/07/23/ssg-speed-test/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;I tested the speed of four static site generators: Nikola, Pelican, Hexo and Octopress, in a clean environment.  Spoiler alert: Nikola won.&lt;/p&gt;
+&lt;!-- TEASER_END --&gt;
+&lt;div class="section" id="original-flask-app"&gt;
+&lt;h2&gt;Original Flask app&lt;/h2&gt;
+&lt;p&gt;The original Flask app had a ton of problems.  In order to make it anywhere
+near useful, I would need to spend hours.  Here’s just a few of
+them:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;357 lines of spaghetti code (295 SLOC), all in one file&lt;/li&gt;
+&lt;li&gt;No form data validation, no CSRF &lt;a class="footnote-reference" href="https://chriswarrick.com/blog/2015/10/11/rewriting-a-flask-app-in-django/#id2" id="id1"&gt;[1]&lt;/a&gt; protection (it did have XSS protection
+though)&lt;/li&gt;
+&lt;li&gt;Login using Mozilla Persona, which requries JavaScript, is a bit kludgey, and
+feels desolate (and also had me store the admin e-mail list in code)&lt;/li&gt;
+&lt;li&gt;Geopolitics issues: using country flags for languages&lt;/li&gt;
+&lt;li&gt;A lot of things were implemented by hand&lt;/li&gt;
+&lt;li&gt;SQLAlchemy is very verbose&lt;/li&gt;
+&lt;li&gt;no DB migrations (makes enhancements harder)&lt;/li&gt;
+&lt;li&gt;Languages implemented as a PostgreSQL integer array&lt;/li&gt;
+&lt;li&gt;Adding a language required running a command-line script and &lt;strong&gt;restarting the
+app&lt;/strong&gt; (languages were cached in Python dicts with no way to reload them from
+the database; that would require talking through uWSGI anyway because there
+were multiple processes involved)&lt;/li&gt;
+&lt;li&gt;The templates were slightly hacky (the page title was set in each individual
+template and not in the view code); menus hacked together in HTML with no
+highlighting&lt;/li&gt;
+&lt;li&gt;Python 2.7&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class="section" id="the-rewrite"&gt;
+&lt;h2&gt;The rewrite&lt;/h2&gt;
+&lt;p&gt;I started the process by opening &lt;a class="reference external" href="https://docs.djangoproject.com/en/"&gt;Django documentation&lt;/a&gt;, with its wonderful
+&lt;a class="reference external" href="https://docs.djangoproject.com/en/1.8/intro/tutorial01/"&gt;tutorial&lt;/a&gt;.  Now, I have written a couple basic Django apps before, but
+the majority of them didn’t do much.  In other words, I didn’t have a lot of experience.  Especially with taking user input and relationships.  It took me about 8 hours to get feature parity, and more.&lt;/p&gt;
+&lt;p&gt;Getting all the features was really simple.  For example, to get a many-to-many
+relationship for languages, I had to write just one line.&lt;/p&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_ae9d9a08bc494c6d80314eb781b22b84-1"&gt;&lt;/a&gt;&lt;span class="n"&gt;languages&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ManyToManyField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Language&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;p&gt;That’s it.  I didn’t have to run through complicated SQLAlchemy documentation,
+which provides a &lt;a class="reference external" href="http://docs.sqlalchemy.org/en/rel_1_0/orm/basic_relationships.html#many-to-many"&gt;13-line solution&lt;/a&gt; to the same problem.&lt;/p&gt;
+&lt;p&gt;Django also simplified New Relic integration, as the browser JS can be implemented
+using Django template tags.&lt;/p&gt;
+&lt;p&gt;Django is not without its problems, though.  I got a very cryptic traceback
+when I did this:&lt;/p&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_ee246dda529a46dd801806525015b8de-1"&gt;&lt;/a&gt;&lt;span class="n"&gt;publish_email&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;forms&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;BooleanField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"Publish e-mail"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;required&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;False&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_ee246dda529a46dd801806525015b8de-2"&gt;&lt;/a&gt;&lt;span class="ne"&gt;TypeError&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;"BooleanField() got multiple values for argument 'required'"&lt;/span&gt;
+&lt;/pre&gt;&lt;p&gt;The real problem with this code?  I forgot the &lt;tt class="docutils literal"&gt;label=&lt;/tt&gt; keyword.  The
+problem is, the model API accepts this syntax — &lt;tt class="docutils literal"&gt;verbose_name&lt;/tt&gt; is the first
+argument.  (I am not actually using the labels though, I write my own form
+HTML)&lt;/p&gt;
+&lt;p&gt;Still, the Django version is much cleaner.  And the best part of all?  There
+are no magic global objects (&lt;tt class="docutils literal"&gt;g&lt;/tt&gt;, &lt;tt class="docutils literal"&gt;session&lt;/tt&gt;, &lt;tt class="docutils literal"&gt;request&lt;/tt&gt;) and
+decorator-based views (which are a bit of syntax abuse IMO).&lt;/p&gt;
+&lt;p&gt;In the end, I have:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;382 lines of code (297 SLOC) over 6 files — much cleaner, and with less long lines&lt;/li&gt;
+&lt;li&gt;form data validation (via Django), CSRF and XSS protection&lt;/li&gt;
+&lt;li&gt;Login using Django built-in authentication, without JavaScript&lt;/li&gt;
+&lt;li&gt;Language codes (granted, I could’ve done that really easily back in Flask)&lt;/li&gt;
+&lt;li&gt;Tried-and-true implementations of common patterns&lt;/li&gt;
+&lt;li&gt;Django models are much more readable and friendly&lt;/li&gt;
+&lt;li&gt;Django-provided DB migrations (generated automatically!)&lt;/li&gt;
+&lt;li&gt;Languages implemented using Django many-to-many relationships&lt;/li&gt;
+&lt;li&gt;Adding a language is possible from the Django built-in admin panel and is
+reflected immediately (no caching)&lt;/li&gt;
+&lt;li&gt;Titles and menus in code&lt;/li&gt;
+&lt;li&gt;Python 3&lt;/li&gt;
+&lt;li&gt;New features: featured sites; show only a specified language — were really easy to add&lt;/li&gt;
+&lt;/ul&gt;
+&lt;table class="docutils footnote" frame="void" id="id2" rules="none"&gt;
+&lt;colgroup&gt;&lt;col class="label"&gt;&lt;col&gt;&lt;/colgroup&gt;
+&lt;tbody valign="top"&gt;
+&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="https://chriswarrick.com/blog/2015/10/11/rewriting-a-flask-app-in-django/#id1"&gt;[1]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;I had some &lt;tt class="docutils literal"&gt;CSRF_ENABLED&lt;/tt&gt; variable, but it did not seem to be actually
+used by anything.&lt;/td&gt;&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;</description><category>Django</category><category>Flask</category><category>Internet</category><category>Nikola</category><category>Python</category><guid>https://chriswarrick.com/blog/2015/10/11/rewriting-a-flask-app-in-django/</guid><pubDate>Sun, 11 Oct 2015 15:24:43 GMT</pubDate></item><item><title>Static Site Generator Speed Test (Nikola, Pelican, Hexo, Octopress)</title><link>https://chriswarrick.com/blog/2015/07/23/ssg-speed-test/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;I tested the speed of four static site generators: Nikola, Pelican, Hexo and Octopress, in a clean environment.  Spoiler alert: Nikola won.&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;Disclaimer:&lt;/em&gt; author is a developer and user of Nikola.  The test environments used were the same for all four generators.&lt;/p&gt;
 &lt;div class="section" id="generators-tested"&gt;
 &lt;h2&gt;Generators tested&lt;/h2&gt;
@@ -14,10 +87,179 @@ all problems.&lt;/p&gt;
 &lt;li&gt;&lt;a class="reference external" href="https://hexo.io/"&gt;Hexo&lt;/a&gt; v3.1.1, by Tommy Chen and contributors; Node.js; MIT license&lt;/li&gt;
 &lt;li&gt;&lt;a class="reference external" href="http://octopress.org/"&gt;Octopress&lt;/a&gt; v2.0, by Brandon Mathis and contributors; Ruby; MIT license (based on Jekyll)&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p class="more"&gt;&lt;a href="https://chriswarrick.com/blog/2015/07/23/ssg-speed-test/"&gt;Read more…&lt;/a&gt; (10 paragraphs remaining — a 3 minutes’ read)&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;</description><category>blog</category><category>Hexo</category><category>jekyll</category><category>Nikola</category><category>Octopress</category><category>Pelican</category><category>Python</category><category>test</category><category>webmastering</category><guid>https://chriswarrick.com/blog/2015/07/23/ssg-speed-test/</guid><pubDate>Thu, 23 Jul 2015 15:10:00 GMT</pubDate></item><item><title>Revamping My Projects Page with Nikola</title><link>https://chriswarrick.com/blog/2014/10/13/revamping-my-projects-page-with-nikola/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;A week ago, I was inspired to produce a new &lt;a class="reference external" href="https://chriswarrick.com/projects/"&gt;projects page&lt;/a&gt; for
+&lt;!-- TEASER_END --&gt;
+&lt;/div&gt;
+&lt;div class="section" id="setup"&gt;
+&lt;h2&gt;Setup&lt;/h2&gt;
+&lt;p&gt;Every site generator was set up in an identical &lt;strong&gt;clean&lt;/strong&gt; environment, using Ubuntu 15.04, x64, as a 512 MB DigitalOcean VM with a 20 GB SSD drive. The machine was updated, an user account with passwordless sudo was created, and &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;build-essential&lt;/span&gt;&lt;/tt&gt; was installed. Tests were run by an automated installer and timer, written in Bash and C, respectively (custom; source code is available). Pre-compiled wheels for lxml and Pillow were used for Nikola testing, because lxml cannot be compiled with less than 1.5 GB of RAM; they were built with &lt;tt class="docutils literal"&gt;pip wheel lxml pillow&lt;/tt&gt; outside of the testing environment (on a local VM). The machine was reimaged after every test. Lists of installed Python/Ruby/Node packages are available in the GitHub repo (see below).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="input"&gt;
+&lt;h2&gt;Input&lt;/h2&gt;
+&lt;p&gt;Every site generator was given the same set of 179 log files from #nikola on freenode. The raw logs contain 1209507 bytes (1.1 MiB) of plain text. The logs were processed into post files, which fit the format of each engine (reST or Markdown), containing mandatory metadata, an introductory paragraph and a code block (using &lt;tt class="docutils literal"&gt;::&lt;/tt&gt; for reST, four spaces for Markdown). One file had to be altered, because they contained the &lt;tt class="docutils literal"&gt;{{&lt;/tt&gt;  sequence, which was misinterpreted as internal templating by Hexo and Octopress — it was replaced by a harmless &lt;tt class="docutils literal"&gt;~~&lt;/tt&gt; sequence for all four generators.&lt;/p&gt;
+&lt;p&gt;The generators used default config, with one exception: highlighting was disabled for Hexo. The highlighting would cause an unfair advantage (other generators did not automatically highlight the code boxes), and led to very high build times (see table 4 in comparison spreadsheet).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="build"&gt;
+&lt;h2&gt;Build&lt;/h2&gt;
+&lt;p&gt;Sites were built a total of 110 times, in 10 cycles of 11 builds each. The first build of a cycle was a fresh build, the remaining 10 were rebuilds. Sites and cache files were removed after each cycle.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="results"&gt;
+&lt;h2&gt;Results&lt;/h2&gt;
+&lt;p&gt;Because Nikola and Hexo use incremental rebuilds, the results were compared in two groups: 11 and 10 runs.&lt;/p&gt;
+&lt;div class="section" id="average-build-times-in-seconds"&gt;
+&lt;h3&gt;Average build times (in seconds)&lt;/h3&gt;
+&lt;table class="table table-bordered table-hover"&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;#&lt;/th&gt;
+&lt;th&gt;Generator&lt;/th&gt;
+&lt;th&gt;Average of 11 runs&lt;/th&gt;
+&lt;th&gt;Average of 10 runs&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;th scope="row"&gt;1&lt;/th&gt;
+&lt;td&gt;Nikola&lt;/td&gt;
+&lt;td&gt;2.38290&lt;/td&gt;
+&lt;td&gt;2.06057&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;th scope="row"&gt;2&lt;/th&gt;
+&lt;td&gt;Pelican&lt;/td&gt;
+&lt;td&gt;2.61924&lt;/td&gt;
+&lt;td&gt;2.62352&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;th scope="row"&gt;3&lt;/th&gt;
+&lt;td&gt;Hexo&lt;/td&gt;
+&lt;td&gt;6.27361&lt;/td&gt;
+&lt;td&gt;6.21267&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;th scope="row"&gt;4&lt;/th&gt;
+&lt;td&gt;Octopress&lt;/td&gt;
+&lt;td&gt;9.57618&lt;/td&gt;
+&lt;td&gt;9.47550&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;&lt;/div&gt;
+&lt;div class="section" id="full-results"&gt;
+&lt;h3&gt;Full results&lt;/h3&gt;
+&lt;p class="lead"&gt;Full results are available in &lt;a class="reference external" href="https://chriswarrick.com/pub/ssg-test-results.ods"&gt;ods format&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="raw-results-and-configuration"&gt;
+&lt;h3&gt;Raw results and configuration&lt;/h3&gt;
+&lt;p&gt;Raw results (&lt;tt class="docutils literal"&gt;.csv&lt;/tt&gt; files from the test runner) and configuration is available in the &lt;a class="reference external" href="https://github.com/Kwpolska/ssg-test"&gt;GitHub repo&lt;/a&gt;. Log files and converted posts are not available publicly; however, they can be provided to interested parties (&lt;a class="reference external" href="https://chriswarrick.com/contact/"&gt;contact me&lt;/a&gt; to obtain them).&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="questions-and-answers"&gt;
+&lt;h2&gt;Questions and answers&lt;/h2&gt;
+&lt;div class="section" id="why-not-plain-jekyll"&gt;
+&lt;h3&gt;Why not plain Jekyll?&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;Plain Jekyll was disqualified&lt;/strong&gt; on the basis of missing many features other generators have, leading to an unfair advantage. The aim of this test was to provide similar setups for each of the four generators. Jekyll generates a very basic site that lacks some elements; a Jekyll site does not have paginated indexes, (partial) post text on indexes, any sort of archives, etc. A Jekyll site contains only one CSS file, index.html, feed.xml, and the log posts. On the other hand, sites generated by Pelican, Nikola and Hexo contain more files, which makes the builds longer and the website experience richer (archives, JS, sitemaps, tag listings).&lt;/p&gt;
+&lt;p&gt;On the basis of the above, &lt;strong&gt;Octopress&lt;/strong&gt; was chosen to represent the Jekyll universe at large. Octopress sites have more assets, a sitemap, archives and category listings — making it comparable to the other four contenders. However, tests were performed for Jekyll. The average result from 11 builds was 2.22118, while the average result from 10 builds was 2.23903. The result would land Jekyll on the 1st place for 11 builds, and on the 2nd place for 10 builds.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="why-not-myfavoritessg"&gt;
+&lt;h3&gt;Why not $MYFAVORITESSG?&lt;/h3&gt;
+&lt;p&gt;I tested only four popular generators that were easy enough to set up. I could easily extend the set if I had time and friendly enough documentation to do so. I can add a SSG, provided that:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;it’s easy to configure&lt;/li&gt;
+&lt;li&gt;it has a default config that provides a working site with a feature set comparable to other SSGs tested here (see &lt;a class="reference internal" href="https://chriswarrick.com/blog/2015/07/23/ssg-speed-test/#why-not-plain-jekyll"&gt;Why not plain Jekyll?&lt;/a&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;/div&gt;</description><category>blog</category><category>Hexo</category><category>jekyll</category><category>Nikola</category><category>Octopress</category><category>Pelican</category><category>Python</category><category>test</category><category>webmastering</category><guid>https://chriswarrick.com/blog/2015/07/23/ssg-speed-test/</guid><pubDate>Thu, 23 Jul 2015 15:10:00 GMT</pubDate></item><item><title>Revamping My Projects Page with Nikola</title><link>https://chriswarrick.com/blog/2014/10/13/revamping-my-projects-page-with-nikola/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;A week ago, I was inspired to produce a new &lt;a class="reference external" href="https://chriswarrick.com/projects/"&gt;projects page&lt;/a&gt; for
 myself.  The previous one was a trainwreck with a lot of hacks.  Also hosted on
 GitHub Pages for some reason.&lt;/p&gt;
-&lt;p class="more"&gt;&lt;a href="https://chriswarrick.com/blog/2014/10/13/revamping-my-projects-page-with-nikola/"&gt;Read more…&lt;/a&gt; (6 paragraphs remaining — a 1 minutes’ read)&lt;/p&gt;&lt;/div&gt;</description><category>devel</category><category>Nikola</category><category>Python</category><guid>https://chriswarrick.com/blog/2014/10/13/revamping-my-projects-page-with-nikola/</guid><pubDate>Mon, 13 Oct 2014 12:15:00 GMT</pubDate></item><item><title>New Year’s Python Meme 2013/2014</title><link>https://chriswarrick.com/blog/2013/12/31/new-years-python-meme-2013-2014/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;Via &lt;a class="reference external" href="http://ziade.org/2013/12/23/new-years-python-meme-2013/"&gt;Tarek Ziadé&lt;/a&gt; (original meme, none this year…) and &lt;a class="reference external" href="http://blog.aclark.net/2014/12/30/new-years-python-meme-2014/"&gt;Alex Clark&lt;/a&gt;.  Right after the break.&lt;/p&gt;
-&lt;p class="more"&gt;&lt;a href="https://chriswarrick.com/blog/2013/12/31/new-years-python-meme-2013-2014/"&gt;Read more…&lt;/a&gt; (14 paragraphs remaining — a 1 minutes’ read)&lt;/p&gt;&lt;/div&gt;</description><category>Nikola</category><category>programming</category><category>Python</category><guid>https://chriswarrick.com/blog/2013/12/31/new-years-python-meme-2013-2014/</guid><pubDate>Tue, 31 Dec 2013 17:15:00 GMT</pubDate></item><item><title>Nikola — The Best Blog Engine Ever!</title><link>https://chriswarrick.com/blog/2013/02/08/nikola-the-best-blog-engine-ever/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;I recently found out about &lt;a class="reference external" href="http://nikola.ralsina.com.ar/"&gt;Nikola&lt;/a&gt; (through &lt;a class="reference external" href="http://planet.python.org/"&gt;Planet Python&lt;/a&gt;).  It is awesome,
+&lt;!-- TEASER_END --&gt;
+&lt;p&gt;So, considering I’m so invested in &lt;a class="reference external" href="https://getnikola.com/"&gt;Nikola&lt;/a&gt; already,
+I produced the &lt;a class="reference external" href="http://plugins.getnikola.com/#projectpages"&gt;projectpages plugin&lt;/a&gt;
+and also made it publicly available.  The plugin produces two files,
+&lt;tt class="docutils literal"&gt;projects/index.html&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;projects/projects.json&lt;/tt&gt;, and also enforces a
+specific framework for the stories used for the individual projects, because
+all the metadata are taken from special meta fields.&lt;/p&gt;
+&lt;p&gt;In Nikola, post metadata is completely arbitrary (in fact, that’s my fault; I
+&lt;a class="reference external" href="https://github.com/getnikola/nikola/pull/304"&gt;contributed the feature&lt;/a&gt; back in February 2013).
+You can put anything you want, and Nikola will let any plugin and template use the information in any way it likes.&lt;/p&gt;
+&lt;p&gt;And that is basically the gist of the projectpages plugin.  Using some specific
+&lt;a class="reference external" href="https://github.com/getnikola/plugins/tree/master/v7/projectpages#meta-fields"&gt;meta fields&lt;/a&gt;,
+the plugin produces all the files.  It also provides ready-made templates for
+the story pages (though the default templates are designed to fit my site
+only).&lt;/p&gt;
+&lt;p&gt;This plugin is basically a special index page generator.  It takes all the
+stories in the designated projects directory, looks at the metadata, and
+lists them in a nice format (slider of featured projects + a list of everything
+else that is not hidden).  Everything automated and done for you, as is always
+with Nikola — which values simplicity and ease of use.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;The result:&lt;/strong&gt; a pretty &lt;strong&gt;&lt;a href="https://chriswarrick.com/projects/"&gt;projects page&lt;/a&gt;&lt;/strong&gt;.  And some good OSS work done.&lt;/p&gt;&lt;p&gt;PS. I just underwent a move to &lt;a class="reference external" href="https://www.digitalocean.com/"&gt;DigitalOcean&lt;/a&gt;
+and I love them.  Moreover, this blog is proudly &lt;em&gt;HTTPS only&lt;/em&gt; as of yesterday.&lt;/p&gt;&lt;/div&gt;</description><category>devel</category><category>Nikola</category><category>Python</category><guid>https://chriswarrick.com/blog/2014/10/13/revamping-my-projects-page-with-nikola/</guid><pubDate>Mon, 13 Oct 2014 12:15:00 GMT</pubDate></item><item><title>New Year’s Python Meme 2013/2014</title><link>https://chriswarrick.com/blog/2013/12/31/new-years-python-meme-2013-2014/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;Via &lt;a class="reference external" href="http://ziade.org/2013/12/23/new-years-python-meme-2013/"&gt;Tarek Ziadé&lt;/a&gt; (original meme, none this year…) and &lt;a class="reference external" href="http://blog.aclark.net/2014/12/30/new-years-python-meme-2014/"&gt;Alex Clark&lt;/a&gt;.  Right after the break.&lt;/p&gt;
+&lt;!-- TEASER_END --&gt;
+&lt;p&gt;Here it comes:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;1. What’s the coolest Python application, framework or library you
+discovered this year?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external" href="http://getnikola.com/"&gt;Nikola&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;2. What new programming technique did you learn this year?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;There are lots of them, including writing sane context managers.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;3. Which open source project did you contribute to the most this year? What
+did you do?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external" href="http://getnikola.com/"&gt;Nikola&lt;/a&gt; yet again!  Up until now, I made 484 commits (or 431
+excluding merge commits) — which is quite a lot.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;4. Which Python blogs, websites or mailing lists did you read the most this year?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external" href="http://nedbatchelder.com/blog/"&gt;Ned Batchelder’s&lt;/a&gt; and &lt;a class="reference external" href="http://lucumr.pocoo.org/"&gt;Armin Ronacher’s&lt;/a&gt; blogs and many things that are on Planet Python.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;5. What are the three top things you want to learn next year?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;There are lots of them, mainly C, some Ruby and JavaScript.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;6. What is the top software, application or library you wish someone would
+write next year?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;My current todo-list says it all — and I’m working on that:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;A quick app for CSV display&lt;/li&gt;
+&lt;li&gt;A GitHub Releases API client&lt;/li&gt;
+&lt;li&gt;&lt;tt class="docutils literal"&gt;nap&lt;/tt&gt; = &lt;tt class="docutils literal"&gt;sleep&lt;/tt&gt; + progressbar (&lt;a class="reference external" href="https://github.com/Kwpolska/nap"&gt;almost-done-thing on GitHub&lt;/a&gt; — C)&lt;/li&gt;
+&lt;li&gt;River of Text — Python CLI library (&lt;a class="reference external" href="https://github.com/Kwpolska/rot"&gt;skeleton on GitHub&lt;/a&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr class="docutils"&gt;
+&lt;p&gt;Want to do your own list?  Here’s how:&lt;/p&gt;
+&lt;ol class="arabic simple"&gt;
+&lt;li&gt;copy-paste the questions and answer to them in your blog&lt;/li&gt;
+&lt;li&gt;tweet it with the &lt;a class="reference external" href="https://twitter.com/search/realtime?q=%232014pythonmeme"&gt;#2014pythonmeme&lt;/a&gt; hashtag&lt;/li&gt;
+&lt;/ol&gt;&lt;/div&gt;</description><category>Nikola</category><category>programming</category><category>Python</category><guid>https://chriswarrick.com/blog/2013/12/31/new-years-python-meme-2013-2014/</guid><pubDate>Tue, 31 Dec 2013 17:15:00 GMT</pubDate></item><item><title>Nikola — The Best Blog Engine Ever!</title><link>https://chriswarrick.com/blog/2013/02/08/nikola-the-best-blog-engine-ever/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;I recently found out about &lt;a class="reference external" href="http://nikola.ralsina.com.ar/"&gt;Nikola&lt;/a&gt; (through &lt;a class="reference external" href="http://planet.python.org/"&gt;Planet Python&lt;/a&gt;).  It is awesome,
 even better than Hyde.  Why?  Right after the break.&lt;/p&gt;
-&lt;p class="more"&gt;&lt;a href="https://chriswarrick.com/blog/2013/02/08/nikola-the-best-blog-engine-ever/"&gt;Read more…&lt;/a&gt; (5 paragraphs remaining — a 1 minutes’ read)&lt;/p&gt;&lt;/div&gt;</description><category>blog</category><category>Nikola</category><category>Python</category><guid>https://chriswarrick.com/blog/2013/02/08/nikola-the-best-blog-engine-ever/</guid><pubDate>Fri, 08 Feb 2013 13:01:51 GMT</pubDate></item></channel></rss>
+&lt;!-- TEASER_END --&gt;
+&lt;div class="section" id="why"&gt;
+&lt;h2&gt;Why?&lt;/h2&gt;
+&lt;ol class="arabic simple"&gt;
+&lt;li&gt;A lively community and an awesome lead developer, &lt;a class="reference external" href="http://ralsina.com.ar/"&gt;Roberto Alsina&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Actively developed (last commit to Hyde was &lt;strong&gt;11 months ago&lt;/strong&gt;).&lt;/li&gt;
+&lt;li&gt;Easily extensible.&lt;/li&gt;
+&lt;li&gt;Ships with the Bootstrap style, to which I planned to migrate (and I did)&lt;/li&gt;
+&lt;li&gt;reStructuredText, Markdown, Textile, … input.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;div class="section" id="how"&gt;
+&lt;h2&gt;How?&lt;/h2&gt;
+&lt;blockquote&gt;&lt;p&gt;After you have Nikola installed:&lt;/p&gt;
+&lt;dl class="docutils"&gt;
+&lt;dt&gt;Create a site:&lt;/dt&gt;
+&lt;dd&gt;&lt;tt class="docutils literal"&gt;nikola init mysite&lt;/tt&gt;&lt;/dd&gt;
+&lt;dt&gt;Create a post:&lt;/dt&gt;
+&lt;dd&gt;&lt;tt class="docutils literal"&gt;nikola new_post&lt;/tt&gt;&lt;/dd&gt;
+&lt;dt&gt;Edit the post:&lt;/dt&gt;
+&lt;dd&gt;The filename should be in the output of the previous command.&lt;/dd&gt;
+&lt;dt&gt;Build the site:&lt;/dt&gt;
+&lt;dd&gt;&lt;tt class="docutils literal"&gt;nikola build&lt;/tt&gt;&lt;/dd&gt;
+&lt;dt&gt;Start the test server:&lt;/dt&gt;
+&lt;dd&gt;&lt;tt class="docutils literal"&gt;nikola serve&lt;/tt&gt;&lt;/dd&gt;
+&lt;dt&gt;See the site:&lt;/dt&gt;
+&lt;dd&gt;&lt;a class="reference external" href="http://127.0.0.1:8000"&gt;http://127.0.0.1:8000&lt;/a&gt;&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;p&gt;That should get you going. If you want to know more, this manual will always be
+here for you.&lt;/p&gt;
+&lt;small&gt;&lt;cite&gt;&lt;a href="http://nikola.ralsina.com.ar/handbook.html"&gt;The Nikola
+Handbook&lt;/a&gt; by Roberto Alsina&lt;/cite&gt;&lt;/small&gt;&lt;/blockquote&gt;&lt;p&gt;That’s how easy it is.   Nikola has many more useful features.&lt;/p&gt;
+&lt;p&gt;And sure, I had to manually fix up all the posts because I decided to switch to
+RST, but that’s not a problem.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="plans-for-the-future"&gt;
+&lt;h2&gt;Plans for the future&lt;/h2&gt;
+&lt;p&gt;I did transition the blog, but not everything is done yet.  I need to create a
+&lt;strong&gt;Contact form&lt;/strong&gt; and a &lt;strong&gt;Project page&lt;/strong&gt;.  Both should be done by Sunday.&lt;/p&gt;
+&lt;/div&gt;&lt;/div&gt;</description><category>blog</category><category>Nikola</category><category>Python</category><guid>https://chriswarrick.com/blog/2013/02/08/nikola-the-best-blog-engine-ever/</guid><pubDate>Fri, 08 Feb 2013 13:01:51 GMT</pubDate></item></channel></rss>

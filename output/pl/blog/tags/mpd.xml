@@ -1,5 +1,133 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chris Warrick (mpd)</title><link>https://chriswarrick.com/</link><description></description><atom:link rel="self" href="https://chriswarrick.com/pl/blog/tags/mpd.xml" type="application/rss+xml"></atom:link><language>pl</language><lastBuildDate>Sun, 11 Oct 2015 17:30:06 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Adventures in Windows: Music Player Daemon</title><link>https://chriswarrick.com/pl/blog/2013/09/01/mpd-on-windows/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;Recently, I had to reinstall Windows.  One of the things I had to set up
+<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>Chris Warrick (mpd)</title><link>https://chriswarrick.com/</link><description></description><atom:link href="https://chriswarrick.com/pl/blog/tags/mpd.xml" rel="self" type="application/rss+xml"></atom:link><language>pl</language><lastBuildDate>Wed, 10 Feb 2016 13:42:31 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Adventures in Windows: Music Player Daemon</title><link>https://chriswarrick.com/pl/blog/2013/09/01/mpd-on-windows/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;Recently, I had to reinstall Windows.  One of the things I had to set up
 was MPD, the &lt;a class="reference external" href="http://musicpd.org/"&gt;Music Player Daemon&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;This is a short guide on how to do this.&lt;/p&gt;
-&lt;p class="more"&gt;&lt;a href="https://chriswarrick.com/pl/blog/2013/09/01/mpd-on-windows/"&gt;Czytaj więcej…&lt;/a&gt; (32 paragraphs remaining — a 3 minutes’ read)&lt;/p&gt;&lt;/div&gt;</description><guid>https://chriswarrick.com/pl/blog/2013/09/01/mpd-on-windows/</guid><pubDate>Sun, 01 Sep 2013 17:15:00 GMT</pubDate></item></channel></rss>
+&lt;!-- TEASER_END --&gt;
+&lt;div class="section" id="step-1-get-mpd-and-mpc"&gt;
+&lt;h2&gt;Step 1: get MPD and MPC&lt;/h2&gt;
+&lt;p&gt;Download &lt;a class="reference external" href="http://musicpd.org/download/win32/"&gt;MPD&lt;/a&gt; (&lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;mpd-x.y.z-win32.zip&lt;/span&gt;&lt;/tt&gt;, replacing &lt;tt class="docutils literal"&gt;x.y.z&lt;/tt&gt; with whatever is the current available version of this file) and &lt;a class="reference external" href="http://musicpd.org/download/mpc/"&gt;MPC&lt;/a&gt; (&lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;mpc-x.y-win32-zip&lt;/span&gt;&lt;/tt&gt;).  I suggest using
+&lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;C:\mpd&lt;/span&gt;&lt;/tt&gt; as your base path.  This post assumes you actually used this
+value.&lt;/p&gt;
+&lt;p&gt;Put everything from the &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;/mpd-x.y.z-win32/bin/&lt;/span&gt;&lt;/tt&gt; directory of the
+&lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;mpd-x.y.z-win32.zip&lt;/span&gt;&lt;/tt&gt; archive into your base path (&lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;C:\mpd&lt;/span&gt;&lt;/tt&gt;).  From
+the &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;mpc-x.y-win32.zip&lt;/span&gt;&lt;/tt&gt; archive, take &lt;tt class="docutils literal"&gt;mpc.exe&lt;/tt&gt; and
+&lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;libmpdclient-2.dll&lt;/span&gt;&lt;/tt&gt; and put them there.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="step-1-5-optional-but-recommended-get-gmpc"&gt;
+&lt;h2&gt;Step 1.5 (optional, but recommended): get GMPC&lt;/h2&gt;
+&lt;p&gt;If you want a nice, easy, graphical interface for MPD, you should install
+GMPC, the &lt;a class="reference external" href="http://gmpclient.org/"&gt;Gnome Music Player Client&lt;/a&gt;.  The installation is very
+straightforward, so I’ll leave the details out.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="step-2-create-a-config-file"&gt;
+&lt;h2&gt;Step 2: create a config file&lt;/h2&gt;
+&lt;p&gt;You need to create a configuration file.  A sample one is included in
+&lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;/mpd-x.y.z-win32/doc/mpdconf.sample&lt;/span&gt;&lt;/tt&gt;.  Use the &lt;tt class="docutils literal"&gt;winmm&lt;/tt&gt; output type.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Warning:&lt;/strong&gt; Windows Notepad will not work, because it does not understand
+Unix-style line endings (&lt;tt class="docutils literal"&gt;\n&lt;/tt&gt; instead of &lt;tt class="docutils literal"&gt;\r\n&lt;/tt&gt;).&lt;/p&gt;
+&lt;p&gt;For &lt;tt class="docutils literal"&gt;db_file&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;log_file&lt;/tt&gt;, I recommend a file in &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;C:\mpd\data\&lt;/span&gt;&lt;/tt&gt;.
+I also recommend saving your config as &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;C:\mpd\data\mpd.conf&lt;/span&gt;&lt;/tt&gt; (in fact,
+this is yet another assumption we make in this guide)&lt;/p&gt;
+&lt;div class="section" id="multi-boot-corner-keep-parts-of-the-config-the-same"&gt;
+&lt;h3&gt;Multi Boot Corner: keep parts of the config the same&lt;/h3&gt;
+&lt;p&gt;Because I have a dual-boot system, there are some directions for
+multi-boot users.&lt;/p&gt;
+&lt;p&gt;Your &lt;tt class="docutils literal"&gt;music_directory&lt;/tt&gt;, &lt;tt class="docutils literal"&gt;playlist_directory&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;state_file&lt;/tt&gt; &lt;em&gt;must&lt;/em&gt; be the same on all the systems in your multi-boot environment.  It is recommended to use the same &lt;tt class="docutils literal"&gt;db_file&lt;/tt&gt;.&lt;/p&gt;
+&lt;p&gt;Your audio outputs must have the same names.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="step-3-test-your-configuration"&gt;
+&lt;h2&gt;Step 3: test your configuration&lt;/h2&gt;
+&lt;p&gt;Open up two Command Prompt windows.  In the first one, run:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+cd C:\mpd
+mpd data\mpd.conf
+&lt;/pre&gt;
+&lt;p&gt;If you see this message:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+Failed to load database: Failed to open database file "&amp;lt;name&amp;gt;": No such file or directory
+&lt;/pre&gt;
+&lt;p&gt;then you can ignore it.  If you see another message, fix whatever it
+states.  You may also use &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;--stdout&lt;/span&gt;&lt;/tt&gt; or &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;-v&lt;/span&gt;&lt;/tt&gt; to get more output
+messages.&lt;/p&gt;
+&lt;div class="section" id="multi-boot-path"&gt;
+&lt;h3&gt;Multi Boot path&lt;/h3&gt;
+&lt;p&gt;If you followed the Multi Boot instructions correctly, you might be
+hearing music already.  If you do not, use your other Command Prompt window and
+run:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+cd C:\mpd
+mpc play
+&lt;/pre&gt;
+&lt;p&gt;If it outputs the name of a song, a &lt;tt class="docutils literal"&gt;[playing]&lt;/tt&gt; line, all is well (if you
+cannot hear music, unmute your audio).&lt;/p&gt;
+&lt;p&gt;If you do not have a mpd database yet, use the &lt;em&gt;Single path&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;If MPD works, press Ctrl+C in the window where you ran ``mpd
+datampd.conf.``&lt;/strong&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="single-path"&gt;
+&lt;h3&gt;Single path&lt;/h3&gt;
+&lt;p&gt;In the other Command Prompt window, run:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+cd C:\mpd
+mpc update
+mpc add "FILENAME"
+mpc play
+&lt;/pre&gt;
+&lt;p&gt;(FILENAME should be a name of a file in your music library.  Make sure to
+keep the quotes.)&lt;/p&gt;
+&lt;p&gt;And now you should hear music.  If you do not, try to unmute, then read
+the output of &lt;tt class="docutils literal"&gt;mpc&lt;/tt&gt; and try to fix it.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;If MPD works, press Ctrl+C in the window where you ran ``mpd
+datampd.conf.``&lt;/strong&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="step-3-5-test-gmpc"&gt;
+&lt;h2&gt;Step 3.5: test GMPC&lt;/h2&gt;
+&lt;p&gt;Start the Gnome Music Player Client.  Click &lt;em&gt;Forward&lt;/em&gt;, &lt;em&gt;Connect&lt;/em&gt;,
+&lt;em&gt;Forward&lt;/em&gt;, &lt;em&gt;Close&lt;/em&gt; and all should be well.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="step-4-create-a-windows-service"&gt;
+&lt;h2&gt;Step 4: create a Windows service&lt;/h2&gt;
+&lt;p&gt;In order to run the daemon in the &lt;em&gt;daemon&lt;/em&gt; mode, i.e. hidden, you need to
+perform some extra steps.  You cannot use Startup in the Start Menu, you
+also cannot use the Run registry keys (this results in an ugly Command Prompt
+window running all the time that you cannot close or hide in the tray).&lt;/p&gt;
+&lt;p&gt;How to solve this problem?  Just run it as a Windows service.  That is
+very easy to do.&lt;/p&gt;
+&lt;p&gt;Open a Command Prompt window as an administrator (right-click on &lt;em&gt;Command
+Prompt&lt;/em&gt; in the Start Menu/on the Start Screen and choose &lt;em&gt;Run as administrator&lt;/em&gt;).&lt;/p&gt;
+&lt;p&gt;In that window, run one very easy command (make sure to copy-paste this
+exactly!):&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+sc create mpd binPath= "c:\mpd\mpd.exe c:\mpd\data\mpd.conf"
+&lt;/pre&gt;
+&lt;p&gt;If it said:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;&lt;tt class="docutils literal"&gt;[SC] CreateService SUCCESS&lt;/tt&gt;, congratulations — you are almost done!  Skip down to &lt;em&gt;Service configuration.&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;tt class="docutils literal"&gt;[SC] OpenSCManager FAILED 5: Access is denied.&lt;/tt&gt;, you need an
+&lt;strong&gt;Administrator&lt;/strong&gt; Command Prompt.&lt;/li&gt;
+&lt;li&gt;something else, check your spelling or Google the error.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="section" id="service-configuration"&gt;
+&lt;h3&gt;Service configuration&lt;/h3&gt;
+&lt;p&gt;That is the easiest part of this guide.&lt;/p&gt;
+&lt;p&gt;Start the &lt;em&gt;Services&lt;/em&gt; console.  You can get to it by typing
+&lt;tt class="docutils literal"&gt;services.msc&lt;/tt&gt; into the Start Menu/Screen search (&lt;em&gt;Run&lt;/em&gt; for XP or
+older).&lt;/p&gt;
+&lt;p&gt;In the tool, find the &lt;tt class="docutils literal"&gt;mpd&lt;/tt&gt; service.  Go to the &lt;em&gt;Log On&lt;/em&gt; tab, choose
+&lt;em&gt;This account:&lt;/em&gt; and enter your credentials there.  Hit &lt;em&gt;Apply&lt;/em&gt; and go to
+the &lt;em&gt;General&lt;/em&gt; tab, on which you should choose the &lt;em&gt;Startup type&lt;/em&gt; to be
+&lt;em&gt;Automatic (Delayed Start)&lt;/em&gt;.  Finish by pressing &lt;em&gt;Start&lt;/em&gt;.  MPD should be
+running and configured properly.  You can now hit &lt;em&gt;OK&lt;/em&gt; and close the
+&lt;em&gt;Services&lt;/em&gt; window, along with the command prompts you have open.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Warning:&lt;/strong&gt; if you change your Windows password, you need to change your
+password in the &lt;em&gt;Services&lt;/em&gt; console as well!&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="just-in-case-uninstalling-the-service"&gt;
+&lt;h3&gt;Just in case: uninstalling the service&lt;/h3&gt;
+&lt;p&gt;First off, stop the service (in the Services console or through &lt;tt class="docutils literal"&gt;sc stop
+mpd&lt;/tt&gt; in an administrator command prompt).&lt;/p&gt;
+&lt;p&gt;Then, run &lt;tt class="docutils literal"&gt;sc delete mpd&lt;/tt&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;/div&gt;</description><guid>https://chriswarrick.com/pl/blog/2013/09/01/mpd-on-windows/</guid><pubDate>Sun, 01 Sep 2013 17:15:00 GMT</pubDate></item></channel></rss>

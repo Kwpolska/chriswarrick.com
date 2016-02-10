@@ -1,10 +1,169 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chris Warrick (howto)</title><link>https://chriswarrick.com/</link><description></description><atom:link rel="self" href="https://chriswarrick.com/pl/blog/tags/howto.xml" type="application/rss+xml"></atom:link><language>pl</language><lastBuildDate>Sun, 11 Oct 2015 17:30:05 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Python Apps the Right Way: entry points and scripts</title><link>https://chriswarrick.com/pl/blog/2014/09/15/python-apps-the-right-way-entry_points-and-scripts/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;There are multiple ways to write an app in Python.  However, not all of them
+<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>Chris Warrick (howto)</title><link>https://chriswarrick.com/</link><description></description><atom:link href="https://chriswarrick.com/pl/blog/tags/howto.xml" rel="self" type="application/rss+xml"></atom:link><language>pl</language><lastBuildDate>Wed, 10 Feb 2016 13:42:31 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Python Apps the Right Way: entry points and scripts</title><link>https://chriswarrick.com/pl/blog/2014/09/15/python-apps-the-right-way-entry_points-and-scripts/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;There are multiple ways to write an app in Python.  However, not all of them
 provide your users with the best experience.&lt;/p&gt;
 &lt;p&gt;One of the problems some people encounter is &lt;em&gt;writing launch scripts&lt;/em&gt;.  The
 best way to handle this is the &lt;em&gt;Entry Points&lt;/em&gt; mechanism of Setuptools, and a
 &lt;tt class="docutils literal"&gt;__main__.py&lt;/tt&gt; file.  It’s quite easy to implement.  If you’re interested,
 read on to learn more!&lt;/p&gt;
-&lt;p class="more"&gt;&lt;a href="https://chriswarrick.com/pl/blog/2014/09/15/python-apps-the-right-way-entry_points-and-scripts/"&gt;Czytaj więcej…&lt;/a&gt; (12 paragraphs remaining — a 1 minutes’ read)&lt;/p&gt;&lt;/div&gt;</description><guid>https://chriswarrick.com/pl/blog/2014/09/15/python-apps-the-right-way-entry_points-and-scripts/</guid><pubDate>Mon, 15 Sep 2014 16:00:00 GMT</pubDate></item><item><title>Jekyll for Dummies</title><link>https://chriswarrick.com/pl/blog/2010/12/27/jekyll-for-dummies/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;This post is an introduction to Jekyll, an awesome, &lt;em&gt;simple, blog aware, static site generator&lt;/em&gt;. It’s a how-to helping you in setting up Jekyll.&lt;/p&gt;
+&lt;!-- TEASER_END --&gt;
+&lt;div class="section" id="requirements-and-desired-results"&gt;
+&lt;h2&gt;Requirements and Desired Results&lt;/h2&gt;
+&lt;p&gt;You will need:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p class="first"&gt;a Python project&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p class="first"&gt;a setup.py file using &lt;a class="reference external" href="https://pypi.python.org/pypi/setuptools"&gt;setuptools&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p class="first"&gt;the following directory structure:&lt;/p&gt;
+&lt;ul class="list-nobullets"&gt;
+    &lt;li&gt;
+    &lt;a href="https://chriswarrick.com/listings/entry_points_project/"&gt;&lt;i class="fa fa-folder-open"&gt;&lt;/i&gt;
+    entry_points_project/&lt;/a&gt;
+    &lt;/li&gt;&lt;li&gt;
+        &lt;ul class="list-nobullets"&gt;
+        &lt;li&gt;
+        &lt;a href="https://chriswarrick.com/listings/entry_points_project/my_project/"&gt;&lt;i class="fa fa-folder-open"&gt;&lt;/i&gt; my_project/&lt;/a&gt;
+            &lt;/li&gt;&lt;li&gt;
+            &lt;ul class="list-nobullets"&gt;
+                &lt;li&gt;
+                &lt;a href="https://chriswarrick.com/listings/entry_points_project/my_project/__init__.py.html"&gt;&lt;i class="fa fa-file"&gt;&lt;/i&gt;
+                __init__.py&lt;/a&gt;
+                &lt;/li&gt;
+                &lt;li&gt;
+                &lt;a href="https://chriswarrick.com/listings/entry_points_project/my_project/__main__.py.html"&gt;&lt;i class="fa fa-file"&gt;&lt;/i&gt;
+                __main__.py&lt;/a&gt;
+                &lt;/li&gt;
+            &lt;/ul&gt;
+            &lt;/li&gt;
+        &lt;li&gt;
+        &lt;a href="https://chriswarrick.com/listings/entry_points_project/setup.py.html"&gt;&lt;i class="fa fa-file"&gt;&lt;/i&gt; setup.py&lt;/a&gt;
+        &lt;/li&gt;
+        &lt;/ul&gt;
+    &lt;/li&gt;
+    &lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;(&lt;tt class="docutils literal"&gt;entry_points_project&lt;/tt&gt; is also where the README and other auxiliary files
+go, while &lt;tt class="docutils literal"&gt;my_project&lt;/tt&gt; contains all the Python code.)&lt;/p&gt;
+&lt;p&gt;When you’re done, you will have a project that can be executed by:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;&lt;tt class="docutils literal"&gt;python &lt;span class="pre"&gt;-m&lt;/span&gt; my_project&lt;/tt&gt;&lt;/li&gt;
+&lt;li&gt;&lt;tt class="docutils literal"&gt;my_project&lt;/tt&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Provided that you have your Python directory and its &lt;tt class="docutils literal"&gt;Scripts\&lt;/tt&gt; subdirectory on
+the %PATH%, this will &lt;strong&gt;also work in Windows&lt;/strong&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="step-1-create-a-main-py-file"&gt;
+&lt;h2&gt;Step 1: create a &lt;tt class="docutils literal"&gt;__main__.py&lt;/tt&gt; file&lt;/h2&gt;
+&lt;p&gt;In order to implement the first desired result, you need to create a
+&lt;tt class="docutils literal"&gt;__main__.py&lt;/tt&gt; file in your package.  This file needs to contain a &lt;tt class="docutils literal"&gt;main()&lt;/tt&gt;
+function that takes no arguments, and also a special passage to determine code
+to run:&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external" href="https://chriswarrick.com/listings/entry_points_project/my_project/__main__.py.html"&gt;entry_points_project/my_project/__main__.py&lt;/a&gt;&lt;/p&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_a66e3d3ac6cc445bb7a8df70f484a529-1"&gt;&lt;/a&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;sys&lt;/span&gt;
+&lt;a name="rest_code_a66e3d3ac6cc445bb7a8df70f484a529-2"&gt;&lt;/a&gt;
+&lt;a name="rest_code_a66e3d3ac6cc445bb7a8df70f484a529-3"&gt;&lt;/a&gt;
+&lt;a name="rest_code_a66e3d3ac6cc445bb7a8df70f484a529-4"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;a name="rest_code_a66e3d3ac6cc445bb7a8df70f484a529-5"&gt;&lt;/a&gt;    &lt;span class="sd"&gt;"""The main routine."""&lt;/span&gt;
+&lt;a name="rest_code_a66e3d3ac6cc445bb7a8df70f484a529-6"&gt;&lt;/a&gt;    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;args&lt;/span&gt; &lt;span class="ow"&gt;is&lt;/span&gt; &lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;a name="rest_code_a66e3d3ac6cc445bb7a8df70f484a529-7"&gt;&lt;/a&gt;        &lt;span class="n"&gt;args&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;:]&lt;/span&gt;
+&lt;a name="rest_code_a66e3d3ac6cc445bb7a8df70f484a529-8"&gt;&lt;/a&gt;
+&lt;a name="rest_code_a66e3d3ac6cc445bb7a8df70f484a529-9"&gt;&lt;/a&gt;    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"This is the main routine."&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_a66e3d3ac6cc445bb7a8df70f484a529-10"&gt;&lt;/a&gt;    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"It should do something interesting."&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_a66e3d3ac6cc445bb7a8df70f484a529-11"&gt;&lt;/a&gt;
+&lt;a name="rest_code_a66e3d3ac6cc445bb7a8df70f484a529-12"&gt;&lt;/a&gt;    &lt;span class="c"&gt;# Do argument parsing here (eg. with argparse) and anything else&lt;/span&gt;
+&lt;a name="rest_code_a66e3d3ac6cc445bb7a8df70f484a529-13"&gt;&lt;/a&gt;    &lt;span class="c"&gt;# you want your project to do.&lt;/span&gt;
+&lt;a name="rest_code_a66e3d3ac6cc445bb7a8df70f484a529-14"&gt;&lt;/a&gt;
+&lt;a name="rest_code_a66e3d3ac6cc445bb7a8df70f484a529-15"&gt;&lt;/a&gt;&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;__name__&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s"&gt;"__main__"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;a name="rest_code_a66e3d3ac6cc445bb7a8df70f484a529-16"&gt;&lt;/a&gt;    &lt;span class="n"&gt;main&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;ol class="arabic simple"&gt;
+&lt;li&gt;The &lt;tt class="docutils literal"&gt;if __name__ == "__main__":&lt;/tt&gt; idiom, as &lt;a class="reference external" href="https://docs.python.org/3/library/__main__.html"&gt;documented here&lt;/a&gt;, is used to check whether
+this is executed as the top-level file, or if it has been imported by someone
+else (in this case, executing the &lt;tt class="docutils literal"&gt;main()&lt;/tt&gt; function is not always intended).&lt;/li&gt;
+&lt;li&gt;The &lt;tt class="docutils literal"&gt;main()&lt;/tt&gt; function must not take any arguments, because that’s how
+&lt;tt class="docutils literal"&gt;entry_points&lt;/tt&gt; executes things.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;div class="section" id="step-2-adjust-setup-py-accordingly"&gt;
+&lt;h2&gt;Step 2: adjust &lt;tt class="docutils literal"&gt;setup.py&lt;/tt&gt; accordingly&lt;/h2&gt;
+&lt;p&gt;This is the real deal: create the entry points in your &lt;tt class="docutils literal"&gt;setup.py&lt;/tt&gt; file.&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external" href="https://chriswarrick.com/listings/entry_points_project/setup.py.html"&gt;entry_points_project/setup.py&lt;/a&gt;&lt;/p&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_f5d5c58ec74f4eb9836ee4edeaca9446-1"&gt;&lt;/a&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;setuptools&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;setup&lt;/span&gt;
+&lt;a name="rest_code_f5d5c58ec74f4eb9836ee4edeaca9446-2"&gt;&lt;/a&gt;
+&lt;a name="rest_code_f5d5c58ec74f4eb9836ee4edeaca9446-3"&gt;&lt;/a&gt;&lt;span class="n"&gt;setup&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;'my_project'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;a name="rest_code_f5d5c58ec74f4eb9836ee4edeaca9446-4"&gt;&lt;/a&gt;      &lt;span class="n"&gt;version&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;'0.1.0'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;a name="rest_code_f5d5c58ec74f4eb9836ee4edeaca9446-5"&gt;&lt;/a&gt;      &lt;span class="n"&gt;packages&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s"&gt;'my_project'&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;
+&lt;a name="rest_code_f5d5c58ec74f4eb9836ee4edeaca9446-6"&gt;&lt;/a&gt;      &lt;span class="n"&gt;entry_points&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_f5d5c58ec74f4eb9836ee4edeaca9446-7"&gt;&lt;/a&gt;          &lt;span class="s"&gt;'console_scripts'&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;
+&lt;a name="rest_code_f5d5c58ec74f4eb9836ee4edeaca9446-8"&gt;&lt;/a&gt;              &lt;span class="s"&gt;'my_project = my_project.__main__:main'&lt;/span&gt;
+&lt;a name="rest_code_f5d5c58ec74f4eb9836ee4edeaca9446-9"&gt;&lt;/a&gt;          &lt;span class="p"&gt;]&lt;/span&gt;
+&lt;a name="rest_code_f5d5c58ec74f4eb9836ee4edeaca9446-10"&gt;&lt;/a&gt;      &lt;span class="p"&gt;},&lt;/span&gt;
+&lt;a name="rest_code_f5d5c58ec74f4eb9836ee4edeaca9446-11"&gt;&lt;/a&gt;      &lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;ol class="arabic simple"&gt;
+&lt;li&gt;You must use setuptools, otherwise this won’t work.&lt;/li&gt;
+&lt;li&gt;The most important piece of code is the &lt;tt class="docutils literal"&gt;entry_points&lt;/tt&gt; declaration
+(unsurprisingly).&lt;/li&gt;
+&lt;li&gt;The declaration reads&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre class="code text"&gt;&lt;a name="rest_code_f21b6027a80442799a64a521fd33e6e2-1"&gt;&lt;/a&gt;"name_of_executable = module.with:function_to_execute"
+&lt;/pre&gt;&lt;ol class="arabic simple" start="4"&gt;
+&lt;li&gt;If you are developing a GUI application (in Tkinter, PyQt/PySide,
+WxPython, PyGTK, PyGame…), you should change the declaration to
+&lt;tt class="docutils literal"&gt;gui_scripts&lt;/tt&gt;.&lt;/li&gt;
+&lt;li&gt;You can create multiple scripts this way.  You can also have multiple
+&lt;tt class="docutils literal"&gt;console_scripts&lt;/tt&gt; &lt;em&gt;and&lt;/em&gt; &lt;tt class="docutils literal"&gt;gui_scripts&lt;/tt&gt; in one setup file.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p class="text-muted"&gt;All &lt;a class="reference external" href="https://chriswarrick.com/listings/entry_points_project/"&gt;code samples&lt;/a&gt; are Copyright © 2014 Chris Warrick and licensed
+under &lt;a class="reference external" href="http://creativecommons.org/licenses/by-nc-nd/3.0/"&gt;CC-BY 3.0&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;&lt;/div&gt;</description><guid>https://chriswarrick.com/pl/blog/2014/09/15/python-apps-the-right-way-entry_points-and-scripts/</guid><pubDate>Mon, 15 Sep 2014 16:00:00 GMT</pubDate></item><item><title>Jekyll for Dummies</title><link>https://chriswarrick.com/pl/blog/2010/12/27/jekyll-for-dummies/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;This post is an introduction to Jekyll, an awesome, &lt;em&gt;simple, blog aware, static site generator&lt;/em&gt;. It’s a how-to helping you in setting up Jekyll.&lt;/p&gt;
 &lt;p&gt;…even though I am currently using &lt;a class="reference external" href="http://kwpolska.tk/blog/2013/02/08/nikola-the-best-blog-engine-ever/"&gt;Nikola&lt;/a&gt;, and I suggest you to do the same.&lt;/p&gt;
-&lt;p class="more"&gt;&lt;a href="https://chriswarrick.com/pl/blog/2010/12/27/jekyll-for-dummies/"&gt;Czytaj więcej…&lt;/a&gt; (19 paragraphs remaining — a 2 minutes’ read)&lt;/p&gt;&lt;/div&gt;</description><guid>https://chriswarrick.com/pl/blog/2010/12/27/jekyll-for-dummies/</guid><pubDate>Sun, 26 Dec 2010 23:00:00 GMT</pubDate></item></channel></rss>
+&lt;!-- TEASER_END --&gt;
+&lt;div class="section" id="about-jekyll"&gt;
+&lt;h2&gt;About Jekyll&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Jekyll&lt;/p&gt;
+&lt;p&gt;By Tom Preston-Werner, Nick Quaranto, and many awesome contributors!&lt;/p&gt;
+&lt;p&gt;Jekyll is a simple, blog aware, static site generator. It takes a template directory (representing the raw form of a website), runs it through Textile or Markdown and Liquid converters, and spits out a complete, static website suitable for serving with Apache or your favorite web server. This is also the engine behind &lt;a class="reference external" href="http://pages.github.com"&gt;GitHub Pages&lt;/a&gt;, which you can use to host your project’s page or blog right here from GitHub.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;(A quote from the README)&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="step-1-install-jekyll"&gt;
+&lt;h2&gt;Step 1: Install Jekyll&lt;/h2&gt;
+&lt;p&gt;First of, you have to install Jekyll. You can do it either on your server or on
+your home machine, if you’ll develop a crazy way to &lt;a class="reference external" href="https://github.com/mojombo/jekyll/wiki/Deployment"&gt;deploy&lt;/a&gt; it. Another way
+is to use &lt;a class="reference external" href="http://pages.github.com"&gt;GitHub Pages&lt;/a&gt;. On Linux, you can do it like this:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+$ gem install jekyll --user-install
+&lt;/pre&gt;
+&lt;p&gt;If you have problems, you might have to install an approperiate package. The &lt;a class="reference external" href="http://github.com/mojombo/jekyll/wiki"&gt;Jekyll Wiki&lt;/a&gt; has more information about it: &lt;a class="reference external" href="https://github.com/mojombo/jekyll/wiki/Install"&gt;Install&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="step-2-configure-jekyll-and-prepare-the-directories"&gt;
+&lt;h2&gt;Step 2: Configure Jekyll and prepare the directories&lt;/h2&gt;
+&lt;p&gt;Create a directory for it. I’m using &lt;tt class="docutils literal"&gt;~/jekyll&lt;/tt&gt;. Go into that directory and create two directories and two files. The directories are &lt;tt class="docutils literal"&gt;_layouts&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;_posts&lt;/tt&gt;. The files are &lt;tt class="docutils literal"&gt;_config.yml&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;index.html&lt;/tt&gt;. If you want, you can create a &lt;tt class="docutils literal"&gt;_site&lt;/tt&gt; directory. Now, you have to fill them with content.&lt;/p&gt;
+&lt;p&gt;The directory &lt;tt class="docutils literal"&gt;_layouts&lt;/tt&gt; stores layouts of your site. You can have a different layout for your home page, posts or pages. You can use template data (see below). The files shall be HTML files &lt;strong&gt;with .yml extension&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;The directory &lt;tt class="docutils literal"&gt;_posts&lt;/tt&gt; is a place for your post written in Markdown or Textile. It must begin with the &lt;a class="reference external" href="https://github.com/mojombo/jekyll/wiki/YAML-Front-Matter"&gt;YAML&lt;/a&gt; Front Matter. The file name must be as follows: &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;YEAR-MO-DD-the-name-of-the-post-that-will-be-used-in-the-url.PARSER&lt;/span&gt;&lt;/tt&gt;, where &lt;tt class="docutils literal"&gt;YEAR&lt;/tt&gt; is current year, &lt;tt class="docutils literal"&gt;MO&lt;/tt&gt; is current month, &lt;tt class="docutils literal"&gt;DD&lt;/tt&gt; is the day and &lt;tt class="docutils literal"&gt;PARSER&lt;/tt&gt; is either &lt;tt class="docutils literal"&gt;markdown&lt;/tt&gt; or &lt;tt class="docutils literal"&gt;textile&lt;/tt&gt;.&lt;/p&gt;
+&lt;p&gt;The file &lt;tt class="docutils literal"&gt;_config.yml&lt;/tt&gt; is the configuration of Jekyll. You can find more information at the awesome Jekyll Wiki in the article &lt;a class="reference external" href="https://github.com/mojombo/jekyll/wiki/Configuration"&gt;Configuration&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;The file &lt;tt class="docutils literal"&gt;index.html&lt;/tt&gt; is the main page of your blog. It must begin with the &lt;a class="reference external" href="https://github.com/mojombo/jekyll/wiki/YAML-Front-Matter"&gt;YAML&lt;/a&gt; Front Matter.&lt;/p&gt;
+&lt;div class="section" id="template-data"&gt;
+&lt;h3&gt;Template data&lt;/h3&gt;
+&lt;p&gt;The template data are elements inserted into layouts and generic pages. Some of the most important are &lt;tt class="docutils literal"&gt;content&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;title&lt;/tt&gt;. You can learn about all of them in a Wiki article, called [Template Data][tdata].&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="step-3-continue-making-the-site"&gt;
+&lt;h2&gt;Step 3: Continue making the site&lt;/h2&gt;
+&lt;p&gt;Now you should continue making your blog. You can make some feeds, pages, layouts, CSS templates and write posts OR import posts from your existing blog.&lt;/p&gt;
+&lt;p&gt;Step 4: Generate your site&lt;/p&gt;
+&lt;p&gt;Unless you’re using GitHub Pages, you must generate the page. It’s easy, you must use the &lt;tt class="docutils literal"&gt;jekyll&lt;/tt&gt; shell command and you get Jekyll in the directory, which you’ve set in the config file. If you’re using GH Pages, you just have to push into your repository.&lt;/p&gt;
+&lt;p&gt;Why use Jekyll?&lt;/p&gt;
+&lt;p&gt;Jekyll is awesome, because it generates &lt;em&gt;static&lt;/em&gt; webpages with use of Markdown. This makes this post’s original source easily readable. Below this paragraph, I’ve got all the links that I used in this post.&lt;/p&gt;
+&lt;blockquote&gt;
+[index]:         &lt;a class="reference external" href="https://github.com/Kwpolska/kwsblog/blob/master/index.html"&gt;https://github.com/Kwpolska/kwsblog/blob/master/index.html&lt;/a&gt; "My index.html"
+[github pages]:  &lt;a class="reference external" href="http://pages.github.com"&gt;http://pages.github.com&lt;/a&gt; "GitHub Pages"
+[wiki]:          &lt;a class="reference external" href="http://github.com/mojombo/jekyll/wiki"&gt;http://github.com/mojombo/jekyll/wiki&lt;/a&gt; "Jekyll Wiki"
+[install]:       &lt;a class="reference external" href="https://github.com/mojombo/jekyll/wiki/Install"&gt;https://github.com/mojombo/jekyll/wiki/Install&lt;/a&gt; "Jekyll Wiki: Install"
+[deploy]:        &lt;a class="reference external" href="https://github.com/mojombo/jekyll/wiki/Deployment"&gt;https://github.com/mojombo/jekyll/wiki/Deployment&lt;/a&gt; "Jekyll Wiki: Deployment"
+[configuration]: &lt;a class="reference external" href="https://github.com/mojombo/jekyll/wiki/Configuration"&gt;https://github.com/mojombo/jekyll/wiki/Configuration&lt;/a&gt; "Jekyll Wiki: Configuration"
+[yaml]:          &lt;a class="reference external" href="https://github.com/mojombo/jekyll/wiki/YAML-Front-Matter"&gt;https://github.com/mojombo/jekyll/wiki/YAML-Front-Matter&lt;/a&gt; "Jekyll Wiki: YAML Front Matter"
+[tdata]:         &lt;a class="reference external" href="https://github.com/mojombo/jekyll/wiki/Template-Data"&gt;https://github.com/mojombo/jekyll/wiki/Template-Data&lt;/a&gt; "Jekyll Wiki: Liquid template data"&lt;/blockquote&gt;
+&lt;p&gt;There are a lot of other awesome things in it.&lt;/p&gt;
+&lt;p&gt;But I switched to &lt;a class="reference external" href="http://kwpolska.tk/blog/2013/02/08/nikola-the-best-blog-engine-ever/"&gt;Nikola&lt;/a&gt; and reStructuredText nonetheless.&lt;/p&gt;
+&lt;/div&gt;&lt;/div&gt;</description><guid>https://chriswarrick.com/pl/blog/2010/12/27/jekyll-for-dummies/</guid><pubDate>Sun, 26 Dec 2010 23:00:00 GMT</pubDate></item></channel></rss>

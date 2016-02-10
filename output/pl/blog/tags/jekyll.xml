@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chris Warrick (jekyll)</title><link>https://chriswarrick.com/</link><description></description><atom:link rel="self" href="https://chriswarrick.com/pl/blog/tags/jekyll.xml" type="application/rss+xml"></atom:link><language>pl</language><lastBuildDate>Sun, 11 Oct 2015 17:30:02 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Static Site Generator Speed Test (Nikola, Pelican, Hexo, Octopress)</title><link>https://chriswarrick.com/pl/blog/2015/07/23/ssg-speed-test/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;I tested the speed of four static site generators: Nikola, Pelican, Hexo and Octopress, in a clean environment.  Spoiler alert: Nikola won.&lt;/p&gt;
+<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>Chris Warrick (jekyll)</title><link>https://chriswarrick.com/</link><description></description><atom:link href="https://chriswarrick.com/pl/blog/tags/jekyll.xml" rel="self" type="application/rss+xml"></atom:link><language>pl</language><lastBuildDate>Wed, 10 Feb 2016 13:42:31 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Static Site Generator Speed Test (Nikola, Pelican, Hexo, Octopress)</title><link>https://chriswarrick.com/pl/blog/2015/07/23/ssg-speed-test/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;I tested the speed of four static site generators: Nikola, Pelican, Hexo and Octopress, in a clean environment.  Spoiler alert: Nikola won.&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;Disclaimer:&lt;/em&gt; author is a developer and user of Nikola.  The test environments used were the same for all four generators.&lt;/p&gt;
 &lt;div class="section" id="generators-tested"&gt;
 &lt;h2&gt;Generators tested&lt;/h2&gt;
@@ -9,11 +9,151 @@
 &lt;li&gt;&lt;a class="reference external" href="https://hexo.io/"&gt;Hexo&lt;/a&gt; v3.1.1, by Tommy Chen and contributors; Node.js; MIT license&lt;/li&gt;
 &lt;li&gt;&lt;a class="reference external" href="http://octopress.org/"&gt;Octopress&lt;/a&gt; v2.0, by Brandon Mathis and contributors; Ruby; MIT license (based on Jekyll)&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p class="more"&gt;&lt;a href="https://chriswarrick.com/pl/blog/2015/07/23/ssg-speed-test/"&gt;Czytaj więcej…&lt;/a&gt; (10 paragraphs remaining — a 3 minutes’ read)&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;</description><guid>https://chriswarrick.com/pl/blog/2015/07/23/ssg-speed-test/</guid><pubDate>Thu, 23 Jul 2015 15:10:00 GMT</pubDate></item><item><title>A New Engine… Again (And A Few Other Changes)</title><link>https://chriswarrick.com/pl/blog/2011/10/20/a-new-engine-again/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;Update 2013-02-07: Now running Nikola.  Hyde was a mess.&lt;/p&gt;
-&lt;p class="more"&gt;&lt;a href="https://chriswarrick.com/pl/blog/2011/10/20/a-new-engine-again/"&gt;Czytaj więcej…&lt;/a&gt; (0 paragraphs remaining — a 1 minutes’ read)&lt;/p&gt;&lt;/div&gt;</description><guid>https://chriswarrick.com/pl/blog/2011/10/20/a-new-engine-again/</guid><pubDate>Thu, 20 Oct 2011 19:00:00 GMT</pubDate></item><item><title>Polish Version</title><link>https://chriswarrick.com/pl/blog/2011/02/07/polish-version/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;Update: removed.&lt;/p&gt;
-&lt;p class="more"&gt;&lt;a href="https://chriswarrick.com/pl/blog/2011/02/07/polish-version/"&gt;Czytaj więcej…&lt;/a&gt; (1 paragraphs remaining — a 1 minutes’ read)&lt;/p&gt;&lt;/div&gt;</description><guid>https://chriswarrick.com/pl/blog/2011/02/07/polish-version/</guid><pubDate>Sun, 06 Feb 2011 23:00:00 GMT</pubDate></item><item><title>Jekyll for Dummies</title><link>https://chriswarrick.com/pl/blog/2010/12/27/jekyll-for-dummies/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;This post is an introduction to Jekyll, an awesome, &lt;em&gt;simple, blog aware, static site generator&lt;/em&gt;. It’s a how-to helping you in setting up Jekyll.&lt;/p&gt;
+&lt;!-- TEASER_END --&gt;
+&lt;/div&gt;
+&lt;div class="section" id="setup"&gt;
+&lt;h2&gt;Setup&lt;/h2&gt;
+&lt;p&gt;Every site generator was set up in an identical &lt;strong&gt;clean&lt;/strong&gt; environment, using Ubuntu 15.04, x64, as a 512 MB DigitalOcean VM with a 20 GB SSD drive. The machine was updated, an user account with passwordless sudo was created, and &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;build-essential&lt;/span&gt;&lt;/tt&gt; was installed. Tests were run by an automated installer and timer, written in Bash and C, respectively (custom; source code is available). Pre-compiled wheels for lxml and Pillow were used for Nikola testing, because lxml cannot be compiled with less than 1.5 GB of RAM; they were built with &lt;tt class="docutils literal"&gt;pip wheel lxml pillow&lt;/tt&gt; outside of the testing environment (on a local VM). The machine was reimaged after every test. Lists of installed Python/Ruby/Node packages are available in the GitHub repo (see below).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="input"&gt;
+&lt;h2&gt;Input&lt;/h2&gt;
+&lt;p&gt;Every site generator was given the same set of 179 log files from #nikola on freenode. The raw logs contain 1209507 bytes (1.1 MiB) of plain text. The logs were processed into post files, which fit the format of each engine (reST or Markdown), containing mandatory metadata, an introductory paragraph and a code block (using &lt;tt class="docutils literal"&gt;::&lt;/tt&gt; for reST, four spaces for Markdown). One file had to be altered, because they contained the &lt;tt class="docutils literal"&gt;{{&lt;/tt&gt;  sequence, which was misinterpreted as internal templating by Hexo and Octopress — it was replaced by a harmless &lt;tt class="docutils literal"&gt;~~&lt;/tt&gt; sequence for all four generators.&lt;/p&gt;
+&lt;p&gt;The generators used default config, with one exception: highlighting was disabled for Hexo. The highlighting would cause an unfair advantage (other generators did not automatically highlight the code boxes), and led to very high build times (see table 4 in comparison spreadsheet).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="build"&gt;
+&lt;h2&gt;Build&lt;/h2&gt;
+&lt;p&gt;Sites were built a total of 110 times, in 10 cycles of 11 builds each. The first build of a cycle was a fresh build, the remaining 10 were rebuilds. Sites and cache files were removed after each cycle.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="results"&gt;
+&lt;h2&gt;Results&lt;/h2&gt;
+&lt;p&gt;Because Nikola and Hexo use incremental rebuilds, the results were compared in two groups: 11 and 10 runs.&lt;/p&gt;
+&lt;div class="section" id="average-build-times-in-seconds"&gt;
+&lt;h3&gt;Average build times (in seconds)&lt;/h3&gt;
+&lt;table class="table table-bordered table-hover"&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;#&lt;/th&gt;
+&lt;th&gt;Generator&lt;/th&gt;
+&lt;th&gt;Average of 11 runs&lt;/th&gt;
+&lt;th&gt;Average of 10 runs&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;th scope="row"&gt;1&lt;/th&gt;
+&lt;td&gt;Nikola&lt;/td&gt;
+&lt;td&gt;2.38290&lt;/td&gt;
+&lt;td&gt;2.06057&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;th scope="row"&gt;2&lt;/th&gt;
+&lt;td&gt;Pelican&lt;/td&gt;
+&lt;td&gt;2.61924&lt;/td&gt;
+&lt;td&gt;2.62352&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;th scope="row"&gt;3&lt;/th&gt;
+&lt;td&gt;Hexo&lt;/td&gt;
+&lt;td&gt;6.27361&lt;/td&gt;
+&lt;td&gt;6.21267&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;th scope="row"&gt;4&lt;/th&gt;
+&lt;td&gt;Octopress&lt;/td&gt;
+&lt;td&gt;9.57618&lt;/td&gt;
+&lt;td&gt;9.47550&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;&lt;/div&gt;
+&lt;div class="section" id="full-results"&gt;
+&lt;h3&gt;Full results&lt;/h3&gt;
+&lt;p class="lead"&gt;Full results are available in &lt;a class="reference external" href="https://chriswarrick.com/pub/ssg-test-results.ods"&gt;ods format&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="raw-results-and-configuration"&gt;
+&lt;h3&gt;Raw results and configuration&lt;/h3&gt;
+&lt;p&gt;Raw results (&lt;tt class="docutils literal"&gt;.csv&lt;/tt&gt; files from the test runner) and configuration is available in the &lt;a class="reference external" href="https://github.com/Kwpolska/ssg-test"&gt;GitHub repo&lt;/a&gt;. Log files and converted posts are not available publicly; however, they can be provided to interested parties (&lt;a class="reference external" href="https://chriswarrick.com/contact/"&gt;contact me&lt;/a&gt; to obtain them).&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="questions-and-answers"&gt;
+&lt;h2&gt;Questions and answers&lt;/h2&gt;
+&lt;div class="section" id="why-not-plain-jekyll"&gt;
+&lt;h3&gt;Why not plain Jekyll?&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;Plain Jekyll was disqualified&lt;/strong&gt; on the basis of missing many features other generators have, leading to an unfair advantage. The aim of this test was to provide similar setups for each of the four generators. Jekyll generates a very basic site that lacks some elements; a Jekyll site does not have paginated indexes, (partial) post text on indexes, any sort of archives, etc. A Jekyll site contains only one CSS file, index.html, feed.xml, and the log posts. On the other hand, sites generated by Pelican, Nikola and Hexo contain more files, which makes the builds longer and the website experience richer (archives, JS, sitemaps, tag listings).&lt;/p&gt;
+&lt;p&gt;On the basis of the above, &lt;strong&gt;Octopress&lt;/strong&gt; was chosen to represent the Jekyll universe at large. Octopress sites have more assets, a sitemap, archives and category listings — making it comparable to the other four contenders. However, tests were performed for Jekyll. The average result from 11 builds was 2.22118, while the average result from 10 builds was 2.23903. The result would land Jekyll on the 1st place for 11 builds, and on the 2nd place for 10 builds.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="why-not-myfavoritessg"&gt;
+&lt;h3&gt;Why not $MYFAVORITESSG?&lt;/h3&gt;
+&lt;p&gt;I tested only four popular generators that were easy enough to set up. I could easily extend the set if I had time and friendly enough documentation to do so. I can add a SSG, provided that:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;it’s easy to configure&lt;/li&gt;
+&lt;li&gt;it has a default config that provides a working site with a feature set comparable to other SSGs tested here (see &lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2015/07/23/ssg-speed-test/#why-not-plain-jekyll"&gt;Why not plain Jekyll?&lt;/a&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;/div&gt;</description><guid>https://chriswarrick.com/pl/blog/2015/07/23/ssg-speed-test/</guid><pubDate>Thu, 23 Jul 2015 15:10:00 GMT</pubDate></item><item><title>A New Engine… Again (And A Few Other Changes)</title><link>https://chriswarrick.com/pl/blog/2011/10/20/a-new-engine-again/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;Update 2013-02-07: Now running Nikola.  Hyde was a mess.&lt;/p&gt;
+&lt;!-- TEASER_END --&gt;&lt;/div&gt;</description><guid>https://chriswarrick.com/pl/blog/2011/10/20/a-new-engine-again/</guid><pubDate>Thu, 20 Oct 2011 19:00:00 GMT</pubDate></item><item><title>Polish Version</title><link>https://chriswarrick.com/pl/blog/2011/02/07/polish-version/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;Update: removed.&lt;/p&gt;
+&lt;!-- TEASER_END --&gt;
+&lt;p&gt;It’s not even worth leaving it here.&lt;/p&gt;&lt;/div&gt;</description><guid>https://chriswarrick.com/pl/blog/2011/02/07/polish-version/</guid><pubDate>Sun, 06 Feb 2011 23:00:00 GMT</pubDate></item><item><title>Jekyll for Dummies</title><link>https://chriswarrick.com/pl/blog/2010/12/27/jekyll-for-dummies/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;This post is an introduction to Jekyll, an awesome, &lt;em&gt;simple, blog aware, static site generator&lt;/em&gt;. It’s a how-to helping you in setting up Jekyll.&lt;/p&gt;
 &lt;p&gt;…even though I am currently using &lt;a class="reference external" href="http://kwpolska.tk/blog/2013/02/08/nikola-the-best-blog-engine-ever/"&gt;Nikola&lt;/a&gt;, and I suggest you to do the same.&lt;/p&gt;
-&lt;p class="more"&gt;&lt;a href="https://chriswarrick.com/pl/blog/2010/12/27/jekyll-for-dummies/"&gt;Czytaj więcej…&lt;/a&gt; (19 paragraphs remaining — a 2 minutes’ read)&lt;/p&gt;&lt;/div&gt;</description><guid>https://chriswarrick.com/pl/blog/2010/12/27/jekyll-for-dummies/</guid><pubDate>Sun, 26 Dec 2010 23:00:00 GMT</pubDate></item><item><title>Jekyll, Welcome Home. + OMG I WROTE SOMETHING</title><link>https://chriswarrick.com/pl/blog/2010/12/12/jekyll-welcome-home/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;Two posts for the price of one, right after the break.  What’s funny is, both
+&lt;!-- TEASER_END --&gt;
+&lt;div class="section" id="about-jekyll"&gt;
+&lt;h2&gt;About Jekyll&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Jekyll&lt;/p&gt;
+&lt;p&gt;By Tom Preston-Werner, Nick Quaranto, and many awesome contributors!&lt;/p&gt;
+&lt;p&gt;Jekyll is a simple, blog aware, static site generator. It takes a template directory (representing the raw form of a website), runs it through Textile or Markdown and Liquid converters, and spits out a complete, static website suitable for serving with Apache or your favorite web server. This is also the engine behind &lt;a class="reference external" href="http://pages.github.com"&gt;GitHub Pages&lt;/a&gt;, which you can use to host your project’s page or blog right here from GitHub.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;(A quote from the README)&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="step-1-install-jekyll"&gt;
+&lt;h2&gt;Step 1: Install Jekyll&lt;/h2&gt;
+&lt;p&gt;First of, you have to install Jekyll. You can do it either on your server or on
+your home machine, if you’ll develop a crazy way to &lt;a class="reference external" href="https://github.com/mojombo/jekyll/wiki/Deployment"&gt;deploy&lt;/a&gt; it. Another way
+is to use &lt;a class="reference external" href="http://pages.github.com"&gt;GitHub Pages&lt;/a&gt;. On Linux, you can do it like this:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+$ gem install jekyll --user-install
+&lt;/pre&gt;
+&lt;p&gt;If you have problems, you might have to install an approperiate package. The &lt;a class="reference external" href="http://github.com/mojombo/jekyll/wiki"&gt;Jekyll Wiki&lt;/a&gt; has more information about it: &lt;a class="reference external" href="https://github.com/mojombo/jekyll/wiki/Install"&gt;Install&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="step-2-configure-jekyll-and-prepare-the-directories"&gt;
+&lt;h2&gt;Step 2: Configure Jekyll and prepare the directories&lt;/h2&gt;
+&lt;p&gt;Create a directory for it. I’m using &lt;tt class="docutils literal"&gt;~/jekyll&lt;/tt&gt;. Go into that directory and create two directories and two files. The directories are &lt;tt class="docutils literal"&gt;_layouts&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;_posts&lt;/tt&gt;. The files are &lt;tt class="docutils literal"&gt;_config.yml&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;index.html&lt;/tt&gt;. If you want, you can create a &lt;tt class="docutils literal"&gt;_site&lt;/tt&gt; directory. Now, you have to fill them with content.&lt;/p&gt;
+&lt;p&gt;The directory &lt;tt class="docutils literal"&gt;_layouts&lt;/tt&gt; stores layouts of your site. You can have a different layout for your home page, posts or pages. You can use template data (see below). The files shall be HTML files &lt;strong&gt;with .yml extension&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;The directory &lt;tt class="docutils literal"&gt;_posts&lt;/tt&gt; is a place for your post written in Markdown or Textile. It must begin with the &lt;a class="reference external" href="https://github.com/mojombo/jekyll/wiki/YAML-Front-Matter"&gt;YAML&lt;/a&gt; Front Matter. The file name must be as follows: &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;YEAR-MO-DD-the-name-of-the-post-that-will-be-used-in-the-url.PARSER&lt;/span&gt;&lt;/tt&gt;, where &lt;tt class="docutils literal"&gt;YEAR&lt;/tt&gt; is current year, &lt;tt class="docutils literal"&gt;MO&lt;/tt&gt; is current month, &lt;tt class="docutils literal"&gt;DD&lt;/tt&gt; is the day and &lt;tt class="docutils literal"&gt;PARSER&lt;/tt&gt; is either &lt;tt class="docutils literal"&gt;markdown&lt;/tt&gt; or &lt;tt class="docutils literal"&gt;textile&lt;/tt&gt;.&lt;/p&gt;
+&lt;p&gt;The file &lt;tt class="docutils literal"&gt;_config.yml&lt;/tt&gt; is the configuration of Jekyll. You can find more information at the awesome Jekyll Wiki in the article &lt;a class="reference external" href="https://github.com/mojombo/jekyll/wiki/Configuration"&gt;Configuration&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;The file &lt;tt class="docutils literal"&gt;index.html&lt;/tt&gt; is the main page of your blog. It must begin with the &lt;a class="reference external" href="https://github.com/mojombo/jekyll/wiki/YAML-Front-Matter"&gt;YAML&lt;/a&gt; Front Matter.&lt;/p&gt;
+&lt;div class="section" id="template-data"&gt;
+&lt;h3&gt;Template data&lt;/h3&gt;
+&lt;p&gt;The template data are elements inserted into layouts and generic pages. Some of the most important are &lt;tt class="docutils literal"&gt;content&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;title&lt;/tt&gt;. You can learn about all of them in a Wiki article, called [Template Data][tdata].&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="step-3-continue-making-the-site"&gt;
+&lt;h2&gt;Step 3: Continue making the site&lt;/h2&gt;
+&lt;p&gt;Now you should continue making your blog. You can make some feeds, pages, layouts, CSS templates and write posts OR import posts from your existing blog.&lt;/p&gt;
+&lt;p&gt;Step 4: Generate your site&lt;/p&gt;
+&lt;p&gt;Unless you’re using GitHub Pages, you must generate the page. It’s easy, you must use the &lt;tt class="docutils literal"&gt;jekyll&lt;/tt&gt; shell command and you get Jekyll in the directory, which you’ve set in the config file. If you’re using GH Pages, you just have to push into your repository.&lt;/p&gt;
+&lt;p&gt;Why use Jekyll?&lt;/p&gt;
+&lt;p&gt;Jekyll is awesome, because it generates &lt;em&gt;static&lt;/em&gt; webpages with use of Markdown. This makes this post’s original source easily readable. Below this paragraph, I’ve got all the links that I used in this post.&lt;/p&gt;
+&lt;blockquote&gt;
+[index]:         &lt;a class="reference external" href="https://github.com/Kwpolska/kwsblog/blob/master/index.html"&gt;https://github.com/Kwpolska/kwsblog/blob/master/index.html&lt;/a&gt; "My index.html"
+[github pages]:  &lt;a class="reference external" href="http://pages.github.com"&gt;http://pages.github.com&lt;/a&gt; "GitHub Pages"
+[wiki]:          &lt;a class="reference external" href="http://github.com/mojombo/jekyll/wiki"&gt;http://github.com/mojombo/jekyll/wiki&lt;/a&gt; "Jekyll Wiki"
+[install]:       &lt;a class="reference external" href="https://github.com/mojombo/jekyll/wiki/Install"&gt;https://github.com/mojombo/jekyll/wiki/Install&lt;/a&gt; "Jekyll Wiki: Install"
+[deploy]:        &lt;a class="reference external" href="https://github.com/mojombo/jekyll/wiki/Deployment"&gt;https://github.com/mojombo/jekyll/wiki/Deployment&lt;/a&gt; "Jekyll Wiki: Deployment"
+[configuration]: &lt;a class="reference external" href="https://github.com/mojombo/jekyll/wiki/Configuration"&gt;https://github.com/mojombo/jekyll/wiki/Configuration&lt;/a&gt; "Jekyll Wiki: Configuration"
+[yaml]:          &lt;a class="reference external" href="https://github.com/mojombo/jekyll/wiki/YAML-Front-Matter"&gt;https://github.com/mojombo/jekyll/wiki/YAML-Front-Matter&lt;/a&gt; "Jekyll Wiki: YAML Front Matter"
+[tdata]:         &lt;a class="reference external" href="https://github.com/mojombo/jekyll/wiki/Template-Data"&gt;https://github.com/mojombo/jekyll/wiki/Template-Data&lt;/a&gt; "Jekyll Wiki: Liquid template data"&lt;/blockquote&gt;
+&lt;p&gt;There are a lot of other awesome things in it.&lt;/p&gt;
+&lt;p&gt;But I switched to &lt;a class="reference external" href="http://kwpolska.tk/blog/2013/02/08/nikola-the-best-blog-engine-ever/"&gt;Nikola&lt;/a&gt; and reStructuredText nonetheless.&lt;/p&gt;
+&lt;/div&gt;&lt;/div&gt;</description><guid>https://chriswarrick.com/pl/blog/2010/12/27/jekyll-for-dummies/</guid><pubDate>Sun, 26 Dec 2010 23:00:00 GMT</pubDate></item><item><title>Jekyll, Welcome Home. + OMG I WROTE SOMETHING</title><link>https://chriswarrick.com/pl/blog/2010/12/12/jekyll-welcome-home/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;Two posts for the price of one, right after the break.  What’s funny is, both
 are out of date, as this blog has went through &lt;a class="reference external" href="http://kwpolska.tk/blog/2011/10/20/a-new-engine-again/"&gt;Hyde&lt;/a&gt; and is currently powered
 by &lt;a class="reference external" href="http://kwpolska.tk/blog/2013/02/08/nikola-the-best-blog-engine-ever/"&gt;Nikola&lt;/a&gt;.&lt;/p&gt;
-&lt;p class="more"&gt;&lt;a href="https://chriswarrick.com/pl/blog/2010/12/12/jekyll-welcome-home/"&gt;Czytaj więcej…&lt;/a&gt; (3 paragraphs remaining — a 1 minutes’ read)&lt;/p&gt;&lt;/div&gt;</description><guid>https://chriswarrick.com/pl/blog/2010/12/12/jekyll-welcome-home/</guid><pubDate>Sat, 11 Dec 2010 23:00:00 GMT</pubDate></item></channel></rss>
+&lt;!-- TEASER_END --&gt;
+&lt;div class="section" id="jekyll-welcome-home-december-12th-2010"&gt;
+&lt;h2&gt;“Jekyll, Welcome Home.”, December 12th, 2010&lt;/h2&gt;
+&lt;p&gt;The Kw’s Blog was redone. The old blog was run by WordPress, Constructor theme and XHTML posts. Now, I’m using Jekyll and Markdown posts. That’s better. All the content was imported and converted to Markdown (except for 3 posts, they are available in HTML forms).  You can see a &lt;a class="reference external" href="http://kwcdn.tk/blog-content/htmlvsmd.html"&gt;comparison of Jekyll and WordPress posts&lt;/a&gt;).&lt;/p&gt;
+&lt;p&gt;And even better: you can see “this” instead of "this" (currently only in this post, it will not be added into older ones).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="omg-i-wrote-something-december-11th-2010"&gt;
+&lt;h2&gt;“OMG I WROTE SOMETHING”, December 11th, 2010&lt;/h2&gt;
+&lt;p&gt;This is a jekyll post. &lt;em&gt;I&lt;/em&gt; can use Markdown. &lt;strong&gt;You&lt;/strong&gt; cannot. And for the sake of it, I imported the old blog entries. I had to modify them A LOT. I hope everything will work fine.&lt;/p&gt;
+&lt;/div&gt;&lt;/div&gt;</description><guid>https://chriswarrick.com/pl/blog/2010/12/12/jekyll-welcome-home/</guid><pubDate>Sat, 11 Dec 2010 23:00:00 GMT</pubDate></item></channel></rss>

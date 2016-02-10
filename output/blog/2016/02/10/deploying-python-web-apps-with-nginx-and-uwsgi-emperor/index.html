@@ -1,0 +1,437 @@
+<html prefix="
+og: http://ogp.me/ns#
+article: http://ogp.me/ns/article#
+" lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="A tutorial to deploy Python Web Applications to popular Linux systems.">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Deploying Python Web Applications with nginx and uWSGI Emperor | Chris Warrick</title>
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
+<link href="/assets/css/all.css" rel="stylesheet" type="text/css">
+<link rel="alternate" type="application/rss+xml" title="RSS (en)" href="/rss.xml">
+<link rel="alternate" type="application/rss+xml" title="RSS (pl)" href="/pl/rss.xml">
+<link rel="canonical" href="https://chriswarrick.com/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/">
+<link rel="icon" href="/favicon.ico" sizes="16x16">
+<!--[if lt IE 9]><script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]--><meta name="application-name" content="Chris Warrick">
+<meta name="msapplication-starturl" content="https://chriswarrick.com/">
+<meta name="msapplication-navbutton-color" content="#00aadd">
+<meta name="theme-color" content="#00aadd">
+<meta name="description" itemprop="description" content="A tutorial to deploy Python Web Applications to popular Linux systems.">
+<meta name="author" content="Chris Warrick">
+<link rel="prev" href="/blog/2015/12/27/windows-10-november-upgrade-windows-as-a-dis-service/" title="Windows 10 November Upgrade: Windows as a (Dis-)service" type="text/html">
+<meta property="og:site_name" content="Chris Warrick">
+<meta property="og:title" content="Deploying Python Web Applications with nginx and uWSGI Emperor">
+<meta property="og:url" content="https://chriswarrick.com/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/">
+<meta property="og:description" content="A tutorial to deploy Python Web Applications to popular Linux systems.">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2016-02-10T15:00:00+01:00">
+<meta property="article:tag" content="Arch Linux">
+<meta property="article:tag" content="Django">
+<meta property="article:tag" content="Fedora">
+<meta property="article:tag" content="Flask">
+<meta property="article:tag" content="Internet">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="nginx">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="systemd">
+<meta property="article:tag" content="Ubuntu">
+<meta property="article:tag" content="uWSGI">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:creator" content="@Kwpolska">
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-kw navbar-static-top" role="navigation"><div class="container">
+<!-- This keeps the margins nice -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-kw-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="https://chriswarrick.com/">
+                <img src="/assets/img/logo.png" alt="Chris Warrick" id="logo"><span id="blog-title">Chris Warrick</span>
+            </a>
+        </div>
+<!-- /.navbar-header -->
+        <div class="collapse navbar-collapse navbar-kw-collapse">
+            <ul class="nav navbar-nav">
+<li>
+<a href="/blog/">Archives</a>
+                </li>
+<li>
+<a href="/blog/tags/">Tags</a>
+                </li>
+<li>
+<a href="/contact/">Contact</a>
+                </li>
+<li>
+<a href="/brand/">Brand</a>
+                </li>
+<li>
+<a href="/kwbot/">KwBot</a>
+                </li>
+<li>
+<a href="/projects/">Projects</a>
+                </li>
+<li>
+<a href="/search/">Search</a>
+
+                
+            </li>
+</ul>
+<ul class="nav navbar-nav navbar-right">
+<li>            </li>
+<li><a href="https://chriswarrick.com/pl/" rel="alternate" hreflang="pl">Polski</a></li>
+
+                
+            </ul>
+</div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav><!-- End of Menubar --><div class="container" id="content">
+    <div class="body-content">
+        <!--Body content-->
+        <div class="row">
+        <div id="cookiecontainer"></div>
+            
+<article class="post-text h-entry hentry postpage postbox" itemscope="itemscope" itemtype="http://schema.org/Article"><header class="page-header"><h1 class="p-name entry-title" itemprop="headline name">
+    <a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/" class="u-url">Deploying Python Web Applications with nginx and uWSGI&nbsp;Emperor</a>
+    </h1>
+
+    <div class="metadata">
+<a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/" rel="bookmark" class="u-published"><time class="published dt-published" datetime="2016-02-10T15:00:00+01:00" itemprop="datePublished" title="2016-02-10 15:00">2016-02-10 15:00</time></a>                <ul itemprop="keywords" class="tags">
+<li class="section-bubble" style="background-color: #ffd43b"><a href="/python/">Python</a></li>
+           <li><a class="tag p-category" href="/blog/tags/arch-linux/" rel="tag">Arch&nbsp;Linux</a></li>
+           <li><a class="tag p-category" href="/blog/tags/django/" rel="tag">Django</a></li>
+           <li><a class="tag p-category" href="/blog/tags/fedora/" rel="tag">Fedora</a></li>
+           <li><a class="tag p-category" href="/blog/tags/flask/" rel="tag">Flask</a></li>
+           <li><a class="tag p-category" href="/blog/tags/internet/" rel="tag">Internet</a></li>
+           <li><a class="tag p-category" href="/blog/tags/linux/" rel="tag">Linux</a></li>
+           <li><a class="tag p-category" href="/blog/tags/nginx/" rel="tag">nginx</a></li>
+           <li><a class="tag p-category" href="/blog/tags/python/" rel="tag">Python</a></li>
+           <li><a class="tag p-category" href="/blog/tags/systemd/" rel="tag">systemd</a></li>
+           <li><a class="tag p-category" href="/blog/tags/ubuntu/" rel="tag">Ubuntu</a></li>
+           <li><a class="tag p-category" href="/blog/tags/uwsgi/" rel="tag">uWSGI</a></li>
+        
+        </ul>
+</div>
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div class="lead"><div>
+<p>You just wrote a great Python web application. Now, you want to share it with the world. In order to do that, you need a server, and some software to do that for&nbsp;you.</p>
+<p>The following is a comprehensive guide on how to accomplish that, on multiple Linux-based operating systems, using nginx and uWSGI Emperor. It doesn’t force you to use any specific web framework — Flask, Django, Pyramid, Bottle will all work. Written for Ubuntu, Fedora and Arch Linux (should be helpful for other systems,&nbsp;too)</p>
+</div></div>
+<div class="section" id="getting-started">
+<h2>Getting&nbsp;Started</h2>
+<p>In order to deploy your web application, you need a server that gives you root and ssh access — in other words, a VPS (or a dedicated server, or a datacenter lease…). If you’re looking for a great VPS service for a low price, I recommend <a class="reference external" href="https://www.digitalocean.com/?refcode=7983689b2ecc">DigitalOcean</a> (reflink <a class="footnote-reference" href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id6" id="id1">[1]</a>), which offers a $5/mo service <a class="footnote-reference" href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id7" id="id2">[2]</a>. If you want to play along at home, without buying a VPS, you can create a virtual machine on your own, or use a Vagrant with a <a class="reference external" href="https://getfedora.org/en/cloud/download/">Vagrant box for Fedora 23</a> (I recommend disabling SELinux, more on that&nbsp;later).</p>
+<p>Your server should also run a modern Linux-based operating system. I tested and wrote this guide for Ubuntu 15.10 <a class="footnote-reference" href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id8" id="id3">[3]</a>, Fedora 23 and Arch Linux, but other Linux distributions (and perhaps *BSD) will work (in places where the instructions are split three-way, try coming up with your own, reading documentation and config files).  Unfortunately, all Linux distributions have their own ideas when it comes to running and managing nginx and&nbsp;UWSGI.</p>
+<div class="note">
+<p class="first admonition-title">Note</p>
+<p class="last">All the commands in this tutorial are meant to be run <strong>as root</strong> — run <tt class="docutils literal">su</tt> or <tt class="docutils literal">sudo su</tt> first to get an administrative&nbsp;shell.</p>
+</div>
+<p>Start by installing virtualenv, nginx and uWSGI. I recommend using your operating system packages. For uWSGI, we need the <tt class="docutils literal">logfile</tt> and <tt class="docutils literal">python3</tt> plugins. (Arch Linux names the <tt class="docutils literal">python3</tt> plugin <tt class="docutils literal">python</tt>; the <tt class="docutils literal">logfile</tt> plugin may be built-in — check with your system&nbsp;repositories!).</p>
+<p><strong>Ubuntu:</strong></p>
+<pre class="code sh"><a name="rest_code_0613a21273754c6f88cd41f5fdbfd829-1"></a>aptitude install virtualenv python3 uwsgi uwsgi-emperor uwsgi-plugin-python3 nginx-full
+</pre>
+<p><strong>Fedora:</strong></p>
+<pre class="code sh"><a name="rest_code_f248f6d2e5514b3ea86046e6635583d2-1"></a>dnf install python3-virtualenv uwsgi uwsgi-plugin-python3 uwsgi-logger-file nginx
+</pre>
+<p><strong>Arch&nbsp;Linux:</strong></p>
+<pre class="code sh"><a name="rest_code_f71d3e17f6bf4dfabf41dc21e64de76b-1"></a>pacman -S python-virtualenv uwsgi uwsgi-plugin-python nginx
+</pre>
+</div>
+<div class="section" id="preparing-your-application">
+<h2>Preparing your&nbsp;application</h2>
+<p>This tutorial will work for any web framework. I will, use <a class="reference external" href="https://github.com/Kwpolska/flask-demo-app">a really basic Flask app</a> that has just one route (<tt class="docutils literal">/</tt>), a static <tt class="docutils literal">hello.png</tt> file and a <tt class="docutils literal">favicon.ico</tt> for demonstration purposes. Note that the app does not use <tt class="docutils literal">app.run()</tt>. While you could add it, it would be used for local development and debugging only, and would be prepended by <tt class="docutils literal">if __name__ == '__main__':</tt> — uWSGI doesn’t work alongside&nbsp;it.</p>
+<p>The app will be installed somewhere under the <tt class="docutils literal">/srv</tt> directory, which is a great place to store things like this. I’ll choose <tt class="docutils literal">/srv/myapp</tt> for this tutorial, but for real deployments, you should use sometihing more distinguishable — the domain name is a great&nbsp;idea.</p>
+<p>We’ll start by creating a&nbsp;virtualenv:</p>
+<p><strong>Ubuntu:</strong></p>
+<pre class="code sh"><a name="rest_code_c01ee6c7cb544852b80d38e6b6102a9b-1"></a><span class="nb">cd </span>srv
+<a name="rest_code_c01ee6c7cb544852b80d38e6b6102a9b-2"></a>virtualenv -p /usr/bin/python3 myapp
+</pre>
+<p><strong>Fedora:</strong></p>
+<pre class="code sh"><a name="rest_code_2512c88c1fc14eefa07d43cf9c233bf2-1"></a><span class="nb">cd</span> /srv
+<a name="rest_code_2512c88c1fc14eefa07d43cf9c233bf2-2"></a>virtualenv-3.4 myapp
+</pre>
+<p><strong>Arch&nbsp;Linux:</strong></p>
+<pre class="code sh"><a name="rest_code_0c708457fa6840bf8ea1892106eb12c3-1"></a><span class="nb">cd</span> /srv
+<a name="rest_code_0c708457fa6840bf8ea1892106eb12c3-2"></a>virtualenv3 myapp
+</pre>
+<p>(Make sure you create a Python 3&nbsp;environment!)</p>
+<p>Now, we need to get our app there and install requirements. An example for the tutorial demo app (adjust for your clone/download&nbsp;path):</p>
+<pre class="code sh"><a name="rest_code_24d0988a9d644258bbfc883803f5d19a-1"></a><span class="nb">cd </span>myapp
+<a name="rest_code_24d0988a9d644258bbfc883803f5d19a-2"></a>cp -r ~/git/flask-demo-app appdata
+<a name="rest_code_24d0988a9d644258bbfc883803f5d19a-3"></a>bin/pip install -r appdata/requirements.txt
+</pre>
+<p>I’m storing my application data in the <tt class="docutils literal">appdata</tt> subdirectory so that it doesn’t clutter the virtualenv (or vice versa).  You may also install the <tt class="docutils literal">uwsgi</tt> package in the virtualenv, but it’s&nbsp;optional.</p>
+<p>What this directory should be depends on your web framework.  For example, for a Django app, you should have an <tt class="docutils literal">appdata/manage.py</tt> file (in other words, <tt class="docutils literal">appdata</tt> is where your app structure starts).  I also assumed that the <tt class="docutils literal">appdata</tt> folder should have a <tt class="docutils literal">static</tt> subdirectory with all static files, including <tt class="docutils literal">favicon.ico</tt> if you have one (we will add support for both in&nbsp;nginx).</p>
+<p>At this point, you should chown this directory to the user and group your server is going to run as.  This is especially important if uwsgi and nginx run as different users (as they do on Fedora). Run one of the following&nbsp;commands:</p>
+<p><strong>Ubuntu:</strong></p>
+<pre class="code sh"><a name="rest_code_4ba249922efb41a996c577c35352c379-1"></a>chown -R www-data:www-data /srv/myapp
+</pre>
+<p><strong>Fedora:</strong></p>
+<pre class="code sh"><a name="rest_code_692c0e27d5014ee3ab6c33ca7c5b0536-1"></a>chown -R uwsgi:nginx /srv/myapp
+</pre>
+<p><strong>Arch&nbsp;Linux:</strong></p>
+<pre class="code sh"><a name="rest_code_01db886106ac4c99b89b5f63c71498d7-1"></a>chown -R http:http /srv/myapp
+</pre>
+</div>
+<div class="section" id="configuring-uwsgi-and-nginx">
+<h2>Configuring uWSGI and&nbsp;nginx</h2>
+<div class="note">
+<p class="first admonition-title">Note</p>
+<p class="last">Parts of the configuration depend on your operating system. I tried to provide advice for Ubuntu, Fedora and Arch Linux. If you experience any issues, in particular with plugins, please consult the&nbsp;documentation.</p>
+</div>
+<p>We need to write a configuration file for uWSGI and&nbsp;nginx.</p>
+<div class="section" id="uwsgi-configuration">
+<h3>uWSGI&nbsp;configuration</h3>
+<p>Start with this, but read the notes below and change the values&nbsp;accordingly:</p>
+<pre class="code ini"><a name="rest_code_fb926f5ae5434a0d8f4e580c2d0f47fd-1"></a><span class="k">[uwsgi]</span>
+<a name="rest_code_fb926f5ae5434a0d8f4e580c2d0f47fd-2"></a><span class="na">socket</span> <span class="o">=</span> <span class="s">/srv/myapp/uwsgi.sock</span>
+<a name="rest_code_fb926f5ae5434a0d8f4e580c2d0f47fd-3"></a><span class="na">chmod-socket</span> <span class="o">=</span> <span class="s">775</span>
+<a name="rest_code_fb926f5ae5434a0d8f4e580c2d0f47fd-4"></a><span class="na">chdir</span> <span class="o">=</span> <span class="s">/srv/myapp/appdata</span>
+<a name="rest_code_fb926f5ae5434a0d8f4e580c2d0f47fd-5"></a><span class="na">master</span> <span class="o">=</span> <span class="s">true</span>
+<a name="rest_code_fb926f5ae5434a0d8f4e580c2d0f47fd-6"></a><span class="na">binary-path</span> <span class="o">=</span> <span class="s">/srv/myapp/bin/uwsgi</span>
+<a name="rest_code_fb926f5ae5434a0d8f4e580c2d0f47fd-7"></a><span class="na">virtualenv</span> <span class="o">=</span> <span class="s">/srv/myapp</span>
+<a name="rest_code_fb926f5ae5434a0d8f4e580c2d0f47fd-8"></a><span class="na">module</span> <span class="o">=</span> <span class="s">flaskapp:app</span>
+<a name="rest_code_fb926f5ae5434a0d8f4e580c2d0f47fd-9"></a><span class="na">uid</span> <span class="o">=</span> <span class="s">www-data</span>
+<a name="rest_code_fb926f5ae5434a0d8f4e580c2d0f47fd-10"></a><span class="na">gid</span> <span class="o">=</span> <span class="s">www-data</span>
+<a name="rest_code_fb926f5ae5434a0d8f4e580c2d0f47fd-11"></a><span class="na">processes</span> <span class="o">=</span> <span class="s">1</span>
+<a name="rest_code_fb926f5ae5434a0d8f4e580c2d0f47fd-12"></a><span class="na">threads</span> <span class="o">=</span> <span class="s">1</span>
+<a name="rest_code_fb926f5ae5434a0d8f4e580c2d0f47fd-13"></a><span class="na">plugins</span> <span class="o">=</span> <span class="s">python3,logfile</span>
+<a name="rest_code_fb926f5ae5434a0d8f4e580c2d0f47fd-14"></a><span class="na">logger</span> <span class="o">=</span> <span class="s">file:/srv/myapp/uwsgi.log</span>
+</pre>
+<p>Save this file&nbsp;as:</p>
+<ul class="simple">
+<li>Ubuntu: <tt class="docutils literal"><span class="pre">/etc/uwsgi-emperor/vassals/myapp.ini</span></tt>
+</li>
+<li>Fedora: <tt class="docutils literal">/etc/uwsgi.d/myapp.ini</tt>
+</li>
+<li>Arch Linux: <tt class="docutils literal">/etc/uwsgi/vassals/myapp.ini</tt> (create the directory first and <strong>chown</strong> it to http: <tt class="docutils literal">mkdir <span class="pre">-p</span> /etc/uwsgi/vassals; chown <span class="pre">-R</span> http:http /etc/uwsgi/vassals</tt>)</li>
+</ul>
+<p>The options&nbsp;are:</p>
+<ul class="simple">
+<li>
+<tt class="docutils literal">socket</tt> — the socket file that will be used by your application. It’s usually a file path (Unix domain socket). You could use a local TCP socket, but it’s not&nbsp;recommended.</li>
+<li>
+<tt class="docutils literal">chdir</tt> — the app&nbsp;directory.</li>
+<li>
+<tt class="docutils literal"><span class="pre">binary-path</span></tt> — the uWSGI executable to use. Remove if you didn’t install the (optional) <tt class="docutils literal">uwsgi</tt> package in your&nbsp;virtualenv.</li>
+<li>
+<tt class="docutils literal">virtualenv</tt> — the virtualenv for your&nbsp;application.</li>
+<li>
+<tt class="docutils literal">module</tt> — the name of the module that houses your application, and the object that speaks the WSGI interface, separated by colons. This depends on your web framework:<ul>
+<li>For Flask: <tt class="docutils literal">module = filename:app</tt>, where <tt class="docutils literal">filename</tt> is the name of your Python file (without the <tt class="docutils literal">.py</tt> part) and <tt class="docutils literal">app</tt> is the <tt class="docutils literal">Flask</tt> object</li>
+<li>For Django: <tt class="docutils literal">module = project.wsgi:application</tt>, where <tt class="docutils literal">project</tt> is the name of your project (directory with <tt class="docutils literal">settings.py</tt>).  You should also add an environment variable: <tt class="docutils literal">env = DJANGO_SETTINGS_MODULE=project.settings</tt>
+</li>
+<li>For Bottle: <tt class="docutils literal">module = filename:app</tt>, where <tt class="docutils literal">app = bottle.default_app()</tt>
+</li>
+<li>For Pyramid: <tt class="docutils literal">module = filename:app</tt>, where <tt class="docutils literal">app = config.make_wsgi_app()</tt> (make sure it’s <strong>not</strong> in a <tt class="docutils literal">if __name__ == '__main__':</tt> block — the demo app does&nbsp;that!)</li>
+</ul>
+</li>
+<li>
+<tt class="docutils literal">uid</tt> and <tt class="docutils literal">gid</tt> — the names of the user account to use for your server.  Use the same values as in the <tt class="docutils literal">chown</tt> command&nbsp;above.</li>
+<li>
+<tt class="docutils literal">processes</tt> and <tt class="docutils literal">threads</tt> — control the resources devoted to this application. Because this is a simple hello app, I used one process with one thread, but for a real app, you will probably need more (you need to see what works the best; there is no algorithm to decide). Also, remember that if you use multiple processes, they don’t share data, so you need an out-of-process database if you want&nbsp;that.</li>
+<li>
+<tt class="docutils literal">plugins</tt> — the list of uWSGI plugins to use. For Arch Linux, use <tt class="docutils literal">plugins = python</tt> (the <tt class="docutils literal">logfile</tt> plugin is always&nbsp;active).</li>
+<li>
+<tt class="docutils literal">logger</tt> — the path to your app-specific logfile. (Other logging facilities are available, but this one is the easiest, especially for multiple applications on the same&nbsp;server)</li>
+</ul>
+<p>You can test your configuration by running <tt class="docutils literal">uwsgi <span class="pre">--ini</span> /path/to/myapp.ini</tt> (disable the logger for stderr output or run <tt class="docutils literal">tail <span class="pre">-f</span> /srv/myapp/uwsgi.log</tt> in another&nbsp;window).</p>
+<p>If you’re using <strong>Fedora</strong>, there are two configuration changes you need to make globally: in <tt class="docutils literal">/etc/uwsgi.ini</tt>, disable the <tt class="docutils literal"><span class="pre">emperor-tyrant</span></tt> option (which seems to be buggy) and set <tt class="docutils literal">gid = nginx</tt>.  We’ll need this so that nginx can talk to your&nbsp;socket.</p>
+</div>
+<div class="section" id="nginx-configuration">
+<h3>nginx&nbsp;configuration</h3>
+<p>We need to configure our web server. Here’s a basic configuration that will get us&nbsp;started:</p>
+<p>Save this file&nbsp;as:</p>
+<ul class="simple">
+<li>Ubuntu: <tt class="docutils literal"><span class="pre">/etc/nginx/sites-enabled/myapp.conf</span></tt>
+</li>
+<li>Fedora: <tt class="docutils literal">/etc/nginx/conf.d/myapp.conf</tt>
+</li>
+<li>Arch Linux: add <tt class="docutils literal">include <span class="pre">/etc/nginx/conf.d/*.conf;</span></tt> to your <tt class="docutils literal">http</tt> directive in <tt class="docutils literal">/etc/nginx/nginx.conf</tt> and use <tt class="docutils literal">/etc/nginx/conf.d/myapp.conf</tt>
+</li>
+</ul>
+<pre class="code nginx"><a name="rest_code_d93a2359f8f14d0f9f5da99dbac6e2d1-1"></a><span class="k">server</span> <span class="p">{</span>
+<a name="rest_code_d93a2359f8f14d0f9f5da99dbac6e2d1-2"></a>    <span class="kn">listen</span> <span class="mi">8080</span><span class="p">;</span>
+<a name="rest_code_d93a2359f8f14d0f9f5da99dbac6e2d1-3"></a>    <span class="kn">server_name</span> <span class="s">localhost</span> <span class="s">myapp.local</span><span class="p">;</span>
+<a name="rest_code_d93a2359f8f14d0f9f5da99dbac6e2d1-4"></a>
+<a name="rest_code_d93a2359f8f14d0f9f5da99dbac6e2d1-5"></a>    <span class="kn">location</span> <span class="s">/</span> <span class="p">{</span>
+<a name="rest_code_d93a2359f8f14d0f9f5da99dbac6e2d1-6"></a>        <span class="kn">include</span> <span class="s">uwsgi_params</span><span class="p">;</span>
+<a name="rest_code_d93a2359f8f14d0f9f5da99dbac6e2d1-7"></a>        <span class="kn">uwsgi_pass</span> <span class="s">unix:/srv/myapp/uwsgi.sock</span><span class="p">;</span>
+<a name="rest_code_d93a2359f8f14d0f9f5da99dbac6e2d1-8"></a>    <span class="p">}</span>
+<a name="rest_code_d93a2359f8f14d0f9f5da99dbac6e2d1-9"></a>
+<a name="rest_code_d93a2359f8f14d0f9f5da99dbac6e2d1-10"></a>    <span class="kn">location</span> <span class="s">/static</span> <span class="p">{</span>
+<a name="rest_code_d93a2359f8f14d0f9f5da99dbac6e2d1-11"></a>        <span class="kn">alias</span> <span class="s">/srv/myapp/appdata/static</span><span class="p">;</span>
+<a name="rest_code_d93a2359f8f14d0f9f5da99dbac6e2d1-12"></a>    <span class="p">}</span>
+<a name="rest_code_d93a2359f8f14d0f9f5da99dbac6e2d1-13"></a>
+<a name="rest_code_d93a2359f8f14d0f9f5da99dbac6e2d1-14"></a>    <span class="kn">location</span> <span class="s">/favicon.ico</span> <span class="p">{</span>
+<a name="rest_code_d93a2359f8f14d0f9f5da99dbac6e2d1-15"></a>        <span class="kn">alias</span> <span class="s">/srv/myapp/appdata/static/favicon.ico</span><span class="p">;</span>
+<a name="rest_code_d93a2359f8f14d0f9f5da99dbac6e2d1-16"></a>    <span class="p">}</span>
+<a name="rest_code_d93a2359f8f14d0f9f5da99dbac6e2d1-17"></a><span class="p">}</span>
+</pre>
+<p>Note that this file is a very basic and rudimentary configuration. This configuration is fine for local testing, but for a real deployment, you will need to adjust&nbsp;it:</p>
+<ul class="simple">
+<li>set <tt class="docutils literal">listen</tt> to <tt class="docutils literal">443 ssl</tt> and create a http→https redirect on port 80 (you can get a free SSL certificate from <a class="reference external" href="https://letsencrypt.org/">Let’s Encrypt</a>; <a class="reference external" href="https://raymii.org/s/tutorials/Strong_SSL_Security_On_nginx.html">make sure to configure SSL properly</a>).</li>
+<li>set <tt class="docutils literal">server_name</tt> to your real domain&nbsp;name</li>
+<li>you might also want to add custom error pages, or change anything else that relates to your web server — consult other nginx guides for&nbsp;details</li>
+<li>nginx might have some server already enabled by default — edit <tt class="docutils literal">/etc/nginx/nginx.conf</tt> to disable&nbsp;it</li>
+</ul>
+</div>
+</div>
+<div class="section" id="service-setup">
+<h2>Service&nbsp;setup</h2>
+<p>After you’ve configured uWSGI and nginx, you need to enable and start the system&nbsp;services.</p>
+<p>I’m going to use <tt class="docutils literal">systemd</tt> here. If your system does not support <tt class="docutils literal">systemd</tt>, please consult your OS documentation for&nbsp;instructions.</p>
+<div class="section" id="for-arch-linux">
+<h3>For Arch&nbsp;Linux</h3>
+<p>All you need&nbsp;is:</p>
+<pre class="code sh"><a name="rest_code_b9a4ae2e61164cff91fe39f7152370d1-1"></a>systemctl <span class="nb">enable </span>nginx emperor.uwsgi
+<a name="rest_code_b9a4ae2e61164cff91fe39f7152370d1-2"></a>systemctl start nginx emperor.uwsgi
+</pre>
+<p>Verify the service is running with <tt class="docutils literal">systemctl status emperor.uwsgi</tt></p>
+</div>
+<div class="section" id="for-fedora">
+<h3>For&nbsp;Fedora</h3>
+<p>Make sure you followed the extra note about editing <tt class="docutils literal">/etc/uwsgi.ini</tt> and&nbsp;run:</p>
+<pre class="code sh"><a name="rest_code_9373bb6fc35a4c03adc2dbd75cc8fe64-1"></a>systemctl <span class="nb">enable </span>nginx uwsgi
+<a name="rest_code_9373bb6fc35a4c03adc2dbd75cc8fe64-2"></a>systemctl start nginx uwsgi
+</pre>
+<p>Verify the service is running with <tt class="docutils literal">systemctl status uwsgi</tt></p>
+<p>This is enough to get an app working, if you disabled SELinux (if you want to do it, edit <tt class="docutils literal">/etc/selinux/config</tt> and reboot), but if you want to keep SELinux happy, you need to do the&nbsp;following:</p>
+<pre class="code sh"><a name="rest_code_82b55a2c5caf48b68945492fd56d90b9-1"></a>setenforce 0
+<a name="rest_code_82b55a2c5caf48b68945492fd56d90b9-2"></a>chcon -R system_u:system_r:httpd_t:s0 /srv/myapp/appdata/static
+<a name="rest_code_82b55a2c5caf48b68945492fd56d90b9-3"></a>setenforce 1
+</pre>
+<p>We now need to install a <a class="reference external" href="https://chriswarrick.com/pub/nginx-uwsgi.pp">SELinux policy</a> (that I created for this project). If it doesn’t work, look into <tt class="docutils literal">audit2allow</tt>.</p>
+<pre class="code sh"><a name="rest_code_328fcbba62f5409f972842b584769963-1"></a>semodule -i nginx-uwsgi.pp
+</pre>
+<p>Hopefully, this is enough. In case it isn’t, please read SELinux documentation, and check audit&nbsp;logs.</p>
+<p>Also if you’re on Fedora, to make your website accessible from the outside Internet, you need to configure the built-in firewall accordingly — for ports 80/443,&nbsp;use:</p>
+<pre class="code sh"><a name="rest_code_a1b6ef93df1a4ada8b5643bbc3ff88be-1"></a>firewall-cmd --add-service http
+<a name="rest_code_a1b6ef93df1a4ada8b5643bbc3ff88be-2"></a>firewall-cmd --add-service https
+</pre>
+</div>
+<div class="section" id="for-ubuntu">
+<h3>For&nbsp;Ubuntu</h3>
+<p>Ubuntu does not ship the uWSGI Emperor service by default. However, you can easily create it.  Copy the <tt class="docutils literal">.service</tt> file from the <a class="reference external" href="https://uwsgi-docs.readthedocs.org/en/latest/Systemd.html#adding-the-emperor-to-systemd">uWSGI systemd documentation</a> to <tt class="docutils literal">/etc/systemd/system/emperor.uwsgi.service</tt>.  Change the ExecStart line&nbsp;to:</p>
+<pre class="code ini"><a name="rest_code_ff9289625fd04b47a437fe1cd9ecb5f7-1"></a><span class="na">ExecStart</span><span class="o">=</span><span class="s">/usr/bin/uwsgi --ini /etc/uwsgi-emperor/emperor.ini</span>
+</pre>
+<p>You can now reload systemd daemons and enable the&nbsp;services:</p>
+<pre class="code sh"><a name="rest_code_8eda15c668c846ac9f5500cc81ac7588-1"></a>systemctl daemon-reload
+<a name="rest_code_8eda15c668c846ac9f5500cc81ac7588-2"></a>systemctl <span class="nb">enable </span>nginx emperor.uwsgi
+<a name="rest_code_8eda15c668c846ac9f5500cc81ac7588-3"></a>systemctl start nginx emperor.uwsgi
+</pre>
+<p>Verify the service is running with <tt class="docutils literal">systemctl status emperor.uwsgi</tt></p>
+</div>
+</div>
+<div class="section" id="testing-end-result">
+<h2>Testing — end&nbsp;result</h2>
+<p>Your web service should now be running at <a class="reference external" href="http://localhost:8080/">http://localhost:8080/</a>.</p>
+<p>If you used the demo application, you should see something like this (complete with the favicon and image&nbsp;greeting):</p>
+<img alt="/images/nginx-uwsgi-demo.png" class="centered" src="/images/nginx-uwsgi-demo.png"><p>Hopefully, everything works. If it doesn’t, check nginx and uwsgi logs for details, and make sure you followed all&nbsp;instructions.</p>
+<hr class="docutils">
+<p>For easy linking, I set up some aliases: <a class="reference external" href="https://go.chriswarrick.com/pyweb">https://go.chriswarrick.com/pyweb</a> and <a class="reference external" href="https://go.chriswarrick.com/uwsgi-tut">https://go.chriswarrick.com/uwsgi-tut</a> (powered by a Django web application, deployed with nginx and&nbsp;uwsgi!)</p>
+<p><strong>Update 2016-02-10 17:00 UTC:</strong> This guide uses nginx and uWSGI, because they
+are considered best practices by most people. nginx is a fast, modern web
+server, with uWSGI support built in (without resorting to reverse proxying).
+uWSGI is similarly aimed at speed. The Emperor mode of uWSGI is recommended for
+init system integration by the uWSGI team, and it’s especially useful for
+multi-app deployments. (This guide is&nbsp;opinionated.)</p>
+<table class="docutils footnote" frame="void" id="id6" rules="none">
+<colgroup>
+<col class="label">
+<col>
+</colgroup>
+<tbody valign="top"><tr>
+<td class="label"><a class="fn-backref" href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id1">[1]</a></td>
+<td>This reflink gives you $10 in credit, which is enough to run a server for up to two months without paying a thing. I earn $15.</td>
+</tr></tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id7" rules="none">
+<colgroup>
+<col class="label">
+<col>
+</colgroup>
+<tbody valign="top"><tr>
+<td class="label"><a class="fn-backref" href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id2">[2]</a></td>
+<td>If you’re in the EU (and thus have to pay VAT), or want DO to handle your backups, it will cost you a little more.</td>
+</tr></tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id8" rules="none">
+<colgroup>
+<col class="label">
+<col>
+</colgroup>
+<tbody valign="top"><tr>
+<td class="label"><a class="fn-backref" href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id3">[3]</a></td>
+<td>Ubuntu 14.04 LTS does not use systemd — you’re on your own (upstart services exist, figure out how to use them yourself). Note that other software might be outdated as well — proceed with care, or just use something more modern.</td>
+</tr></tbody>
+</table>
+</div>
+</div>
+    </article>
+</div>
+    <aside class="postpromonav"><nav><ul class="pager hidden-print">
+<li class="previous">
+                <a href="/blog/2015/12/27/windows-10-november-upgrade-windows-as-a-dis-service/" rel="prev" title="Windows 10 November Upgrade: Windows as a (Dis-)service">Previous&nbsp;post</a>
+            </li>
+        </ul></nav></aside><section class="comments"><h2>Comments</h2>
+                        <div id="disqus_thread"></div>
+        <script>
+        var disqus_shortname ="kwpolska",
+            disqus_url="https://chriswarrick.com/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/",
+        disqus_title="Deploying Python Web Applications with nginx and uWSGI Emperor",
+        disqus_identifier="cache/posts/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor.html",
+        disqus_config = function () {
+            this.language = "en";
+        };
+        (function() {
+            var dsq = document.createElement('script'); dsq.async = true;
+            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+    <a href="https://disqus.com" class="dsq-brlink" rel="nofollow">Comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+        </section><script>var disqus_shortname="kwpolska";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script>
+</div>
+        <!--End of body content-->
+
+        <footer class="site-footer"><p><a href="/cookies/">this site uses
+cookies.</a><br>by using this site, you agree to our cookie&nbsp;policy.</p>
+<p>
+powered by <strong><a href="https://getnikola.com/">Nikola</a></strong>, <a href="http://nginx.org/">nginx</a> and <a href="https://www.digitalocean.com/?refcode=7983689b2ecc">DigitalOcean</a><br>
+copyright © 2009–2016 <a href="/contact/">Chris Warrick</a><br><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/">CC
+BY-NC-ND</a>, unless stated&nbsp;otherwise</p>
+            
+        </footer>
+</div>
+
+
+            <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script><script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script><script src="/assets/js/all.js"></script><script>jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script><script>
+    moment.locale("en");
+    fancydates(0, "YYYY-MM-DD HH:mm");
+    </script><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-11937989-1', 'chriswarrick.com');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+
+</script>
+</body>
+</html>

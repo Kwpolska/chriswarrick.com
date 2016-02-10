@@ -440,7 +440,7 @@ COPY_SOURCES = False
 # RSS_LINK = None
 
 # Show only teasers in the RSS feed? Default to True
-# RSS_TEASERS = True
+FEED_TEASERS = False
 
 # A search form to search this site, for the sidebar. You can use a google
 # custom search (http://www.google.com/cse/)
