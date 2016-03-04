@@ -5,6 +5,7 @@
 .. status: 4
 .. download: https://github.com/Kwpolska/speeker/releases
 .. github: https://github.com/Kwpolska/speeker
+.. bugtracker: https://github.com/Kwpolska/speeker/issues
 .. role: Maintainer
 .. license: 3-clause BSD
 .. language: Java

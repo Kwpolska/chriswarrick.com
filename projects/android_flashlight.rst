@@ -5,6 +5,7 @@
 .. status: 7
 .. download: https://github.com/Kwpolska/flashlight/releases
 .. github: https://github.com/Kwpolska/flashlight
+.. bugtracker: https://github.com/Kwpolska/flashlight/issues
 .. role: Maintainer
 .. license: 3-clause BSD
 .. language: Java

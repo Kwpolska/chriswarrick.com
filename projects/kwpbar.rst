@@ -5,7 +5,7 @@
 .. status: 5
 .. role: Maintainer
 .. license: 3-clause BSD
-.. language: Python; C
+.. language: Python, C
 .. sort: 86
 .. featured: false
 

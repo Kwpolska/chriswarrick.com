@@ -5,7 +5,6 @@
 .. status: 7
 .. logo: /projects/_logos/aurqt.png
 .. github: https://github.com/Kwpolska/aurqt
-.. bugtracker: https://github.com/Kwpolska/aurqt/issues
 .. role: Maintainer
 .. license: 3-clause BSD
 .. featured: False
