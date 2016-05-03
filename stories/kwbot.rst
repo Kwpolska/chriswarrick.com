@@ -36,3 +36,5 @@ Commands must be prepended with ``!``, ``KwBot:`` or ``KwBot,`` — as demonstra
 * ``help`` — respond with a message linking to this page
 * ``logs`` — respond with the URL to KwBot’s logs for this channel on the Internet (if available)
 * ``tell target message`` — add the ``message`` to a queue and show it when ``target`` joins the channel next time
+* ``factoids`` — list factoids for this channel (messages that can be used for
+  eg. common links or information)
