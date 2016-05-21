@@ -9,7 +9,7 @@
 .. role: Maintainer
 .. license: 3-clause BSD
 .. language: Java
-.. sort: 82
+.. sort: 40
 .. logo: /projects/_logos/speeker.png
 .. gallery: /galleries/speeker/
 

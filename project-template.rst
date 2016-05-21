@@ -5,6 +5,7 @@
 .. status: 
 .. download: https://github.com/Kwpolska/????/releases
 .. github: https://github.com/Kwpolska/????
+.. bugtracker: https://github.com/Kwpolska/????/issues
 .. role: Maintainer
 .. license: 3-clause BSD
 .. language: 

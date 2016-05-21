@@ -6,7 +6,7 @@
 .. link: https://coil.readthedocs.org/
 .. download: https://pypi.python.org/pypi/coil
 .. github: https://github.com/getnikola/coil
-.. bugtracker: https://github.com/getnikola/nikola/issues
+.. bugtracker: https://github.com/getnikola/coil/issues
 .. role: Maintainer
 .. license: 3-clause BSD
 .. featured: False

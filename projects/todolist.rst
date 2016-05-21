@@ -9,7 +9,7 @@
 .. role: Maintainer
 .. license: 3-clause BSD
 .. language: LaTeX
-.. sort: 68
+.. sort: 82
 
 I believe that the best way to manage things to do is an analog piece of paper.
 Those pieces of paper come out of a nicely crafted template, courtesy of

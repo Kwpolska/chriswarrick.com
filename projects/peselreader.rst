@@ -10,7 +10,7 @@
 .. license: 3-clause BSD
 .. featured: False
 .. language: C
-.. sort: 70
+.. sort: 76
 
 This very small piece of software decodes PESEL numbers (think SSNs for Polish
 citizens) into C structs.  The following information is encoded in a PESEL

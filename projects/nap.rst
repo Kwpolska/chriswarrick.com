@@ -10,7 +10,7 @@
 .. license: 3-clause BSD
 .. featured: False
 .. language: C
-.. sort: 90
+.. sort: 80
 
 ``nap`` is a special implementation of ``sleep``.  The main difference is the
 presence of a progressbar: ``nap`` prints out a progressbar and shows how much

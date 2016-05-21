@@ -8,7 +8,7 @@
 .. role: Maintainer
 .. license: 3-clause BSD
 .. language: Python
-.. sort: 9
+.. sort: 10
 
 This is yet another URL shortener, which does not respect many best practices.
 

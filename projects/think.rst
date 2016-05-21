@@ -9,7 +9,7 @@
 .. role: Maintainer
 .. license: 3-clause BSD
 .. language: Python
-.. sort: 88
+.. sort: 78
 
 Are you executing a process that takes a long time?  Do you want to know that it’s
 still working while you are in another terminal/making coffee?  Do you have a

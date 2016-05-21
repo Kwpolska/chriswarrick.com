@@ -9,7 +9,7 @@
 .. license: 3-clause BSD
 .. featured: False
 .. language: Python
-.. sort: 10
+.. sort: 9
 
 aurqt, the graphical AUR manager, has been abandoned and is not available
 anymore due to multiple changes in the AUR itself and the status of the code
