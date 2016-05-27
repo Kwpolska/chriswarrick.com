@@ -45,12 +45,12 @@
     {% endif %}
 {% endmacro %}
 
-{% macro html_post_header(post, want_date=True, want_link=True) %}
+{% macro html_post_header(post, want_date=True, want_link=True, want_tags=True) %}
     <header class="page-header">
     {{ html_post_title(post.title(), post, want_link) }}
     <div class="metadata">
         {% if want_date %}<a href="{{ post.permalink() }}" rel="bookmark" class="u-published"><time class="published dt-published" datetime="{{ post.date.isoformat() }}" itemprop="datePublished" title="{{ post.formatted_date(date_format) }}">{{ post.formatted_date(date_format) }}</time></a>{% endif %}
-        {{ html_tags(post) }}
+        {% if want_tags %}{{ html_tags(post) }}{% endif %}
     </div>
     </header>
 {% endmacro %}
