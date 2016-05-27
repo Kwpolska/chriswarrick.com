@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0"><channel><title>Chris Warrick (C#)</title><link>https://chriswarrick.com/</link><description></description><atom:link type="application/rss+xml" rel="self" href="https://chriswarrick.com/pl/blog/tags/c.xml"></atom:link><language>pl</language><lastBuildDate>Fri, 27 May 2016 11:44:31 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Code writing code: Python and Vim as development aids</title><link>https://chriswarrick.com/pl/blog/2016/05/27/code-writing-code-python-and-vim/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;Recently I was working on some C# and Java code. And along the way, I used
+Python and Vim to (re)write my code. A small Python script and a 6-keystroke
+Vim macro did it faster and better than a human would.&lt;/p&gt;
+&lt;p&gt;Every programmer should learn a good scripting language and use a programmable
+editor like Vim. Why? Here are two examples, after the break.&lt;/p&gt;
+&lt;!-- TEASER_END --&gt;
+&lt;div class="section" id="episode-i-inotifypropertychanged-or-python-writing-c"&gt;
+&lt;h2&gt;Episode I: &lt;tt class="docutils literal"&gt;INotifyPropertyChanged&lt;/tt&gt;, or Python writing C#&lt;/h2&gt;
+&lt;p&gt;I was building a private C# weekend project (that turned into a weeklong
+project) — and by the way, WPF and C# are quite pleasant (Windows Forms is a
+trainwreck, though). One of the things I used in that project was a DataGrid
+bound to a list of custom objects (a DataGrid is a table, basically). And in
+order to use it, you need to use the &lt;tt class="docutils literal"&gt;INotifyPropertyChanged&lt;/tt&gt; interface &lt;a class="reference external" href="https://msdn.microsoft.com/en-us/library/ms229614(v=vs.100).aspx"&gt;(MSDN)&lt;/a&gt;.
+It involves doing something like this:&lt;/p&gt;
+&lt;pre class="code csharp"&gt;&lt;a name="rest_code_f2c6a60c28bd4dfeabeb12d478b504b3-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;private&lt;/span&gt; &lt;span class="kt"&gt;string&lt;/span&gt; &lt;span class="n"&gt;name_&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="k"&gt;get&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="k"&gt;set&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="p"&gt;};&lt;/span&gt; &lt;span class="c1"&gt;// can also be a field&lt;/span&gt;
+&lt;a name="rest_code_f2c6a60c28bd4dfeabeb12d478b504b3-2"&gt;&lt;/a&gt;
+&lt;a name="rest_code_f2c6a60c28bd4dfeabeb12d478b504b3-3"&gt;&lt;/a&gt;&lt;span class="na"&gt;[JsonProperty]&lt;/span&gt;
+&lt;a name="rest_code_f2c6a60c28bd4dfeabeb12d478b504b3-4"&gt;&lt;/a&gt;&lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;string&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_f2c6a60c28bd4dfeabeb12d478b504b3-5"&gt;&lt;/a&gt;    &lt;span class="k"&gt;get&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_f2c6a60c28bd4dfeabeb12d478b504b3-6"&gt;&lt;/a&gt;        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;name_&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_f2c6a60c28bd4dfeabeb12d478b504b3-7"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;a name="rest_code_f2c6a60c28bd4dfeabeb12d478b504b3-8"&gt;&lt;/a&gt;    &lt;span class="k"&gt;set&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_f2c6a60c28bd4dfeabeb12d478b504b3-9"&gt;&lt;/a&gt;        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;value&lt;/span&gt; &lt;span class="p"&gt;!=&lt;/span&gt; &lt;span class="n"&gt;name_&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_f2c6a60c28bd4dfeabeb12d478b504b3-10"&gt;&lt;/a&gt;            &lt;span class="n"&gt;name_&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="k"&gt;value&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_f2c6a60c28bd4dfeabeb12d478b504b3-11"&gt;&lt;/a&gt;            &lt;span class="n"&gt;NotifyPropertyChanged&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"name"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;a name="rest_code_f2c6a60c28bd4dfeabeb12d478b504b3-12"&gt;&lt;/a&gt;        &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;a name="rest_code_f2c6a60c28bd4dfeabeb12d478b504b3-13"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;a name="rest_code_f2c6a60c28bd4dfeabeb12d478b504b3-14"&gt;&lt;/a&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;p&gt;That’s 12 lines of code (excluding &lt;tt class="docutils literal"&gt;[JsonProperty]&lt;/tt&gt; which comes from the
+Json.NET library) for that pattern. Oh: and I need to do that for &lt;strong&gt;every&lt;/strong&gt;
+field/property of my class, because otherwise any changes to them would not be
+reflected in the tables (and maybe one or two fields were &lt;em&gt;not&lt;/em&gt; in the table).&lt;/p&gt;
+&lt;p&gt;Doing that by hand is really not feasible: you need to copy-paste this
+large block 14 times and take care of 5 instances of the name (3 with
+underscores, 2 without), 2 instances of the type, and the &lt;tt class="docutils literal"&gt;[JsonProperty]&lt;/tt&gt;
+attribute (which does not appear on all properties).&lt;/p&gt;
+&lt;p&gt;So, I used one of those intelligent computer things to do it for me. I wrote a
+really simple &lt;a class="reference external" href="https://www.python.org/"&gt;Python&lt;/a&gt; script and ran it. And I ended up with all 14 fields built
+for me.&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external" href="https://chriswarrick.com/listings/code-writing-code/write_properties.py.html"&gt;code-writing-code/write_properties.py&lt;/a&gt;&lt;/p&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-1"&gt;&lt;/a&gt;&lt;span class="ch"&gt;#!/usr/bin/env python3&lt;/span&gt;
+&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-2"&gt;&lt;/a&gt;&lt;span class="n"&gt;TEMPLATE&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;"""&lt;/span&gt;&lt;span class="se"&gt;\&lt;/span&gt;
+&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-3"&gt;&lt;/a&gt;&lt;span class="s2"&gt;        &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt;public &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt; &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt; {&lt;/span&gt;
+&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-4"&gt;&lt;/a&gt;&lt;span class="s2"&gt;            get {&lt;/span&gt;
+&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-5"&gt;&lt;/a&gt;&lt;span class="s2"&gt;                return &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt;_;&lt;/span&gt;
+&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-6"&gt;&lt;/a&gt;&lt;span class="s2"&gt;            }&lt;/span&gt;
+&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-7"&gt;&lt;/a&gt;&lt;span class="s2"&gt;            set {&lt;/span&gt;
+&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-8"&gt;&lt;/a&gt;&lt;span class="s2"&gt;                if (value != &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt;_) {&lt;/span&gt;
+&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-9"&gt;&lt;/a&gt;&lt;span class="s2"&gt;                    &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt;_ = value;&lt;/span&gt;
+&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-10"&gt;&lt;/a&gt;&lt;span class="s2"&gt;                    NotifyPropertyChanged("&lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt;");&lt;/span&gt;
+&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-11"&gt;&lt;/a&gt;&lt;span class="s2"&gt;                }&lt;/span&gt;
+&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-12"&gt;&lt;/a&gt;&lt;span class="s2"&gt;            }&lt;/span&gt;
+&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-13"&gt;&lt;/a&gt;&lt;span class="s2"&gt;        }&lt;/span&gt;
+&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-14"&gt;&lt;/a&gt;&lt;span class="s2"&gt;"""&lt;/span&gt;
+&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-15"&gt;&lt;/a&gt;&lt;span class="n"&gt;JSONPROPERTY_TEMPLATE&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;'[JsonProperty]&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s1"&gt;        '&lt;/span&gt;
+&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-16"&gt;&lt;/a&gt;
+&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-17"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;has_jsonproperty&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-18"&gt;&lt;/a&gt;    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;has_jsonproperty&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-19"&gt;&lt;/a&gt;        &lt;span class="n"&gt;jsonproperty&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;JSONPROPERTY_TEMPLATE&lt;/span&gt;
+&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-20"&gt;&lt;/a&gt;    &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-21"&gt;&lt;/a&gt;        &lt;span class="n"&gt;jsonproperty&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;''&lt;/span&gt;
+&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-22"&gt;&lt;/a&gt;    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;TEMPLATE&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;jsonproperty&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-23"&gt;&lt;/a&gt;
+&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-24"&gt;&lt;/a&gt;&lt;span class="n"&gt;properties&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;
+&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-25"&gt;&lt;/a&gt;    &lt;span class="s1"&gt;'1 string name'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-26"&gt;&lt;/a&gt;    &lt;span class="s1"&gt;'0 int another'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-27"&gt;&lt;/a&gt;    &lt;span class="c1"&gt;# 12 fields omitted for brevity&lt;/span&gt;
+&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-28"&gt;&lt;/a&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-29"&gt;&lt;/a&gt;&lt;span class="n"&gt;properties_split&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;split&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;p&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;properties&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-30"&gt;&lt;/a&gt;
+&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-31"&gt;&lt;/a&gt;&lt;span class="c1"&gt;# Private definitions (internal)&lt;/span&gt;
+&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-32"&gt;&lt;/a&gt;&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;has_jsonproperty&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;properties_split&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-33"&gt;&lt;/a&gt;    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"        private &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt; &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt;_ { get; set; }"&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-34"&gt;&lt;/a&gt;
+&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-35"&gt;&lt;/a&gt;&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-36"&gt;&lt;/a&gt;&lt;span class="c1"&gt;# Public definitions (with notifications)&lt;/span&gt;
+&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-37"&gt;&lt;/a&gt;&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;has_jsonproperty&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;properties_split&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-38"&gt;&lt;/a&gt;    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;has_jsonproperty&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s1"&gt;'1'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;/pre&gt;&lt;p&gt;That script takes a list of properties and spits out a block of code, ready to
+be pasted into the code. Visual Studio has a nice &lt;em&gt;Insert File as Text&lt;/em&gt;
+feature, so redirecting the output to a file and using that option is enough.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="episode-ii-fixing-argument-order-or-vim-re-writing-java"&gt;
+&lt;h2&gt;Episode II: Fixing argument order, or Vim (re)writing Java&lt;/h2&gt;
+&lt;p&gt;Another project, &lt;a class="reference external" href="https://github.com/Kwpolska/numbernamer"&gt;Number Namer&lt;/a&gt;, written in Java, and it does what it says on
+the tin: takes a number and writes it out as words, while being multilingual and
+extensible. I used Eclipse for this project, because it looks good, is really
+helpful with its code linting, and does not run slowly on my aging system (I’m
+looking at you, IntelliJ IDEA aka PyCharm aka Android Studio…)&lt;/p&gt;
+&lt;p&gt;And so, I was building a test suite, using &lt;a class="reference external" href="http://junit.org/"&gt;JUnit&lt;/a&gt;. It’s pretty
+straightforward, and I remember the syntax from Python’s unittest (even though
+I write tests with &lt;a class="reference external" href="http://pytest.org/"&gt;pytest&lt;/a&gt; nowadays). Or so I thought.&lt;/p&gt;
+&lt;pre class="code java"&gt;&lt;a name="rest_code_da917a0e3c7f406aa7273404a76de25a-1"&gt;&lt;/a&gt;&lt;span class="c1"&gt;// (incorrect)&lt;/span&gt;
+&lt;a name="rest_code_da917a0e3c7f406aa7273404a76de25a-2"&gt;&lt;/a&gt;&lt;span class="n"&gt;assertEquals&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"Basic integers (7) failed"&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;namer&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;7L&lt;/span&gt;&lt;span class="o"&gt;),&lt;/span&gt; &lt;span class="s"&gt;"seven"&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+&lt;a name="rest_code_da917a0e3c7f406aa7273404a76de25a-3"&gt;&lt;/a&gt;&lt;span class="c1"&gt;// (fixed)                              ^ cursor&lt;/span&gt;
+&lt;a name="rest_code_da917a0e3c7f406aa7273404a76de25a-4"&gt;&lt;/a&gt;&lt;span class="n"&gt;assertEquals&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"Basic integers (7) failed"&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"seven"&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;namer&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;7L&lt;/span&gt;&lt;span class="o"&gt;));&lt;/span&gt;
+&lt;/pre&gt;&lt;p&gt;You see, the typical Python spelling is &lt;tt class="docutils literal"&gt;self.assertEquals(actual,
+expected)&lt;/tt&gt;. Java adds a &lt;tt class="docutils literal"&gt;String&lt;/tt&gt; message parameter and it also swaps
+&lt;tt class="docutils literal"&gt;actual&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;expected&lt;/tt&gt;. Which I didn’t notice at first, and I wrote my
+assertions incorrectly. While it doesn’t &lt;em&gt;really&lt;/em&gt; matter (it will still work),
+the output looked a bit weird.&lt;/p&gt;
+&lt;p&gt;And I noticed only when I finished writing my tests (and I had a typo in my
+expected output). I wanted to fix them all — not manually, of course. So, I
+closed this file, brought up Vim, searched for the motion I need (it’s
+&lt;tt class="docutils literal"&gt;t{char}&lt;/tt&gt; — see &lt;tt class="docutils literal"&gt;:help t&lt;/tt&gt;). And I ended up with this
+(cursor placed on the comma after the first argument):&lt;/p&gt;
+&lt;div style="text-align: center;"&gt;
+&lt;kbd style="font-size: 2em;"&gt;dt,&lt;/kbd&gt;&lt;kbd style="font-size: 2em;"&gt;t)&lt;/kbd&gt;&lt;kbd style="font-size: 2em;"&gt;p&lt;/kbd&gt;
+&lt;/div&gt;&lt;p&gt;What does this do, you may ask? It’s actually pretty self-explanatory:&lt;/p&gt;
+&lt;blockquote&gt;&lt;p&gt;
+&lt;b&gt;d&lt;/b&gt;elete &lt;b&gt;t&lt;/b&gt;ill comma, (go) &lt;b&gt;t&lt;/b&gt;ill closing parenthesis, &lt;b&gt;p&lt;/b&gt;aste.
+&lt;/p&gt;&lt;/blockquote&gt;&lt;p&gt;This fixes one line. Automatically. Make it a macro (wrap in &lt;tt class="docutils literal"&gt;qq&lt;/tt&gt; … &lt;tt class="docutils literal"&gt;q&lt;/tt&gt;,
+use with &lt;tt class="docutils literal"&gt;@q&lt;/tt&gt;) and now you can run it on all lines, either by moving manually or by
+searching for &lt;tt class="docutils literal"&gt;,&lt;/tt&gt; and pressing &lt;tt class="docutils literal"&gt;n@q&lt;/tt&gt; until you run out of lines.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="epilogue"&gt;
+&lt;h2&gt;Epilogue&lt;/h2&gt;
+&lt;p&gt;Some of you might say “but VS/Eclipse/IDEA has an option for that somewhere” or
+“[expensive tool] can do that” — and a Google search shows that there is an
+Eclipse plugin to swap arguments and that I could also write a regex to solve
+my second issue. Nevertheless, Python is a great tool in a programmer’s toolbox
+— especially the interactive interpreter. And Vim is an awesome editor that can
+accomplish magic in a few keystrokes — and there are many more things you can
+do with it.&lt;/p&gt;
+&lt;p class="lead"&gt;Go learn &lt;a class="reference external" href="https://www.python.org/"&gt;Python&lt;/a&gt; and &lt;a class="reference external" href="http://www.vim.org/"&gt;Vim&lt;/a&gt; now.&lt;/p&gt;
+&lt;p&gt;Also: don’t even bother with VsVim or IdeaVim or any other Vim emulation
+plugins, they work in unusual ways and often don’t give you everything — for
+example, VsVim has a Vim visual mode (&lt;tt class="docutils literal"&gt;v&lt;/tt&gt; key) and Visual Studio selection
+mode (mouse), and only one allows Vim keystrokes (the other will replace
+selected text).&lt;/p&gt;
+&lt;/div&gt;&lt;/div&gt;</description><guid>https://chriswarrick.com/pl/blog/2016/05/27/code-writing-code-python-and-vim/</guid><pubDate>Fri, 27 May 2016 08:46:35 GMT</pubDate></item></channel></rss>
