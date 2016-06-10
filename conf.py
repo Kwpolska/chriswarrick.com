@@ -317,7 +317,7 @@ INDEX_READ_MORE_LINK = ''
 FEED_READ_MORE_LINK = '<p class="more"><a href="{link}">{read_more}…</a> ({remaining_paragraph_count} paragraphs remaining — a {remaining_reading_time} minutes’ read)</p>'
 
 # A HTML fragment describing the license, for the sidebar.
-LICENSE = """<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/">CC BY-NC-ND</a>"""
+LICENSE = """<a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA</a>"""
 # I recommend using the Creative Commons' wizard:
 # http://creativecommons.org/choose/
 # LICENSE = """
@@ -334,16 +334,16 @@ cookies.</a><br>by using this site, you agree to our cookie policy.</p><p>
 powered by <strong><a href="https://getnikola.com/">Nikola</a></strong>, <a href="http://nginx.org/">nginx</a> and <a href="https://www.digitalocean.com/?refcode=7983689b2ecc">DigitalOcean</a><br>
 copyright&nbsp;©&nbsp;2009–2016&nbsp;<a
 href="/contact/">Chris Warrick</a><br> <a rel="license"
-href="http://creativecommons.org/licenses/by-nc-nd/3.0/">CC
-BY-NC-ND</a>, unless stated otherwise</p>""",
+href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC
+BY-NC-SA</a>, unless stated otherwise</p>""",
     'pl': """<p><a href="/pl/cookies/">ta strona używa ciasteczek.</a><br>
 korzystając z tej strony, akceptujesz naszą politykę ciasteczek.
 </p><p>
 powered by <strong><a href="https://getnikola.com/">Nikola</a></strong>, <a href="http://nginx.org/">nginx</a> and <a href="https://www.digitalocean.com/?refcode=7983689b2ecc">DigitalOcean</a><br>
 copyright&nbsp;©&nbsp;2009–2016&nbsp;<a
 href="/pl/contact/">Chris Warrick</a><br> <a rel="license"
-href="http://creativecommons.org/licenses/by-nc-nd/3.0/">CC
-BY-NC-ND</a>, unless stated otherwise</p>""",
+href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC
+BY-NC-SA</a>, unless stated otherwise</p>""",
 
 }
 
