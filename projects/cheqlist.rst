@@ -13,7 +13,8 @@
 .. featured: true
 .. previewimage: /projects/_banners/cheqlist.png
 
-``cheqlist`` is a simple check list application for Qt.
+``cheqlist`` is a simple check list application for Qt. It supports formatting,
+file input/output, and an undo stack.
 
 .. thumbnail:: /projects/_banners/cheqlist.png
 
