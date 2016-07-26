@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0"><channel><title>Chris Warrick (Python)</title><link>https://chriswarrick.com/</link><description></description><atom:link type="application/rss+xml" rel="self" href="https://chriswarrick.com/pl/blog/tags/python.xml"></atom:link><language>pl</language><lastBuildDate>Fri, 27 May 2016 11:44:32 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Code writing code: Python and Vim as development aids</title><link>https://chriswarrick.com/pl/blog/2016/05/27/code-writing-code-python-and-vim/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;Recently I was working on some C# and Java code. And along the way, I used
+<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chris Warrick (Python)</title><link>https://chriswarrick.com/</link><description></description><atom:link href="https://chriswarrick.com/pl/blog/tags/python.xml" rel="self" type="application/rss+xml"></atom:link><language>pl</language><lastBuildDate>Tue, 26 Jul 2016 13:21:21 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Code writing code: Python and Vim as development aids</title><link>https://chriswarrick.com/pl/blog/2016/05/27/code-writing-code-python-and-vim/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;Recently I was working on some C# and Java code. And along the way, I used
 Python and Vim to (re)write my code. A small Python script and a 6-keystroke
 Vim macro did it faster and better than a human would.&lt;/p&gt;
 &lt;p&gt;Every programmer should learn a good scripting language and use a programmable
@@ -13,20 +13,20 @@ trainwreck, though). One of the things I used in that project was a DataGrid
 bound to a list of custom objects (a DataGrid is a table, basically). And in
 order to use it, you need to use the &lt;tt class="docutils literal"&gt;INotifyPropertyChanged&lt;/tt&gt; interface &lt;a class="reference external" href="https://msdn.microsoft.com/en-us/library/ms229614(v=vs.100).aspx"&gt;(MSDN)&lt;/a&gt;.
 It involves doing something like this:&lt;/p&gt;
-&lt;pre class="code csharp"&gt;&lt;a name="rest_code_f2c6a60c28bd4dfeabeb12d478b504b3-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;private&lt;/span&gt; &lt;span class="kt"&gt;string&lt;/span&gt; &lt;span class="n"&gt;name_&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="k"&gt;get&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="k"&gt;set&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="p"&gt;};&lt;/span&gt; &lt;span class="c1"&gt;// can also be a field&lt;/span&gt;
-&lt;a name="rest_code_f2c6a60c28bd4dfeabeb12d478b504b3-2"&gt;&lt;/a&gt;
-&lt;a name="rest_code_f2c6a60c28bd4dfeabeb12d478b504b3-3"&gt;&lt;/a&gt;&lt;span class="na"&gt;[JsonProperty]&lt;/span&gt;
-&lt;a name="rest_code_f2c6a60c28bd4dfeabeb12d478b504b3-4"&gt;&lt;/a&gt;&lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;string&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;a name="rest_code_f2c6a60c28bd4dfeabeb12d478b504b3-5"&gt;&lt;/a&gt;    &lt;span class="k"&gt;get&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;a name="rest_code_f2c6a60c28bd4dfeabeb12d478b504b3-6"&gt;&lt;/a&gt;        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;name_&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;a name="rest_code_f2c6a60c28bd4dfeabeb12d478b504b3-7"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;a name="rest_code_f2c6a60c28bd4dfeabeb12d478b504b3-8"&gt;&lt;/a&gt;    &lt;span class="k"&gt;set&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;a name="rest_code_f2c6a60c28bd4dfeabeb12d478b504b3-9"&gt;&lt;/a&gt;        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;value&lt;/span&gt; &lt;span class="p"&gt;!=&lt;/span&gt; &lt;span class="n"&gt;name_&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;a name="rest_code_f2c6a60c28bd4dfeabeb12d478b504b3-10"&gt;&lt;/a&gt;            &lt;span class="n"&gt;name_&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="k"&gt;value&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;a name="rest_code_f2c6a60c28bd4dfeabeb12d478b504b3-11"&gt;&lt;/a&gt;            &lt;span class="n"&gt;NotifyPropertyChanged&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"name"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;a name="rest_code_f2c6a60c28bd4dfeabeb12d478b504b3-12"&gt;&lt;/a&gt;        &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;a name="rest_code_f2c6a60c28bd4dfeabeb12d478b504b3-13"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;a name="rest_code_f2c6a60c28bd4dfeabeb12d478b504b3-14"&gt;&lt;/a&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;pre class="code csharp"&gt;&lt;a name="rest_code_bcc9a7cc02a645efb973d54c3bade67f-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;private&lt;/span&gt; &lt;span class="kt"&gt;string&lt;/span&gt; &lt;span class="n"&gt;name_&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="k"&gt;get&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="k"&gt;set&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="p"&gt;};&lt;/span&gt; &lt;span class="c1"&gt;// can also be a field&lt;/span&gt;
+&lt;a name="rest_code_bcc9a7cc02a645efb973d54c3bade67f-2"&gt;&lt;/a&gt;
+&lt;a name="rest_code_bcc9a7cc02a645efb973d54c3bade67f-3"&gt;&lt;/a&gt;&lt;span class="na"&gt;[JsonProperty]&lt;/span&gt;
+&lt;a name="rest_code_bcc9a7cc02a645efb973d54c3bade67f-4"&gt;&lt;/a&gt;&lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;string&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_bcc9a7cc02a645efb973d54c3bade67f-5"&gt;&lt;/a&gt;    &lt;span class="k"&gt;get&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_bcc9a7cc02a645efb973d54c3bade67f-6"&gt;&lt;/a&gt;        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;name_&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_bcc9a7cc02a645efb973d54c3bade67f-7"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;a name="rest_code_bcc9a7cc02a645efb973d54c3bade67f-8"&gt;&lt;/a&gt;    &lt;span class="k"&gt;set&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_bcc9a7cc02a645efb973d54c3bade67f-9"&gt;&lt;/a&gt;        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;value&lt;/span&gt; &lt;span class="p"&gt;!=&lt;/span&gt; &lt;span class="n"&gt;name_&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_bcc9a7cc02a645efb973d54c3bade67f-10"&gt;&lt;/a&gt;            &lt;span class="n"&gt;name_&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="k"&gt;value&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_bcc9a7cc02a645efb973d54c3bade67f-11"&gt;&lt;/a&gt;            &lt;span class="n"&gt;NotifyPropertyChanged&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"name"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;a name="rest_code_bcc9a7cc02a645efb973d54c3bade67f-12"&gt;&lt;/a&gt;        &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;a name="rest_code_bcc9a7cc02a645efb973d54c3bade67f-13"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;a name="rest_code_bcc9a7cc02a645efb973d54c3bade67f-14"&gt;&lt;/a&gt;&lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;That’s 12 lines of code (excluding &lt;tt class="docutils literal"&gt;[JsonProperty]&lt;/tt&gt; which comes from the
 Json.NET library) for that pattern. Oh: and I need to do that for &lt;strong&gt;every&lt;/strong&gt;
 field/property of my class, because otherwise any changes to them would not be
@@ -39,44 +39,44 @@ attribute (which does not appear on all properties).&lt;/p&gt;
 really simple &lt;a class="reference external" href="https://www.python.org/"&gt;Python&lt;/a&gt; script and ran it. And I ended up with all 14 fields built
 for me.&lt;/p&gt;
 &lt;p&gt;&lt;a class="reference external" href="https://chriswarrick.com/listings/code-writing-code/write_properties.py.html"&gt;code-writing-code/write_properties.py&lt;/a&gt;&lt;/p&gt;
-&lt;pre class="code python"&gt;&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-1"&gt;&lt;/a&gt;&lt;span class="ch"&gt;#!/usr/bin/env python3&lt;/span&gt;
-&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-2"&gt;&lt;/a&gt;&lt;span class="n"&gt;TEMPLATE&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;"""&lt;/span&gt;&lt;span class="se"&gt;\&lt;/span&gt;
-&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-3"&gt;&lt;/a&gt;&lt;span class="s2"&gt;        &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt;public &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt; &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt; {&lt;/span&gt;
-&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-4"&gt;&lt;/a&gt;&lt;span class="s2"&gt;            get {&lt;/span&gt;
-&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-5"&gt;&lt;/a&gt;&lt;span class="s2"&gt;                return &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt;_;&lt;/span&gt;
-&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-6"&gt;&lt;/a&gt;&lt;span class="s2"&gt;            }&lt;/span&gt;
-&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-7"&gt;&lt;/a&gt;&lt;span class="s2"&gt;            set {&lt;/span&gt;
-&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-8"&gt;&lt;/a&gt;&lt;span class="s2"&gt;                if (value != &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt;_) {&lt;/span&gt;
-&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-9"&gt;&lt;/a&gt;&lt;span class="s2"&gt;                    &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt;_ = value;&lt;/span&gt;
-&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-10"&gt;&lt;/a&gt;&lt;span class="s2"&gt;                    NotifyPropertyChanged("&lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt;");&lt;/span&gt;
-&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-11"&gt;&lt;/a&gt;&lt;span class="s2"&gt;                }&lt;/span&gt;
-&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-12"&gt;&lt;/a&gt;&lt;span class="s2"&gt;            }&lt;/span&gt;
-&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-13"&gt;&lt;/a&gt;&lt;span class="s2"&gt;        }&lt;/span&gt;
-&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-14"&gt;&lt;/a&gt;&lt;span class="s2"&gt;"""&lt;/span&gt;
-&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-15"&gt;&lt;/a&gt;&lt;span class="n"&gt;JSONPROPERTY_TEMPLATE&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;'[JsonProperty]&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s1"&gt;        '&lt;/span&gt;
-&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-16"&gt;&lt;/a&gt;
-&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-17"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;has_jsonproperty&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-18"&gt;&lt;/a&gt;    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;has_jsonproperty&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-19"&gt;&lt;/a&gt;        &lt;span class="n"&gt;jsonproperty&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;JSONPROPERTY_TEMPLATE&lt;/span&gt;
-&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-20"&gt;&lt;/a&gt;    &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-21"&gt;&lt;/a&gt;        &lt;span class="n"&gt;jsonproperty&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;''&lt;/span&gt;
-&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-22"&gt;&lt;/a&gt;    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;TEMPLATE&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;jsonproperty&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-23"&gt;&lt;/a&gt;
-&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-24"&gt;&lt;/a&gt;&lt;span class="n"&gt;properties&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;
-&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-25"&gt;&lt;/a&gt;    &lt;span class="s1"&gt;'1 string name'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-26"&gt;&lt;/a&gt;    &lt;span class="s1"&gt;'0 int another'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-27"&gt;&lt;/a&gt;    &lt;span class="c1"&gt;# 12 fields omitted for brevity&lt;/span&gt;
-&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-28"&gt;&lt;/a&gt;&lt;span class="p"&gt;]&lt;/span&gt;
-&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-29"&gt;&lt;/a&gt;&lt;span class="n"&gt;properties_split&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;split&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;p&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;properties&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
-&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-30"&gt;&lt;/a&gt;
-&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-31"&gt;&lt;/a&gt;&lt;span class="c1"&gt;# Private definitions (internal)&lt;/span&gt;
-&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-32"&gt;&lt;/a&gt;&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;has_jsonproperty&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;properties_split&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-33"&gt;&lt;/a&gt;    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"        private &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt; &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt;_ { get; set; }"&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-34"&gt;&lt;/a&gt;
-&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-35"&gt;&lt;/a&gt;&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-36"&gt;&lt;/a&gt;&lt;span class="c1"&gt;# Public definitions (with notifications)&lt;/span&gt;
-&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-37"&gt;&lt;/a&gt;&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;has_jsonproperty&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;properties_split&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-&lt;a name="rest_code_0cf2a8a4ac1d43a48dd33472f5a38820-38"&gt;&lt;/a&gt;    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;has_jsonproperty&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s1"&gt;'1'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_52ab317fa9284183a70e37e9cce4f39d-1"&gt;&lt;/a&gt;&lt;span class="c"&gt;#!/usr/bin/env python3&lt;/span&gt;
+&lt;a name="rest_code_52ab317fa9284183a70e37e9cce4f39d-2"&gt;&lt;/a&gt;&lt;span class="n"&gt;TEMPLATE&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;"""&lt;/span&gt;&lt;span class="se"&gt;\&lt;/span&gt;
+&lt;a name="rest_code_52ab317fa9284183a70e37e9cce4f39d-3"&gt;&lt;/a&gt;&lt;span class="s"&gt;        &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s"&gt;public &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s"&gt; &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s"&gt; {&lt;/span&gt;
+&lt;a name="rest_code_52ab317fa9284183a70e37e9cce4f39d-4"&gt;&lt;/a&gt;&lt;span class="s"&gt;            get {&lt;/span&gt;
+&lt;a name="rest_code_52ab317fa9284183a70e37e9cce4f39d-5"&gt;&lt;/a&gt;&lt;span class="s"&gt;                return &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s"&gt;_;&lt;/span&gt;
+&lt;a name="rest_code_52ab317fa9284183a70e37e9cce4f39d-6"&gt;&lt;/a&gt;&lt;span class="s"&gt;            }&lt;/span&gt;
+&lt;a name="rest_code_52ab317fa9284183a70e37e9cce4f39d-7"&gt;&lt;/a&gt;&lt;span class="s"&gt;            set {&lt;/span&gt;
+&lt;a name="rest_code_52ab317fa9284183a70e37e9cce4f39d-8"&gt;&lt;/a&gt;&lt;span class="s"&gt;                if (value != &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s"&gt;_) {&lt;/span&gt;
+&lt;a name="rest_code_52ab317fa9284183a70e37e9cce4f39d-9"&gt;&lt;/a&gt;&lt;span class="s"&gt;                    &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s"&gt;_ = value;&lt;/span&gt;
+&lt;a name="rest_code_52ab317fa9284183a70e37e9cce4f39d-10"&gt;&lt;/a&gt;&lt;span class="s"&gt;                    NotifyPropertyChanged("&lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s"&gt;");&lt;/span&gt;
+&lt;a name="rest_code_52ab317fa9284183a70e37e9cce4f39d-11"&gt;&lt;/a&gt;&lt;span class="s"&gt;                }&lt;/span&gt;
+&lt;a name="rest_code_52ab317fa9284183a70e37e9cce4f39d-12"&gt;&lt;/a&gt;&lt;span class="s"&gt;            }&lt;/span&gt;
+&lt;a name="rest_code_52ab317fa9284183a70e37e9cce4f39d-13"&gt;&lt;/a&gt;&lt;span class="s"&gt;        }&lt;/span&gt;
+&lt;a name="rest_code_52ab317fa9284183a70e37e9cce4f39d-14"&gt;&lt;/a&gt;&lt;span class="s"&gt;"""&lt;/span&gt;
+&lt;a name="rest_code_52ab317fa9284183a70e37e9cce4f39d-15"&gt;&lt;/a&gt;&lt;span class="n"&gt;JSONPROPERTY_TEMPLATE&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;'[JsonProperty]&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s"&gt;        '&lt;/span&gt;
+&lt;a name="rest_code_52ab317fa9284183a70e37e9cce4f39d-16"&gt;&lt;/a&gt;
+&lt;a name="rest_code_52ab317fa9284183a70e37e9cce4f39d-17"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;has_jsonproperty&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;a name="rest_code_52ab317fa9284183a70e37e9cce4f39d-18"&gt;&lt;/a&gt;    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;has_jsonproperty&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;a name="rest_code_52ab317fa9284183a70e37e9cce4f39d-19"&gt;&lt;/a&gt;        &lt;span class="n"&gt;jsonproperty&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;JSONPROPERTY_TEMPLATE&lt;/span&gt;
+&lt;a name="rest_code_52ab317fa9284183a70e37e9cce4f39d-20"&gt;&lt;/a&gt;    &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;a name="rest_code_52ab317fa9284183a70e37e9cce4f39d-21"&gt;&lt;/a&gt;        &lt;span class="n"&gt;jsonproperty&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;''&lt;/span&gt;
+&lt;a name="rest_code_52ab317fa9284183a70e37e9cce4f39d-22"&gt;&lt;/a&gt;    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;TEMPLATE&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;jsonproperty&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_52ab317fa9284183a70e37e9cce4f39d-23"&gt;&lt;/a&gt;
+&lt;a name="rest_code_52ab317fa9284183a70e37e9cce4f39d-24"&gt;&lt;/a&gt;&lt;span class="n"&gt;properties&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;
+&lt;a name="rest_code_52ab317fa9284183a70e37e9cce4f39d-25"&gt;&lt;/a&gt;    &lt;span class="s"&gt;'1 string name'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;a name="rest_code_52ab317fa9284183a70e37e9cce4f39d-26"&gt;&lt;/a&gt;    &lt;span class="s"&gt;'0 int another'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;a name="rest_code_52ab317fa9284183a70e37e9cce4f39d-27"&gt;&lt;/a&gt;    &lt;span class="c"&gt;# 12 fields omitted for brevity&lt;/span&gt;
+&lt;a name="rest_code_52ab317fa9284183a70e37e9cce4f39d-28"&gt;&lt;/a&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;a name="rest_code_52ab317fa9284183a70e37e9cce4f39d-29"&gt;&lt;/a&gt;&lt;span class="n"&gt;properties_split&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;split&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;p&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;properties&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;a name="rest_code_52ab317fa9284183a70e37e9cce4f39d-30"&gt;&lt;/a&gt;
+&lt;a name="rest_code_52ab317fa9284183a70e37e9cce4f39d-31"&gt;&lt;/a&gt;&lt;span class="c"&gt;# Private definitions (internal)&lt;/span&gt;
+&lt;a name="rest_code_52ab317fa9284183a70e37e9cce4f39d-32"&gt;&lt;/a&gt;&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;has_jsonproperty&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;properties_split&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;a name="rest_code_52ab317fa9284183a70e37e9cce4f39d-33"&gt;&lt;/a&gt;    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"        private &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s"&gt; &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s"&gt;_ { get; set; }"&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;a name="rest_code_52ab317fa9284183a70e37e9cce4f39d-34"&gt;&lt;/a&gt;
+&lt;a name="rest_code_52ab317fa9284183a70e37e9cce4f39d-35"&gt;&lt;/a&gt;&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;a name="rest_code_52ab317fa9284183a70e37e9cce4f39d-36"&gt;&lt;/a&gt;&lt;span class="c"&gt;# Public definitions (with notifications)&lt;/span&gt;
+&lt;a name="rest_code_52ab317fa9284183a70e37e9cce4f39d-37"&gt;&lt;/a&gt;&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;has_jsonproperty&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;properties_split&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;a name="rest_code_52ab317fa9284183a70e37e9cce4f39d-38"&gt;&lt;/a&gt;    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;has_jsonproperty&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s"&gt;'1'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;That script takes a list of properties and spits out a block of code, ready to
 be pasted into the code. Visual Studio has a nice &lt;em&gt;Insert File as Text&lt;/em&gt;
 feature, so redirecting the output to a file and using that option is enough.&lt;/p&gt;
@@ -91,10 +91,10 @@ looking at you, IntelliJ IDEA aka PyCharm aka Android Studio…)&lt;/p&gt;
 &lt;p&gt;And so, I was building a test suite, using &lt;a class="reference external" href="http://junit.org/"&gt;JUnit&lt;/a&gt;. It’s pretty
 straightforward, and I remember the syntax from Python’s unittest (even though
 I write tests with &lt;a class="reference external" href="http://pytest.org/"&gt;pytest&lt;/a&gt; nowadays). Or so I thought.&lt;/p&gt;
-&lt;pre class="code java"&gt;&lt;a name="rest_code_da917a0e3c7f406aa7273404a76de25a-1"&gt;&lt;/a&gt;&lt;span class="c1"&gt;// (incorrect)&lt;/span&gt;
-&lt;a name="rest_code_da917a0e3c7f406aa7273404a76de25a-2"&gt;&lt;/a&gt;&lt;span class="n"&gt;assertEquals&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"Basic integers (7) failed"&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;namer&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;7L&lt;/span&gt;&lt;span class="o"&gt;),&lt;/span&gt; &lt;span class="s"&gt;"seven"&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
-&lt;a name="rest_code_da917a0e3c7f406aa7273404a76de25a-3"&gt;&lt;/a&gt;&lt;span class="c1"&gt;// (fixed)                              ^ cursor&lt;/span&gt;
-&lt;a name="rest_code_da917a0e3c7f406aa7273404a76de25a-4"&gt;&lt;/a&gt;&lt;span class="n"&gt;assertEquals&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"Basic integers (7) failed"&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"seven"&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;namer&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;7L&lt;/span&gt;&lt;span class="o"&gt;));&lt;/span&gt;
+&lt;pre class="code java"&gt;&lt;a name="rest_code_f79f5bf44df24faba91c5fb18c01fe2a-1"&gt;&lt;/a&gt;&lt;span class="c1"&gt;// (incorrect)&lt;/span&gt;
+&lt;a name="rest_code_f79f5bf44df24faba91c5fb18c01fe2a-2"&gt;&lt;/a&gt;&lt;span class="n"&gt;assertEquals&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"Basic integers (7) failed"&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;namer&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;7L&lt;/span&gt;&lt;span class="o"&gt;),&lt;/span&gt; &lt;span class="s"&gt;"seven"&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+&lt;a name="rest_code_f79f5bf44df24faba91c5fb18c01fe2a-3"&gt;&lt;/a&gt;&lt;span class="c1"&gt;// (fixed)                              ^ cursor&lt;/span&gt;
+&lt;a name="rest_code_f79f5bf44df24faba91c5fb18c01fe2a-4"&gt;&lt;/a&gt;&lt;span class="n"&gt;assertEquals&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"Basic integers (7) failed"&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"seven"&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;namer&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;7L&lt;/span&gt;&lt;span class="o"&gt;));&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;You see, the typical Python spelling is &lt;tt class="docutils literal"&gt;self.assertEquals(actual,
 expected)&lt;/tt&gt;. Java adds a &lt;tt class="docutils literal"&gt;String&lt;/tt&gt; message parameter and it also swaps
 &lt;tt class="docutils literal"&gt;actual&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;expected&lt;/tt&gt;. Which I didn’t notice at first, and I wrote my
@@ -142,11 +142,11 @@ selected text).&lt;/p&gt;
 &lt;/div&gt;
 &lt;p&gt;Start by installing virtualenv, nginx and uWSGI. I recommend using your operating system packages. For uWSGI, we need the &lt;tt class="docutils literal"&gt;logfile&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;python3&lt;/tt&gt; plugins. (Arch Linux names the &lt;tt class="docutils literal"&gt;python3&lt;/tt&gt; plugin &lt;tt class="docutils literal"&gt;python&lt;/tt&gt;; the &lt;tt class="docutils literal"&gt;logfile&lt;/tt&gt; plugin may be built-in — check with your system repositories!).&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Ubuntu:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_0613a21273754c6f88cd41f5fdbfd829-1"&gt;&lt;/a&gt;aptitude install virtualenv python3 uwsgi uwsgi-emperor uwsgi-plugin-python3 nginx-full
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_6f648f5ef2fa4927999ee21fb3e56e5c-1"&gt;&lt;/a&gt;aptitude install virtualenv python3 uwsgi uwsgi-emperor uwsgi-plugin-python3 nginx-full
 &lt;/pre&gt;&lt;p&gt;&lt;strong&gt;Fedora:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_f248f6d2e5514b3ea86046e6635583d2-1"&gt;&lt;/a&gt;dnf install python3-virtualenv uwsgi uwsgi-plugin-python3 uwsgi-logger-file nginx
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_adb366d454d74f06bc178a1b4fa4ebd5-1"&gt;&lt;/a&gt;dnf install python3-virtualenv uwsgi uwsgi-plugin-python3 uwsgi-logger-file nginx
 &lt;/pre&gt;&lt;p&gt;&lt;strong&gt;Arch Linux:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_f71d3e17f6bf4dfabf41dc21e64de76b-1"&gt;&lt;/a&gt;pacman -S python-virtualenv uwsgi uwsgi-plugin-python nginx
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_b6d16bebe3fa467a9d5200988aa82299-1"&gt;&lt;/a&gt;pacman -S python-virtualenv uwsgi uwsgi-plugin-python nginx
 &lt;/pre&gt;&lt;/div&gt;
 &lt;div class="section" id="preparing-your-application"&gt;
 &lt;h2&gt;Preparing your application&lt;/h2&gt;
@@ -154,28 +154,28 @@ selected text).&lt;/p&gt;
 &lt;p&gt;The app will be installed somewhere under the &lt;tt class="docutils literal"&gt;/srv&lt;/tt&gt; directory, which is a great place to store things like this. I’ll choose &lt;tt class="docutils literal"&gt;/srv/myapp&lt;/tt&gt; for this tutorial, but for real deployments, you should use sometihing more distinguishable — the domain name is a great idea.&lt;/p&gt;
 &lt;p&gt;We’ll start by creating a virtualenv:&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Ubuntu:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_c01ee6c7cb544852b80d38e6b6102a9b-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;cd &lt;/span&gt;srv
-&lt;a name="rest_code_c01ee6c7cb544852b80d38e6b6102a9b-2"&gt;&lt;/a&gt;virtualenv -p /usr/bin/python3 myapp
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_79d452180221453a80e11ba017bdce26-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;cd &lt;/span&gt;srv
+&lt;a name="rest_code_79d452180221453a80e11ba017bdce26-2"&gt;&lt;/a&gt;virtualenv -p /usr/bin/python3 myapp
 &lt;/pre&gt;&lt;p&gt;&lt;strong&gt;Fedora:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_2512c88c1fc14eefa07d43cf9c233bf2-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; /srv
-&lt;a name="rest_code_2512c88c1fc14eefa07d43cf9c233bf2-2"&gt;&lt;/a&gt;virtualenv-3.4 myapp
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_71445e41825f496993ad08dfe2e42e09-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; /srv
+&lt;a name="rest_code_71445e41825f496993ad08dfe2e42e09-2"&gt;&lt;/a&gt;virtualenv-3.4 myapp
 &lt;/pre&gt;&lt;p&gt;&lt;strong&gt;Arch Linux:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_0c708457fa6840bf8ea1892106eb12c3-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; /srv
-&lt;a name="rest_code_0c708457fa6840bf8ea1892106eb12c3-2"&gt;&lt;/a&gt;virtualenv3 myapp
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_a0ee40a9ebd441e6bde56c1a6297eef5-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; /srv
+&lt;a name="rest_code_a0ee40a9ebd441e6bde56c1a6297eef5-2"&gt;&lt;/a&gt;virtualenv3 myapp
 &lt;/pre&gt;&lt;p&gt;(Make sure you create a Python 3 environment!)&lt;/p&gt;
 &lt;p&gt;Now, we need to get our app there and install requirements. An example for the tutorial demo app (adjust for your clone/download path):&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_24d0988a9d644258bbfc883803f5d19a-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;cd &lt;/span&gt;myapp
-&lt;a name="rest_code_24d0988a9d644258bbfc883803f5d19a-2"&gt;&lt;/a&gt;cp -r ~/git/flask-demo-app appdata
-&lt;a name="rest_code_24d0988a9d644258bbfc883803f5d19a-3"&gt;&lt;/a&gt;bin/pip install -r appdata/requirements.txt
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_1a6806dde5bb455484ef84d1f6c6bb3c-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;cd &lt;/span&gt;myapp
+&lt;a name="rest_code_1a6806dde5bb455484ef84d1f6c6bb3c-2"&gt;&lt;/a&gt;cp -r ~/git/flask-demo-app appdata
+&lt;a name="rest_code_1a6806dde5bb455484ef84d1f6c6bb3c-3"&gt;&lt;/a&gt;bin/pip install -r appdata/requirements.txt
 &lt;/pre&gt;&lt;p&gt;I’m storing my application data in the &lt;tt class="docutils literal"&gt;appdata&lt;/tt&gt; subdirectory so that it doesn’t clutter the virtualenv (or vice versa).  You may also install the &lt;tt class="docutils literal"&gt;uwsgi&lt;/tt&gt; package in the virtualenv, but it’s optional.&lt;/p&gt;
 &lt;p&gt;What this directory should be depends on your web framework.  For example, for a Django app, you should have an &lt;tt class="docutils literal"&gt;appdata/manage.py&lt;/tt&gt; file (in other words, &lt;tt class="docutils literal"&gt;appdata&lt;/tt&gt; is where your app structure starts).  I also assumed that the &lt;tt class="docutils literal"&gt;appdata&lt;/tt&gt; folder should have a &lt;tt class="docutils literal"&gt;static&lt;/tt&gt; subdirectory with all static files, including &lt;tt class="docutils literal"&gt;favicon.ico&lt;/tt&gt; if you have one (we will add support for both in nginx).&lt;/p&gt;
 &lt;p&gt;At this point, you should chown this directory to the user and group your server is going to run as.  This is especially important if uwsgi and nginx run as different users (as they do on Fedora). Run one of the following commands:&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Ubuntu:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_4ba249922efb41a996c577c35352c379-1"&gt;&lt;/a&gt;chown -R www-data:www-data /srv/myapp
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_0769be8b9e21494b81a9df7e2a67613d-1"&gt;&lt;/a&gt;chown -R www-data:www-data /srv/myapp
 &lt;/pre&gt;&lt;p&gt;&lt;strong&gt;Fedora:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_692c0e27d5014ee3ab6c33ca7c5b0536-1"&gt;&lt;/a&gt;chown -R uwsgi:nginx /srv/myapp
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_ba98b5b7307941509c031b97997cfd20-1"&gt;&lt;/a&gt;chown -R uwsgi:nginx /srv/myapp
 &lt;/pre&gt;&lt;p&gt;&lt;strong&gt;Arch Linux:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_01db886106ac4c99b89b5f63c71498d7-1"&gt;&lt;/a&gt;chown -R http:http /srv/myapp
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_145bcf61304e4e269e8c06ad61e87543-1"&gt;&lt;/a&gt;chown -R http:http /srv/myapp
 &lt;/pre&gt;&lt;/div&gt;
 &lt;div class="section" id="configuring-uwsgi-and-nginx"&gt;
 &lt;h2&gt;Configuring uWSGI and nginx&lt;/h2&gt;
@@ -187,20 +187,20 @@ selected text).&lt;/p&gt;
 &lt;div class="section" id="uwsgi-configuration"&gt;
 &lt;h3&gt;uWSGI configuration&lt;/h3&gt;
 &lt;p&gt;Start with this, but read the notes below and change the values accordingly:&lt;/p&gt;
-&lt;pre class="code ini"&gt;&lt;a name="rest_code_fb926f5ae5434a0d8f4e580c2d0f47fd-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;[uwsgi]&lt;/span&gt;
-&lt;a name="rest_code_fb926f5ae5434a0d8f4e580c2d0f47fd-2"&gt;&lt;/a&gt;&lt;span class="na"&gt;socket&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/uwsgi.sock&lt;/span&gt;
-&lt;a name="rest_code_fb926f5ae5434a0d8f4e580c2d0f47fd-3"&gt;&lt;/a&gt;&lt;span class="na"&gt;chmod-socket&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;775&lt;/span&gt;
-&lt;a name="rest_code_fb926f5ae5434a0d8f4e580c2d0f47fd-4"&gt;&lt;/a&gt;&lt;span class="na"&gt;chdir&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/appdata&lt;/span&gt;
-&lt;a name="rest_code_fb926f5ae5434a0d8f4e580c2d0f47fd-5"&gt;&lt;/a&gt;&lt;span class="na"&gt;master&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;true&lt;/span&gt;
-&lt;a name="rest_code_fb926f5ae5434a0d8f4e580c2d0f47fd-6"&gt;&lt;/a&gt;&lt;span class="na"&gt;binary-path&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/bin/uwsgi&lt;/span&gt;
-&lt;a name="rest_code_fb926f5ae5434a0d8f4e580c2d0f47fd-7"&gt;&lt;/a&gt;&lt;span class="na"&gt;virtualenv&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp&lt;/span&gt;
-&lt;a name="rest_code_fb926f5ae5434a0d8f4e580c2d0f47fd-8"&gt;&lt;/a&gt;&lt;span class="na"&gt;module&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;flaskapp:app&lt;/span&gt;
-&lt;a name="rest_code_fb926f5ae5434a0d8f4e580c2d0f47fd-9"&gt;&lt;/a&gt;&lt;span class="na"&gt;uid&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;www-data&lt;/span&gt;
-&lt;a name="rest_code_fb926f5ae5434a0d8f4e580c2d0f47fd-10"&gt;&lt;/a&gt;&lt;span class="na"&gt;gid&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;www-data&lt;/span&gt;
-&lt;a name="rest_code_fb926f5ae5434a0d8f4e580c2d0f47fd-11"&gt;&lt;/a&gt;&lt;span class="na"&gt;processes&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;1&lt;/span&gt;
-&lt;a name="rest_code_fb926f5ae5434a0d8f4e580c2d0f47fd-12"&gt;&lt;/a&gt;&lt;span class="na"&gt;threads&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;1&lt;/span&gt;
-&lt;a name="rest_code_fb926f5ae5434a0d8f4e580c2d0f47fd-13"&gt;&lt;/a&gt;&lt;span class="na"&gt;plugins&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;python3,logfile&lt;/span&gt;
-&lt;a name="rest_code_fb926f5ae5434a0d8f4e580c2d0f47fd-14"&gt;&lt;/a&gt;&lt;span class="na"&gt;logger&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;file:/srv/myapp/uwsgi.log&lt;/span&gt;
+&lt;pre class="code ini"&gt;&lt;a name="rest_code_5c30e76d106b41e8aec55c3b25e0944e-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;[uwsgi]&lt;/span&gt;
+&lt;a name="rest_code_5c30e76d106b41e8aec55c3b25e0944e-2"&gt;&lt;/a&gt;&lt;span class="na"&gt;socket&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/uwsgi.sock&lt;/span&gt;
+&lt;a name="rest_code_5c30e76d106b41e8aec55c3b25e0944e-3"&gt;&lt;/a&gt;&lt;span class="na"&gt;chmod-socket&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;775&lt;/span&gt;
+&lt;a name="rest_code_5c30e76d106b41e8aec55c3b25e0944e-4"&gt;&lt;/a&gt;&lt;span class="na"&gt;chdir&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/appdata&lt;/span&gt;
+&lt;a name="rest_code_5c30e76d106b41e8aec55c3b25e0944e-5"&gt;&lt;/a&gt;&lt;span class="na"&gt;master&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;true&lt;/span&gt;
+&lt;a name="rest_code_5c30e76d106b41e8aec55c3b25e0944e-6"&gt;&lt;/a&gt;&lt;span class="na"&gt;binary-path&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/bin/uwsgi&lt;/span&gt;
+&lt;a name="rest_code_5c30e76d106b41e8aec55c3b25e0944e-7"&gt;&lt;/a&gt;&lt;span class="na"&gt;virtualenv&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp&lt;/span&gt;
+&lt;a name="rest_code_5c30e76d106b41e8aec55c3b25e0944e-8"&gt;&lt;/a&gt;&lt;span class="na"&gt;module&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;flaskapp:app&lt;/span&gt;
+&lt;a name="rest_code_5c30e76d106b41e8aec55c3b25e0944e-9"&gt;&lt;/a&gt;&lt;span class="na"&gt;uid&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;www-data&lt;/span&gt;
+&lt;a name="rest_code_5c30e76d106b41e8aec55c3b25e0944e-10"&gt;&lt;/a&gt;&lt;span class="na"&gt;gid&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;www-data&lt;/span&gt;
+&lt;a name="rest_code_5c30e76d106b41e8aec55c3b25e0944e-11"&gt;&lt;/a&gt;&lt;span class="na"&gt;processes&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;1&lt;/span&gt;
+&lt;a name="rest_code_5c30e76d106b41e8aec55c3b25e0944e-12"&gt;&lt;/a&gt;&lt;span class="na"&gt;threads&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;1&lt;/span&gt;
+&lt;a name="rest_code_5c30e76d106b41e8aec55c3b25e0944e-13"&gt;&lt;/a&gt;&lt;span class="na"&gt;plugins&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;python3,logfile&lt;/span&gt;
+&lt;a name="rest_code_5c30e76d106b41e8aec55c3b25e0944e-14"&gt;&lt;/a&gt;&lt;span class="na"&gt;logger&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;file:/srv/myapp/uwsgi.log&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;Save this file as:&lt;/p&gt;
 &lt;ul class="simple"&gt;
 &lt;li&gt;Ubuntu: &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;/etc/uwsgi-emperor/vassals/myapp.ini&lt;/span&gt;&lt;/tt&gt;&lt;/li&gt;
@@ -237,23 +237,23 @@ selected text).&lt;/p&gt;
 &lt;li&gt;Fedora: &lt;tt class="docutils literal"&gt;/etc/nginx/conf.d/myapp.conf&lt;/tt&gt;&lt;/li&gt;
 &lt;li&gt;Arch Linux: add &lt;tt class="docutils literal"&gt;include &lt;span class="pre"&gt;/etc/nginx/conf.d/*.conf;&lt;/span&gt;&lt;/tt&gt; to your &lt;tt class="docutils literal"&gt;http&lt;/tt&gt; directive in &lt;tt class="docutils literal"&gt;/etc/nginx/nginx.conf&lt;/tt&gt; and use &lt;tt class="docutils literal"&gt;/etc/nginx/conf.d/myapp.conf&lt;/tt&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;pre class="code nginx"&gt;&lt;a name="rest_code_d93a2359f8f14d0f9f5da99dbac6e2d1-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;server&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;a name="rest_code_d93a2359f8f14d0f9f5da99dbac6e2d1-2"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;listen&lt;/span&gt; &lt;span class="mi"&gt;8080&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;a name="rest_code_d93a2359f8f14d0f9f5da99dbac6e2d1-3"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;server_name&lt;/span&gt; &lt;span class="s"&gt;localhost&lt;/span&gt; &lt;span class="s"&gt;myapp.local&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;a name="rest_code_d93a2359f8f14d0f9f5da99dbac6e2d1-4"&gt;&lt;/a&gt;
-&lt;a name="rest_code_d93a2359f8f14d0f9f5da99dbac6e2d1-5"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;location&lt;/span&gt; &lt;span class="s"&gt;/&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;a name="rest_code_d93a2359f8f14d0f9f5da99dbac6e2d1-6"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;include&lt;/span&gt; &lt;span class="s"&gt;uwsgi_params&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;a name="rest_code_d93a2359f8f14d0f9f5da99dbac6e2d1-7"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;uwsgi_pass&lt;/span&gt; &lt;span class="s"&gt;unix:/srv/myapp/uwsgi.sock&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;a name="rest_code_d93a2359f8f14d0f9f5da99dbac6e2d1-8"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;a name="rest_code_d93a2359f8f14d0f9f5da99dbac6e2d1-9"&gt;&lt;/a&gt;
-&lt;a name="rest_code_d93a2359f8f14d0f9f5da99dbac6e2d1-10"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;location&lt;/span&gt; &lt;span class="s"&gt;/static&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;a name="rest_code_d93a2359f8f14d0f9f5da99dbac6e2d1-11"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;alias&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/appdata/static&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;a name="rest_code_d93a2359f8f14d0f9f5da99dbac6e2d1-12"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;a name="rest_code_d93a2359f8f14d0f9f5da99dbac6e2d1-13"&gt;&lt;/a&gt;
-&lt;a name="rest_code_d93a2359f8f14d0f9f5da99dbac6e2d1-14"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;location&lt;/span&gt; &lt;span class="s"&gt;/favicon.ico&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;a name="rest_code_d93a2359f8f14d0f9f5da99dbac6e2d1-15"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;alias&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/appdata/static/favicon.ico&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;a name="rest_code_d93a2359f8f14d0f9f5da99dbac6e2d1-16"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;a name="rest_code_d93a2359f8f14d0f9f5da99dbac6e2d1-17"&gt;&lt;/a&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;pre class="code nginx"&gt;&lt;a name="rest_code_dda92488640945f5b9880497db9e56a5-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;server&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_dda92488640945f5b9880497db9e56a5-2"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;listen&lt;/span&gt; &lt;span class="mi"&gt;8080&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_dda92488640945f5b9880497db9e56a5-3"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;server_name&lt;/span&gt; &lt;span class="s"&gt;localhost&lt;/span&gt; &lt;span class="s"&gt;myapp.local&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_dda92488640945f5b9880497db9e56a5-4"&gt;&lt;/a&gt;
+&lt;a name="rest_code_dda92488640945f5b9880497db9e56a5-5"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;location&lt;/span&gt; &lt;span class="s"&gt;/&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_dda92488640945f5b9880497db9e56a5-6"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;include&lt;/span&gt; &lt;span class="s"&gt;uwsgi_params&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_dda92488640945f5b9880497db9e56a5-7"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;uwsgi_pass&lt;/span&gt; &lt;span class="s"&gt;unix:/srv/myapp/uwsgi.sock&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_dda92488640945f5b9880497db9e56a5-8"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;a name="rest_code_dda92488640945f5b9880497db9e56a5-9"&gt;&lt;/a&gt;
+&lt;a name="rest_code_dda92488640945f5b9880497db9e56a5-10"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;location&lt;/span&gt; &lt;span class="s"&gt;/static&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_dda92488640945f5b9880497db9e56a5-11"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;alias&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/appdata/static&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_dda92488640945f5b9880497db9e56a5-12"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;a name="rest_code_dda92488640945f5b9880497db9e56a5-13"&gt;&lt;/a&gt;
+&lt;a name="rest_code_dda92488640945f5b9880497db9e56a5-14"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;location&lt;/span&gt; &lt;span class="s"&gt;/favicon.ico&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_dda92488640945f5b9880497db9e56a5-15"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;alias&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/appdata/static/favicon.ico&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_dda92488640945f5b9880497db9e56a5-16"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;a name="rest_code_dda92488640945f5b9880497db9e56a5-17"&gt;&lt;/a&gt;&lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;Note that this file is a very basic and rudimentary configuration. This configuration is fine for local testing, but for a real deployment, you will need to adjust it:&lt;/p&gt;
 &lt;ul class="simple"&gt;
 &lt;li&gt;set &lt;tt class="docutils literal"&gt;listen&lt;/tt&gt; to &lt;tt class="docutils literal"&gt;443 ssl&lt;/tt&gt; and create a http→https redirect on port 80 (you can get a free SSL certificate from &lt;a class="reference external" href="https://letsencrypt.org/"&gt;Let’s Encrypt&lt;/a&gt;; &lt;a class="reference external" href="https://raymii.org/s/tutorials/Strong_SSL_Security_On_nginx.html"&gt;make sure to configure SSL properly&lt;/a&gt;).&lt;/li&gt;
@@ -270,35 +270,35 @@ selected text).&lt;/p&gt;
 &lt;div class="section" id="for-arch-linux"&gt;
 &lt;h3&gt;For Arch Linux&lt;/h3&gt;
 &lt;p&gt;All you need is:&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_b9a4ae2e61164cff91fe39f7152370d1-1"&gt;&lt;/a&gt;systemctl &lt;span class="nb"&gt;enable &lt;/span&gt;nginx emperor.uwsgi
-&lt;a name="rest_code_b9a4ae2e61164cff91fe39f7152370d1-2"&gt;&lt;/a&gt;systemctl start nginx emperor.uwsgi
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_9fdf17c51df44e03ac1bebc44a1eabe6-1"&gt;&lt;/a&gt;systemctl &lt;span class="nb"&gt;enable &lt;/span&gt;nginx emperor.uwsgi
+&lt;a name="rest_code_9fdf17c51df44e03ac1bebc44a1eabe6-2"&gt;&lt;/a&gt;systemctl start nginx emperor.uwsgi
 &lt;/pre&gt;&lt;p&gt;Verify the service is running with &lt;tt class="docutils literal"&gt;systemctl status emperor.uwsgi&lt;/tt&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="for-fedora"&gt;
 &lt;h3&gt;For Fedora&lt;/h3&gt;
 &lt;p&gt;Make sure you followed the extra note about editing &lt;tt class="docutils literal"&gt;/etc/uwsgi.ini&lt;/tt&gt; and run:&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_9373bb6fc35a4c03adc2dbd75cc8fe64-1"&gt;&lt;/a&gt;systemctl &lt;span class="nb"&gt;enable &lt;/span&gt;nginx uwsgi
-&lt;a name="rest_code_9373bb6fc35a4c03adc2dbd75cc8fe64-2"&gt;&lt;/a&gt;systemctl start nginx uwsgi
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_ad1d8cea92e047498c39e4a2af19f226-1"&gt;&lt;/a&gt;systemctl &lt;span class="nb"&gt;enable &lt;/span&gt;nginx uwsgi
+&lt;a name="rest_code_ad1d8cea92e047498c39e4a2af19f226-2"&gt;&lt;/a&gt;systemctl start nginx uwsgi
 &lt;/pre&gt;&lt;p&gt;Verify the service is running with &lt;tt class="docutils literal"&gt;systemctl status uwsgi&lt;/tt&gt;&lt;/p&gt;
 &lt;p&gt;This is enough to get an app working, if you disabled SELinux (if you want to do it, edit &lt;tt class="docutils literal"&gt;/etc/selinux/config&lt;/tt&gt; and reboot), but if you want to keep SELinux happy, you need to do the following:&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_82b55a2c5caf48b68945492fd56d90b9-1"&gt;&lt;/a&gt;setenforce 0
-&lt;a name="rest_code_82b55a2c5caf48b68945492fd56d90b9-2"&gt;&lt;/a&gt;chcon -R system_u:system_r:httpd_t:s0 /srv/myapp/appdata/static
-&lt;a name="rest_code_82b55a2c5caf48b68945492fd56d90b9-3"&gt;&lt;/a&gt;setenforce 1
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_732b4775f29f425187b5576f629537b3-1"&gt;&lt;/a&gt;setenforce 0
+&lt;a name="rest_code_732b4775f29f425187b5576f629537b3-2"&gt;&lt;/a&gt;chcon -R system_u:system_r:httpd_t:s0 /srv/myapp/appdata/static
+&lt;a name="rest_code_732b4775f29f425187b5576f629537b3-3"&gt;&lt;/a&gt;setenforce 1
 &lt;/pre&gt;&lt;p&gt;We now need to install a &lt;a class="reference external" href="https://chriswarrick.com/pub/nginx-uwsgi.pp"&gt;SELinux policy&lt;/a&gt; (that I created for this project). If it doesn’t work, look into &lt;tt class="docutils literal"&gt;audit2allow&lt;/tt&gt;.&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_328fcbba62f5409f972842b584769963-1"&gt;&lt;/a&gt;semodule -i nginx-uwsgi.pp
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_8d53b4d227604450a46952de0896b650-1"&gt;&lt;/a&gt;semodule -i nginx-uwsgi.pp
 &lt;/pre&gt;&lt;p&gt;Hopefully, this is enough. In case it isn’t, please read SELinux documentation, and check audit logs.&lt;/p&gt;
 &lt;p&gt;Also if you’re on Fedora, to make your website accessible from the outside Internet, you need to configure the built-in firewall accordingly — for ports 80/443, use:&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_a1b6ef93df1a4ada8b5643bbc3ff88be-1"&gt;&lt;/a&gt;firewall-cmd --add-service http
-&lt;a name="rest_code_a1b6ef93df1a4ada8b5643bbc3ff88be-2"&gt;&lt;/a&gt;firewall-cmd --add-service https
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_2450adbc926d40ff9494a212cba944dc-1"&gt;&lt;/a&gt;firewall-cmd --add-service http
+&lt;a name="rest_code_2450adbc926d40ff9494a212cba944dc-2"&gt;&lt;/a&gt;firewall-cmd --add-service https
 &lt;/pre&gt;&lt;/div&gt;
 &lt;div class="section" id="for-ubuntu"&gt;
 &lt;h3&gt;For Ubuntu&lt;/h3&gt;
 &lt;p&gt;Ubuntu does not ship the uWSGI Emperor service by default. However, you can easily create it.  Copy the &lt;tt class="docutils literal"&gt;.service&lt;/tt&gt; file from the &lt;a class="reference external" href="https://uwsgi-docs.readthedocs.org/en/latest/Systemd.html#adding-the-emperor-to-systemd"&gt;uWSGI systemd documentation&lt;/a&gt; to &lt;tt class="docutils literal"&gt;/etc/systemd/system/emperor.uwsgi.service&lt;/tt&gt;.  Change the ExecStart line to:&lt;/p&gt;
-&lt;pre class="code ini"&gt;&lt;a name="rest_code_ff9289625fd04b47a437fe1cd9ecb5f7-1"&gt;&lt;/a&gt;&lt;span class="na"&gt;ExecStart&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/usr/bin/uwsgi --ini /etc/uwsgi-emperor/emperor.ini&lt;/span&gt;
+&lt;pre class="code ini"&gt;&lt;a name="rest_code_4183cac74cc64092b210555e3d49479b-1"&gt;&lt;/a&gt;&lt;span class="na"&gt;ExecStart&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/usr/bin/uwsgi --ini /etc/uwsgi-emperor/emperor.ini&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;You can now reload systemd daemons and enable the services:&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_8eda15c668c846ac9f5500cc81ac7588-1"&gt;&lt;/a&gt;systemctl daemon-reload
-&lt;a name="rest_code_8eda15c668c846ac9f5500cc81ac7588-2"&gt;&lt;/a&gt;systemctl &lt;span class="nb"&gt;enable &lt;/span&gt;nginx emperor.uwsgi
-&lt;a name="rest_code_8eda15c668c846ac9f5500cc81ac7588-3"&gt;&lt;/a&gt;systemctl start nginx emperor.uwsgi
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_04a9db9d0f0c4e0db37b3703170619b7-1"&gt;&lt;/a&gt;systemctl daemon-reload
+&lt;a name="rest_code_04a9db9d0f0c4e0db37b3703170619b7-2"&gt;&lt;/a&gt;systemctl &lt;span class="nb"&gt;enable &lt;/span&gt;nginx emperor.uwsgi
+&lt;a name="rest_code_04a9db9d0f0c4e0db37b3703170619b7-3"&gt;&lt;/a&gt;systemctl start nginx emperor.uwsgi
 &lt;/pre&gt;&lt;p&gt;Verify the service is running with &lt;tt class="docutils literal"&gt;systemctl status emperor.uwsgi&lt;/tt&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -373,15 +373,15 @@ highlighting&lt;/li&gt;
 the majority of them didn’t do much.  In other words, I didn’t have a lot of experience.  Especially with taking user input and relationships.  It took me about 8 hours to get feature parity, and more.&lt;/p&gt;
 &lt;p&gt;Getting all the features was really simple.  For example, to get a many-to-many
 relationship for languages, I had to write just one line.&lt;/p&gt;
-&lt;pre class="code python"&gt;&lt;a name="rest_code_ae9d9a08bc494c6d80314eb781b22b84-1"&gt;&lt;/a&gt;&lt;span class="n"&gt;languages&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ManyToManyField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Language&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_acbf5f2002cf4061a3c85e48a99b4710-1"&gt;&lt;/a&gt;&lt;span class="n"&gt;languages&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ManyToManyField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Language&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;That’s it.  I didn’t have to run through complicated SQLAlchemy documentation,
 which provides a &lt;a class="reference external" href="http://docs.sqlalchemy.org/en/rel_1_0/orm/basic_relationships.html#many-to-many"&gt;13-line solution&lt;/a&gt; to the same problem.&lt;/p&gt;
 &lt;p&gt;Django also simplified New Relic integration, as the browser JS can be implemented
 using Django template tags.&lt;/p&gt;
 &lt;p&gt;Django is not without its problems, though.  I got a very cryptic traceback
 when I did this:&lt;/p&gt;
-&lt;pre class="code python"&gt;&lt;a name="rest_code_ee246dda529a46dd801806525015b8de-1"&gt;&lt;/a&gt;&lt;span class="n"&gt;publish_email&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;forms&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;BooleanField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"Publish e-mail"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;required&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;False&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_ee246dda529a46dd801806525015b8de-2"&gt;&lt;/a&gt;&lt;span class="ne"&gt;TypeError&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;"BooleanField() got multiple values for argument 'required'"&lt;/span&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_216e38892ead4484970ef95c0781a8e4-1"&gt;&lt;/a&gt;&lt;span class="n"&gt;publish_email&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;forms&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;BooleanField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"Publish e-mail"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;required&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;False&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_216e38892ead4484970ef95c0781a8e4-2"&gt;&lt;/a&gt;&lt;span class="ne"&gt;TypeError&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s"&gt;"BooleanField() got multiple values for argument 'required'"&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;The real problem with this code?  I forgot the &lt;tt class="docutils literal"&gt;label=&lt;/tt&gt; keyword.  The
 problem is, the model API accepts this syntax — &lt;tt class="docutils literal"&gt;verbose_name&lt;/tt&gt; is the first
 argument.  (I am not actually using the labels though, I write my own form
@@ -576,10 +576,10 @@ mogą zainstalować pakiet &lt;tt class="docutils literal"&gt;think&lt;/tt&gt; z
 &lt;h2&gt;Konfiguracja&lt;/h2&gt;
 &lt;p&gt;Utwórz plik &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;~/.config/think.conf&lt;/span&gt;&lt;/tt&gt; (tam, gdzie jest &lt;tt class="docutils literal"&gt;XDG_CONFIG_HOME&lt;/tt&gt;),
 zawierający poniższe cztery linie:&lt;/p&gt;
-&lt;pre class="code ini"&gt;&lt;a name="rest_code_624c24f659484b4daa611903b4cea715-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;[Think]&lt;/span&gt;
-&lt;a name="rest_code_624c24f659484b4daa611903b4cea715-2"&gt;&lt;/a&gt;&lt;span class="na"&gt;command&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;play&lt;/span&gt;
-&lt;a name="rest_code_624c24f659484b4daa611903b4cea715-3"&gt;&lt;/a&gt;&lt;span class="na"&gt;file&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/home/kwpolska/Dropbox/Media/Wielka Gra.mp3&lt;/span&gt;
-&lt;a name="rest_code_624c24f659484b4daa611903b4cea715-4"&gt;&lt;/a&gt;&lt;span class="na"&gt;behavior&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;wait&lt;/span&gt;
+&lt;pre class="code ini"&gt;&lt;a name="rest_code_7e231855b973418b88d1c0ebcd75c26d-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;[Think]&lt;/span&gt;
+&lt;a name="rest_code_7e231855b973418b88d1c0ebcd75c26d-2"&gt;&lt;/a&gt;&lt;span class="na"&gt;command&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;play&lt;/span&gt;
+&lt;a name="rest_code_7e231855b973418b88d1c0ebcd75c26d-3"&gt;&lt;/a&gt;&lt;span class="na"&gt;file&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/home/kwpolska/Dropbox/Media/Wielka Gra.mp3&lt;/span&gt;
+&lt;a name="rest_code_7e231855b973418b88d1c0ebcd75c26d-4"&gt;&lt;/a&gt;&lt;span class="na"&gt;behavior&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;wait&lt;/span&gt;
 &lt;/pre&gt;&lt;ul class="simple"&gt;
 &lt;li&gt;&lt;tt class="docutils literal"&gt;command&lt;/tt&gt; to komenda odtwarzacza, która zostanie wywołana. Możesz użyć
 &lt;tt class="docutils literal"&gt;play&lt;/tt&gt; (z pakietu &lt;tt class="docutils literal"&gt;sox&lt;/tt&gt;) albo jakiegokolwiek innego szybkiego odtwarzacza
@@ -596,7 +596,7 @@ muzyki działającego w konsoli.&lt;/li&gt;
 &lt;div class="section" id="uzycie"&gt;
 &lt;h2&gt;Użycie&lt;/h2&gt;
 &lt;p&gt;Dodaj &lt;tt class="docutils literal"&gt;think&lt;/tt&gt; przed komendą, która długo się wykonuje:&lt;/p&gt;
-&lt;pre class="code console"&gt;&lt;a name="rest_code_9e22d0c2074f43e4b90c9ec03fae8285-1"&gt;&lt;/a&gt;&lt;span class="go"&gt;think sleep 120&lt;/span&gt;
+&lt;pre class="code console"&gt;&lt;a name="rest_code_86e78c91aa834e2298747ba164dd7128-1"&gt;&lt;/a&gt;&lt;span class="go"&gt;think sleep 120&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</description><category>app</category><category>CLI</category><category>game show</category><category>Jeopardy!</category><category>Linux</category><category>projects</category><category>Python</category><category>think</category><guid>https://chriswarrick.com/pl/blog/2015/05/30/think/</guid><pubDate>Sat, 06 Jun 2015 12:15:00 GMT</pubDate></item><item><title>Revamping My Projects Page with Nikola</title><link>https://chriswarrick.com/pl/blog/2014/10/13/revamping-my-projects-page-with-nikola/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;A week ago, I was inspired to produce a new &lt;a class="reference external" href="https://chriswarrick.com/projects/"&gt;projects page&lt;/a&gt; for
 myself.  The previous one was a trainwreck with a lot of hacks.  Also hosted on
 GitHub Pages for some reason.&lt;/p&gt;
@@ -681,22 +681,22 @@ the %PATH%, this will &lt;strong&gt;also work in Windows&lt;/strong&gt;.&lt;/p&g
 function that takes no arguments, and also a special passage to determine code
 to run:&lt;/p&gt;
 &lt;p&gt;&lt;a class="reference external" href="https://chriswarrick.com/listings/entry_points_project/my_project/__main__.py.html"&gt;entry_points_project/my_project/__main__.py&lt;/a&gt;&lt;/p&gt;
-&lt;pre class="code python"&gt;&lt;a name="rest_code_a66e3d3ac6cc445bb7a8df70f484a529-1"&gt;&lt;/a&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;sys&lt;/span&gt;
-&lt;a name="rest_code_a66e3d3ac6cc445bb7a8df70f484a529-2"&gt;&lt;/a&gt;
-&lt;a name="rest_code_a66e3d3ac6cc445bb7a8df70f484a529-3"&gt;&lt;/a&gt;
-&lt;a name="rest_code_a66e3d3ac6cc445bb7a8df70f484a529-4"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-&lt;a name="rest_code_a66e3d3ac6cc445bb7a8df70f484a529-5"&gt;&lt;/a&gt;    &lt;span class="sd"&gt;"""The main routine."""&lt;/span&gt;
-&lt;a name="rest_code_a66e3d3ac6cc445bb7a8df70f484a529-6"&gt;&lt;/a&gt;    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;args&lt;/span&gt; &lt;span class="ow"&gt;is&lt;/span&gt; &lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-&lt;a name="rest_code_a66e3d3ac6cc445bb7a8df70f484a529-7"&gt;&lt;/a&gt;        &lt;span class="n"&gt;args&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;:]&lt;/span&gt;
-&lt;a name="rest_code_a66e3d3ac6cc445bb7a8df70f484a529-8"&gt;&lt;/a&gt;
-&lt;a name="rest_code_a66e3d3ac6cc445bb7a8df70f484a529-9"&gt;&lt;/a&gt;    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"This is the main routine."&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_a66e3d3ac6cc445bb7a8df70f484a529-10"&gt;&lt;/a&gt;    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"It should do something interesting."&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_a66e3d3ac6cc445bb7a8df70f484a529-11"&gt;&lt;/a&gt;
-&lt;a name="rest_code_a66e3d3ac6cc445bb7a8df70f484a529-12"&gt;&lt;/a&gt;    &lt;span class="c"&gt;# Do argument parsing here (eg. with argparse) and anything else&lt;/span&gt;
-&lt;a name="rest_code_a66e3d3ac6cc445bb7a8df70f484a529-13"&gt;&lt;/a&gt;    &lt;span class="c"&gt;# you want your project to do.&lt;/span&gt;
-&lt;a name="rest_code_a66e3d3ac6cc445bb7a8df70f484a529-14"&gt;&lt;/a&gt;
-&lt;a name="rest_code_a66e3d3ac6cc445bb7a8df70f484a529-15"&gt;&lt;/a&gt;&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;__name__&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s"&gt;"__main__"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-&lt;a name="rest_code_a66e3d3ac6cc445bb7a8df70f484a529-16"&gt;&lt;/a&gt;    &lt;span class="n"&gt;main&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_367b380890e74203a01fe94703d19f57-1"&gt;&lt;/a&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;sys&lt;/span&gt;
+&lt;a name="rest_code_367b380890e74203a01fe94703d19f57-2"&gt;&lt;/a&gt;
+&lt;a name="rest_code_367b380890e74203a01fe94703d19f57-3"&gt;&lt;/a&gt;
+&lt;a name="rest_code_367b380890e74203a01fe94703d19f57-4"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;a name="rest_code_367b380890e74203a01fe94703d19f57-5"&gt;&lt;/a&gt;    &lt;span class="sd"&gt;"""The main routine."""&lt;/span&gt;
+&lt;a name="rest_code_367b380890e74203a01fe94703d19f57-6"&gt;&lt;/a&gt;    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;args&lt;/span&gt; &lt;span class="ow"&gt;is&lt;/span&gt; &lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;a name="rest_code_367b380890e74203a01fe94703d19f57-7"&gt;&lt;/a&gt;        &lt;span class="n"&gt;args&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;:]&lt;/span&gt;
+&lt;a name="rest_code_367b380890e74203a01fe94703d19f57-8"&gt;&lt;/a&gt;
+&lt;a name="rest_code_367b380890e74203a01fe94703d19f57-9"&gt;&lt;/a&gt;    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"This is the main routine."&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_367b380890e74203a01fe94703d19f57-10"&gt;&lt;/a&gt;    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"It should do something interesting."&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_367b380890e74203a01fe94703d19f57-11"&gt;&lt;/a&gt;
+&lt;a name="rest_code_367b380890e74203a01fe94703d19f57-12"&gt;&lt;/a&gt;    &lt;span class="c"&gt;# Do argument parsing here (eg. with argparse) and anything else&lt;/span&gt;
+&lt;a name="rest_code_367b380890e74203a01fe94703d19f57-13"&gt;&lt;/a&gt;    &lt;span class="c"&gt;# you want your project to do.&lt;/span&gt;
+&lt;a name="rest_code_367b380890e74203a01fe94703d19f57-14"&gt;&lt;/a&gt;
+&lt;a name="rest_code_367b380890e74203a01fe94703d19f57-15"&gt;&lt;/a&gt;&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;__name__&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s"&gt;"__main__"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;a name="rest_code_367b380890e74203a01fe94703d19f57-16"&gt;&lt;/a&gt;    &lt;span class="n"&gt;main&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;/pre&gt;&lt;ol class="arabic simple"&gt;
 &lt;li&gt;The &lt;tt class="docutils literal"&gt;if __name__ == "__main__":&lt;/tt&gt; idiom, as &lt;a class="reference external" href="https://docs.python.org/3/library/__main__.html"&gt;documented here&lt;/a&gt;, is used to check whether
 this is executed as the top-level file, or if it has been imported by someone
@@ -709,24 +709,24 @@ else (in this case, executing the &lt;tt class="docutils literal"&gt;main()&lt;/
 &lt;h2&gt;Step 2: adjust &lt;tt class="docutils literal"&gt;setup.py&lt;/tt&gt; accordingly&lt;/h2&gt;
 &lt;p&gt;This is the real deal: create the entry points in your &lt;tt class="docutils literal"&gt;setup.py&lt;/tt&gt; file.&lt;/p&gt;
 &lt;p&gt;&lt;a class="reference external" href="https://chriswarrick.com/listings/entry_points_project/setup.py.html"&gt;entry_points_project/setup.py&lt;/a&gt;&lt;/p&gt;
-&lt;pre class="code python"&gt;&lt;a name="rest_code_f5d5c58ec74f4eb9836ee4edeaca9446-1"&gt;&lt;/a&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;setuptools&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;setup&lt;/span&gt;
-&lt;a name="rest_code_f5d5c58ec74f4eb9836ee4edeaca9446-2"&gt;&lt;/a&gt;
-&lt;a name="rest_code_f5d5c58ec74f4eb9836ee4edeaca9446-3"&gt;&lt;/a&gt;&lt;span class="n"&gt;setup&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;'my_project'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;a name="rest_code_f5d5c58ec74f4eb9836ee4edeaca9446-4"&gt;&lt;/a&gt;      &lt;span class="n"&gt;version&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;'0.1.0'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;a name="rest_code_f5d5c58ec74f4eb9836ee4edeaca9446-5"&gt;&lt;/a&gt;      &lt;span class="n"&gt;packages&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s"&gt;'my_project'&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;
-&lt;a name="rest_code_f5d5c58ec74f4eb9836ee4edeaca9446-6"&gt;&lt;/a&gt;      &lt;span class="n"&gt;entry_points&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-&lt;a name="rest_code_f5d5c58ec74f4eb9836ee4edeaca9446-7"&gt;&lt;/a&gt;          &lt;span class="s"&gt;'console_scripts'&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;
-&lt;a name="rest_code_f5d5c58ec74f4eb9836ee4edeaca9446-8"&gt;&lt;/a&gt;              &lt;span class="s"&gt;'my_project = my_project.__main__:main'&lt;/span&gt;
-&lt;a name="rest_code_f5d5c58ec74f4eb9836ee4edeaca9446-9"&gt;&lt;/a&gt;          &lt;span class="p"&gt;]&lt;/span&gt;
-&lt;a name="rest_code_f5d5c58ec74f4eb9836ee4edeaca9446-10"&gt;&lt;/a&gt;      &lt;span class="p"&gt;},&lt;/span&gt;
-&lt;a name="rest_code_f5d5c58ec74f4eb9836ee4edeaca9446-11"&gt;&lt;/a&gt;      &lt;span class="p"&gt;)&lt;/span&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_db1da35b5aca46e499fe16fcad0145b0-1"&gt;&lt;/a&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;setuptools&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;setup&lt;/span&gt;
+&lt;a name="rest_code_db1da35b5aca46e499fe16fcad0145b0-2"&gt;&lt;/a&gt;
+&lt;a name="rest_code_db1da35b5aca46e499fe16fcad0145b0-3"&gt;&lt;/a&gt;&lt;span class="n"&gt;setup&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;'my_project'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;a name="rest_code_db1da35b5aca46e499fe16fcad0145b0-4"&gt;&lt;/a&gt;      &lt;span class="n"&gt;version&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;'0.1.0'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;a name="rest_code_db1da35b5aca46e499fe16fcad0145b0-5"&gt;&lt;/a&gt;      &lt;span class="n"&gt;packages&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s"&gt;'my_project'&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;
+&lt;a name="rest_code_db1da35b5aca46e499fe16fcad0145b0-6"&gt;&lt;/a&gt;      &lt;span class="n"&gt;entry_points&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_db1da35b5aca46e499fe16fcad0145b0-7"&gt;&lt;/a&gt;          &lt;span class="s"&gt;'console_scripts'&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;
+&lt;a name="rest_code_db1da35b5aca46e499fe16fcad0145b0-8"&gt;&lt;/a&gt;              &lt;span class="s"&gt;'my_project = my_project.__main__:main'&lt;/span&gt;
+&lt;a name="rest_code_db1da35b5aca46e499fe16fcad0145b0-9"&gt;&lt;/a&gt;          &lt;span class="p"&gt;]&lt;/span&gt;
+&lt;a name="rest_code_db1da35b5aca46e499fe16fcad0145b0-10"&gt;&lt;/a&gt;      &lt;span class="p"&gt;},&lt;/span&gt;
+&lt;a name="rest_code_db1da35b5aca46e499fe16fcad0145b0-11"&gt;&lt;/a&gt;      &lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;ol class="arabic simple"&gt;
 &lt;li&gt;You must use setuptools, otherwise this won’t work.&lt;/li&gt;
 &lt;li&gt;The most important piece of code is the &lt;tt class="docutils literal"&gt;entry_points&lt;/tt&gt; declaration
 (unsurprisingly).&lt;/li&gt;
 &lt;li&gt;The declaration reads&lt;/li&gt;
 &lt;/ol&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_f21b6027a80442799a64a521fd33e6e2-1"&gt;&lt;/a&gt;"name_of_executable = module.with:function_to_execute"
+&lt;pre class="code text"&gt;&lt;a name="rest_code_2080420d70fc44e086442b6cace18fcf-1"&gt;&lt;/a&gt;"name_of_executable = module.with:function_to_execute"
 &lt;/pre&gt;&lt;ol class="arabic simple" start="4"&gt;
 &lt;li&gt;If you are developing a GUI application (in Tkinter, PyQt/PySide,
 WxPython, PyGTK, PyGame…), you should change the declaration to

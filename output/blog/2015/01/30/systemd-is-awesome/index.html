@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html prefix="
 og: http://ogp.me/ns#
 article: http://ogp.me/ns/article#
@@ -98,13 +99,13 @@ article: http://ogp.me/ns/article#
         <div id="cookiecontainer"></div>
             
 <article class="post-text h-entry hentry postpage postbox" itemscope="itemscope" itemtype="http://schema.org/Article"><header class="page-header"><h1 class="p-name entry-title" itemprop="headline name">
-    <a href="/blog/2015/01/30/systemd-is-awesome/" class="u-url">systemd is&nbsp;awesome.</a>
+    <a href="/blog/2015/01/30/systemd-is-awesome/" class="u-url">systemd is awesome.</a>
     </h1>
 
     <div class="metadata">
 <a href="/blog/2015/01/30/systemd-is-awesome/" rel="bookmark" class="u-published"><time class="published dt-published" datetime="2015-01-30T16:00:00+01:00" itemprop="datePublished" title="2015-01-30 16:00">2015-01-30 16:00</time></a>        <ul itemprop="keywords" class="tags">
 <li class="section-bubble" style="background-color: #ff59e3"><a href="/linux/">Linux</a></li>
-           <li><a class="tag p-category" href="/blog/tags/arch-linux/" rel="tag">Arch&nbsp;Linux</a></li>
+           <li><a class="tag p-category" href="/blog/tags/arch-linux/" rel="tag">Arch Linux</a></li>
            <li><a class="tag p-category" href="/blog/tags/debian/" rel="tag">Debian</a></li>
            <li><a class="tag p-category" href="/blog/tags/fedora/" rel="tag">Fedora</a></li>
            <li><a class="tag p-category" href="/blog/tags/linux/" rel="tag">Linux</a></li>
@@ -117,12 +118,12 @@ article: http://ogp.me/ns/article#
 <p>I recently switched distros on my server, from Debian to Fedora, to use
 <tt class="docutils literal">systemd</tt> and keep it in line with my home <a class="reference external" href="/blog/2011/01/06/arch-linux-the-best-distro-ever/">Arch Linux</a> system (which was
 not reinstalled since 2010, by the way!)  Why is systemd so awesome?  Read
-on to find&nbsp;out.</p>
+on to find out.</p>
 </div></div>
 <p><em>(I changed the hardware for my home system along the way.  And just copied
-everything over with &#8220;dd&#8220;.  That’s Linux at its&nbsp;finest.)</em></p>
+everything over with ``dd``.  That’s Linux at its finest.)</em></p>
 <div class="section" id="user-friendly">
-<h2>User&nbsp;friendly</h2>
+<h2>User friendly</h2>
 <p>The most important thing in systemd is its user friendliness.  systemd offers
 the <tt class="docutils literal">systemctl</tt> tool, which can be used to control all the services.  You
 can see what exactly is going on: what is running, what failed to start,
@@ -131,12 +132,12 @@ and you can also see why if you ask <tt class="docutils literal">systemctl statu
 <div class="section" id="services">
 <h2>Services</h2>
 <div class="section" id="writing-services-is-fun">
-<h3>Writing services is&nbsp;fun</h3>
+<h3>Writing services is fun</h3>
 <p>If you want your own services, you just need to write some simple INI files.  No
 need for bash, distro-specific frameworks and whatnot.  If I have a functioning
 service written on Arch, I can just copy the file over to Fedora and blindly
-enable it — assuming I have the executables installed, it’s guaranteed to&nbsp;work.</p>
-<p>And the units are&nbsp;tiny:</p>
+enable it — assuming I have the executables installed, it’s guaranteed to work.</p>
+<p>And the units are tiny:</p>
 <pre class="literal-block">
 fedora$ wc -l /usr/lib/systemd/system/nginx.service
 15 /usr/lib/systemd/system/nginx.service
@@ -144,58 +145,58 @@ debian$ wc -l /etc/init.d/nginx
 101 /etc/init.d/nginx
 </pre>
 <p>And you can write a bare-minimum systemd daemon in less than that – not so easy
-with <tt class="docutils literal">sysvinit</tt> (writing everything on one line doesn’t&nbsp;count!)</p>
+with <tt class="docutils literal">sysvinit</tt> (writing everything on one line doesn’t count!)</p>
 </div>
 <div class="section" id="managing-personal-services">
-<h3>Managing personal&nbsp;services</h3>
+<h3>Managing personal services</h3>
 <p>systemd also features user-specific services.  You can run any service as your
 user.  I use this to run <a class="reference external" href="/kwbot/">KwBot</a>, which was previously under control of
-<tt class="docutils literal">supervisord</tt> — that’s one less dependency to care&nbsp;about!</p>
+<tt class="docutils literal">supervisord</tt> — that’s one less dependency to care about!</p>
 </div>
 <div class="section" id="runlevels-do-not-exist">
-<h3>Runlevels do not&nbsp;exist</h3>
+<h3>Runlevels do not exist</h3>
 <p>systemd does away with the standard convention of runlevels.  They are replaced
 by human-friendly <em>targets</em>.  Each unit defines its target: most use
-<tt class="docutils literal"><span class="pre">multi-user.target</span></tt>.  It is much easier to&nbsp;manage.</p>
+<tt class="docutils literal"><span class="pre">multi-user.target</span></tt>.  It is much easier to manage.</p>
 </div>
 <div class="section" id="no-symlink-mess">
-<h3>No symlink&nbsp;mess</h3>
+<h3>No symlink mess</h3>
 <p>Just like old sysvinit-esque systems, systemd uses symlinks to manage
 enabled/disabled services.  There is just one difference: you get just <strong>one</strong>
 symlink in the appropriate <tt class="docutils literal">.wants</tt> directory.  You do not have to look into
 all the different runlevels.  <tt class="docutils literal">graphical.target</tt> depends on
 <tt class="docutils literal"><span class="pre">multi-user.target</span></tt>, which in turn depends on <tt class="docutils literal">basic.target</tt>, which depends
-on a few more targets required to get the system up and&nbsp;running.</p>
+on a few more targets required to get the system up and running.</p>
 </div>
 <div class="section" id="units-can-depend-on-each-other">
-<h3>Units can depend on each&nbsp;other</h3>
+<h3>Units can depend on each other</h3>
 <p>Do you have some units that require the network to be up?  Set it to be run
-after and require <tt class="docutils literal">network.target</tt> and call it a&nbsp;day.</p>
+after and require <tt class="docutils literal">network.target</tt> and call it a day.</p>
 </div>
 </div>
 <div class="section" id="the-journal">
-<h2>The&nbsp;Journal</h2>
+<h2>The Journal</h2>
 <p>If I want to know what is going on in my system, I can just ask <tt class="docutils literal">journalctl</tt>
 to show me the most recent messages.  I don’t need to read a thousand different
 log files — most things appear in the journal.  Sure, some things aren’t there
-(yet), but what I <em>can</em> see is very&nbsp;useful.</p>
+(yet), but what I <em>can</em> see is very useful.</p>
 </div>
 <div class="section" id="did-i-really-change-my-distro-for-all-that">
-<h2>Did I really change my distro for all&nbsp;that?</h2>
+<h2>Did I really change my distro for all that?</h2>
 <p>Yes.  I got too annoyed with Debian’s idiocy.  Also, DigitalOcean doesn’t
 <em>really</em> support Debian testing, and I cannot survive with outdated software.
-I feel much better and, more importantly, <strong>safer</strong> with&nbsp;Fedora.</p>
-<p>(also, the “Veteran Unix Admins” of Devuan are a bunch of&nbsp;idiots.)</p>
+I feel much better and, more importantly, <strong>safer</strong> with Fedora.</p>
+<p>(also, the “Veteran Unix Admins” of Devuan are a bunch of idiots.)</p>
 </div>
 </div>
     </article>
 </div>
     <aside class="postpromonav"><nav><ul class="pager hidden-print">
 <li class="previous">
-                <a href="/blog/2014/11/09/inbox-review/" rel="prev" title="Inbox (by Google) Review">Previous&nbsp;post</a>
+                <a href="/blog/2014/11/09/inbox-review/" rel="prev" title="Inbox (by Google) Review">Previous post</a>
             </li>
             <li class="next">
-                <a href="/blog/2015/05/30/think/" rel="next" title="New project: think (Terminal Think Music)">Next&nbsp;post</a>
+                <a href="/blog/2015/05/30/think/" rel="next" title="New project: think (Terminal Think Music)">Next post</a>
             </li>
         </ul></nav></aside><section class="comments"><h2>Comments</h2>
                         <div id="disqus_thread"></div>
@@ -222,11 +223,11 @@ I feel much better and, more importantly, <strong>safer</strong> with&nbsp;Fedor
         <!--End of body content-->
 
         <footer class="site-footer"><p><a href="/cookies/">this site uses
-cookies.</a><br>by using this site, you agree to our cookie&nbsp;policy.</p>
+cookies.</a><br>by using this site, you agree to our cookie policy.</p>
 <p>
 powered by <strong><a href="https://getnikola.com/">Nikola</a></strong>, <a href="http://nginx.org/">nginx</a> and <a href="https://www.digitalocean.com/?refcode=7983689b2ecc">DigitalOcean</a><br>
 copyright © 2009–2016 <a href="/contact/">Chris Warrick</a><br><a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC
-BY-NC-SA</a>, unless stated&nbsp;otherwise</p>
+BY-NC-SA</a>, unless stated otherwise</p>
             
         </footer>
 </div>

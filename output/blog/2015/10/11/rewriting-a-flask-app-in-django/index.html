@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html prefix="
 og: http://ogp.me/ns#
 article: http://ogp.me/ns/article#
@@ -98,7 +99,7 @@ article: http://ogp.me/ns/article#
         <div id="cookiecontainer"></div>
             
 <article class="post-text h-entry hentry postpage postbox" itemscope="itemscope" itemtype="http://schema.org/Article"><header class="page-header"><h1 class="p-name entry-title" itemprop="headline name">
-    <a href="/blog/2015/10/11/rewriting-a-flask-app-in-django/" class="u-url">Rewriting a Flask app in&nbsp;Django</a>
+    <a href="/blog/2015/10/11/rewriting-a-flask-app-in-django/" class="u-url">Rewriting a Flask app in Django</a>
     </h1>
 
     <div class="metadata">
@@ -118,70 +119,74 @@ article: http://ogp.me/ns/article#
 <a class="reference external" href="https://users.getnikola.com/">Nikola Users</a>, which is a very simple CRUD
 app.  And yet, the Flask code was a mess, full of bugs and vulnerabilities.
 Eight hours later, I had a fully functional Django app that did more and fixed
-all&nbsp;problems.</p>
+all problems.</p>
 </div></div>
 <div class="section" id="original-flask-app">
-<h2>Original Flask&nbsp;app</h2>
+<h2>Original Flask app</h2>
 <p>The original Flask app had a ton of problems.  In order to make it anywhere
-near useful, I would need to spend hours.  Here’s just a few of&nbsp;them:</p>
+near useful, I would need to spend hours.  Here’s just a few of
+them:</p>
 <ul class="simple">
-<li>357 lines of spaghetti code (295 SLOC), all in one&nbsp;file</li>
-<li>No form data validation, no CSRF <a class="footnote-reference" href="/blog/2015/10/11/rewriting-a-flask-app-in-django/#id2" id="id1">[1]</a> protection (it did have XSS protection&nbsp;though)</li>
+<li>357 lines of spaghetti code (295 SLOC), all in one file</li>
+<li>No form data validation, no CSRF <a class="footnote-reference" href="/blog/2015/10/11/rewriting-a-flask-app-in-django/#id2" id="id1">[1]</a> protection (it did have XSS protection
+though)</li>
 <li>Login using Mozilla Persona, which requries JavaScript, is a bit kludgey, and
-feels desolate (and also had me store the admin e-mail list in&nbsp;code)</li>
-<li>Geopolitics issues: using country flags for&nbsp;languages</li>
-<li>A lot of things were implemented by&nbsp;hand</li>
-<li>SQLAlchemy is very&nbsp;verbose</li>
-<li>no DB migrations (makes enhancements&nbsp;harder)</li>
-<li>Languages implemented as a PostgreSQL integer&nbsp;array</li>
+feels desolate (and also had me store the admin e-mail list in code)</li>
+<li>Geopolitics issues: using country flags for languages</li>
+<li>A lot of things were implemented by hand</li>
+<li>SQLAlchemy is very verbose</li>
+<li>no DB migrations (makes enhancements harder)</li>
+<li>Languages implemented as a PostgreSQL integer array</li>
 <li>Adding a language required running a command-line script and <strong>restarting the
 app</strong> (languages were cached in Python dicts with no way to reload them from
 the database; that would require talking through uWSGI anyway because there
-were multiple processes&nbsp;involved)</li>
+were multiple processes involved)</li>
 <li>The templates were slightly hacky (the page title was set in each individual
-template and not in the view code); menus hacked together in HTML with no&nbsp;highlighting</li>
-<li>Python&nbsp;2.7</li>
+template and not in the view code); menus hacked together in HTML with no
+highlighting</li>
+<li>Python 2.7</li>
 </ul>
 </div>
 <div class="section" id="the-rewrite">
-<h2>The&nbsp;rewrite</h2>
+<h2>The rewrite</h2>
 <p>I started the process by opening <a class="reference external" href="https://docs.djangoproject.com/en/">Django documentation</a>, with its wonderful
 <a class="reference external" href="https://docs.djangoproject.com/en/1.8/intro/tutorial01/">tutorial</a>.  Now, I have written a couple basic Django apps before, but
-the majority of them didn’t do much.  In other words, I didn’t have a lot of experience.  Especially with taking user input and relationships.  It took me about 8 hours to get feature parity, and&nbsp;more.</p>
+the majority of them didn’t do much.  In other words, I didn’t have a lot of experience.  Especially with taking user input and relationships.  It took me about 8 hours to get feature parity, and more.</p>
 <p>Getting all the features was really simple.  For example, to get a many-to-many
-relationship for languages, I had to write just one&nbsp;line.</p>
-<pre class="code python"><a name="rest_code_ae9d9a08bc494c6d80314eb781b22b84-1"></a><span class="n">languages</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="n">Language</span><span class="p">)</span>
+relationship for languages, I had to write just one line.</p>
+<pre class="code python"><a name="rest_code_acbf5f2002cf4061a3c85e48a99b4710-1"></a><span class="n">languages</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="n">Language</span><span class="p">)</span>
 </pre>
 <p>That’s it.  I didn’t have to run through complicated SQLAlchemy documentation,
-which provides a <a class="reference external" href="http://docs.sqlalchemy.org/en/rel_1_0/orm/basic_relationships.html#many-to-many">13-line solution</a> to the same&nbsp;problem.</p>
+which provides a <a class="reference external" href="http://docs.sqlalchemy.org/en/rel_1_0/orm/basic_relationships.html#many-to-many">13-line solution</a> to the same problem.</p>
 <p>Django also simplified New Relic integration, as the browser JS can be implemented
-using Django template&nbsp;tags.</p>
+using Django template tags.</p>
 <p>Django is not without its problems, though.  I got a very cryptic traceback
-when I did&nbsp;this:</p>
-<pre class="code python"><a name="rest_code_ee246dda529a46dd801806525015b8de-1"></a><span class="n">publish_email</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="s">"Publish e-mail"</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
-<a name="rest_code_ee246dda529a46dd801806525015b8de-2"></a><span class="ne">TypeError</span><span class="p">:</span> <span class="s">"BooleanField() got multiple values for argument 'required'"</span>
+when I did this:</p>
+<pre class="code python"><a name="rest_code_216e38892ead4484970ef95c0781a8e4-1"></a><span class="n">publish_email</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="s">"Publish e-mail"</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<a name="rest_code_216e38892ead4484970ef95c0781a8e4-2"></a><span class="ne">TypeError</span><span class="p">:</span> <span class="s">"BooleanField() got multiple values for argument 'required'"</span>
 </pre>
 <p>The real problem with this code?  I forgot the <tt class="docutils literal">label=</tt> keyword.  The
 problem is, the model API accepts this syntax — <tt class="docutils literal">verbose_name</tt> is the first
-argument.  (I am not actually using the labels though, I write my own form&nbsp;HTML)</p>
+argument.  (I am not actually using the labels though, I write my own form
+HTML)</p>
 <p>Still, the Django version is much cleaner.  And the best part of all?  There
 are no magic global objects (<tt class="docutils literal">g</tt>, <tt class="docutils literal">session</tt>, <tt class="docutils literal">request</tt>) and
-decorator-based views (which are a bit of syntax abuse&nbsp;IMO).</p>
-<p>In the end, I&nbsp;have:</p>
+decorator-based views (which are a bit of syntax abuse IMO).</p>
+<p>In the end, I have:</p>
 <ul class="simple">
-<li>382 lines of code (297 SLOC) over 6 files — much cleaner, and with less long&nbsp;lines</li>
-<li>form data validation (via Django), CSRF and XSS&nbsp;protection</li>
-<li>Login using Django built-in authentication, without&nbsp;JavaScript</li>
-<li>Language codes (granted, I could’ve done that really easily back in&nbsp;Flask)</li>
-<li>Tried-and-true implementations of common&nbsp;patterns</li>
-<li>Django models are much more readable and&nbsp;friendly</li>
-<li>Django-provided DB migrations (generated&nbsp;automatically!)</li>
-<li>Languages implemented using Django many-to-many&nbsp;relationships</li>
+<li>382 lines of code (297 SLOC) over 6 files — much cleaner, and with less long lines</li>
+<li>form data validation (via Django), CSRF and XSS protection</li>
+<li>Login using Django built-in authentication, without JavaScript</li>
+<li>Language codes (granted, I could’ve done that really easily back in Flask)</li>
+<li>Tried-and-true implementations of common patterns</li>
+<li>Django models are much more readable and friendly</li>
+<li>Django-provided DB migrations (generated automatically!)</li>
+<li>Languages implemented using Django many-to-many relationships</li>
 <li>Adding a language is possible from the Django built-in admin panel and is
-reflected immediately (no&nbsp;caching)</li>
-<li>Titles and menus in&nbsp;code</li>
-<li>Python&nbsp;3</li>
-<li>New features: featured sites; show only a specified language — were really easy to&nbsp;add</li>
+reflected immediately (no caching)</li>
+<li>Titles and menus in code</li>
+<li>Python 3</li>
+<li>New features: featured sites; show only a specified language — were really easy to add</li>
 </ul>
 <table class="docutils footnote" frame="void" id="id2" rules="none">
 <colgroup>
@@ -200,10 +205,10 @@ used by anything.</td>
 </div>
     <aside class="postpromonav"><nav><ul class="pager hidden-print">
 <li class="previous">
-                <a href="/blog/2015/07/23/ssg-speed-test/" rel="prev" title="Static Site Generator Speed Test (Nikola, Pelican, Hexo, Octopress)">Previous&nbsp;post</a>
+                <a href="/blog/2015/07/23/ssg-speed-test/" rel="prev" title="Static Site Generator Speed Test (Nikola, Pelican, Hexo, Octopress)">Previous post</a>
             </li>
             <li class="next">
-                <a href="/blog/2015/12/27/windows-10-november-upgrade-windows-as-a-dis-service/" rel="next" title="Windows 10 November Upgrade: Windows as a (Dis-)service">Next&nbsp;post</a>
+                <a href="/blog/2015/12/27/windows-10-november-upgrade-windows-as-a-dis-service/" rel="next" title="Windows 10 November Upgrade: Windows as a (Dis-)service">Next post</a>
             </li>
         </ul></nav></aside><section class="comments"><h2>Comments</h2>
                         <div id="disqus_thread"></div>
@@ -230,11 +235,11 @@ used by anything.</td>
         <!--End of body content-->
 
         <footer class="site-footer"><p><a href="/cookies/">this site uses
-cookies.</a><br>by using this site, you agree to our cookie&nbsp;policy.</p>
+cookies.</a><br>by using this site, you agree to our cookie policy.</p>
 <p>
 powered by <strong><a href="https://getnikola.com/">Nikola</a></strong>, <a href="http://nginx.org/">nginx</a> and <a href="https://www.digitalocean.com/?refcode=7983689b2ecc">DigitalOcean</a><br>
 copyright © 2009–2016 <a href="/contact/">Chris Warrick</a><br><a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC
-BY-NC-SA</a>, unless stated&nbsp;otherwise</p>
+BY-NC-SA</a>, unless stated otherwise</p>
             
         </footer>
 </div>

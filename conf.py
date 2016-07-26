@@ -235,7 +235,7 @@ CACHE_FOLDER = 'cache'
 #
 # By default, there are no filters.
 FILTERS = {
-   ".html": [filters.typogrify],
+   # ".html": [filters.typogrify],
 }
 
 # Create a gzipped copy of each generated file. Cheap server-side optimization.

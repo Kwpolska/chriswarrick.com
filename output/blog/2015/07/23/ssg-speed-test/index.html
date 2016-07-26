@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html prefix="
 og: http://ogp.me/ns#
 article: http://ogp.me/ns/article#
@@ -102,7 +103,7 @@ article: http://ogp.me/ns/article#
         <div id="cookiecontainer"></div>
             
 <article class="post-text h-entry hentry postpage postbox" itemscope="itemscope" itemtype="http://schema.org/Article"><header class="page-header"><h1 class="p-name entry-title" itemprop="headline name">
-    <a href="/blog/2015/07/23/ssg-speed-test/" class="u-url">Static Site Generator Speed Test (Nikola, Pelican, Hexo,&nbsp;Octopress)</a>
+    <a href="/blog/2015/07/23/ssg-speed-test/" class="u-url">Static Site Generator Speed Test (Nikola, Pelican, Hexo, Octopress)</a>
     </h1>
 
     <div class="metadata">
@@ -123,41 +124,41 @@ article: http://ogp.me/ns/article#
     </header><div class="e-content entry-content" itemprop="articleBody text">
     <div class="lead">
 <div>
-<p>I tested the speed of four static site generators: Nikola, Pelican, Hexo and Octopress, in a clean environment.  Spoiler alert: Nikola&nbsp;won.</p>
-<p><em>Disclaimer:</em> author is a developer and user of Nikola.  The test environments used were the same for all four&nbsp;generators.</p>
+<p>I tested the speed of four static site generators: Nikola, Pelican, Hexo and Octopress, in a clean environment.  Spoiler alert: Nikola won.</p>
+<p><em>Disclaimer:</em> author is a developer and user of Nikola.  The test environments used were the same for all four generators.</p>
 <div class="section" id="generators-tested">
-<h2>Generators&nbsp;tested</h2>
+<h2>Generators tested</h2>
 <ul class="simple">
 <li>
-<a class="reference external" href="https://getnikola.com/">Nikola</a> v7.6.1, by Roberto Alsina, Chris Warrick and contributors; Python; MIT&nbsp;license</li>
+<a class="reference external" href="https://getnikola.com/">Nikola</a> v7.6.1, by Roberto Alsina, Chris Warrick and contributors; Python; MIT license</li>
 <li>
-<a class="reference external" href="http://blog.getpelican.com/">Pelican</a> v3.6.0, by Alexis Metaireau and contributors; Python; GNU AGPL&nbsp;license</li>
+<a class="reference external" href="http://blog.getpelican.com/">Pelican</a> v3.6.0, by Alexis Metaireau and contributors; Python; GNU AGPL license</li>
 <li>
-<a class="reference external" href="https://hexo.io/">Hexo</a> v3.1.1, by Tommy Chen and contributors; Node.js; MIT&nbsp;license</li>
+<a class="reference external" href="https://hexo.io/">Hexo</a> v3.1.1, by Tommy Chen and contributors; Node.js; MIT license</li>
 <li>
-<a class="reference external" href="http://octopress.org/">Octopress</a> v2.0, by Brandon Mathis and contributors; Ruby; MIT license (based on&nbsp;Jekyll)</li>
+<a class="reference external" href="http://octopress.org/">Octopress</a> v2.0, by Brandon Mathis and contributors; Ruby; MIT license (based on Jekyll)</li>
 </ul>
 </div>
 </div>
 </div>
 <div class="section" id="setup">
 <h2>Setup</h2>
-<p>Every site generator was set up in an identical <strong>clean</strong> environment, using Ubuntu 15.04, x64, as a 512 MB DigitalOcean VM with a 20 GB SSD drive. The machine was updated, an user account with passwordless sudo was created, and <tt class="docutils literal"><span class="pre">build-essential</span></tt> was installed. Tests were run by an automated installer and timer, written in Bash and C, respectively (custom; source code is available). Pre-compiled wheels for lxml and Pillow were used for Nikola testing, because lxml cannot be compiled with less than 1.5 GB of RAM; they were built with <tt class="docutils literal">pip wheel lxml pillow</tt> outside of the testing environment (on a local VM). The machine was reimaged after every test. Lists of installed Python/Ruby/Node packages are available in the GitHub repo (see&nbsp;below).</p>
+<p>Every site generator was set up in an identical <strong>clean</strong> environment, using Ubuntu 15.04, x64, as a 512 MB DigitalOcean VM with a 20 GB SSD drive. The machine was updated, an user account with passwordless sudo was created, and <tt class="docutils literal"><span class="pre">build-essential</span></tt> was installed. Tests were run by an automated installer and timer, written in Bash and C, respectively (custom; source code is available). Pre-compiled wheels for lxml and Pillow were used for Nikola testing, because lxml cannot be compiled with less than 1.5 GB of RAM; they were built with <tt class="docutils literal">pip wheel lxml pillow</tt> outside of the testing environment (on a local VM). The machine was reimaged after every test. Lists of installed Python/Ruby/Node packages are available in the GitHub repo (see below).</p>
 </div>
 <div class="section" id="input">
 <h2>Input</h2>
-<p>Every site generator was given the same set of 179 log files from #nikola on freenode. The raw logs contain 1209507 bytes (1.1 MiB) of plain text. The logs were processed into post files, which fit the format of each engine (reST or Markdown), containing mandatory metadata, an introductory paragraph and a code block (using <tt class="docutils literal">::</tt> for reST, four spaces for Markdown). One file had to be altered, because they contained the <tt class="docutils literal">{{</tt>  sequence, which was misinterpreted as internal templating by Hexo and Octopress — it was replaced by a harmless <tt class="docutils literal">~~</tt> sequence for all four&nbsp;generators.</p>
-<p>The generators used default config, with one exception: highlighting was disabled for Hexo. The highlighting would cause an unfair advantage (other generators did not automatically highlight the code boxes), and led to very high build times (see table 4 in comparison&nbsp;spreadsheet).</p>
+<p>Every site generator was given the same set of 179 log files from #nikola on freenode. The raw logs contain 1209507 bytes (1.1 MiB) of plain text. The logs were processed into post files, which fit the format of each engine (reST or Markdown), containing mandatory metadata, an introductory paragraph and a code block (using <tt class="docutils literal">::</tt> for reST, four spaces for Markdown). One file had to be altered, because they contained the <tt class="docutils literal">{{</tt>  sequence, which was misinterpreted as internal templating by Hexo and Octopress — it was replaced by a harmless <tt class="docutils literal">~~</tt> sequence for all four generators.</p>
+<p>The generators used default config, with one exception: highlighting was disabled for Hexo. The highlighting would cause an unfair advantage (other generators did not automatically highlight the code boxes), and led to very high build times (see table 4 in comparison spreadsheet).</p>
 </div>
 <div class="section" id="build">
 <h2>Build</h2>
-<p>Sites were built a total of 110 times, in 10 cycles of 11 builds each. The first build of a cycle was a fresh build, the remaining 10 were rebuilds. Sites and cache files were removed after each&nbsp;cycle.</p>
+<p>Sites were built a total of 110 times, in 10 cycles of 11 builds each. The first build of a cycle was a fresh build, the remaining 10 were rebuilds. Sites and cache files were removed after each cycle.</p>
 </div>
 <div class="section" id="results">
 <h2>Results</h2>
-<p>Because Nikola and Hexo use incremental rebuilds, the results were compared in two groups: 11 and 10&nbsp;runs.</p>
+<p>Because Nikola and Hexo use incremental rebuilds, the results were compared in two groups: 11 and 10 runs.</p>
 <div class="section" id="average-build-times-in-seconds">
-<h3>Average build times (in&nbsp;seconds)</h3>
+<h3>Average build times (in seconds)</h3>
 <table class="table table-bordered table-hover">
 <thead><tr>
 <th>#</th>
@@ -194,26 +195,26 @@ article: http://ogp.me/ns/article#
 </table>
 </div>
 <div class="section" id="full-results">
-<h3>Full&nbsp;results</h3>
+<h3>Full results</h3>
 <p class="lead">Full results are available in <a class="reference external" href="https://chriswarrick.com/pub/ssg-test-results.ods">ods format</a>.</p>
 </div>
 <div class="section" id="raw-results-and-configuration">
-<h3>Raw results and&nbsp;configuration</h3>
-<p>Raw results (<tt class="docutils literal">.csv</tt> files from the test runner) and configuration is available in the <a class="reference external" href="https://github.com/Kwpolska/ssg-test">GitHub repo</a>. Log files and converted posts are not available publicly; however, they can be provided to interested parties (<a class="reference external" href="https://chriswarrick.com/contact/">contact me</a> to obtain&nbsp;them).</p>
+<h3>Raw results and configuration</h3>
+<p>Raw results (<tt class="docutils literal">.csv</tt> files from the test runner) and configuration is available in the <a class="reference external" href="https://github.com/Kwpolska/ssg-test">GitHub repo</a>. Log files and converted posts are not available publicly; however, they can be provided to interested parties (<a class="reference external" href="https://chriswarrick.com/contact/">contact me</a> to obtain them).</p>
 </div>
 </div>
 <div class="section" id="questions-and-answers">
-<h2>Questions and&nbsp;answers</h2>
+<h2>Questions and answers</h2>
 <div class="section" id="why-not-plain-jekyll">
-<h3>Why not plain&nbsp;Jekyll?</h3>
-<p><strong>Plain Jekyll was disqualified</strong> on the basis of missing many features other generators have, leading to an unfair advantage. The aim of this test was to provide similar setups for each of the four generators. Jekyll generates a very basic site that lacks some elements; a Jekyll site does not have paginated indexes, (partial) post text on indexes, any sort of archives, etc. A Jekyll site contains only one CSS file, index.html, feed.xml, and the log posts. On the other hand, sites generated by Pelican, Nikola and Hexo contain more files, which makes the builds longer and the website experience richer (archives, JS, sitemaps, tag&nbsp;listings).</p>
-<p>On the basis of the above, <strong>Octopress</strong> was chosen to represent the Jekyll universe at large. Octopress sites have more assets, a sitemap, archives and category listings — making it comparable to the other four contenders. However, tests were performed for Jekyll. The average result from 11 builds was 2.22118, while the average result from 10 builds was 2.23903. The result would land Jekyll on the 1st place for 11 builds, and on the 2nd place for 10&nbsp;builds.</p>
+<h3>Why not plain Jekyll?</h3>
+<p><strong>Plain Jekyll was disqualified</strong> on the basis of missing many features other generators have, leading to an unfair advantage. The aim of this test was to provide similar setups for each of the four generators. Jekyll generates a very basic site that lacks some elements; a Jekyll site does not have paginated indexes, (partial) post text on indexes, any sort of archives, etc. A Jekyll site contains only one CSS file, index.html, feed.xml, and the log posts. On the other hand, sites generated by Pelican, Nikola and Hexo contain more files, which makes the builds longer and the website experience richer (archives, JS, sitemaps, tag listings).</p>
+<p>On the basis of the above, <strong>Octopress</strong> was chosen to represent the Jekyll universe at large. Octopress sites have more assets, a sitemap, archives and category listings — making it comparable to the other four contenders. However, tests were performed for Jekyll. The average result from 11 builds was 2.22118, while the average result from 10 builds was 2.23903. The result would land Jekyll on the 1st place for 11 builds, and on the 2nd place for 10 builds.</p>
 </div>
 <div class="section" id="why-not-myfavoritessg">
-<h3>Why not&nbsp;$MYFAVORITESSG?</h3>
-<p>I tested only four popular generators that were easy enough to set up. I could easily extend the set if I had time and friendly enough documentation to do so. I can add a SSG, provided&nbsp;that:</p>
+<h3>Why not $MYFAVORITESSG?</h3>
+<p>I tested only four popular generators that were easy enough to set up. I could easily extend the set if I had time and friendly enough documentation to do so. I can add a SSG, provided that:</p>
 <ul class="simple">
-<li>it’s easy to&nbsp;configure</li>
+<li>it’s easy to configure</li>
 <li>it has a default config that provides a working site with a feature set comparable to other SSGs tested here (see <a class="reference internal" href="/blog/2015/07/23/ssg-speed-test/#why-not-plain-jekyll">Why not plain Jekyll?</a>)</li>
 </ul>
 </div>
@@ -223,10 +224,10 @@ article: http://ogp.me/ns/article#
 </div>
     <aside class="postpromonav"><nav><ul class="pager hidden-print">
 <li class="previous">
-                <a href="/blog/2015/07/06/upass/" rel="prev" title="New project: upass — console UI for pass">Previous&nbsp;post</a>
+                <a href="/blog/2015/07/06/upass/" rel="prev" title="New project: upass — console UI for pass">Previous post</a>
             </li>
             <li class="next">
-                <a href="/blog/2015/10/11/rewriting-a-flask-app-in-django/" rel="next" title="Rewriting a Flask app in Django">Next&nbsp;post</a>
+                <a href="/blog/2015/10/11/rewriting-a-flask-app-in-django/" rel="next" title="Rewriting a Flask app in Django">Next post</a>
             </li>
         </ul></nav></aside><section class="comments"><h2>Comments</h2>
                         <div id="disqus_thread"></div>
@@ -253,11 +254,11 @@ article: http://ogp.me/ns/article#
         <!--End of body content-->
 
         <footer class="site-footer"><p><a href="/cookies/">this site uses
-cookies.</a><br>by using this site, you agree to our cookie&nbsp;policy.</p>
+cookies.</a><br>by using this site, you agree to our cookie policy.</p>
 <p>
 powered by <strong><a href="https://getnikola.com/">Nikola</a></strong>, <a href="http://nginx.org/">nginx</a> and <a href="https://www.digitalocean.com/?refcode=7983689b2ecc">DigitalOcean</a><br>
 copyright © 2009–2016 <a href="/contact/">Chris Warrick</a><br><a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC
-BY-NC-SA</a>, unless stated&nbsp;otherwise</p>
+BY-NC-SA</a>, unless stated otherwise</p>
             
         </footer>
 </div>
