@@ -49,7 +49,9 @@
     <header class="page-header">
     {{ html_post_title(post.title(), post, want_link) }}
     <div class="metadata">
-        {% if want_date %}<a href="{{ post.permalink() }}" rel="bookmark" class="u-published"><time class="published dt-published" datetime="{{ post.date.isoformat() }}" itemprop="datePublished" title="{{ post.formatted_date(date_format) }}">{{ post.formatted_date(date_format) }}</time></a>{% endif %}
+        {% if want_date %}<a href="{{ post.permalink() }}" rel="bookmark" class="u-published"><time class="published dt-published" datetime="{{ post.date.isoformat() }}" itemprop="datePublished" title="{{ post.formatted_date(date_format) }}">{{ post.formatted_date(date_format) }}</time>
+        {% if post.updated != post.date %}<time class="updated dt-updated" datetime="{{ post.updated.isoformat() }}" title="Updated {{ post.formatted_updated(date_format) }}"> ({{ post.formatted_updated(date_format) }})</time>{% endif %}</a>
+        {% endif %}
         {% if want_tags %}{{ html_tags(post) }}{% endif %}
     </div>
     </header>

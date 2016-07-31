@@ -11,7 +11,7 @@ You just wrote a great Python web application. Now, you want to share it with th
 
 The following is a comprehensive guide on how to accomplish that, on multiple Linux-based operating systems, using nginx and uWSGI Emperor. It doesn’t force you to use any specific web framework — Flask, Django, Pyramid, Bottle will all work. Written for Ubuntu, Debian, Fedora, CentOS and Arch Linux (should be helpful for other systems, too)
 
-*Revision 3 (2016-07-31): Ubuntu 16.04, Debian 8, Fedora 24, CentOS 7*
+*Revision 3 (2016-07-31): Ubuntu 16.04, Debian 8, Fedora 24, CentOS 7, Arch Linux*
 
 .. TEASER_END
 
