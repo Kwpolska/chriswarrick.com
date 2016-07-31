@@ -1,6 +1,7 @@
 .. title: Deploying Python Web Applications with nginx and uWSGI Emperor
 .. slug: deploying-python-web-apps-with-nginx-and-uwsgi-emperor
 .. date: 2016-02-10 15:00:00+01:00
+.. updated: 2016-07-31 15:00:00+02:00
 .. tags: Python, Django, Flask, uWSGI, nginx, Internet, Linux, Fedora, Arch Linux, Ubuntu, systemd
 .. section: Python
 .. description: A tutorial to deploy Python Web Applications to popular Linux systems.
@@ -10,50 +11,66 @@ You just wrote a great Python web application. Now, you want to share it with th
 
 The following is a comprehensive guide on how to accomplish that, on multiple Linux-based operating systems, using nginx and uWSGI Emperor. It doesn’t force you to use any specific web framework — Flask, Django, Pyramid, Bottle will all work. Written for Ubuntu, Fedora and Arch Linux (should be helpful for other systems, too)
 
+*Revision 3 (2016-07-31): Ubuntu 16.04, Fedora 24*
+
 .. TEASER_END
 
-Getting Started
-===============
+For easy linking, I set up some aliases: https://go.chriswarrick.com/pyweb and https://go.chriswarrick.com/uwsgi-tut (powered by a Django web application, deployed with nginx and uWSGI!)
 
-In order to deploy your web application, you need a server that gives you root and ssh access — in other words, a VPS (or a dedicated server, or a datacenter lease…). If you’re looking for a great VPS service for a low price, I recommend `DigitalOcean`_ (reflink [#]_), which offers a $5/mo service [#]_. If you want to play along at home, without buying a VPS, you can create a virtual machine on your own, or use a Vagrant with a `Vagrant box for Fedora 23`_ (I recommend disabling SELinux, more on that later).
+Prerequisites
+=============
+
+In order to deploy your web application, you need a server that gives you root and ssh access — in other words, a VPS (or a dedicated server, or a datacenter lease…). If you’re looking for a great VPS service for a low price, I recommend `DigitalOcean`_ (reflink [#]_), which offers a $5/mo service [#]_. If you want to play along at home, without buying a VPS, you can create a virtual machine on your own, or use a Vagrant with a Vagrant box for Fedora 24 (``fedora/24-cloud-base``).
 
 .. _DigitalOcean: https://www.digitalocean.com/?refcode=7983689b2ecc
-.. _Vagrant box for Fedora 23: https://getfedora.org/en/cloud/download/
 
-Your server should also run a modern Linux-based operating system. I tested and wrote this guide for Ubuntu 15.10 [#]_, Fedora 23 and Arch Linux, but other Linux distributions (and perhaps \*BSD) will work (in places where the instructions are split three-way, try coming up with your own, reading documentation and config files).  Unfortunately, all Linux distributions have their own ideas when it comes to running and managing nginx and UWSGI.
+Your server should also run a modern Linux-based operating system. This guide was written and tested on:
+
+* Ubuntu 16.04 LTS
+* Fedora 24 (with SELinux enabled and disabled)
+* Arch Linux
+
+Users of other Linux distributions (and perhaps other Unix flavors) can also follow this tutorial. This guide assumes ``systemd`` as your init system; if you are not using systemd, you will have to get your own daemon files somewhere else. In places where the instructions are split three-way, try coming up with your own, reading documentation and config files; the Arch Linux instructions are probably the closest to upstream (but not always).  Unfortunately, all Linux distributions have their own ideas when it comes to running and managing nginx and uWSGI.
+
+nginx and uWSGI are considered best practices by most people. nginx is a fast, modern web server, with uWSGI support built in (without resorting to reverse proxying).  uWSGI is similarly aimed at speed.  The Emperor mode of uWSGI is recommended for init system integration by the uWSGI team, and it’s especially useful for multi-app deployments. (This guide is opinionated.)
 
 .. note::
 
-   All the commands in this tutorial are meant to be run **as root** — run ``su`` or ``sudo su`` first to get an administrative shell.
+   All the commands in this tutorial are meant to be run **as root** — run ``su`` or ``sudo su`` first to get an administrative shell. This tutorial assumes familiarity with basic Linux administration and command-line usage.
 
-Start by installing virtualenv, nginx and uWSGI. I recommend using your operating system packages. For uWSGI, we need the ``logfile`` and ``python3`` plugins. (Arch Linux names the ``python3`` plugin ``python``; the ``logfile`` plugin may be built-in — check with your system repositories!).
+Getting started
+===============
+
+Start by installing virtualenv, nginx and uWSGI. I recommend using your operating system packages. For uWSGI, we need the ``logfile`` and ``python3`` plugins. (Arch Linux names the ``python3`` plugin ``python``; the ``logfile`` plugin may be built-in — check with your system repositories!). I’ll also install Git to clone the tutorial app, but it’s optional if your workflow does not involve git.
 
 **Ubuntu:**
 
 .. code:: sh
 
-   aptitude install virtualenv python3 uwsgi uwsgi-emperor uwsgi-plugin-python3 nginx-full
+   aptitude install virtualenv python3 uwsgi uwsgi-emperor uwsgi-plugin-python3 nginx-full git
 
 **Fedora:**
 
 .. code:: sh
 
-   dnf install python3-virtualenv uwsgi uwsgi-plugin-python3 uwsgi-logger-file nginx
+   dnf install python3-virtualenv uwsgi uwsgi-plugin-python3 uwsgi-logger-file nginx git
 
 **Arch Linux:**
 
 .. code:: sh
 
-   pacman -S python-virtualenv uwsgi uwsgi-plugin-python nginx
+   pacman -S python-virtualenv uwsgi uwsgi-plugin-python nginx git
 
 Preparing your application
 ==========================
 
-This tutorial will work for any web framework. I will, use `a really basic Flask app`_ that has just one route (``/``), a static ``hello.png`` file and a ``favicon.ico`` for demonstration purposes. Note that the app does not use ``app.run()``. While you could add it, it would be used for local development and debugging only, and would be prepended by ``if __name__ == '__main__':`` — uWSGI doesn’t work alongside it.
+This tutorial will work for any web framework. I will use `a really basic Flask app`_ that has just one route (``/``) [#]_, a static ``hello.png`` file and a ``favicon.ico`` for demonstration purposes. Note that the app does not use ``app.run()``. While you could add it, it would be used for local development and debugging only, and would have to be prepended by ``if __name__ == '__main__':`` (if it wasn’t, that server would run instead of uWSGI, which is bad)
 
 .. _a really basic Flask app: https://github.com/Kwpolska/flask-demo-app
 
 The app will be installed somewhere under the ``/srv`` directory, which is a great place to store things like this. I’ll choose ``/srv/myapp`` for this tutorial, but for real deployments, you should use sometihing more distinguishable — the domain name is a great idea.
+
+If you don’t use Flask, this tutorial also has instructions for other web frameworks (Django, Pyramid, Bottle) in the configuration files; it should be adjustable to any other WSGI-compliant framework/script nevertheless.
 
 We’ll start by creating a virtualenv:
 
@@ -69,7 +86,7 @@ We’ll start by creating a virtualenv:
 .. code:: sh
 
    cd /srv
-   virtualenv-3.4 myapp
+   virtualenv-3.5 myapp
 
 **Arch Linux:**
 
@@ -78,14 +95,14 @@ We’ll start by creating a virtualenv:
    cd /srv
    virtualenv3 myapp
 
-(Make sure you create a Python 3 environment!)
+(This tutorial assumes Python 3. Make sure you use the correct ``virtualenv`` command/argument. If you want to use Python 2.7, you’ll need to adjust your uWSGI configuration as well.)
 
-Now, we need to get our app there and install requirements. An example for the tutorial demo app (adjust for your clone/download path):
+Now, we need to get our app there and install requirements. An example for the tutorial demo app:
 
 .. code:: sh
 
    cd myapp
-   cp -r ~/git/flask-demo-app appdata
+   git clone https://github.com/Kwpolska/flask-demo-app appdata
    bin/pip install -r appdata/requirements.txt
 
 I’m storing my application data in the ``appdata`` subdirectory so that it doesn’t clutter the virtualenv (or vice versa).  You may also install the ``uwsgi`` package in the virtualenv, but it’s optional.
@@ -163,7 +180,7 @@ The options are:
   * For Pyramid: ``module = filename:app``, where ``app = config.make_wsgi_app()`` (make sure it’s **not** in a ``if __name__ == '__main__':`` block — the demo app does that!)
 
 * ``uid`` and ``gid`` — the names of the user account to use for your server.  Use the same values as in the ``chown`` command above.
-* ``processes`` and ``threads`` — control the resources devoted to this application. Because this is a simple hello app, I used one process with one thread, but for a real app, you will probably need more (you need to see what works the best; there is no algorithm to decide). Also, remember that if you use multiple processes, they don’t share data, so you need an out-of-process database if you want that.
+* ``processes`` and ``threads`` — control the resources devoted to this application. Because this is a simple hello app, I used one process with one thread, but for a real app, you will probably need more (you need to see what works the best; there is no algorithm to decide). Also, remember that if you use multiple processes, they don’t share memory (you need a database to share data between them).
 * ``plugins`` — the list of uWSGI plugins to use. For Arch Linux, use ``plugins = python`` (the ``logfile`` plugin is always active).
 * ``logger`` — the path to your app-specific logfile. (Other logging facilities are available, but this one is the easiest, especially for multiple applications on the same server)
 
@@ -185,7 +202,10 @@ Save this file as:
 .. code:: nginx
 
    server {
-       listen 8080;
+       # for a public HTTP server:
+       listen 80;
+       # for a public HTTPS server:
+       # listen 443 ssl;
        server_name localhost myapp.local;
 
        location / {
@@ -204,10 +224,10 @@ Save this file as:
 
 Note that this file is a very basic and rudimentary configuration. This configuration is fine for local testing, but for a real deployment, you will need to adjust it:
 
-* set ``listen`` to ``443 ssl`` and create a http→https redirect on port 80 (you can get a free SSL certificate from `Let’s Encrypt`__; `make sure to configure SSL properly`__).
+* set ``listen`` to ``443 ssl`` and create a http→https redirect on port 80 (you can get a free SSL certificate from `Let’s Encrypt`__; make sure to `configure SSL properly`__).
 * set ``server_name`` to your real domain name
-* you might also want to add custom error pages, or change anything else that relates to your web server — consult other nginx guides for details
-* nginx might have some server already enabled by default — edit ``/etc/nginx/nginx.conf`` to disable it
+* you might also want to add custom error pages, log files, or change anything else that relates to your web server — consult other nginx guides for details
+* nginx usually has some server already enabled by default — edit ``/etc/nginx/nginx.conf`` or remove their configuration files from your sites directory to disable it
 
 __ https://letsencrypt.org/
 __ https://raymii.org/s/tutorials/Strong_SSL_Security_On_nginx.html
@@ -216,8 +236,6 @@ Service setup
 =============
 
 After you’ve configured uWSGI and nginx, you need to enable and start the system services.
-
-I’m going to use ``systemd`` here. If your system does not support ``systemd``, please consult your OS documentation for instructions.
 
 For Arch Linux
 --------------
@@ -234,7 +252,7 @@ Verify the service is running with ``systemctl status emperor.uwsgi``
 For Fedora
 ----------
 
-Make sure you followed the extra note about editing ``/etc/uwsgi.ini`` and run:
+Make sure you followed the extra note about editing ``/etc/uwsgi.ini`` earlier and run:
 
 .. code:: sh
 
@@ -243,7 +261,9 @@ Make sure you followed the extra note about editing ``/etc/uwsgi.ini`` and run:
 
 Verify the service is running with ``systemctl status uwsgi``
 
-This is enough to get an app working, if you disabled SELinux (if you want to do it, edit ``/etc/selinux/config`` and reboot), but if you want to keep SELinux happy, you need to do the following:
+If you disabled SELinux, this is enough to get an app working and you can skip over to the next section.
+
+If you want to use SELinux, you need to do the following to allow nginx to read static files:
 
 .. code:: sh
 
@@ -251,20 +271,14 @@ This is enough to get an app working, if you disabled SELinux (if you want to do
    chcon -R system_u:system_r:httpd_t:s0 /srv/myapp/appdata/static
    setenforce 1
 
-We now need to install a `SELinux policy`_ (that I created for this project). If it doesn’t work, look into ``audit2allow``.
+We now need to install a `SELinux policy`_ (that I created for this project) to allow nginx and uWSGI to communicate.
+Download it and run:
 
 .. code:: sh
 
    semodule -i nginx-uwsgi.pp
 
-Hopefully, this is enough. In case it isn’t, please read SELinux documentation, and check audit logs.
-
-Also if you’re on Fedora, to make your website accessible from the outside Internet, you need to configure the built-in firewall accordingly — for ports 80/443, use:
-
-.. code:: sh
-
-   firewall-cmd --add-service http
-   firewall-cmd --add-service https
+Hopefully, this is enough. In case it isn’t, please read SELinux documentation, check audit logs, and look into ``audit2allow``.
 
 .. _SELinux policy: https://chriswarrick.com/pub/nginx-uwsgi.pp
 
@@ -289,29 +303,39 @@ Verify the service is running with ``systemctl status emperor.uwsgi``
 
 .. _uWSGI systemd documentation: https://uwsgi-docs.readthedocs.org/en/latest/Systemd.html#adding-the-emperor-to-systemd
 
-Testing — end result
-====================
+End result
+==========
 
-Your web service should now be running at http://localhost:8080/.
+Your web service should now be running at http://localhost/ (or wherever you set up server to listen).
 
 If you used the demo application, you should see something like this (complete with the favicon and image greeting):
 
 .. image:: /images/nginx-uwsgi-demo.png
    :class: centered
 
-Hopefully, everything works. If it doesn’t, check nginx and uwsgi logs for details, and make sure you followed all instructions.
+If you want to test with cURL:
 
-----
+.. code:: sh
 
-For easy linking, I set up some aliases: https://go.chriswarrick.com/pyweb and https://go.chriswarrick.com/uwsgi-tut (powered by a Django web application, deployed with nginx and uwsgi!)
+   curl -v http://localhost/
+   curl -I http://localhost/favicon.ico
+   curl -I http://localhost/static/hello.png
 
-**Update 2016-02-10 17:00 UTC:** This guide uses nginx and uWSGI, because they
-are considered best practices by most people. nginx is a fast, modern web
-server, with uWSGI support built in (without resorting to reverse proxying).
-uWSGI is similarly aimed at speed. The Emperor mode of uWSGI is recommended for
-init system integration by the uWSGI team, and it’s especially useful for
-multi-app deployments. (This guide is opinionated.)
+Troubleshooting
+---------------
+
+Hopefully, everything works. If it doesn’t:
+
+* Check your nginx, system (``journalctl``, ``systemctl status SERVICE``) and uwsgi (``/srv/myapp/uwsgi.log``) logs.
+* Make sure you followed all instructions.
+* If you have a firewall installed, make sure to open the ports your web server runs on (typically 80/443). For ``firewalld`` (Fedora):
+
+.. code:: sh
+
+   firewall-cmd --add-service http
+   firewall-cmd --add-service https
+
 
 .. [#] This reflink gives you $10 in credit, which is enough to run a server for up to two months without paying a thing. I earn $15.
-.. [#] If you’re in the EU (and thus have to pay VAT), or want DO to handle your backups, it will cost you a little more.
-.. [#] Ubuntu 14.04 LTS does not use systemd — you’re on your own (upstart services exist, figure out how to use them yourself). Note that other software might be outdated as well — proceed with care, or just use something more modern.
+.. [#] For the cheapest plan. If you’re in the EU (and thus have to pay VAT), or want DO to handle your backups, it will cost you a little more.
+.. [#] This app does not use templates, but you should in any real project. This app is meant to be as simple as possible.
