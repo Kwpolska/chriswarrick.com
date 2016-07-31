@@ -9,9 +9,9 @@
 
 You just wrote a great Python web application. Now, you want to share it with the world. In order to do that, you need a server, and some software to do that for you.
 
-The following is a comprehensive guide on how to accomplish that, on multiple Linux-based operating systems, using nginx and uWSGI Emperor. It doesn’t force you to use any specific web framework — Flask, Django, Pyramid, Bottle will all work. Written for Ubuntu, Fedora and Arch Linux (should be helpful for other systems, too)
+The following is a comprehensive guide on how to accomplish that, on multiple Linux-based operating systems, using nginx and uWSGI Emperor. It doesn’t force you to use any specific web framework — Flask, Django, Pyramid, Bottle will all work. Written for Ubuntu, Fedora, CentOS and Arch Linux (should be helpful for other systems, too)
 
-*Revision 3 (2016-07-31): Ubuntu 16.04, Fedora 24*
+*Revision 3 (2016-07-31): Ubuntu 16.04, Fedora 24, CentOS 7*
 
 .. TEASER_END
 
@@ -28,6 +28,7 @@ Your server should also run a modern Linux-based operating system. This guide wa
 
 * Ubuntu 16.04 LTS
 * Fedora 24 (with SELinux enabled and disabled)
+* CentOS 7 (with SELinux enabled and disabled)
 * Arch Linux
 
 Users of other Linux distributions (and perhaps other Unix flavors) can also follow this tutorial. This guide assumes ``systemd`` as your init system; if you are not using systemd, you will have to get your own daemon files somewhere else. In places where the instructions are split three-way, try coming up with your own, reading documentation and config files; the Arch Linux instructions are probably the closest to upstream (but not always).  Unfortunately, all Linux distributions have their own ideas when it comes to running and managing nginx and uWSGI.
@@ -55,6 +56,19 @@ Start by installing virtualenv, nginx and uWSGI. I recommend using your operatin
 
    dnf install python3-virtualenv uwsgi uwsgi-plugin-python3 uwsgi-logger-file nginx git
 
+**CentOS:**
+
+.. code:: sh
+
+   yum install epel-release
+   yum install python34 uwsgi uwsgi-plugin-python3 uwsgi-logger-file nginx git wget
+   wget https://bootstrap.pypa.io/get-pip.py
+   python3 get-pip.py --user
+   rm get-pip.py
+   ~/.local/bin/pip install --user virtualenv
+
+We need to install pip and virtualenv manually, because neither is packaged for CentOS, and the ``python-virtualenv`` package is not compatible. They will be available to root only (user install).
+
 **Arch Linux:**
 
 .. code:: sh
@@ -78,7 +92,7 @@ We’ll start by creating a virtualenv:
 
 .. code:: sh
 
-   cd srv
+   cd /srv
    virtualenv -p /usr/bin/python3 myapp
 
 **Fedora:**
@@ -87,6 +101,13 @@ We’ll start by creating a virtualenv:
 
    cd /srv
    virtualenv-3.5 myapp
+
+**CentOS:**
+
+.. code:: sh
+
+   cd /srv
+   ~/.local/bin/virtualenv myapp
 
 **Arch Linux:**
 
@@ -97,7 +118,7 @@ We’ll start by creating a virtualenv:
 
 (This tutorial assumes Python 3. Make sure you use the correct ``virtualenv`` command/argument. If you want to use Python 2.7, you’ll need to adjust your uWSGI configuration as well.)
 
-Now, we need to get our app there and install requirements. An example for the tutorial demo app:
+Now, we need to put our app there and install requirements. An example for the tutorial demo app:
 
 .. code:: sh
 
@@ -117,7 +138,7 @@ At this point, you should chown this directory to the user and group your server
 
    chown -R www-data:www-data /srv/myapp
 
-**Fedora:**
+**Fedora, CentOS:**
 
 .. code:: sh
 
@@ -134,7 +155,7 @@ Configuring uWSGI and nginx
 
 .. note::
 
-   Parts of the configuration depend on your operating system. I tried to provide advice for Ubuntu, Fedora and Arch Linux. If you experience any issues, in particular with plugins, please consult the documentation.
+   Parts of the configuration depend on your operating system. I tried to provide advice for Ubuntu, Fedora, CentOS and Arch Linux. If you experience any issues, in particular with plugins, please consult the documentation.
 
 We need to write a configuration file for uWSGI and nginx.
 
@@ -163,7 +184,7 @@ Start with this, but read the notes below and change the values accordingly:
 Save this file as:
 
 * Ubuntu: ``/etc/uwsgi-emperor/vassals/myapp.ini``
-* Fedora: ``/etc/uwsgi.d/myapp.ini``
+* Fedora, CentOS: ``/etc/uwsgi.d/myapp.ini``
 * Arch Linux: ``/etc/uwsgi/vassals/myapp.ini`` (create the directory first and **chown** it to http: ``mkdir -p /etc/uwsgi/vassals; chown -R http:http /etc/uwsgi/vassals``)
 
 The options are:
@@ -186,7 +207,7 @@ The options are:
 
 You can test your configuration by running ``uwsgi --ini /path/to/myapp.ini`` (disable the logger for stderr output or run ``tail -f /srv/myapp/uwsgi.log`` in another window).
 
-If you’re using **Fedora**, there are two configuration changes you need to make globally: in ``/etc/uwsgi.ini``, disable the ``emperor-tyrant`` option (which seems to be buggy) and set ``gid = nginx``.  We’ll need this so that nginx can talk to your socket.
+If you’re using **Fedora** or **CentOS**, there are two configuration changes you need to make globally: in ``/etc/uwsgi.ini``, disable the ``emperor-tyrant`` option (which seems to be buggy) and set ``gid = nginx``.  We’ll need this so that nginx can talk to your socket.
 
 nginx configuration
 -------------------
@@ -196,7 +217,7 @@ We need to configure our web server. Here’s a basic configuration that will ge
 Save this file as:
 
 * Ubuntu: ``/etc/nginx/sites-enabled/myapp.conf``
-* Fedora: ``/etc/nginx/conf.d/myapp.conf``
+* Fedora, CentOS: ``/etc/nginx/conf.d/myapp.conf``
 * Arch Linux: add ``include /etc/nginx/conf.d/*.conf;`` to your ``http`` directive in ``/etc/nginx/nginx.conf`` and use ``/etc/nginx/conf.d/myapp.conf``
 
 .. code:: nginx
@@ -249,8 +270,8 @@ All you need is:
 
 Verify the service is running with ``systemctl status emperor.uwsgi``
 
-For Fedora
-----------
+For Fedora and CentOS
+---------------------
 
 Make sure you followed the extra note about editing ``/etc/uwsgi.ini`` earlier and run:
 
@@ -278,7 +299,7 @@ Download it and run:
 
    semodule -i nginx-uwsgi.pp
 
-Hopefully, this is enough. In case it isn’t, please read SELinux documentation, check audit logs, and look into ``audit2allow``.
+Hopefully, this is enough (you can delete the file). In case it isn’t, please read SELinux documentation, check audit logs, and look into ``audit2allow``.
 
 .. _SELinux policy: https://chriswarrick.com/pub/nginx-uwsgi.pp
 
@@ -328,7 +349,7 @@ Hopefully, everything works. If it doesn’t:
 
 * Check your nginx, system (``journalctl``, ``systemctl status SERVICE``) and uwsgi (``/srv/myapp/uwsgi.log``) logs.
 * Make sure you followed all instructions.
-* If you have a firewall installed, make sure to open the ports your web server runs on (typically 80/443). For ``firewalld`` (Fedora):
+* If you have a firewall installed, make sure to open the ports your web server runs on (typically 80/443). For ``firewalld`` (Fedora, CentOS):
 
 .. code:: sh
 
