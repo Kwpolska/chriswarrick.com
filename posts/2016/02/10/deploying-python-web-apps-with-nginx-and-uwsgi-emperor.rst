@@ -306,7 +306,16 @@ Hopefully, this is enough (you can delete the file). In case it isn’t, please 
 For Ubuntu
 ----------
 
-Ubuntu does not ship the uWSGI Emperor service by default. However, you can easily create it.  Copy the ``.service`` file from the `uWSGI systemd documentation`_ to ``/etc/systemd/system/emperor.uwsgi.service``.  Change the ExecStart line to:
+Ubuntu (still!) uses LSB services for uWSGI. Because LSB services are awful, we’re going to set up our own systemd-based (native) service.
+
+Start by disabling the LSB service that comes with Ubuntu:
+
+.. code:: sh
+
+   systemctl stop uwsgi-emperor
+   systemctl disable uwsgi-emperor
+
+Copy the ``.service`` file from the `uWSGI systemd documentation`_ to ``/etc/systemd/system/emperor.uwsgi.service``.  Change the ExecStart line to:
 
 .. code:: ini
 
@@ -318,9 +327,11 @@ You can now reload systemd daemons and enable the services:
 
    systemctl daemon-reload
    systemctl enable nginx emperor.uwsgi
-   systemctl start nginx emperor.uwsgi
+   systemctl reload nginx
+   systemctl start emperor.uwsgi
 
-Verify the service is running with ``systemctl status emperor.uwsgi``
+Verify the service is running with ``systemctl status emperor.uwsgi``.  (Ignore
+the warning about no request plugin)
 
 .. _uWSGI systemd documentation: https://uwsgi-docs.readthedocs.org/en/latest/Systemd.html#adding-the-emperor-to-systemd
 
@@ -355,7 +366,6 @@ Hopefully, everything works. If it doesn’t:
 
    firewall-cmd --add-service http
    firewall-cmd --add-service https
-
 
 .. [#] This reflink gives you $10 in credit, which is enough to run a server for up to two months without paying a thing. I earn $15.
 .. [#] For the cheapest plan. If you’re in the EU (and thus have to pay VAT), or want DO to handle your backups, it will cost you a little more.
