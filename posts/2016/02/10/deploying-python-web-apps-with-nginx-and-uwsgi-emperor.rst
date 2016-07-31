@@ -20,7 +20,7 @@ For easy linking, I set up some aliases: https://go.chriswarrick.com/pyweb and h
 Prerequisites
 =============
 
-In order to deploy your web application, you need a server that gives you root and ssh access — in other words, a VPS (or a dedicated server, or a datacenter lease…). If you’re looking for a great VPS service for a low price, I recommend `DigitalOcean`_ (reflink [#]_), which offers a $5/mo service [#]_. If you want to play along at home, without buying a VPS, you can create a virtual machine on your own, or use a Vagrant with a Vagrant box for Fedora 24 (``fedora/24-cloud-base``).
+In order to deploy your web application, you need a server that gives you root and ssh access — in other words, a VPS (or a dedicated server, or a datacenter lease…). If you’re looking for a great VPS service for a low price, I recommend `DigitalOcean`_ (reflink [#]_), which offers a $5/mo service [#]_. If you want to play along at home, without buying a VPS, you can create a virtual machine on your own, or use Vagrant with a Vagrant box for Fedora 24 (``fedora/24-cloud-base``).
 
 .. _DigitalOcean: https://www.digitalocean.com/?refcode=7983689b2ecc
 
@@ -29,7 +29,7 @@ Your server should also run a modern Linux-based operating system. This guide wa
 * Ubuntu 16.04 LTS
 * Debian 8 (jessie)
 * Fedora 24 (with SELinux enabled and disabled)
-* CentOS 7 (with SELinux enabled and disabled)
+* CentOS 7 (with SELinux enabled and disabled) — should also work on RHEL 7
 * Arch Linux
 
 Users of other Linux distributions (and perhaps other Unix flavors) can also follow this tutorial. This guide assumes ``systemd`` as your init system; if you are not using systemd, you will have to get your own daemon files somewhere else. In places where the instructions are split three-way, try coming up with your own, reading documentation and config files; the Arch Linux instructions are probably the closest to upstream (but not always).  Unfortunately, all Linux distributions have their own ideas when it comes to running and managing nginx and uWSGI.
@@ -83,7 +83,7 @@ This tutorial will work for any web framework. I will use `a really basic Flask 
 
 .. _a really basic Flask app: https://github.com/Kwpolska/flask-demo-app
 
-The app will be installed somewhere under the ``/srv`` directory, which is a great place to store things like this. I’ll choose ``/srv/myapp`` for this tutorial, but for real deployments, you should use sometihing more distinguishable — the domain name is a great idea.
+The app will be installed somewhere under the ``/srv`` directory, which is a great place to store things like this. I’ll choose ``/srv/myapp`` for this tutorial, but for real deployments, you should use something more distinguishable — the domain name is a great idea.
 
 If you don’t use Flask, this tutorial also has instructions for other web frameworks (Django, Pyramid, Bottle) in the configuration files; it should be adjustable to any other WSGI-compliant framework/script nevertheless.
 
