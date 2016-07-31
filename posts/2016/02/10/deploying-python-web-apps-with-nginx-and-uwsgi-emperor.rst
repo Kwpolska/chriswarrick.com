@@ -1,7 +1,7 @@
 .. title: Deploying Python Web Applications with nginx and uWSGI Emperor
 .. slug: deploying-python-web-apps-with-nginx-and-uwsgi-emperor
 .. date: 2016-02-10 15:00:00+01:00
-.. updated: 2016-07-31 15:00:00+02:00
+.. updated: 2016-07-31 13:00:00+02:00
 .. tags: Python, Django, Flask, uWSGI, nginx, Internet, Linux, Fedora, Arch Linux, Ubuntu, systemd
 .. section: Python
 .. description: A tutorial to deploy Python Web Applications to popular Linux systems.
@@ -9,9 +9,9 @@
 
 You just wrote a great Python web application. Now, you want to share it with the world. In order to do that, you need a server, and some software to do that for you.
 
-The following is a comprehensive guide on how to accomplish that, on multiple Linux-based operating systems, using nginx and uWSGI Emperor. It doesn’t force you to use any specific web framework — Flask, Django, Pyramid, Bottle will all work. Written for Ubuntu, Fedora, CentOS and Arch Linux (should be helpful for other systems, too)
+The following is a comprehensive guide on how to accomplish that, on multiple Linux-based operating systems, using nginx and uWSGI Emperor. It doesn’t force you to use any specific web framework — Flask, Django, Pyramid, Bottle will all work. Written for Ubuntu, Debian, Fedora, CentOS and Arch Linux (should be helpful for other systems, too)
 
-*Revision 3 (2016-07-31): Ubuntu 16.04, Fedora 24, CentOS 7*
+*Revision 3 (2016-07-31): Ubuntu 16.04, Debian 8, Fedora 24, CentOS 7*
 
 .. TEASER_END
 
@@ -27,6 +27,7 @@ In order to deploy your web application, you need a server that gives you root a
 Your server should also run a modern Linux-based operating system. This guide was written and tested on:
 
 * Ubuntu 16.04 LTS
+* Debian 8 (jessie)
 * Fedora 24 (with SELinux enabled and disabled)
 * CentOS 7 (with SELinux enabled and disabled)
 * Arch Linux
@@ -44,11 +45,11 @@ Getting started
 
 Start by installing virtualenv, nginx and uWSGI. I recommend using your operating system packages. For uWSGI, we need the ``logfile`` and ``python3`` plugins. (Arch Linux names the ``python3`` plugin ``python``; the ``logfile`` plugin may be built-in — check with your system repositories!). I’ll also install Git to clone the tutorial app, but it’s optional if your workflow does not involve git.
 
-**Ubuntu:**
+**Ubuntu, Debian:**
 
 .. code:: sh
 
-   aptitude install virtualenv python3 uwsgi uwsgi-emperor uwsgi-plugin-python3 nginx-full git
+   apt install virtualenv python3 uwsgi uwsgi-emperor uwsgi-plugin-python3 nginx-full git
 
 **Fedora:**
 
@@ -88,7 +89,7 @@ If you don’t use Flask, this tutorial also has instructions for other web fram
 
 We’ll start by creating a virtualenv:
 
-**Ubuntu:**
+**Ubuntu, Debian:**
 
 .. code:: sh
 
@@ -132,7 +133,7 @@ What this directory should be depends on your web framework.  For example, for a
 
 At this point, you should chown this directory to the user and group your server is going to run as.  This is especially important if uwsgi and nginx run as different users (as they do on Fedora). Run one of the following commands:
 
-**Ubuntu:**
+**Ubuntu, Debian:**
 
 .. code:: sh
 
@@ -155,7 +156,7 @@ Configuring uWSGI and nginx
 
 .. note::
 
-   Parts of the configuration depend on your operating system. I tried to provide advice for Ubuntu, Fedora, CentOS and Arch Linux. If you experience any issues, in particular with plugins, please consult the documentation.
+   Parts of the configuration depend on your operating system. I tried to provide advice for Ubuntu, Debian, Fedora, CentOS and Arch Linux. If you experience any issues, in particular with plugins, please consult the documentation.
 
 We need to write a configuration file for uWSGI and nginx.
 
@@ -183,7 +184,7 @@ Start with this, but read the notes below and change the values accordingly:
 
 Save this file as:
 
-* Ubuntu: ``/etc/uwsgi-emperor/vassals/myapp.ini``
+* Ubuntu, Debian: ``/etc/uwsgi-emperor/vassals/myapp.ini``
 * Fedora, CentOS: ``/etc/uwsgi.d/myapp.ini``
 * Arch Linux: ``/etc/uwsgi/vassals/myapp.ini`` (create the directory first and **chown** it to http: ``mkdir -p /etc/uwsgi/vassals; chown -R http:http /etc/uwsgi/vassals``)
 
@@ -216,7 +217,7 @@ We need to configure our web server. Here’s a basic configuration that will ge
 
 Save this file as:
 
-* Ubuntu: ``/etc/nginx/sites-enabled/myapp.conf``
+* Ubuntu, Debian: ``/etc/nginx/sites-enabled/myapp.conf``
 * Fedora, CentOS: ``/etc/nginx/conf.d/myapp.conf``
 * Arch Linux: add ``include /etc/nginx/conf.d/*.conf;`` to your ``http`` directive in ``/etc/nginx/nginx.conf`` and use ``/etc/nginx/conf.d/myapp.conf``
 
@@ -303,12 +304,12 @@ Hopefully, this is enough (you can delete the file). In case it isn’t, please 
 
 .. _SELinux policy: https://chriswarrick.com/pub/nginx-uwsgi.pp
 
-For Ubuntu
-----------
+For Ubuntu and Debian
+---------------------
 
-Ubuntu (still!) uses LSB services for uWSGI. Because LSB services are awful, we’re going to set up our own systemd-based (native) service.
+Ubuntu and Debian (still!) use LSB services for uWSGI. Because LSB services are awful, we’re going to set up our own systemd-based (native) service.
 
-Start by disabling the LSB service that comes with Ubuntu:
+Start by disabling the LSB service that comes with Ubuntu and Debian:
 
 .. code:: sh
 
