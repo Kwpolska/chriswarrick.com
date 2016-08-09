@@ -50,7 +50,7 @@ article: http://ogp.me/ns/article#
             <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" href="https://chriswarrick.com/pl/">
-                <img src="/assets/img/logo.png" alt="Chris Warrick" id="logo"><span id="blog-title">Chris Warrick</span>
+            <img src="/assets/img/logo.png" srcset="/assets/img/logo2x.png 2x" alt="Chris Warrick" id="logo"><span id="blog-title">Chris Warrick</span>
             </a>
         </div>
 <!-- /.navbar-header -->
@@ -125,16 +125,16 @@ a fully-featured AUR helper (it has no update function, but I will
 write one soon).  It’s the <a class="reference external" href="https://github.com/Kwpolska/pkgbuilder">PKGBUILDer</a>.</p>
 <p>The Perl version (search in the repo, linked above) had 56 lines.  In
 short, it did something like this (rewritten to bash):</p>
-<pre class="code bash"><a name="rest_code_a0f9908528fc47939c4ee11cbcf89e92-1"></a><span class="k">function</span> generate<span class="o">(</span>package<span class="o">)</span> <span class="o">{</span>
-<a name="rest_code_a0f9908528fc47939c4ee11cbcf89e92-2"></a>    <span class="nv">pk</span><span class="o">=</span><span class="si">${</span><span class="nv">package</span><span class="p">:</span><span class="nv">0</span><span class="p">:</span><span class="nv">2</span><span class="si">}</span>
-<a name="rest_code_a0f9908528fc47939c4ee11cbcf89e92-3"></a>    wget http://aur.archlinux.org/<span class="nv">$pk</span>/<span class="nv">$package</span>.tar.gz
-<a name="rest_code_a0f9908528fc47939c4ee11cbcf89e92-4"></a>    tar -xzvf <span class="nv">$package</span>.tar.gz
-<a name="rest_code_a0f9908528fc47939c4ee11cbcf89e92-5"></a>    <span class="nb">cd</span> <span class="nv">$package</span>
-<a name="rest_code_a0f9908528fc47939c4ee11cbcf89e92-6"></a>    makepkg -si
-<a name="rest_code_a0f9908528fc47939c4ee11cbcf89e92-7"></a>    <span class="nb">cd</span> ..
-<a name="rest_code_a0f9908528fc47939c4ee11cbcf89e92-8"></a><span class="o">}</span>
-<a name="rest_code_a0f9908528fc47939c4ee11cbcf89e92-9"></a>
-<a name="rest_code_a0f9908528fc47939c4ee11cbcf89e92-10"></a><span class="k">for</span> package in <span class="nv">$@</span>, <span class="k">do</span> generate<span class="o">(</span>package<span class="o">)</span><span class="p">;</span> <span class="k">done</span>
+<pre class="code bash"><a name="rest_code_c405d7b112724f23ba32d313b86a98b8-1"></a><span class="k">function</span> generate<span class="o">(</span>package<span class="o">)</span> <span class="o">{</span>
+<a name="rest_code_c405d7b112724f23ba32d313b86a98b8-2"></a>    <span class="nv">pk</span><span class="o">=</span><span class="si">${</span><span class="nv">package</span><span class="p">:</span><span class="nv">0</span><span class="p">:</span><span class="nv">2</span><span class="si">}</span>
+<a name="rest_code_c405d7b112724f23ba32d313b86a98b8-3"></a>    wget http://aur.archlinux.org/<span class="nv">$pk</span>/<span class="nv">$package</span>.tar.gz
+<a name="rest_code_c405d7b112724f23ba32d313b86a98b8-4"></a>    tar -xzvf <span class="nv">$package</span>.tar.gz
+<a name="rest_code_c405d7b112724f23ba32d313b86a98b8-5"></a>    <span class="nb">cd</span> <span class="nv">$package</span>
+<a name="rest_code_c405d7b112724f23ba32d313b86a98b8-6"></a>    makepkg -si
+<a name="rest_code_c405d7b112724f23ba32d313b86a98b8-7"></a>    <span class="nb">cd</span> ..
+<a name="rest_code_c405d7b112724f23ba32d313b86a98b8-8"></a><span class="o">}</span>
+<a name="rest_code_c405d7b112724f23ba32d313b86a98b8-9"></a>
+<a name="rest_code_c405d7b112724f23ba32d313b86a98b8-10"></a><span class="k">for</span> package in <span class="nv">$@</span>, <span class="k">do</span> generate<span class="o">(</span>package<span class="o">)</span><span class="p">;</span> <span class="k">done</span>
 </pre>
 <p>This code is really, REALLY bad.  But it worked for me, because the “normal”
 AUR helpers were slow.  I wanted to do something about it.  I put an entry on
@@ -172,15 +172,15 @@ harsh.  Perl’s is not easy to search.</p>
 <p>Time for a real world example:  I want to learn how to write a specific
 function in Perl, PHP and Python.  This function would print the argument.
 For example, in C:</p>
-<pre class="code cpp"><a name="rest_code_3e49a61ee0a942f7b2fae8ebe2ae03b3-1"></a><span class="cp">#include &lt;stdio.h&gt;</span>
-<a name="rest_code_3e49a61ee0a942f7b2fae8ebe2ae03b3-2"></a><span class="kt">void</span> <span class="nf">writeStuff</span><span class="p">(</span><span class="n">text</span><span class="p">)</span> <span class="p">{</span>
-<a name="rest_code_3e49a61ee0a942f7b2fae8ebe2ae03b3-3"></a>    <span class="n">printf</span><span class="p">(</span><span class="s">"Input: %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">text</span><span class="p">);</span>
-<a name="rest_code_3e49a61ee0a942f7b2fae8ebe2ae03b3-4"></a><span class="p">}</span>
-<a name="rest_code_3e49a61ee0a942f7b2fae8ebe2ae03b3-5"></a>
-<a name="rest_code_3e49a61ee0a942f7b2fae8ebe2ae03b3-6"></a><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="p">{</span>
-<a name="rest_code_3e49a61ee0a942f7b2fae8ebe2ae03b3-7"></a>    <span class="n">writeStuff</span><span class="p">(</span><span class="s">"some stuff to print"</span><span class="p">);</span>
-<a name="rest_code_3e49a61ee0a942f7b2fae8ebe2ae03b3-8"></a>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<a name="rest_code_3e49a61ee0a942f7b2fae8ebe2ae03b3-9"></a><span class="p">}</span>
+<pre class="code cpp"><a name="rest_code_0c85989c965d4d62bd65c3176962d851-1"></a><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+<a name="rest_code_0c85989c965d4d62bd65c3176962d851-2"></a><span class="kt">void</span> <span class="nf">writeStuff</span><span class="p">(</span><span class="n">text</span><span class="p">)</span> <span class="p">{</span>
+<a name="rest_code_0c85989c965d4d62bd65c3176962d851-3"></a>    <span class="n">printf</span><span class="p">(</span><span class="s">"Input: %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">text</span><span class="p">);</span>
+<a name="rest_code_0c85989c965d4d62bd65c3176962d851-4"></a><span class="p">}</span>
+<a name="rest_code_0c85989c965d4d62bd65c3176962d851-5"></a>
+<a name="rest_code_0c85989c965d4d62bd65c3176962d851-6"></a><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="p">{</span>
+<a name="rest_code_0c85989c965d4d62bd65c3176962d851-7"></a>    <span class="n">writeStuff</span><span class="p">(</span><span class="s">"some stuff to print"</span><span class="p">);</span>
+<a name="rest_code_0c85989c965d4d62bd65c3176962d851-8"></a>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<a name="rest_code_0c85989c965d4d62bd65c3176962d851-9"></a><span class="p">}</span>
 </pre>
 <p>Notice: by “searching” in docs I mean reading the page and looking for
 a thing.</p>
@@ -192,12 +192,12 @@ Nothing.  I ask Google and I learn that Perl names them <em>subroutines</em>.  I
 check the Language reference:  it’s the sub function, now I can define my
 function and call it.  printf?  Let’s look it up in the Functions list.
 We’re done.</p>
-<pre class="code perl"><a name="rest_code_e99baf1c19474568872cf8f4051fd145-1"></a><span class="k">sub </span><span class="nf">writeStuff</span> <span class="p">{</span>
-<a name="rest_code_e99baf1c19474568872cf8f4051fd145-2"></a>    <span class="k">my</span> <span class="nv">$text</span> <span class="o">=</span> <span class="nb">shift</span><span class="p">;</span>
-<a name="rest_code_e99baf1c19474568872cf8f4051fd145-3"></a>    <span class="nb">printf</span><span class="p">(</span><span class="s">"Input: %s\n"</span><span class="p">,</span> <span class="nv">$text</span><span class="p">);</span>
-<a name="rest_code_e99baf1c19474568872cf8f4051fd145-4"></a><span class="p">}</span>
-<a name="rest_code_e99baf1c19474568872cf8f4051fd145-5"></a>
-<a name="rest_code_e99baf1c19474568872cf8f4051fd145-6"></a><span class="n">writeStuff</span><span class="p">(</span><span class="s">"some stuff to print"</span><span class="p">);</span>
+<pre class="code perl"><a name="rest_code_58c2aa83042a4b39a80357c791167a77-1"></a><span class="k">sub </span><span class="nf">writeStuff</span> <span class="p">{</span>
+<a name="rest_code_58c2aa83042a4b39a80357c791167a77-2"></a>    <span class="k">my</span> <span class="nv">$text</span> <span class="o">=</span> <span class="nb">shift</span><span class="p">;</span>
+<a name="rest_code_58c2aa83042a4b39a80357c791167a77-3"></a>    <span class="nb">printf</span><span class="p">(</span><span class="s">"Input: %s\n"</span><span class="p">,</span> <span class="nv">$text</span><span class="p">);</span>
+<a name="rest_code_58c2aa83042a4b39a80357c791167a77-4"></a><span class="p">}</span>
+<a name="rest_code_58c2aa83042a4b39a80357c791167a77-5"></a>
+<a name="rest_code_58c2aa83042a4b39a80357c791167a77-6"></a><span class="n">writeStuff</span><span class="p">(</span><span class="s">"some stuff to print"</span><span class="p">);</span>
 </pre>
 <p>Perl’s documentation is anywhere near user-friendliness.</p>
 <p><strong>PHP:</strong> &lt;<a class="reference external" href="http://php.net">http://php.net</a>&gt;.  Why is the <em>documentation</em> link so small?
@@ -205,12 +205,12 @@ Anyways, I need functions.  Language Refernce/Functions.  Here we go, one
 more click and I know how to make a function.  And I guess that I’ll have
 to search the Function Reference.  I find text processing, go for Strings
 and I can happily see printf.  Take a look and we can write this:</p>
-<pre class="code php"><a name="rest_code_6e5fb5bc3878473db9e9b6dce2b60e05-1"></a><span class="cp">&lt;?php</span>
-<a name="rest_code_6e5fb5bc3878473db9e9b6dce2b60e05-2"></a><span class="k">function</span> <span class="nf">writeStuff</span><span class="p">(</span><span class="nv">$text</span><span class="p">)</span> <span class="p">{</span>
-<a name="rest_code_6e5fb5bc3878473db9e9b6dce2b60e05-3"></a>    <span class="nb">printf</span><span class="p">(</span><span class="s2">"Input: %s</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span> <span class="nv">$text</span><span class="p">);</span>
-<a name="rest_code_6e5fb5bc3878473db9e9b6dce2b60e05-4"></a><span class="p">}</span>
-<a name="rest_code_6e5fb5bc3878473db9e9b6dce2b60e05-5"></a><span class="nx">writeStuff</span><span class="p">(</span><span class="s2">"some stuff to print"</span><span class="p">);</span>
-<a name="rest_code_6e5fb5bc3878473db9e9b6dce2b60e05-6"></a><span class="cp">?&gt;</span><span class="x"></span>
+<pre class="code php"><a name="rest_code_a2c51d09c3564942ac68092cdf0f4e95-1"></a><span class="cp">&lt;?php</span>
+<a name="rest_code_a2c51d09c3564942ac68092cdf0f4e95-2"></a><span class="k">function</span> <span class="nf">writeStuff</span><span class="p">(</span><span class="nv">$text</span><span class="p">)</span> <span class="p">{</span>
+<a name="rest_code_a2c51d09c3564942ac68092cdf0f4e95-3"></a>    <span class="nb">printf</span><span class="p">(</span><span class="s2">"Input: %s</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span> <span class="nv">$text</span><span class="p">);</span>
+<a name="rest_code_a2c51d09c3564942ac68092cdf0f4e95-4"></a><span class="p">}</span>
+<a name="rest_code_a2c51d09c3564942ac68092cdf0f4e95-5"></a><span class="nx">writeStuff</span><span class="p">(</span><span class="s2">"some stuff to print"</span><span class="p">);</span>
+<a name="rest_code_a2c51d09c3564942ac68092cdf0f4e95-6"></a><span class="cp">?&gt;</span><span class="x"></span>
 </pre>
 <p><strong>Python:</strong> &lt;<a class="reference external" href="http://python.org/">http://python.org/</a>&gt;.  Documentation element exists in the
 menu.  I click it.  They offer me a nice tutorial, so I’ll check it out.
@@ -221,10 +221,10 @@ Fancier output formatting</em>.  I want to have %s as in other languages, so
 I skip this one and see <em>Old string formatting</em>, which uses the %s.  Now,
 assuming they indented the code on purpose because there are no braces,
 I can write:</p>
-<pre class="code python"><a name="rest_code_335b68696b804604b08df2b3e332671e-1"></a><span class="k">def</span> <span class="nf">writeStuff</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
-<a name="rest_code_335b68696b804604b08df2b3e332671e-2"></a>    <span class="k">print</span> <span class="s">"Input: </span><span class="si">%s</span><span class="s">"</span> <span class="o">%</span> <span class="n">text</span>
-<a name="rest_code_335b68696b804604b08df2b3e332671e-3"></a>
-<a name="rest_code_335b68696b804604b08df2b3e332671e-4"></a><span class="n">writeStuff</span><span class="p">(</span><span class="s">"some stuff to print"</span><span class="p">)</span>
+<pre class="code python"><a name="rest_code_55d6edc8c02e4733a8dbad40935ffbb0-1"></a><span class="k">def</span> <span class="nf">writeStuff</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+<a name="rest_code_55d6edc8c02e4733a8dbad40935ffbb0-2"></a>    <span class="k">print</span> <span class="s2">"Input: </span><span class="si">%s</span><span class="s2">"</span> <span class="o">%</span> <span class="n">text</span>
+<a name="rest_code_55d6edc8c02e4733a8dbad40935ffbb0-3"></a>
+<a name="rest_code_55d6edc8c02e4733a8dbad40935ffbb0-4"></a><span class="n">writeStuff</span><span class="p">(</span><span class="s2">"some stuff to print"</span><span class="p">)</span>
 </pre>
 <p>All of them work and output <tt class="docutils literal">Input: some stuff to print</tt> followed by a
 newline.  The original C example had 8 lines.  Perl made it in 5, PHP
