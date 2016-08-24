@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Chris Warrick</title><link>https://chriswarrick.com/</link><description></description><atom:link href="https://chriswarrick.com/pl/linux/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>pl</language><lastBuildDate>Wed, 24 Aug 2016 19:01:37 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>systemd is awesome.</title><link>https://chriswarrick.com/pl/blog/2015/01/30/systemd-is-awesome/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;I recently switched distros on my server, from Debian to Fedora, to use
+&lt;tt class="docutils literal"&gt;systemd&lt;/tt&gt; and keep it in line with my home &lt;a class="reference external" href="https://chriswarrick.com/blog/2011/01/06/arch-linux-the-best-distro-ever/"&gt;Arch Linux&lt;/a&gt; system (which was
+not reinstalled since 2010, by the way!)  Why is systemd so awesome?  Read
+on to find out.&lt;/p&gt;
+&lt;!-- TEASER_END --&gt;
+&lt;p&gt;&lt;em&gt;(I changed the hardware for my home system along the way.  And just copied
+everything over with ``dd``.  That’s Linux at its finest.)&lt;/em&gt;&lt;/p&gt;
+&lt;div class="section" id="user-friendly"&gt;
+&lt;h2&gt;User friendly&lt;/h2&gt;
+&lt;p&gt;The most important thing in systemd is its user friendliness.  systemd offers
+the &lt;tt class="docutils literal"&gt;systemctl&lt;/tt&gt; tool, which can be used to control all the services.  You
+can see what exactly is going on: what is running, what failed to start,
+and you can also see why if you ask &lt;tt class="docutils literal"&gt;systemctl status $SERVICE&lt;/tt&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="services"&gt;
+&lt;h2&gt;Services&lt;/h2&gt;
+&lt;div class="section" id="writing-services-is-fun"&gt;
+&lt;h3&gt;Writing services is fun&lt;/h3&gt;
+&lt;p&gt;If you want your own services, you just need to write some simple INI files.  No
+need for bash, distro-specific frameworks and whatnot.  If I have a functioning
+service written on Arch, I can just copy the file over to Fedora and blindly
+enable it — assuming I have the executables installed, it’s guaranteed to work.&lt;/p&gt;
+&lt;p&gt;And the units are tiny:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+fedora$ wc -l /usr/lib/systemd/system/nginx.service
+15 /usr/lib/systemd/system/nginx.service
+debian$ wc -l /etc/init.d/nginx
+101 /etc/init.d/nginx
+&lt;/pre&gt;
+&lt;p&gt;And you can write a bare-minimum systemd daemon in less than that – not so easy
+with &lt;tt class="docutils literal"&gt;sysvinit&lt;/tt&gt; (writing everything on one line doesn’t count!)&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="managing-personal-services"&gt;
+&lt;h3&gt;Managing personal services&lt;/h3&gt;
+&lt;p&gt;systemd also features user-specific services.  You can run any service as your
+user.  I use this to run &lt;a class="reference external" href="https://chriswarrick.com/kwbot/"&gt;KwBot&lt;/a&gt;, which was previously under control of
+&lt;tt class="docutils literal"&gt;supervisord&lt;/tt&gt; — that’s one less dependency to care about!&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="runlevels-do-not-exist"&gt;
+&lt;h3&gt;Runlevels do not exist&lt;/h3&gt;
+&lt;p&gt;systemd does away with the standard convention of runlevels.  They are replaced
+by human-friendly &lt;em&gt;targets&lt;/em&gt;.  Each unit defines its target: most use
+&lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;multi-user.target&lt;/span&gt;&lt;/tt&gt;.  It is much easier to manage.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="no-symlink-mess"&gt;
+&lt;h3&gt;No symlink mess&lt;/h3&gt;
+&lt;p&gt;Just like old sysvinit-esque systems, systemd uses symlinks to manage
+enabled/disabled services.  There is just one difference: you get just &lt;strong&gt;one&lt;/strong&gt;
+symlink in the appropriate &lt;tt class="docutils literal"&gt;.wants&lt;/tt&gt; directory.  You do not have to look into
+all the different runlevels.  &lt;tt class="docutils literal"&gt;graphical.target&lt;/tt&gt; depends on
+&lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;multi-user.target&lt;/span&gt;&lt;/tt&gt;, which in turn depends on &lt;tt class="docutils literal"&gt;basic.target&lt;/tt&gt;, which depends
+on a few more targets required to get the system up and running.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="units-can-depend-on-each-other"&gt;
+&lt;h3&gt;Units can depend on each other&lt;/h3&gt;
+&lt;p&gt;Do you have some units that require the network to be up?  Set it to be run
+after and require &lt;tt class="docutils literal"&gt;network.target&lt;/tt&gt; and call it a day.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="the-journal"&gt;
+&lt;h2&gt;The Journal&lt;/h2&gt;
+&lt;p&gt;If I want to know what is going on in my system, I can just ask &lt;tt class="docutils literal"&gt;journalctl&lt;/tt&gt;
+to show me the most recent messages.  I don’t need to read a thousand different
+log files — most things appear in the journal.  Sure, some things aren’t there
+(yet), but what I &lt;em&gt;can&lt;/em&gt; see is very useful.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="did-i-really-change-my-distro-for-all-that"&gt;
+&lt;h2&gt;Did I really change my distro for all that?&lt;/h2&gt;
+&lt;p&gt;Yes.  I got too annoyed with Debian’s idiocy.  Also, DigitalOcean doesn’t
+&lt;em&gt;really&lt;/em&gt; support Debian testing, and I cannot survive with outdated software.
+I feel much better and, more importantly, &lt;strong&gt;safer&lt;/strong&gt; with Fedora.&lt;/p&gt;
+&lt;p&gt;(also, the “Veteran Unix Admins” of Devuan are a bunch of idiots.)&lt;/p&gt;
+&lt;/div&gt;&lt;/div&gt;</description><guid>https://chriswarrick.com/pl/blog/2015/01/30/systemd-is-awesome/</guid><pubDate>Fri, 30 Jan 2015 15:00:00 GMT</pubDate></item><item><title>Zsh — A Shell For The Power Users.</title><link>https://chriswarrick.com/pl/blog/2011/03/05/zsh-a-shell-for-the-power-users/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;What’s the most important non-kernel piece of software in UNIX-like OSes? The shell. A good shell.&lt;/p&gt;
+&lt;!-- TEASER_END --&gt;
+&lt;p&gt;I’m working with UNIX-like OSes a long time. I wasn’t using a shell all the time, but the black window with a monospace font was seen more often on my screen with time. A black window with &lt;cite&gt;bash&lt;/cite&gt; in it. Are you wondering why? They set it as the default shell. And some users might not bother with changing their settings or testing other shells.&lt;/p&gt;
+&lt;div class="section" id="user-localhost-zsh"&gt;
+&lt;h2&gt;&lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;user@localhost:~$&lt;/span&gt; zsh&lt;/tt&gt;&lt;/h2&gt;
+&lt;p&gt;Are you still using bash? Switch over to zsh and learn why it’s better. Let’s begin with a reason list.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="reason-1-intelligent-completion"&gt;
+&lt;h2&gt;Reason #1. Intelligent Completion&lt;/h2&gt;
+&lt;p&gt;The zsh’s bulit-in completion is the best one ever made. For example, here is how regular bash responds to &lt;tt class="docutils literal"&gt;pacman &lt;span class="pre"&gt;&amp;lt;Tab&amp;gt;&amp;lt;Tab&amp;gt;&lt;/span&gt;&lt;/tt&gt;:&lt;/p&gt;
+&lt;pre class="code text"&gt;&lt;a name="rest_code_ed55320de63e4a77a456b38c43d27bc9-1"&gt;&lt;/a&gt;[kwpolska@kwpolska-lin ~]$ pacman
+&lt;a name="rest_code_ed55320de63e4a77a456b38c43d27bc9-2"&gt;&lt;/a&gt;Display all XXX possibilities? (y or n)
+&lt;/pre&gt;&lt;p&gt;(The &lt;em&gt;possibilities&lt;/em&gt; are all the files and directories in the current working directory.)&lt;/p&gt;
+&lt;p&gt;And here’s another bash response, this time with bash-completion:&lt;/p&gt;
+&lt;pre class="code text"&gt;&lt;a name="rest_code_6b6f9ffdc2cd42c5b338e09be646f278-1"&gt;&lt;/a&gt;[kwpolska@kwpolska-lin ~]$ pacman -
+&lt;a name="rest_code_6b6f9ffdc2cd42c5b338e09be646f278-2"&gt;&lt;/a&gt;-D          -h          -Q          -R          -S          -U          -V
+&lt;a name="rest_code_6b6f9ffdc2cd42c5b338e09be646f278-3"&gt;&lt;/a&gt;--database  --help      --query     --remove    --sync      --upgrade   --version
+&lt;/pre&gt;&lt;p&gt;That’s much more helpful, but a new user still wouldn’t know what to do.&lt;/p&gt;
+&lt;p&gt;Are you wondering what zsh did after adding a &lt;tt class="docutils literal"&gt;-&lt;/tt&gt; before the first &lt;tt class="docutils literal"&gt;&amp;lt;Tab&amp;gt;&lt;/tt&gt;?&lt;/p&gt;
+&lt;pre class="code text"&gt;&lt;a name="rest_code_9ec2261c39d14d629f6f4ce79bbe12ff-1"&gt;&lt;/a&gt;[kwpolska@kwpolska-lin ~]$ pacman -Q
+&lt;a name="rest_code_9ec2261c39d14d629f6f4ce79bbe12ff-2"&gt;&lt;/a&gt;-Q  -- Query the package database
+&lt;a name="rest_code_9ec2261c39d14d629f6f4ce79bbe12ff-3"&gt;&lt;/a&gt;-R  -- Remove a package from the system
+&lt;a name="rest_code_9ec2261c39d14d629f6f4ce79bbe12ff-4"&gt;&lt;/a&gt;-S  -- Synchronize packages
+&lt;a name="rest_code_9ec2261c39d14d629f6f4ce79bbe12ff-5"&gt;&lt;/a&gt;-U  -- Upgrade a package
+&lt;a name="rest_code_9ec2261c39d14d629f6f4ce79bbe12ff-6"&gt;&lt;/a&gt;-V  -- Display version and exit
+&lt;a name="rest_code_9ec2261c39d14d629f6f4ce79bbe12ff-7"&gt;&lt;/a&gt;-h  -- Display usage
+&lt;/pre&gt;&lt;p&gt;(If you will press tab once, it will just show the possibilities. If you will press it once again, it will change to -R.)&lt;/p&gt;
+&lt;p&gt;Do you want to start the GNOME’s Preferred Applications dialog box &lt;strong&gt;from the shell, without using the Tab key&lt;/strong&gt;? Good luck! The name is &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;gnome-default-applications-properties&lt;/span&gt;&lt;/tt&gt;. That’s &lt;strong&gt;38&lt;/strong&gt; characters. &lt;strong&gt;THIRTY EIGHT&lt;/strong&gt; characters. If you will make a typo in bash, you’ll see “command not found”, swear a few times and find the typo yourself. With zsh, instead of searching for typo, you can press &lt;tt class="docutils literal"&gt;&amp;lt;Tab&amp;gt;&lt;/tt&gt;. In many cases, you’ll see the proper command.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="reason-2-no-cd-required"&gt;
+&lt;h2&gt;Reason #2. No &lt;tt class="docutils literal"&gt;cd&lt;/tt&gt; required&lt;/h2&gt;
+&lt;dl class="docutils"&gt;
+&lt;dt&gt;If you will add one line to your zshrc, you’ll be able to skip cd if you want to go to a directory (doesn’t work if there’s something in the &lt;tt class="docutils literal"&gt;$PATH&lt;/tt&gt; with the same name)::&lt;/dt&gt;
+&lt;dd&gt;setopt autocd&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/div&gt;
+&lt;div class="section" id="reason-3-bulit-in-commands"&gt;
+&lt;h2&gt;Reason #3. Bulit-in commands&lt;/h2&gt;
+&lt;p&gt;Do you want to use the basic &lt;tt class="docutils literal"&gt;more&lt;/tt&gt;/&lt;tt class="docutils literal"&gt;less&lt;/tt&gt;/&lt;tt class="docutils literal"&gt;$PAGER&lt;/tt&gt; to read a file? Just say &lt;tt class="docutils literal"&gt;&amp;lt;filename&lt;/tt&gt; and you’re done. Do you need to use FTP? You can use &lt;tt class="docutils literal"&gt;zftp&lt;/tt&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="reason-4-bindkeys"&gt;
+&lt;h2&gt;Reason #4. &lt;tt class="docutils literal"&gt;bindkeys&lt;/tt&gt;&lt;/h2&gt;
+&lt;p&gt;Wish to use some keys for special text operations? You can use bindkeys. I’m binding these keystrokes:&lt;/p&gt;
+&lt;pre class="code bash"&gt;&lt;a name="rest_code_3c919f5efca04fd2b7e5a7d3839c84bf-1"&gt;&lt;/a&gt;bindkey &lt;span class="s2"&gt;"\e[1~"&lt;/span&gt; beginning-of-line       &lt;span class="c1"&gt;# Home&lt;/span&gt;
+&lt;a name="rest_code_3c919f5efca04fd2b7e5a7d3839c84bf-2"&gt;&lt;/a&gt;bindkey &lt;span class="s2"&gt;"\e[4~"&lt;/span&gt; end-of-line             &lt;span class="c1"&gt;# End&lt;/span&gt;
+&lt;a name="rest_code_3c919f5efca04fd2b7e5a7d3839c84bf-3"&gt;&lt;/a&gt;bindkey &lt;span class="s2"&gt;"\e[5~"&lt;/span&gt; beginning-of-history    &lt;span class="c1"&gt;# PageUp&lt;/span&gt;
+&lt;a name="rest_code_3c919f5efca04fd2b7e5a7d3839c84bf-4"&gt;&lt;/a&gt;bindkey &lt;span class="s2"&gt;"\e[6~"&lt;/span&gt; end-of-history          &lt;span class="c1"&gt;# PageDown&lt;/span&gt;
+&lt;a name="rest_code_3c919f5efca04fd2b7e5a7d3839c84bf-5"&gt;&lt;/a&gt;bindkey &lt;span class="s2"&gt;"\e[2~"&lt;/span&gt; quoted-insert           &lt;span class="c1"&gt;# Ins&lt;/span&gt;
+&lt;a name="rest_code_3c919f5efca04fd2b7e5a7d3839c84bf-6"&gt;&lt;/a&gt;bindkey &lt;span class="s2"&gt;"\e[3~"&lt;/span&gt; delete-char             &lt;span class="c1"&gt;# Del&lt;/span&gt;
+&lt;a name="rest_code_3c919f5efca04fd2b7e5a7d3839c84bf-7"&gt;&lt;/a&gt;bindkey &lt;span class="s2"&gt;"^[OH"&lt;/span&gt;  beginning-of-line       &lt;span class="c1"&gt;# Home&lt;/span&gt;
+&lt;a name="rest_code_3c919f5efca04fd2b7e5a7d3839c84bf-8"&gt;&lt;/a&gt;bindkey &lt;span class="s2"&gt;"^[OF"&lt;/span&gt;  end-of-line             &lt;span class="c1"&gt;# End&lt;/span&gt;
+&lt;a name="rest_code_3c919f5efca04fd2b7e5a7d3839c84bf-9"&gt;&lt;/a&gt;bindkey &lt;span class="s2"&gt;"^[[5~"&lt;/span&gt; beginning-of-history    &lt;span class="c1"&gt;# PageUp&lt;/span&gt;
+&lt;a name="rest_code_3c919f5efca04fd2b7e5a7d3839c84bf-10"&gt;&lt;/a&gt;bindkey &lt;span class="s2"&gt;"^[[6~"&lt;/span&gt; end-of-history          &lt;span class="c1"&gt;# PageDown&lt;/span&gt;
+&lt;a name="rest_code_3c919f5efca04fd2b7e5a7d3839c84bf-11"&gt;&lt;/a&gt;bindkey &lt;span class="s2"&gt;"^[[2~"&lt;/span&gt; quoted-insert           &lt;span class="c1"&gt;# Ins&lt;/span&gt;
+&lt;a name="rest_code_3c919f5efca04fd2b7e5a7d3839c84bf-12"&gt;&lt;/a&gt;bindkey &lt;span class="s2"&gt;"^[[3~"&lt;/span&gt; delete-char             &lt;span class="c1"&gt;# Del&lt;/span&gt;
+&lt;a name="rest_code_3c919f5efca04fd2b7e5a7d3839c84bf-13"&gt;&lt;/a&gt;bindkey &lt;span class="s2"&gt;"^[[1;5D"&lt;/span&gt; backward-word         &lt;span class="c1"&gt;# ^Left&lt;/span&gt;
+&lt;a name="rest_code_3c919f5efca04fd2b7e5a7d3839c84bf-14"&gt;&lt;/a&gt;bindkey &lt;span class="s2"&gt;"^[[1;5C"&lt;/span&gt; forward-word          &lt;span class="c1"&gt;# ^Right&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;div class="section" id="getting-help"&gt;
+&lt;h2&gt;Getting Help&lt;/h2&gt;
+&lt;p&gt;Do you need help? Choose one of the sources.&lt;/p&gt;
+&lt;div class="section" id="zsh-freenode"&gt;
+&lt;h3&gt;#zsh @ freenode&lt;/h3&gt;
+&lt;p&gt;Do you love IRC, like me? Visit #zsh at freenode.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="zshwiki"&gt;
+&lt;h3&gt;ZSHWiki&lt;/h3&gt;
+&lt;p&gt;The Z Shell has its very own wiki at &amp;lt;&lt;a class="reference external" href="http://zshwiki.org"&gt;http://zshwiki.org&lt;/a&gt;&amp;gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="mailing-lists"&gt;
+&lt;h3&gt;Mailing Lists&lt;/h3&gt;
+&lt;p&gt;Subscribe to a mailing list: &amp;lt;&lt;a class="reference external" href="http://zsh.sourceforge.net/Arc/mlist.html"&gt;http://zsh.sourceforge.net/Arc/mlist.html&lt;/a&gt;&amp;gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="website-web-documentation"&gt;
+&lt;h3&gt;Website/Web Documentation&lt;/h3&gt;
+&lt;p&gt;You can find some information at &amp;lt;&lt;a class="reference external" href="http://zsh.sourceforge.net/"&gt;http://zsh.sourceforge.net/&lt;/a&gt;&amp;gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="the-man-page-aka-because-zsh-contains-many-features-the-zsh-manual-has-been-split-into-a-number-of-sections"&gt;
+&lt;h3&gt;The Man Page aka &lt;em&gt;Because zsh contains many features, the zsh manual has been split into a number of sections&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;The &lt;cite&gt;zsh&lt;/cite&gt; man page just tells you the most important things and informs you about other sections. If you aren’t sure where to search, try &lt;tt class="docutils literal"&gt;man zshall&lt;/tt&gt;.&lt;/p&gt;
+&lt;pre class="code text"&gt;&lt;a name="rest_code_78c79136befb453280f78597db79fd6c-1"&gt;&lt;/a&gt;zsh          Zsh overview
+&lt;a name="rest_code_78c79136befb453280f78597db79fd6c-2"&gt;&lt;/a&gt;zshroadmap   Informal introduction to the manual
+&lt;a name="rest_code_78c79136befb453280f78597db79fd6c-3"&gt;&lt;/a&gt;zshmisc      Anything not fitting into the other sections
+&lt;a name="rest_code_78c79136befb453280f78597db79fd6c-4"&gt;&lt;/a&gt;zshexpn      Zsh command and parameter expansion
+&lt;a name="rest_code_78c79136befb453280f78597db79fd6c-5"&gt;&lt;/a&gt;zshparam     Zsh parameters
+&lt;a name="rest_code_78c79136befb453280f78597db79fd6c-6"&gt;&lt;/a&gt;zshoptions   Zsh options
+&lt;a name="rest_code_78c79136befb453280f78597db79fd6c-7"&gt;&lt;/a&gt;zshbuiltins  Zsh built-in functions
+&lt;a name="rest_code_78c79136befb453280f78597db79fd6c-8"&gt;&lt;/a&gt;zshzle       Zsh command line editing
+&lt;a name="rest_code_78c79136befb453280f78597db79fd6c-9"&gt;&lt;/a&gt;zshcompwid   Zsh completion widgets
+&lt;a name="rest_code_78c79136befb453280f78597db79fd6c-10"&gt;&lt;/a&gt;zshcompsys   Zsh completion system
+&lt;a name="rest_code_78c79136befb453280f78597db79fd6c-11"&gt;&lt;/a&gt;zshcompctl   Zsh completion control
+&lt;a name="rest_code_78c79136befb453280f78597db79fd6c-12"&gt;&lt;/a&gt;zshmodules   Zsh loadable modules
+&lt;a name="rest_code_78c79136befb453280f78597db79fd6c-13"&gt;&lt;/a&gt;zshcalsys    Zsh built-in calendar functions
+&lt;a name="rest_code_78c79136befb453280f78597db79fd6c-14"&gt;&lt;/a&gt;zshtcpsys    Zsh built-in TCP functions
+&lt;a name="rest_code_78c79136befb453280f78597db79fd6c-15"&gt;&lt;/a&gt;zshzftpsys   Zsh built-in FTP client
+&lt;a name="rest_code_78c79136befb453280f78597db79fd6c-16"&gt;&lt;/a&gt;zshcontrib   Additional zsh functions and utilities
+&lt;a name="rest_code_78c79136befb453280f78597db79fd6c-17"&gt;&lt;/a&gt;zshall       Meta-man page containing all of the above
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;&lt;/div&gt;</description><guid>https://chriswarrick.com/pl/blog/2011/03/05/zsh-a-shell-for-the-power-users/</guid><pubDate>Fri, 04 Mar 2011 23:00:00 GMT</pubDate></item><item><title>Arch Linux: The Best Linux Distro Ever.</title><link>https://chriswarrick.com/pl/blog/2011/01/06/arch-linux-the-best-distro-ever/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;I’m using Linux since 2007. I’ve been on many distros (in order): &lt;a class="reference external" href="http://www2.mandriva.com/en/"&gt;Mandriva&lt;/a&gt;, &lt;a class="reference external" href="http://ubuntu.com"&gt;Ubuntu&lt;/a&gt;, &lt;a class="reference external" href="http://opensuse.org"&gt;openSuSE&lt;/a&gt;, &lt;a class="reference external" href="http://fedoraproject.org"&gt;Fedora&lt;/a&gt;, and only in &lt;a class="reference external" href="http://virtualbox.org"&gt;VirtualBox&lt;/a&gt;: &lt;a class="reference external" href="http://debian.org"&gt;Debian&lt;/a&gt; and &lt;a class="reference external" href="http://linuxmint.com"&gt;Linux Mint&lt;/a&gt;. But since two months there is another distro in both lists (I tested it out on VirtualBox and then set it up on the actual machine): &lt;a class="reference external" href="http://archlinux.org"&gt;Arch Linux&lt;/a&gt;.&lt;/p&gt;
+&lt;!-- TEASER_END --&gt;
+&lt;p&gt;Arch Linux is a Linux distribution by Judd Vinet and Aaron Griffin, existing since 2002, intended to be simple, elegant, versatile and expedient (See Reason #3). It uses pacman as the package manager. It’s a rolling-release distro, that means there are only new CD images released, you get updates even if you’ve installed Arch Linux v0.1.&lt;/p&gt;
+&lt;div class="section" id="what-makes-it-so-awesome"&gt;
+&lt;h2&gt;What makes it so awesome?&lt;/h2&gt;
+&lt;p&gt;There are six things that makes it the best distro:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="reason-1-archwiki"&gt;
+&lt;h2&gt;Reason 1. &lt;a class="reference external" href="https://wiki.archlinux.org/index.php/Main_Page"&gt;ArchWiki&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;The Arch Wiki is an awesome place. You can find many useful things about Arch. In this article you can find 9 links to articles in the wiki (plus two doubled).&lt;/p&gt;
+&lt;p&gt;## Reason 2. Pacman and the AUR
+The package manager is &lt;tt class="docutils literal"&gt;pacman&lt;/tt&gt;. It has a specific syntax. The &lt;a class="reference external" href="http://aur.archlinux.org/"&gt;Arch User Repository&lt;/a&gt; is a place, where you can find PKGBUILDs (build instructions, which help you make a package) for more packages than contents of the default repositioriies — &lt;tt class="docutils literal"&gt;[core]&lt;/tt&gt;, &lt;tt class="docutils literal"&gt;[extra]&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;[community]&lt;/tt&gt; (which consists of binary packages that began their life in AUR) Read the &lt;a class="reference external" href="https://wiki.archlinux.org/index.php/Main_Page"&gt;ArchWiki&lt;/a&gt; &lt;a class="reference external" href="https://wiki.archlinux.org/index.php/Pacman"&gt;Pacman&lt;/a&gt; and &lt;a class="reference external" href="https://wiki.archlinux.org/index.php/Arch_User_Repository"&gt;AUR&lt;/a&gt; articles for details.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="reason-3-the-arch-way"&gt;
+&lt;h2&gt;Reason 3. &lt;a class="reference external" href="https://wiki.archlinux.org/index.php/The_Arch_Way_v2.0"&gt;The Arch Way&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;The distro is &lt;em&gt;intended to be simple, elegant, versatile and expedient&lt;/em&gt;, as &lt;a class="reference external" href="https://wiki.archlinux.org/index.php/The_Arch_Way_v2.0"&gt;The Arch Way&lt;/a&gt; v2.0 states.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="reason-4-etc-rc-conf"&gt;
+&lt;h2&gt;Reason 4. &lt;tt class="docutils literal"&gt;/etc/rc.conf&lt;/tt&gt;&lt;/h2&gt;
+&lt;p&gt;&lt;tt class="docutils literal"&gt;/etc/rc.conf&lt;/tt&gt; is the main configuration file. &lt;strong&gt;Or at least it was when I
+wrote this post.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;systemd&lt;/strong&gt; replaced it.  And boy is it awesome.  It’s much more friendly than
+&lt;tt class="docutils literal"&gt;/etc/rc.conf&lt;/tt&gt; ever was.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="reason-5-the-community-irc-forums-mailing-lists"&gt;
+&lt;h2&gt;Reason 5. The community: &lt;a class="reference external" href="https://wiki.archlinux.org/index.php/IRC_Channel"&gt;IRC&lt;/a&gt;, &lt;a class="reference external" href="https://bbs.archlinux.org"&gt;Forums&lt;/a&gt;, &lt;a class="reference external" href="http://mailman.archlinux.org/mailman/listinfo/"&gt;Mailing Lists&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;Arch Linux has a strong community: there are many people on the &lt;a class="reference external" href="https://wiki.archlinux.org/index.php/IRC_Channel"&gt;IRC&lt;/a&gt; channel, &lt;a class="reference external" href="https://bbs.archlinux.org"&gt;Forums&lt;/a&gt; and &lt;a class="reference external" href="http://mailman.archlinux.org/mailman/listinfo/"&gt;Mailing Lists&lt;/a&gt;. They are here to help you.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="reason-6-the-rolling-release-model"&gt;
+&lt;h2&gt;Reason 6. The rolling-release model&lt;/h2&gt;
+&lt;p&gt;Arch uses an rolling-release model: there are only new CD images released, and you get updates even if you’ve installed Arch Linux v0.1.&lt;/p&gt;
+&lt;/div&gt;&lt;/div&gt;</description><guid>https://chriswarrick.com/pl/blog/2011/01/06/arch-linux-the-best-distro-ever/</guid><pubDate>Wed, 05 Jan 2011 23:00:00 GMT</pubDate></item></channel></rss>

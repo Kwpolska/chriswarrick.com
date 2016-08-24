@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Chris Warrick</title><link>https://chriswarrick.com/</link><description></description><atom:link href="https://chriswarrick.com/internet/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Wed, 24 Aug 2016 19:01:38 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Static Site Generator Speed Test (Nikola, Pelican, Hexo, Octopress)</title><link>https://chriswarrick.com/blog/2015/07/23/ssg-speed-test/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;I tested the speed of four static site generators: Nikola, Pelican, Hexo and Octopress, in a clean environment.  Spoiler alert: Nikola won.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Disclaimer:&lt;/em&gt; author is a developer and user of Nikola.  The test environments used were the same for all four generators.&lt;/p&gt;
+&lt;div class="section" id="generators-tested"&gt;
+&lt;h2&gt;Generators tested&lt;/h2&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;&lt;a class="reference external" href="https://getnikola.com/"&gt;Nikola&lt;/a&gt; v7.6.1, by Roberto Alsina, Chris Warrick and contributors; Python; MIT license&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference external" href="http://blog.getpelican.com/"&gt;Pelican&lt;/a&gt; v3.6.0, by Alexis Metaireau and contributors; Python; GNU AGPL license&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference external" href="https://hexo.io/"&gt;Hexo&lt;/a&gt; v3.1.1, by Tommy Chen and contributors; Node.js; MIT license&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference external" href="http://octopress.org/"&gt;Octopress&lt;/a&gt; v2.0, by Brandon Mathis and contributors; Ruby; MIT license (based on Jekyll)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;!-- TEASER_END --&gt;
+&lt;/div&gt;
+&lt;div class="section" id="setup"&gt;
+&lt;h2&gt;Setup&lt;/h2&gt;
+&lt;p&gt;Every site generator was set up in an identical &lt;strong&gt;clean&lt;/strong&gt; environment, using Ubuntu 15.04, x64, as a 512 MB DigitalOcean VM with a 20 GB SSD drive. The machine was updated, an user account with passwordless sudo was created, and &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;build-essential&lt;/span&gt;&lt;/tt&gt; was installed. Tests were run by an automated installer and timer, written in Bash and C, respectively (custom; source code is available). Pre-compiled wheels for lxml and Pillow were used for Nikola testing, because lxml cannot be compiled with less than 1.5 GB of RAM; they were built with &lt;tt class="docutils literal"&gt;pip wheel lxml pillow&lt;/tt&gt; outside of the testing environment (on a local VM). The machine was reimaged after every test. Lists of installed Python/Ruby/Node packages are available in the GitHub repo (see below).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="input"&gt;
+&lt;h2&gt;Input&lt;/h2&gt;
+&lt;p&gt;Every site generator was given the same set of 179 log files from #nikola on freenode. The raw logs contain 1209507 bytes (1.1 MiB) of plain text. The logs were processed into post files, which fit the format of each engine (reST or Markdown), containing mandatory metadata, an introductory paragraph and a code block (using &lt;tt class="docutils literal"&gt;::&lt;/tt&gt; for reST, four spaces for Markdown). One file had to be altered, because they contained the &lt;tt class="docutils literal"&gt;{{&lt;/tt&gt;  sequence, which was misinterpreted as internal templating by Hexo and Octopress — it was replaced by a harmless &lt;tt class="docutils literal"&gt;~~&lt;/tt&gt; sequence for all four generators.&lt;/p&gt;
+&lt;p&gt;The generators used default config, with one exception: highlighting was disabled for Hexo. The highlighting would cause an unfair advantage (other generators did not automatically highlight the code boxes), and led to very high build times (see table 4 in comparison spreadsheet).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="build"&gt;
+&lt;h2&gt;Build&lt;/h2&gt;
+&lt;p&gt;Sites were built a total of 110 times, in 10 cycles of 11 builds each. The first build of a cycle was a fresh build, the remaining 10 were rebuilds. Sites and cache files were removed after each cycle.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="results"&gt;
+&lt;h2&gt;Results&lt;/h2&gt;
+&lt;p&gt;Because Nikola and Hexo use incremental rebuilds, the results were compared in two groups: 11 and 10 runs.&lt;/p&gt;
+&lt;div class="section" id="average-build-times-in-seconds"&gt;
+&lt;h3&gt;Average build times (in seconds)&lt;/h3&gt;
+&lt;table class="table table-bordered table-hover"&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;#&lt;/th&gt;
+&lt;th&gt;Generator&lt;/th&gt;
+&lt;th&gt;Average of 11 runs&lt;/th&gt;
+&lt;th&gt;Average of 10 runs&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;th scope="row"&gt;1&lt;/th&gt;
+&lt;td&gt;Nikola&lt;/td&gt;
+&lt;td&gt;2.38290&lt;/td&gt;
+&lt;td&gt;2.06057&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;th scope="row"&gt;2&lt;/th&gt;
+&lt;td&gt;Pelican&lt;/td&gt;
+&lt;td&gt;2.61924&lt;/td&gt;
+&lt;td&gt;2.62352&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;th scope="row"&gt;3&lt;/th&gt;
+&lt;td&gt;Hexo&lt;/td&gt;
+&lt;td&gt;6.27361&lt;/td&gt;
+&lt;td&gt;6.21267&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;th scope="row"&gt;4&lt;/th&gt;
+&lt;td&gt;Octopress&lt;/td&gt;
+&lt;td&gt;9.57618&lt;/td&gt;
+&lt;td&gt;9.47550&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;&lt;/div&gt;
+&lt;div class="section" id="full-results"&gt;
+&lt;h3&gt;Full results&lt;/h3&gt;
+&lt;p class="lead"&gt;Full results are available in &lt;a class="reference external" href="https://chriswarrick.com/pub/ssg-test-results.ods"&gt;ods format&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="raw-results-and-configuration"&gt;
+&lt;h3&gt;Raw results and configuration&lt;/h3&gt;
+&lt;p&gt;Raw results (&lt;tt class="docutils literal"&gt;.csv&lt;/tt&gt; files from the test runner) and configuration is available in the &lt;a class="reference external" href="https://github.com/Kwpolska/ssg-test"&gt;GitHub repo&lt;/a&gt;. Log files and converted posts are not available publicly; however, they can be provided to interested parties (&lt;a class="reference external" href="https://chriswarrick.com/contact/"&gt;contact me&lt;/a&gt; to obtain them).&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="questions-and-answers"&gt;
+&lt;h2&gt;Questions and answers&lt;/h2&gt;
+&lt;div class="section" id="why-not-plain-jekyll"&gt;
+&lt;h3&gt;Why not plain Jekyll?&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;Plain Jekyll was disqualified&lt;/strong&gt; on the basis of missing many features other generators have, leading to an unfair advantage. The aim of this test was to provide similar setups for each of the four generators. Jekyll generates a very basic site that lacks some elements; a Jekyll site does not have paginated indexes, (partial) post text on indexes, any sort of archives, etc. A Jekyll site contains only one CSS file, index.html, feed.xml, and the log posts. On the other hand, sites generated by Pelican, Nikola and Hexo contain more files, which makes the builds longer and the website experience richer (archives, JS, sitemaps, tag listings).&lt;/p&gt;
+&lt;p&gt;On the basis of the above, &lt;strong&gt;Octopress&lt;/strong&gt; was chosen to represent the Jekyll universe at large. Octopress sites have more assets, a sitemap, archives and category listings — making it comparable to the other four contenders. However, tests were performed for Jekyll. The average result from 11 builds was 2.22118, while the average result from 10 builds was 2.23903. The result would land Jekyll on the 1st place for 11 builds, and on the 2nd place for 10 builds.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="why-not-myfavoritessg"&gt;
+&lt;h3&gt;Why not $MYFAVORITESSG?&lt;/h3&gt;
+&lt;p&gt;I tested only four popular generators that were easy enough to set up. I could easily extend the set if I had time and friendly enough documentation to do so. I can add a SSG, provided that:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;it’s easy to configure&lt;/li&gt;
+&lt;li&gt;it has a default config that provides a working site with a feature set comparable to other SSGs tested here (see &lt;a class="reference internal" href="https://chriswarrick.com/blog/2015/07/23/ssg-speed-test/#why-not-plain-jekyll"&gt;Why not plain Jekyll?&lt;/a&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;/div&gt;</description><category>blog</category><category>Hexo</category><category>jekyll</category><category>Nikola</category><category>Octopress</category><category>Pelican</category><category>Python</category><category>test</category><category>webmastering</category><guid>https://chriswarrick.com/blog/2015/07/23/ssg-speed-test/</guid><pubDate>Thu, 23 Jul 2015 15:10:00 GMT</pubDate></item><item><title>Inbox (by Google) Review</title><link>https://chriswarrick.com/blog/2014/11/09/inbox-review/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;figure&gt;&lt;img src="https://chriswarrick.com/galleries/inbox-by-google/10%20All%20done%20view.png"&gt;&lt;/figure&gt; &lt;div&gt;&lt;p&gt;I got a &lt;a class="reference external" href="http://www.google.com/inbox/"&gt;Inbox&lt;/a&gt; invite (hat tip to &lt;a class="reference external" href="https://twitter.com/dav4dav4"&gt;Dawid Róż @dav4dav4&lt;/a&gt;) and spent a day
+with it.  The same day, I got the Material Design upgrade for Gmail.  Let’s review it.&lt;/p&gt;
+&lt;!-- TEASER_END --&gt;
+&lt;p style="text-align: center; clear: both;"&gt;
+&lt;a href="https://chriswarrick.com/galleries/inbox-by-google/" class="btn btn-primary btn-default"&gt;
+&lt;i class="fa fa-picture-o"&gt;&lt;/i&gt;
+Screenshots/Gallery
+&lt;/a&gt;
+&lt;/p&gt;&lt;p&gt;&lt;em&gt;I tested the mobile version; the web app works the same.&lt;/em&gt;&lt;/p&gt;
+&lt;div class="section" id="task-oriented-e-mail"&gt;
+&lt;h2&gt;Task-oriented e-mail&lt;/h2&gt;
+&lt;p&gt;Inbox changes how e-mail works.  E-mails are now tasks.&lt;/p&gt;
+&lt;p&gt;First off, e-mails are &lt;em&gt;bundled&lt;/em&gt; into categories (Travel, Purchases, Finance,
+Social, Updates, Forums, Promos) — the last four of which were available in
+Gmail before if you used inbox categories (the tabs).  The difference is, all
+the messages are &lt;em&gt;bundled&lt;/em&gt; in the inbox.  All the categories show up as one
+entry in the inbox view.  Also, “humans” get their own entries.  When you click
+on an entry, it expands and all the threads in this category.  You can also
+bundle other labels in the inbox, provided that there are any &lt;strong&gt;filters&lt;/strong&gt; that
+send them here (as filters are one of the main elements of Inbox)&lt;/p&gt;
+&lt;div class="section" id="actions"&gt;
+&lt;h3&gt;Actions&lt;/h3&gt;
+&lt;p&gt;There are four actions you can perform on each message.  They are:&lt;/p&gt;
+&lt;div class="section" id="pin"&gt;
+&lt;h4&gt;Pin&lt;/h4&gt;
+&lt;p&gt;A pinned message appears outside of its bundle.  It can’t be sweeped away, you
+must explicitly mark it as done.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="mark-done"&gt;
+&lt;h4&gt;Mark done&lt;/h4&gt;
+&lt;p&gt;Marking a message done is equivalent to archiving it in Gmail.  If you had a
+workflow that involved archiving things you don’t need anymore, you will find
+yourself at home in Inbox.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="snooze"&gt;
+&lt;h4&gt;Snooze&lt;/h4&gt;
+&lt;p&gt;A snoozed message disappears from your Inbox for the time being.  It will
+appear at the time you set.  Helpful for decluttering your inbox while not
+getting rid of things you need to come back to later.  The catch: no
+notifications &lt;em&gt;at all&lt;/em&gt; — you must check your inbox yourself.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="move-to"&gt;
+&lt;h4&gt;Move to…&lt;/h4&gt;
+&lt;p&gt;Inbox’s algorithms are pretty good, but sometimes you may need to move messages
+to a different bundle/label.  This lets you do just that.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="right-handed-people-do-left-handed-people-postpone"&gt;
+&lt;h3&gt;&lt;em&gt;Right-handed people do, left-handed people postpone.&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;This is something funny I was taught by Inbox.  You see, I am left-handed.
+I primarily use my phone with my left-hand (though I use a
+normal/“right-handed” computer mouse).  For me, the best way to swipe things
+away is right-to-left.  That’s how I am usually doing it in Gmail.  I can do it
+both ways, it registers as an archive.&lt;/p&gt;
+&lt;p&gt;Inbox, however, has two distinctive swipe actions: if you swipe from the left
+side, the conversation is archived (&lt;em&gt;marked done&lt;/em&gt;).  However, if you swipe from
+the right side, it will be snoozed.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="reminders"&gt;
+&lt;h3&gt;Reminders&lt;/h3&gt;
+&lt;p&gt;There are also &lt;strong&gt;Reminders&lt;/strong&gt;.  Reminders are just email-less items appearing in
+Inbox.  They don’t serve any special purpose.  Some of them, however, contain
+hints — for example, the contact data of the place mentioned in your reminder
+(if there is any).&lt;/p&gt;
+&lt;p&gt;Reminders can be snoozed, but again: there are no notifications.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="material-design-galore"&gt;
+&lt;h2&gt;Material Design Galore&lt;/h2&gt;
+&lt;p&gt;One of the parts that made me get interested in the first place is Material
+Design.  I believe in its principles.  As mentioned earlier, I also have access
+to the Gmail app with Material Design (version 5.0).  So, I can compare them
+both.&lt;/p&gt;
+&lt;p&gt;Both apps look nicely; however, Inbox is prettier.  Multiple things look and
+work better in Inbox than in Gmail.  The app feels nicer overall — mainly
+because it was redone from scratch and not just upgraded from something that’s
+around for YEARS.  Gmail works pretty much the same as it did on Friday.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="final-thoughts"&gt;
+&lt;h2&gt;Final Thoughts&lt;/h2&gt;
+&lt;p&gt;I really loved the experience.  But will Inbox ever be my main e-mail client?  &lt;strong&gt;No — at least not today.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Inbox is either minimalistic, or an unfinished piece of software.  It lacks a
+few important features — for example, you can only send HTML mail, and you
+cannot have a signature.  Moreover, you can’t have multiple From: addresses.&lt;/p&gt;
+&lt;p&gt;One thing I noticed is, Inbox &lt;strong&gt;defaults&lt;/strong&gt; to &lt;em&gt;Reply All&lt;/em&gt;.  No questions asked.  We all know &lt;a class="reference external" href="http://en.wikipedia.org/wiki/Email_storm"&gt;what Reply All leads to&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Moreover, I like e-mail the way it is.  I have very comprehensive labels, which
+are much more helpful and granular than the bundles.  I have also developed a
+perfect Priority Inbox setup: Gmail knows exactly what I care about and need
+notifications for.&lt;/p&gt;
+&lt;p&gt;Finally: I currently do my GTD in &lt;a class="reference external" href="https://www.evernote.com/"&gt;Evernote&lt;/a&gt; (via &lt;a class="reference external" href="http://www.thesecretweapon.org/"&gt;The Secret Weapon&lt;/a&gt; plus Reminders).  It’s &lt;em&gt;nicer&lt;/em&gt;, at least for me.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="aside-the-four-themes-of-android"&gt;
+&lt;h2&gt;Aside: The Four Themes of Android&lt;/h2&gt;
+&lt;blockquote class="twitter-tweet"&gt;&lt;p lang="en" dir="ltr"&gt;After spending most of the day in Material Design land, coming back to Holo apps feels weird.&lt;/p&gt;— Chris Warrick (@Kwpolska) &lt;a href="https://twitter.com/Kwpolska/status/531172678536003584"&gt;November 8, 2014&lt;/a&gt;&lt;/blockquote&gt;
+&lt;script async src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;&lt;p&gt;Modern Android has &lt;strong&gt;FOUR&lt;/strong&gt; different themes that can be encountered by the
+user.  Just look at this madness:&lt;/p&gt;
+&lt;table border="1" class="table table-bordered table-striped docutils"&gt;
+&lt;colgroup&gt;
+&lt;col width="15%"&gt;
+&lt;col width="43%"&gt;
+&lt;col width="42%"&gt;
+&lt;/colgroup&gt;
+&lt;thead valign="bottom"&gt;
+&lt;tr&gt;&lt;th class="head"&gt;Internal Name&lt;/th&gt;
+&lt;th class="head"&gt;Description&lt;/th&gt;
+&lt;th class="head"&gt;Modern usage&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody valign="top"&gt;
+&lt;tr&gt;&lt;td&gt;&lt;tt class="docutils literal"&gt;Theme&lt;/tt&gt;&lt;/td&gt;
+&lt;td&gt;the original theme of Android, last updated in Android 2.3&lt;/td&gt;
+&lt;td&gt;very old apps; games (for compatibility with older versions)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;tt class="docutils literal"&gt;Theme.Holo&lt;/tt&gt;&lt;/td&gt;
+&lt;td&gt;the Holo theme, the main theme of Android 3.0 through 4.4&lt;/td&gt;
+&lt;td&gt;most apps currently in Play Store&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;tt class="docutils literal"&gt;Theme.Material&lt;/tt&gt;&lt;/td&gt;
+&lt;td&gt;tne new Material theme, introduced in Android 5.0&lt;/td&gt;
+&lt;td&gt;newly updated apps&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;tt class="docutils literal"&gt;Theme.DeviceDefault&lt;/tt&gt;&lt;/td&gt;
+&lt;td&gt;the (ugly) theme specific to this phone’s manufacturer (eg. Samsung)&lt;/td&gt;
+&lt;td&gt;Settings and other apps written/modified by the device manufacturer&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;(The new themes are backported to old versions in the Android Support Library.)&lt;/p&gt;
+&lt;p&gt;You can easily find apps in all four styles on a typical Android device.  Apps looking differently.  Nobody cares about consistency in the Android world…&lt;/p&gt;
+&lt;p style="text-align: center; clear: both;"&gt;
+&lt;a href="https://chriswarrick.com/galleries/inbox-by-google/" class="btn btn-primary btn-default"&gt;
+&lt;i class="fa fa-picture-o"&gt;&lt;/i&gt;
+Screenshots/Gallery
+&lt;/a&gt;
+&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;</description><category>android</category><category>e-mail</category><category>Google</category><category>review</category><guid>https://chriswarrick.com/blog/2014/11/09/inbox-review/</guid><pubDate>Sun, 09 Nov 2014 18:30:00 GMT</pubDate></item></channel></rss>

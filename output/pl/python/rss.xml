@@ -1,0 +1,755 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Chris Warrick</title><link>https://chriswarrick.com/</link><description></description><atom:link href="https://chriswarrick.com/pl/python/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>pl</language><lastBuildDate>Wed, 24 Aug 2016 19:01:37 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Deploying Python Web Applications with nginx and uWSGI Emperor</title><link>https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;You just wrote a great Python web application. Now, you want to share it with the world. In order to do that, you need a server, and some software to do that for you.&lt;/p&gt;
+&lt;p&gt;The following is a comprehensive guide on how to accomplish that, on multiple Linux-based operating systems, using nginx and uWSGI Emperor. It doesn’t force you to use any specific web framework — Flask, Django, Pyramid, Bottle will all work. Written for Ubuntu, Debian, Fedora, CentOS and Arch Linux (should be helpful for other systems, too)&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Revision 3 (2016-07-31): Ubuntu 16.04, Debian 8, Fedora 24, CentOS 7, Arch Linux&lt;/em&gt;&lt;/p&gt;
+&lt;!-- TEASER_END --&gt;
+&lt;p&gt;For easy linking, I set up some aliases: &lt;a class="reference external" href="https://go.chriswarrick.com/pyweb"&gt;https://go.chriswarrick.com/pyweb&lt;/a&gt; and &lt;a class="reference external" href="https://go.chriswarrick.com/uwsgi-tut"&gt;https://go.chriswarrick.com/uwsgi-tut&lt;/a&gt; (powered by a Django web application, deployed with nginx and uWSGI!)&lt;/p&gt;
+&lt;div class="section" id="prerequisites"&gt;
+&lt;h2&gt;Prerequisites&lt;/h2&gt;
+&lt;p&gt;In order to deploy your web application, you need a server that gives you root and ssh access — in other words, a VPS (or a dedicated server, or a datacenter lease…). If you’re looking for a great VPS service for a low price, I recommend &lt;a class="reference external" href="https://www.digitalocean.com/?refcode=7983689b2ecc"&gt;DigitalOcean&lt;/a&gt; (reflink &lt;a class="footnote-reference" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id6" id="id1"&gt;[1]&lt;/a&gt;), which offers a $5/mo service &lt;a class="footnote-reference" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id7" id="id2"&gt;[2]&lt;/a&gt;. If you want to play along at home, without buying a VPS, you can create a virtual machine on your own, or use Vagrant with a Vagrant box for Fedora 24 (&lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;fedora/24-cloud-base&lt;/span&gt;&lt;/tt&gt;).&lt;/p&gt;
+&lt;p&gt;Your server should also run a modern Linux-based operating system. This guide was written and tested on:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;Ubuntu 16.04 LTS&lt;/li&gt;
+&lt;li&gt;Debian 8 (jessie)&lt;/li&gt;
+&lt;li&gt;Fedora 24 (with SELinux enabled and disabled)&lt;/li&gt;
+&lt;li&gt;CentOS 7 (with SELinux enabled and disabled) — should also work on RHEL 7&lt;/li&gt;
+&lt;li&gt;Arch Linux&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Users of other Linux distributions (and perhaps other Unix flavors) can also follow this tutorial. This guide assumes &lt;tt class="docutils literal"&gt;systemd&lt;/tt&gt; as your init system; if you are not using systemd, you will have to get your own daemon files somewhere else. In places where the instructions are split three-way, try coming up with your own, reading documentation and config files; the Arch Linux instructions are probably the closest to upstream (but not always).  Unfortunately, all Linux distributions have their own ideas when it comes to running and managing nginx and uWSGI.&lt;/p&gt;
+&lt;p&gt;nginx and uWSGI are considered best practices by most people. nginx is a fast, modern web server, with uWSGI support built in (without resorting to reverse proxying).  uWSGI is similarly aimed at speed.  The Emperor mode of uWSGI is recommended for init system integration by the uWSGI team, and it’s especially useful for multi-app deployments. (This guide is opinionated.)&lt;/p&gt;
+&lt;div class="note"&gt;
+&lt;p class="first admonition-title"&gt;Note&lt;/p&gt;
+&lt;p class="last"&gt;All the commands in this tutorial are meant to be run &lt;strong&gt;as root&lt;/strong&gt; — run &lt;tt class="docutils literal"&gt;su&lt;/tt&gt; or &lt;tt class="docutils literal"&gt;sudo su&lt;/tt&gt; first to get an administrative shell. This tutorial assumes familiarity with basic Linux administration and command-line usage.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="getting-started"&gt;
+&lt;h2&gt;Getting started&lt;/h2&gt;
+&lt;p&gt;Start by installing virtualenv, nginx and uWSGI. I recommend using your operating system packages. For uWSGI, we need the &lt;tt class="docutils literal"&gt;logfile&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;python3&lt;/tt&gt; plugins. (Arch Linux names the &lt;tt class="docutils literal"&gt;python3&lt;/tt&gt; plugin &lt;tt class="docutils literal"&gt;python&lt;/tt&gt;; the &lt;tt class="docutils literal"&gt;logfile&lt;/tt&gt; plugin may be built-in — check with your system repositories!). I’ll also install Git to clone the tutorial app, but it’s optional if your workflow does not involve git.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Ubuntu, Debian:&lt;/strong&gt;&lt;/p&gt;
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_5e4a031dd27d4e3f86cff60b793db4be-1"&gt;&lt;/a&gt;apt install virtualenv python3 uwsgi uwsgi-emperor uwsgi-plugin-python3 nginx-full git
+&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;Fedora:&lt;/strong&gt;&lt;/p&gt;
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_7616aa6c083b425b9f4ac9ed4343e7b3-1"&gt;&lt;/a&gt;dnf install python3-virtualenv uwsgi uwsgi-plugin-python3 uwsgi-logger-file nginx git
+&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;CentOS:&lt;/strong&gt;&lt;/p&gt;
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_7cd8124f28704c6da15b2cf21b8b64e2-1"&gt;&lt;/a&gt;yum install epel-release
+&lt;a name="rest_code_7cd8124f28704c6da15b2cf21b8b64e2-2"&gt;&lt;/a&gt;yum install python34 uwsgi uwsgi-plugin-python3 uwsgi-logger-file nginx git wget
+&lt;a name="rest_code_7cd8124f28704c6da15b2cf21b8b64e2-3"&gt;&lt;/a&gt;wget https://bootstrap.pypa.io/get-pip.py
+&lt;a name="rest_code_7cd8124f28704c6da15b2cf21b8b64e2-4"&gt;&lt;/a&gt;python3 get-pip.py --user
+&lt;a name="rest_code_7cd8124f28704c6da15b2cf21b8b64e2-5"&gt;&lt;/a&gt;rm get-pip.py
+&lt;a name="rest_code_7cd8124f28704c6da15b2cf21b8b64e2-6"&gt;&lt;/a&gt;~/.local/bin/pip install --user virtualenv
+&lt;/pre&gt;&lt;p&gt;We need to install pip and virtualenv manually, because neither is packaged for CentOS, and the &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;python-virtualenv&lt;/span&gt;&lt;/tt&gt; package is not compatible. They will be available to root only (user install).&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Arch Linux:&lt;/strong&gt;&lt;/p&gt;
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_16a9dc26ab5a4056b3af6a5a1eab102c-1"&gt;&lt;/a&gt;pacman -S python-virtualenv uwsgi uwsgi-plugin-python nginx git
+&lt;/pre&gt;&lt;/div&gt;
+&lt;div class="section" id="preparing-your-application"&gt;
+&lt;h2&gt;Preparing your application&lt;/h2&gt;
+&lt;p&gt;This tutorial will work for any web framework. I will use &lt;a class="reference external" href="https://github.com/Kwpolska/flask-demo-app"&gt;a really basic Flask app&lt;/a&gt; that has just one route (&lt;tt class="docutils literal"&gt;/&lt;/tt&gt;) &lt;a class="footnote-reference" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id8" id="id3"&gt;[3]&lt;/a&gt;, a static &lt;tt class="docutils literal"&gt;hello.png&lt;/tt&gt; file and a &lt;tt class="docutils literal"&gt;favicon.ico&lt;/tt&gt; for demonstration purposes. Note that the app does not use &lt;tt class="docutils literal"&gt;app.run()&lt;/tt&gt;. While you could add it, it would be used for local development and debugging only, and would have to be prepended by &lt;tt class="docutils literal"&gt;if __name__ == '__main__':&lt;/tt&gt; (if it wasn’t, that server would run instead of uWSGI, which is bad)&lt;/p&gt;
+&lt;p&gt;The app will be installed somewhere under the &lt;tt class="docutils literal"&gt;/srv&lt;/tt&gt; directory, which is a great place to store things like this. I’ll choose &lt;tt class="docutils literal"&gt;/srv/myapp&lt;/tt&gt; for this tutorial, but for real deployments, you should use something more distinguishable — the domain name is a great idea.&lt;/p&gt;
+&lt;p&gt;If you don’t use Flask, this tutorial also has instructions for other web frameworks (Django, Pyramid, Bottle) in the configuration files; it should be adjustable to any other WSGI-compliant framework/script nevertheless.&lt;/p&gt;
+&lt;p&gt;We’ll start by creating a virtualenv:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Ubuntu, Debian:&lt;/strong&gt;&lt;/p&gt;
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_8acdc9bec1e44265af1b3b3ad7b35fbc-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; /srv
+&lt;a name="rest_code_8acdc9bec1e44265af1b3b3ad7b35fbc-2"&gt;&lt;/a&gt;virtualenv -p /usr/bin/python3 myapp
+&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;Fedora:&lt;/strong&gt;&lt;/p&gt;
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_e079ccacc5bd4fe39f9a4d92ea3f9cae-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; /srv
+&lt;a name="rest_code_e079ccacc5bd4fe39f9a4d92ea3f9cae-2"&gt;&lt;/a&gt;virtualenv-3.5 myapp
+&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;CentOS:&lt;/strong&gt;&lt;/p&gt;
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_398e0b4f353e43cf90a8526200042aff-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; /srv
+&lt;a name="rest_code_398e0b4f353e43cf90a8526200042aff-2"&gt;&lt;/a&gt;~/.local/bin/virtualenv myapp
+&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;Arch Linux:&lt;/strong&gt;&lt;/p&gt;
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_dd3c341edc7b47cd9d5ba7a360ca211a-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; /srv
+&lt;a name="rest_code_dd3c341edc7b47cd9d5ba7a360ca211a-2"&gt;&lt;/a&gt;virtualenv3 myapp
+&lt;/pre&gt;&lt;p&gt;(This tutorial assumes Python 3. Make sure you use the correct &lt;tt class="docutils literal"&gt;virtualenv&lt;/tt&gt; command/argument. If you want to use Python 2.7, you’ll need to adjust your uWSGI configuration as well.)&lt;/p&gt;
+&lt;p&gt;Now, we need to put our app there and install requirements. An example for the tutorial demo app:&lt;/p&gt;
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_9eccfe0d30274dfc9b2039df26ed6e01-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; myapp
+&lt;a name="rest_code_9eccfe0d30274dfc9b2039df26ed6e01-2"&gt;&lt;/a&gt;git clone https://github.com/Kwpolska/flask-demo-app appdata
+&lt;a name="rest_code_9eccfe0d30274dfc9b2039df26ed6e01-3"&gt;&lt;/a&gt;bin/pip install -r appdata/requirements.txt
+&lt;/pre&gt;&lt;p&gt;I’m storing my application data in the &lt;tt class="docutils literal"&gt;appdata&lt;/tt&gt; subdirectory so that it doesn’t clutter the virtualenv (or vice versa).  You may also install the &lt;tt class="docutils literal"&gt;uwsgi&lt;/tt&gt; package in the virtualenv, but it’s optional.&lt;/p&gt;
+&lt;p&gt;What this directory should be depends on your web framework.  For example, for a Django app, you should have an &lt;tt class="docutils literal"&gt;appdata/manage.py&lt;/tt&gt; file (in other words, &lt;tt class="docutils literal"&gt;appdata&lt;/tt&gt; is where your app structure starts).  I also assumed that the &lt;tt class="docutils literal"&gt;appdata&lt;/tt&gt; folder should have a &lt;tt class="docutils literal"&gt;static&lt;/tt&gt; subdirectory with all static files, including &lt;tt class="docutils literal"&gt;favicon.ico&lt;/tt&gt; if you have one (we will add support for both in nginx).&lt;/p&gt;
+&lt;p&gt;At this point, you should chown this directory to the user and group your server is going to run as.  This is especially important if uwsgi and nginx run as different users (as they do on Fedora). Run one of the following commands:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Ubuntu, Debian:&lt;/strong&gt;&lt;/p&gt;
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_b8f92979038a4cc684596cc12cd09ec3-1"&gt;&lt;/a&gt;chown -R www-data:www-data /srv/myapp
+&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;Fedora, CentOS:&lt;/strong&gt;&lt;/p&gt;
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_b2d3dd9816544740bd166f7ff8c21e27-1"&gt;&lt;/a&gt;chown -R uwsgi:nginx /srv/myapp
+&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;Arch Linux:&lt;/strong&gt;&lt;/p&gt;
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_f81a4e7c6e514468a00cb66d9896803b-1"&gt;&lt;/a&gt;chown -R http:http /srv/myapp
+&lt;/pre&gt;&lt;/div&gt;
+&lt;div class="section" id="configuring-uwsgi-and-nginx"&gt;
+&lt;h2&gt;Configuring uWSGI and nginx&lt;/h2&gt;
+&lt;div class="note"&gt;
+&lt;p class="first admonition-title"&gt;Note&lt;/p&gt;
+&lt;p class="last"&gt;Parts of the configuration depend on your operating system. I tried to provide advice for Ubuntu, Debian, Fedora, CentOS and Arch Linux. If you experience any issues, in particular with plugins, please consult the documentation.&lt;/p&gt;
+&lt;/div&gt;
+&lt;p&gt;We need to write a configuration file for uWSGI and nginx.&lt;/p&gt;
+&lt;div class="section" id="uwsgi-configuration"&gt;
+&lt;h3&gt;uWSGI configuration&lt;/h3&gt;
+&lt;p&gt;Start with this, but read the notes below and change the values accordingly:&lt;/p&gt;
+&lt;pre class="code ini"&gt;&lt;a name="rest_code_42a487d5b6ac44209cab3e292cbb71ce-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;[uwsgi]&lt;/span&gt;
+&lt;a name="rest_code_42a487d5b6ac44209cab3e292cbb71ce-2"&gt;&lt;/a&gt;&lt;span class="na"&gt;socket&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/uwsgi.sock&lt;/span&gt;
+&lt;a name="rest_code_42a487d5b6ac44209cab3e292cbb71ce-3"&gt;&lt;/a&gt;&lt;span class="na"&gt;chmod-socket&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;775&lt;/span&gt;
+&lt;a name="rest_code_42a487d5b6ac44209cab3e292cbb71ce-4"&gt;&lt;/a&gt;&lt;span class="na"&gt;chdir&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/appdata&lt;/span&gt;
+&lt;a name="rest_code_42a487d5b6ac44209cab3e292cbb71ce-5"&gt;&lt;/a&gt;&lt;span class="na"&gt;master&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;true&lt;/span&gt;
+&lt;a name="rest_code_42a487d5b6ac44209cab3e292cbb71ce-6"&gt;&lt;/a&gt;&lt;span class="na"&gt;binary-path&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/bin/uwsgi&lt;/span&gt;
+&lt;a name="rest_code_42a487d5b6ac44209cab3e292cbb71ce-7"&gt;&lt;/a&gt;&lt;span class="na"&gt;virtualenv&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp&lt;/span&gt;
+&lt;a name="rest_code_42a487d5b6ac44209cab3e292cbb71ce-8"&gt;&lt;/a&gt;&lt;span class="na"&gt;module&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;flaskapp:app&lt;/span&gt;
+&lt;a name="rest_code_42a487d5b6ac44209cab3e292cbb71ce-9"&gt;&lt;/a&gt;&lt;span class="na"&gt;uid&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;www-data&lt;/span&gt;
+&lt;a name="rest_code_42a487d5b6ac44209cab3e292cbb71ce-10"&gt;&lt;/a&gt;&lt;span class="na"&gt;gid&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;www-data&lt;/span&gt;
+&lt;a name="rest_code_42a487d5b6ac44209cab3e292cbb71ce-11"&gt;&lt;/a&gt;&lt;span class="na"&gt;processes&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;1&lt;/span&gt;
+&lt;a name="rest_code_42a487d5b6ac44209cab3e292cbb71ce-12"&gt;&lt;/a&gt;&lt;span class="na"&gt;threads&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;1&lt;/span&gt;
+&lt;a name="rest_code_42a487d5b6ac44209cab3e292cbb71ce-13"&gt;&lt;/a&gt;&lt;span class="na"&gt;plugins&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;python3,logfile&lt;/span&gt;
+&lt;a name="rest_code_42a487d5b6ac44209cab3e292cbb71ce-14"&gt;&lt;/a&gt;&lt;span class="na"&gt;logger&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;file:/srv/myapp/uwsgi.log&lt;/span&gt;
+&lt;/pre&gt;&lt;p&gt;Save this file as:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;Ubuntu, Debian: &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;/etc/uwsgi-emperor/vassals/myapp.ini&lt;/span&gt;&lt;/tt&gt;&lt;/li&gt;
+&lt;li&gt;Fedora, CentOS: &lt;tt class="docutils literal"&gt;/etc/uwsgi.d/myapp.ini&lt;/tt&gt;&lt;/li&gt;
+&lt;li&gt;Arch Linux: &lt;tt class="docutils literal"&gt;/etc/uwsgi/vassals/myapp.ini&lt;/tt&gt; (create the directory first and &lt;strong&gt;chown&lt;/strong&gt; it to http: &lt;tt class="docutils literal"&gt;mkdir &lt;span class="pre"&gt;-p&lt;/span&gt; /etc/uwsgi/vassals; chown &lt;span class="pre"&gt;-R&lt;/span&gt; http:http /etc/uwsgi/vassals&lt;/tt&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The options are:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;&lt;tt class="docutils literal"&gt;socket&lt;/tt&gt; — the socket file that will be used by your application. It’s usually a file path (Unix domain socket). You could use a local TCP socket, but it’s not recommended.&lt;/li&gt;
+&lt;li&gt;&lt;tt class="docutils literal"&gt;chdir&lt;/tt&gt; — the app directory.&lt;/li&gt;
+&lt;li&gt;&lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;binary-path&lt;/span&gt;&lt;/tt&gt; — the uWSGI executable to use. Remove if you didn’t install the (optional) &lt;tt class="docutils literal"&gt;uwsgi&lt;/tt&gt; package in your virtualenv.&lt;/li&gt;
+&lt;li&gt;&lt;tt class="docutils literal"&gt;virtualenv&lt;/tt&gt; — the virtualenv for your application.&lt;/li&gt;
+&lt;li&gt;&lt;tt class="docutils literal"&gt;module&lt;/tt&gt; — the name of the module that houses your application, and the object that speaks the WSGI interface, separated by colons. This depends on your web framework:&lt;ul&gt;
+&lt;li&gt;For Flask: &lt;tt class="docutils literal"&gt;module = filename:app&lt;/tt&gt;, where &lt;tt class="docutils literal"&gt;filename&lt;/tt&gt; is the name of your Python file (without the &lt;tt class="docutils literal"&gt;.py&lt;/tt&gt; part) and &lt;tt class="docutils literal"&gt;app&lt;/tt&gt; is the &lt;tt class="docutils literal"&gt;Flask&lt;/tt&gt; object&lt;/li&gt;
+&lt;li&gt;For Django: &lt;tt class="docutils literal"&gt;module = project.wsgi:application&lt;/tt&gt;, where &lt;tt class="docutils literal"&gt;project&lt;/tt&gt; is the name of your project (directory with &lt;tt class="docutils literal"&gt;settings.py&lt;/tt&gt;).  You should also add an environment variable: &lt;tt class="docutils literal"&gt;env = DJANGO_SETTINGS_MODULE=project.settings&lt;/tt&gt;&lt;/li&gt;
+&lt;li&gt;For Bottle: &lt;tt class="docutils literal"&gt;module = filename:app&lt;/tt&gt;, where &lt;tt class="docutils literal"&gt;app = bottle.default_app()&lt;/tt&gt;&lt;/li&gt;
+&lt;li&gt;For Pyramid: &lt;tt class="docutils literal"&gt;module = filename:app&lt;/tt&gt;, where &lt;tt class="docutils literal"&gt;app = config.make_wsgi_app()&lt;/tt&gt; (make sure it’s &lt;strong&gt;not&lt;/strong&gt; in a &lt;tt class="docutils literal"&gt;if __name__ == '__main__':&lt;/tt&gt; block — the demo app does that!)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;tt class="docutils literal"&gt;uid&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;gid&lt;/tt&gt; — the names of the user account to use for your server.  Use the same values as in the &lt;tt class="docutils literal"&gt;chown&lt;/tt&gt; command above.&lt;/li&gt;
+&lt;li&gt;&lt;tt class="docutils literal"&gt;processes&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;threads&lt;/tt&gt; — control the resources devoted to this application. Because this is a simple hello app, I used one process with one thread, but for a real app, you will probably need more (you need to see what works the best; there is no algorithm to decide). Also, remember that if you use multiple processes, they don’t share memory (you need a database to share data between them).&lt;/li&gt;
+&lt;li&gt;&lt;tt class="docutils literal"&gt;plugins&lt;/tt&gt; — the list of uWSGI plugins to use. For Arch Linux, use &lt;tt class="docutils literal"&gt;plugins = python&lt;/tt&gt; (the &lt;tt class="docutils literal"&gt;logfile&lt;/tt&gt; plugin is always active).&lt;/li&gt;
+&lt;li&gt;&lt;tt class="docutils literal"&gt;logger&lt;/tt&gt; — the path to your app-specific logfile. (Other logging facilities are available, but this one is the easiest, especially for multiple applications on the same server)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;You can test your configuration by running &lt;tt class="docutils literal"&gt;uwsgi &lt;span class="pre"&gt;--ini&lt;/span&gt; /path/to/myapp.ini&lt;/tt&gt; (disable the logger for stderr output or run &lt;tt class="docutils literal"&gt;tail &lt;span class="pre"&gt;-f&lt;/span&gt; /srv/myapp/uwsgi.log&lt;/tt&gt; in another window).&lt;/p&gt;
+&lt;p&gt;If you’re using &lt;strong&gt;Fedora&lt;/strong&gt; or &lt;strong&gt;CentOS&lt;/strong&gt;, there are two configuration changes you need to make globally: in &lt;tt class="docutils literal"&gt;/etc/uwsgi.ini&lt;/tt&gt;, disable the &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;emperor-tyrant&lt;/span&gt;&lt;/tt&gt; option (which seems to be buggy) and set &lt;tt class="docutils literal"&gt;gid = nginx&lt;/tt&gt;.  We’ll need this so that nginx can talk to your socket.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="nginx-configuration"&gt;
+&lt;h3&gt;nginx configuration&lt;/h3&gt;
+&lt;p&gt;We need to configure our web server. Here’s a basic configuration that will get us started:&lt;/p&gt;
+&lt;p&gt;Save this file as:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;Ubuntu, Debian: &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;/etc/nginx/sites-enabled/myapp.conf&lt;/span&gt;&lt;/tt&gt;&lt;/li&gt;
+&lt;li&gt;Fedora, CentOS: &lt;tt class="docutils literal"&gt;/etc/nginx/conf.d/myapp.conf&lt;/tt&gt;&lt;/li&gt;
+&lt;li&gt;Arch Linux: add &lt;tt class="docutils literal"&gt;include &lt;span class="pre"&gt;/etc/nginx/conf.d/*.conf;&lt;/span&gt;&lt;/tt&gt; to your &lt;tt class="docutils literal"&gt;http&lt;/tt&gt; directive in &lt;tt class="docutils literal"&gt;/etc/nginx/nginx.conf&lt;/tt&gt; and use &lt;tt class="docutils literal"&gt;/etc/nginx/conf.d/myapp.conf&lt;/tt&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class="code nginx"&gt;&lt;a name="rest_code_0eaa746520854718846bf52ca374a566-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;server&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_0eaa746520854718846bf52ca374a566-2"&gt;&lt;/a&gt;    &lt;span class="c1"&gt;# for a public HTTP server:&lt;/span&gt;
+&lt;a name="rest_code_0eaa746520854718846bf52ca374a566-3"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;listen&lt;/span&gt; &lt;span class="mi"&gt;80&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_0eaa746520854718846bf52ca374a566-4"&gt;&lt;/a&gt;    &lt;span class="c1"&gt;# for a public HTTPS server:&lt;/span&gt;
+&lt;a name="rest_code_0eaa746520854718846bf52ca374a566-5"&gt;&lt;/a&gt;    &lt;span class="c1"&gt;# listen 443 ssl;&lt;/span&gt;
+&lt;a name="rest_code_0eaa746520854718846bf52ca374a566-6"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;server_name&lt;/span&gt; &lt;span class="s"&gt;localhost&lt;/span&gt; &lt;span class="s"&gt;myapp.local&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_0eaa746520854718846bf52ca374a566-7"&gt;&lt;/a&gt;
+&lt;a name="rest_code_0eaa746520854718846bf52ca374a566-8"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;location&lt;/span&gt; &lt;span class="s"&gt;/&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_0eaa746520854718846bf52ca374a566-9"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;include&lt;/span&gt; &lt;span class="s"&gt;uwsgi_params&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_0eaa746520854718846bf52ca374a566-10"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;uwsgi_pass&lt;/span&gt; &lt;span class="s"&gt;unix:/srv/myapp/uwsgi.sock&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_0eaa746520854718846bf52ca374a566-11"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;a name="rest_code_0eaa746520854718846bf52ca374a566-12"&gt;&lt;/a&gt;
+&lt;a name="rest_code_0eaa746520854718846bf52ca374a566-13"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;location&lt;/span&gt; &lt;span class="s"&gt;/static&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_0eaa746520854718846bf52ca374a566-14"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;alias&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/appdata/static&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_0eaa746520854718846bf52ca374a566-15"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;a name="rest_code_0eaa746520854718846bf52ca374a566-16"&gt;&lt;/a&gt;
+&lt;a name="rest_code_0eaa746520854718846bf52ca374a566-17"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;location&lt;/span&gt; &lt;span class="s"&gt;/favicon.ico&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_0eaa746520854718846bf52ca374a566-18"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;alias&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/appdata/static/favicon.ico&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_0eaa746520854718846bf52ca374a566-19"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;a name="rest_code_0eaa746520854718846bf52ca374a566-20"&gt;&lt;/a&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;p&gt;Note that this file is a very basic and rudimentary configuration. This configuration is fine for local testing, but for a real deployment, you will need to adjust it:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;set &lt;tt class="docutils literal"&gt;listen&lt;/tt&gt; to &lt;tt class="docutils literal"&gt;443 ssl&lt;/tt&gt; and create a http→https redirect on port 80 (you can get a free SSL certificate from &lt;a class="reference external" href="https://letsencrypt.org/"&gt;Let’s Encrypt&lt;/a&gt;; make sure to &lt;a class="reference external" href="https://raymii.org/s/tutorials/Strong_SSL_Security_On_nginx.html"&gt;configure SSL properly&lt;/a&gt;).&lt;/li&gt;
+&lt;li&gt;set &lt;tt class="docutils literal"&gt;server_name&lt;/tt&gt; to your real domain name&lt;/li&gt;
+&lt;li&gt;you might also want to add custom error pages, log files, or change anything else that relates to your web server — consult other nginx guides for details&lt;/li&gt;
+&lt;li&gt;nginx usually has some server already enabled by default — edit &lt;tt class="docutils literal"&gt;/etc/nginx/nginx.conf&lt;/tt&gt; or remove their configuration files from your sites directory to disable it&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="service-setup"&gt;
+&lt;h2&gt;Service setup&lt;/h2&gt;
+&lt;p&gt;After you’ve configured uWSGI and nginx, you need to enable and start the system services.&lt;/p&gt;
+&lt;div class="section" id="for-arch-linux"&gt;
+&lt;h3&gt;For Arch Linux&lt;/h3&gt;
+&lt;p&gt;All you need is:&lt;/p&gt;
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_8f617e2bceec488491c0115c7bc2cdc0-1"&gt;&lt;/a&gt;systemctl &lt;span class="nb"&gt;enable&lt;/span&gt; nginx emperor.uwsgi
+&lt;a name="rest_code_8f617e2bceec488491c0115c7bc2cdc0-2"&gt;&lt;/a&gt;systemctl start nginx emperor.uwsgi
+&lt;/pre&gt;&lt;p&gt;Verify the service is running with &lt;tt class="docutils literal"&gt;systemctl status emperor.uwsgi&lt;/tt&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="for-fedora-and-centos"&gt;
+&lt;h3&gt;For Fedora and CentOS&lt;/h3&gt;
+&lt;p&gt;Make sure you followed the extra note about editing &lt;tt class="docutils literal"&gt;/etc/uwsgi.ini&lt;/tt&gt; earlier and run:&lt;/p&gt;
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_6126df76f6054116ba2d97ac38c7cef8-1"&gt;&lt;/a&gt;systemctl &lt;span class="nb"&gt;enable&lt;/span&gt; nginx uwsgi
+&lt;a name="rest_code_6126df76f6054116ba2d97ac38c7cef8-2"&gt;&lt;/a&gt;systemctl start nginx uwsgi
+&lt;/pre&gt;&lt;p&gt;Verify the service is running with &lt;tt class="docutils literal"&gt;systemctl status uwsgi&lt;/tt&gt;&lt;/p&gt;
+&lt;p&gt;If you disabled SELinux, this is enough to get an app working and you can skip over to the next section.&lt;/p&gt;
+&lt;p&gt;If you want to use SELinux, you need to do the following to allow nginx to read static files:&lt;/p&gt;
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_95100d095c2049e3be3a003a97dae60d-1"&gt;&lt;/a&gt;setenforce 0
+&lt;a name="rest_code_95100d095c2049e3be3a003a97dae60d-2"&gt;&lt;/a&gt;chcon -R system_u:system_r:httpd_t:s0 /srv/myapp/appdata/static
+&lt;a name="rest_code_95100d095c2049e3be3a003a97dae60d-3"&gt;&lt;/a&gt;setenforce 1
+&lt;/pre&gt;&lt;p&gt;We now need to install a &lt;a class="reference external" href="https://chriswarrick.com/pub/nginx-uwsgi.pp"&gt;SELinux policy&lt;/a&gt; (that I created for this project) to allow nginx and uWSGI to communicate.
+Download it and run:&lt;/p&gt;
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_a8fc736ab63d46518c3ad9476d0902ae-1"&gt;&lt;/a&gt;semodule -i nginx-uwsgi.pp
+&lt;/pre&gt;&lt;p&gt;Hopefully, this is enough (you can delete the file). In case it isn’t, please read SELinux documentation, check audit logs, and look into &lt;tt class="docutils literal"&gt;audit2allow&lt;/tt&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="for-ubuntu-and-debian"&gt;
+&lt;h3&gt;For Ubuntu and Debian&lt;/h3&gt;
+&lt;p&gt;Ubuntu and Debian (still!) use LSB services for uWSGI. Because LSB services are awful, we’re going to set up our own systemd-based (native) service.&lt;/p&gt;
+&lt;p&gt;Start by disabling the LSB service that comes with Ubuntu and Debian:&lt;/p&gt;
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_e224fda7c7c04f5bab69dfab784e1c71-1"&gt;&lt;/a&gt;systemctl stop uwsgi-emperor
+&lt;a name="rest_code_e224fda7c7c04f5bab69dfab784e1c71-2"&gt;&lt;/a&gt;systemctl disable uwsgi-emperor
+&lt;/pre&gt;&lt;p&gt;Copy the &lt;tt class="docutils literal"&gt;.service&lt;/tt&gt; file from the &lt;a class="reference external" href="https://uwsgi-docs.readthedocs.org/en/latest/Systemd.html#adding-the-emperor-to-systemd"&gt;uWSGI systemd documentation&lt;/a&gt; to &lt;tt class="docutils literal"&gt;/etc/systemd/system/emperor.uwsgi.service&lt;/tt&gt;.  Change the ExecStart line to:&lt;/p&gt;
+&lt;pre class="code ini"&gt;&lt;a name="rest_code_74a9c35aca454774aab3c48bf8af95ad-1"&gt;&lt;/a&gt;&lt;span class="na"&gt;ExecStart&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/usr/bin/uwsgi --ini /etc/uwsgi-emperor/emperor.ini&lt;/span&gt;
+&lt;/pre&gt;&lt;p&gt;You can now reload systemd daemons and enable the services:&lt;/p&gt;
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_2e4f22ad83a84813a72494dcfc2af02d-1"&gt;&lt;/a&gt;systemctl daemon-reload
+&lt;a name="rest_code_2e4f22ad83a84813a72494dcfc2af02d-2"&gt;&lt;/a&gt;systemctl &lt;span class="nb"&gt;enable&lt;/span&gt; nginx emperor.uwsgi
+&lt;a name="rest_code_2e4f22ad83a84813a72494dcfc2af02d-3"&gt;&lt;/a&gt;systemctl reload nginx
+&lt;a name="rest_code_2e4f22ad83a84813a72494dcfc2af02d-4"&gt;&lt;/a&gt;systemctl start emperor.uwsgi
+&lt;/pre&gt;&lt;p&gt;Verify the service is running with &lt;tt class="docutils literal"&gt;systemctl status emperor.uwsgi&lt;/tt&gt;.  (Ignore
+the warning about no request plugin)&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="end-result"&gt;
+&lt;h2&gt;End result&lt;/h2&gt;
+&lt;p&gt;Your web service should now be running at &lt;a class="reference external" href="http://localhost/"&gt;http://localhost/&lt;/a&gt; (or wherever you set up server to listen).&lt;/p&gt;
+&lt;p&gt;If you used the demo application, you should see something like this (complete with the favicon and image greeting):&lt;/p&gt;
+&lt;img alt="/images/nginx-uwsgi-demo.png" class="centered" src="https://chriswarrick.com/images/nginx-uwsgi-demo.png"&gt;
+&lt;p&gt;If you want to test with cURL:&lt;/p&gt;
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_ef550a061bde4c009072622afd18488b-1"&gt;&lt;/a&gt;curl -v http://localhost/
+&lt;a name="rest_code_ef550a061bde4c009072622afd18488b-2"&gt;&lt;/a&gt;curl -I http://localhost/favicon.ico
+&lt;a name="rest_code_ef550a061bde4c009072622afd18488b-3"&gt;&lt;/a&gt;curl -I http://localhost/static/hello.png
+&lt;/pre&gt;&lt;div class="section" id="troubleshooting"&gt;
+&lt;h3&gt;Troubleshooting&lt;/h3&gt;
+&lt;p&gt;Hopefully, everything works. If it doesn’t:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;Check your nginx, system (&lt;tt class="docutils literal"&gt;journalctl&lt;/tt&gt;, &lt;tt class="docutils literal"&gt;systemctl status SERVICE&lt;/tt&gt;) and uwsgi (&lt;tt class="docutils literal"&gt;/srv/myapp/uwsgi.log&lt;/tt&gt;) logs.&lt;/li&gt;
+&lt;li&gt;Make sure you followed all instructions.&lt;/li&gt;
+&lt;li&gt;If you have a firewall installed, make sure to open the ports your web server runs on (typically 80/443). For &lt;tt class="docutils literal"&gt;firewalld&lt;/tt&gt; (Fedora, CentOS):&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_d203c75ac8d346a18265bc777b9a0dcd-1"&gt;&lt;/a&gt;firewall-cmd --add-service http
+&lt;a name="rest_code_d203c75ac8d346a18265bc777b9a0dcd-2"&gt;&lt;/a&gt;firewall-cmd --add-service https
+&lt;/pre&gt;&lt;table class="docutils footnote" frame="void" id="id6" rules="none"&gt;
+&lt;colgroup&gt;&lt;col class="label"&gt;&lt;col&gt;&lt;/colgroup&gt;
+&lt;tbody valign="top"&gt;
+&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id1"&gt;[1]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;This reflink gives you $10 in credit, which is enough to run a server for up to two months without paying a thing. I earn $15.&lt;/td&gt;&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;table class="docutils footnote" frame="void" id="id7" rules="none"&gt;
+&lt;colgroup&gt;&lt;col class="label"&gt;&lt;col&gt;&lt;/colgroup&gt;
+&lt;tbody valign="top"&gt;
+&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id2"&gt;[2]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;For the cheapest plan. If you’re in the EU (and thus have to pay VAT), or want DO to handle your backups, it will cost you a little more.&lt;/td&gt;&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;table class="docutils footnote" frame="void" id="id8" rules="none"&gt;
+&lt;colgroup&gt;&lt;col class="label"&gt;&lt;col&gt;&lt;/colgroup&gt;
+&lt;tbody valign="top"&gt;
+&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id3"&gt;[3]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;This app does not use templates, but you should in any real project. This app is meant to be as simple as possible.&lt;/td&gt;&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;/div&gt;</description><guid>https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/</guid><pubDate>Wed, 10 Feb 2016 14:00:00 GMT</pubDate></item><item><title>Rewriting a Flask app in Django</title><link>https://chriswarrick.com/pl/blog/2015/10/11/rewriting-a-flask-app-in-django/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;I spent Saturday on rewriting a Flask app in Django.  The app in question was
+&lt;a class="reference external" href="https://users.getnikola.com/"&gt;Nikola Users&lt;/a&gt;, which is a very simple CRUD
+app.  And yet, the Flask code was a mess, full of bugs and vulnerabilities.
+Eight hours later, I had a fully functional Django app that did more and fixed
+all problems.&lt;/p&gt;
+&lt;!-- TEASER_END --&gt;
+&lt;div class="section" id="original-flask-app"&gt;
+&lt;h2&gt;Original Flask app&lt;/h2&gt;
+&lt;p&gt;The original Flask app had a ton of problems.  In order to make it anywhere
+near useful, I would need to spend hours.  Here’s just a few of
+them:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;357 lines of spaghetti code (295 SLOC), all in one file&lt;/li&gt;
+&lt;li&gt;No form data validation, no CSRF &lt;a class="footnote-reference" href="https://chriswarrick.com/pl/blog/2015/10/11/rewriting-a-flask-app-in-django/#id2" id="id1"&gt;[1]&lt;/a&gt; protection (it did have XSS protection
+though)&lt;/li&gt;
+&lt;li&gt;Login using Mozilla Persona, which requries JavaScript, is a bit kludgey, and
+feels desolate (and also had me store the admin e-mail list in code)&lt;/li&gt;
+&lt;li&gt;Geopolitics issues: using country flags for languages&lt;/li&gt;
+&lt;li&gt;A lot of things were implemented by hand&lt;/li&gt;
+&lt;li&gt;SQLAlchemy is very verbose&lt;/li&gt;
+&lt;li&gt;no DB migrations (makes enhancements harder)&lt;/li&gt;
+&lt;li&gt;Languages implemented as a PostgreSQL integer array&lt;/li&gt;
+&lt;li&gt;Adding a language required running a command-line script and &lt;strong&gt;restarting the
+app&lt;/strong&gt; (languages were cached in Python dicts with no way to reload them from
+the database; that would require talking through uWSGI anyway because there
+were multiple processes involved)&lt;/li&gt;
+&lt;li&gt;The templates were slightly hacky (the page title was set in each individual
+template and not in the view code); menus hacked together in HTML with no
+highlighting&lt;/li&gt;
+&lt;li&gt;Python 2.7&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class="section" id="the-rewrite"&gt;
+&lt;h2&gt;The rewrite&lt;/h2&gt;
+&lt;p&gt;I started the process by opening &lt;a class="reference external" href="https://docs.djangoproject.com/en/"&gt;Django documentation&lt;/a&gt;, with its wonderful
+&lt;a class="reference external" href="https://docs.djangoproject.com/en/1.8/intro/tutorial01/"&gt;tutorial&lt;/a&gt;.  Now, I have written a couple basic Django apps before, but
+the majority of them didn’t do much.  In other words, I didn’t have a lot of experience.  Especially with taking user input and relationships.  It took me about 8 hours to get feature parity, and more.&lt;/p&gt;
+&lt;p&gt;Getting all the features was really simple.  For example, to get a many-to-many
+relationship for languages, I had to write just one line.&lt;/p&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_a2050724007749d79070bc03d35ffb17-1"&gt;&lt;/a&gt;&lt;span class="n"&gt;languages&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ManyToManyField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Language&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;p&gt;That’s it.  I didn’t have to run through complicated SQLAlchemy documentation,
+which provides a &lt;a class="reference external" href="http://docs.sqlalchemy.org/en/rel_1_0/orm/basic_relationships.html#many-to-many"&gt;13-line solution&lt;/a&gt; to the same problem.&lt;/p&gt;
+&lt;p&gt;Django also simplified New Relic integration, as the browser JS can be implemented
+using Django template tags.&lt;/p&gt;
+&lt;p&gt;Django is not without its problems, though.  I got a very cryptic traceback
+when I did this:&lt;/p&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_e1bc67444aa04577b8e4c38090b062cc-1"&gt;&lt;/a&gt;&lt;span class="n"&gt;publish_email&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;forms&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;BooleanField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"Publish e-mail"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;required&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;False&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_e1bc67444aa04577b8e4c38090b062cc-2"&gt;&lt;/a&gt;&lt;span class="ne"&gt;TypeError&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;"BooleanField() got multiple values for argument 'required'"&lt;/span&gt;
+&lt;/pre&gt;&lt;p&gt;The real problem with this code?  I forgot the &lt;tt class="docutils literal"&gt;label=&lt;/tt&gt; keyword.  The
+problem is, the model API accepts this syntax — &lt;tt class="docutils literal"&gt;verbose_name&lt;/tt&gt; is the first
+argument.  (I am not actually using the labels though, I write my own form
+HTML)&lt;/p&gt;
+&lt;p&gt;Still, the Django version is much cleaner.  And the best part of all?  There
+are no magic global objects (&lt;tt class="docutils literal"&gt;g&lt;/tt&gt;, &lt;tt class="docutils literal"&gt;session&lt;/tt&gt;, &lt;tt class="docutils literal"&gt;request&lt;/tt&gt;) and
+decorator-based views (which are a bit of syntax abuse IMO).&lt;/p&gt;
+&lt;p&gt;In the end, I have:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;382 lines of code (297 SLOC) over 6 files — much cleaner, and with less long lines&lt;/li&gt;
+&lt;li&gt;form data validation (via Django), CSRF and XSS protection&lt;/li&gt;
+&lt;li&gt;Login using Django built-in authentication, without JavaScript&lt;/li&gt;
+&lt;li&gt;Language codes (granted, I could’ve done that really easily back in Flask)&lt;/li&gt;
+&lt;li&gt;Tried-and-true implementations of common patterns&lt;/li&gt;
+&lt;li&gt;Django models are much more readable and friendly&lt;/li&gt;
+&lt;li&gt;Django-provided DB migrations (generated automatically!)&lt;/li&gt;
+&lt;li&gt;Languages implemented using Django many-to-many relationships&lt;/li&gt;
+&lt;li&gt;Adding a language is possible from the Django built-in admin panel and is
+reflected immediately (no caching)&lt;/li&gt;
+&lt;li&gt;Titles and menus in code&lt;/li&gt;
+&lt;li&gt;Python 3&lt;/li&gt;
+&lt;li&gt;New features: featured sites; show only a specified language — were really easy to add&lt;/li&gt;
+&lt;/ul&gt;
+&lt;table class="docutils footnote" frame="void" id="id2" rules="none"&gt;
+&lt;colgroup&gt;&lt;col class="label"&gt;&lt;col&gt;&lt;/colgroup&gt;
+&lt;tbody valign="top"&gt;
+&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="https://chriswarrick.com/pl/blog/2015/10/11/rewriting-a-flask-app-in-django/#id1"&gt;[1]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;I had some &lt;tt class="docutils literal"&gt;CSRF_ENABLED&lt;/tt&gt; variable, but it did not seem to be actually
+used by anything.&lt;/td&gt;&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;&lt;/div&gt;</description><guid>https://chriswarrick.com/pl/blog/2015/10/11/rewriting-a-flask-app-in-django/</guid><pubDate>Sun, 11 Oct 2015 15:24:43 GMT</pubDate></item><item><title>Nowy projekt: upass — konsolowy interfejs dla pass</title><link>https://chriswarrick.com/pl/blog/2015/07/06/upass/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;a class="reference external" href="http://www.passwordstore.org/"&gt;pass&lt;/a&gt; to standardowy Uniksowy manager haseł.
+A ja właśnie stworzyłem odrobinę przyjaźniejszy, klikalniejszy interfejs przy
+użyciu biblioteki urwid w Pythonie.&lt;/p&gt;
+&lt;!-- TEASER_END --&gt;
+&lt;p style="text-align: center; clear: both;"&gt;
+&lt;a href="https://chriswarrick.com/projects/upass/" class="btn btn-primary" style="width: 250px;"&gt;
+&lt;i class="fa fa-info-circle"&gt;&lt;/i&gt;
+Strona projektu
+&lt;/a&gt;
+&lt;/p&gt;
+&lt;p style="text-align: center; clear: both;"&gt;
+&lt;a href="https://chriswarrick.com/pl/galleries/upass/" class="btn btn-default" style="width: 250px;"&gt;
+&lt;i class="fa fa-picture-o"&gt;&lt;/i&gt;
+Zrzuty ekranu
+&lt;/a&gt;
+&lt;/p&gt;
+&lt;p style="text-align: center; clear: both;"&gt;
+&lt;a href="https://github.com/Kwpolska/upass" class="btn btn-default" style="width: 250px;"&gt;
+&lt;i class="fa fa-github"&gt;&lt;/i&gt;
+GitHub
+&lt;/a&gt;
+&lt;/p&gt;
+&lt;p style="text-align: center; clear: both;"&gt;
+&lt;a href="https://pypi.python.org/pypi/upass" class="btn btn-default" style="width: 250px;"&gt;
+&lt;i class="fa fa-download"&gt;&lt;/i&gt;
+Pobierz (PyPI)
+&lt;/a&gt;
+&lt;/p&gt;&lt;p&gt;&lt;tt class="docutils literal"&gt;upass&lt;/tt&gt; używa biblioteki urwid, co oznacza, że ma przyjazny pełnoekranowy interfejs konsolowy.
+Pokazuje strukturę katalogów (ze spłaszczonymi podkatalogami) i wywołuje
+&lt;tt class="docutils literal"&gt;pass&lt;/tt&gt; na żądanie.  (Nie używa &lt;tt class="docutils literal"&gt;pass &lt;span class="pre"&gt;-c&lt;/span&gt;&lt;/tt&gt; przez problemy z podprocesami, w
+zamian samodzielnie kopiując tekst — zauważ, że schowek &lt;strong&gt;nie zostanie
+wyczyszczony&lt;/strong&gt;)&lt;/p&gt;
+&lt;p&gt;Jeśli chcesz zobaczyć, jak wygląda &lt;tt class="docutils literal"&gt;upass&lt;/tt&gt;, odwiedź &lt;a class="reference external" href="https://chriswarrick.com/pl/galleries/upass/"&gt;galerię zrzutów ekranu&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;tt class="docutils literal"&gt;upass&lt;/tt&gt; jest ciągle rozwijany (i został pierwotnie napisany w jeden wieczór).
+Jeśli masz pomysły, znalazłeś błędy, lub chcesz pomóc, odwiedź
+&lt;a class="reference external" href="https://github.com/Kwpolska/upass"&gt;stronę na GitHubie&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Możesz zainstalować &lt;tt class="docutils literal"&gt;upass&lt;/tt&gt; z &lt;a class="reference external" href="https://pypi.python.org/pypi/upass"&gt;PyPI&lt;/a&gt; (przy uzyciu &lt;tt class="docutils literal"&gt;pip install upass&lt;/tt&gt;). Użytkownicy
+Arch Linux mogą zainstalować pakiet &lt;tt class="docutils literal"&gt;upass&lt;/tt&gt; z AUR.&lt;/p&gt;&lt;/div&gt;</description><category>app</category><category>CLI</category><category>Linux</category><category>password</category><category>projects</category><category>Python</category><category>upass</category><guid>https://chriswarrick.com/pl/blog/2015/07/06/upass/</guid><pubDate>Mon, 06 Jul 2015 12:30:00 GMT</pubDate></item><item><title>Nowy projekt: think (Terminal Think Music)</title><link>https://chriswarrick.com/pl/blog/2015/05/30/think/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;Czy uruchamiasz proces, który długo się wykonuje?  Czy chcesz wiedzieć, kiedy
+skończy pracę, gdy używasz innego Terminala/parzysz kawę?  Czy masz ulubioną
+muzykę z teleturnieju do odtworzenia gdy coś robisz?&lt;/p&gt;
+&lt;p&gt;Jeśli tak: &lt;tt class="docutils literal"&gt;think&lt;/tt&gt; jest właśnie dla ciebie.  By dowiedzieć się więcej, czytaj dalej lub &lt;a class="reference external" href="https://github.com/Kwpolska/think"&gt;odwiedź stronę na GitHubie [en]&lt;/a&gt;.&lt;/p&gt;
+&lt;!-- TEASER_END --&gt;
+&lt;p style="text-align: center; clear: both;"&gt;
+&lt;a href="https://chriswarrick.com/projects/think/" class="btn btn-primary" style="width: 250px;"&gt;
+&lt;i class="fa fa-info-circle"&gt;&lt;/i&gt;
+Strona projektu
+&lt;/a&gt;
+&lt;/p&gt;
+&lt;p style="text-align: center; clear: both;"&gt;
+&lt;a href="https://github.com/Kwpolska/think" class="btn btn-default" style="width: 250px;"&gt;
+&lt;i class="fa fa-github"&gt;&lt;/i&gt;
+GitHub
+&lt;/a&gt;
+&lt;/p&gt;
+&lt;p style="text-align: center; clear: both;"&gt;
+&lt;a href="https://github.com/Kwpolska/think/releases" class="btn btn-default" style="width: 250px;"&gt;
+&lt;i class="fa fa-download"&gt;&lt;/i&gt;
+Pobierz (GitHub)
+&lt;/a&gt;
+&lt;/p&gt;
+&lt;p style="text-align: center; clear: both;"&gt;
+&lt;a href="https://pypi.python.org/pypi/think" class="btn btn-default" style="width: 250px;"&gt;
+&lt;i class="fa fa-download"&gt;&lt;/i&gt;
+Pobierz (PyPI)
+&lt;/a&gt;
+&lt;/p&gt;&lt;div class="section" id="instalacja"&gt;
+&lt;h2&gt;Instalacja&lt;/h2&gt;
+&lt;p&gt;Możesz zainstalować &lt;tt class="docutils literal"&gt;think&lt;/tt&gt; z &lt;a class="reference external" href="https://pypi.python.org/pypi/think"&gt;PyPI&lt;/a&gt; (przy uzyciu &lt;tt class="docutils literal"&gt;pip install think&lt;/tt&gt;). Użytkownicy Arch Linux
+mogą zainstalować pakiet &lt;tt class="docutils literal"&gt;think&lt;/tt&gt; z AUR.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="konfiguracja"&gt;
+&lt;h2&gt;Konfiguracja&lt;/h2&gt;
+&lt;p&gt;Utwórz plik &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;~/.config/think.conf&lt;/span&gt;&lt;/tt&gt; (tam, gdzie jest &lt;tt class="docutils literal"&gt;XDG_CONFIG_HOME&lt;/tt&gt;),
+zawierający poniższe cztery linie:&lt;/p&gt;
+&lt;pre class="code ini"&gt;&lt;a name="rest_code_0b679ddfac614596ad8dd6ebf297b43a-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;[Think]&lt;/span&gt;
+&lt;a name="rest_code_0b679ddfac614596ad8dd6ebf297b43a-2"&gt;&lt;/a&gt;&lt;span class="na"&gt;command&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;play&lt;/span&gt;
+&lt;a name="rest_code_0b679ddfac614596ad8dd6ebf297b43a-3"&gt;&lt;/a&gt;&lt;span class="na"&gt;file&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/home/kwpolska/Dropbox/Media/Wielka Gra.mp3&lt;/span&gt;
+&lt;a name="rest_code_0b679ddfac614596ad8dd6ebf297b43a-4"&gt;&lt;/a&gt;&lt;span class="na"&gt;behavior&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;wait&lt;/span&gt;
+&lt;/pre&gt;&lt;ul class="simple"&gt;
+&lt;li&gt;&lt;tt class="docutils literal"&gt;command&lt;/tt&gt; to komenda odtwarzacza, która zostanie wywołana. Możesz użyć
+&lt;tt class="docutils literal"&gt;play&lt;/tt&gt; (z pakietu &lt;tt class="docutils literal"&gt;sox&lt;/tt&gt;) albo jakiegokolwiek innego szybkiego odtwarzacza
+muzyki działającego w konsoli.&lt;/li&gt;
+&lt;li&gt;&lt;tt class="docutils literal"&gt;file&lt;/tt&gt; to nazwa pliku, który zostanie podany jako jedyny argument do komendy odtwarzacza. Nie jest potrzebne żadne escape’owanie. Ja używam czołówki z &lt;a class="reference external" href="https://www.youtube.com/watch?v=Nnu7I3b7ZbY"&gt;Wielkiej Gry&lt;/a&gt; (BTW: właśnie dodałem wersję MP3 na pierwszą rocznicę uploadu na YouTube!), Amerykanie mogą wybrać &lt;a class="reference external" href="https://www.youtube.com/watch?v=vXGhvoekY44"&gt;Jeopardy! Think Music&lt;/a&gt; (która jest źródłem nazwy komendy), Brytyjczycy mogą wybrać temat muzyczny z &lt;a class="reference external" href="https://www.youtube.com/watch?v=M2dhD9zR6hk"&gt;Countdown&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;tt class="docutils literal"&gt;behavior&lt;/tt&gt; może być jednym z:&lt;ul&gt;
+&lt;li&gt;&lt;tt class="docutils literal"&gt;return&lt;/tt&gt; — oddaj kontrolę do terminala jak tylko program skończy działać, bez zatrzymywania muzyki&lt;/li&gt;
+&lt;li&gt;&lt;tt class="docutils literal"&gt;wait&lt;/tt&gt; — poczekaj aż muzyka się skończy przed oddaniem kontroli&lt;/li&gt;
+&lt;li&gt;&lt;tt class="docutils literal"&gt;stop&lt;/tt&gt; — zatrzymaj muzykę i oddaj kontrolę natychmiastowo&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class="section" id="uzycie"&gt;
+&lt;h2&gt;Użycie&lt;/h2&gt;
+&lt;p&gt;Dodaj &lt;tt class="docutils literal"&gt;think&lt;/tt&gt; przed komendą, która długo się wykonuje:&lt;/p&gt;
+&lt;pre class="code console"&gt;&lt;a name="rest_code_a41fd93df47f481dabb79526023c0667-1"&gt;&lt;/a&gt;&lt;span class="go"&gt;think sleep 120&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</description><category>app</category><category>CLI</category><category>game show</category><category>Jeopardy!</category><category>Linux</category><category>projects</category><category>Python</category><category>think</category><guid>https://chriswarrick.com/pl/blog/2015/05/30/think/</guid><pubDate>Sat, 06 Jun 2015 12:15:00 GMT</pubDate></item><item><title>Revamping My Projects Page with Nikola</title><link>https://chriswarrick.com/pl/blog/2014/10/13/revamping-my-projects-page-with-nikola/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;A week ago, I was inspired to produce a new &lt;a class="reference external" href="https://chriswarrick.com/projects/"&gt;projects page&lt;/a&gt; for
+myself.  The previous one was a trainwreck with a lot of hacks.  Also hosted on
+GitHub Pages for some reason.&lt;/p&gt;
+&lt;!-- TEASER_END --&gt;
+&lt;p&gt;So, considering I’m so invested in &lt;a class="reference external" href="https://getnikola.com/"&gt;Nikola&lt;/a&gt; already,
+I produced the &lt;a class="reference external" href="http://plugins.getnikola.com/#projectpages"&gt;projectpages plugin&lt;/a&gt;
+and also made it publicly available.  The plugin produces two files,
+&lt;tt class="docutils literal"&gt;projects/index.html&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;projects/projects.json&lt;/tt&gt;, and also enforces a
+specific framework for the stories used for the individual projects, because
+all the metadata are taken from special meta fields.&lt;/p&gt;
+&lt;p&gt;In Nikola, post metadata is completely arbitrary (in fact, that’s my fault; I
+&lt;a class="reference external" href="https://github.com/getnikola/nikola/pull/304"&gt;contributed the feature&lt;/a&gt; back in February 2013).
+You can put anything you want, and Nikola will let any plugin and template use the information in any way it likes.&lt;/p&gt;
+&lt;p&gt;And that is basically the gist of the projectpages plugin.  Using some specific
+&lt;a class="reference external" href="https://github.com/getnikola/plugins/tree/master/v7/projectpages#meta-fields"&gt;meta fields&lt;/a&gt;,
+the plugin produces all the files.  It also provides ready-made templates for
+the story pages (though the default templates are designed to fit my site
+only).&lt;/p&gt;
+&lt;p&gt;This plugin is basically a special index page generator.  It takes all the
+stories in the designated projects directory, looks at the metadata, and
+lists them in a nice format (slider of featured projects + a list of everything
+else that is not hidden).  Everything automated and done for you, as is always
+with Nikola — which values simplicity and ease of use.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;The result:&lt;/strong&gt; a pretty &lt;strong&gt;&lt;a href="https://chriswarrick.com/projects/"&gt;projects page&lt;/a&gt;&lt;/strong&gt;.  And some good OSS work done.&lt;/p&gt;&lt;p&gt;PS. I just underwent a move to &lt;a class="reference external" href="https://www.digitalocean.com/"&gt;DigitalOcean&lt;/a&gt;
+and I love them.  Moreover, this blog is proudly &lt;em&gt;HTTPS only&lt;/em&gt; as of yesterday.&lt;/p&gt;&lt;/div&gt;</description><guid>https://chriswarrick.com/pl/blog/2014/10/13/revamping-my-projects-page-with-nikola/</guid><pubDate>Mon, 13 Oct 2014 12:15:00 GMT</pubDate></item><item><title>Python Apps the Right Way: entry points and scripts</title><link>https://chriswarrick.com/pl/blog/2014/09/15/python-apps-the-right-way-entry_points-and-scripts/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;There are multiple ways to write an app in Python.  However, not all of them
+provide your users with the best experience.&lt;/p&gt;
+&lt;p&gt;One of the problems some people encounter is &lt;em&gt;writing launch scripts&lt;/em&gt;.  The
+best way to handle this is the &lt;em&gt;Entry Points&lt;/em&gt; mechanism of Setuptools, and a
+&lt;tt class="docutils literal"&gt;__main__.py&lt;/tt&gt; file.  It’s quite easy to implement.  If you’re interested,
+read on to learn more!&lt;/p&gt;
+&lt;!-- TEASER_END --&gt;
+&lt;div class="section" id="requirements-and-desired-results"&gt;
+&lt;h2&gt;Requirements and Desired Results&lt;/h2&gt;
+&lt;p&gt;You will need:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p class="first"&gt;a Python project&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p class="first"&gt;a setup.py file using &lt;a class="reference external" href="https://pypi.python.org/pypi/setuptools"&gt;setuptools&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p class="first"&gt;the following directory structure:&lt;/p&gt;
+&lt;ul class="list-nobullets"&gt;
+    &lt;li&gt;
+    &lt;a href="https://chriswarrick.com/listings/entry_points_project/"&gt;&lt;i class="fa fa-folder-open"&gt;&lt;/i&gt;
+    entry_points_project/&lt;/a&gt;
+    &lt;/li&gt;&lt;li&gt;
+        &lt;ul class="list-nobullets"&gt;
+        &lt;li&gt;
+        &lt;a href="https://chriswarrick.com/listings/entry_points_project/my_project/"&gt;&lt;i class="fa fa-folder-open"&gt;&lt;/i&gt; my_project/&lt;/a&gt;
+            &lt;/li&gt;&lt;li&gt;
+            &lt;ul class="list-nobullets"&gt;
+                &lt;li&gt;
+                &lt;a href="https://chriswarrick.com/listings/entry_points_project/my_project/__init__.py.html"&gt;&lt;i class="fa fa-file"&gt;&lt;/i&gt;
+                __init__.py&lt;/a&gt;
+                &lt;/li&gt;
+                &lt;li&gt;
+                &lt;a href="https://chriswarrick.com/listings/entry_points_project/my_project/__main__.py.html"&gt;&lt;i class="fa fa-file"&gt;&lt;/i&gt;
+                __main__.py&lt;/a&gt;
+                &lt;/li&gt;
+            &lt;/ul&gt;
+            &lt;/li&gt;
+        &lt;li&gt;
+        &lt;a href="https://chriswarrick.com/listings/entry_points_project/setup.py.html"&gt;&lt;i class="fa fa-file"&gt;&lt;/i&gt; setup.py&lt;/a&gt;
+        &lt;/li&gt;
+        &lt;/ul&gt;
+    &lt;/li&gt;
+    &lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;(&lt;tt class="docutils literal"&gt;entry_points_project&lt;/tt&gt; is also where the README and other auxiliary files
+go, while &lt;tt class="docutils literal"&gt;my_project&lt;/tt&gt; contains all the Python code.)&lt;/p&gt;
+&lt;p&gt;When you’re done, you will have a project that can be executed by:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;&lt;tt class="docutils literal"&gt;python &lt;span class="pre"&gt;-m&lt;/span&gt; my_project&lt;/tt&gt;&lt;/li&gt;
+&lt;li&gt;&lt;tt class="docutils literal"&gt;my_project&lt;/tt&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Provided that you have your Python directory and its &lt;tt class="docutils literal"&gt;Scripts\&lt;/tt&gt; subdirectory on
+the %PATH%, this will &lt;strong&gt;also work in Windows&lt;/strong&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="step-1-create-a-main-py-file"&gt;
+&lt;h2&gt;Step 1: create a &lt;tt class="docutils literal"&gt;__main__.py&lt;/tt&gt; file&lt;/h2&gt;
+&lt;p&gt;In order to implement the first desired result, you need to create a
+&lt;tt class="docutils literal"&gt;__main__.py&lt;/tt&gt; file in your package.  This file needs to contain a &lt;tt class="docutils literal"&gt;main()&lt;/tt&gt;
+function that takes no arguments, and also a special passage to determine code
+to run:&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external" href="https://chriswarrick.com/listings/entry_points_project/my_project/__main__.py.html"&gt;entry_points_project/my_project/__main__.py&lt;/a&gt;&lt;/p&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_1fc3f9edaaf141848aaa3eef699311c8-1"&gt;&lt;/a&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;sys&lt;/span&gt;
+&lt;a name="rest_code_1fc3f9edaaf141848aaa3eef699311c8-2"&gt;&lt;/a&gt;
+&lt;a name="rest_code_1fc3f9edaaf141848aaa3eef699311c8-3"&gt;&lt;/a&gt;
+&lt;a name="rest_code_1fc3f9edaaf141848aaa3eef699311c8-4"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;a name="rest_code_1fc3f9edaaf141848aaa3eef699311c8-5"&gt;&lt;/a&gt;    &lt;span class="sd"&gt;"""The main routine."""&lt;/span&gt;
+&lt;a name="rest_code_1fc3f9edaaf141848aaa3eef699311c8-6"&gt;&lt;/a&gt;    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;args&lt;/span&gt; &lt;span class="ow"&gt;is&lt;/span&gt; &lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;a name="rest_code_1fc3f9edaaf141848aaa3eef699311c8-7"&gt;&lt;/a&gt;        &lt;span class="n"&gt;args&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;:]&lt;/span&gt;
+&lt;a name="rest_code_1fc3f9edaaf141848aaa3eef699311c8-8"&gt;&lt;/a&gt;
+&lt;a name="rest_code_1fc3f9edaaf141848aaa3eef699311c8-9"&gt;&lt;/a&gt;    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"This is the main routine."&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_1fc3f9edaaf141848aaa3eef699311c8-10"&gt;&lt;/a&gt;    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"It should do something interesting."&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_1fc3f9edaaf141848aaa3eef699311c8-11"&gt;&lt;/a&gt;
+&lt;a name="rest_code_1fc3f9edaaf141848aaa3eef699311c8-12"&gt;&lt;/a&gt;    &lt;span class="c1"&gt;# Do argument parsing here (eg. with argparse) and anything else&lt;/span&gt;
+&lt;a name="rest_code_1fc3f9edaaf141848aaa3eef699311c8-13"&gt;&lt;/a&gt;    &lt;span class="c1"&gt;# you want your project to do.&lt;/span&gt;
+&lt;a name="rest_code_1fc3f9edaaf141848aaa3eef699311c8-14"&gt;&lt;/a&gt;
+&lt;a name="rest_code_1fc3f9edaaf141848aaa3eef699311c8-15"&gt;&lt;/a&gt;&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;__name__&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s2"&gt;"__main__"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;a name="rest_code_1fc3f9edaaf141848aaa3eef699311c8-16"&gt;&lt;/a&gt;    &lt;span class="n"&gt;main&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;ol class="arabic simple"&gt;
+&lt;li&gt;The &lt;tt class="docutils literal"&gt;if __name__ == "__main__":&lt;/tt&gt; idiom, as &lt;a class="reference external" href="https://docs.python.org/3/library/__main__.html"&gt;documented here&lt;/a&gt;, is used to check whether
+this is executed as the top-level file, or if it has been imported by someone
+else (in this case, executing the &lt;tt class="docutils literal"&gt;main()&lt;/tt&gt; function is not always intended).&lt;/li&gt;
+&lt;li&gt;The &lt;tt class="docutils literal"&gt;main()&lt;/tt&gt; function must not take any arguments, because that’s how
+&lt;tt class="docutils literal"&gt;entry_points&lt;/tt&gt; executes things.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;div class="section" id="step-2-adjust-setup-py-accordingly"&gt;
+&lt;h2&gt;Step 2: adjust &lt;tt class="docutils literal"&gt;setup.py&lt;/tt&gt; accordingly&lt;/h2&gt;
+&lt;p&gt;This is the real deal: create the entry points in your &lt;tt class="docutils literal"&gt;setup.py&lt;/tt&gt; file.&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external" href="https://chriswarrick.com/listings/entry_points_project/setup.py.html"&gt;entry_points_project/setup.py&lt;/a&gt;&lt;/p&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_cca94c677ed745669ae2eb8eba53d46d-1"&gt;&lt;/a&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;setuptools&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;setup&lt;/span&gt;
+&lt;a name="rest_code_cca94c677ed745669ae2eb8eba53d46d-2"&gt;&lt;/a&gt;
+&lt;a name="rest_code_cca94c677ed745669ae2eb8eba53d46d-3"&gt;&lt;/a&gt;&lt;span class="n"&gt;setup&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;'my_project'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;a name="rest_code_cca94c677ed745669ae2eb8eba53d46d-4"&gt;&lt;/a&gt;      &lt;span class="n"&gt;version&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;'0.1.0'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;a name="rest_code_cca94c677ed745669ae2eb8eba53d46d-5"&gt;&lt;/a&gt;      &lt;span class="n"&gt;packages&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;'my_project'&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;
+&lt;a name="rest_code_cca94c677ed745669ae2eb8eba53d46d-6"&gt;&lt;/a&gt;      &lt;span class="n"&gt;entry_points&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_cca94c677ed745669ae2eb8eba53d46d-7"&gt;&lt;/a&gt;          &lt;span class="s1"&gt;'console_scripts'&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;
+&lt;a name="rest_code_cca94c677ed745669ae2eb8eba53d46d-8"&gt;&lt;/a&gt;              &lt;span class="s1"&gt;'my_project = my_project.__main__:main'&lt;/span&gt;
+&lt;a name="rest_code_cca94c677ed745669ae2eb8eba53d46d-9"&gt;&lt;/a&gt;          &lt;span class="p"&gt;]&lt;/span&gt;
+&lt;a name="rest_code_cca94c677ed745669ae2eb8eba53d46d-10"&gt;&lt;/a&gt;      &lt;span class="p"&gt;},&lt;/span&gt;
+&lt;a name="rest_code_cca94c677ed745669ae2eb8eba53d46d-11"&gt;&lt;/a&gt;      &lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;ol class="arabic simple"&gt;
+&lt;li&gt;You must use setuptools, otherwise this won’t work.&lt;/li&gt;
+&lt;li&gt;The most important piece of code is the &lt;tt class="docutils literal"&gt;entry_points&lt;/tt&gt; declaration
+(unsurprisingly).&lt;/li&gt;
+&lt;li&gt;The declaration reads&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre class="code text"&gt;&lt;a name="rest_code_887045a41f2b4d55bd2e302d2db315f0-1"&gt;&lt;/a&gt;"name_of_executable = module.with:function_to_execute"
+&lt;/pre&gt;&lt;ol class="arabic simple" start="4"&gt;
+&lt;li&gt;If you are developing a GUI application (in Tkinter, PyQt/PySide,
+WxPython, PyGTK, PyGame…), you should change the declaration to
+&lt;tt class="docutils literal"&gt;gui_scripts&lt;/tt&gt;.&lt;/li&gt;
+&lt;li&gt;You can create multiple scripts this way.  You can also have multiple
+&lt;tt class="docutils literal"&gt;console_scripts&lt;/tt&gt; &lt;em&gt;and&lt;/em&gt; &lt;tt class="docutils literal"&gt;gui_scripts&lt;/tt&gt; in one setup file.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p class="text-muted"&gt;All &lt;a class="reference external" href="https://chriswarrick.com/listings/entry_points_project/"&gt;code samples&lt;/a&gt; are Copyright © 2014 Chris Warrick and licensed
+under &lt;a class="reference external" href="http://creativecommons.org/licenses/by-nc-nd/3.0/"&gt;CC-BY 3.0&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;&lt;/div&gt;</description><guid>https://chriswarrick.com/pl/blog/2014/09/15/python-apps-the-right-way-entry_points-and-scripts/</guid><pubDate>Mon, 15 Sep 2014 16:00:00 GMT</pubDate></item><item><title>New Year’s Python Meme 2013/2014</title><link>https://chriswarrick.com/pl/blog/2013/12/31/new-years-python-meme-2013-2014/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;Via &lt;a class="reference external" href="http://ziade.org/2013/12/23/new-years-python-meme-2013/"&gt;Tarek Ziadé&lt;/a&gt; (original meme, none this year…) and &lt;a class="reference external" href="http://blog.aclark.net/2014/12/30/new-years-python-meme-2014/"&gt;Alex Clark&lt;/a&gt;.  Right after the break.&lt;/p&gt;
+&lt;!-- TEASER_END --&gt;
+&lt;p&gt;Here it comes:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;1. What’s the coolest Python application, framework or library you
+discovered this year?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external" href="http://getnikola.com/"&gt;Nikola&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;2. What new programming technique did you learn this year?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;There are lots of them, including writing sane context managers.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;3. Which open source project did you contribute to the most this year? What
+did you do?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external" href="http://getnikola.com/"&gt;Nikola&lt;/a&gt; yet again!  Up until now, I made 484 commits (or 431
+excluding merge commits) — which is quite a lot.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;4. Which Python blogs, websites or mailing lists did you read the most this year?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external" href="http://nedbatchelder.com/blog/"&gt;Ned Batchelder’s&lt;/a&gt; and &lt;a class="reference external" href="http://lucumr.pocoo.org/"&gt;Armin Ronacher’s&lt;/a&gt; blogs and many things that are on Planet Python.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;5. What are the three top things you want to learn next year?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;There are lots of them, mainly C, some Ruby and JavaScript.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;6. What is the top software, application or library you wish someone would
+write next year?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;My current todo-list says it all — and I’m working on that:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;A quick app for CSV display&lt;/li&gt;
+&lt;li&gt;A GitHub Releases API client&lt;/li&gt;
+&lt;li&gt;&lt;tt class="docutils literal"&gt;nap&lt;/tt&gt; = &lt;tt class="docutils literal"&gt;sleep&lt;/tt&gt; + progressbar (&lt;a class="reference external" href="https://github.com/Kwpolska/nap"&gt;almost-done-thing on GitHub&lt;/a&gt; — C)&lt;/li&gt;
+&lt;li&gt;River of Text — Python CLI library (&lt;a class="reference external" href="https://github.com/Kwpolska/rot"&gt;skeleton on GitHub&lt;/a&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr class="docutils"&gt;
+&lt;p&gt;Want to do your own list?  Here’s how:&lt;/p&gt;
+&lt;ol class="arabic simple"&gt;
+&lt;li&gt;copy-paste the questions and answer to them in your blog&lt;/li&gt;
+&lt;li&gt;tweet it with the &lt;a class="reference external" href="https://twitter.com/search/realtime?q=%232014pythonmeme"&gt;#2014pythonmeme&lt;/a&gt; hashtag&lt;/li&gt;
+&lt;/ol&gt;&lt;/div&gt;</description><guid>https://chriswarrick.com/pl/blog/2013/12/31/new-years-python-meme-2013-2014/</guid><pubDate>Tue, 31 Dec 2013 17:15:00 GMT</pubDate></item><item><title>New Year’s Python Meme 2012</title><link>https://chriswarrick.com/pl/blog/2012/12/29/new-years-python-meme-2012/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;Via &lt;a class="reference external" href="http://ziade.org/2012/12/23/new-years-python-meme-2012/"&gt;Tarek Ziadé&lt;/a&gt;.  Right after the break.&lt;/p&gt;
+&lt;!-- TEASER_END --&gt;
+&lt;p&gt;Here it comes:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;1. What’s the coolest Python application, framework or library you have
+discovered in 2012?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;A lot of them.  &lt;a class="reference external" href="http://docs.python-requests.org/en/latest/"&gt;Requests&lt;/a&gt; by the ever-awesome Kenneth Reitz, for example.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;2. What new programming technique did you learn in 2012?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Python and Pythonic code is the answer for this one.  I fell in love with
+Python really quickly.  For a reason.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;3. Which open source project did you contribute to the most in 2012? What
+did you do?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Mine don’t count, right?  If yes, then it would be &lt;a class="reference external" href="https://github.com/fosskers/aura"&gt;Aura&lt;/a&gt; and its pl_PL
+translation, but it is not Python.  (BTW, if anyone is looking for some pl_PL
+translations for their project using GNU gettext, drop me a line.)&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;4. Which Python blog or website did you read the most in 2012?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;docs.python.org.  Also, Planet Python is providing me with a lot of news and
+such.  I also have some other blogs in my RSS.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;5. What are the three top things you want to learn in 2013?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Python: web development, wxPython (Py{Qt4,Side} now, but wxWidgets is
+multi-platform and I might try it), databases.&lt;/p&gt;
+&lt;p&gt;Non-Python: LaTeX and probably a few other things.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;6. What is the top software, application or library you wish someone would
+write in 2013?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;A me-friendly Todo list (I am going to take care of this soon, with wxWidgets
+and GAE), but that is barely important.  Because nobody fits my needs in terms
+of accessibility and such.  Actually, I have a bit of spare time now and may as
+well devote it to doing that.  Remember question 5?  Web development → I want
+it to run on GAE or Heroku (more likely, Heroku), free for everyone.  wxPython
+→ multi-platform GUI.  Databases → storing the TODOs.  LaTeX?  Personal use.&lt;/p&gt;
+&lt;p&gt;Want to do your own list?  Here’s how:&lt;/p&gt;
+&lt;ol class="arabic simple"&gt;
+&lt;li&gt;copy-paste the questions and answer to them in your blog&lt;/li&gt;
+&lt;li&gt;tweet it with the &lt;a class="reference external" href="https://twitter.com/search/realtime?q=%232012pythonmeme"&gt;#2012pythonmeme&lt;/a&gt; hashtag&lt;/li&gt;
+&lt;/ol&gt;&lt;/div&gt;</description><guid>https://chriswarrick.com/pl/blog/2012/12/29/new-years-python-meme-2012/</guid><pubDate>Sat, 29 Dec 2012 19:40:00 GMT</pubDate></item><item><title>I love Python!</title><link>https://chriswarrick.com/pl/blog/2011/08/03/i-love-python/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;figure&gt;
+&lt;a href="http://python.org" title="Python"&gt;&lt;img src="http://kwpolska.tk/blog-content/logos/python.png" alt="Python logo"&gt;&lt;/a&gt;
+&lt;figcaption&gt;Python logo&lt;/figcaption&gt;
+&lt;/figure&gt;&lt;p&gt;I recently started writing &lt;a class="reference external" href="http://python.org"&gt;Python&lt;/a&gt; code. And I love it.&lt;/p&gt;
+&lt;!-- TEASER_END --&gt;
+&lt;p&gt;If you’d ask me a week ago about Python, I’d say “meh.”  Python3K?  I
+wouldn’t be happy about it.  Sunday evening?  I love both.&lt;/p&gt;
+&lt;div class="section" id="one-project-rewritten"&gt;
+&lt;h2&gt;One project, rewritten&lt;/h2&gt;
+&lt;p&gt;I wrote a new project.  Or rather re-wrote a Perl “project”.&lt;/p&gt;
+&lt;p&gt;The project, once a little help for building AUR packages, now is almost
+a fully-featured AUR helper (it has no update function, but I will
+write one soon).  It’s the &lt;a class="reference external" href="https://github.com/Kwpolska/pkgbuilder"&gt;PKGBUILDer&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;The Perl version (search in the repo, linked above) had 56 lines.  In
+short, it did something like this (rewritten to bash):&lt;/p&gt;
+&lt;pre class="code bash"&gt;&lt;a name="rest_code_c405d7b112724f23ba32d313b86a98b8-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;function&lt;/span&gt; generate&lt;span class="o"&gt;(&lt;/span&gt;package&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_c405d7b112724f23ba32d313b86a98b8-2"&gt;&lt;/a&gt;    &lt;span class="nv"&gt;pk&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;package&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="nv"&gt;0&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="nv"&gt;2&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;
+&lt;a name="rest_code_c405d7b112724f23ba32d313b86a98b8-3"&gt;&lt;/a&gt;    wget http://aur.archlinux.org/&lt;span class="nv"&gt;$pk&lt;/span&gt;/&lt;span class="nv"&gt;$package&lt;/span&gt;.tar.gz
+&lt;a name="rest_code_c405d7b112724f23ba32d313b86a98b8-4"&gt;&lt;/a&gt;    tar -xzvf &lt;span class="nv"&gt;$package&lt;/span&gt;.tar.gz
+&lt;a name="rest_code_c405d7b112724f23ba32d313b86a98b8-5"&gt;&lt;/a&gt;    &lt;span class="nb"&gt;cd&lt;/span&gt; &lt;span class="nv"&gt;$package&lt;/span&gt;
+&lt;a name="rest_code_c405d7b112724f23ba32d313b86a98b8-6"&gt;&lt;/a&gt;    makepkg -si
+&lt;a name="rest_code_c405d7b112724f23ba32d313b86a98b8-7"&gt;&lt;/a&gt;    &lt;span class="nb"&gt;cd&lt;/span&gt; ..
+&lt;a name="rest_code_c405d7b112724f23ba32d313b86a98b8-8"&gt;&lt;/a&gt;&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;a name="rest_code_c405d7b112724f23ba32d313b86a98b8-9"&gt;&lt;/a&gt;
+&lt;a name="rest_code_c405d7b112724f23ba32d313b86a98b8-10"&gt;&lt;/a&gt;&lt;span class="k"&gt;for&lt;/span&gt; package in &lt;span class="nv"&gt;$@&lt;/span&gt;, &lt;span class="k"&gt;do&lt;/span&gt; generate&lt;span class="o"&gt;(&lt;/span&gt;package&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="k"&gt;done&lt;/span&gt;
+&lt;/pre&gt;&lt;p&gt;This code is really, REALLY bad.  But it worked for me, because the “normal”
+AUR helpers were slow.  I wanted to do something about it.  I put an entry on
+my TODO list about it.  A few months later I decided to do it.  The TODO list
+entry said “write build.py”.  I wanted to use Python because I wanted to learn
+it.  In fact, I began &lt;em&gt;loving&lt;/em&gt; Python.&lt;/p&gt;
+&lt;p&gt;The Perl version had 56 lines.  A shortened version of it in Bash took only 10
+(I skipped a few features, the full version would be around 20 lines or so.)
+Take a guess: how long is the Python version? 30 lines?  100?  No.  300 lines.
+How could this happen?  No, &lt;em&gt;not&lt;/em&gt; because Python is a pain in the ass to write.
+It was because I could implement new, great features EASILY.  The original
+version could only download a package and build it.  What if the package didn’t
+exist?  The library responsible for untarring it would throw an error.  And
+even if makepkg had a problem with building the package, the script would
+happily inform the user that it was successfully bulit…  What are the new
+features, you may ask?  Install validation, i.e.  checking if the package is
+installed or not.  Package searching, sanity checks, dependency solving…  This
+is great.  If I’d like to write it in Perl, it will take me ages and I’m not
+sure if there is any libalpm wrapper.&lt;/p&gt;
+&lt;p&gt;If you think that you can rewrite it in Perl, sure, go for it, if you will:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;find a working libalpm wrapper or write one yourself&lt;/li&gt;
+&lt;li&gt;port python3-aur (it heps with the XML-RPC of the AUR) to perl&lt;/li&gt;
+&lt;li&gt;implement EVERY feature of the Py3K version&lt;/li&gt;
+&lt;li&gt;give me the code and tell me how long did you write it&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Done?  Great then, &lt;a class="reference external" href="https://chriswarrick.com/contact/"&gt;contact me&lt;/a&gt;!&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="documentation"&gt;
+&lt;h2&gt;Documentation&lt;/h2&gt;
+&lt;p&gt;Python has the friendliest web documentation ever.  PHP’s looks a bit
+harsh.  Perl’s is not easy to search.&lt;/p&gt;
+&lt;p&gt;Time for a real world example:  I want to learn how to write a specific
+function in Perl, PHP and Python.  This function would print the argument.
+For example, in C:&lt;/p&gt;
+&lt;pre class="code cpp"&gt;&lt;a name="rest_code_0c85989c965d4d62bd65c3176962d851-1"&gt;&lt;/a&gt;&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;stdio.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+&lt;a name="rest_code_0c85989c965d4d62bd65c3176962d851-2"&gt;&lt;/a&gt;&lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;writeStuff&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_0c85989c965d4d62bd65c3176962d851-3"&gt;&lt;/a&gt;    &lt;span class="n"&gt;printf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"Input: %s&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s"&gt;"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;a name="rest_code_0c85989c965d4d62bd65c3176962d851-4"&gt;&lt;/a&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;a name="rest_code_0c85989c965d4d62bd65c3176962d851-5"&gt;&lt;/a&gt;
+&lt;a name="rest_code_0c85989c965d4d62bd65c3176962d851-6"&gt;&lt;/a&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;void&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_0c85989c965d4d62bd65c3176962d851-7"&gt;&lt;/a&gt;    &lt;span class="n"&gt;writeStuff&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"some stuff to print"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;a name="rest_code_0c85989c965d4d62bd65c3176962d851-8"&gt;&lt;/a&gt;    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_0c85989c965d4d62bd65c3176962d851-9"&gt;&lt;/a&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;p&gt;Notice: by “searching” in docs I mean reading the page and looking for
+a thing.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Perl:&lt;/strong&gt; Let’s begin at &amp;lt;&lt;a class="reference external" href="http://perl.org"&gt;http://perl.org&lt;/a&gt;&amp;gt;. Documentation tab, Tutorials.
+I need to define a function.  Nothing seems to help me.  I look at the
+sidebar and find &lt;em&gt;Reference/Functions&lt;/em&gt;.  Great, that’s what I need, so i
+click it…  I can’t see anything about functions.  Langauge reference?
+Nothing.  I ask Google and I learn that Perl names them &lt;em&gt;subroutines&lt;/em&gt;.  I
+check the Language reference:  it’s the sub function, now I can define my
+function and call it.  printf?  Let’s look it up in the Functions list.
+We’re done.&lt;/p&gt;
+&lt;pre class="code perl"&gt;&lt;a name="rest_code_58c2aa83042a4b39a80357c791167a77-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;sub &lt;/span&gt;&lt;span class="nf"&gt;writeStuff&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_58c2aa83042a4b39a80357c791167a77-2"&gt;&lt;/a&gt;    &lt;span class="k"&gt;my&lt;/span&gt; &lt;span class="nv"&gt;$text&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;shift&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_58c2aa83042a4b39a80357c791167a77-3"&gt;&lt;/a&gt;    &lt;span class="nb"&gt;printf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"Input: %s\n"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nv"&gt;$text&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;a name="rest_code_58c2aa83042a4b39a80357c791167a77-4"&gt;&lt;/a&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;a name="rest_code_58c2aa83042a4b39a80357c791167a77-5"&gt;&lt;/a&gt;
+&lt;a name="rest_code_58c2aa83042a4b39a80357c791167a77-6"&gt;&lt;/a&gt;&lt;span class="n"&gt;writeStuff&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"some stuff to print"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;p&gt;Perl’s documentation is anywhere near user-friendliness.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;PHP:&lt;/strong&gt; &amp;lt;&lt;a class="reference external" href="http://php.net"&gt;http://php.net&lt;/a&gt;&amp;gt;.  Why is the &lt;em&gt;documentation&lt;/em&gt; link so small?
+Anyways, I need functions.  Language Refernce/Functions.  Here we go, one
+more click and I know how to make a function.  And I guess that I’ll have
+to search the Function Reference.  I find text processing, go for Strings
+and I can happily see printf.  Take a look and we can write this:&lt;/p&gt;
+&lt;pre class="code php"&gt;&lt;a name="rest_code_a2c51d09c3564942ac68092cdf0f4e95-1"&gt;&lt;/a&gt;&lt;span class="cp"&gt;&amp;lt;?php&lt;/span&gt;
+&lt;a name="rest_code_a2c51d09c3564942ac68092cdf0f4e95-2"&gt;&lt;/a&gt;&lt;span class="k"&gt;function&lt;/span&gt; &lt;span class="nf"&gt;writeStuff&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;$text&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_a2c51d09c3564942ac68092cdf0f4e95-3"&gt;&lt;/a&gt;    &lt;span class="nb"&gt;printf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"Input: %s&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s2"&gt;"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nv"&gt;$text&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;a name="rest_code_a2c51d09c3564942ac68092cdf0f4e95-4"&gt;&lt;/a&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;a name="rest_code_a2c51d09c3564942ac68092cdf0f4e95-5"&gt;&lt;/a&gt;&lt;span class="nx"&gt;writeStuff&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"some stuff to print"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;a name="rest_code_a2c51d09c3564942ac68092cdf0f4e95-6"&gt;&lt;/a&gt;&lt;span class="cp"&gt;?&amp;gt;&lt;/span&gt;&lt;span class="x"&gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;Python:&lt;/strong&gt; &amp;lt;&lt;a class="reference external" href="http://python.org/"&gt;http://python.org/&lt;/a&gt;&amp;gt;.  Documentation element exists in the
+menu.  I click it.  They offer me a nice tutorial, so I’ll check it out.
+I scan through the Table of Contents and I see a chapter called Defining
+Functions.  Great, it will work.  Now I go back to the ToC and, because
+this is a tutorial rather than a reference, and I can see chapter &lt;em&gt;7.1:
+Fancier output formatting&lt;/em&gt;.  I want to have %s as in other languages, so
+I skip this one and see &lt;em&gt;Old string formatting&lt;/em&gt;, which uses the %s.  Now,
+assuming they indented the code on purpose because there are no braces,
+I can write:&lt;/p&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_55d6edc8c02e4733a8dbad40935ffbb0-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;writeStuff&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;a name="rest_code_55d6edc8c02e4733a8dbad40935ffbb0-2"&gt;&lt;/a&gt;    &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s2"&gt;"Input: &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt;"&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;text&lt;/span&gt;
+&lt;a name="rest_code_55d6edc8c02e4733a8dbad40935ffbb0-3"&gt;&lt;/a&gt;
+&lt;a name="rest_code_55d6edc8c02e4733a8dbad40935ffbb0-4"&gt;&lt;/a&gt;&lt;span class="n"&gt;writeStuff&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"some stuff to print"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;p&gt;All of them work and output &lt;tt class="docutils literal"&gt;Input: some stuff to print&lt;/tt&gt; followed by a
+newline.  The original C example had 8 lines.  Perl made it in 5, PHP
+in 6 (or 4 if you won’t count the PHP tags), Python used only 3.&lt;/p&gt;
+&lt;p&gt;Which documentation is the most HUMAN-friendly?  Python’s.  Which is the
+worst? Perl’s.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="nothing-is-flawless"&gt;
+&lt;h2&gt;Nothing is flawless&lt;/h2&gt;
+&lt;p&gt;Everything has some flaws.  What is it in Python, then?
+&lt;a class="reference external" href="http://wiki.python.org/moin/Python2orPython3"&gt;Existence of two concurrent versions&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Most distros and projects use Py2K, while some of them offer Py3K (or both.)
+The &lt;a class="reference external" href="https://github.com/Kwpolska/pkgbuilder"&gt;PKGBUILDer&lt;/a&gt; is in Py3K, because it requires &lt;tt class="docutils literal"&gt;pyalpm&lt;/tt&gt; and the &lt;tt class="docutils literal"&gt;AUR&lt;/tt&gt;
+module (I could rewrite the AUR module in Py2K, but pyalpm is much harder to
+modify.  UPDATE 2012-08-04: it was re-implemented by me several releases ago,
+in version 2.1.0, released over a month after this post)  My other projects
+(like KWDv2, another rewrite, this time with minimal changes and 30% less code
+or my first ever Python project, trash.py, a partial XDG trash standard
+implementation) use the old Py2K (usually v2.6, because I need compatibility
+with my shell server.)&lt;/p&gt;
+&lt;p&gt;I would rewrite this blog into &lt;a class="reference external" href="https://www.djangoproject.com/"&gt;Django&lt;/a&gt; if I’d &lt;em&gt;own&lt;/em&gt; a VPS or a dedicated
+server. (update 2011-10-20: this blog is now based on hyde, jekyll’s evil twin
+in Python.  Update 2013-02-08: Now using Nikola, even better engine, yet still
+in Python.)&lt;/p&gt;
+&lt;/div&gt;&lt;/div&gt;</description><guid>https://chriswarrick.com/pl/blog/2011/08/03/i-love-python/</guid><pubDate>Tue, 02 Aug 2011 22:00:00 GMT</pubDate></item></channel></rss>
