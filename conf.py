@@ -355,9 +355,9 @@ COMMENT_SYSTEM = 'disqus'
 COMMENT_SYSTEM_ID = 'kwpolska'
 
 # Create index.html for story folders?
-STORY_INDEX = False
+PAGE_INDEX = False
 # Enable comments on story pages?
-COMMENTS_IN_STORIES = False
+COMMENTS_IN_PAGES = False
 # Enable comments on picture gallery pages?
 COMMENTS_IN_GALLERIES = False
 

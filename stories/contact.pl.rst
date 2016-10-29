@@ -5,15 +5,15 @@
 .. description: Skontaktuj się ze mną!
 
 
-Jestem Pythonistą.  Możesz znaleźć niektóre z moich projektów na `GitHubie <https://github.com/Kwpolska>`_.
+Jestem Pythonistą.  Możesz znaleźć niektóre z moich projektów na `GitHubie <https://github.com/Kwpolska>`_ lub na stronie `Projekty <https://chriswarrick.com/projects/>`_.
 
 .. TEASER_END
 
 Skontaktuj się ze mną:
 ======================
 
-* **pocztą e-mailową** — chris \[at\] chriswarrick.com
-* **na IRC-u** — Kwpolska\@freenode
+* **pocztą e-mail** — chris \[at\] chriswarrick.com
+* **na IRC-u** — Chris Warrick w sieci freenode
 * **na Twitterze** — `@Kwpolska <https://twitter.com/Kwpolska>`_
 * **na GitHubie** — `Kwpolska <https://github.com/Kwpolska>`_
 * klucz GPG: 0x5EAAEA16 (``gpg --keyserver hkp://keys.gnupg.net --recv-key 0x5EAAEA16``)
