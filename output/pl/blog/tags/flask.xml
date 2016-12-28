@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Chris Warrick (Flask)</title><link>https://chriswarrick.com/</link><description></description><atom:link rel="self" href="https://chriswarrick.com/pl/blog/tags/flask.xml" type="application/rss+xml"></atom:link><language>pl</language><lastBuildDate>Sat, 29 Oct 2016 10:32:40 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Deploying Python Web Applications with nginx and uWSGI Emperor</title><link>https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;You just wrote a great Python web application. Now, you want to share it with the world. In order to do that, you need a server, and some software to do that for you.&lt;/p&gt;
+<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chris Warrick (Posty o Flask)</title><link>https://chriswarrick.com/</link><description></description><atom:link href="https://chriswarrick.com/pl/blog/tags/flask.xml" rel="self" type="application/rss+xml"></atom:link><language>pl</language><lastBuildDate>Wed, 28 Dec 2016 15:15:30 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Deploying Python Web Applications with nginx and uWSGI Emperor</title><link>https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;You just wrote a great Python web application. Now, you want to share it with the world. In order to do that, you need a server, and some software to do that for you.&lt;/p&gt;
 &lt;p&gt;The following is a comprehensive guide on how to accomplish that, on multiple Linux-based operating systems, using nginx and uWSGI Emperor. It doesn’t force you to use any specific web framework — Flask, Django, Pyramid, Bottle will all work. Written for Ubuntu, Debian, Fedora, CentOS and Arch Linux (should be helpful for other systems, too)&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;Revision 3 (2016-07-31): Ubuntu 16.04, Debian 8, Fedora 24, CentOS 7, Arch Linux&lt;/em&gt;&lt;/p&gt;
 &lt;!-- TEASER_END --&gt;
@@ -17,7 +17,7 @@
 &lt;/ul&gt;
 &lt;p&gt;Users of other Linux distributions (and perhaps other Unix flavors) can also follow this tutorial. This guide assumes &lt;tt class="docutils literal"&gt;systemd&lt;/tt&gt; as your init system; if you are not using systemd, you will have to get your own daemon files somewhere else. In places where the instructions are split three-way, try coming up with your own, reading documentation and config files; the Arch Linux instructions are probably the closest to upstream (but not always).  Unfortunately, all Linux distributions have their own ideas when it comes to running and managing nginx and uWSGI.&lt;/p&gt;
 &lt;p&gt;nginx and uWSGI are considered best practices by most people. nginx is a fast, modern web server, with uWSGI support built in (without resorting to reverse proxying).  uWSGI is similarly aimed at speed.  The Emperor mode of uWSGI is recommended for init system integration by the uWSGI team, and it’s especially useful for multi-app deployments. (This guide is opinionated.)&lt;/p&gt;
-&lt;div class="note"&gt;
+&lt;div class="admonition note"&gt;
 &lt;p class="first admonition-title"&gt;Note&lt;/p&gt;
 &lt;p class="last"&gt;All the commands in this tutorial are meant to be run &lt;strong&gt;as root&lt;/strong&gt; — run &lt;tt class="docutils literal"&gt;su&lt;/tt&gt; or &lt;tt class="docutils literal"&gt;sudo su&lt;/tt&gt; first to get an administrative shell. This tutorial assumes familiarity with basic Linux administration and command-line usage.&lt;/p&gt;
 &lt;/div&gt;
@@ -26,19 +26,19 @@
 &lt;h2&gt;Getting started&lt;/h2&gt;
 &lt;p&gt;Start by installing virtualenv, nginx and uWSGI. I recommend using your operating system packages. For uWSGI, we need the &lt;tt class="docutils literal"&gt;logfile&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;python3&lt;/tt&gt; plugins. (Arch Linux names the &lt;tt class="docutils literal"&gt;python3&lt;/tt&gt; plugin &lt;tt class="docutils literal"&gt;python&lt;/tt&gt;; the &lt;tt class="docutils literal"&gt;logfile&lt;/tt&gt; plugin may be built-in — check with your system repositories!). I’ll also install Git to clone the tutorial app, but it’s optional if your workflow does not involve git.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Ubuntu, Debian:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_02e27373b8e94beea02ac3ac4e7ef8d6-1"&gt;&lt;/a&gt;apt install virtualenv python3 uwsgi uwsgi-emperor uwsgi-plugin-python3 nginx-full git
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_95ff757b6b974e518359c71c10b822df-1"&gt;&lt;/a&gt;apt install virtualenv python3 uwsgi uwsgi-emperor uwsgi-plugin-python3 nginx-full git
 &lt;/pre&gt;&lt;p&gt;&lt;strong&gt;Fedora:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_e63c87cda0d14a03a521fe6b6b6dfb9d-1"&gt;&lt;/a&gt;dnf install python3-virtualenv uwsgi uwsgi-plugin-python3 uwsgi-logger-file nginx git
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_199c055759ec4dfe9ad81be8784cb5ca-1"&gt;&lt;/a&gt;dnf install python3-virtualenv uwsgi uwsgi-plugin-python3 uwsgi-logger-file nginx git
 &lt;/pre&gt;&lt;p&gt;&lt;strong&gt;CentOS:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_d37e77a354d142c1ab2c57ff4386c00e-1"&gt;&lt;/a&gt;yum install epel-release
-&lt;a name="rest_code_d37e77a354d142c1ab2c57ff4386c00e-2"&gt;&lt;/a&gt;yum install python34 uwsgi uwsgi-plugin-python3 uwsgi-logger-file nginx git wget
-&lt;a name="rest_code_d37e77a354d142c1ab2c57ff4386c00e-3"&gt;&lt;/a&gt;wget https://bootstrap.pypa.io/get-pip.py
-&lt;a name="rest_code_d37e77a354d142c1ab2c57ff4386c00e-4"&gt;&lt;/a&gt;python3 get-pip.py --user
-&lt;a name="rest_code_d37e77a354d142c1ab2c57ff4386c00e-5"&gt;&lt;/a&gt;rm get-pip.py
-&lt;a name="rest_code_d37e77a354d142c1ab2c57ff4386c00e-6"&gt;&lt;/a&gt;~/.local/bin/pip install --user virtualenv
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_2d4ba89892d34ae2bdb67d9b8b873d04-1"&gt;&lt;/a&gt;yum install epel-release
+&lt;a name="rest_code_2d4ba89892d34ae2bdb67d9b8b873d04-2"&gt;&lt;/a&gt;yum install python34 uwsgi uwsgi-plugin-python3 uwsgi-logger-file nginx git wget
+&lt;a name="rest_code_2d4ba89892d34ae2bdb67d9b8b873d04-3"&gt;&lt;/a&gt;wget https://bootstrap.pypa.io/get-pip.py
+&lt;a name="rest_code_2d4ba89892d34ae2bdb67d9b8b873d04-4"&gt;&lt;/a&gt;python3 get-pip.py --user
+&lt;a name="rest_code_2d4ba89892d34ae2bdb67d9b8b873d04-5"&gt;&lt;/a&gt;rm get-pip.py
+&lt;a name="rest_code_2d4ba89892d34ae2bdb67d9b8b873d04-6"&gt;&lt;/a&gt;~/.local/bin/pip install --user virtualenv
 &lt;/pre&gt;&lt;p&gt;We need to install pip and virtualenv manually, because neither is packaged for CentOS, and the &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;python-virtualenv&lt;/span&gt;&lt;/tt&gt; package is not compatible. They will be available to root only (user install).&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Arch Linux:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_1a1ccea104964188930fb9d557a3b7fd-1"&gt;&lt;/a&gt;pacman -S python-virtualenv uwsgi uwsgi-plugin-python nginx git
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_ef5183a73830499aaac5ffc6fc767300-1"&gt;&lt;/a&gt;pacman -S python-virtualenv uwsgi uwsgi-plugin-python nginx git
 &lt;/pre&gt;&lt;/div&gt;
 &lt;div class="section" id="preparing-your-application"&gt;
 &lt;h2&gt;Preparing your application&lt;/h2&gt;
@@ -47,35 +47,35 @@
 &lt;p&gt;If you don’t use Flask, this tutorial also has instructions for other web frameworks (Django, Pyramid, Bottle) in the configuration files; it should be adjustable to any other WSGI-compliant framework/script nevertheless.&lt;/p&gt;
 &lt;p&gt;We’ll start by creating a virtualenv:&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Ubuntu, Debian:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_d36dd3ae1dfb4eac9acd73676a960c37-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; /srv
-&lt;a name="rest_code_d36dd3ae1dfb4eac9acd73676a960c37-2"&gt;&lt;/a&gt;virtualenv -p /usr/bin/python3 myapp
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_79fdffad56db4e91b3dc6ca96037b9c8-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; /srv
+&lt;a name="rest_code_79fdffad56db4e91b3dc6ca96037b9c8-2"&gt;&lt;/a&gt;virtualenv -p /usr/bin/python3 myapp
 &lt;/pre&gt;&lt;p&gt;&lt;strong&gt;Fedora:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_31ec08bf959b4a7c8105fe3544a64d43-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; /srv
-&lt;a name="rest_code_31ec08bf959b4a7c8105fe3544a64d43-2"&gt;&lt;/a&gt;virtualenv-3.5 myapp
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_0402cde0915f43d0aa2e1c93bf2ddcbf-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; /srv
+&lt;a name="rest_code_0402cde0915f43d0aa2e1c93bf2ddcbf-2"&gt;&lt;/a&gt;virtualenv-3.5 myapp
 &lt;/pre&gt;&lt;p&gt;&lt;strong&gt;CentOS:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_8352fb4e8ceb49be9c244fa9681656ee-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; /srv
-&lt;a name="rest_code_8352fb4e8ceb49be9c244fa9681656ee-2"&gt;&lt;/a&gt;~/.local/bin/virtualenv myapp
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_c818cb32fbed498ba405a632e546681c-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; /srv
+&lt;a name="rest_code_c818cb32fbed498ba405a632e546681c-2"&gt;&lt;/a&gt;~/.local/bin/virtualenv myapp
 &lt;/pre&gt;&lt;p&gt;&lt;strong&gt;Arch Linux:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_023c904936364639a606e8d95adecd83-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; /srv
-&lt;a name="rest_code_023c904936364639a606e8d95adecd83-2"&gt;&lt;/a&gt;virtualenv3 myapp
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_32190bfc16404c9bbc7801c544cc5b5f-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; /srv
+&lt;a name="rest_code_32190bfc16404c9bbc7801c544cc5b5f-2"&gt;&lt;/a&gt;virtualenv3 myapp
 &lt;/pre&gt;&lt;p&gt;(This tutorial assumes Python 3. Make sure you use the correct &lt;tt class="docutils literal"&gt;virtualenv&lt;/tt&gt; command/argument. If you want to use Python 2.7, you’ll need to adjust your uWSGI configuration as well.)&lt;/p&gt;
 &lt;p&gt;Now, we need to put our app there and install requirements. An example for the tutorial demo app:&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_5234493a1ec244a985cded93f09e3bc2-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; myapp
-&lt;a name="rest_code_5234493a1ec244a985cded93f09e3bc2-2"&gt;&lt;/a&gt;git clone https://github.com/Kwpolska/flask-demo-app appdata
-&lt;a name="rest_code_5234493a1ec244a985cded93f09e3bc2-3"&gt;&lt;/a&gt;bin/pip install -r appdata/requirements.txt
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_e83ec1f2ec1c4bf58b4682b12a8c03f2-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; myapp
+&lt;a name="rest_code_e83ec1f2ec1c4bf58b4682b12a8c03f2-2"&gt;&lt;/a&gt;git clone https://github.com/Kwpolska/flask-demo-app appdata
+&lt;a name="rest_code_e83ec1f2ec1c4bf58b4682b12a8c03f2-3"&gt;&lt;/a&gt;bin/pip install -r appdata/requirements.txt
 &lt;/pre&gt;&lt;p&gt;I’m storing my application data in the &lt;tt class="docutils literal"&gt;appdata&lt;/tt&gt; subdirectory so that it doesn’t clutter the virtualenv (or vice versa).  You may also install the &lt;tt class="docutils literal"&gt;uwsgi&lt;/tt&gt; package in the virtualenv, but it’s optional.&lt;/p&gt;
 &lt;p&gt;What this directory should be depends on your web framework.  For example, for a Django app, you should have an &lt;tt class="docutils literal"&gt;appdata/manage.py&lt;/tt&gt; file (in other words, &lt;tt class="docutils literal"&gt;appdata&lt;/tt&gt; is where your app structure starts).  I also assumed that the &lt;tt class="docutils literal"&gt;appdata&lt;/tt&gt; folder should have a &lt;tt class="docutils literal"&gt;static&lt;/tt&gt; subdirectory with all static files, including &lt;tt class="docutils literal"&gt;favicon.ico&lt;/tt&gt; if you have one (we will add support for both in nginx).&lt;/p&gt;
 &lt;p&gt;At this point, you should chown this directory to the user and group your server is going to run as.  This is especially important if uwsgi and nginx run as different users (as they do on Fedora). Run one of the following commands:&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Ubuntu, Debian:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_484462c199aa408b9a26b1fd1653716d-1"&gt;&lt;/a&gt;chown -R www-data:www-data /srv/myapp
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_96cff431b4cb41419ef840cf9c7db33f-1"&gt;&lt;/a&gt;chown -R www-data:www-data /srv/myapp
 &lt;/pre&gt;&lt;p&gt;&lt;strong&gt;Fedora, CentOS:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_ec9853e96e814a37b48a633753a67856-1"&gt;&lt;/a&gt;chown -R uwsgi:nginx /srv/myapp
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_00370c3c7b2f4e68851f9636ea4a7fac-1"&gt;&lt;/a&gt;chown -R uwsgi:nginx /srv/myapp
 &lt;/pre&gt;&lt;p&gt;&lt;strong&gt;Arch Linux:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_b8dd26fe04ee4cd18621d80a808e7433-1"&gt;&lt;/a&gt;chown -R http:http /srv/myapp
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_d8efb748c283493f99b5bc2939e63683-1"&gt;&lt;/a&gt;chown -R http:http /srv/myapp
 &lt;/pre&gt;&lt;/div&gt;
 &lt;div class="section" id="configuring-uwsgi-and-nginx"&gt;
 &lt;h2&gt;Configuring uWSGI and nginx&lt;/h2&gt;
-&lt;div class="note"&gt;
+&lt;div class="admonition note"&gt;
 &lt;p class="first admonition-title"&gt;Note&lt;/p&gt;
 &lt;p class="last"&gt;Parts of the configuration depend on your operating system. I tried to provide advice for Ubuntu, Debian, Fedora, CentOS and Arch Linux. If you experience any issues, in particular with plugins, please consult the documentation.&lt;/p&gt;
 &lt;/div&gt;
@@ -83,20 +83,20 @@
 &lt;div class="section" id="uwsgi-configuration"&gt;
 &lt;h3&gt;uWSGI configuration&lt;/h3&gt;
 &lt;p&gt;Start with this, but read the notes below and change the values accordingly:&lt;/p&gt;
-&lt;pre class="code ini"&gt;&lt;a name="rest_code_45fe4569e6a642d8a430985176552084-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;[uwsgi]&lt;/span&gt;
-&lt;a name="rest_code_45fe4569e6a642d8a430985176552084-2"&gt;&lt;/a&gt;&lt;span class="na"&gt;socket&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/uwsgi.sock&lt;/span&gt;
-&lt;a name="rest_code_45fe4569e6a642d8a430985176552084-3"&gt;&lt;/a&gt;&lt;span class="na"&gt;chmod-socket&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;775&lt;/span&gt;
-&lt;a name="rest_code_45fe4569e6a642d8a430985176552084-4"&gt;&lt;/a&gt;&lt;span class="na"&gt;chdir&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/appdata&lt;/span&gt;
-&lt;a name="rest_code_45fe4569e6a642d8a430985176552084-5"&gt;&lt;/a&gt;&lt;span class="na"&gt;master&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;true&lt;/span&gt;
-&lt;a name="rest_code_45fe4569e6a642d8a430985176552084-6"&gt;&lt;/a&gt;&lt;span class="na"&gt;binary-path&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/bin/uwsgi&lt;/span&gt;
-&lt;a name="rest_code_45fe4569e6a642d8a430985176552084-7"&gt;&lt;/a&gt;&lt;span class="na"&gt;virtualenv&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp&lt;/span&gt;
-&lt;a name="rest_code_45fe4569e6a642d8a430985176552084-8"&gt;&lt;/a&gt;&lt;span class="na"&gt;module&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;flaskapp:app&lt;/span&gt;
-&lt;a name="rest_code_45fe4569e6a642d8a430985176552084-9"&gt;&lt;/a&gt;&lt;span class="na"&gt;uid&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;www-data&lt;/span&gt;
-&lt;a name="rest_code_45fe4569e6a642d8a430985176552084-10"&gt;&lt;/a&gt;&lt;span class="na"&gt;gid&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;www-data&lt;/span&gt;
-&lt;a name="rest_code_45fe4569e6a642d8a430985176552084-11"&gt;&lt;/a&gt;&lt;span class="na"&gt;processes&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;1&lt;/span&gt;
-&lt;a name="rest_code_45fe4569e6a642d8a430985176552084-12"&gt;&lt;/a&gt;&lt;span class="na"&gt;threads&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;1&lt;/span&gt;
-&lt;a name="rest_code_45fe4569e6a642d8a430985176552084-13"&gt;&lt;/a&gt;&lt;span class="na"&gt;plugins&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;python3,logfile&lt;/span&gt;
-&lt;a name="rest_code_45fe4569e6a642d8a430985176552084-14"&gt;&lt;/a&gt;&lt;span class="na"&gt;logger&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;file:/srv/myapp/uwsgi.log&lt;/span&gt;
+&lt;pre class="code ini"&gt;&lt;a name="rest_code_6eeb80df3bb7427ebc1d04c885896b8d-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;[uwsgi]&lt;/span&gt;
+&lt;a name="rest_code_6eeb80df3bb7427ebc1d04c885896b8d-2"&gt;&lt;/a&gt;&lt;span class="na"&gt;socket&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/uwsgi.sock&lt;/span&gt;
+&lt;a name="rest_code_6eeb80df3bb7427ebc1d04c885896b8d-3"&gt;&lt;/a&gt;&lt;span class="na"&gt;chmod-socket&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;775&lt;/span&gt;
+&lt;a name="rest_code_6eeb80df3bb7427ebc1d04c885896b8d-4"&gt;&lt;/a&gt;&lt;span class="na"&gt;chdir&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/appdata&lt;/span&gt;
+&lt;a name="rest_code_6eeb80df3bb7427ebc1d04c885896b8d-5"&gt;&lt;/a&gt;&lt;span class="na"&gt;master&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;true&lt;/span&gt;
+&lt;a name="rest_code_6eeb80df3bb7427ebc1d04c885896b8d-6"&gt;&lt;/a&gt;&lt;span class="na"&gt;binary-path&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/bin/uwsgi&lt;/span&gt;
+&lt;a name="rest_code_6eeb80df3bb7427ebc1d04c885896b8d-7"&gt;&lt;/a&gt;&lt;span class="na"&gt;virtualenv&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp&lt;/span&gt;
+&lt;a name="rest_code_6eeb80df3bb7427ebc1d04c885896b8d-8"&gt;&lt;/a&gt;&lt;span class="na"&gt;module&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;flaskapp:app&lt;/span&gt;
+&lt;a name="rest_code_6eeb80df3bb7427ebc1d04c885896b8d-9"&gt;&lt;/a&gt;&lt;span class="na"&gt;uid&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;www-data&lt;/span&gt;
+&lt;a name="rest_code_6eeb80df3bb7427ebc1d04c885896b8d-10"&gt;&lt;/a&gt;&lt;span class="na"&gt;gid&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;www-data&lt;/span&gt;
+&lt;a name="rest_code_6eeb80df3bb7427ebc1d04c885896b8d-11"&gt;&lt;/a&gt;&lt;span class="na"&gt;processes&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;1&lt;/span&gt;
+&lt;a name="rest_code_6eeb80df3bb7427ebc1d04c885896b8d-12"&gt;&lt;/a&gt;&lt;span class="na"&gt;threads&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;1&lt;/span&gt;
+&lt;a name="rest_code_6eeb80df3bb7427ebc1d04c885896b8d-13"&gt;&lt;/a&gt;&lt;span class="na"&gt;plugins&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;python3,logfile&lt;/span&gt;
+&lt;a name="rest_code_6eeb80df3bb7427ebc1d04c885896b8d-14"&gt;&lt;/a&gt;&lt;span class="na"&gt;logger&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;file:/srv/myapp/uwsgi.log&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;Save this file as:&lt;/p&gt;
 &lt;ul class="simple"&gt;
 &lt;li&gt;Ubuntu, Debian: &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;/etc/uwsgi-emperor/vassals/myapp.ini&lt;/span&gt;&lt;/tt&gt;&lt;/li&gt;
@@ -133,26 +133,26 @@
 &lt;li&gt;Fedora, CentOS: &lt;tt class="docutils literal"&gt;/etc/nginx/conf.d/myapp.conf&lt;/tt&gt;&lt;/li&gt;
 &lt;li&gt;Arch Linux: add &lt;tt class="docutils literal"&gt;include &lt;span class="pre"&gt;/etc/nginx/conf.d/*.conf;&lt;/span&gt;&lt;/tt&gt; to your &lt;tt class="docutils literal"&gt;http&lt;/tt&gt; directive in &lt;tt class="docutils literal"&gt;/etc/nginx/nginx.conf&lt;/tt&gt; and use &lt;tt class="docutils literal"&gt;/etc/nginx/conf.d/myapp.conf&lt;/tt&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;pre class="code nginx"&gt;&lt;a name="rest_code_de5db33ca8ac43968f2ef2510ff5a4e1-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;server&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;a name="rest_code_de5db33ca8ac43968f2ef2510ff5a4e1-2"&gt;&lt;/a&gt;    &lt;span class="c1"&gt;# for a public HTTP server:&lt;/span&gt;
-&lt;a name="rest_code_de5db33ca8ac43968f2ef2510ff5a4e1-3"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;listen&lt;/span&gt; &lt;span class="mi"&gt;80&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;a name="rest_code_de5db33ca8ac43968f2ef2510ff5a4e1-4"&gt;&lt;/a&gt;    &lt;span class="c1"&gt;# for a public HTTPS server:&lt;/span&gt;
-&lt;a name="rest_code_de5db33ca8ac43968f2ef2510ff5a4e1-5"&gt;&lt;/a&gt;    &lt;span class="c1"&gt;# listen 443 ssl;&lt;/span&gt;
-&lt;a name="rest_code_de5db33ca8ac43968f2ef2510ff5a4e1-6"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;server_name&lt;/span&gt; &lt;span class="s"&gt;localhost&lt;/span&gt; &lt;span class="s"&gt;myapp.local&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;a name="rest_code_de5db33ca8ac43968f2ef2510ff5a4e1-7"&gt;&lt;/a&gt;
-&lt;a name="rest_code_de5db33ca8ac43968f2ef2510ff5a4e1-8"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;location&lt;/span&gt; &lt;span class="s"&gt;/&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;a name="rest_code_de5db33ca8ac43968f2ef2510ff5a4e1-9"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;include&lt;/span&gt; &lt;span class="s"&gt;uwsgi_params&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;a name="rest_code_de5db33ca8ac43968f2ef2510ff5a4e1-10"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;uwsgi_pass&lt;/span&gt; &lt;span class="s"&gt;unix:/srv/myapp/uwsgi.sock&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;a name="rest_code_de5db33ca8ac43968f2ef2510ff5a4e1-11"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;a name="rest_code_de5db33ca8ac43968f2ef2510ff5a4e1-12"&gt;&lt;/a&gt;
-&lt;a name="rest_code_de5db33ca8ac43968f2ef2510ff5a4e1-13"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;location&lt;/span&gt; &lt;span class="s"&gt;/static&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;a name="rest_code_de5db33ca8ac43968f2ef2510ff5a4e1-14"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;alias&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/appdata/static&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;a name="rest_code_de5db33ca8ac43968f2ef2510ff5a4e1-15"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;a name="rest_code_de5db33ca8ac43968f2ef2510ff5a4e1-16"&gt;&lt;/a&gt;
-&lt;a name="rest_code_de5db33ca8ac43968f2ef2510ff5a4e1-17"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;location&lt;/span&gt; &lt;span class="s"&gt;/favicon.ico&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;a name="rest_code_de5db33ca8ac43968f2ef2510ff5a4e1-18"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;alias&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/appdata/static/favicon.ico&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;a name="rest_code_de5db33ca8ac43968f2ef2510ff5a4e1-19"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;a name="rest_code_de5db33ca8ac43968f2ef2510ff5a4e1-20"&gt;&lt;/a&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;pre class="code nginx"&gt;&lt;a name="rest_code_e9f60e5b154940bba56c82872a779017-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;server&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_e9f60e5b154940bba56c82872a779017-2"&gt;&lt;/a&gt;    &lt;span class="c1"&gt;# for a public HTTP server:&lt;/span&gt;
+&lt;a name="rest_code_e9f60e5b154940bba56c82872a779017-3"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;listen&lt;/span&gt; &lt;span class="mi"&gt;80&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_e9f60e5b154940bba56c82872a779017-4"&gt;&lt;/a&gt;    &lt;span class="c1"&gt;# for a public HTTPS server:&lt;/span&gt;
+&lt;a name="rest_code_e9f60e5b154940bba56c82872a779017-5"&gt;&lt;/a&gt;    &lt;span class="c1"&gt;# listen 443 ssl;&lt;/span&gt;
+&lt;a name="rest_code_e9f60e5b154940bba56c82872a779017-6"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;server_name&lt;/span&gt; &lt;span class="s"&gt;localhost&lt;/span&gt; &lt;span class="s"&gt;myapp.local&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_e9f60e5b154940bba56c82872a779017-7"&gt;&lt;/a&gt;
+&lt;a name="rest_code_e9f60e5b154940bba56c82872a779017-8"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;location&lt;/span&gt; &lt;span class="s"&gt;/&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_e9f60e5b154940bba56c82872a779017-9"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;include&lt;/span&gt; &lt;span class="s"&gt;uwsgi_params&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_e9f60e5b154940bba56c82872a779017-10"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;uwsgi_pass&lt;/span&gt; &lt;span class="s"&gt;unix:/srv/myapp/uwsgi.sock&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_e9f60e5b154940bba56c82872a779017-11"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;a name="rest_code_e9f60e5b154940bba56c82872a779017-12"&gt;&lt;/a&gt;
+&lt;a name="rest_code_e9f60e5b154940bba56c82872a779017-13"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;location&lt;/span&gt; &lt;span class="s"&gt;/static&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_e9f60e5b154940bba56c82872a779017-14"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;alias&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/appdata/static&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_e9f60e5b154940bba56c82872a779017-15"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;a name="rest_code_e9f60e5b154940bba56c82872a779017-16"&gt;&lt;/a&gt;
+&lt;a name="rest_code_e9f60e5b154940bba56c82872a779017-17"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;location&lt;/span&gt; &lt;span class="s"&gt;/favicon.ico&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_e9f60e5b154940bba56c82872a779017-18"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;alias&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/appdata/static/favicon.ico&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_e9f60e5b154940bba56c82872a779017-19"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;a name="rest_code_e9f60e5b154940bba56c82872a779017-20"&gt;&lt;/a&gt;&lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;Note that this file is a very basic and rudimentary configuration. This configuration is fine for local testing, but for a real deployment, you will need to adjust it:&lt;/p&gt;
 &lt;ul class="simple"&gt;
 &lt;li&gt;set &lt;tt class="docutils literal"&gt;listen&lt;/tt&gt; to &lt;tt class="docutils literal"&gt;443 ssl&lt;/tt&gt; and create a http→https redirect on port 80 (you can get a free SSL certificate from &lt;a class="reference external" href="https://letsencrypt.org/"&gt;Let’s Encrypt&lt;/a&gt;; make sure to &lt;a class="reference external" href="https://raymii.org/s/tutorials/Strong_SSL_Security_On_nginx.html"&gt;configure SSL properly&lt;/a&gt;).&lt;/li&gt;
@@ -168,39 +168,39 @@
 &lt;div class="section" id="for-arch-linux"&gt;
 &lt;h3&gt;For Arch Linux&lt;/h3&gt;
 &lt;p&gt;All you need is:&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_28f247212db34c1391b8444c107b3423-1"&gt;&lt;/a&gt;systemctl &lt;span class="nb"&gt;enable&lt;/span&gt; nginx emperor.uwsgi
-&lt;a name="rest_code_28f247212db34c1391b8444c107b3423-2"&gt;&lt;/a&gt;systemctl start nginx emperor.uwsgi
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_a83a6248a83a4e60ae22ac8890ae483e-1"&gt;&lt;/a&gt;systemctl &lt;span class="nb"&gt;enable&lt;/span&gt; nginx emperor.uwsgi
+&lt;a name="rest_code_a83a6248a83a4e60ae22ac8890ae483e-2"&gt;&lt;/a&gt;systemctl start nginx emperor.uwsgi
 &lt;/pre&gt;&lt;p&gt;Verify the service is running with &lt;tt class="docutils literal"&gt;systemctl status emperor.uwsgi&lt;/tt&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="for-fedora-and-centos"&gt;
 &lt;h3&gt;For Fedora and CentOS&lt;/h3&gt;
 &lt;p&gt;Make sure you followed the extra note about editing &lt;tt class="docutils literal"&gt;/etc/uwsgi.ini&lt;/tt&gt; earlier and run:&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_74c9f67e0fb84f4a8bea85d83ad48228-1"&gt;&lt;/a&gt;systemctl &lt;span class="nb"&gt;enable&lt;/span&gt; nginx uwsgi
-&lt;a name="rest_code_74c9f67e0fb84f4a8bea85d83ad48228-2"&gt;&lt;/a&gt;systemctl start nginx uwsgi
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_2d969400fccd4ae68ad3f65a567bbf78-1"&gt;&lt;/a&gt;systemctl &lt;span class="nb"&gt;enable&lt;/span&gt; nginx uwsgi
+&lt;a name="rest_code_2d969400fccd4ae68ad3f65a567bbf78-2"&gt;&lt;/a&gt;systemctl start nginx uwsgi
 &lt;/pre&gt;&lt;p&gt;Verify the service is running with &lt;tt class="docutils literal"&gt;systemctl status uwsgi&lt;/tt&gt;&lt;/p&gt;
 &lt;p&gt;If you disabled SELinux, this is enough to get an app working and you can skip over to the next section.&lt;/p&gt;
 &lt;p&gt;If you want to use SELinux, you need to do the following to allow nginx to read static files:&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_fc0d5b13fc9a40688283d85d4b900ec9-1"&gt;&lt;/a&gt;setenforce 0
-&lt;a name="rest_code_fc0d5b13fc9a40688283d85d4b900ec9-2"&gt;&lt;/a&gt;chcon -R system_u:system_r:httpd_t:s0 /srv/myapp/appdata/static
-&lt;a name="rest_code_fc0d5b13fc9a40688283d85d4b900ec9-3"&gt;&lt;/a&gt;setenforce 1
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_42abd143157141409429b78bfd6090ab-1"&gt;&lt;/a&gt;setenforce 0
+&lt;a name="rest_code_42abd143157141409429b78bfd6090ab-2"&gt;&lt;/a&gt;chcon -R system_u:system_r:httpd_t:s0 /srv/myapp/appdata/static
+&lt;a name="rest_code_42abd143157141409429b78bfd6090ab-3"&gt;&lt;/a&gt;setenforce 1
 &lt;/pre&gt;&lt;p&gt;We now need to install a &lt;a class="reference external" href="https://chriswarrick.com/pub/nginx-uwsgi.pp"&gt;SELinux policy&lt;/a&gt; (that I created for this project) to allow nginx and uWSGI to communicate.
 Download it and run:&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_5c855a792b9040e5ba0e5914aa31598a-1"&gt;&lt;/a&gt;semodule -i nginx-uwsgi.pp
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_65c77933673a470aa4b0e620fe3db888-1"&gt;&lt;/a&gt;semodule -i nginx-uwsgi.pp
 &lt;/pre&gt;&lt;p&gt;Hopefully, this is enough (you can delete the file). In case it isn’t, please read SELinux documentation, check audit logs, and look into &lt;tt class="docutils literal"&gt;audit2allow&lt;/tt&gt;.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="for-ubuntu-and-debian"&gt;
 &lt;h3&gt;For Ubuntu and Debian&lt;/h3&gt;
 &lt;p&gt;Ubuntu and Debian (still!) use LSB services for uWSGI. Because LSB services are awful, we’re going to set up our own systemd-based (native) service.&lt;/p&gt;
 &lt;p&gt;Start by disabling the LSB service that comes with Ubuntu and Debian:&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_93d57129c21f41ed93e3d309072ecc5d-1"&gt;&lt;/a&gt;systemctl stop uwsgi-emperor
-&lt;a name="rest_code_93d57129c21f41ed93e3d309072ecc5d-2"&gt;&lt;/a&gt;systemctl disable uwsgi-emperor
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_b0902fe8330540e48b6aae64ed5731cb-1"&gt;&lt;/a&gt;systemctl stop uwsgi-emperor
+&lt;a name="rest_code_b0902fe8330540e48b6aae64ed5731cb-2"&gt;&lt;/a&gt;systemctl disable uwsgi-emperor
 &lt;/pre&gt;&lt;p&gt;Copy the &lt;tt class="docutils literal"&gt;.service&lt;/tt&gt; file from the &lt;a class="reference external" href="https://uwsgi-docs.readthedocs.org/en/latest/Systemd.html#adding-the-emperor-to-systemd"&gt;uWSGI systemd documentation&lt;/a&gt; to &lt;tt class="docutils literal"&gt;/etc/systemd/system/emperor.uwsgi.service&lt;/tt&gt;.  Change the ExecStart line to:&lt;/p&gt;
-&lt;pre class="code ini"&gt;&lt;a name="rest_code_26e5c5a3af0446f1ad9c9466c3f97943-1"&gt;&lt;/a&gt;&lt;span class="na"&gt;ExecStart&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/usr/bin/uwsgi --ini /etc/uwsgi-emperor/emperor.ini&lt;/span&gt;
+&lt;pre class="code ini"&gt;&lt;a name="rest_code_b095e93e00af4ad488120170fcba87e5-1"&gt;&lt;/a&gt;&lt;span class="na"&gt;ExecStart&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/usr/bin/uwsgi --ini /etc/uwsgi-emperor/emperor.ini&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;You can now reload systemd daemons and enable the services:&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_636cbc9ae58d4379825827c58c1f99f7-1"&gt;&lt;/a&gt;systemctl daemon-reload
-&lt;a name="rest_code_636cbc9ae58d4379825827c58c1f99f7-2"&gt;&lt;/a&gt;systemctl &lt;span class="nb"&gt;enable&lt;/span&gt; nginx emperor.uwsgi
-&lt;a name="rest_code_636cbc9ae58d4379825827c58c1f99f7-3"&gt;&lt;/a&gt;systemctl reload nginx
-&lt;a name="rest_code_636cbc9ae58d4379825827c58c1f99f7-4"&gt;&lt;/a&gt;systemctl start emperor.uwsgi
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_293d3d07a4d74d799e103f8155c6f7c8-1"&gt;&lt;/a&gt;systemctl daemon-reload
+&lt;a name="rest_code_293d3d07a4d74d799e103f8155c6f7c8-2"&gt;&lt;/a&gt;systemctl &lt;span class="nb"&gt;enable&lt;/span&gt; nginx emperor.uwsgi
+&lt;a name="rest_code_293d3d07a4d74d799e103f8155c6f7c8-3"&gt;&lt;/a&gt;systemctl reload nginx
+&lt;a name="rest_code_293d3d07a4d74d799e103f8155c6f7c8-4"&gt;&lt;/a&gt;systemctl start emperor.uwsgi
 &lt;/pre&gt;&lt;p&gt;Verify the service is running with &lt;tt class="docutils literal"&gt;systemctl status emperor.uwsgi&lt;/tt&gt;.  (Ignore
 the warning about no request plugin)&lt;/p&gt;
 &lt;/div&gt;
@@ -211,9 +211,9 @@ the warning about no request plugin)&lt;/p&gt;
 &lt;p&gt;If you used the demo application, you should see something like this (complete with the favicon and image greeting):&lt;/p&gt;
 &lt;img alt="/images/nginx-uwsgi-demo.png" class="centered" src="https://chriswarrick.com/images/nginx-uwsgi-demo.png"&gt;
 &lt;p&gt;If you want to test with cURL:&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_15973ec2824d4656a38c730e9d0463e5-1"&gt;&lt;/a&gt;curl -v http://localhost/
-&lt;a name="rest_code_15973ec2824d4656a38c730e9d0463e5-2"&gt;&lt;/a&gt;curl -I http://localhost/favicon.ico
-&lt;a name="rest_code_15973ec2824d4656a38c730e9d0463e5-3"&gt;&lt;/a&gt;curl -I http://localhost/static/hello.png
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_b8f1e95c25c44d25a6d129fa45671b48-1"&gt;&lt;/a&gt;curl -v http://localhost/
+&lt;a name="rest_code_b8f1e95c25c44d25a6d129fa45671b48-2"&gt;&lt;/a&gt;curl -I http://localhost/favicon.ico
+&lt;a name="rest_code_b8f1e95c25c44d25a6d129fa45671b48-3"&gt;&lt;/a&gt;curl -I http://localhost/static/hello.png
 &lt;/pre&gt;&lt;div class="section" id="troubleshooting"&gt;
 &lt;h3&gt;Troubleshooting&lt;/h3&gt;
 &lt;p&gt;Hopefully, everything works. If it doesn’t:&lt;/p&gt;
@@ -222,8 +222,8 @@ the warning about no request plugin)&lt;/p&gt;
 &lt;li&gt;Make sure you followed all instructions.&lt;/li&gt;
 &lt;li&gt;If you have a firewall installed, make sure to open the ports your web server runs on (typically 80/443). For &lt;tt class="docutils literal"&gt;firewalld&lt;/tt&gt; (Fedora, CentOS):&lt;/li&gt;
 &lt;/ul&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_aef45323b66e43fc9d85f8cdea50ef8d-1"&gt;&lt;/a&gt;firewall-cmd --add-service http
-&lt;a name="rest_code_aef45323b66e43fc9d85f8cdea50ef8d-2"&gt;&lt;/a&gt;firewall-cmd --add-service https
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_47a55ac45bad465794b5b16c641120a7-1"&gt;&lt;/a&gt;firewall-cmd --add-service http
+&lt;a name="rest_code_47a55ac45bad465794b5b16c641120a7-2"&gt;&lt;/a&gt;firewall-cmd --add-service https
 &lt;/pre&gt;&lt;table class="docutils footnote" frame="void" id="id6" rules="none"&gt;
 &lt;colgroup&gt;&lt;col class="label"&gt;&lt;col&gt;&lt;/colgroup&gt;
 &lt;tbody valign="top"&gt;
@@ -282,15 +282,15 @@ highlighting&lt;/li&gt;
 the majority of them didn’t do much.  In other words, I didn’t have a lot of experience.  Especially with taking user input and relationships.  It took me about 8 hours to get feature parity, and more.&lt;/p&gt;
 &lt;p&gt;Getting all the features was really simple.  For example, to get a many-to-many
 relationship for languages, I had to write just one line.&lt;/p&gt;
-&lt;pre class="code python"&gt;&lt;a name="rest_code_ae062b9daec24c9892805ce486f868b6-1"&gt;&lt;/a&gt;&lt;span class="n"&gt;languages&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ManyToManyField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Language&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_94a23ba2144c46c2a815d3dd69886408-1"&gt;&lt;/a&gt;&lt;span class="n"&gt;languages&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ManyToManyField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Language&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;That’s it.  I didn’t have to run through complicated SQLAlchemy documentation,
 which provides a &lt;a class="reference external" href="http://docs.sqlalchemy.org/en/rel_1_0/orm/basic_relationships.html#many-to-many"&gt;13-line solution&lt;/a&gt; to the same problem.&lt;/p&gt;
 &lt;p&gt;Django also simplified New Relic integration, as the browser JS can be implemented
 using Django template tags.&lt;/p&gt;
 &lt;p&gt;Django is not without its problems, though.  I got a very cryptic traceback
 when I did this:&lt;/p&gt;
-&lt;pre class="code python"&gt;&lt;a name="rest_code_200f188a036e431c9f965fcd1deea045-1"&gt;&lt;/a&gt;&lt;span class="n"&gt;publish_email&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;forms&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;BooleanField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"Publish e-mail"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;required&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;False&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_200f188a036e431c9f965fcd1deea045-2"&gt;&lt;/a&gt;&lt;span class="ne"&gt;TypeError&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;"BooleanField() got multiple values for argument 'required'"&lt;/span&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_9400b905624043c88a5a243163b0d1d4-1"&gt;&lt;/a&gt;&lt;span class="n"&gt;publish_email&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;forms&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;BooleanField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"Publish e-mail"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;required&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;False&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_9400b905624043c88a5a243163b0d1d4-2"&gt;&lt;/a&gt;&lt;span class="ne"&gt;TypeError&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;"BooleanField() got multiple values for argument 'required'"&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;The real problem with this code?  I forgot the &lt;tt class="docutils literal"&gt;label=&lt;/tt&gt; keyword.  The
 problem is, the model API accepts this syntax — &lt;tt class="docutils literal"&gt;verbose_name&lt;/tt&gt; is the first
 argument.  (I am not actually using the labels though, I write my own form
