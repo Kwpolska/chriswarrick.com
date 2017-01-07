@@ -650,4 +650,6 @@ POSTS_SECTION_COLORS = {
 
 POSTS_SECTION_FROM_META = True
 
+NEW_POST_DATE_PATH = True
+
 GLOBAL_CONTEXT = {'post_lead_format': post_lead_format,}
