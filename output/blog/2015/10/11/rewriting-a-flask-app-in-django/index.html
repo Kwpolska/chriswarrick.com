@@ -18,6 +18,7 @@ article: http://ogp.me/ns/article#
 <meta name="msapplication-starturl" content="https://chriswarrick.com/">
 <meta name="msapplication-navbutton-color" content="#00aadd">
 <meta name="theme-color" content="#00aadd">
+<meta name="generator" content="Nikola (getnikola.com)">
 <meta name="description" itemprop="description" content="I spent Saturday on rewriting a Flask app in Django.">
 <meta name="author" content="Chris Warrick">
 <link rel="prev" href="/blog/2015/07/23/ssg-speed-test/" title="Static Site Generator Speed Test (Nikola, Pelican, Hexo, Octopress)" type="text/html">
@@ -155,7 +156,7 @@ highlighting</li>
 the majority of them didn’t do much.  In other words, I didn’t have a lot of experience.  Especially with taking user input and relationships.  It took me about 8 hours to get feature parity, and more.</p>
 <p>Getting all the features was really simple.  For example, to get a many-to-many
 relationship for languages, I had to write just one line.</p>
-<pre class="code python"><a name="rest_code_94a23ba2144c46c2a815d3dd69886408-1"></a><span class="n">languages</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="n">Language</span><span class="p">)</span>
+<pre class="code python"><a name="rest_code_6e37e579fc2141159833b8810135b3b9-1"></a><span class="n">languages</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="n">Language</span><span class="p">)</span>
 </pre>
 <p>That’s it.  I didn’t have to run through complicated SQLAlchemy documentation,
 which provides a <a class="reference external" href="http://docs.sqlalchemy.org/en/rel_1_0/orm/basic_relationships.html#many-to-many">13-line solution</a> to the same problem.</p>
@@ -163,8 +164,8 @@ which provides a <a class="reference external" href="http://docs.sqlalchemy.org/
 using Django template tags.</p>
 <p>Django is not without its problems, though.  I got a very cryptic traceback
 when I did this:</p>
-<pre class="code python"><a name="rest_code_9400b905624043c88a5a243163b0d1d4-1"></a><span class="n">publish_email</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="s2">"Publish e-mail"</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
-<a name="rest_code_9400b905624043c88a5a243163b0d1d4-2"></a><span class="ne">TypeError</span><span class="p">:</span> <span class="s2">"BooleanField() got multiple values for argument 'required'"</span>
+<pre class="code python"><a name="rest_code_06e4320fd9de47bd95ac9b4387fd9abb-1"></a><span class="n">publish_email</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="s2">"Publish e-mail"</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<a name="rest_code_06e4320fd9de47bd95ac9b4387fd9abb-2"></a><span class="ne">TypeError</span><span class="p">:</span> <span class="s2">"BooleanField() got multiple values for argument 'required'"</span>
 </pre>
 <p>The real problem with this code?  I forgot the <tt class="docutils literal">label=</tt> keyword.  The
 problem is, the model API accepts this syntax — <tt class="docutils literal">verbose_name</tt> is the first

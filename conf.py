@@ -105,8 +105,10 @@ NAVIGATION_LINKS = {
 # rss feeds.
 #
 
-POSTS = (("posts/*.rst", "blog", "post.tmpl"),
-         ("posts/*.ipynb", "blog", "post.tmpl"))
+POSTS = (
+    ("posts/*.rst", "blog", "post.tmpl"),
+    ("posts/*.ipynb", "blog", "post.tmpl"),
+)
 
 PAGES = (
     ("stories/*.rst", "", "story.tmpl"),
