@@ -21,10 +21,12 @@ Downloads
 * `KwKeyboard-Windows-2017-03.zip`__
 * `KwKeyboard-Linux-2017-03.zip`__
 * `KwKeyboard-macOS-2017-03.dmg`__
+* Preview: `Layout-macOS.pdf`__
 
 __ /pub/KwKeyboard/KwKeyboard-Windows-2017-03.zip
 __ /pub/KwKeyboard/KwKeyboard-Linux-2017-03.zip
 __ /pub/KwKeyboard/KwKeyboard-macOS-2017-03.dmg
+__ /pub/KwKeyboard/Layout-macOS.pdf
 
 Usage
 =====
