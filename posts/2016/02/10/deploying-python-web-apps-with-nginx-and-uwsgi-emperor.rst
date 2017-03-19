@@ -9,9 +9,7 @@
 
 You’ve just written a great Python web application. Now, you want to share it with the world. In order to do that, you need a server, and some software to do that for you.
 
-The following is a comprehensive guide on how to accomplish that, on multiple Linux-based operating systems, using nginx and uWSGI Emperor. It doesn’t force you to use any specific web framework — Flask, Django, Pyramid, Bottle will all work. Written for Ubuntu, Debian, Fedora, CentOS and Arch Linux (should be helpful for other systems, too). Now with an `Ansible Playbook`_.
-
-.. _Ansible Playbook: https://github.com/Kwpolska/ansible-nginx-uwsgi
+The following is a comprehensive guide on how to accomplish that, on multiple Linux-based operating systems, using nginx and uWSGI Emperor. It doesn’t force you to use any specific web framework — Flask, Django, Pyramid, Bottle will all work. Written for Ubuntu, Debian, Fedora, CentOS and Arch Linux (should be helpful for other systems, too). Now with an Ansible Playbook.
 
 *Revision 4 (2017-03-19): Ansible Playbook!*
 
@@ -42,10 +40,6 @@ Users of other Linux distributions (and perhaps other Unix flavors) can also fol
 
 nginx and uWSGI are considered best practices by most people. nginx is a fast, modern web server, with uWSGI support built in (without resorting to reverse proxying).  uWSGI is similarly aimed at speed.  The Emperor mode of uWSGI is recommended for init system integration by the uWSGI team, and it’s especially useful for multi-app deployments. (This guide is opinionated.)
 
-.. note::
-
-   All the commands in this tutorial are meant to be run **as root** — run ``su`` or ``sudo su`` first to get an administrative shell. This tutorial assumes familiarity with basic Linux administration and command-line usage.
-
 Automate everything: Ansible Playbook
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -58,7 +52,7 @@ How to use
 
 1. Install Ansible_ on your control computer (not necessarily the destination server).
 2. Clone the Playbook_ from GitHub.
-3. Read ``README.md``.
+3. Read ``README.md``. You should also understand how Ansible works.
 4. Configure (change three files: ``hosts``, ``group_vars/all``, and ``group_vars/os_<destination OS>``
 5. Make sure all the dependencies are installed on your destination server
 6. Run ``ansible-playbook -v nginx-uwsgi.yml -i hosts`` and watch magic happen.
@@ -72,8 +66,12 @@ The manual guide
 
 Even though I personally recommend the Playbook as a much less error-prone way to set up your app, it might not be compatible with everyone’s system, or otherwise be the wrong solution. The original manual configuration guide is still maintained.
 
-Even if you are using the Playbook, you may still read this to find out what
-happens under the hood.
+Even if you are using the Playbook, you may still read this to find out what happens under the hood.
+
+.. note::
+
+   All the commands in this tutorial are meant to be run **as root** — run ``su`` or ``sudo su`` first to get an administrative shell. This tutorial assumes familiarity with basic Linux administration and command-line usage.
+
 
 Getting started
 ===============
