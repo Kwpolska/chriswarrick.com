@@ -1,35 +1,41 @@
 .. title: Deploying Python Web Applications with nginx and uWSGI Emperor
 .. slug: deploying-python-web-apps-with-nginx-and-uwsgi-emperor
 .. date: 2016-02-10 15:00:00+01:00
-.. updated: 2016-07-31 13:00:00+02:00
-.. tags: Python, Django, Flask, uWSGI, nginx, Internet, Linux, Fedora, Arch Linux, Ubuntu, systemd
+.. updated: 2017-03-19 17:00:00+01:00
+.. tags: Python, Django, Flask, uWSGI, nginx, Internet, Linux, Fedora, Arch Linux, Ubuntu, systemd, CentOS, Debian, Ansible
 .. section: Python
 .. description: A tutorial to deploy Python Web Applications to popular Linux systems.
 .. type: text
 
-You just wrote a great Python web application. Now, you want to share it with the world. In order to do that, you need a server, and some software to do that for you.
+You’ve just written a great Python web application. Now, you want to share it with the world. In order to do that, you need a server, and some software to do that for you.
 
-The following is a comprehensive guide on how to accomplish that, on multiple Linux-based operating systems, using nginx and uWSGI Emperor. It doesn’t force you to use any specific web framework — Flask, Django, Pyramid, Bottle will all work. Written for Ubuntu, Debian, Fedora, CentOS and Arch Linux (should be helpful for other systems, too)
+The following is a comprehensive guide on how to accomplish that, on multiple Linux-based operating systems, using nginx and uWSGI Emperor. It doesn’t force you to use any specific web framework — Flask, Django, Pyramid, Bottle will all work. Written for Ubuntu, Debian, Fedora, CentOS and Arch Linux (should be helpful for other systems, too). Now with an `Ansible Playbook`_.
 
-*Revision 3 (2016-07-31): Ubuntu 16.04, Debian 8, Fedora 24, CentOS 7, Arch Linux*
+.. _Ansible Playbook: https://github.com/Kwpolska/ansible-nginx-uwsgi
+
+*Revision 4 (2017-03-19): Ansible Playbook!*
 
 .. TEASER_END
 
-For easy linking, I set up some aliases: https://go.chriswarrick.com/pyweb and https://go.chriswarrick.com/uwsgi-tut (powered by a Django web application, deployed with nginx and uWSGI!)
+For easy linking, I set up some aliases: https://go.chriswarrick.com/pyweb and https://go.chriswarrick.com/uwsgi-tut (powered by a Django web application, deployed with nginx and uWSGI!).
+
+.. class:: alert alert-info pull-right
+
+.. contents::
 
 Prerequisites
-=============
+~~~~~~~~~~~~~
 
-In order to deploy your web application, you need a server that gives you root and ssh access — in other words, a VPS (or a dedicated server, or a datacenter lease…). If you’re looking for a great VPS service for a low price, I recommend `DigitalOcean`_ (reflink [#]_), which offers a $5/mo service [#]_. If you want to play along at home, without buying a VPS, you can create a virtual machine on your own, or use Vagrant with a Vagrant box for Fedora 24 (``fedora/24-cloud-base``).
+In order to deploy your web application, you need a server that gives you root and ssh access — in other words, a VPS (or a dedicated server, or a datacenter lease…). If you’re looking for a great VPS service for a low price, I recommend `DigitalOcean`_ (reflink [#]_), which offers a $5/mo service [#]_. If you want to play along at home, without buying a VPS, you can create a virtual machine on your own, or use Vagrant with a Vagrant box for Fedora 25 (``fedora/25-cloud-base``).
 
 .. _DigitalOcean: https://www.digitalocean.com/?refcode=7983689b2ecc
 
 Your server should also run a modern Linux-based operating system. This guide was written and tested on:
 
-* Ubuntu 16.04 LTS
-* Debian 8 (jessie)
-* Fedora 24 (with SELinux enabled and disabled)
-* CentOS 7 (with SELinux enabled and disabled) — should also work on RHEL 7
+* Ubuntu 16.04 LTS or newer
+* Debian 8 (jessie) or newer
+* Fedora 24 or newer (with SELinux enabled and disabled)
+* CentOS 7 (with SELinux enabled and disabled) — manual guide should also work on RHEL 7
 * Arch Linux
 
 Users of other Linux distributions (and perhaps other Unix flavors) can also follow this tutorial. This guide assumes ``systemd`` as your init system; if you are not using systemd, you will have to get your own daemon files somewhere else. In places where the instructions are split three-way, try coming up with your own, reading documentation and config files; the Arch Linux instructions are probably the closest to upstream (but not always).  Unfortunately, all Linux distributions have their own ideas when it comes to running and managing nginx and uWSGI.
@@ -39,6 +45,35 @@ nginx and uWSGI are considered best practices by most people. nginx is a fast, m
 .. note::
 
    All the commands in this tutorial are meant to be run **as root** — run ``su`` or ``sudo su`` first to get an administrative shell. This tutorial assumes familiarity with basic Linux administration and command-line usage.
+
+Automate everything: Ansible Playbook
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. class:: lead
+
+A Playbook_ that automates everything in this tutorial is available.
+
+How to use
+==========
+
+1. Install Ansible_ on your control computer (not necessarily the destination server).
+2. Clone the Playbook_ from GitHub.
+3. Read ``README.md``.
+4. Configure (change three files: ``hosts``, ``group_vars/all``, and ``group_vars/os_<destination OS>``
+5. Make sure all the dependencies are installed on your destination server
+6. Run ``ansible-playbook -v nginx-uwsgi.yml -i hosts`` and watch magic happen.
+7. Skip over to `End result`_ and test your site.
+
+.. _Ansible: https://docs.ansible.com/ansible/intro_installation.html
+.. _Playbook: https://github.com/Kwpolska/ansible-nginx-uwsgi
+
+The manual guide
+~~~~~~~~~~~~~~~~
+
+Even though I personally recommend the Playbook as a much less error-prone way to set up your app, it might not be compatible with everyone’s system, or otherwise be the wrong solution. The original manual configuration guide is still maintained.
+
+Even if you are using the Playbook, you may still read this to find out what
+happens under the hood.
 
 Getting started
 ===============
@@ -62,13 +97,10 @@ Start by installing virtualenv, nginx and uWSGI. I recommend using your operatin
 .. code:: sh
 
    yum install epel-release
-   yum install python34 uwsgi uwsgi-plugin-python3 uwsgi-logger-file nginx git wget
-   wget https://bootstrap.pypa.io/get-pip.py
-   python3 get-pip.py --user
-   rm get-pip.py
-   ~/.local/bin/pip install --user virtualenv
+   yum install python34 python34-pip uwsgi uwsgi-plugin-python3 uwsgi-logger-file nginx git wget
+   python3 -m pip install --user virtualenv
 
-We need to install pip and virtualenv manually, because neither is packaged for CentOS, and the ``python-virtualenv`` package is not compatible. They will be available to root only (user install).
+We need to install virtualenv manually, because the ``python-virtualenv`` package is not compatible. It will be available to root only (user install).
 
 **Arch Linux:**
 
@@ -96,26 +128,12 @@ We’ll start by creating a virtualenv:
    cd /srv
    virtualenv -p /usr/bin/python3 myapp
 
-**Fedora:**
+**Fedora, CentOS, Arch Linux:**
 
 .. code:: sh
 
    cd /srv
-   virtualenv-3.5 myapp
-
-**CentOS:**
-
-.. code:: sh
-
-   cd /srv
-   ~/.local/bin/virtualenv myapp
-
-**Arch Linux:**
-
-.. code:: sh
-
-   cd /srv
-   virtualenv3 myapp
+   python3 -m virtualenv myapp
 
 (This tutorial assumes Python 3. Make sure you use the correct ``virtualenv`` command/argument. If you want to use Python 2.7, you’ll need to adjust your uWSGI configuration as well.)
 
@@ -337,7 +355,7 @@ the warning about no request plugin)
 .. _uWSGI systemd documentation: https://uwsgi-docs.readthedocs.org/en/latest/Systemd.html#adding-the-emperor-to-systemd
 
 End result
-==========
+~~~~~~~~~~
 
 Your web service should now be running at http://localhost/ (or wherever you set up server to listen).
 
@@ -355,18 +373,21 @@ If you want to test with cURL:
    curl -I http://localhost/static/hello.png
 
 Troubleshooting
----------------
+===============
 
 Hopefully, everything works. If it doesn’t:
 
 * Check your nginx, system (``journalctl``, ``systemctl status SERVICE``) and uwsgi (``/srv/myapp/uwsgi.log``) logs.
 * Make sure you followed all instructions.
+* If you get a default site, disable that site in nginx config (``/etc/nginx/nginx.conf`` or your sites directory).
 * If you have a firewall installed, make sure to open the ports your web server runs on (typically 80/443). For ``firewalld`` (Fedora, CentOS):
 
 .. code:: sh
 
    firewall-cmd --add-service http
    firewall-cmd --add-service https
+
+* If it still does not work, feel free to ask in the comments, mentioning your distribution, installation method, and what doesn’t work.
 
 .. [#] This reflink gives you $10 in credit, which is enough to run a server for up to two months without paying a thing. I earn $15.
 .. [#] For the cheapest plan. If you’re in the EU (and thus have to pay VAT), or want DO to handle your backups, it will cost you a little more.

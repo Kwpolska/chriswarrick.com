@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chris Warrick (Posty o systemd)</title><link>https://chriswarrick.com/</link><description></description><atom:link href="https://chriswarrick.com/pl/blog/tags/systemd.xml" rel="self" type="application/rss+xml"></atom:link><language>pl</language><lastBuildDate>Sun, 19 Mar 2017 16:16:31 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Deploying Python Web Applications with nginx and uWSGI Emperor</title><link>https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;You’ve just written a great Python web application. Now, you want to share it with the world. In order to do that, you need a server, and some software to do that for you.&lt;/p&gt;
+<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chris Warrick (Posts about Ansible)</title><link>https://chriswarrick.com/</link><description></description><atom:link href="https://chriswarrick.com/blog/tags/ansible.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Sun, 19 Mar 2017 16:16:29 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Deploying Python Web Applications with nginx and uWSGI Emperor</title><link>https://chriswarrick.com/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;You’ve just written a great Python web application. Now, you want to share it with the world. In order to do that, you need a server, and some software to do that for you.&lt;/p&gt;
 &lt;p&gt;The following is a comprehensive guide on how to accomplish that, on multiple Linux-based operating systems, using nginx and uWSGI Emperor. It doesn’t force you to use any specific web framework — Flask, Django, Pyramid, Bottle will all work. Written for Ubuntu, Debian, Fedora, CentOS and Arch Linux (should be helpful for other systems, too). Now with an &lt;a class="reference external" href="https://github.com/Kwpolska/ansible-nginx-uwsgi"&gt;Ansible Playbook&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;Revision 4 (2017-03-19): Ansible Playbook!&lt;/em&gt;&lt;/p&gt;
 &lt;!-- TEASER_END --&gt;
@@ -7,36 +7,36 @@
 &lt;div class="contents alert alert-info pull-right topic" id="contents"&gt;
 &lt;p class="topic-title first"&gt;Contents&lt;/p&gt;
 &lt;ul class="simple"&gt;
-&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#prerequisites" id="id9"&gt;Prerequisites&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#automate-everything-ansible-playbook" id="id10"&gt;Automate everything: Ansible Playbook&lt;/a&gt;&lt;ul&gt;
-&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#how-to-use" id="id11"&gt;How to use&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#prerequisites" id="id9"&gt;Prerequisites&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#automate-everything-ansible-playbook" id="id10"&gt;Automate everything: Ansible Playbook&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#how-to-use" id="id11"&gt;How to use&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
-&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#the-manual-guide" id="id12"&gt;The manual guide&lt;/a&gt;&lt;ul&gt;
-&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#getting-started" id="id13"&gt;Getting started&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#preparing-your-application" id="id14"&gt;Preparing your application&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#configuring-uwsgi-and-nginx" id="id15"&gt;Configuring uWSGI and nginx&lt;/a&gt;&lt;ul&gt;
-&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#uwsgi-configuration" id="id16"&gt;uWSGI configuration&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#nginx-configuration" id="id17"&gt;nginx configuration&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#the-manual-guide" id="id12"&gt;The manual guide&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#getting-started" id="id13"&gt;Getting started&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#preparing-your-application" id="id14"&gt;Preparing your application&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#configuring-uwsgi-and-nginx" id="id15"&gt;Configuring uWSGI and nginx&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#uwsgi-configuration" id="id16"&gt;uWSGI configuration&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#nginx-configuration" id="id17"&gt;nginx configuration&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
-&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#service-setup" id="id18"&gt;Service setup&lt;/a&gt;&lt;ul&gt;
-&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#for-arch-linux" id="id19"&gt;For Arch Linux&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#for-fedora-and-centos" id="id20"&gt;For Fedora and CentOS&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#for-ubuntu-and-debian" id="id21"&gt;For Ubuntu and Debian&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#service-setup" id="id18"&gt;Service setup&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#for-arch-linux" id="id19"&gt;For Arch Linux&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#for-fedora-and-centos" id="id20"&gt;For Fedora and CentOS&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#for-ubuntu-and-debian" id="id21"&gt;For Ubuntu and Debian&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
-&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#end-result" id="id22"&gt;End result&lt;/a&gt;&lt;ul&gt;
-&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#troubleshooting" id="id23"&gt;Troubleshooting&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#end-result" id="id22"&gt;End result&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#troubleshooting" id="id23"&gt;Troubleshooting&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;/div&gt;
 &lt;div class="section" id="prerequisites"&gt;
-&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id9"&gt;Prerequisites&lt;/a&gt;&lt;/h2&gt;
-&lt;p&gt;In order to deploy your web application, you need a server that gives you root and ssh access — in other words, a VPS (or a dedicated server, or a datacenter lease…). If you’re looking for a great VPS service for a low price, I recommend &lt;a class="reference external" href="https://www.digitalocean.com/?refcode=7983689b2ecc"&gt;DigitalOcean&lt;/a&gt; (reflink &lt;a class="footnote-reference" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id6" id="id1"&gt;[1]&lt;/a&gt;), which offers a $5/mo service &lt;a class="footnote-reference" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id7" id="id2"&gt;[2]&lt;/a&gt;. If you want to play along at home, without buying a VPS, you can create a virtual machine on your own, or use Vagrant with a Vagrant box for Fedora 25 (&lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;fedora/25-cloud-base&lt;/span&gt;&lt;/tt&gt;).&lt;/p&gt;
+&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id9"&gt;Prerequisites&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;In order to deploy your web application, you need a server that gives you root and ssh access — in other words, a VPS (or a dedicated server, or a datacenter lease…). If you’re looking for a great VPS service for a low price, I recommend &lt;a class="reference external" href="https://www.digitalocean.com/?refcode=7983689b2ecc"&gt;DigitalOcean&lt;/a&gt; (reflink &lt;a class="footnote-reference" href="https://chriswarrick.com/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id6" id="id1"&gt;[1]&lt;/a&gt;), which offers a $5/mo service &lt;a class="footnote-reference" href="https://chriswarrick.com/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id7" id="id2"&gt;[2]&lt;/a&gt;. If you want to play along at home, without buying a VPS, you can create a virtual machine on your own, or use Vagrant with a Vagrant box for Fedora 25 (&lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;fedora/25-cloud-base&lt;/span&gt;&lt;/tt&gt;).&lt;/p&gt;
 &lt;p&gt;Your server should also run a modern Linux-based operating system. This guide was written and tested on:&lt;/p&gt;
 &lt;ul class="simple"&gt;
 &lt;li&gt;Ubuntu 16.04 LTS or newer&lt;/li&gt;
@@ -53,10 +53,10 @@
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class="section" id="automate-everything-ansible-playbook"&gt;
-&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id10"&gt;Automate everything: Ansible Playbook&lt;/a&gt;&lt;/h2&gt;
+&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id10"&gt;Automate everything: Ansible Playbook&lt;/a&gt;&lt;/h2&gt;
 &lt;p class="lead"&gt;A &lt;a class="reference external" href="https://github.com/Kwpolska/ansible-nginx-uwsgi"&gt;Playbook&lt;/a&gt; that automates everything in this tutorial is available.&lt;/p&gt;
 &lt;div class="section" id="how-to-use"&gt;
-&lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id11"&gt;How to use&lt;/a&gt;&lt;/h3&gt;
+&lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id11"&gt;How to use&lt;/a&gt;&lt;/h3&gt;
 &lt;ol class="arabic simple"&gt;
 &lt;li&gt;Install &lt;a class="reference external" href="https://docs.ansible.com/ansible/intro_installation.html"&gt;Ansible&lt;/a&gt; on your control computer (not necessarily the destination server).&lt;/li&gt;
 &lt;li&gt;Clone the &lt;a class="reference external" href="https://github.com/Kwpolska/ansible-nginx-uwsgi"&gt;Playbook&lt;/a&gt; from GitHub.&lt;/li&gt;
@@ -64,17 +64,17 @@
 &lt;li&gt;Configure (change three files: &lt;tt class="docutils literal"&gt;hosts&lt;/tt&gt;, &lt;tt class="docutils literal"&gt;group_vars/all&lt;/tt&gt;, and &lt;tt class="docutils literal"&gt;group_vars/os_&amp;lt;destination OS&amp;gt;&lt;/tt&gt;&lt;/li&gt;
 &lt;li&gt;Make sure all the dependencies are installed on your destination server&lt;/li&gt;
 &lt;li&gt;Run &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;ansible-playbook&lt;/span&gt; &lt;span class="pre"&gt;-v&lt;/span&gt; &lt;span class="pre"&gt;nginx-uwsgi.yml&lt;/span&gt; &lt;span class="pre"&gt;-i&lt;/span&gt; hosts&lt;/tt&gt; and watch magic happen.&lt;/li&gt;
-&lt;li&gt;Skip over to &lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#end-result"&gt;End result&lt;/a&gt; and test your site.&lt;/li&gt;
+&lt;li&gt;Skip over to &lt;a class="reference internal" href="https://chriswarrick.com/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#end-result"&gt;End result&lt;/a&gt; and test your site.&lt;/li&gt;
 &lt;/ol&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class="section" id="the-manual-guide"&gt;
-&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id12"&gt;The manual guide&lt;/a&gt;&lt;/h2&gt;
+&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id12"&gt;The manual guide&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;Even though I personally recommend the Playbook as a much less error-prone way to set up your app, it might not be compatible with everyone’s system, or otherwise be the wrong solution. The original manual configuration guide is still maintained.&lt;/p&gt;
 &lt;p&gt;Even if you are using the Playbook, you may still read this to find out what
 happens under the hood.&lt;/p&gt;
 &lt;div class="section" id="getting-started"&gt;
-&lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id13"&gt;Getting started&lt;/a&gt;&lt;/h3&gt;
+&lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id13"&gt;Getting started&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;Start by installing virtualenv, nginx and uWSGI. I recommend using your operating system packages. For uWSGI, we need the &lt;tt class="docutils literal"&gt;logfile&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;python3&lt;/tt&gt; plugins. (Arch Linux names the &lt;tt class="docutils literal"&gt;python3&lt;/tt&gt; plugin &lt;tt class="docutils literal"&gt;python&lt;/tt&gt;; the &lt;tt class="docutils literal"&gt;logfile&lt;/tt&gt; plugin may be built-in — check with your system repositories!). I’ll also install Git to clone the tutorial app, but it’s optional if your workflow does not involve git.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Ubuntu, Debian:&lt;/strong&gt;&lt;/p&gt;
 &lt;pre class="code sh"&gt;&lt;a name="rest_code_9f6aca90bfd243b98074b12b17400f8a-1"&gt;&lt;/a&gt;apt install virtualenv python3 uwsgi uwsgi-emperor uwsgi-plugin-python3 nginx-full git
@@ -89,8 +89,8 @@ happens under the hood.&lt;/p&gt;
 &lt;pre class="code sh"&gt;&lt;a name="rest_code_0288b8fa6ef74d61911b0f2469b67c7b-1"&gt;&lt;/a&gt;pacman -S python-virtualenv uwsgi uwsgi-plugin-python nginx git
 &lt;/pre&gt;&lt;/div&gt;
 &lt;div class="section" id="preparing-your-application"&gt;
-&lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id14"&gt;Preparing your application&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;This tutorial will work for any web framework. I will use &lt;a class="reference external" href="https://github.com/Kwpolska/flask-demo-app"&gt;a really basic Flask app&lt;/a&gt; that has just one route (&lt;tt class="docutils literal"&gt;/&lt;/tt&gt;) &lt;a class="footnote-reference" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id8" id="id3"&gt;[3]&lt;/a&gt;, a static &lt;tt class="docutils literal"&gt;hello.png&lt;/tt&gt; file and a &lt;tt class="docutils literal"&gt;favicon.ico&lt;/tt&gt; for demonstration purposes. Note that the app does not use &lt;tt class="docutils literal"&gt;app.run()&lt;/tt&gt;. While you could add it, it would be used for local development and debugging only, and would have to be prepended by &lt;tt class="docutils literal"&gt;if __name__ == '__main__':&lt;/tt&gt; (if it wasn’t, that server would run instead of uWSGI, which is bad)&lt;/p&gt;
+&lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id14"&gt;Preparing your application&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;This tutorial will work for any web framework. I will use &lt;a class="reference external" href="https://github.com/Kwpolska/flask-demo-app"&gt;a really basic Flask app&lt;/a&gt; that has just one route (&lt;tt class="docutils literal"&gt;/&lt;/tt&gt;) &lt;a class="footnote-reference" href="https://chriswarrick.com/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id8" id="id3"&gt;[3]&lt;/a&gt;, a static &lt;tt class="docutils literal"&gt;hello.png&lt;/tt&gt; file and a &lt;tt class="docutils literal"&gt;favicon.ico&lt;/tt&gt; for demonstration purposes. Note that the app does not use &lt;tt class="docutils literal"&gt;app.run()&lt;/tt&gt;. While you could add it, it would be used for local development and debugging only, and would have to be prepended by &lt;tt class="docutils literal"&gt;if __name__ == '__main__':&lt;/tt&gt; (if it wasn’t, that server would run instead of uWSGI, which is bad)&lt;/p&gt;
 &lt;p&gt;The app will be installed somewhere under the &lt;tt class="docutils literal"&gt;/srv&lt;/tt&gt; directory, which is a great place to store things like this. I’ll choose &lt;tt class="docutils literal"&gt;/srv/myapp&lt;/tt&gt; for this tutorial, but for real deployments, you should use something more distinguishable — the domain name is a great idea.&lt;/p&gt;
 &lt;p&gt;If you don’t use Flask, this tutorial also has instructions for other web frameworks (Django, Pyramid, Bottle) in the configuration files; it should be adjustable to any other WSGI-compliant framework/script nevertheless.&lt;/p&gt;
 &lt;p&gt;We’ll start by creating a virtualenv:&lt;/p&gt;
@@ -116,14 +116,14 @@ happens under the hood.&lt;/p&gt;
 &lt;pre class="code sh"&gt;&lt;a name="rest_code_d71e852f82e74823b30f957dfdf46f26-1"&gt;&lt;/a&gt;chown -R http:http /srv/myapp
 &lt;/pre&gt;&lt;/div&gt;
 &lt;div class="section" id="configuring-uwsgi-and-nginx"&gt;
-&lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id15"&gt;Configuring uWSGI and nginx&lt;/a&gt;&lt;/h3&gt;
+&lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id15"&gt;Configuring uWSGI and nginx&lt;/a&gt;&lt;/h3&gt;
 &lt;div class="admonition note"&gt;
 &lt;p class="first admonition-title"&gt;Note&lt;/p&gt;
 &lt;p class="last"&gt;Parts of the configuration depend on your operating system. I tried to provide advice for Ubuntu, Debian, Fedora, CentOS and Arch Linux. If you experience any issues, in particular with plugins, please consult the documentation.&lt;/p&gt;
 &lt;/div&gt;
 &lt;p&gt;We need to write a configuration file for uWSGI and nginx.&lt;/p&gt;
 &lt;div class="section" id="uwsgi-configuration"&gt;
-&lt;h4&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id16"&gt;uWSGI configuration&lt;/a&gt;&lt;/h4&gt;
+&lt;h4&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id16"&gt;uWSGI configuration&lt;/a&gt;&lt;/h4&gt;
 &lt;p&gt;Start with this, but read the notes below and change the values accordingly:&lt;/p&gt;
 &lt;pre class="code ini"&gt;&lt;a name="rest_code_3dbe57a191a54b1586bbdd2fd2c8ff4f-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;[uwsgi]&lt;/span&gt;
 &lt;a name="rest_code_3dbe57a191a54b1586bbdd2fd2c8ff4f-2"&gt;&lt;/a&gt;&lt;span class="na"&gt;socket&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/uwsgi.sock&lt;/span&gt;
@@ -167,7 +167,7 @@ happens under the hood.&lt;/p&gt;
 &lt;p&gt;If you’re using &lt;strong&gt;Fedora&lt;/strong&gt; or &lt;strong&gt;CentOS&lt;/strong&gt;, there are two configuration changes you need to make globally: in &lt;tt class="docutils literal"&gt;/etc/uwsgi.ini&lt;/tt&gt;, disable the &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;emperor-tyrant&lt;/span&gt;&lt;/tt&gt; option (which seems to be buggy) and set &lt;tt class="docutils literal"&gt;gid = nginx&lt;/tt&gt;.  We’ll need this so that nginx can talk to your socket.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="nginx-configuration"&gt;
-&lt;h4&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id17"&gt;nginx configuration&lt;/a&gt;&lt;/h4&gt;
+&lt;h4&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id17"&gt;nginx configuration&lt;/a&gt;&lt;/h4&gt;
 &lt;p&gt;We need to configure our web server. Here’s a basic configuration that will get us started:&lt;/p&gt;
 &lt;p&gt;Save this file as:&lt;/p&gt;
 &lt;ul class="simple"&gt;
@@ -205,17 +205,17 @@ happens under the hood.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class="section" id="service-setup"&gt;
-&lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id18"&gt;Service setup&lt;/a&gt;&lt;/h3&gt;
+&lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id18"&gt;Service setup&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;After you’ve configured uWSGI and nginx, you need to enable and start the system services.&lt;/p&gt;
 &lt;div class="section" id="for-arch-linux"&gt;
-&lt;h4&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id19"&gt;For Arch Linux&lt;/a&gt;&lt;/h4&gt;
+&lt;h4&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id19"&gt;For Arch Linux&lt;/a&gt;&lt;/h4&gt;
 &lt;p&gt;All you need is:&lt;/p&gt;
 &lt;pre class="code sh"&gt;&lt;a name="rest_code_e18f2bf50f08452c84a4d6caace4ed86-1"&gt;&lt;/a&gt;systemctl &lt;span class="nb"&gt;enable&lt;/span&gt; nginx emperor.uwsgi
 &lt;a name="rest_code_e18f2bf50f08452c84a4d6caace4ed86-2"&gt;&lt;/a&gt;systemctl start nginx emperor.uwsgi
 &lt;/pre&gt;&lt;p&gt;Verify the service is running with &lt;tt class="docutils literal"&gt;systemctl status emperor.uwsgi&lt;/tt&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="for-fedora-and-centos"&gt;
-&lt;h4&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id20"&gt;For Fedora and CentOS&lt;/a&gt;&lt;/h4&gt;
+&lt;h4&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id20"&gt;For Fedora and CentOS&lt;/a&gt;&lt;/h4&gt;
 &lt;p&gt;Make sure you followed the extra note about editing &lt;tt class="docutils literal"&gt;/etc/uwsgi.ini&lt;/tt&gt; earlier and run:&lt;/p&gt;
 &lt;pre class="code sh"&gt;&lt;a name="rest_code_721fc5054e9a4a10a7757497211cc41f-1"&gt;&lt;/a&gt;systemctl &lt;span class="nb"&gt;enable&lt;/span&gt; nginx uwsgi
 &lt;a name="rest_code_721fc5054e9a4a10a7757497211cc41f-2"&gt;&lt;/a&gt;systemctl start nginx uwsgi
@@ -231,7 +231,7 @@ Download it and run:&lt;/p&gt;
 &lt;/pre&gt;&lt;p&gt;Hopefully, this is enough (you can delete the file). In case it isn’t, please read SELinux documentation, check audit logs, and look into &lt;tt class="docutils literal"&gt;audit2allow&lt;/tt&gt;.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="for-ubuntu-and-debian"&gt;
-&lt;h4&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id21"&gt;For Ubuntu and Debian&lt;/a&gt;&lt;/h4&gt;
+&lt;h4&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id21"&gt;For Ubuntu and Debian&lt;/a&gt;&lt;/h4&gt;
 &lt;p&gt;Ubuntu and Debian (still!) use LSB services for uWSGI. Because LSB services are awful, we’re going to set up our own systemd-based (native) service.&lt;/p&gt;
 &lt;p&gt;Start by disabling the LSB service that comes with Ubuntu and Debian:&lt;/p&gt;
 &lt;pre class="code sh"&gt;&lt;a name="rest_code_b86f61076fe047ec9e70c9a02ae9a40e-1"&gt;&lt;/a&gt;systemctl stop uwsgi-emperor
@@ -249,7 +249,7 @@ the warning about no request plugin)&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class="section" id="end-result"&gt;
-&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id22"&gt;End result&lt;/a&gt;&lt;/h2&gt;
+&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id22"&gt;End result&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;Your web service should now be running at &lt;a class="reference external" href="http://localhost/"&gt;http://localhost/&lt;/a&gt; (or wherever you set up server to listen).&lt;/p&gt;
 &lt;p&gt;If you used the demo application, you should see something like this (complete with the favicon and image greeting):&lt;/p&gt;
 &lt;img alt="/images/nginx-uwsgi-demo.png" class="centered" src="https://chriswarrick.com/images/nginx-uwsgi-demo.png"&gt;
@@ -258,7 +258,7 @@ the warning about no request plugin)&lt;/p&gt;
 &lt;a name="rest_code_378dc67a38514a6b91b1197be982e614-2"&gt;&lt;/a&gt;curl -I http://localhost/favicon.ico
 &lt;a name="rest_code_378dc67a38514a6b91b1197be982e614-3"&gt;&lt;/a&gt;curl -I http://localhost/static/hello.png
 &lt;/pre&gt;&lt;div class="section" id="troubleshooting"&gt;
-&lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id23"&gt;Troubleshooting&lt;/a&gt;&lt;/h3&gt;
+&lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id23"&gt;Troubleshooting&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;Hopefully, everything works. If it doesn’t:&lt;/p&gt;
 &lt;ul class="simple"&gt;
 &lt;li&gt;Check your nginx, system (&lt;tt class="docutils literal"&gt;journalctl&lt;/tt&gt;, &lt;tt class="docutils literal"&gt;systemctl status SERVICE&lt;/tt&gt;) and uwsgi (&lt;tt class="docutils literal"&gt;/srv/myapp/uwsgi.log&lt;/tt&gt;) logs.&lt;/li&gt;
@@ -274,92 +274,20 @@ the warning about no request plugin)&lt;/p&gt;
 &lt;table class="docutils footnote" frame="void" id="id6" rules="none"&gt;
 &lt;colgroup&gt;&lt;col class="label"&gt;&lt;col&gt;&lt;/colgroup&gt;
 &lt;tbody valign="top"&gt;
-&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id1"&gt;[1]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;This reflink gives you $10 in credit, which is enough to run a server for up to two months without paying a thing. I earn $15.&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="https://chriswarrick.com/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id1"&gt;[1]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;This reflink gives you $10 in credit, which is enough to run a server for up to two months without paying a thing. I earn $15.&lt;/td&gt;&lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;table class="docutils footnote" frame="void" id="id7" rules="none"&gt;
 &lt;colgroup&gt;&lt;col class="label"&gt;&lt;col&gt;&lt;/colgroup&gt;
 &lt;tbody valign="top"&gt;
-&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id2"&gt;[2]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;For the cheapest plan. If you’re in the EU (and thus have to pay VAT), or want DO to handle your backups, it will cost you a little more.&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="https://chriswarrick.com/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id2"&gt;[2]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;For the cheapest plan. If you’re in the EU (and thus have to pay VAT), or want DO to handle your backups, it will cost you a little more.&lt;/td&gt;&lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;table class="docutils footnote" frame="void" id="id8" rules="none"&gt;
 &lt;colgroup&gt;&lt;col class="label"&gt;&lt;col&gt;&lt;/colgroup&gt;
 &lt;tbody valign="top"&gt;
-&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id3"&gt;[3]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;This app does not use templates, but you should in any real project. This app is meant to be as simple as possible.&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="https://chriswarrick.com/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id3"&gt;[3]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;This app does not use templates, but you should in any real project. This app is meant to be as simple as possible.&lt;/td&gt;&lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;/div&gt;</description><guid>https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/</guid><pubDate>Wed, 10 Feb 2016 14:00:00 GMT</pubDate></item><item><title>systemd is awesome.</title><link>https://chriswarrick.com/pl/blog/2015/01/30/systemd-is-awesome/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;I recently switched distros on my server, from Debian to Fedora, to use
-&lt;tt class="docutils literal"&gt;systemd&lt;/tt&gt; and keep it in line with my home &lt;a class="reference external" href="https://chriswarrick.com/blog/2011/01/06/arch-linux-the-best-distro-ever/"&gt;Arch Linux&lt;/a&gt; system (which was
-not reinstalled since 2010, by the way!)  Why is systemd so awesome?  Read
-on to find out.&lt;/p&gt;
-&lt;!-- TEASER_END --&gt;
-&lt;p&gt;&lt;em&gt;(I changed the hardware for my home system along the way.  And just copied
-everything over with ``dd``.  That’s Linux at its finest.)&lt;/em&gt;&lt;/p&gt;
-&lt;div class="section" id="user-friendly"&gt;
-&lt;h2&gt;User friendly&lt;/h2&gt;
-&lt;p&gt;The most important thing in systemd is its user friendliness.  systemd offers
-the &lt;tt class="docutils literal"&gt;systemctl&lt;/tt&gt; tool, which can be used to control all the services.  You
-can see what exactly is going on: what is running, what failed to start,
-and you can also see why if you ask &lt;tt class="docutils literal"&gt;systemctl status $SERVICE&lt;/tt&gt;.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="section" id="services"&gt;
-&lt;h2&gt;Services&lt;/h2&gt;
-&lt;div class="section" id="writing-services-is-fun"&gt;
-&lt;h3&gt;Writing services is fun&lt;/h3&gt;
-&lt;p&gt;If you want your own services, you just need to write some simple INI files.  No
-need for bash, distro-specific frameworks and whatnot.  If I have a functioning
-service written on Arch, I can just copy the file over to Fedora and blindly
-enable it — assuming I have the executables installed, it’s guaranteed to work.&lt;/p&gt;
-&lt;p&gt;And the units are tiny:&lt;/p&gt;
-&lt;pre class="literal-block"&gt;
-fedora$ wc -l /usr/lib/systemd/system/nginx.service
-15 /usr/lib/systemd/system/nginx.service
-debian$ wc -l /etc/init.d/nginx
-101 /etc/init.d/nginx
-&lt;/pre&gt;
-&lt;p&gt;And you can write a bare-minimum systemd daemon in less than that – not so easy
-with &lt;tt class="docutils literal"&gt;sysvinit&lt;/tt&gt; (writing everything on one line doesn’t count!)&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="section" id="managing-personal-services"&gt;
-&lt;h3&gt;Managing personal services&lt;/h3&gt;
-&lt;p&gt;systemd also features user-specific services.  You can run any service as your
-user.  I use this to run &lt;a class="reference external" href="https://chriswarrick.com/kwbot/"&gt;KwBot&lt;/a&gt;, which was previously under control of
-&lt;tt class="docutils literal"&gt;supervisord&lt;/tt&gt; — that’s one less dependency to care about!&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="section" id="runlevels-do-not-exist"&gt;
-&lt;h3&gt;Runlevels do not exist&lt;/h3&gt;
-&lt;p&gt;systemd does away with the standard convention of runlevels.  They are replaced
-by human-friendly &lt;em&gt;targets&lt;/em&gt;.  Each unit defines its target: most use
-&lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;multi-user.target&lt;/span&gt;&lt;/tt&gt;.  It is much easier to manage.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="section" id="no-symlink-mess"&gt;
-&lt;h3&gt;No symlink mess&lt;/h3&gt;
-&lt;p&gt;Just like old sysvinit-esque systems, systemd uses symlinks to manage
-enabled/disabled services.  There is just one difference: you get just &lt;strong&gt;one&lt;/strong&gt;
-symlink in the appropriate &lt;tt class="docutils literal"&gt;.wants&lt;/tt&gt; directory.  You do not have to look into
-all the different runlevels.  &lt;tt class="docutils literal"&gt;graphical.target&lt;/tt&gt; depends on
-&lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;multi-user.target&lt;/span&gt;&lt;/tt&gt;, which in turn depends on &lt;tt class="docutils literal"&gt;basic.target&lt;/tt&gt;, which depends
-on a few more targets required to get the system up and running.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="section" id="units-can-depend-on-each-other"&gt;
-&lt;h3&gt;Units can depend on each other&lt;/h3&gt;
-&lt;p&gt;Do you have some units that require the network to be up?  Set it to be run
-after and require &lt;tt class="docutils literal"&gt;network.target&lt;/tt&gt; and call it a day.&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class="section" id="the-journal"&gt;
-&lt;h2&gt;The Journal&lt;/h2&gt;
-&lt;p&gt;If I want to know what is going on in my system, I can just ask &lt;tt class="docutils literal"&gt;journalctl&lt;/tt&gt;
-to show me the most recent messages.  I don’t need to read a thousand different
-log files — most things appear in the journal.  Sure, some things aren’t there
-(yet), but what I &lt;em&gt;can&lt;/em&gt; see is very useful.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="section" id="did-i-really-change-my-distro-for-all-that"&gt;
-&lt;h2&gt;Did I really change my distro for all that?&lt;/h2&gt;
-&lt;p&gt;Yes.  I got too annoyed with Debian’s idiocy.  Also, DigitalOcean doesn’t
-&lt;em&gt;really&lt;/em&gt; support Debian testing, and I cannot survive with outdated software.
-I feel much better and, more importantly, &lt;strong&gt;safer&lt;/strong&gt; with Fedora.&lt;/p&gt;
-&lt;p&gt;(also, the “Veteran Unix Admins” of Devuan are a bunch of idiots.)&lt;/p&gt;
-&lt;/div&gt;&lt;/div&gt;</description><guid>https://chriswarrick.com/pl/blog/2015/01/30/systemd-is-awesome/</guid><pubDate>Fri, 30 Jan 2015 15:00:00 GMT</pubDate></item></channel></rss>
+&lt;/div&gt;&lt;/div&gt;</description><category>Ansible</category><category>Arch Linux</category><category>CentOS</category><category>Debian</category><category>Django</category><category>Fedora</category><category>Flask</category><category>Internet</category><category>Linux</category><category>nginx</category><category>Python</category><category>systemd</category><category>Ubuntu</category><category>uWSGI</category><guid>https://chriswarrick.com/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/</guid><pubDate>Wed, 10 Feb 2016 14:00:00 GMT</pubDate></item></channel></rss>
