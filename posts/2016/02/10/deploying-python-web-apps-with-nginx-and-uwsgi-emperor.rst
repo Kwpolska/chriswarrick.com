@@ -2,10 +2,12 @@
 .. slug: deploying-python-web-apps-with-nginx-and-uwsgi-emperor
 .. date: 2016-02-10 15:00:00+01:00
 .. updated: 2017-03-19 17:00:00+01:00
-.. tags: Python, Django, Flask, uWSGI, nginx, Internet, Linux, Fedora, Arch Linux, Ubuntu, systemd, CentOS, Debian, Ansible
+.. tags: Python, Django, Flask, uWSGI, nginx, Internet, Linux, Fedora, Arch Linux, Ubuntu, systemd, CentOS, Debian, Ansible, guide
 .. section: Python
 .. description: A tutorial to deploy Python Web Applications to popular Linux systems.
 .. type: text
+.. guide_topic: Python, web apps
+.. guide_platform: Ubuntu, Debian, Fedora, CentOS, Arch Linux
 
 You’ve just written a great Python web application. Now, you want to share it with the world. In order to do that, you need a server, and some software to do that for you.
 

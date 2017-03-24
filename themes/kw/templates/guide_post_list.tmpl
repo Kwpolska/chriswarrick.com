@@ -1,0 +1,26 @@
+{#  -*- coding: utf-8 -*- #}
+{% block content %}
+<!-- Begin post-list {{ post_list_id }} -->
+<div id="{{ post_list_id }}" class="post-list guide-post-list">
+    {% if posts %}
+    <ul class="post-list">
+        {% for post in posts %}
+            <li class="post-list-item">
+            <a class="guide-title" href="{{ post.permalink(lang) }}">{{ post.title(lang)|e }}</a>
+            <p class="guide-post-list-meta">
+            <span class="topicline"><strong>Topic:</strong> {{ post.meta('guide_topic') }}</span>
+            <span class="platformline"><strong>Platform:</strong> {{ post.meta('guide_platform') }}</span>
+            {% if post.date != post.updated %}
+            <span class="dateline"><strong>Updated:</strong> <time class="updated dt-updated" datetime="{{ post.updated.isoformat() }}" title="Updated {{ post.formatted_updated(date_format) }}">{{ post.formatted_updated(date_format) }}</time></span>
+            {% else %}
+            <span class="dateline"><strong>Posted:</strong> <time class="published dt-published" datetime="{{ post.date.isoformat() }}" itemprop="datePublished" title="{{ post.formatted_date(date_format) }}">{{ post.formatted_date(date_format) }}</time></span>
+            {% endif %}
+            </p>
+            {{ post.text(teaser_only=True) }}
+            </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</div>
+<!-- End post-list {{ post_list_id }} -->
+{% endblock %}

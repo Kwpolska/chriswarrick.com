@@ -64,6 +64,7 @@ NAVIGATION_LINKS = {
         ('/brand/', 'Brand'),
         ('/kwbot/', 'KwBot'),
         ('/projects/', 'Projects'),
+        ('/guides/', 'Guides'),
         ('/search/', 'Search'),
     ),
 
@@ -74,6 +75,7 @@ NAVIGATION_LINKS = {
         ('/pl/brand/', 'Brand'),
         ('/pl/kwbot/', 'KwBot'),
         ('/projects/', 'Projekty'),
+        ('/guides/', 'Przewodniki'),
         ('/pl/search/', 'Szukaj'),
     ),
 }
@@ -111,8 +113,8 @@ POSTS = (
 )
 
 PAGES = (
-    ("stories/*.rst", "", "story.tmpl"),
-    ("stories/*.html", "", "story.tmpl"),
+    ("pages/*.rst", "", "story.tmpl"),
+    ("pages/*.html", "", "story.tmpl"),
     ("err/*.html", "err", "err.tmpl"),
     ("projects/*.rst", "projects", "project.tmpl"),
 )
