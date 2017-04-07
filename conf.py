@@ -109,7 +109,7 @@ NAVIGATION_LINKS = {
 
 POSTS = (
     ("posts/*.rst", "blog", "post.tmpl"),
-    ("posts/*.ipynb", "blog", "post.tmpl"),
+    # ("posts/*.ipynb", "blog", "post.tmpl"),
 )
 
 PAGES = (

@@ -1,5 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chris Warrick (Blog)</title><link>https://chriswarrick.com/</link><description>A blog about everything and nothing.</description><atom:link href="https://chriswarrick.com/pl/rss.xml" rel="self" type="application/rss+xml"></atom:link><language>pl</language><lastBuildDate>Fri, 24 Mar 2017 15:54:22 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>5 months with a MacBook Pro: beautiful machine that just works</title><link>https://chriswarrick.com/pl/blog/2016/12/28/5-months-with-a-macbook-pro-beautiful-machine-that-just-works/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;Five months ago, I decided to make the switch from my trusty old desktop
+<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chris Warrick (Blog)</title><link>https://chriswarrick.com/</link><description>A blog about everything and nothing.</description><atom:link href="https://chriswarrick.com/pl/rss.xml" rel="self" type="application/rss+xml"></atom:link><language>pl</language><lastBuildDate>Fri, 07 Apr 2017 18:01:39 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>CSV is not a standard</title><link>https://chriswarrick.com/pl/blog/2017/04/07/csv-is-not-a-standard/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;CSV is not a standard. What does that really mean for anyone using that format?
+The file’s recipient may be unable to read it the way you intended. Separators,
+decimal marks, escaping and encodings are all problems — and Excel does them
+all pretty badly.&lt;/p&gt;
+&lt;!-- TEASER_END --&gt;
+&lt;p&gt;So first, some people might claim that &lt;a class="reference external" href="http://www.ietf.org/rfc/rfc4180.txt"&gt;RFC 4180&lt;/a&gt; is the CSV standard. Those
+people also have not read the document they’re referring to. It states:&lt;/p&gt;
+&lt;blockquote&gt;
+This memo provides information for the Internet community.  It does
+not specify an Internet standard of any kind.&lt;/blockquote&gt;
+&lt;p&gt;The problem with this is the fact that a &lt;tt class="docutils literal"&gt;.csv&lt;/tt&gt; file does not mean much. There
+are a few problems. The first question is,&lt;/p&gt;
+&lt;blockquote&gt;
+What is the field separator? Is it a comma or a semicolon?&lt;/blockquote&gt;
+&lt;p&gt;Hey, wait a minute, doesn’t the file format/extension stand for
+&lt;em&gt;comma-separated values&lt;/em&gt;? Yes, it does. But that does not matter in the
+slightest. You see, Microsoft Excel — which most people will use to read/write
+their CSV files — makes this decision based on the user locale settings. If the
+OS is set to a locale where the comma is the &lt;a class="reference external" href="https://en.wikipedia.org/wiki/Decimal_mark#Hindu.E2.80.93Arabic_numeral_system"&gt;decimal mark&lt;/a&gt; (eg. most of
+Europe), the list separator is set to &lt;tt class="docutils literal"&gt;;&lt;/tt&gt; instead of &lt;tt class="docutils literal"&gt;,&lt;/tt&gt; — and Excel uses
+that.&lt;/p&gt;
+&lt;p&gt;Of course, there’s also the TSV data format — those are tab-separated values.
+And some people might name their TSV files &lt;tt class="docutils literal"&gt;.csv&lt;/tt&gt;.&lt;/p&gt;
+&lt;p&gt;To read files saved in a different locale, or with a different separator, Excel
+users need to change the file extension to &lt;tt class="docutils literal"&gt;.txt&lt;/tt&gt;, or go to Data → Get
+External Data → From Text &lt;a class="reference external" href="https://support.office.com/en-us/article/Text-Import-Wizard-c5b02af6-fda1-4440-899f-f78bafe41857"&gt;(documentation)&lt;/a&gt; and use the import wizard. You
+can’t double-click on files.&lt;/p&gt;
+&lt;p&gt;On a side note, Apple Numbers guesses the format — one of the few things it
+gets right. LibreOffice always asks the user to pick import settings, but by
+default it uses tab AND comma AND semicolon for CSV files, which brings its own
+host of problems.&lt;/p&gt;
+&lt;p&gt;Here’s a quick test:&lt;/p&gt;
+&lt;blockquote&gt;
+What does &lt;tt class="docutils literal"&gt;foo;bar,baz;quux&lt;/tt&gt; mean? What about &lt;tt class="docutils literal"&gt;foo,bar;baz,quux&lt;/tt&gt;?&lt;/blockquote&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;LibreOffice assumes it’s (Chinese) UTF-16 text, but after telling it the real encoding, both
+files contain &lt;strong&gt;4 columns&lt;/strong&gt;.&lt;/li&gt;
+&lt;li&gt;Microsoft Excel says one of the files contains &lt;strong&gt;3 columns&lt;/strong&gt; and the other contains &lt;strong&gt;2 columns&lt;/strong&gt;
+(which is which depends on locale)&lt;/li&gt;
+&lt;li&gt;Apple Numbers says the first file contains &lt;strong&gt;3 columns&lt;/strong&gt; and the other
+contains &lt;strong&gt;2 columns&lt;/strong&gt; if set to English, and both files contain &lt;strong&gt;3
+columns&lt;/strong&gt; if set to Polish.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;But let’s get back to gotchas:&lt;/p&gt;
+&lt;blockquote&gt;
+What is the decimal mark? Is it a dot or a comma?&lt;/blockquote&gt;
+&lt;p&gt;That’s a direct consequence of the previous question. However, one can’t simply
+assume &lt;tt class="docutils literal"&gt;comma/dot&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;semicolon/comma&lt;/tt&gt;, because users might do crazy
+stuff.&lt;/p&gt;
+&lt;blockquote&gt;
+What is used to escape rows containing the field separator? Quotes?
+Backslashes?  What is used to escape the escape character?&lt;/blockquote&gt;
+&lt;p&gt;Excel, for example, puts some things in &lt;tt class="docutils literal"&gt;"quotes"&lt;/tt&gt;. If a literal quote
+character appears in the spreadsheet, it’s represented as &lt;tt class="docutils literal"&gt;""&lt;/tt&gt;, and
+the entire cell is quoted as well. But there might be programs that use
+backslashes for escapes, or even bad code that does not consider the need of
+escaping like this, with tragic results.&lt;/p&gt;
+&lt;p&gt;There’s still one more thing to cover: encodings. You see, even though the TSV
+format effectively solves the issues I named before, both CSV and TSV suffer
+from one problem:&lt;/p&gt;
+&lt;blockquote&gt;
+Which encoding to use when reading this file?&lt;/blockquote&gt;
+&lt;p&gt;I already mentioned that LibreOffice believed my sample file was UTF-16,
+containing Chinese text — in reality, this file was UTF-8 (or ASCII).&lt;/p&gt;
+&lt;p&gt;What does Microsoft Excel do then? It looks like it follows &lt;em&gt;System locale for
+non-Unicode programs&lt;/em&gt;. While there is an encoding option hidden in the Save
+dialog, it does not seem to affect the output. So what does that mean? You
+can’t expect a CSV file that contains characters outside of your system locale
+— or outside of ASCII if you’re working with people around the world — to look
+right. Unless you’re on &lt;a class="reference external" href="https://answers.microsoft.com/en-us/msoffice/forum/msoffice_install-mso_win10/announcing-october-feature-update-for-office-2016/927eea90-eea3-479a-a78a-45f7612460e1"&gt;Excel 2016&lt;/a&gt; and Office 365 — if you have the October
+2016 update, you can read and write UTF-8 files. But if you’re using an older
+version of Excel, or you’re using a non-Office 365 license, tough luck.&lt;/p&gt;
+&lt;p&gt;So, to reiterate: CSV can mean a lot of things. And you can’t trust it to work
+well most of the time, unless you’re dealing with people in one country, all
+using the same locale settings and software. Which is pretty unlikely. TSV
+can work around most of the problems, but encodings are still troublesome.&lt;/p&gt;&lt;/div&gt;</description><guid>https://chriswarrick.com/pl/blog/2017/04/07/csv-is-not-a-standard/</guid><pubDate>Fri, 07 Apr 2017 18:00:00 GMT</pubDate></item><item><title>5 months with a MacBook Pro: beautiful machine that just works</title><link>https://chriswarrick.com/pl/blog/2016/12/28/5-months-with-a-macbook-pro-beautiful-machine-that-just-works/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;Five months ago, I decided to make the switch from my trusty old desktop
 computer, running Arch Linux, to a MacBook Pro. I picked the 2015 13" base
 model with an upgraded hard drive. The device is beautiful, and just works™,
 which is pretty important to me.&lt;/p&gt;
@@ -993,138 +1068,4 @@ log files — most things appear in the journal.  Sure, some things aren’t the
 &lt;em&gt;really&lt;/em&gt; support Debian testing, and I cannot survive with outdated software.
 I feel much better and, more importantly, &lt;strong&gt;safer&lt;/strong&gt; with Fedora.&lt;/p&gt;
 &lt;p&gt;(also, the “Veteran Unix Admins” of Devuan are a bunch of idiots.)&lt;/p&gt;
-&lt;/div&gt;&lt;/div&gt;</description><guid>https://chriswarrick.com/pl/blog/2015/01/30/systemd-is-awesome/</guid><pubDate>Fri, 30 Jan 2015 15:00:00 GMT</pubDate></item><item><title>Inbox (by Google) Review</title><link>https://chriswarrick.com/pl/blog/2014/11/09/inbox-review/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;figure&gt;&lt;img src="https://chriswarrick.com/galleries/inbox-by-google/10%20All%20done%20view.png"&gt;&lt;/figure&gt; &lt;div&gt;&lt;p&gt;I got a &lt;a class="reference external" href="http://www.google.com/inbox/"&gt;Inbox&lt;/a&gt; invite (hat tip to &lt;a class="reference external" href="https://twitter.com/dav4dav4"&gt;Dawid Róż @dav4dav4&lt;/a&gt;) and spent a day
-with it.  The same day, I got the Material Design upgrade for Gmail.  Let’s review it.&lt;/p&gt;
-&lt;!-- TEASER_END --&gt;
-&lt;p style="text-align: center; clear: both;"&gt;
-&lt;a href="https://chriswarrick.com/galleries/inbox-by-google/" class="btn btn-primary btn-default"&gt;
-&lt;i class="fa fa-picture-o"&gt;&lt;/i&gt;
-Screenshots/Gallery
-&lt;/a&gt;
-&lt;/p&gt;&lt;p&gt;&lt;em&gt;I tested the mobile version; the web app works the same.&lt;/em&gt;&lt;/p&gt;
-&lt;div class="section" id="task-oriented-e-mail"&gt;
-&lt;h2&gt;Task-oriented e-mail&lt;/h2&gt;
-&lt;p&gt;Inbox changes how e-mail works.  E-mails are now tasks.&lt;/p&gt;
-&lt;p&gt;First off, e-mails are &lt;em&gt;bundled&lt;/em&gt; into categories (Travel, Purchases, Finance,
-Social, Updates, Forums, Promos) — the last four of which were available in
-Gmail before if you used inbox categories (the tabs).  The difference is, all
-the messages are &lt;em&gt;bundled&lt;/em&gt; in the inbox.  All the categories show up as one
-entry in the inbox view.  Also, “humans” get their own entries.  When you click
-on an entry, it expands and all the threads in this category.  You can also
-bundle other labels in the inbox, provided that there are any &lt;strong&gt;filters&lt;/strong&gt; that
-send them here (as filters are one of the main elements of Inbox)&lt;/p&gt;
-&lt;div class="section" id="actions"&gt;
-&lt;h3&gt;Actions&lt;/h3&gt;
-&lt;p&gt;There are four actions you can perform on each message.  They are:&lt;/p&gt;
-&lt;div class="section" id="pin"&gt;
-&lt;h4&gt;Pin&lt;/h4&gt;
-&lt;p&gt;A pinned message appears outside of its bundle.  It can’t be sweeped away, you
-must explicitly mark it as done.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="section" id="mark-done"&gt;
-&lt;h4&gt;Mark done&lt;/h4&gt;
-&lt;p&gt;Marking a message done is equivalent to archiving it in Gmail.  If you had a
-workflow that involved archiving things you don’t need anymore, you will find
-yourself at home in Inbox.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="section" id="snooze"&gt;
-&lt;h4&gt;Snooze&lt;/h4&gt;
-&lt;p&gt;A snoozed message disappears from your Inbox for the time being.  It will
-appear at the time you set.  Helpful for decluttering your inbox while not
-getting rid of things you need to come back to later.  The catch: no
-notifications &lt;em&gt;at all&lt;/em&gt; — you must check your inbox yourself.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="section" id="move-to"&gt;
-&lt;h4&gt;Move to…&lt;/h4&gt;
-&lt;p&gt;Inbox’s algorithms are pretty good, but sometimes you may need to move messages
-to a different bundle/label.  This lets you do just that.&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class="section" id="right-handed-people-do-left-handed-people-postpone"&gt;
-&lt;h3&gt;&lt;em&gt;Right-handed people do, left-handed people postpone.&lt;/em&gt;&lt;/h3&gt;
-&lt;p&gt;This is something funny I was taught by Inbox.  You see, I am left-handed.
-I primarily use my phone with my left-hand (though I use a
-normal/“right-handed” computer mouse).  For me, the best way to swipe things
-away is right-to-left.  That’s how I am usually doing it in Gmail.  I can do it
-both ways, it registers as an archive.&lt;/p&gt;
-&lt;p&gt;Inbox, however, has two distinctive swipe actions: if you swipe from the left
-side, the conversation is archived (&lt;em&gt;marked done&lt;/em&gt;).  However, if you swipe from
-the right side, it will be snoozed.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="section" id="reminders"&gt;
-&lt;h3&gt;Reminders&lt;/h3&gt;
-&lt;p&gt;There are also &lt;strong&gt;Reminders&lt;/strong&gt;.  Reminders are just email-less items appearing in
-Inbox.  They don’t serve any special purpose.  Some of them, however, contain
-hints — for example, the contact data of the place mentioned in your reminder
-(if there is any).&lt;/p&gt;
-&lt;p&gt;Reminders can be snoozed, but again: there are no notifications.&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class="section" id="material-design-galore"&gt;
-&lt;h2&gt;Material Design Galore&lt;/h2&gt;
-&lt;p&gt;One of the parts that made me get interested in the first place is Material
-Design.  I believe in its principles.  As mentioned earlier, I also have access
-to the Gmail app with Material Design (version 5.0).  So, I can compare them
-both.&lt;/p&gt;
-&lt;p&gt;Both apps look nicely; however, Inbox is prettier.  Multiple things look and
-work better in Inbox than in Gmail.  The app feels nicer overall — mainly
-because it was redone from scratch and not just upgraded from something that’s
-around for YEARS.  Gmail works pretty much the same as it did on Friday.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="section" id="final-thoughts"&gt;
-&lt;h2&gt;Final Thoughts&lt;/h2&gt;
-&lt;p&gt;I really loved the experience.  But will Inbox ever be my main e-mail client?  &lt;strong&gt;No — at least not today.&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;Inbox is either minimalistic, or an unfinished piece of software.  It lacks a
-few important features — for example, you can only send HTML mail, and you
-cannot have a signature.  Moreover, you can’t have multiple From: addresses.&lt;/p&gt;
-&lt;p&gt;One thing I noticed is, Inbox &lt;strong&gt;defaults&lt;/strong&gt; to &lt;em&gt;Reply All&lt;/em&gt;.  No questions asked.  We all know &lt;a class="reference external" href="http://en.wikipedia.org/wiki/Email_storm"&gt;what Reply All leads to&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;Moreover, I like e-mail the way it is.  I have very comprehensive labels, which
-are much more helpful and granular than the bundles.  I have also developed a
-perfect Priority Inbox setup: Gmail knows exactly what I care about and need
-notifications for.&lt;/p&gt;
-&lt;p&gt;Finally: I currently do my GTD in &lt;a class="reference external" href="https://www.evernote.com/"&gt;Evernote&lt;/a&gt; (via &lt;a class="reference external" href="http://www.thesecretweapon.org/"&gt;The Secret Weapon&lt;/a&gt; plus Reminders).  It’s &lt;em&gt;nicer&lt;/em&gt;, at least for me.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="section" id="aside-the-four-themes-of-android"&gt;
-&lt;h2&gt;Aside: The Four Themes of Android&lt;/h2&gt;
-&lt;blockquote class="twitter-tweet"&gt;&lt;p lang="en" dir="ltr"&gt;After spending most of the day in Material Design land, coming back to Holo apps feels weird.&lt;/p&gt;— Chris Warrick (@Kwpolska) &lt;a href="https://twitter.com/Kwpolska/status/531172678536003584"&gt;November 8, 2014&lt;/a&gt;&lt;/blockquote&gt;
-&lt;script async src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;&lt;p&gt;Modern Android has &lt;strong&gt;FOUR&lt;/strong&gt; different themes that can be encountered by the
-user.  Just look at this madness:&lt;/p&gt;
-&lt;table border="1" class="table table-bordered table-striped docutils"&gt;
-&lt;colgroup&gt;
-&lt;col width="15%"&gt;
-&lt;col width="43%"&gt;
-&lt;col width="42%"&gt;
-&lt;/colgroup&gt;
-&lt;thead valign="bottom"&gt;
-&lt;tr&gt;&lt;th class="head"&gt;Internal Name&lt;/th&gt;
-&lt;th class="head"&gt;Description&lt;/th&gt;
-&lt;th class="head"&gt;Modern usage&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody valign="top"&gt;
-&lt;tr&gt;&lt;td&gt;&lt;tt class="docutils literal"&gt;Theme&lt;/tt&gt;&lt;/td&gt;
-&lt;td&gt;the original theme of Android, last updated in Android 2.3&lt;/td&gt;
-&lt;td&gt;very old apps; games (for compatibility with older versions)&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;&lt;tt class="docutils literal"&gt;Theme.Holo&lt;/tt&gt;&lt;/td&gt;
-&lt;td&gt;the Holo theme, the main theme of Android 3.0 through 4.4&lt;/td&gt;
-&lt;td&gt;most apps currently in Play Store&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;&lt;tt class="docutils literal"&gt;Theme.Material&lt;/tt&gt;&lt;/td&gt;
-&lt;td&gt;tne new Material theme, introduced in Android 5.0&lt;/td&gt;
-&lt;td&gt;newly updated apps&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;&lt;tt class="docutils literal"&gt;Theme.DeviceDefault&lt;/tt&gt;&lt;/td&gt;
-&lt;td&gt;the (ugly) theme specific to this phone’s manufacturer (eg. Samsung)&lt;/td&gt;
-&lt;td&gt;Settings and other apps written/modified by the device manufacturer&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;p&gt;(The new themes are backported to old versions in the Android Support Library.)&lt;/p&gt;
-&lt;p&gt;You can easily find apps in all four styles on a typical Android device.  Apps looking differently.  Nobody cares about consistency in the Android world…&lt;/p&gt;
-&lt;p style="text-align: center; clear: both;"&gt;
-&lt;a href="https://chriswarrick.com/galleries/inbox-by-google/" class="btn btn-primary btn-default"&gt;
-&lt;i class="fa fa-picture-o"&gt;&lt;/i&gt;
-Screenshots/Gallery
-&lt;/a&gt;
-&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;</description><guid>https://chriswarrick.com/pl/blog/2014/11/09/inbox-review/</guid><pubDate>Sun, 09 Nov 2014 18:30:00 GMT</pubDate></item></channel></rss>
+&lt;/div&gt;&lt;/div&gt;</description><guid>https://chriswarrick.com/pl/blog/2015/01/30/systemd-is-awesome/</guid><pubDate>Fri, 30 Jan 2015 15:00:00 GMT</pubDate></item></channel></rss>
