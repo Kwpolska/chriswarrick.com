@@ -1,5 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chris Warrick (Posty o Nikola)</title><link>https://chriswarrick.com/</link><description></description><atom:link href="https://chriswarrick.com/pl/blog/tags/nikola.xml" rel="self" type="application/rss+xml"></atom:link><language>pl</language><lastBuildDate>Mon, 13 Feb 2017 15:12:28 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Rewriting a Flask app in Django</title><link>https://chriswarrick.com/pl/blog/2015/10/11/rewriting-a-flask-app-in-django/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;I spent Saturday on rewriting a Flask app in Django.  The app in question was
+<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chris Warrick (Posty o Nikola)</title><link>https://chriswarrick.com/</link><description></description><atom:link href="https://chriswarrick.com/pl/blog/tags/nikola.xml" rel="self" type="application/rss+xml"></atom:link><language>pl</language><lastBuildDate>Sun, 09 Apr 2017 09:03:28 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Structuring and automating a Python project with the Python Project Template</title><link>https://chriswarrick.com/pl/blog/2017/04/09/python-project-template-structure-and-automation/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;To create a project that other people can use and contribute to, you need to
+follow a specific directory structure. Moreover, releasing a new version should
+be as simple and painless as possible. For my projects, I use a template that
+has the structure already in place, and comes with automation for almost every
+part of a release.&lt;/p&gt;
+&lt;!-- TEASER_END --&gt;
+&lt;p&gt;The &lt;a class="reference external" href="https://github.com/Kwpolska/python-project-template"&gt;Python Project Template&lt;/a&gt; is my approach to this. It comes with a good (IMO) structure and automation.&lt;/p&gt;
+&lt;p&gt;What does it include? A whole lot of things. Documentation, Sphinx
+configuration, a simple test suite, a &lt;tt class="docutils literal"&gt;setup.py&lt;/tt&gt; file, some AUR stuff, and
+perhaps the most important part — the &lt;tt class="docutils literal"&gt;release&lt;/tt&gt; script. It can automate a lot
+of tasks that are part of a release.&lt;/p&gt;
+&lt;p&gt;You see, releasing a package is error-prone. There are a lot of things that can go wrong:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;Version numbers. They may appear in code comments, Sphinx configuration,
+README files and documentation, and setup.py. Some people claim to have
+“solutions” for this. Most of those solutions don’t work right — either they
+import a file from the project (which may break if &lt;tt class="docutils literal"&gt;__init__.py&lt;/tt&gt; is too
+magical), read a file from that place (which might not get included
+properly), or use some setuptools extension to get the version from VCS or
+whatever (which needs to be installed before the package). Using &lt;tt class="docutils literal"&gt;sed&lt;/tt&gt; to
+fix the version numbers is much simpler.&lt;/li&gt;
+&lt;li&gt;Forgetting about changelogs.&lt;/li&gt;
+&lt;li&gt;Not updating translations or other important files.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;We’ve had quite a few botched releases in the &lt;a class="reference external" href="https://getnikola.com/"&gt;Nikola&lt;/a&gt; project. I wrote a
+&lt;a class="reference external" href="http://getnikola.github.io/releng/checklist.html"&gt;checklist&lt;/a&gt; to prevent things like those. You may notice that the most
+prominent step is to run a &lt;tt class="docutils literal"&gt;release&lt;/tt&gt; script. This step replaced 21 others —
+now the checklist only talks about writing announcements, sending e-mails,
+updating the website, and doing some GitHub stuff that is not yet automated.&lt;/p&gt;
+&lt;p&gt;The template promotes a &lt;em&gt;release early, release often&lt;/em&gt; workflow: since making a
+new release requires almost no human intervention, you might as well do it
+every time you make a bunch of changes. In my projects, &lt;em&gt;everything&lt;/em&gt; gets
+automated, and it might as well be possible in yours.&lt;/p&gt;
+&lt;div class="section" id="the-complete-feature-list-as-of-v2-1-5"&gt;
+&lt;h2&gt;The complete feature list (as of v2.1.5)&lt;/h2&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;pre-configured Sphinx with:&lt;ul&gt;
+&lt;li&gt;&lt;tt class="docutils literal"&gt;CONTRIBUTING.rst&lt;/tt&gt; guide (used by GitHub when sending a pull request or an issue)&lt;/li&gt;
+&lt;li&gt;&lt;tt class="docutils literal"&gt;LICENSE.rst&lt;/tt&gt;&lt;/li&gt;
+&lt;li&gt;an empty &lt;tt class="docutils literal"&gt;CHANGELOG.rst&lt;/tt&gt;&lt;/li&gt;
+&lt;li&gt;&lt;tt class="docutils literal"&gt;README.rst&lt;/tt&gt;&lt;/li&gt;
+&lt;li&gt;a bare-bones &lt;tt class="docutils literal"&gt;index.rst&lt;/tt&gt; page&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;The exact same files in &lt;tt class="docutils literal"&gt;/&lt;/tt&gt;, which are fragile and &lt;strong&gt;MAY NOT&lt;/strong&gt; be modified
+as they are replaced with copies in &lt;tt class="docutils literal"&gt;/docs&lt;/tt&gt; by the &lt;tt class="docutils literal"&gt;release&lt;/tt&gt; script&lt;/li&gt;
+&lt;li&gt;&lt;tt class="docutils literal"&gt;__init__.py&lt;/tt&gt;, &lt;tt class="docutils literal"&gt;__main__.py&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;template.py&lt;/tt&gt; files in the Python package directory&lt;/li&gt;
+&lt;li&gt;A &lt;tt class="docutils literal"&gt;setup.py&lt;/tt&gt; file that could be good enough for people, and that supports
+&lt;tt class="docutils literal"&gt;entry_points&lt;/tt&gt; (see &lt;a class="reference external" href="https://go.chriswarrick.com/entry_points"&gt;https://go.chriswarrick.com/entry_points&lt;/a&gt;).&lt;/li&gt;
+&lt;li&gt;&lt;tt class="docutils literal"&gt;tests/&lt;/tt&gt; containing some &lt;em&gt;Is My Python Sane?&lt;/em&gt;-style tests (using &lt;tt class="docutils literal"&gt;pytest&lt;/tt&gt;)&lt;/li&gt;
+&lt;li&gt;An automated global update script (&lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;.pypt/PYPT-UPDATE&lt;/span&gt;&lt;/tt&gt;)&lt;/li&gt;
+&lt;li&gt;Entry points configuration ready to be uncommented (and a matching
+&lt;tt class="docutils literal"&gt;__main__.py&lt;/tt&gt; file)&lt;/li&gt;
+&lt;li&gt;Add-ons for Qt users (in &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;pypt-extras/Qt&lt;/span&gt;&lt;/tt&gt;)&lt;/li&gt;
+&lt;li&gt;A sample hook for AUR updates (in &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;pypt-extras/AUR&lt;/span&gt;&lt;/tt&gt;)&lt;/li&gt;
+&lt;li&gt;PKGBUILDs for the Arch Linux User Repository (AUR)&lt;/li&gt;
+&lt;li&gt;A state-of-the-art &lt;tt class="docutils literal"&gt;release&lt;/tt&gt; script, the operations of which are:&lt;ul&gt;
+&lt;li&gt;querying the user for version number, commit message and changes&lt;/li&gt;
+&lt;li&gt;updating &lt;tt class="docutils literal"&gt;/docs/CHANGELOG.rst&lt;/tt&gt;&lt;/li&gt;
+&lt;li&gt;bumping the version number in all the files, changing dates where necessary&lt;/li&gt;
+&lt;li&gt;copying over &lt;tt class="docutils literal"&gt;/docs/README.rst&lt;/tt&gt;,  &lt;tt class="docutils literal"&gt;/docs/CHANGELOG.rst&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;/docs/CONTRIBUTING.rst&lt;/tt&gt; to &lt;tt class="docutils literal"&gt;/&lt;/tt&gt;&lt;/li&gt;
+&lt;li&gt;locale generation (via the &lt;tt class="docutils literal"&gt;.pypt/localegen&lt;/tt&gt; script)&lt;/li&gt;
+&lt;li&gt;running &lt;tt class="docutils literal"&gt;import $PROJECTLC&lt;/tt&gt; and the test suite&lt;/li&gt;
+&lt;li&gt;uploading a source distribution and a wheel to PyPI&lt;/li&gt;
+&lt;li&gt;Making a Git commit and tagging the release&lt;/li&gt;
+&lt;li&gt;creating a GitHub Releases entry&lt;/li&gt;
+&lt;li&gt;updating the AUR packages (by using hooks)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="system-message"&gt;
+&lt;p class="system-message-title"&gt;System Message: ERROR/3 (&lt;tt class="docutils"&gt;&amp;lt;string&amp;gt;&lt;/tt&gt;, line 76)&lt;/p&gt;
+&lt;p&gt;Content block expected for the "raw" directive; none found.&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+.. raw:: html
+    &amp;lt;div style="text-align: center;"&amp;gt;
+    &amp;lt;a href="https://github.com/Kwpolska/python-project-template" class="btn btn-lg btn-info"&amp;gt;&amp;lt;i class="fa fa-github"&amp;gt;&amp;lt;/i&amp;gt; Check it out on GitHub&amp;lt;/a&amp;gt;
+    &amp;lt;/div&amp;gt;
+
+
+&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;/div&gt;</description><guid>https://chriswarrick.com/pl/blog/2017/04/09/python-project-template-structure-and-automation/</guid><pubDate>Sun, 09 Apr 2017 09:00:00 GMT</pubDate></item><item><title>Rewriting a Flask app in Django</title><link>https://chriswarrick.com/pl/blog/2015/10/11/rewriting-a-flask-app-in-django/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;I spent Saturday on rewriting a Flask app in Django.  The app in question was
 &lt;a class="reference external" href="https://users.getnikola.com/"&gt;Nikola Users&lt;/a&gt;, which is a very simple CRUD
 app.  And yet, the Flask code was a mess, full of bugs and vulnerabilities.
 Eight hours later, I had a fully functional Django app that did more and fixed
