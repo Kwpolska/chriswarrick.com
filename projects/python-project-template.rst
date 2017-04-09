@@ -26,26 +26,30 @@ The template contains the following files to get you started:
   * ``CONTRIBUTING.rst`` guide (used by GitHub when sending a pull request or an issue)
   * ``LICENSE.rst``
   * an empty ``CHANGELOG.rst``
-  * this (worthless for most people) ``README.rst`` and a bare-bones ``index.rst`` page
+  * ``README.rst``
+  * a bare-bones ``index.rst`` page
 
 * The exact same files in ``/``, which are fragile and **MAY NOT** be modified
-  as they are replaced with copies in ``/docs`` by the ``release``
-  script
-* ``__init__.py`` and ``template.py`` files in the Python package directory
-* A good-enough ``setup.py`` file
-* ``tests/`` containing some *Is My Python Sane?*-style tests (using ``py.test``)
+  as they are replaced with copies in ``/docs`` by the ``release`` script
+* ``__init__.py``, ``__main__.py`` and ``template.py`` files in the Python package directory
+* A ``setup.py`` file that could be good enough for people, and that supports
+  ``entry_points`` (see https://go.chriswarrick.com/entry_points).
+* ``tests/`` containing some *Is My Python Sane?*-style tests (using ``pytest``)
 * An automated global update script (``.pypt/PYPT-UPDATE``)
-* Entry points configuration ready to be uncommented
-* Addons for Qt users
+* Entry points configuration ready to be uncommented (and a matching
+  ``__main__.py`` file)
+* Add-ons for Qt users (in ``pypt-extras/Qt``)
+* A sample hook for AUR updates (in ``pypt-extras/AUR``)
 * PKGBUILDs for the Arch Linux User Repository (AUR)
 * A state-of-the-art ``release`` script, the operations of which are:
 
-  * querying the current branch for version number
+  * querying the user for version number, commit message and changes
   * updating ``/docs/CHANGELOG.rst``
   * bumping the version number in all the files, changing dates where necessary
   * copying over ``/docs/README.rst``,  ``/docs/CHANGELOG.rst`` and ``/docs/CONTRIBUTING.rst`` to ``/``
   * locale generation (via the ``.pypt/localegen`` script)
-  * running ``import $project`` and the testsuite
+  * running ``import $PROJECTLC`` and the test suite
   * uploading a source distribution and a wheel to PyPI
-  * committing into git, finishing the ``git flow`` release
+  * Making a Git commit and tagging the release
   * creating a GitHub Releases entry
+  * updating the AUR packages (by using hooks)
