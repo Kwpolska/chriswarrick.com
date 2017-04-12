@@ -5,8 +5,10 @@
 .. section: Programming
 .. description: How to structure a Python project and automate releases.
 .. type: text
+.. guide: yes
 .. guide_topic: Python
-.. guide_platform: any
+.. guide_platform: any platform
+.. guide_effect: your Python project is now well-structured and automated
 
 To create a project that other people can use and contribute to, you need to
 follow a specific directory structure. Moreover, releasing a new version should
@@ -84,6 +86,7 @@ The complete feature list (as of v2.1.5)
   * updating the AUR packages (by using hooks)
 
 .. raw:: html
+
     <div style="text-align: center;">
     <a href="https://github.com/Kwpolska/python-project-template" class="btn btn-lg btn-info"><i class="fa fa-github"></i> Check it out on GitHub</a>
     </div>

@@ -4,8 +4,10 @@
 .. description: A short how-to on installing MPD on Windows.
 .. tags: Windows, mpd, guide
 .. section: Windows
+.. guide: yes
 .. guide_topic: MPD
 .. guide_platform: Windows
+.. guide_effect: you can now play music the Unix way on Windows
 
 Recently, I had to reinstall Windows.  One of the things I had to set up
 was MPD, the `Music Player Daemon`_.

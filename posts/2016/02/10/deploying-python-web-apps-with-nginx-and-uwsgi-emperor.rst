@@ -6,8 +6,10 @@
 .. section: Python
 .. description: A tutorial to deploy Python Web Applications to popular Linux systems.
 .. type: text
+.. guide: yes
 .. guide_topic: Python, web apps
 .. guide_platform: Ubuntu, Debian, Fedora, CentOS, Arch Linux
+.. guide_effect: your Python web app is up and running
 
 You’ve just written a great Python web application. Now, you want to share it with the world. In order to do that, you need a server, and some software to do that for you.
 

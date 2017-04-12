@@ -1,10 +1,13 @@
 .. title: Python Apps the Right Way: entry points and scripts
 .. slug: python-apps-the-right-way-entry_points-and-scripts
 .. date: 2014-09-15 18:00:00+02:00
+.. updated: 2017-04-12 20:35:00+02:00
 .. tags: Python, guide, devel, best practices
 .. section: Python
+.. guide: yes
 .. guide_topic: Python
-.. guide_platform: any
+.. guide_platform: any platform
+.. guide_effect: your Python apps have good launch scripts for all platforms
 
 There are multiple ways to write an app in Python.  However, not all of them
 provide your users with the best experience.
@@ -68,6 +71,18 @@ When you’re done, you will have a project that can be executed by:
 Provided that you have your Python directory and its ``Scripts\`` subdirectory on
 the %PATH%, this will **also work in Windows**.
 
+.. raw:: html
+
+    <div class="panel panel-info">
+      <div class="panel-heading">
+        <h3 class="panel-title">Looking for a project template?</h3>
+      </div>
+      <div class="panel-body">
+       If you want to create a well-structured project with release automation and
+   some other goodies, check out my <a href="https://github.com/Kwpolska/python-project-template" style="font-weight: bold;">Python Project Template</a>.
+      </div>
+    </div>
+
 Step 1: create a ``__main__.py`` file
 -------------------------------------
 
@@ -105,10 +120,9 @@ This is the real deal: create the entry points in your ``setup.py`` file.
 4. If you are developing a GUI application (in Tkinter, PyQt/PySide,
    WxPython, PyGTK, PyGame…), you should change the declaration to
    ``gui_scripts``.
-5. You can create multiple scripts this way.  You can also have multiple
+5. You can create **multiple scripts** this way.  You can also have multiple
    ``console_scripts`` *and* ``gui_scripts`` in one setup file.
 
 .. class:: text-muted
 
-All `code samples </listings/entry_points_project/>`_ are Copyright © 2014 Chris Warrick and licensed
-under `CC-BY 3.0 <http://creativecommons.org/licenses/by-nc-nd/3.0/>`_.
+All `code samples </listings/entry_points_project/>`_ are freely reusable, but if you mention where you got them from, it’d be really nice.
