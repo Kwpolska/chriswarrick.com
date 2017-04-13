@@ -1,8 +1,5 @@
 """The main routine of my_project."""
-
-# Copyright (C) 2014 Chris Warrick.
-# From: http://chriswarrick.com/
-# License: CC BY http://creativecommons.org/licenses/by/3.0/
+# http://go.chriswarrick.com/entry_points
 
 import sys
 

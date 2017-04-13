@@ -4,6 +4,4 @@
 # Put anything you want here, or even make it empty, but it MUST exist
 # for everything to work.
 
-# Copyright (C) 2014 Chris Warrick.
-# From: http://chriswarrick.com/
-# License: CC BY http://creativecommons.org/licenses/by/3.0/
+# http://go.chriswarrick.com/entry_points
