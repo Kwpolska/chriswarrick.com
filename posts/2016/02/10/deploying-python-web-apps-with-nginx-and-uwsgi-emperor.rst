@@ -1,7 +1,7 @@
 .. title: Deploying Python Web Applications with nginx and uWSGI Emperor
 .. slug: deploying-python-web-apps-with-nginx-and-uwsgi-emperor
 .. date: 2016-02-10 15:00:00+01:00
-.. updated: 2017-03-19 17:00:00+01:00
+.. updated: 2017-04-29 15:30:00+02:00
 .. tags: Python, Django, Flask, uWSGI, nginx, Internet, Linux, Fedora, Arch Linux, Ubuntu, systemd, CentOS, Debian, Ansible, guide
 .. section: Python
 .. description: A tutorial to deploy Python Web Applications to popular Linux systems.
@@ -15,7 +15,7 @@ You’ve just written a great Python web application. Now, you want to share it 
 
 The following is a comprehensive guide on how to accomplish that, on multiple Linux-based operating systems, using nginx and uWSGI Emperor. It doesn’t force you to use any specific web framework — Flask, Django, Pyramid, Bottle will all work. Written for Ubuntu, Debian, Fedora, CentOS and Arch Linux (should be helpful for other systems, too). Now with an Ansible Playbook.
 
-*Revision 4 (2017-03-19): Ansible Playbook!*
+*Revision 4a (2017-04-29): Ansible Playbook! (and environment variable configuration info)*
 
 .. TEASER_END
 
@@ -70,7 +70,7 @@ The manual guide
 
 Even though I personally recommend the Playbook as a much less error-prone way to set up your app, it might not be compatible with everyone’s system, or otherwise be the wrong solution. The original manual configuration guide is still maintained.
 
-Even if you are using the Playbook, you may still read this to find out what happens under the hood.
+Even if you are using the Playbook, you should still read this to find out what happens under the hood, and to find out about other caveats/required configuration changes.
 
 .. note::
 
@@ -225,6 +225,7 @@ The options are:
 * ``processes`` and ``threads`` — control the resources devoted to this application. Because this is a simple hello app, I used one process with one thread, but for a real app, you will probably need more (you need to see what works the best; there is no algorithm to decide). Also, remember that if you use multiple processes, they don’t share memory (you need a database to share data between them).
 * ``plugins`` — the list of uWSGI plugins to use. For Arch Linux, use ``plugins = python`` (the ``logfile`` plugin is always active).
 * ``logger`` — the path to your app-specific logfile. (Other logging facilities are available, but this one is the easiest, especially for multiple applications on the same server)
+* ``env`` — environment variables to pass to your app. Useful for configuration, may be specified multiple times. Example for Django: ``env = DJANGO_SETTINGS_MODULE=project.settings``
 
 You can test your configuration by running ``uwsgi --ini /path/to/myapp.ini`` (disable the logger for stderr output or run ``tail -f /srv/myapp/uwsgi.log`` in another window).
 
