@@ -1,7 +1,7 @@
 .. title: Deploying Python Web Applications with nginx and uWSGI Emperor
 .. slug: deploying-python-web-apps-with-nginx-and-uwsgi-emperor
 .. date: 2016-02-10 15:00:00+01:00
-.. updated: 2017-04-29 15:30:00+02:00
+.. updated: 2017-04-29 16:45:00+02:00
 .. tags: Python, Django, Flask, uWSGI, nginx, Internet, Linux, Fedora, Arch Linux, Ubuntu, systemd, CentOS, Debian, Ansible, guide
 .. section: Python
 .. description: A tutorial to deploy Python Web Applications to popular Linux systems.
@@ -15,7 +15,7 @@ You’ve just written a great Python web application. Now, you want to share it 
 
 The following is a comprehensive guide on how to accomplish that, on multiple Linux-based operating systems, using nginx and uWSGI Emperor. It doesn’t force you to use any specific web framework — Flask, Django, Pyramid, Bottle will all work. Written for Ubuntu, Debian, Fedora, CentOS and Arch Linux (should be helpful for other systems, too). Now with an Ansible Playbook.
 
-*Revision 4a (2017-04-29): Ansible Playbook! (and environment variable configuration info)*
+*Revision 5 (2017-04-29): Better module specification description, environment variable configuration info*
 
 .. TEASER_END
 
@@ -214,12 +214,21 @@ The options are:
 * ``chdir`` — the app directory.
 * ``binary-path`` — the uWSGI executable to use. Remove if you didn’t install the (optional) ``uwsgi`` package in your virtualenv.
 * ``virtualenv`` — the virtualenv for your application.
-* ``module`` — the name of the module that houses your application, and the object that speaks the WSGI interface, separated by colons. This depends on your web framework:
+* ``module`` — the name of the module that houses your application, and the object that speaks the WSGI interface, separated by colons. This depends on your web framework (use the **Module name**):
 
-  * For Flask: ``module = filename:app``, where ``filename`` is the name of your Python file (without the ``.py`` part) and ``app`` is the ``Flask`` object
-  * For Django: ``module = project.wsgi:application``, where ``project`` is the name of your project (directory with ``settings.py``).  You should also add an environment variable: ``env = DJANGO_SETTINGS_MODULE=project.settings``
-  * For Bottle: ``module = filename:app``, where ``app = bottle.default_app()``
-  * For Pyramid: ``module = filename:app``, where ``app = config.make_wsgi_app()`` (make sure it’s **not** in a ``if __name__ == '__main__':`` block — the demo app does that!)
+  .. class:: table table-striped table-bordered
+
+  +-----------+--------------+-------------+--------------------------+----------------------------------------------------------------------------------------+----------------------------------+----------------------------------------------------------------------------------------------+
+  | Framework | Package      | Callable    | Module name              | Package is…                                                                            | Callable is…                     | Caveats                                                                                      |
+  +===========+==============+=============+==========================+========================================================================================+==================================+==============================================================================================+
+  | Flask     | filename     | app         | filename:app             | module name (for a Python import)                                                      | Flask object                     | —                                                                                            |
+  +-----------+--------------+-------------+--------------------------+----------------------------------------------------------------------------------------+----------------------------------+----------------------------------------------------------------------------------------------+
+  | Django    | project.wsgi | application | project.wsgi:application | ``project`` is name of your project (directory with settings.py); ``wsgi`` is constant | constant                         | add an environment variable for settings: ``env = DJANGO_SETTINGS_MODULE=project.settings``  |
+  +-----------+--------------+-------------+--------------------------+----------------------------------------------------------------------------------------+----------------------------------+----------------------------------------------------------------------------------------------+
+  | Bottle    | filename     | app         | filename:app             | module name (for a Python import)                                                      | ``app = bottle.default_app()``   | —                                                                                            |
+  +-----------+--------------+-------------+--------------------------+----------------------------------------------------------------------------------------+----------------------------------+----------------------------------------------------------------------------------------------+
+  | Pyramid   | filename     | app         | filename:app             | module name (for a Python import)                                                      | ``app = config.make_wsgi_app()`` | make sure it’s **not** in an ``if __name__ == '__main__':`` block — the demo app does that!) |
+  +-----------+--------------+-------------+--------------------------+----------------------------------------------------------------------------------------+----------------------------------+----------------------------------------------------------------------------------------------+
 
 * ``uid`` and ``gid`` — the names of the user account to use for your server.  Use the same values as in the ``chown`` command above.
 * ``processes`` and ``threads`` — control the resources devoted to this application. Because this is a simple hello app, I used one process with one thread, but for a real app, you will probably need more (you need to see what works the best; there is no algorithm to decide). Also, remember that if you use multiple processes, they don’t share memory (you need a database to share data between them).
