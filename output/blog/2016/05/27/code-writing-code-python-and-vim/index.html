@@ -134,20 +134,20 @@ trainwreck, though). One of the things I used in that project was a DataGrid
 bound to a list of custom objects (a DataGrid is a table, basically). And in
 order to use it, you need to use the <tt class="docutils literal">INotifyPropertyChanged</tt> interface <a class="reference external" href="https://msdn.microsoft.com/en-us/library/ms229614(v=vs.100).aspx">(MSDN)</a>.
 It involves doing something like this:</p>
-<pre class="code csharp"><a name="rest_code_930799f9a07d4cbea3dcf87850fdea63-1"></a><span class="k">private</span> <span class="kt">string</span> <span class="n">name_</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">};</span> <span class="c1">// can also be a field</span>
-<a name="rest_code_930799f9a07d4cbea3dcf87850fdea63-2"></a>
-<a name="rest_code_930799f9a07d4cbea3dcf87850fdea63-3"></a><span class="na">[JsonProperty]</span>
-<a name="rest_code_930799f9a07d4cbea3dcf87850fdea63-4"></a><span class="k">public</span> <span class="kt">string</span> <span class="n">name</span> <span class="p">{</span>
-<a name="rest_code_930799f9a07d4cbea3dcf87850fdea63-5"></a>    <span class="k">get</span> <span class="p">{</span>
-<a name="rest_code_930799f9a07d4cbea3dcf87850fdea63-6"></a>        <span class="k">return</span> <span class="n">name_</span><span class="p">;</span>
-<a name="rest_code_930799f9a07d4cbea3dcf87850fdea63-7"></a>    <span class="p">}</span>
-<a name="rest_code_930799f9a07d4cbea3dcf87850fdea63-8"></a>    <span class="k">set</span> <span class="p">{</span>
-<a name="rest_code_930799f9a07d4cbea3dcf87850fdea63-9"></a>        <span class="k">if</span> <span class="p">(</span><span class="k">value</span> <span class="p">!=</span> <span class="n">name_</span><span class="p">)</span> <span class="p">{</span>
-<a name="rest_code_930799f9a07d4cbea3dcf87850fdea63-10"></a>            <span class="n">name_</span> <span class="p">=</span> <span class="k">value</span><span class="p">;</span>
-<a name="rest_code_930799f9a07d4cbea3dcf87850fdea63-11"></a>            <span class="n">NotifyPropertyChanged</span><span class="p">(</span><span class="s">"name"</span><span class="p">);</span>
-<a name="rest_code_930799f9a07d4cbea3dcf87850fdea63-12"></a>        <span class="p">}</span>
-<a name="rest_code_930799f9a07d4cbea3dcf87850fdea63-13"></a>    <span class="p">}</span>
-<a name="rest_code_930799f9a07d4cbea3dcf87850fdea63-14"></a><span class="p">}</span>
+<pre class="code csharp"><a name="rest_code_474225ca1ef04bde87ee4aed5cbd494b-1"></a><span class="k">private</span> <span class="kt">string</span> <span class="n">name_</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">};</span> <span class="c1">// can also be a field</span>
+<a name="rest_code_474225ca1ef04bde87ee4aed5cbd494b-2"></a>
+<a name="rest_code_474225ca1ef04bde87ee4aed5cbd494b-3"></a><span class="na">[JsonProperty]</span>
+<a name="rest_code_474225ca1ef04bde87ee4aed5cbd494b-4"></a><span class="k">public</span> <span class="kt">string</span> <span class="n">name</span> <span class="p">{</span>
+<a name="rest_code_474225ca1ef04bde87ee4aed5cbd494b-5"></a>    <span class="k">get</span> <span class="p">{</span>
+<a name="rest_code_474225ca1ef04bde87ee4aed5cbd494b-6"></a>        <span class="k">return</span> <span class="n">name_</span><span class="p">;</span>
+<a name="rest_code_474225ca1ef04bde87ee4aed5cbd494b-7"></a>    <span class="p">}</span>
+<a name="rest_code_474225ca1ef04bde87ee4aed5cbd494b-8"></a>    <span class="k">set</span> <span class="p">{</span>
+<a name="rest_code_474225ca1ef04bde87ee4aed5cbd494b-9"></a>        <span class="k">if</span> <span class="p">(</span><span class="k">value</span> <span class="p">!=</span> <span class="n">name_</span><span class="p">)</span> <span class="p">{</span>
+<a name="rest_code_474225ca1ef04bde87ee4aed5cbd494b-10"></a>            <span class="n">name_</span> <span class="p">=</span> <span class="k">value</span><span class="p">;</span>
+<a name="rest_code_474225ca1ef04bde87ee4aed5cbd494b-11"></a>            <span class="n">NotifyPropertyChanged</span><span class="p">(</span><span class="s">"name"</span><span class="p">);</span>
+<a name="rest_code_474225ca1ef04bde87ee4aed5cbd494b-12"></a>        <span class="p">}</span>
+<a name="rest_code_474225ca1ef04bde87ee4aed5cbd494b-13"></a>    <span class="p">}</span>
+<a name="rest_code_474225ca1ef04bde87ee4aed5cbd494b-14"></a><span class="p">}</span>
 </pre>
 <p>That’s 12 lines of code (excluding <tt class="docutils literal">[JsonProperty]</tt> which comes from the
 Json.NET library) for that pattern. Oh: and I need to do that for <strong>every</strong>
@@ -161,44 +161,44 @@ attribute (which does not appear on all properties).</p>
 really simple <a class="reference external" href="https://www.python.org/">Python</a> script and ran it. And I ended up with all 14 fields built
 for me.</p>
 <p><a class="reference external" href="/listings/code-writing-code/write_properties.py.html">code-writing-code/write_properties.py</a>  <a class="reference external" href="/listings/code-writing-code/write_properties.py">(Source)</a></p>
-<pre class="code python"><a name="rest_code_e41a20a72a254913b7af63592e6dea06-1"></a><span class="ch">#!/usr/bin/env python3</span>
-<a name="rest_code_e41a20a72a254913b7af63592e6dea06-2"></a><span class="n">TEMPLATE</span> <span class="o">=</span> <span class="s2">"""</span><span class="se">\</span>
-<a name="rest_code_e41a20a72a254913b7af63592e6dea06-3"></a><span class="s2">        </span><span class="si">%s</span><span class="s2">public </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2"> {</span>
-<a name="rest_code_e41a20a72a254913b7af63592e6dea06-4"></a><span class="s2">            get {</span>
-<a name="rest_code_e41a20a72a254913b7af63592e6dea06-5"></a><span class="s2">                return </span><span class="si">%s</span><span class="s2">_;</span>
-<a name="rest_code_e41a20a72a254913b7af63592e6dea06-6"></a><span class="s2">            }</span>
-<a name="rest_code_e41a20a72a254913b7af63592e6dea06-7"></a><span class="s2">            set {</span>
-<a name="rest_code_e41a20a72a254913b7af63592e6dea06-8"></a><span class="s2">                if (value != </span><span class="si">%s</span><span class="s2">_) {</span>
-<a name="rest_code_e41a20a72a254913b7af63592e6dea06-9"></a><span class="s2">                    </span><span class="si">%s</span><span class="s2">_ = value;</span>
-<a name="rest_code_e41a20a72a254913b7af63592e6dea06-10"></a><span class="s2">                    NotifyPropertyChanged("</span><span class="si">%s</span><span class="s2">");</span>
-<a name="rest_code_e41a20a72a254913b7af63592e6dea06-11"></a><span class="s2">                }</span>
-<a name="rest_code_e41a20a72a254913b7af63592e6dea06-12"></a><span class="s2">            }</span>
-<a name="rest_code_e41a20a72a254913b7af63592e6dea06-13"></a><span class="s2">        }</span>
-<a name="rest_code_e41a20a72a254913b7af63592e6dea06-14"></a><span class="s2">"""</span>
-<a name="rest_code_e41a20a72a254913b7af63592e6dea06-15"></a><span class="n">JSONPROPERTY_TEMPLATE</span> <span class="o">=</span> <span class="s1">'[JsonProperty]</span><span class="se">\n</span><span class="s1">        '</span>
-<a name="rest_code_e41a20a72a254913b7af63592e6dea06-16"></a>
-<a name="rest_code_e41a20a72a254913b7af63592e6dea06-17"></a><span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="n">has_jsonproperty</span><span class="p">,</span> <span class="n">vtype</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-<a name="rest_code_e41a20a72a254913b7af63592e6dea06-18"></a>    <span class="k">if</span> <span class="n">has_jsonproperty</span><span class="p">:</span>
-<a name="rest_code_e41a20a72a254913b7af63592e6dea06-19"></a>        <span class="n">jsonproperty</span> <span class="o">=</span> <span class="n">JSONPROPERTY_TEMPLATE</span>
-<a name="rest_code_e41a20a72a254913b7af63592e6dea06-20"></a>    <span class="k">else</span><span class="p">:</span>
-<a name="rest_code_e41a20a72a254913b7af63592e6dea06-21"></a>        <span class="n">jsonproperty</span> <span class="o">=</span> <span class="s1">''</span>
-<a name="rest_code_e41a20a72a254913b7af63592e6dea06-22"></a>    <span class="k">return</span> <span class="n">TEMPLATE</span> <span class="o">%</span> <span class="p">(</span><span class="n">jsonproperty</span><span class="p">,</span> <span class="n">vtype</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
-<a name="rest_code_e41a20a72a254913b7af63592e6dea06-23"></a>
-<a name="rest_code_e41a20a72a254913b7af63592e6dea06-24"></a><span class="n">properties</span> <span class="o">=</span> <span class="p">[</span>
-<a name="rest_code_e41a20a72a254913b7af63592e6dea06-25"></a>    <span class="s1">'1 string name'</span><span class="p">,</span>
-<a name="rest_code_e41a20a72a254913b7af63592e6dea06-26"></a>    <span class="s1">'0 int another'</span><span class="p">,</span>
-<a name="rest_code_e41a20a72a254913b7af63592e6dea06-27"></a>    <span class="c1"># 12 fields omitted for brevity</span>
-<a name="rest_code_e41a20a72a254913b7af63592e6dea06-28"></a><span class="p">]</span>
-<a name="rest_code_e41a20a72a254913b7af63592e6dea06-29"></a><span class="n">properties_split</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">split</span><span class="p">()</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">properties</span><span class="p">]</span>
-<a name="rest_code_e41a20a72a254913b7af63592e6dea06-30"></a>
-<a name="rest_code_e41a20a72a254913b7af63592e6dea06-31"></a><span class="c1"># Private definitions (internal)</span>
-<a name="rest_code_e41a20a72a254913b7af63592e6dea06-32"></a><span class="k">for</span> <span class="n">has_jsonproperty</span><span class="p">,</span> <span class="n">vtype</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">properties_split</span><span class="p">:</span>
-<a name="rest_code_e41a20a72a254913b7af63592e6dea06-33"></a>    <span class="k">print</span><span class="p">(</span><span class="s2">"        private </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">_ { get; set; }"</span> <span class="o">%</span> <span class="p">(</span><span class="n">vtype</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
-<a name="rest_code_e41a20a72a254913b7af63592e6dea06-34"></a>
-<a name="rest_code_e41a20a72a254913b7af63592e6dea06-35"></a><span class="k">print</span><span class="p">()</span>
-<a name="rest_code_e41a20a72a254913b7af63592e6dea06-36"></a><span class="c1"># Public definitions (with notifications)</span>
-<a name="rest_code_e41a20a72a254913b7af63592e6dea06-37"></a><span class="k">for</span> <span class="n">has_jsonproperty</span><span class="p">,</span> <span class="n">vtype</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">properties_split</span><span class="p">:</span>
-<a name="rest_code_e41a20a72a254913b7af63592e6dea06-38"></a>    <span class="k">print</span><span class="p">(</span><span class="n">write</span><span class="p">(</span><span class="n">has_jsonproperty</span> <span class="o">==</span> <span class="s1">'1'</span><span class="p">,</span> <span class="n">vtype</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
+<pre class="code python"><a name="rest_code_cc209f4e27254b609730aeb800731324-1"></a><span class="ch">#!/usr/bin/env python3</span>
+<a name="rest_code_cc209f4e27254b609730aeb800731324-2"></a><span class="n">TEMPLATE</span> <span class="o">=</span> <span class="s2">"""</span><span class="se">\</span>
+<a name="rest_code_cc209f4e27254b609730aeb800731324-3"></a><span class="s2">        </span><span class="si">%s</span><span class="s2">public </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2"> {</span>
+<a name="rest_code_cc209f4e27254b609730aeb800731324-4"></a><span class="s2">            get {</span>
+<a name="rest_code_cc209f4e27254b609730aeb800731324-5"></a><span class="s2">                return </span><span class="si">%s</span><span class="s2">_;</span>
+<a name="rest_code_cc209f4e27254b609730aeb800731324-6"></a><span class="s2">            }</span>
+<a name="rest_code_cc209f4e27254b609730aeb800731324-7"></a><span class="s2">            set {</span>
+<a name="rest_code_cc209f4e27254b609730aeb800731324-8"></a><span class="s2">                if (value != </span><span class="si">%s</span><span class="s2">_) {</span>
+<a name="rest_code_cc209f4e27254b609730aeb800731324-9"></a><span class="s2">                    </span><span class="si">%s</span><span class="s2">_ = value;</span>
+<a name="rest_code_cc209f4e27254b609730aeb800731324-10"></a><span class="s2">                    NotifyPropertyChanged("</span><span class="si">%s</span><span class="s2">");</span>
+<a name="rest_code_cc209f4e27254b609730aeb800731324-11"></a><span class="s2">                }</span>
+<a name="rest_code_cc209f4e27254b609730aeb800731324-12"></a><span class="s2">            }</span>
+<a name="rest_code_cc209f4e27254b609730aeb800731324-13"></a><span class="s2">        }</span>
+<a name="rest_code_cc209f4e27254b609730aeb800731324-14"></a><span class="s2">"""</span>
+<a name="rest_code_cc209f4e27254b609730aeb800731324-15"></a><span class="n">JSONPROPERTY_TEMPLATE</span> <span class="o">=</span> <span class="s1">'[JsonProperty]</span><span class="se">\n</span><span class="s1">        '</span>
+<a name="rest_code_cc209f4e27254b609730aeb800731324-16"></a>
+<a name="rest_code_cc209f4e27254b609730aeb800731324-17"></a><span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="n">has_jsonproperty</span><span class="p">,</span> <span class="n">vtype</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<a name="rest_code_cc209f4e27254b609730aeb800731324-18"></a>    <span class="k">if</span> <span class="n">has_jsonproperty</span><span class="p">:</span>
+<a name="rest_code_cc209f4e27254b609730aeb800731324-19"></a>        <span class="n">jsonproperty</span> <span class="o">=</span> <span class="n">JSONPROPERTY_TEMPLATE</span>
+<a name="rest_code_cc209f4e27254b609730aeb800731324-20"></a>    <span class="k">else</span><span class="p">:</span>
+<a name="rest_code_cc209f4e27254b609730aeb800731324-21"></a>        <span class="n">jsonproperty</span> <span class="o">=</span> <span class="s1">''</span>
+<a name="rest_code_cc209f4e27254b609730aeb800731324-22"></a>    <span class="k">return</span> <span class="n">TEMPLATE</span> <span class="o">%</span> <span class="p">(</span><span class="n">jsonproperty</span><span class="p">,</span> <span class="n">vtype</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+<a name="rest_code_cc209f4e27254b609730aeb800731324-23"></a>
+<a name="rest_code_cc209f4e27254b609730aeb800731324-24"></a><span class="n">properties</span> <span class="o">=</span> <span class="p">[</span>
+<a name="rest_code_cc209f4e27254b609730aeb800731324-25"></a>    <span class="s1">'1 string name'</span><span class="p">,</span>
+<a name="rest_code_cc209f4e27254b609730aeb800731324-26"></a>    <span class="s1">'0 int another'</span><span class="p">,</span>
+<a name="rest_code_cc209f4e27254b609730aeb800731324-27"></a>    <span class="c1"># 12 fields omitted for brevity</span>
+<a name="rest_code_cc209f4e27254b609730aeb800731324-28"></a><span class="p">]</span>
+<a name="rest_code_cc209f4e27254b609730aeb800731324-29"></a><span class="n">properties_split</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">split</span><span class="p">()</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">properties</span><span class="p">]</span>
+<a name="rest_code_cc209f4e27254b609730aeb800731324-30"></a>
+<a name="rest_code_cc209f4e27254b609730aeb800731324-31"></a><span class="c1"># Private definitions (internal)</span>
+<a name="rest_code_cc209f4e27254b609730aeb800731324-32"></a><span class="k">for</span> <span class="n">has_jsonproperty</span><span class="p">,</span> <span class="n">vtype</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">properties_split</span><span class="p">:</span>
+<a name="rest_code_cc209f4e27254b609730aeb800731324-33"></a>    <span class="k">print</span><span class="p">(</span><span class="s2">"        private </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">_ { get; set; }"</span> <span class="o">%</span> <span class="p">(</span><span class="n">vtype</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
+<a name="rest_code_cc209f4e27254b609730aeb800731324-34"></a>
+<a name="rest_code_cc209f4e27254b609730aeb800731324-35"></a><span class="k">print</span><span class="p">()</span>
+<a name="rest_code_cc209f4e27254b609730aeb800731324-36"></a><span class="c1"># Public definitions (with notifications)</span>
+<a name="rest_code_cc209f4e27254b609730aeb800731324-37"></a><span class="k">for</span> <span class="n">has_jsonproperty</span><span class="p">,</span> <span class="n">vtype</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">properties_split</span><span class="p">:</span>
+<a name="rest_code_cc209f4e27254b609730aeb800731324-38"></a>    <span class="k">print</span><span class="p">(</span><span class="n">write</span><span class="p">(</span><span class="n">has_jsonproperty</span> <span class="o">==</span> <span class="s1">'1'</span><span class="p">,</span> <span class="n">vtype</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
 </pre>
 <p>That script takes a list of properties and spits out a block of code, ready to
 be pasted into the code. Visual Studio has a nice <em>Insert File as Text</em>
@@ -214,10 +214,10 @@ looking at you, IntelliJ IDEA aka PyCharm aka Android Studio…)</p>
 <p>And so, I was building a test suite, using <a class="reference external" href="http://junit.org/">JUnit</a>. It’s pretty
 straightforward, and I remember the syntax from Python’s unittest (even though
 I write tests with <a class="reference external" href="http://pytest.org/">pytest</a> nowadays). Or so I thought.</p>
-<pre class="code java"><a name="rest_code_2d0f7c793f8747d8a300d8508932af04-1"></a><span class="c1">// (incorrect)</span>
-<a name="rest_code_2d0f7c793f8747d8a300d8508932af04-2"></a><span class="n">assertEquals</span><span class="o">(</span><span class="s">"Basic integers (7) failed"</span><span class="o">,</span> <span class="n">namer</span><span class="o">.</span><span class="na">name</span><span class="o">(</span><span class="mi">7L</span><span class="o">),</span> <span class="s">"seven"</span><span class="o">);</span>
-<a name="rest_code_2d0f7c793f8747d8a300d8508932af04-3"></a><span class="c1">// (fixed)                              ^ cursor</span>
-<a name="rest_code_2d0f7c793f8747d8a300d8508932af04-4"></a><span class="n">assertEquals</span><span class="o">(</span><span class="s">"Basic integers (7) failed"</span><span class="o">,</span> <span class="s">"seven"</span><span class="o">,</span> <span class="n">namer</span><span class="o">.</span><span class="na">name</span><span class="o">(</span><span class="mi">7L</span><span class="o">));</span>
+<pre class="code java"><a name="rest_code_96b5aee32c374b89aee0324afa7d94bb-1"></a><span class="c1">// (incorrect)</span>
+<a name="rest_code_96b5aee32c374b89aee0324afa7d94bb-2"></a><span class="n">assertEquals</span><span class="o">(</span><span class="s">"Basic integers (7) failed"</span><span class="o">,</span> <span class="n">namer</span><span class="o">.</span><span class="na">name</span><span class="o">(</span><span class="mi">7L</span><span class="o">),</span> <span class="s">"seven"</span><span class="o">);</span>
+<a name="rest_code_96b5aee32c374b89aee0324afa7d94bb-3"></a><span class="c1">// (fixed)                              ^ cursor</span>
+<a name="rest_code_96b5aee32c374b89aee0324afa7d94bb-4"></a><span class="n">assertEquals</span><span class="o">(</span><span class="s">"Basic integers (7) failed"</span><span class="o">,</span> <span class="s">"seven"</span><span class="o">,</span> <span class="n">namer</span><span class="o">.</span><span class="na">name</span><span class="o">(</span><span class="mi">7L</span><span class="o">));</span>
 </pre>
 <p>You see, the typical Python spelling is <tt class="docutils literal">self.assertEquals(actual,
 expected)</tt>. Java adds a <tt class="docutils literal">String</tt> message parameter and it also swaps
