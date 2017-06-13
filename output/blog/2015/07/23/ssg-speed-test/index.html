@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html prefix="
 og: http://ogp.me/ns#
 article: http://ogp.me/ns/article#
@@ -132,7 +131,7 @@ article: http://ogp.me/ns/article#
 <p>I tested the speed of four static site generators: Nikola, Pelican, Hexo and Octopress, in a clean environment.  Spoiler alert: Nikola won.</p>
 <p><em>Disclaimer:</em> author is a developer and user of Nikola.  The test environments used were the same for all four generators.</p>
 <div class="section" id="generators-tested">
-<h2>Generators tested</h2>
+<h2>Generators tested<a href="#generators-tested" class="headerlink" title="Permalink to this heading">¶</a></h2>
 <ul class="simple">
 <li>
 <a class="reference external" href="https://getnikola.com/">Nikola</a> v7.6.1, by Roberto Alsina, Chris Warrick and contributors; Python; MIT license</li>
@@ -147,23 +146,23 @@ article: http://ogp.me/ns/article#
 </div>
 </div>
 <div class="section" id="setup">
-<h2>Setup</h2>
+<h2>Setup<a href="#setup" class="headerlink" title="Permalink to this heading">¶</a></h2>
 <p>Every site generator was set up in an identical <strong>clean</strong> environment, using Ubuntu 15.04, x64, as a 512 MB DigitalOcean VM with a 20 GB SSD drive. The machine was updated, an user account with passwordless sudo was created, and <tt class="docutils literal"><span class="pre">build-essential</span></tt> was installed. Tests were run by an automated installer and timer, written in Bash and C, respectively (custom; source code is available). Pre-compiled wheels for lxml and Pillow were used for Nikola testing, because lxml cannot be compiled with less than 1.5 GB of RAM; they were built with <tt class="docutils literal">pip wheel lxml pillow</tt> outside of the testing environment (on a local VM). The machine was reimaged after every test. Lists of installed Python/Ruby/Node packages are available in the GitHub repo (see below).</p>
 </div>
 <div class="section" id="input">
-<h2>Input</h2>
+<h2>Input<a href="#input" class="headerlink" title="Permalink to this heading">¶</a></h2>
 <p>Every site generator was given the same set of 179 log files from #nikola on freenode. The raw logs contain 1209507 bytes (1.1 MiB) of plain text. The logs were processed into post files, which fit the format of each engine (reST or Markdown), containing mandatory metadata, an introductory paragraph and a code block (using <tt class="docutils literal">::</tt> for reST, four spaces for Markdown). One file had to be altered, because they contained the <tt class="docutils literal">{{</tt>  sequence, which was misinterpreted as internal templating by Hexo and Octopress — it was replaced by a harmless <tt class="docutils literal">~~</tt> sequence for all four generators.</p>
 <p>The generators used default config, with one exception: highlighting was disabled for Hexo. The highlighting would cause an unfair advantage (other generators did not automatically highlight the code boxes), and led to very high build times (see table 4 in comparison spreadsheet).</p>
 </div>
 <div class="section" id="build">
-<h2>Build</h2>
+<h2>Build<a href="#build" class="headerlink" title="Permalink to this heading">¶</a></h2>
 <p>Sites were built a total of 110 times, in 10 cycles of 11 builds each. The first build of a cycle was a fresh build, the remaining 10 were rebuilds. Sites and cache files were removed after each cycle.</p>
 </div>
 <div class="section" id="results">
-<h2>Results</h2>
+<h2>Results<a href="#results" class="headerlink" title="Permalink to this heading">¶</a></h2>
 <p>Because Nikola and Hexo use incremental rebuilds, the results were compared in two groups: 11 and 10 runs.</p>
 <div class="section" id="average-build-times-in-seconds">
-<h3>Average build times (in seconds)</h3>
+<h3>Average build times (in seconds)<a href="#average-build-times-in-seconds" class="headerlink" title="Permalink to this heading">¶</a></h3>
 <table class="table table-bordered table-hover">
 <thead><tr>
 <th>#</th>
@@ -200,23 +199,23 @@ article: http://ogp.me/ns/article#
 </table>
 </div>
 <div class="section" id="full-results">
-<h3>Full results</h3>
+<h3>Full results<a href="#full-results" class="headerlink" title="Permalink to this heading">¶</a></h3>
 <p class="lead">Full results are available in <a class="reference external" href="https://chriswarrick.com/pub/ssg-test-results.ods">ods format</a>.</p>
 </div>
 <div class="section" id="raw-results-and-configuration">
-<h3>Raw results and configuration</h3>
+<h3>Raw results and configuration<a href="#raw-results-and-configuration" class="headerlink" title="Permalink to this heading">¶</a></h3>
 <p>Raw results (<tt class="docutils literal">.csv</tt> files from the test runner) and configuration is available in the <a class="reference external" href="https://github.com/Kwpolska/ssg-test">GitHub repo</a>. Log files and converted posts are not available publicly; however, they can be provided to interested parties (<a class="reference external" href="https://chriswarrick.com/contact/">contact me</a> to obtain them).</p>
 </div>
 </div>
 <div class="section" id="questions-and-answers">
-<h2>Questions and answers</h2>
+<h2>Questions and answers<a href="#questions-and-answers" class="headerlink" title="Permalink to this heading">¶</a></h2>
 <div class="section" id="why-not-plain-jekyll">
-<h3>Why not plain Jekyll?</h3>
+<h3>Why not plain Jekyll?<a href="#why-not-plain-jekyll" class="headerlink" title="Permalink to this heading">¶</a></h3>
 <p><strong>Plain Jekyll was disqualified</strong> on the basis of missing many features other generators have, leading to an unfair advantage. The aim of this test was to provide similar setups for each of the four generators. Jekyll generates a very basic site that lacks some elements; a Jekyll site does not have paginated indexes, (partial) post text on indexes, any sort of archives, etc. A Jekyll site contains only one CSS file, index.html, feed.xml, and the log posts. On the other hand, sites generated by Pelican, Nikola and Hexo contain more files, which makes the builds longer and the website experience richer (archives, JS, sitemaps, tag listings).</p>
 <p>On the basis of the above, <strong>Octopress</strong> was chosen to represent the Jekyll universe at large. Octopress sites have more assets, a sitemap, archives and category listings — making it comparable to the other four contenders. However, tests were performed for Jekyll. The average result from 11 builds was 2.22118, while the average result from 10 builds was 2.23903. The result would land Jekyll on the 1st place for 11 builds, and on the 2nd place for 10 builds.</p>
 </div>
 <div class="section" id="why-not-myfavoritessg">
-<h3>Why not $MYFAVORITESSG?</h3>
+<h3>Why not $MYFAVORITESSG?<a href="#why-not-myfavoritessg" class="headerlink" title="Permalink to this heading">¶</a></h3>
 <p>I tested only four popular generators that were easy enough to set up. I could easily extend the set if I had time and friendly enough documentation to do so. I can add a SSG, provided that:</p>
 <ul class="simple">
 <li>it’s easy to configure</li>

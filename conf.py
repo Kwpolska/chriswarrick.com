@@ -239,7 +239,7 @@ CACHE_FOLDER = 'cache'
 #
 # By default, there are no filters.
 FILTERS = {
-   # ".html": [filters.typogrify],
+   ".html": ['filters.add_header_permalinks'],
 }
 
 # Create a gzipped copy of each generated file. Cheap server-side optimization.
@@ -655,5 +655,6 @@ POSTS_SECTION_COLORS = {
 POSTS_SECTION_FROM_META = True
 
 NEW_POST_DATE_PATH = True
+HEADER_PERMALINKS_XPATH_LIST = ['*//div[@class="e-content entry-content"]//{hx}']
 
-GLOBAL_CONTEXT = {'post_lead_format': post_lead_format,}
+GLOBAL_CONTEXT = {'post_lead_format': post_lead_format}
