@@ -10,6 +10,7 @@ This is a list of guides I wrote on this blog. They are setup guides for some
 technologies, or ways to implement best programming practices.
 
 .. post-list::
+   :reverse:
    :tags: guide
    :sort: updated
    :template: guide_post_list.tmpl

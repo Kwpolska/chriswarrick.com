@@ -1,0 +1,288 @@
+<html prefix="
+og: http://ogp.me/ns#
+article: http://ogp.me/ns/article#
+" lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="How to configure locales for Unicode support.">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unix locales vs Unicode (‘ascii’ codec can’t encode character…) | Chris Warrick</title>
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+<link href="/assets/css/all.css" rel="stylesheet" type="text/css">
+<link rel="alternate" type="application/rss+xml" title="RSS (en)" href="/rss.xml">
+<link rel="alternate" type="application/rss+xml" title="RSS (pl)" href="/pl/rss.xml">
+<link rel="canonical" href="https://chriswarrick.com/pl/blog/2017/06/18/unix-locales-vs-unicode/">
+<link rel="icon" href="/favicon.ico" sizes="16x16">
+<!--[if lt IE 9]><script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]--><meta name="application-name" content="Chris Warrick">
+<meta name="msapplication-starturl" content="https://chriswarrick.com/">
+<meta name="msapplication-navbutton-color" content="#00aadd">
+<meta name="theme-color" content="#00aadd">
+<meta name="generator" content="Nikola (getnikola.com)">
+<meta name="description" itemprop="description" content="How to configure locales for Unicode support.">
+<meta name="author" content="Chris Warrick">
+<link rel="prev" href="/pl/blog/2017/06/08/apples-new-pricing-strategy-dont-buy-the-12-macbook/" title="Apple’s new pricing strategy: don't buy the 12″ MacBook" type="text/html">
+<meta property="og:site_name" content="Chris Warrick">
+<meta property="og:title" content="Unix locales vs Unicode (‘ascii’ codec can’t encode character…)">
+<meta property="og:url" content="https://chriswarrick.com/pl/blog/2017/06/18/unix-locales-vs-unicode/">
+<meta property="og:description" content="How to configure locales for Unicode support.">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2017-06-18T20:40:00+02:00">
+<meta property="article:tag" content="guide">
+<meta property="article:tag" content="locale">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="Unicode">
+<meta property="article:tag" content="Unix">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:creator" content="@Kwpolska">
+<link rel="alternate" hreflang="en" href="/blog/2017/06/18/unix-locales-vs-unicode/">
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Przejdź do treści</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-kw navbar-static-top" role="navigation"><div class="container">
+<!-- This keeps the margins nice -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-kw-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="https://chriswarrick.com/pl/">
+            <img src="/assets/img/logo.png" srcset="/assets/img/logo2x.png 2x" alt="Chris Warrick" id="logo"><span id="blog-title">Chris Warrick</span>
+            </a>
+        </div>
+<!-- /.navbar-header -->
+        <div class="collapse navbar-collapse navbar-kw-collapse">
+            <ul class="nav navbar-nav">
+<li>
+<a href="/pl/blog/">Archiwum</a>
+                </li>
+<li>
+<a href="/pl/blog/tags/">Tagi</a>
+                </li>
+<li>
+<a href="/pl/contact/">Kontakt</a>
+                </li>
+<li>
+<a href="/pl/brand/">Brand</a>
+                </li>
+<li>
+<a href="/pl/kwbot/">KwBot</a>
+                </li>
+<li>
+<a href="/projects/">Projekty</a>
+                </li>
+<li>
+<a href="/guides/">Przewodniki</a>
+                </li>
+<li>
+<a href="/pl/search/">Szukaj</a>
+
+                
+            </li>
+</ul>
+<ul class="nav navbar-nav navbar-right">
+<li>            </li>
+<li><a href="https://chriswarrick.com/" rel="alternate" hreflang="en">English</a></li>
+
+                
+            </ul>
+</div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav><!-- End of Menubar --><div class="container" id="content">
+    <div class="body-content">
+        <!--Body content-->
+        <div class="row">
+        <div id="cookiecontainer"></div>
+            
+<article class="post-text h-entry hentry postpage postbox" itemscope="itemscope" itemtype="http://schema.org/Article"><header class="page-header"><h1 class="p-name entry-title" itemprop="headline name">
+    <a href="/pl/blog/2017/06/18/unix-locales-vs-unicode/" class="u-url">Unix locales vs Unicode (‘ascii’ codec can’t encode character…)</a>
+    </h1>
+
+    <div class="metadata">
+<a href="/pl/blog/2017/06/18/unix-locales-vs-unicode/" rel="bookmark" class="u-published"><time class="published dt-published" datetime="2017-06-18T20:40:00+02:00" itemprop="datePublished" title="2017-06-18 20:40">2017-06-18 20:40</time></a>
+        <ul itemprop="keywords" class="tags">
+<li class="section-bubble" style="background-color: #00b1a1"><a href="/pl/programming/">Programming</a></li>
+           <li><a class="tag p-category" href="/pl/blog/tags/guide/" rel="tag">guide</a></li>
+           <li><a class="tag p-category" href="/pl/blog/tags/locale/" rel="tag">locale</a></li>
+           <li><a class="tag p-category" href="/pl/blog/tags/python/" rel="tag">Python</a></li>
+           <li><a class="tag p-category" href="/pl/blog/tags/unicode/" rel="tag">Unicode</a></li>
+           <li><a class="tag p-category" href="/pl/blog/tags/unix/" rel="tag">Unix</a></li>
+        
+<li class="shortlink-bubble"><a href="https://go.chriswarrick.com/locale" title="Short link to this article (go.chriswarrick.com/locale)"><i class="fa fa-link"></i> locale</a></li>        </ul>
+<p class="guide-header">A <a href="/guides/">guide</a> about <span class="guide-topic">Locale support/Unicode</span> for <span class="guide-platform">Unix (Linux, macOS, etc.)</span></p>    </div>
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div class="lead"><div>
+<p>You might get unusual errors about Unicode and inability to convert
+to ASCII. Programs might just crash at random. Those are often simple to fix —
+all you need is correct locale configuration.</p>
+</div></div>
+<p class="lead">Has this ever happened to you?</p>
+<pre class="code pytb"><a name="rest_code_746ad4e9a2af4492a0f0bd8940cba914-1"></a><span class="gt">Traceback (most recent call last):</span>
+<a name="rest_code_746ad4e9a2af4492a0f0bd8940cba914-2"></a>  File <span class="nb">"aogonek.py"</span>, line <span class="m">1</span>, in <span class="n">&lt;module&gt;</span>
+<a name="rest_code_746ad4e9a2af4492a0f0bd8940cba914-3"></a>    <span class="k">print</span><span class="p">(</span><span class="sa">u</span><span class="s1">'</span><span class="se">\u0105</span><span class="s1">'</span><span class="p">)</span>
+<a name="rest_code_746ad4e9a2af4492a0f0bd8940cba914-4"></a><span class="gr">UnicodeEncodeError</span>: <span class="n">'ascii' codec can't encode character '\u0105' in position 0: ordinal not in range(128)</span>
+</pre>
+<pre class="code text"><a name="rest_code_264b5b4d11bf4feaa500f8bdfef2928b-1"></a>Nikola: Could not guess locale for language en, using locale C
+</pre>
+<pre class="code text"><a name="rest_code_d8618b0b268b42a5bbe1238ec49d147f-1"></a>Input: ą
+<a name="rest_code_d8618b0b268b42a5bbe1238ec49d147f-2"></a>Desired ascii(): '\u0105'
+<a name="rest_code_d8618b0b268b42a5bbe1238ec49d147f-3"></a>Real ascii(): '\udcc4\udc85'
+</pre>
+<pre class="code text"><a name="rest_code_869e9166c1404632b4c09f1c3d7974b7-1"></a>perl: warning: Setting locale failed.
+<a name="rest_code_869e9166c1404632b4c09f1c3d7974b7-2"></a>perl: warning: Please check that your locale settings:
+<a name="rest_code_869e9166c1404632b4c09f1c3d7974b7-3"></a>    [...]
+<a name="rest_code_869e9166c1404632b4c09f1c3d7974b7-4"></a>    are supported and installed on your system.
+<a name="rest_code_869e9166c1404632b4c09f1c3d7974b7-5"></a>perl: warning: Falling back to the standard locale ("C").
+</pre>
+<p class="lead">All those errors have the same root cause: incorrect locale configuration.
+To fix them all, you need to generate the missing locales and set them.</p>
+<div class="section" id="check-currently-used-locale">
+<h2>Check currently used locale<a href="#check-currently-used-locale" class="headerlink" title="Permalink to this heading">¶</a></h2>
+<p>The <tt class="docutils literal">locale</tt> command (without arguments) should tell you which locales you’re
+currently using.  (The list might be shorter on your end)</p>
+<pre class="code sh"><a name="rest_code_b4c80b627b49440a9177769715ce6a51-1"></a>$ locale
+<a name="rest_code_b4c80b627b49440a9177769715ce6a51-2"></a><span class="nv">LANG</span><span class="o">=</span><span class="s2">"en_US.UTF-8"</span>
+<a name="rest_code_b4c80b627b49440a9177769715ce6a51-3"></a><span class="nv">LC_CTYPE</span><span class="o">=</span><span class="s2">"en_US.UTF-8"</span>
+<a name="rest_code_b4c80b627b49440a9177769715ce6a51-4"></a><span class="nv">LC_NUMERIC</span><span class="o">=</span><span class="s2">"en_US.UTF-8"</span>
+<a name="rest_code_b4c80b627b49440a9177769715ce6a51-5"></a><span class="nv">LC_TIME</span><span class="o">=</span><span class="s2">"en_US.UTF-8"</span>
+<a name="rest_code_b4c80b627b49440a9177769715ce6a51-6"></a><span class="nv">LC_COLLATE</span><span class="o">=</span><span class="s2">"en_US.UTF-8"</span>
+<a name="rest_code_b4c80b627b49440a9177769715ce6a51-7"></a><span class="nv">LC_MONETARY</span><span class="o">=</span><span class="s2">"en_US.UTF-8"</span>
+<a name="rest_code_b4c80b627b49440a9177769715ce6a51-8"></a><span class="nv">LC_MESSAGES</span><span class="o">=</span><span class="s2">"en_US.UTF-8"</span>
+<a name="rest_code_b4c80b627b49440a9177769715ce6a51-9"></a><span class="nv">LC_PAPER</span><span class="o">=</span><span class="s2">"en_US.UTF-8"</span>
+<a name="rest_code_b4c80b627b49440a9177769715ce6a51-10"></a><span class="nv">LC_NAME</span><span class="o">=</span><span class="s2">"en_US.UTF-8"</span>
+<a name="rest_code_b4c80b627b49440a9177769715ce6a51-11"></a><span class="nv">LC_ADDRESS</span><span class="o">=</span><span class="s2">"en_US.UTF-8"</span>
+<a name="rest_code_b4c80b627b49440a9177769715ce6a51-12"></a><span class="nv">LC_TELEPHONE</span><span class="o">=</span><span class="s2">"en_US.UTF-8"</span>
+<a name="rest_code_b4c80b627b49440a9177769715ce6a51-13"></a><span class="nv">LC_MEASUREMENT</span><span class="o">=</span><span class="s2">"en_US.UTF-8"</span>
+<a name="rest_code_b4c80b627b49440a9177769715ce6a51-14"></a><span class="nv">LC_IDENTIFICATION</span><span class="o">=</span><span class="s2">"en_US.UTF-8"</span>
+<a name="rest_code_b4c80b627b49440a9177769715ce6a51-15"></a><span class="nv">LC_ALL</span><span class="o">=</span>
+</pre>
+<p>If any of those is set to <tt class="docutils literal">C</tt> or <tt class="docutils literal">POSIX</tt>, has a different encoding than
+<tt class="docutils literal"><span class="pre">UTF-8</span></tt> (sometimes spelled <tt class="docutils literal">utf8</tt>) is empty (with the exception of
+<tt class="docutils literal">LC_ALL</tt>), or if you see any errors, you need to reconfigure your locale.</p>
+</div>
+<div class="section" id="check-locale-availability-and-install-missing-locales">
+<h2>Check locale availability and install missing locales<a href="#check-locale-availability-and-install-missing-locales" class="headerlink" title="Permalink to this heading">¶</a></h2>
+<p>The first thing you need to do is check locale availability. To do this, run
+<tt class="docutils literal">locale <span class="pre">-a</span></tt>. This will produce a list of all installed locales.  You can use
+<tt class="docutils literal">grep</tt> to get a more reasonable list.</p>
+<pre class="code text"><a name="rest_code_a38bc857a2794a3cbaa118a1ed368a5c-1"></a>$ locale -a | grep -i utf
+<a name="rest_code_a38bc857a2794a3cbaa118a1ed368a5c-2"></a>&lt;lists all UTF-8 locales&gt;
+<a name="rest_code_a38bc857a2794a3cbaa118a1ed368a5c-3"></a>$ locale -a | grep -i utf | grep -i en_US
+<a name="rest_code_a38bc857a2794a3cbaa118a1ed368a5c-4"></a>en_US.UTF-8
+</pre>
+<p>The best locale to use is the one for your language, with the UTF-8 encoding.
+The locale will be used by some console apps for output. I’m going to use
+<tt class="docutils literal"><span class="pre">en_US.UTF-8</span></tt> in this guide.</p>
+<p>If you can’t see any UTF-8 locales, or no appropriate locale setting for your
+language of choice, you might need to generate those. The required actions
+depend on your distro/OS.</p>
+<ul class="simple">
+<li>Debian, Ubuntu, and derivatives: install <tt class="docutils literal"><span class="pre">language-pack-en-base</span></tt>, run <tt class="docutils literal">sudo <span class="pre">dpkg-reconfigure</span> locales</tt>
+</li>
+<li>RHEL, CentOS, Fedora: install <tt class="docutils literal"><span class="pre">glibc-langpack-en</span></tt>
+</li>
+<li>Arch Linux: uncomment relevant entries in <tt class="docutils literal">/etc/locale.gen</tt> and run <tt class="docutils literal">sudo <span class="pre">locale-gen</span></tt> <a class="reference external" href="https://wiki.archlinux.org/index.php/Locale">(wiki)</a>
+</li>
+<li>For other OSes, refer to the documentation.</li>
+</ul>
+<p>You need a UTF-8 locale to ensure compatibility with software. Avoid the <tt class="docutils literal">C</tt>
+and <tt class="docutils literal">POSIX</tt> locales (it’s ASCII) and locales with other encodings (those
+aren’t used by ~anyone these days)</p>
+</div>
+<div class="section" id="configure-system-wide">
+<h2>Configure system-wide<a href="#configure-system-wide" class="headerlink" title="Permalink to this heading">¶</a></h2>
+<p>On some systems, you may be able to configure locale system-wide.  Check your
+system documentation for details. If your system has systemd, run</p>
+<pre class="code text"><a name="rest_code_04901a5243fe4deca7a64fa7f603f5bb-1"></a>sudo localectl set-locale LANG=en_US.UTF-8
+</pre>
+</div>
+<div class="section" id="configure-for-a-single-user">
+<h2>Configure for a single user<a href="#configure-for-a-single-user" class="headerlink" title="Permalink to this heading">¶</a></h2>
+<p>If your environment does not allow system-wide locale configuration (macOS,
+shared server with generated but unconfigured locales), or if you want to
+ensure it’s always configured independently of system settings.</p>
+<p>To do this, you need to edit the configuration file for your shell. If you’re
+using bash, it’s <tt class="docutils literal">.bashrc</tt> (or <tt class="docutils literal">.bash_profile</tt> on macOS). For zsh users,
+<tt class="docutils literal">.zshrc</tt>.  Add this line (or equivalent in your shell):</p>
+<pre class="code sh"><a name="rest_code_c22f8a4c752a4914ad6ae0a88f8f616d-1"></a><span class="nb">export</span> <span class="nv">LANG</span><span class="o">=</span>en_US.UTF-8 <span class="nv">LC_ALL</span><span class="o">=</span>en_US.UTF-8
+</pre>
+<p>That should be enough. Note that those settings don’t apply to programs
+not launched through a shell.</p>
+<hr class="docutils">
+<p><strong>Python/Windows corner:</strong> Python 3.7 will fix this on Unix by assuming UTF-8
+if it encounters the C locale.  On Windows, Python 3.6 is using UTF-8
+interactively, but not when using shell redirections to files or pipes.</p>
+<p><em>This post was brought to you by ą — U+0105 LATIN SMALL LETTER A WITH OGONEK.</em></p>
+</div>
+</div>
+    </article>
+</div>
+    <aside class="postpromonav"><div class="panel panel-primary guide-footer">
+  <div class="panel-heading"><h3 class="panel-title">That’s all!</h3></div>
+  <div class="panel-body">
+    Hopefully, the guide worked for you and you can now use Unicode in many more places. If so, great! Otherwise, make sure you did everything as stated in this guide. If you are still stuck, ask for help in the comments.
+  </div>
+  <div class="panel-footer"><a href="/guides/">Check out my other guides!</a></div>
+</div>
+    <nav><ul class="pager hidden-print">
+<li class="previous">
+                <a href="/pl/blog/2017/06/08/apples-new-pricing-strategy-dont-buy-the-12-macbook/" rel="prev" title="Apple’s new pricing strategy: don't buy the 12″ MacBook">Poprzedni post</a>
+            </li>
+        </ul></nav></aside><section class="comments"><h2>Komentarze</h2>
+                        <div id="disqus_thread"></div>
+        <script>
+        var disqus_shortname ="kwpolska",
+            disqus_url="https://chriswarrick.com/pl/blog/2017/06/18/unix-locales-vs-unicode/",
+        disqus_title="Unix locales vs Unicode (\u2018ascii\u2019 codec can\u2019t encode character\u2026)",
+        disqus_identifier="cache/posts/2017/06/18/unix-locales-vs-unicode.html",
+        disqus_config = function () {
+            this.language = "pl";
+        };
+        (function() {
+            var dsq = document.createElement('script'); dsq.async = true;
+            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+    <a href="https://disqus.com" class="dsq-brlink" rel="nofollow">Comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+        </section><script>var disqus_shortname="kwpolska";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script>
+</div>
+        <!--End of body content-->
+
+        <footer class="site-footer"><p><a href="/pl/cookies/">ta strona używa ciasteczek.</a><br>
+korzystając z tej strony, akceptujesz naszą politykę ciasteczek.
+</p>
+<p>
+powered by <strong><a href="https://getnikola.com/">Nikola</a></strong>, <a href="http://nginx.org/">nginx</a> and <a href="https://www.digitalocean.com/?refcode=7983689b2ecc">DigitalOcean</a><br>
+copyright © 2009–2017 <a href="/pl/contact/">Chris Warrick</a><br><a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC
+BY-NC-SA</a>, unless stated otherwise</p>
+            
+        </footer>
+</div>
+
+
+            <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script><script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script><script src="/assets/js/all.js"></script><script src="/assets/js/colorbox-i18n/jquery.colorbox-pl.js"></script><script>jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script><script>
+    moment.locale("pl");
+    fancydates(0, "YYYY-MM-DD HH:mm");
+    </script><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-11937989-1', 'chriswarrick.com');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+
+</script>
+</body>
+</html>

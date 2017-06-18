@@ -8,6 +8,7 @@
 .. guide_topic: Python
 .. guide_platform: any platform
 .. guide_effect: your Python apps have good launch scripts for all platforms
+.. shortlink: entry_points
 
 There are multiple ways to write an app in Python.  However, not all of them
 provide your users with the best experience.

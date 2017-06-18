@@ -6,6 +6,7 @@
 .. link: https://chriswarrick.com/pub/ssg-test-results.ods
 .. description: Four static site generators: which one is the fastest
 .. type: text
+.. shortlink: ssg-speed-test
 
 I tested the speed of four static site generators: Nikola, Pelican, Hexo and Octopress, in a clean environment.  Spoiler alert: Nikola won.
 

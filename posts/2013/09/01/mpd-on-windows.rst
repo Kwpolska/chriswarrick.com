@@ -8,6 +8,7 @@
 .. guide_topic: MPD
 .. guide_platform: Windows
 .. guide_effect: you can now play music the Unix way on Windows
+.. shortlink: mpd-win
 
 Recently, I had to reinstall Windows.  One of the things I had to set up
 was MPD, the `Music Player Daemon`_.

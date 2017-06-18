@@ -5,6 +5,7 @@
 .. section: Programming
 .. description: CSV is not a standard.
 .. type: text
+.. shortlink: csv
 
 CSV is not a standard. What does that really mean for anyone using that format?
 The file’s recipient may be unable to read it the way you intended. Separators,
