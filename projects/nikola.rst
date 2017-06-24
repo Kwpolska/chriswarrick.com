@@ -26,7 +26,7 @@
 Nikola is a static site and blog generator, written in Python.  It can
 use Mako and Jinja2 templates, and input in many popular markup
 formats, such as reStructuredText and Markdown — and can even turn
-Jupyter (IPython) Notebooks into blog posts! It also supports image galleries,
+Jupyter Notebooks into blog posts! It also supports image galleries,
 and is multilingual.  Nikola is flexible, and page builds are
 extremely fast, courtesy of doit (which is rebuilding only what has
 been changed).
@@ -37,7 +37,5 @@ many features out of the box, making it easy to create a modern website.
 I am a co-maintainer of Nikola, responsible for a sizeable fraction of commits
 — but I am not the one who did the most work and came up with the idea (it was
 `Roberto Alsina <http://ralsina.me/>`_).
-
-See also: `Coil CMS <../coil/>` — a web interface for Nikola.
 
 This very website is powered by Nikola.
