@@ -1,0 +1,1 @@
+../posts/2017/07/03/setting-up-a-python-development-environment.rst

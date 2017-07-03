@@ -1,5 +1,365 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chris Warrick (Blog)</title><link>https://chriswarrick.com/</link><description>A blog about everything and nothing.</description><atom:link href="https://chriswarrick.com/rss.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Sat, 24 Jun 2017 19:07:57 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Apple broke the display menu, so I wrote my own</title><link>https://chriswarrick.com/blog/2017/06/24/apple-broke-the-display-menu-so-i-wrote-my-own/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;A short time ago, the macOS display menu stopped working for me. It no longer had options to change mirroring settings, only supporting AirPlay. So I wrote my own, also solving some other issues.&lt;/p&gt;
+<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chris Warrick (Blog)</title><link>https://chriswarrick.com/</link><description>A blog about everything and nothing.</description><atom:link href="https://chriswarrick.com/rss.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Mon, 03 Jul 2017 10:52:22 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Setting up a Python development environment</title><link>https://chriswarrick.com/blog/2017/07/03/setting-up-a-python-development-environment/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;Setting up Python is usually simple, but there are some places where newcomers
+(and experienced users) need to be careful. What versions are there? What’s the
+difference between Python, CPython, Anaconda, PyPy? Those and many other
+questions may stump new developers, or people wanting to use Python.&lt;/p&gt;
+&lt;!-- TEASER_END --&gt;
+&lt;p&gt;Note: this guide is opinionated.&lt;/p&gt;
+&lt;div class="contents alert alert-info pull-right topic" id="contents"&gt;
+&lt;p class="topic-title first"&gt;Contents&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2017/07/03/setting-up-a-python-development-environment/#glossary-and-questions" id="id2"&gt;Glossary and questions&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2017/07/03/setting-up-a-python-development-environment/#python-versions-2-vs-3" id="id3"&gt;Python versions: 2 vs 3&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2017/07/03/setting-up-a-python-development-environment/#can-i-run-multiple-pythons-on-the-same-machine" id="id4"&gt;Can I run multiple Pythons on the same machine?&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2017/07/03/setting-up-a-python-development-environment/#implementations" id="id5"&gt;Implementations&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2017/07/03/setting-up-a-python-development-environment/#distributions" id="id6"&gt;Distributions&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2017/07/03/setting-up-a-python-development-environment/#can-i-make-exe-files-from-python-programs" id="id7"&gt;Can I make .exe files from Python programs?&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2017/07/03/setting-up-a-python-development-environment/#where-to-learn-python-where-to-get-help" id="id8"&gt;Where to learn Python? Where to get help?&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2017/07/03/setting-up-a-python-development-environment/#installing-python" id="id9"&gt;Installing Python&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2017/07/03/setting-up-a-python-development-environment/#windows" id="id10"&gt;Windows&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2017/07/03/setting-up-a-python-development-environment/#macos" id="id11"&gt;macOS&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2017/07/03/setting-up-a-python-development-environment/#linux-and-other-unix-like-oses" id="id12"&gt;Linux (and other Unix-like OSes)&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2017/07/03/setting-up-a-python-development-environment/#installing-packages" id="id13"&gt;Installing packages&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2017/07/03/setting-up-a-python-development-environment/#user-installs" id="id14"&gt;User installs&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2017/07/03/setting-up-a-python-development-environment/#virtual-environments" id="id15"&gt;Virtual environments&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2017/07/03/setting-up-a-python-development-environment/#tools-and-management" id="id16"&gt;Tools and management&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2017/07/03/setting-up-a-python-development-environment/#installation-and-usage" id="id17"&gt;Installation and usage&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2017/07/03/setting-up-a-python-development-environment/#upgrading-and-moving" id="id18"&gt;Upgrading and moving&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2017/07/03/setting-up-a-python-development-environment/#packages-with-c-extensions-binary" id="id19"&gt;Packages with C extensions (binary)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2017/07/03/setting-up-a-python-development-environment/#other-stuff" id="id20"&gt;Other stuff&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2017/07/03/setting-up-a-python-development-environment/#editors-and-ides" id="id21"&gt;Editors and IDEs&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class="section" id="glossary-and-questions"&gt;
+&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2017/07/03/setting-up-a-python-development-environment/#id2"&gt;Glossary and questions&lt;/a&gt;&lt;/h2&gt;
+&lt;div class="section" id="python-versions-2-vs-3"&gt;
+&lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2017/07/03/setting-up-a-python-development-environment/#id3"&gt;Python versions: 2 vs 3&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;The Python community has undergone sort of a &lt;em&gt;schism&lt;/em&gt; in recent years. Python
+3, released in 2008, broke backwards compatibility: deprecated some bad
+constructs and libraries (eg. &lt;tt class="docutils literal"&gt;raw_input()&lt;/tt&gt; became &lt;tt class="docutils literal"&gt;input()&lt;/tt&gt; and the
+original Python 2 function that ran code input by users is gone; &lt;tt class="docutils literal"&gt;print()&lt;/tt&gt;
+became a function; many things that returned lists now are iterators — &lt;tt class="docutils literal"&gt;zip&lt;/tt&gt;,
+&lt;tt class="docutils literal"&gt;range&lt;/tt&gt;), and completely remodelled strings (which are now Unicode by
+default, and the interpreter behavior is stricter when the wrong type is used)&lt;/p&gt;
+&lt;p&gt;For new code, you should use Python 3. &lt;a class="reference external" href="https://python3wos.appspot.com/"&gt;Most popular packages support Python 3&lt;/a&gt;, and many of them support both Pythons at
+the same time. The early bugs were ironed out in the first few point releases,
+some features that made porting easier were added (back).&lt;/p&gt;
+&lt;p&gt;But what if you end up needing Python 2 later? No problem: you can learn the
+differences in a short time, and with the help of a few libraries (eg. &lt;tt class="docutils literal"&gt;six&lt;/tt&gt;)
+you can easily write code that is compatible with Python 2 and 3 at the same
+time, using the same codebase (most libraries out there do that).&lt;/p&gt;
+&lt;p&gt;Python 2 will go EOL and lose official support and updates in 2020.&lt;/p&gt;
+&lt;p&gt;Read more: &lt;a class="reference external" href="https://wiki.python.org/moin/Python2orPython3"&gt;Python 2 or Python 3 on Python Wiki&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="can-i-run-multiple-pythons-on-the-same-machine"&gt;
+&lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2017/07/03/setting-up-a-python-development-environment/#id4"&gt;Can I run multiple Pythons on the same machine?&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;Yes. Note that multiple Python interpreters are completely separate: they have
+their own pip and packages, and you can’t run Python 2 code in a Python 3
+interpreter. You need to specify which interpreter to use when installing
+packages and running some scripts (eg. &lt;tt class="docutils literal"&gt;pip2&lt;/tt&gt;, &lt;tt class="docutils literal"&gt;pip3&lt;/tt&gt; or &lt;tt class="docutils literal"&gt;python3 &lt;span class="pre"&gt;-m&lt;/span&gt; pip&lt;/tt&gt;).&lt;/p&gt;
+&lt;p&gt;It’s best to limit yourself to the latest Python 2 and 3 versions. Python is
+backwards-compatible within the major release, so Python 2.7 runs code
+written with older 2.x versions in mind.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="implementations"&gt;
+&lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2017/07/03/setting-up-a-python-development-environment/#id5"&gt;Implementations&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;A programming language is an abstract construct. To run code written in that
+language, an interpreter or compiler needs to be written. In Python’s case,
+there’s a plethora of implementations. Some of them are:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;&lt;strong&gt;CPython&lt;/strong&gt; is the reference implementation. This is the implementation
+distributed on &lt;a class="reference external" href="https://python.org/"&gt;https://python.org/&lt;/a&gt; and as part of many operating systems.
+Most Python features are first implemented in CPython, and then they are
+ported to other implementations.  If you don’t know what to choose, use
+CPython.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;PyPy&lt;/strong&gt; is a fast implementation, written in a subset of Python. It’s compatible with
+Python 2.7 and 3.5 (beta support). It can run all pure Python code, and many
+extension libraries that use CFFI.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;IronPython&lt;/strong&gt; is a .NET CLR implementation. It can integrate with .NET code.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Jython&lt;/strong&gt; is a Java JVM implementation. It can integrate with Java code, as
+well as other JVM languages.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Read more: &lt;a class="reference external" href="https://wiki.python.org/moin/PythonImplementations"&gt;Python Implementations on Python Wiki&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="distributions"&gt;
+&lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2017/07/03/setting-up-a-python-development-environment/#id6"&gt;Distributions&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;There are also Python (CPython) distributions. They ship the CPython
+interpreter and add some extra packages/features.  They are maintained by other
+communities or corporate entities.&lt;/p&gt;
+&lt;p&gt;The most popular third-party distribution is &lt;a class="reference external" href="https://www.continuum.io/downloads"&gt;Anaconda&lt;/a&gt; from Continuum Analytics. It’s popular
+for data scientists, and includes over 100 packages, with extra pre-built
+binaries available from the &lt;tt class="docutils literal"&gt;conda&lt;/tt&gt; package manager.&lt;/p&gt;
+&lt;p&gt;I personally recommend to avoid Anaconda:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;Most packages have binary wheels for Windows, macOS and Linux (yes, Linux!)
+making the installation as simple as &lt;tt class="docutils literal"&gt;pip install numpy&lt;/tt&gt;.&lt;/li&gt;
+&lt;li&gt;You waste disk space for packages Anaconda installs that you won’t ever need.&lt;/li&gt;
+&lt;li&gt;It’s provided by some random for-profit company.&lt;/li&gt;
+&lt;li&gt;I’ve seen bugs that were not reproducible outside of Anaconda.&lt;/li&gt;
+&lt;li&gt;You can still do data science using the official distribution. There’s
+nothing special about Anaconda.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Read more: &lt;a class="reference external" href="https://wiki.python.org/moin/PythonDistributions"&gt;Python distributions on Python Wiki&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="can-i-make-exe-files-from-python-programs"&gt;
+&lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2017/07/03/setting-up-a-python-development-environment/#id7"&gt;Can I make .exe files from Python programs?&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;Yes, you can. There are tools for this — &lt;a class="reference external" href="http://www.pyinstaller.org/"&gt;PyInstaller&lt;/a&gt; is the best one. Note that you usually need to
+run it on the destination operating system. And remember that “compiling” to
+exe files like that &lt;strong&gt;is not&lt;/strong&gt; a security measure — your source code is still
+easily recoverable. (It’s not a security measure in other languages either,
+even if getting source code back might be more expensive/tricky in those.)&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="where-to-learn-python-where-to-get-help"&gt;
+&lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2017/07/03/setting-up-a-python-development-environment/#id8"&gt;Where to learn Python? Where to get help?&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;The choice of learning material is important. If you get a bad book, it might
+discourage you from learning (because it’s boring), or may teach you
+bad/outdated practices.&lt;/p&gt;
+&lt;p&gt;If you can already program in another language, I recommend the &lt;a class="reference external" href="https://docs.python.org/3/tutorial/"&gt;official
+Python tutorial&lt;/a&gt;. For newcomers to
+programming, I recommend &lt;a class="reference external" href="http://greenteapress.com/wp/think-python-2e/"&gt;Think Python&lt;/a&gt; or &lt;a class="reference external" href="https://automatetheboringstuff.com/"&gt;Automate the Boring Stuff
+with Python&lt;/a&gt;.  They teach Python 3, and
+(mostly) best practices.&lt;/p&gt;
+&lt;p&gt;If you need help, try &lt;tt class="docutils literal"&gt;#python&lt;/tt&gt; on freenode IRC, the &lt;a class="reference external" href="https://mail.python.org/mailman/listinfo/tutor"&gt;Tutor&lt;/a&gt; or &lt;a class="reference external" href="https://mail.python.org/mailman/listinfo/python-list"&gt;Python-list&lt;/a&gt; mailing lists, or a bunch of other communities. (I’m a regular on &lt;tt class="docutils literal"&gt;#python&lt;/tt&gt;)&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="installing-python"&gt;
+&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2017/07/03/setting-up-a-python-development-environment/#id9"&gt;Installing Python&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;This guide will focus on installing CPython 2.7 and 3.x (latest), using the standard
+distribution. This choice is satisfactory for most people. Third-party
+distributions, while handy in some cases, are not needed for most. (See
+&lt;a class="reference internal" href="https://chriswarrick.com/blog/2017/07/03/setting-up-a-python-development-environment/#distributions"&gt;Distributions&lt;/a&gt; for arguments)&lt;/p&gt;
+&lt;p&gt;Throughout this guide, I’ll refer to the Python interpreter executable as
+&lt;tt class="docutils literal"&gt;python&lt;/tt&gt;. The exact name depends on your system and desired version. On most
+OSes, &lt;tt class="docutils literal"&gt;python&lt;/tt&gt; is Python 2 and &lt;tt class="docutils literal"&gt;python3&lt;/tt&gt; is 3; &lt;tt class="docutils literal"&gt;python2&lt;/tt&gt; should also
+exist.  On Arch Linux, &lt;tt class="docutils literal"&gt;python&lt;/tt&gt; is Python 3. On Windows, use the &lt;tt class="docutils literal"&gt;py&lt;/tt&gt;
+launcher.&lt;/p&gt;
+&lt;div class="section" id="windows"&gt;
+&lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2017/07/03/setting-up-a-python-development-environment/#id10"&gt;Windows&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;Download the installer(s): &lt;a class="reference external" href="https://www.python.org/downloads/"&gt;https://www.python.org/downloads/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Those installers come with &lt;tt class="docutils literal"&gt;pip&lt;/tt&gt;, and modern Python 3.x versions come with
+the &lt;tt class="docutils literal"&gt;py&lt;/tt&gt; launcher.  You can use that launcher to pick a specific Python
+version, eg.:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;&lt;tt class="docutils literal"&gt;py &lt;span class="pre"&gt;-3&lt;/span&gt; &lt;span class="pre"&gt;-m&lt;/span&gt; pip install &amp;lt;package&amp;gt;&lt;/tt&gt;&lt;/li&gt;
+&lt;li&gt;&lt;tt class="docutils literal"&gt;py &lt;span class="pre"&gt;-2&lt;/span&gt; somefile.py&lt;/tt&gt;&lt;/li&gt;
+&lt;li&gt;&lt;tt class="docutils literal"&gt;py &lt;span class="pre"&gt;-2.7&lt;/span&gt;&lt;/tt&gt;&lt;/li&gt;
+&lt;li&gt;&lt;tt class="docutils literal"&gt;py&lt;/tt&gt; (default system version)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;It’s recommended for most use, and mandatory for upgrading pip.&lt;/p&gt;
+&lt;p&gt;The 32-bit versions are more versatile. Most packages support both (the only
+exception I’m aware of is Tensorflow, which only allows 64-bit Python 3.5 as of
+now).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="macos"&gt;
+&lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2017/07/03/setting-up-a-python-development-environment/#id11"&gt;macOS&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;macOS ships with Python 2.7.10 (as of macOS Sierra). It’s not the latest
+version; it’s good enough for most people, but I still recommend installing
+your own (the system Python doesn’t include &lt;tt class="docutils literal"&gt;pip&lt;/tt&gt;, for example). You can
+install the latest 2.7 version, as well as Python 3, using a package manager. I
+recommend Homebrew — it’s the most popular solution, and lets you install many
+other packages.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;DO NOT&lt;/strong&gt; use the python.org installers: they do not have uninstallers, so you
+will have outdated versions lying around after some time. There is no
+auto-update as well.&lt;/p&gt;
+&lt;p&gt;If you already have a package manager installed (MacPorts, Fink), don’t install
+a new one and just use the existing one.&lt;/p&gt;
+&lt;ol class="arabic simple"&gt;
+&lt;li&gt;Install &lt;a class="reference external" href="https://brew.sh/"&gt;Homebrew&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Run &lt;tt class="docutils literal"&gt;brew install python python3&lt;/tt&gt;.&lt;/li&gt;
+&lt;li&gt;You should now have &lt;tt class="docutils literal"&gt;python&lt;/tt&gt;, &lt;tt class="docutils literal"&gt;python3&lt;/tt&gt;, &lt;tt class="docutils literal"&gt;pip&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;pip3&lt;/tt&gt;.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;To update Homebrew and Python, run &lt;tt class="docutils literal"&gt;brew update&lt;/tt&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="linux-and-other-unix-like-oses"&gt;
+&lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2017/07/03/setting-up-a-python-development-environment/#id12"&gt;Linux (and other Unix-like OSes)&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;On Linux, there usually are good enough packages in your OS repositories. You
+should be able to install the appropriate package for Python (2 and/or 3).&lt;/p&gt;
+&lt;p&gt;If the version that ships with your distribution is too old, there are some
+options. There might be some repositories with better versions, eg. the
+&lt;a class="reference external" href="https://launchpad.net/~fkrull/+archive/ubuntu/deadsnakes"&gt;deadsnakes PPA&lt;/a&gt;
+for Ubuntu. Then there’s the other option of compiling Python manually. The
+instructions depend on your exact requirements, but here’s a summary:&lt;/p&gt;
+&lt;ol class="arabic simple"&gt;
+&lt;li&gt;Download the &lt;a class="reference external" href="https://www.python.org/downloads/source/"&gt;source distribution from Python.org&lt;/a&gt; and unpack it. Go into the unpacked source directory.&lt;/li&gt;
+&lt;li&gt;Ensure you’ve got a functional C compiler and Python’s dependencies. You can
+usually use your system’s package manager to install the build dependencies
+of your system Python. Some dependencies are optional (eg. &lt;tt class="docutils literal"&gt;sqlite3&lt;/tt&gt;
+requires SQLite headers).&lt;/li&gt;
+&lt;li&gt;Run &lt;tt class="docutils literal"&gt;./configure &lt;span class="pre"&gt;--prefix=/opt/python3.6&lt;/span&gt;&lt;/tt&gt; and then &lt;tt class="docutils literal"&gt;make&lt;/tt&gt;. (You may add other options to both. It will
+take a while.)&lt;/li&gt;
+&lt;li&gt;Run &lt;tt class="docutils literal"&gt;make altinstall&lt;/tt&gt; as root. Avoid &lt;tt class="docutils literal"&gt;make install&lt;/tt&gt;, as it can override
+&lt;tt class="docutils literal"&gt;python&lt;/tt&gt; executables.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Alternatively, you can try &lt;tt class="docutils literal"&gt;pyenv&lt;/tt&gt; or &lt;tt class="docutils literal"&gt;pythonz&lt;/tt&gt; — tools that can be used to install and manage different Python versions. Remember: compiling Python should be considered a &lt;strong&gt;last resort&lt;/strong&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="installing-packages"&gt;
+&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2017/07/03/setting-up-a-python-development-environment/#id13"&gt;Installing packages&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;To install third-party packages, you should use pip, the Python package
+manager. If you’re using Windows or macOS (from Homebrew), pip is included with
+your copy of Python.  If you’re on Linux and installed Python from a system
+repository, install the correct system package (&lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;python-pip&lt;/span&gt;&lt;/tt&gt;,
+&lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;python3-pip&lt;/span&gt;&lt;/tt&gt;). If you compiled your own Python, pip is also included.&lt;/p&gt;
+&lt;p&gt;To run pip, use &lt;tt class="docutils literal"&gt;py &lt;span class="pre"&gt;-m&lt;/span&gt; pip&lt;/tt&gt; (Windows), &lt;tt class="docutils literal"&gt;python &lt;span class="pre"&gt;-m&lt;/span&gt; pip&lt;/tt&gt; (other platforms),
+or the short &lt;tt class="docutils literal"&gt;pip&lt;/tt&gt;/&lt;tt class="docutils literal"&gt;pip3&lt;/tt&gt; commands.&lt;/p&gt;
+&lt;p&gt;Very important: &lt;strong&gt;NEVER use sudo with pip&lt;/strong&gt;. That can lead to conflicts with
+system package managers and does not provide isolation between package
+versions.&lt;/p&gt;
+&lt;p&gt;Note that a package install is specific to the Python interpreter used to run
+&lt;tt class="docutils literal"&gt;pip&lt;/tt&gt;. Packages installed to a virtualenv are separate from system packages;
+packages installed for “global” Python 2.7 are separate from 3.6 packages.
+Virtual environments generally don’t use the system packages, unless
+specifically enabled during creation.&lt;/p&gt;
+&lt;p&gt;Some distros have pouplar packages in their repositories. Sometimes they’re
+good; in other cases they’re terribly outdated or they lack important
+components, making package managers angry and sick of supporting a 2-year-old
+version. (Especially since most bugs are closed with “we’ve fixed that long
+ago”)&lt;/p&gt;
+&lt;div class="section" id="user-installs"&gt;
+&lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2017/07/03/setting-up-a-python-development-environment/#id14"&gt;User installs&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;At a small scale, you can install packages with pip for a single user.  Use
+&lt;tt class="docutils literal"&gt;pip install &lt;span class="pre"&gt;--user&lt;/span&gt; PACKAGE&lt;/tt&gt; to do this. If your package installs &lt;a class="reference external" href="https://chriswarrick.com/blog/2014/09/15/python-apps-the-right-way-entry_points-and-scripts/"&gt;scripts&lt;/a&gt;,
+they will be installed to &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;~/.local/bin&lt;/span&gt;&lt;/tt&gt; on Linux, and
+&lt;tt class="docutils literal"&gt;~/Library/Python/X.Y/bin&lt;/tt&gt; on macOS (X.Y is Python version), or you can use
+&lt;tt class="docutils literal"&gt;python &lt;span class="pre"&gt;-m&lt;/span&gt;&lt;/tt&gt; if the package supports it.&lt;/p&gt;
+&lt;p&gt;For most people and projects, virtual environments are better. There are,
+however, use cases for putting some packages user-wide — if you don’t work on
+projects, but instead are doing one-off research projects, those are better
+suited by user-wide installs.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="virtual-environments"&gt;
+&lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2017/07/03/setting-up-a-python-development-environment/#id15"&gt;Virtual environments&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;Virtual environments are the best way to install and manage Python packages.
+Advantages include:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;Isolation of projects and their requirements: if one app/package requires
+library version X, but another requires version Y, they can live in separate
+virtual environments&lt;/li&gt;
+&lt;li&gt;Independent from system-wide packages&lt;/li&gt;
+&lt;li&gt;Lightweight (an empty virtualenv is about 10 MB)&lt;/li&gt;
+&lt;li&gt;Simple to re-create in any place (&lt;tt class="docutils literal"&gt;pip freeze &amp;gt; requirements.txt&lt;/tt&gt; → &lt;tt class="docutils literal"&gt;pip install &lt;span class="pre"&gt;-r&lt;/span&gt; requirements.txt&lt;/tt&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="section" id="tools-and-management"&gt;
+&lt;h4&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2017/07/03/setting-up-a-python-development-environment/#id16"&gt;Tools and management&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;There are two tools to facilitate creation of virtual environments: the older
+&lt;a class="reference external" href="https://virtualenv.pypa.io/en/stable/"&gt;virtualenv&lt;/a&gt; project, and the newer
+&lt;tt class="docutils literal"&gt;venv&lt;/tt&gt; module. The &lt;tt class="docutils literal"&gt;venv&lt;/tt&gt; module is shipped with Python 3.x; some
+distributions may put it in a separate package or remove it altogether. I
+recommend using &lt;strong&gt;virtualenv&lt;/strong&gt; — it’s compatible with more Python versions
+(it’s better to use the same tool for both Pythons) and cannot be broken by
+incompetent OS package mainainers (&lt;tt class="docutils literal"&gt;venv&lt;/tt&gt; fails on Debian due to no
+&lt;tt class="docutils literal"&gt;ensurepip&lt;/tt&gt;; there is a &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;python3-venv&lt;/span&gt;&lt;/tt&gt; package that fixes it but that’s
+hard to discover)&lt;/p&gt;
+&lt;p&gt;There are multiple schools of thought regarding virtualenv placement and
+content. Myself, I use &lt;a class="reference external" href="https://virtualenvwrapper.readthedocs.io/en/latest/"&gt;virtualenvwrapper&lt;/a&gt; to manage virtualenvs
+and put them in &lt;tt class="docutils literal"&gt;~/virtualenvs&lt;/tt&gt;. Other people put virtualenvs inside their
+git repositories (but they &lt;em&gt;must&lt;/em&gt; be in &lt;tt class="docutils literal"&gt;.gitignore&lt;/tt&gt;) Virtualenvs should only contain packages
+installed with &lt;tt class="docutils literal"&gt;pip&lt;/tt&gt; so they can be rereated quickly.&lt;/p&gt;
+&lt;p&gt;I also use the &lt;tt class="docutils literal"&gt;virtualenvwrapper&lt;/tt&gt; plugin for Oh My Zsh, which also
+activates virtualenvs with the same name as a git repo, or the environment
+named by a &lt;tt class="docutils literal"&gt;.venv&lt;/tt&gt; file.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="installation-and-usage"&gt;
+&lt;h4&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2017/07/03/setting-up-a-python-development-environment/#id17"&gt;Installation and usage&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;To install virtualenv user-wide, use &lt;tt class="docutils literal"&gt;pip install &lt;span class="pre"&gt;--user&lt;/span&gt; virtualenv&lt;/tt&gt;. You can
+then use it with &lt;tt class="docutils literal"&gt;python &lt;span class="pre"&gt;-m&lt;/span&gt; virtualenv DIRECTORY&lt;/tt&gt;. You may pass extra
+options, eg. interpreter to use (&lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;-p&lt;/span&gt; python3&lt;/tt&gt;). Sometimes you need to install
+virtualenv for every Python version; usually, one copy is enough.&lt;/p&gt;
+&lt;p&gt;How to use them? This is a subject of heated debate in the Python community.
+Some people believe that activating (&lt;tt class="docutils literal"&gt;source bin/activate&lt;/tt&gt; on *nix;
+&lt;tt class="docutils literal"&gt;Scripts\activate&lt;/tt&gt; on Windows) is the right thing to do. Others think that
+you should use &lt;tt class="docutils literal"&gt;bin/python&lt;/tt&gt; (or other scripts in that directory) directly.
+Others still think &lt;a class="reference external" href="https://gist.github.com/datagrok/2199506"&gt;virtualenvs should be used in subshells&lt;/a&gt;. In my opinion, if activating
+virtualenvs works in your environment, you should do it — it’s the most
+convenient option. There are, however, cases when activation fails, or is
+otherwise impossible — calling &lt;tt class="docutils literal"&gt;bin/python&lt;/tt&gt; directly is your best bet in that
+case. I’m not a fan of the subshell option, because it complicates stuff if you
+work on multiple projects, and requires tracking usage manually.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="upgrading-and-moving"&gt;
+&lt;h4&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2017/07/03/setting-up-a-python-development-environment/#id18"&gt;Upgrading and moving&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;Upgrading the system Python may make your virtualenvs unusable.
+For patch version upgrades, you can just update symlinks (see &lt;a class="reference external" href="https://github.com/Kwpolska/scripts/blob/master/fix-venvs.sh"&gt;fix-venvs.sh&lt;/a&gt;).
+However, if the minor version changes, it’s best to re-create the virtualenv
+(you need to create &lt;tt class="docutils literal"&gt;requirements.txt&lt;/tt&gt; ahead of time).&lt;/p&gt;
+&lt;p&gt;You cannot move a virtualenv between directories/machines or rename
+virtualenvs. You need to use &lt;tt class="docutils literal"&gt;pip freeze &amp;gt; requirements.txt&lt;/tt&gt;, create a new
+virtualenv, and run &lt;tt class="docutils literal"&gt;pip install &lt;span class="pre"&gt;-r&lt;/span&gt; requirements.txt&lt;/tt&gt; (you can then delete
+the old environment with a simple &lt;tt class="docutils literal"&gt;rm &lt;span class="pre"&gt;-rf&lt;/span&gt;&lt;/tt&gt;)&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="packages-with-c-extensions-binary"&gt;
+&lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2017/07/03/setting-up-a-python-development-environment/#id19"&gt;Packages with C extensions (binary)&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;The situation improved drastically in the past year or so. Nowadays, almost
+all packages have a pre-compiled package available in PyPI. Those packages work
+for Windows, macOS, and Linux. There are packages for some of the most
+common &lt;em&gt;offenders&lt;/em&gt;, including Pillow, lxml, PyQt5, numpy… However, there might
+still be packages without wheels on PyPI.&lt;/p&gt;
+&lt;p&gt;If there is no wheel for a package and you are on Windows, check out &lt;a class="reference external" href="http://www.lfd.uci.edu/~gohlke/pythonlibs/"&gt;Christoph
+Gohlke’s unofficial binaries&lt;/a&gt;.
+If you can’t find any wheels online, you would have to resort to compiling it
+manually — this requires installign Visual Studio in a version that matches
+your Python, and it’s kind of a pain to do.&lt;/p&gt;
+&lt;p&gt;If you are not on Windows, you must install a C compiler and toolchain.
+If you get a warning about missing &lt;tt class="docutils literal"&gt;Python.h&lt;/tt&gt;, install the appropriate development
+package — for example, &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;python-dev&lt;/span&gt;&lt;/tt&gt; or &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;python3-dev&lt;/span&gt;&lt;/tt&gt;) on Debian/Ubuntu,
+&lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;python-devel&lt;/span&gt;&lt;/tt&gt; or &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;python3-devel&lt;/span&gt;&lt;/tt&gt; on RHEL/Fedora. The package you’re trying
+to install might have other dependencies that you need to install (the
+&lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;-dev(el)&lt;/span&gt;&lt;/tt&gt; part is important, too)&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="other-stuff"&gt;
+&lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2017/07/03/setting-up-a-python-development-environment/#id20"&gt;Other stuff&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;If you’re working on a project, use &lt;tt class="docutils literal"&gt;pip install &lt;span class="pre"&gt;-e&lt;/span&gt; .&lt;/tt&gt; inside the project
+directory to install the package in your environment in development (editable)
+mode. This loads code directly from your repository — you don’t need to
+re-install on every change; you might need to re-install when your version
+number changes.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="editors-and-ides"&gt;
+&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2017/07/03/setting-up-a-python-development-environment/#id21"&gt;Editors and IDEs&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;Another important thing a developer should take care of is the choice of an
+editor. This is an important decision, and is the reason for many holy wars in
+the programmer community.&lt;/p&gt;
+&lt;p&gt;A good editor should have syntax highlighting for all languages you need to
+work with. It should also have features like visual block/multiple selections,
+sophisticated find-and-replace, file finding, code completion, and many more minor
+but helpful features.&lt;/p&gt;
+&lt;p&gt;Then there’s the difference between IDEs and text editors. Text editors are
+simpler, whereas IDEs try to include many extra things not necessairly related
+to writing code. IDEs often use more resources, but you won’t notice it with a
+modern computer (especially with a SSD).&lt;/p&gt;
+&lt;p&gt;I spend the most of my time in &lt;a class="reference external" href="http://www.vim.org/"&gt;Vim&lt;/a&gt; (&lt;a class="reference external" href="https://neovim.io/"&gt;neovim&lt;/a&gt;/&lt;a class="reference external" href="http://vimr.org/"&gt;VimR&lt;/a&gt; to be
+precise). Vim is the most powerful text editor out there, and with the right
+set of plugins it can beat IDEs at speed and productivity. Vim has a steep
+learning curve, but it’s worth it — you can do large changes with just a few
+keystrokes. Vim is considered so good that many IDEs (Visual Studio, IntelliJ
+IDEA/PyCharm) have (mediocre) Vim emulation plugins.&lt;/p&gt;
+&lt;p&gt;However, if you would prefer an IDE, your best bet would be &lt;a class="reference external" href="https://www.jetbrains.com/pycharm/"&gt;PyCharm&lt;/a&gt; from JetBrains. It has both a free
+Community and paid Professional edition. The JetBrains folks are experts at
+IDEs — they have fully-fledged tools for many languages. Their Python solution
+offers a plethora of options that aid programmers in their work. If you’re on
+Windows, you might try Python Tools for Visual Studio (although I haven’t
+worked with that and can’t vouch for it)&lt;/p&gt;
+&lt;p&gt;Another, lighter option is &lt;a class="reference external" href="https://code.visualstudio.com/"&gt;Visual Studio Code&lt;/a&gt; — it’s a text editor, but can offer many
+IDE-like features with the right set of plugins. It’s Electron-based
+architecture, or effectively being based on top of Google’s Chromium, is
+unfortunate and can lead to bad performance on lower-end machines. (In my
+experience, it’s better than Atom.) You can also try &lt;a class="reference external" href="https://www.sublimetext.com/"&gt;Sublime Text&lt;/a&gt; ($70).&lt;/p&gt;
+&lt;p&gt;But really, almost any editor will do. But please &lt;strong&gt;avoid&lt;/strong&gt; IDLE, the editor
+included with Python. It lacks some of the most basic things — it doesn’t even
+have an option to show line numbers. Not to mention its ugliness. Also, don’t
+use Notepad and TextEdit. Those are too simple, and Notepad has encoding
+issues.&lt;/p&gt;
+&lt;/div&gt;&lt;/div&gt;</description><category>best practices</category><category>devel</category><category>guide</category><category>Python</category><guid>https://chriswarrick.com/blog/2017/07/03/setting-up-a-python-development-environment/</guid><pubDate>Mon, 03 Jul 2017 10:40:00 GMT</pubDate></item><item><title>Apple broke the display menu, so I wrote my own</title><link>https://chriswarrick.com/blog/2017/06/24/apple-broke-the-display-menu-so-i-wrote-my-own/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;A short time ago, the macOS display menu stopped working for me. It no longer had options to change mirroring settings, only supporting AirPlay. So I wrote my own, also solving some other issues.&lt;/p&gt;
 &lt;!-- TEASER_END --&gt;
 &lt;p&gt;The first thing to consider is: what features do I really want? I’m using a MacBook Pro with an external display. I sometimes need to switch to only one display &lt;a class="footnote-reference" href="https://chriswarrick.com/blog/2017/06/24/apple-broke-the-display-menu-so-i-wrote-my-own/#id3" id="id1"&gt;[1]&lt;/a&gt; — mirroring is useful here. Although I can afford to put the dock at the bottom in dual-screen mode, it works better on the right if I’m tight on space. &lt;a class="footnote-reference" href="https://chriswarrick.com/blog/2017/06/24/apple-broke-the-display-menu-so-i-wrote-my-own/#id4" id="id2"&gt;[2]&lt;/a&gt; Also when working on the MacBook screen, I can switch to a higher resolution. So, I need:&lt;/p&gt;
 &lt;ul class="simple"&gt;
@@ -27,40 +387,40 @@ to ASCII. Programs might just crash at random. Those are often simple to fix —
 all you need is correct locale configuration.&lt;/p&gt;
 &lt;!-- TEASER_END --&gt;
 &lt;p class="lead"&gt;Has this ever happened to you?&lt;/p&gt;
-&lt;pre class="code pytb"&gt;&lt;a name="rest_code_746ad4e9a2af4492a0f0bd8940cba914-1"&gt;&lt;/a&gt;&lt;span class="gt"&gt;Traceback (most recent call last):&lt;/span&gt;
-&lt;a name="rest_code_746ad4e9a2af4492a0f0bd8940cba914-2"&gt;&lt;/a&gt;  File &lt;span class="nb"&gt;"aogonek.py"&lt;/span&gt;, line &lt;span class="m"&gt;1&lt;/span&gt;, in &lt;span class="n"&gt;&amp;lt;module&amp;gt;&lt;/span&gt;
-&lt;a name="rest_code_746ad4e9a2af4492a0f0bd8940cba914-3"&gt;&lt;/a&gt;    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;u&lt;/span&gt;&lt;span class="s1"&gt;'&lt;/span&gt;&lt;span class="se"&gt;\u0105&lt;/span&gt;&lt;span class="s1"&gt;'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_746ad4e9a2af4492a0f0bd8940cba914-4"&gt;&lt;/a&gt;&lt;span class="gr"&gt;UnicodeEncodeError&lt;/span&gt;: &lt;span class="n"&gt;'ascii' codec can't encode character '\u0105' in position 0: ordinal not in range(128)&lt;/span&gt;
-&lt;/pre&gt;&lt;pre class="code text"&gt;&lt;a name="rest_code_264b5b4d11bf4feaa500f8bdfef2928b-1"&gt;&lt;/a&gt;Nikola: Could not guess locale for language en, using locale C
-&lt;/pre&gt;&lt;pre class="code text"&gt;&lt;a name="rest_code_d8618b0b268b42a5bbe1238ec49d147f-1"&gt;&lt;/a&gt;Input: ą
-&lt;a name="rest_code_d8618b0b268b42a5bbe1238ec49d147f-2"&gt;&lt;/a&gt;Desired ascii(): '\u0105'
-&lt;a name="rest_code_d8618b0b268b42a5bbe1238ec49d147f-3"&gt;&lt;/a&gt;Real ascii(): '\udcc4\udc85'
-&lt;/pre&gt;&lt;pre class="code text"&gt;&lt;a name="rest_code_869e9166c1404632b4c09f1c3d7974b7-1"&gt;&lt;/a&gt;perl: warning: Setting locale failed.
-&lt;a name="rest_code_869e9166c1404632b4c09f1c3d7974b7-2"&gt;&lt;/a&gt;perl: warning: Please check that your locale settings:
-&lt;a name="rest_code_869e9166c1404632b4c09f1c3d7974b7-3"&gt;&lt;/a&gt;    [...]
-&lt;a name="rest_code_869e9166c1404632b4c09f1c3d7974b7-4"&gt;&lt;/a&gt;    are supported and installed on your system.
-&lt;a name="rest_code_869e9166c1404632b4c09f1c3d7974b7-5"&gt;&lt;/a&gt;perl: warning: Falling back to the standard locale ("C").
+&lt;pre class="code pytb"&gt;&lt;a name="rest_code_f3d5186e155e4d96844f325568bc9c11-1"&gt;&lt;/a&gt;&lt;span class="gt"&gt;Traceback (most recent call last):&lt;/span&gt;
+&lt;a name="rest_code_f3d5186e155e4d96844f325568bc9c11-2"&gt;&lt;/a&gt;  File &lt;span class="nb"&gt;"aogonek.py"&lt;/span&gt;, line &lt;span class="m"&gt;1&lt;/span&gt;, in &lt;span class="n"&gt;&amp;lt;module&amp;gt;&lt;/span&gt;
+&lt;a name="rest_code_f3d5186e155e4d96844f325568bc9c11-3"&gt;&lt;/a&gt;    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;u&lt;/span&gt;&lt;span class="s1"&gt;'&lt;/span&gt;&lt;span class="se"&gt;\u0105&lt;/span&gt;&lt;span class="s1"&gt;'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_f3d5186e155e4d96844f325568bc9c11-4"&gt;&lt;/a&gt;&lt;span class="gr"&gt;UnicodeEncodeError&lt;/span&gt;: &lt;span class="n"&gt;'ascii' codec can't encode character '\u0105' in position 0: ordinal not in range(128)&lt;/span&gt;
+&lt;/pre&gt;&lt;pre class="code text"&gt;&lt;a name="rest_code_d6028919d4354cc28fe4550641d4408b-1"&gt;&lt;/a&gt;Nikola: Could not guess locale for language en, using locale C
+&lt;/pre&gt;&lt;pre class="code text"&gt;&lt;a name="rest_code_42932c4409fc41dbac4a075093e34689-1"&gt;&lt;/a&gt;Input: ą
+&lt;a name="rest_code_42932c4409fc41dbac4a075093e34689-2"&gt;&lt;/a&gt;Desired ascii(): '\u0105'
+&lt;a name="rest_code_42932c4409fc41dbac4a075093e34689-3"&gt;&lt;/a&gt;Real ascii(): '\udcc4\udc85'
+&lt;/pre&gt;&lt;pre class="code text"&gt;&lt;a name="rest_code_a7d029c83a084c16b7fc273b91a6b935-1"&gt;&lt;/a&gt;perl: warning: Setting locale failed.
+&lt;a name="rest_code_a7d029c83a084c16b7fc273b91a6b935-2"&gt;&lt;/a&gt;perl: warning: Please check that your locale settings:
+&lt;a name="rest_code_a7d029c83a084c16b7fc273b91a6b935-3"&gt;&lt;/a&gt;    [...]
+&lt;a name="rest_code_a7d029c83a084c16b7fc273b91a6b935-4"&gt;&lt;/a&gt;    are supported and installed on your system.
+&lt;a name="rest_code_a7d029c83a084c16b7fc273b91a6b935-5"&gt;&lt;/a&gt;perl: warning: Falling back to the standard locale ("C").
 &lt;/pre&gt;&lt;p class="lead"&gt;All those errors have the same root cause: incorrect locale configuration.
 To fix them all, you need to generate the missing locales and set them.&lt;/p&gt;
 &lt;div class="section" id="check-currently-used-locale"&gt;
 &lt;h2&gt;Check currently used locale&lt;/h2&gt;
 &lt;p&gt;The &lt;tt class="docutils literal"&gt;locale&lt;/tt&gt; command (without arguments) should tell you which locales you’re
 currently using.  (The list might be shorter on your end)&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_b4c80b627b49440a9177769715ce6a51-1"&gt;&lt;/a&gt;$ locale
-&lt;a name="rest_code_b4c80b627b49440a9177769715ce6a51-2"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LANG&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_b4c80b627b49440a9177769715ce6a51-3"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_CTYPE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_b4c80b627b49440a9177769715ce6a51-4"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_NUMERIC&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_b4c80b627b49440a9177769715ce6a51-5"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_TIME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_b4c80b627b49440a9177769715ce6a51-6"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_COLLATE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_b4c80b627b49440a9177769715ce6a51-7"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_MONETARY&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_b4c80b627b49440a9177769715ce6a51-8"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_MESSAGES&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_b4c80b627b49440a9177769715ce6a51-9"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_PAPER&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_b4c80b627b49440a9177769715ce6a51-10"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_NAME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_b4c80b627b49440a9177769715ce6a51-11"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_ADDRESS&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_b4c80b627b49440a9177769715ce6a51-12"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_TELEPHONE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_b4c80b627b49440a9177769715ce6a51-13"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_MEASUREMENT&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_b4c80b627b49440a9177769715ce6a51-14"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_IDENTIFICATION&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_b4c80b627b49440a9177769715ce6a51-15"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_ALL&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_fab395500d8348da8accab2c6c8acecc-1"&gt;&lt;/a&gt;$ locale
+&lt;a name="rest_code_fab395500d8348da8accab2c6c8acecc-2"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LANG&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_fab395500d8348da8accab2c6c8acecc-3"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_CTYPE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_fab395500d8348da8accab2c6c8acecc-4"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_NUMERIC&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_fab395500d8348da8accab2c6c8acecc-5"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_TIME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_fab395500d8348da8accab2c6c8acecc-6"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_COLLATE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_fab395500d8348da8accab2c6c8acecc-7"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_MONETARY&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_fab395500d8348da8accab2c6c8acecc-8"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_MESSAGES&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_fab395500d8348da8accab2c6c8acecc-9"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_PAPER&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_fab395500d8348da8accab2c6c8acecc-10"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_NAME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_fab395500d8348da8accab2c6c8acecc-11"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_ADDRESS&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_fab395500d8348da8accab2c6c8acecc-12"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_TELEPHONE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_fab395500d8348da8accab2c6c8acecc-13"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_MEASUREMENT&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_fab395500d8348da8accab2c6c8acecc-14"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_IDENTIFICATION&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_fab395500d8348da8accab2c6c8acecc-15"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_ALL&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;If any of those is set to &lt;tt class="docutils literal"&gt;C&lt;/tt&gt; or &lt;tt class="docutils literal"&gt;POSIX&lt;/tt&gt;, has a different encoding than
 &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;UTF-8&lt;/span&gt;&lt;/tt&gt; (sometimes spelled &lt;tt class="docutils literal"&gt;utf8&lt;/tt&gt;) is empty (with the exception of
 &lt;tt class="docutils literal"&gt;LC_ALL&lt;/tt&gt;), or if you see any errors, you need to reconfigure your locale.&lt;/p&gt;
@@ -70,10 +430,10 @@ currently using.  (The list might be shorter on your end)&lt;/p&gt;
 &lt;p&gt;The first thing you need to do is check locale availability. To do this, run
 &lt;tt class="docutils literal"&gt;locale &lt;span class="pre"&gt;-a&lt;/span&gt;&lt;/tt&gt;. This will produce a list of all installed locales.  You can use
 &lt;tt class="docutils literal"&gt;grep&lt;/tt&gt; to get a more reasonable list.&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_a38bc857a2794a3cbaa118a1ed368a5c-1"&gt;&lt;/a&gt;$ locale -a | grep -i utf
-&lt;a name="rest_code_a38bc857a2794a3cbaa118a1ed368a5c-2"&gt;&lt;/a&gt;&amp;lt;lists all UTF-8 locales&amp;gt;
-&lt;a name="rest_code_a38bc857a2794a3cbaa118a1ed368a5c-3"&gt;&lt;/a&gt;$ locale -a | grep -i utf | grep -i en_US
-&lt;a name="rest_code_a38bc857a2794a3cbaa118a1ed368a5c-4"&gt;&lt;/a&gt;en_US.UTF-8
+&lt;pre class="code text"&gt;&lt;a name="rest_code_5d0f67860cd747048452e3523487c4f8-1"&gt;&lt;/a&gt;$ locale -a | grep -i utf
+&lt;a name="rest_code_5d0f67860cd747048452e3523487c4f8-2"&gt;&lt;/a&gt;&amp;lt;lists all UTF-8 locales&amp;gt;
+&lt;a name="rest_code_5d0f67860cd747048452e3523487c4f8-3"&gt;&lt;/a&gt;$ locale -a | grep -i utf | grep -i en_US
+&lt;a name="rest_code_5d0f67860cd747048452e3523487c4f8-4"&gt;&lt;/a&gt;en_US.UTF-8
 &lt;/pre&gt;&lt;p&gt;The best locale to use is the one for your language, with the UTF-8 encoding.
 The locale will be used by some console apps for output. I’m going to use
 &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;en_US.UTF-8&lt;/span&gt;&lt;/tt&gt; in this guide.&lt;/p&gt;
@@ -94,7 +454,7 @@ aren’t used by ~anyone these days)&lt;/p&gt;
 &lt;h2&gt;Configure system-wide&lt;/h2&gt;
 &lt;p&gt;On some systems, you may be able to configure locale system-wide.  Check your
 system documentation for details. If your system has systemd, run&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_04901a5243fe4deca7a64fa7f603f5bb-1"&gt;&lt;/a&gt;sudo localectl set-locale LANG=en_US.UTF-8
+&lt;pre class="code text"&gt;&lt;a name="rest_code_751d950ae95d4b1d89c73b7a0c3aed71-1"&gt;&lt;/a&gt;sudo localectl set-locale LANG=en_US.UTF-8
 &lt;/pre&gt;&lt;/div&gt;
 &lt;div class="section" id="configure-for-a-single-user"&gt;
 &lt;h2&gt;Configure for a single user&lt;/h2&gt;
@@ -104,7 +464,7 @@ ensure it’s always configured independently of system settings.&lt;/p&gt;
 &lt;p&gt;To do this, you need to edit the configuration file for your shell. If you’re
 using bash, it’s &lt;tt class="docutils literal"&gt;.bashrc&lt;/tt&gt; (or &lt;tt class="docutils literal"&gt;.bash_profile&lt;/tt&gt; on macOS). For zsh users,
 &lt;tt class="docutils literal"&gt;.zshrc&lt;/tt&gt;.  Add this line (or equivalent in your shell):&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_c22f8a4c752a4914ad6ae0a88f8f616d-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;export&lt;/span&gt; &lt;span class="nv"&gt;LANG&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;en_US.UTF-8 &lt;span class="nv"&gt;LC_ALL&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;en_US.UTF-8
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_8cdb77b60a8945a3a237ed785ff2bc28-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;export&lt;/span&gt; &lt;span class="nv"&gt;LANG&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;en_US.UTF-8 &lt;span class="nv"&gt;LC_ALL&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;en_US.UTF-8
 &lt;/pre&gt;&lt;p&gt;That should be enough. Note that those settings don’t apply to programs
 not launched through a shell.&lt;/p&gt;
 &lt;hr class="docutils"&gt;
@@ -496,20 +856,20 @@ trainwreck, though). One of the things I used in that project was a DataGrid
 bound to a list of custom objects (a DataGrid is a table, basically). And in
 order to use it, you need to use the &lt;tt class="docutils literal"&gt;INotifyPropertyChanged&lt;/tt&gt; interface &lt;a class="reference external" href="https://msdn.microsoft.com/en-us/library/ms229614(v=vs.100).aspx"&gt;(MSDN)&lt;/a&gt;.
 It involves doing something like this:&lt;/p&gt;
-&lt;pre class="code csharp"&gt;&lt;a name="rest_code_2c1c55cf8c344104814127652265fd3c-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;private&lt;/span&gt; &lt;span class="kt"&gt;string&lt;/span&gt; &lt;span class="n"&gt;name_&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="k"&gt;get&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="k"&gt;set&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="p"&gt;};&lt;/span&gt; &lt;span class="c1"&gt;// can also be a field&lt;/span&gt;
-&lt;a name="rest_code_2c1c55cf8c344104814127652265fd3c-2"&gt;&lt;/a&gt;
-&lt;a name="rest_code_2c1c55cf8c344104814127652265fd3c-3"&gt;&lt;/a&gt;&lt;span class="na"&gt;[JsonProperty]&lt;/span&gt;
-&lt;a name="rest_code_2c1c55cf8c344104814127652265fd3c-4"&gt;&lt;/a&gt;&lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;string&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;a name="rest_code_2c1c55cf8c344104814127652265fd3c-5"&gt;&lt;/a&gt;    &lt;span class="k"&gt;get&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;a name="rest_code_2c1c55cf8c344104814127652265fd3c-6"&gt;&lt;/a&gt;        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;name_&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;a name="rest_code_2c1c55cf8c344104814127652265fd3c-7"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;a name="rest_code_2c1c55cf8c344104814127652265fd3c-8"&gt;&lt;/a&gt;    &lt;span class="k"&gt;set&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;a name="rest_code_2c1c55cf8c344104814127652265fd3c-9"&gt;&lt;/a&gt;        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;value&lt;/span&gt; &lt;span class="p"&gt;!=&lt;/span&gt; &lt;span class="n"&gt;name_&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;a name="rest_code_2c1c55cf8c344104814127652265fd3c-10"&gt;&lt;/a&gt;            &lt;span class="n"&gt;name_&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="k"&gt;value&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;a name="rest_code_2c1c55cf8c344104814127652265fd3c-11"&gt;&lt;/a&gt;            &lt;span class="n"&gt;NotifyPropertyChanged&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"name"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;a name="rest_code_2c1c55cf8c344104814127652265fd3c-12"&gt;&lt;/a&gt;        &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;a name="rest_code_2c1c55cf8c344104814127652265fd3c-13"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;a name="rest_code_2c1c55cf8c344104814127652265fd3c-14"&gt;&lt;/a&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;pre class="code csharp"&gt;&lt;a name="rest_code_a0736d0efc484dd19746f5b85300beb1-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;private&lt;/span&gt; &lt;span class="kt"&gt;string&lt;/span&gt; &lt;span class="n"&gt;name_&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="k"&gt;get&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="k"&gt;set&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="p"&gt;};&lt;/span&gt; &lt;span class="c1"&gt;// can also be a field&lt;/span&gt;
+&lt;a name="rest_code_a0736d0efc484dd19746f5b85300beb1-2"&gt;&lt;/a&gt;
+&lt;a name="rest_code_a0736d0efc484dd19746f5b85300beb1-3"&gt;&lt;/a&gt;&lt;span class="na"&gt;[JsonProperty]&lt;/span&gt;
+&lt;a name="rest_code_a0736d0efc484dd19746f5b85300beb1-4"&gt;&lt;/a&gt;&lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;string&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_a0736d0efc484dd19746f5b85300beb1-5"&gt;&lt;/a&gt;    &lt;span class="k"&gt;get&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_a0736d0efc484dd19746f5b85300beb1-6"&gt;&lt;/a&gt;        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;name_&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_a0736d0efc484dd19746f5b85300beb1-7"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;a name="rest_code_a0736d0efc484dd19746f5b85300beb1-8"&gt;&lt;/a&gt;    &lt;span class="k"&gt;set&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_a0736d0efc484dd19746f5b85300beb1-9"&gt;&lt;/a&gt;        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;value&lt;/span&gt; &lt;span class="p"&gt;!=&lt;/span&gt; &lt;span class="n"&gt;name_&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_a0736d0efc484dd19746f5b85300beb1-10"&gt;&lt;/a&gt;            &lt;span class="n"&gt;name_&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="k"&gt;value&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_a0736d0efc484dd19746f5b85300beb1-11"&gt;&lt;/a&gt;            &lt;span class="n"&gt;NotifyPropertyChanged&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"name"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;a name="rest_code_a0736d0efc484dd19746f5b85300beb1-12"&gt;&lt;/a&gt;        &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;a name="rest_code_a0736d0efc484dd19746f5b85300beb1-13"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;a name="rest_code_a0736d0efc484dd19746f5b85300beb1-14"&gt;&lt;/a&gt;&lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;That’s 12 lines of code (excluding &lt;tt class="docutils literal"&gt;[JsonProperty]&lt;/tt&gt; which comes from the
 Json.NET library) for that pattern. Oh: and I need to do that for &lt;strong&gt;every&lt;/strong&gt;
 field/property of my class, because otherwise any changes to them would not be
@@ -522,44 +882,44 @@ attribute (which does not appear on all properties).&lt;/p&gt;
 really simple &lt;a class="reference external" href="https://www.python.org/"&gt;Python&lt;/a&gt; script and ran it. And I ended up with all 14 fields built
 for me.&lt;/p&gt;
 &lt;p&gt;&lt;a class="reference external" href="https://chriswarrick.com/listings/code-writing-code/write_properties.py.html"&gt;code-writing-code/write_properties.py&lt;/a&gt;  &lt;a class="reference external" href="https://chriswarrick.com/listings/code-writing-code/write_properties.py"&gt;(Source)&lt;/a&gt;&lt;/p&gt;
-&lt;pre class="code python"&gt;&lt;a name="rest_code_3731a4d605454e47b9bead863e5a798f-1"&gt;&lt;/a&gt;&lt;span class="ch"&gt;#!/usr/bin/env python3&lt;/span&gt;
-&lt;a name="rest_code_3731a4d605454e47b9bead863e5a798f-2"&gt;&lt;/a&gt;&lt;span class="n"&gt;TEMPLATE&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;"""&lt;/span&gt;&lt;span class="se"&gt;\&lt;/span&gt;
-&lt;a name="rest_code_3731a4d605454e47b9bead863e5a798f-3"&gt;&lt;/a&gt;&lt;span class="s2"&gt;        &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt;public &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt; &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt; {&lt;/span&gt;
-&lt;a name="rest_code_3731a4d605454e47b9bead863e5a798f-4"&gt;&lt;/a&gt;&lt;span class="s2"&gt;            get {&lt;/span&gt;
-&lt;a name="rest_code_3731a4d605454e47b9bead863e5a798f-5"&gt;&lt;/a&gt;&lt;span class="s2"&gt;                return &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt;_;&lt;/span&gt;
-&lt;a name="rest_code_3731a4d605454e47b9bead863e5a798f-6"&gt;&lt;/a&gt;&lt;span class="s2"&gt;            }&lt;/span&gt;
-&lt;a name="rest_code_3731a4d605454e47b9bead863e5a798f-7"&gt;&lt;/a&gt;&lt;span class="s2"&gt;            set {&lt;/span&gt;
-&lt;a name="rest_code_3731a4d605454e47b9bead863e5a798f-8"&gt;&lt;/a&gt;&lt;span class="s2"&gt;                if (value != &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt;_) {&lt;/span&gt;
-&lt;a name="rest_code_3731a4d605454e47b9bead863e5a798f-9"&gt;&lt;/a&gt;&lt;span class="s2"&gt;                    &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt;_ = value;&lt;/span&gt;
-&lt;a name="rest_code_3731a4d605454e47b9bead863e5a798f-10"&gt;&lt;/a&gt;&lt;span class="s2"&gt;                    NotifyPropertyChanged("&lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt;");&lt;/span&gt;
-&lt;a name="rest_code_3731a4d605454e47b9bead863e5a798f-11"&gt;&lt;/a&gt;&lt;span class="s2"&gt;                }&lt;/span&gt;
-&lt;a name="rest_code_3731a4d605454e47b9bead863e5a798f-12"&gt;&lt;/a&gt;&lt;span class="s2"&gt;            }&lt;/span&gt;
-&lt;a name="rest_code_3731a4d605454e47b9bead863e5a798f-13"&gt;&lt;/a&gt;&lt;span class="s2"&gt;        }&lt;/span&gt;
-&lt;a name="rest_code_3731a4d605454e47b9bead863e5a798f-14"&gt;&lt;/a&gt;&lt;span class="s2"&gt;"""&lt;/span&gt;
-&lt;a name="rest_code_3731a4d605454e47b9bead863e5a798f-15"&gt;&lt;/a&gt;&lt;span class="n"&gt;JSONPROPERTY_TEMPLATE&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;'[JsonProperty]&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s1"&gt;        '&lt;/span&gt;
-&lt;a name="rest_code_3731a4d605454e47b9bead863e5a798f-16"&gt;&lt;/a&gt;
-&lt;a name="rest_code_3731a4d605454e47b9bead863e5a798f-17"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;has_jsonproperty&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-&lt;a name="rest_code_3731a4d605454e47b9bead863e5a798f-18"&gt;&lt;/a&gt;    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;has_jsonproperty&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-&lt;a name="rest_code_3731a4d605454e47b9bead863e5a798f-19"&gt;&lt;/a&gt;        &lt;span class="n"&gt;jsonproperty&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;JSONPROPERTY_TEMPLATE&lt;/span&gt;
-&lt;a name="rest_code_3731a4d605454e47b9bead863e5a798f-20"&gt;&lt;/a&gt;    &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-&lt;a name="rest_code_3731a4d605454e47b9bead863e5a798f-21"&gt;&lt;/a&gt;        &lt;span class="n"&gt;jsonproperty&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;''&lt;/span&gt;
-&lt;a name="rest_code_3731a4d605454e47b9bead863e5a798f-22"&gt;&lt;/a&gt;    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;TEMPLATE&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;jsonproperty&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_3731a4d605454e47b9bead863e5a798f-23"&gt;&lt;/a&gt;
-&lt;a name="rest_code_3731a4d605454e47b9bead863e5a798f-24"&gt;&lt;/a&gt;&lt;span class="n"&gt;properties&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;
-&lt;a name="rest_code_3731a4d605454e47b9bead863e5a798f-25"&gt;&lt;/a&gt;    &lt;span class="s1"&gt;'1 string name'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;a name="rest_code_3731a4d605454e47b9bead863e5a798f-26"&gt;&lt;/a&gt;    &lt;span class="s1"&gt;'0 int another'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;a name="rest_code_3731a4d605454e47b9bead863e5a798f-27"&gt;&lt;/a&gt;    &lt;span class="c1"&gt;# 12 fields omitted for brevity&lt;/span&gt;
-&lt;a name="rest_code_3731a4d605454e47b9bead863e5a798f-28"&gt;&lt;/a&gt;&lt;span class="p"&gt;]&lt;/span&gt;
-&lt;a name="rest_code_3731a4d605454e47b9bead863e5a798f-29"&gt;&lt;/a&gt;&lt;span class="n"&gt;properties_split&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;split&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;p&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;properties&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
-&lt;a name="rest_code_3731a4d605454e47b9bead863e5a798f-30"&gt;&lt;/a&gt;
-&lt;a name="rest_code_3731a4d605454e47b9bead863e5a798f-31"&gt;&lt;/a&gt;&lt;span class="c1"&gt;# Private definitions (internal)&lt;/span&gt;
-&lt;a name="rest_code_3731a4d605454e47b9bead863e5a798f-32"&gt;&lt;/a&gt;&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;has_jsonproperty&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;properties_split&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-&lt;a name="rest_code_3731a4d605454e47b9bead863e5a798f-33"&gt;&lt;/a&gt;    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"        private &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt; &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt;_ { get; set; }"&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-&lt;a name="rest_code_3731a4d605454e47b9bead863e5a798f-34"&gt;&lt;/a&gt;
-&lt;a name="rest_code_3731a4d605454e47b9bead863e5a798f-35"&gt;&lt;/a&gt;&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;a name="rest_code_3731a4d605454e47b9bead863e5a798f-36"&gt;&lt;/a&gt;&lt;span class="c1"&gt;# Public definitions (with notifications)&lt;/span&gt;
-&lt;a name="rest_code_3731a4d605454e47b9bead863e5a798f-37"&gt;&lt;/a&gt;&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;has_jsonproperty&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;properties_split&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-&lt;a name="rest_code_3731a4d605454e47b9bead863e5a798f-38"&gt;&lt;/a&gt;    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;has_jsonproperty&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s1"&gt;'1'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_688eb867f2174acdbf460dbc625137fb-1"&gt;&lt;/a&gt;&lt;span class="ch"&gt;#!/usr/bin/env python3&lt;/span&gt;
+&lt;a name="rest_code_688eb867f2174acdbf460dbc625137fb-2"&gt;&lt;/a&gt;&lt;span class="n"&gt;TEMPLATE&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;"""&lt;/span&gt;&lt;span class="se"&gt;\&lt;/span&gt;
+&lt;a name="rest_code_688eb867f2174acdbf460dbc625137fb-3"&gt;&lt;/a&gt;&lt;span class="s2"&gt;        &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt;public &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt; &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt; {&lt;/span&gt;
+&lt;a name="rest_code_688eb867f2174acdbf460dbc625137fb-4"&gt;&lt;/a&gt;&lt;span class="s2"&gt;            get {&lt;/span&gt;
+&lt;a name="rest_code_688eb867f2174acdbf460dbc625137fb-5"&gt;&lt;/a&gt;&lt;span class="s2"&gt;                return &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt;_;&lt;/span&gt;
+&lt;a name="rest_code_688eb867f2174acdbf460dbc625137fb-6"&gt;&lt;/a&gt;&lt;span class="s2"&gt;            }&lt;/span&gt;
+&lt;a name="rest_code_688eb867f2174acdbf460dbc625137fb-7"&gt;&lt;/a&gt;&lt;span class="s2"&gt;            set {&lt;/span&gt;
+&lt;a name="rest_code_688eb867f2174acdbf460dbc625137fb-8"&gt;&lt;/a&gt;&lt;span class="s2"&gt;                if (value != &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt;_) {&lt;/span&gt;
+&lt;a name="rest_code_688eb867f2174acdbf460dbc625137fb-9"&gt;&lt;/a&gt;&lt;span class="s2"&gt;                    &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt;_ = value;&lt;/span&gt;
+&lt;a name="rest_code_688eb867f2174acdbf460dbc625137fb-10"&gt;&lt;/a&gt;&lt;span class="s2"&gt;                    NotifyPropertyChanged("&lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt;");&lt;/span&gt;
+&lt;a name="rest_code_688eb867f2174acdbf460dbc625137fb-11"&gt;&lt;/a&gt;&lt;span class="s2"&gt;                }&lt;/span&gt;
+&lt;a name="rest_code_688eb867f2174acdbf460dbc625137fb-12"&gt;&lt;/a&gt;&lt;span class="s2"&gt;            }&lt;/span&gt;
+&lt;a name="rest_code_688eb867f2174acdbf460dbc625137fb-13"&gt;&lt;/a&gt;&lt;span class="s2"&gt;        }&lt;/span&gt;
+&lt;a name="rest_code_688eb867f2174acdbf460dbc625137fb-14"&gt;&lt;/a&gt;&lt;span class="s2"&gt;"""&lt;/span&gt;
+&lt;a name="rest_code_688eb867f2174acdbf460dbc625137fb-15"&gt;&lt;/a&gt;&lt;span class="n"&gt;JSONPROPERTY_TEMPLATE&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;'[JsonProperty]&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s1"&gt;        '&lt;/span&gt;
+&lt;a name="rest_code_688eb867f2174acdbf460dbc625137fb-16"&gt;&lt;/a&gt;
+&lt;a name="rest_code_688eb867f2174acdbf460dbc625137fb-17"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;has_jsonproperty&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;a name="rest_code_688eb867f2174acdbf460dbc625137fb-18"&gt;&lt;/a&gt;    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;has_jsonproperty&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;a name="rest_code_688eb867f2174acdbf460dbc625137fb-19"&gt;&lt;/a&gt;        &lt;span class="n"&gt;jsonproperty&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;JSONPROPERTY_TEMPLATE&lt;/span&gt;
+&lt;a name="rest_code_688eb867f2174acdbf460dbc625137fb-20"&gt;&lt;/a&gt;    &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;a name="rest_code_688eb867f2174acdbf460dbc625137fb-21"&gt;&lt;/a&gt;        &lt;span class="n"&gt;jsonproperty&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;''&lt;/span&gt;
+&lt;a name="rest_code_688eb867f2174acdbf460dbc625137fb-22"&gt;&lt;/a&gt;    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;TEMPLATE&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;jsonproperty&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_688eb867f2174acdbf460dbc625137fb-23"&gt;&lt;/a&gt;
+&lt;a name="rest_code_688eb867f2174acdbf460dbc625137fb-24"&gt;&lt;/a&gt;&lt;span class="n"&gt;properties&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;
+&lt;a name="rest_code_688eb867f2174acdbf460dbc625137fb-25"&gt;&lt;/a&gt;    &lt;span class="s1"&gt;'1 string name'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;a name="rest_code_688eb867f2174acdbf460dbc625137fb-26"&gt;&lt;/a&gt;    &lt;span class="s1"&gt;'0 int another'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;a name="rest_code_688eb867f2174acdbf460dbc625137fb-27"&gt;&lt;/a&gt;    &lt;span class="c1"&gt;# 12 fields omitted for brevity&lt;/span&gt;
+&lt;a name="rest_code_688eb867f2174acdbf460dbc625137fb-28"&gt;&lt;/a&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;a name="rest_code_688eb867f2174acdbf460dbc625137fb-29"&gt;&lt;/a&gt;&lt;span class="n"&gt;properties_split&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;split&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;p&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;properties&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;a name="rest_code_688eb867f2174acdbf460dbc625137fb-30"&gt;&lt;/a&gt;
+&lt;a name="rest_code_688eb867f2174acdbf460dbc625137fb-31"&gt;&lt;/a&gt;&lt;span class="c1"&gt;# Private definitions (internal)&lt;/span&gt;
+&lt;a name="rest_code_688eb867f2174acdbf460dbc625137fb-32"&gt;&lt;/a&gt;&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;has_jsonproperty&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;properties_split&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;a name="rest_code_688eb867f2174acdbf460dbc625137fb-33"&gt;&lt;/a&gt;    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"        private &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt; &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt;_ { get; set; }"&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;a name="rest_code_688eb867f2174acdbf460dbc625137fb-34"&gt;&lt;/a&gt;
+&lt;a name="rest_code_688eb867f2174acdbf460dbc625137fb-35"&gt;&lt;/a&gt;&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;a name="rest_code_688eb867f2174acdbf460dbc625137fb-36"&gt;&lt;/a&gt;&lt;span class="c1"&gt;# Public definitions (with notifications)&lt;/span&gt;
+&lt;a name="rest_code_688eb867f2174acdbf460dbc625137fb-37"&gt;&lt;/a&gt;&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;has_jsonproperty&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;properties_split&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;a name="rest_code_688eb867f2174acdbf460dbc625137fb-38"&gt;&lt;/a&gt;    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;has_jsonproperty&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s1"&gt;'1'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;That script takes a list of properties and spits out a block of code, ready to
 be pasted into the code. Visual Studio has a nice &lt;em&gt;Insert File as Text&lt;/em&gt;
 feature, so redirecting the output to a file and using that option is enough.&lt;/p&gt;
@@ -574,10 +934,10 @@ looking at you, IntelliJ IDEA aka PyCharm aka Android Studio…)&lt;/p&gt;
 &lt;p&gt;And so, I was building a test suite, using &lt;a class="reference external" href="http://junit.org/"&gt;JUnit&lt;/a&gt;. It’s pretty
 straightforward, and I remember the syntax from Python’s unittest (even though
 I write tests with &lt;a class="reference external" href="http://pytest.org/"&gt;pytest&lt;/a&gt; nowadays). Or so I thought.&lt;/p&gt;
-&lt;pre class="code java"&gt;&lt;a name="rest_code_c742e2e43a784072a8b2b8ef44d7d0cd-1"&gt;&lt;/a&gt;&lt;span class="c1"&gt;// (incorrect)&lt;/span&gt;
-&lt;a name="rest_code_c742e2e43a784072a8b2b8ef44d7d0cd-2"&gt;&lt;/a&gt;&lt;span class="n"&gt;assertEquals&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"Basic integers (7) failed"&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;namer&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;7L&lt;/span&gt;&lt;span class="o"&gt;),&lt;/span&gt; &lt;span class="s"&gt;"seven"&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
-&lt;a name="rest_code_c742e2e43a784072a8b2b8ef44d7d0cd-3"&gt;&lt;/a&gt;&lt;span class="c1"&gt;// (fixed)                              ^ cursor&lt;/span&gt;
-&lt;a name="rest_code_c742e2e43a784072a8b2b8ef44d7d0cd-4"&gt;&lt;/a&gt;&lt;span class="n"&gt;assertEquals&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"Basic integers (7) failed"&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"seven"&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;namer&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;7L&lt;/span&gt;&lt;span class="o"&gt;));&lt;/span&gt;
+&lt;pre class="code java"&gt;&lt;a name="rest_code_abac0afed8d54a22b9fad84e823c9624-1"&gt;&lt;/a&gt;&lt;span class="c1"&gt;// (incorrect)&lt;/span&gt;
+&lt;a name="rest_code_abac0afed8d54a22b9fad84e823c9624-2"&gt;&lt;/a&gt;&lt;span class="n"&gt;assertEquals&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"Basic integers (7) failed"&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;namer&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;7L&lt;/span&gt;&lt;span class="o"&gt;),&lt;/span&gt; &lt;span class="s"&gt;"seven"&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+&lt;a name="rest_code_abac0afed8d54a22b9fad84e823c9624-3"&gt;&lt;/a&gt;&lt;span class="c1"&gt;// (fixed)                              ^ cursor&lt;/span&gt;
+&lt;a name="rest_code_abac0afed8d54a22b9fad84e823c9624-4"&gt;&lt;/a&gt;&lt;span class="n"&gt;assertEquals&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"Basic integers (7) failed"&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"seven"&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;namer&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;7L&lt;/span&gt;&lt;span class="o"&gt;));&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;You see, the typical Python spelling is &lt;tt class="docutils literal"&gt;self.assertEquals(actual,
 expected)&lt;/tt&gt;. Java adds a &lt;tt class="docutils literal"&gt;String&lt;/tt&gt; message parameter and it also swaps
 &lt;tt class="docutils literal"&gt;actual&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;expected&lt;/tt&gt;. Which I didn’t notice at first, and I wrote my
@@ -689,16 +1049,16 @@ selected text).&lt;/p&gt;
 &lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id13"&gt;Getting started&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;Start by installing virtualenv, nginx and uWSGI. I recommend using your operating system packages. For uWSGI, we need the &lt;tt class="docutils literal"&gt;logfile&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;python3&lt;/tt&gt; plugins. (Arch Linux names the &lt;tt class="docutils literal"&gt;python3&lt;/tt&gt; plugin &lt;tt class="docutils literal"&gt;python&lt;/tt&gt;; the &lt;tt class="docutils literal"&gt;logfile&lt;/tt&gt; plugin may be built-in — check with your system repositories!). I’ll also install Git to clone the tutorial app, but it’s optional if your workflow does not involve git.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Ubuntu, Debian:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_4d17d579ebde4fd79839840fbfd56ea6-1"&gt;&lt;/a&gt;apt install virtualenv python3 uwsgi uwsgi-emperor uwsgi-plugin-python3 nginx-full git
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_a0190e3c1e3b46c49457cdc5078117b5-1"&gt;&lt;/a&gt;apt install virtualenv python3 uwsgi uwsgi-emperor uwsgi-plugin-python3 nginx-full git
 &lt;/pre&gt;&lt;p&gt;&lt;strong&gt;Fedora:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_03e336d7b4614187a4300da33ff6e2f1-1"&gt;&lt;/a&gt;dnf install python3-virtualenv uwsgi uwsgi-plugin-python3 uwsgi-logger-file nginx git
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_118339b5bacf4ddaa6b5b984df164131-1"&gt;&lt;/a&gt;dnf install python3-virtualenv uwsgi uwsgi-plugin-python3 uwsgi-logger-file nginx git
 &lt;/pre&gt;&lt;p&gt;&lt;strong&gt;CentOS:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_026986883257481982425685076b29e0-1"&gt;&lt;/a&gt;yum install epel-release
-&lt;a name="rest_code_026986883257481982425685076b29e0-2"&gt;&lt;/a&gt;yum install python34 python34-pip uwsgi uwsgi-plugin-python3 uwsgi-logger-file nginx git wget
-&lt;a name="rest_code_026986883257481982425685076b29e0-3"&gt;&lt;/a&gt;python3 -m pip install --user virtualenv
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_8d81fa4439de415eab89a791ca49d612-1"&gt;&lt;/a&gt;yum install epel-release
+&lt;a name="rest_code_8d81fa4439de415eab89a791ca49d612-2"&gt;&lt;/a&gt;yum install python34 python34-pip uwsgi uwsgi-plugin-python3 uwsgi-logger-file nginx git wget
+&lt;a name="rest_code_8d81fa4439de415eab89a791ca49d612-3"&gt;&lt;/a&gt;python3 -m pip install --user virtualenv
 &lt;/pre&gt;&lt;p&gt;We need to install virtualenv manually, because the &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;python-virtualenv&lt;/span&gt;&lt;/tt&gt; package is not compatible. It will be available to root only (user install).&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Arch Linux:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_e180718107134d82a27563bfef002f01-1"&gt;&lt;/a&gt;pacman -S python-virtualenv uwsgi uwsgi-plugin-python nginx git
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_2e5ba4c644cc44e3bc783878aff777e2-1"&gt;&lt;/a&gt;pacman -S python-virtualenv uwsgi uwsgi-plugin-python nginx git
 &lt;/pre&gt;&lt;/div&gt;
 &lt;div class="section" id="preparing-your-application"&gt;
 &lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id14"&gt;Preparing your application&lt;/a&gt;&lt;/h3&gt;
@@ -707,25 +1067,25 @@ selected text).&lt;/p&gt;
 &lt;p&gt;If you don’t use Flask, this tutorial also has instructions for other web frameworks (Django, Pyramid, Bottle) in the configuration files; it should be adjustable to any other WSGI-compliant framework/script nevertheless.&lt;/p&gt;
 &lt;p&gt;We’ll start by creating a virtualenv:&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Ubuntu, Debian:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_941c2b546f6147b08aeac8862d987767-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; /srv
-&lt;a name="rest_code_941c2b546f6147b08aeac8862d987767-2"&gt;&lt;/a&gt;virtualenv -p /usr/bin/python3 myapp
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_cebf0b556b264f99a535c3a7bd5fa101-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; /srv
+&lt;a name="rest_code_cebf0b556b264f99a535c3a7bd5fa101-2"&gt;&lt;/a&gt;virtualenv -p /usr/bin/python3 myapp
 &lt;/pre&gt;&lt;p&gt;&lt;strong&gt;Fedora, CentOS, Arch Linux:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_0f6155be226d420aa07c5aed65205e7f-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; /srv
-&lt;a name="rest_code_0f6155be226d420aa07c5aed65205e7f-2"&gt;&lt;/a&gt;python3 -m virtualenv myapp
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_e98799bb388449d3a59127fc6702fde2-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; /srv
+&lt;a name="rest_code_e98799bb388449d3a59127fc6702fde2-2"&gt;&lt;/a&gt;python3 -m virtualenv myapp
 &lt;/pre&gt;&lt;p&gt;(This tutorial assumes Python 3. Make sure you use the correct &lt;tt class="docutils literal"&gt;virtualenv&lt;/tt&gt; command/argument. If you want to use Python 2.7, you’ll need to adjust your uWSGI configuration as well.)&lt;/p&gt;
 &lt;p&gt;Now, we need to put our app there and install requirements. An example for the tutorial demo app:&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_ba71adab4c09468fa84b25e29f586711-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; myapp
-&lt;a name="rest_code_ba71adab4c09468fa84b25e29f586711-2"&gt;&lt;/a&gt;git clone https://github.com/Kwpolska/flask-demo-app appdata
-&lt;a name="rest_code_ba71adab4c09468fa84b25e29f586711-3"&gt;&lt;/a&gt;bin/pip install -r appdata/requirements.txt
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_9de1a23765964a329c008fcb7b84a280-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; myapp
+&lt;a name="rest_code_9de1a23765964a329c008fcb7b84a280-2"&gt;&lt;/a&gt;git clone https://github.com/Kwpolska/flask-demo-app appdata
+&lt;a name="rest_code_9de1a23765964a329c008fcb7b84a280-3"&gt;&lt;/a&gt;bin/pip install -r appdata/requirements.txt
 &lt;/pre&gt;&lt;p&gt;I’m storing my application data in the &lt;tt class="docutils literal"&gt;appdata&lt;/tt&gt; subdirectory so that it doesn’t clutter the virtualenv (or vice versa).  You may also install the &lt;tt class="docutils literal"&gt;uwsgi&lt;/tt&gt; package in the virtualenv, but it’s optional.&lt;/p&gt;
 &lt;p&gt;What this directory should be depends on your web framework.  For example, for a Django app, you should have an &lt;tt class="docutils literal"&gt;appdata/manage.py&lt;/tt&gt; file (in other words, &lt;tt class="docutils literal"&gt;appdata&lt;/tt&gt; is where your app structure starts).  I also assumed that the &lt;tt class="docutils literal"&gt;appdata&lt;/tt&gt; folder should have a &lt;tt class="docutils literal"&gt;static&lt;/tt&gt; subdirectory with all static files, including &lt;tt class="docutils literal"&gt;favicon.ico&lt;/tt&gt; if you have one (we will add support for both in nginx).&lt;/p&gt;
 &lt;p&gt;At this point, you should chown this directory to the user and group your server is going to run as.  This is especially important if uwsgi and nginx run as different users (as they do on Fedora). Run one of the following commands:&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Ubuntu, Debian:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_07f3adaac1a243f6b8fc7064ce095450-1"&gt;&lt;/a&gt;chown -R www-data:www-data /srv/myapp
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_82f242f9bd974c0d9c42dc034edc12eb-1"&gt;&lt;/a&gt;chown -R www-data:www-data /srv/myapp
 &lt;/pre&gt;&lt;p&gt;&lt;strong&gt;Fedora, CentOS:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_57f05dec4f794e29b443677376cc9cd2-1"&gt;&lt;/a&gt;chown -R uwsgi:nginx /srv/myapp
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_f77136e60d9e4147bfef8ff1b2b9b627-1"&gt;&lt;/a&gt;chown -R uwsgi:nginx /srv/myapp
 &lt;/pre&gt;&lt;p&gt;&lt;strong&gt;Arch Linux:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_d8d9d46eb2cb4007848b14d8d80733ff-1"&gt;&lt;/a&gt;chown -R http:http /srv/myapp
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_33c30b70043e4a74baa581558ef15f1d-1"&gt;&lt;/a&gt;chown -R http:http /srv/myapp
 &lt;/pre&gt;&lt;/div&gt;
 &lt;div class="section" id="configuring-uwsgi-and-nginx"&gt;
 &lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id15"&gt;Configuring uWSGI and nginx&lt;/a&gt;&lt;/h3&gt;
@@ -737,20 +1097,20 @@ selected text).&lt;/p&gt;
 &lt;div class="section" id="uwsgi-configuration"&gt;
 &lt;h4&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id16"&gt;uWSGI configuration&lt;/a&gt;&lt;/h4&gt;
 &lt;p&gt;Start with this, but read the notes below and change the values accordingly:&lt;/p&gt;
-&lt;pre class="code ini"&gt;&lt;a name="rest_code_47e7a88f4519414881aca9d0bd189797-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;[uwsgi]&lt;/span&gt;
-&lt;a name="rest_code_47e7a88f4519414881aca9d0bd189797-2"&gt;&lt;/a&gt;&lt;span class="na"&gt;socket&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/uwsgi.sock&lt;/span&gt;
-&lt;a name="rest_code_47e7a88f4519414881aca9d0bd189797-3"&gt;&lt;/a&gt;&lt;span class="na"&gt;chmod-socket&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;775&lt;/span&gt;
-&lt;a name="rest_code_47e7a88f4519414881aca9d0bd189797-4"&gt;&lt;/a&gt;&lt;span class="na"&gt;chdir&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/appdata&lt;/span&gt;
-&lt;a name="rest_code_47e7a88f4519414881aca9d0bd189797-5"&gt;&lt;/a&gt;&lt;span class="na"&gt;master&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;true&lt;/span&gt;
-&lt;a name="rest_code_47e7a88f4519414881aca9d0bd189797-6"&gt;&lt;/a&gt;&lt;span class="na"&gt;binary-path&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/bin/uwsgi&lt;/span&gt;
-&lt;a name="rest_code_47e7a88f4519414881aca9d0bd189797-7"&gt;&lt;/a&gt;&lt;span class="na"&gt;virtualenv&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp&lt;/span&gt;
-&lt;a name="rest_code_47e7a88f4519414881aca9d0bd189797-8"&gt;&lt;/a&gt;&lt;span class="na"&gt;module&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;flaskapp:app&lt;/span&gt;
-&lt;a name="rest_code_47e7a88f4519414881aca9d0bd189797-9"&gt;&lt;/a&gt;&lt;span class="na"&gt;uid&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;www-data&lt;/span&gt;
-&lt;a name="rest_code_47e7a88f4519414881aca9d0bd189797-10"&gt;&lt;/a&gt;&lt;span class="na"&gt;gid&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;www-data&lt;/span&gt;
-&lt;a name="rest_code_47e7a88f4519414881aca9d0bd189797-11"&gt;&lt;/a&gt;&lt;span class="na"&gt;processes&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;1&lt;/span&gt;
-&lt;a name="rest_code_47e7a88f4519414881aca9d0bd189797-12"&gt;&lt;/a&gt;&lt;span class="na"&gt;threads&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;1&lt;/span&gt;
-&lt;a name="rest_code_47e7a88f4519414881aca9d0bd189797-13"&gt;&lt;/a&gt;&lt;span class="na"&gt;plugins&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;python3,logfile&lt;/span&gt;
-&lt;a name="rest_code_47e7a88f4519414881aca9d0bd189797-14"&gt;&lt;/a&gt;&lt;span class="na"&gt;logger&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;file:/srv/myapp/uwsgi.log&lt;/span&gt;
+&lt;pre class="code ini"&gt;&lt;a name="rest_code_fe5096cc1d3b429bbcdfdce7a07cebc1-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;[uwsgi]&lt;/span&gt;
+&lt;a name="rest_code_fe5096cc1d3b429bbcdfdce7a07cebc1-2"&gt;&lt;/a&gt;&lt;span class="na"&gt;socket&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/uwsgi.sock&lt;/span&gt;
+&lt;a name="rest_code_fe5096cc1d3b429bbcdfdce7a07cebc1-3"&gt;&lt;/a&gt;&lt;span class="na"&gt;chmod-socket&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;775&lt;/span&gt;
+&lt;a name="rest_code_fe5096cc1d3b429bbcdfdce7a07cebc1-4"&gt;&lt;/a&gt;&lt;span class="na"&gt;chdir&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/appdata&lt;/span&gt;
+&lt;a name="rest_code_fe5096cc1d3b429bbcdfdce7a07cebc1-5"&gt;&lt;/a&gt;&lt;span class="na"&gt;master&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;true&lt;/span&gt;
+&lt;a name="rest_code_fe5096cc1d3b429bbcdfdce7a07cebc1-6"&gt;&lt;/a&gt;&lt;span class="na"&gt;binary-path&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/bin/uwsgi&lt;/span&gt;
+&lt;a name="rest_code_fe5096cc1d3b429bbcdfdce7a07cebc1-7"&gt;&lt;/a&gt;&lt;span class="na"&gt;virtualenv&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp&lt;/span&gt;
+&lt;a name="rest_code_fe5096cc1d3b429bbcdfdce7a07cebc1-8"&gt;&lt;/a&gt;&lt;span class="na"&gt;module&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;flaskapp:app&lt;/span&gt;
+&lt;a name="rest_code_fe5096cc1d3b429bbcdfdce7a07cebc1-9"&gt;&lt;/a&gt;&lt;span class="na"&gt;uid&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;www-data&lt;/span&gt;
+&lt;a name="rest_code_fe5096cc1d3b429bbcdfdce7a07cebc1-10"&gt;&lt;/a&gt;&lt;span class="na"&gt;gid&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;www-data&lt;/span&gt;
+&lt;a name="rest_code_fe5096cc1d3b429bbcdfdce7a07cebc1-11"&gt;&lt;/a&gt;&lt;span class="na"&gt;processes&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;1&lt;/span&gt;
+&lt;a name="rest_code_fe5096cc1d3b429bbcdfdce7a07cebc1-12"&gt;&lt;/a&gt;&lt;span class="na"&gt;threads&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;1&lt;/span&gt;
+&lt;a name="rest_code_fe5096cc1d3b429bbcdfdce7a07cebc1-13"&gt;&lt;/a&gt;&lt;span class="na"&gt;plugins&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;python3,logfile&lt;/span&gt;
+&lt;a name="rest_code_fe5096cc1d3b429bbcdfdce7a07cebc1-14"&gt;&lt;/a&gt;&lt;span class="na"&gt;logger&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;file:/srv/myapp/uwsgi.log&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;Save this file as:&lt;/p&gt;
 &lt;ul class="simple"&gt;
 &lt;li&gt;Ubuntu, Debian: &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;/etc/uwsgi-emperor/vassals/myapp.ini&lt;/span&gt;&lt;/tt&gt;&lt;/li&gt;
@@ -847,26 +1207,26 @@ selected text).&lt;/p&gt;
 &lt;li&gt;Fedora, CentOS: &lt;tt class="docutils literal"&gt;/etc/nginx/conf.d/myapp.conf&lt;/tt&gt;&lt;/li&gt;
 &lt;li&gt;Arch Linux: add &lt;tt class="docutils literal"&gt;include &lt;span class="pre"&gt;/etc/nginx/conf.d/*.conf;&lt;/span&gt;&lt;/tt&gt; to your &lt;tt class="docutils literal"&gt;http&lt;/tt&gt; directive in &lt;tt class="docutils literal"&gt;/etc/nginx/nginx.conf&lt;/tt&gt; and use &lt;tt class="docutils literal"&gt;/etc/nginx/conf.d/myapp.conf&lt;/tt&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;pre class="code nginx"&gt;&lt;a name="rest_code_8889bf0b77c8454fb7910cd9110807f9-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;server&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;a name="rest_code_8889bf0b77c8454fb7910cd9110807f9-2"&gt;&lt;/a&gt;    &lt;span class="c1"&gt;# for a public HTTP server:&lt;/span&gt;
-&lt;a name="rest_code_8889bf0b77c8454fb7910cd9110807f9-3"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;listen&lt;/span&gt; &lt;span class="mi"&gt;80&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;a name="rest_code_8889bf0b77c8454fb7910cd9110807f9-4"&gt;&lt;/a&gt;    &lt;span class="c1"&gt;# for a public HTTPS server:&lt;/span&gt;
-&lt;a name="rest_code_8889bf0b77c8454fb7910cd9110807f9-5"&gt;&lt;/a&gt;    &lt;span class="c1"&gt;# listen 443 ssl;&lt;/span&gt;
-&lt;a name="rest_code_8889bf0b77c8454fb7910cd9110807f9-6"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;server_name&lt;/span&gt; &lt;span class="s"&gt;localhost&lt;/span&gt; &lt;span class="s"&gt;myapp.local&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;a name="rest_code_8889bf0b77c8454fb7910cd9110807f9-7"&gt;&lt;/a&gt;
-&lt;a name="rest_code_8889bf0b77c8454fb7910cd9110807f9-8"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;location&lt;/span&gt; &lt;span class="s"&gt;/&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;a name="rest_code_8889bf0b77c8454fb7910cd9110807f9-9"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;include&lt;/span&gt; &lt;span class="s"&gt;uwsgi_params&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;a name="rest_code_8889bf0b77c8454fb7910cd9110807f9-10"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;uwsgi_pass&lt;/span&gt; &lt;span class="s"&gt;unix:/srv/myapp/uwsgi.sock&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;a name="rest_code_8889bf0b77c8454fb7910cd9110807f9-11"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;a name="rest_code_8889bf0b77c8454fb7910cd9110807f9-12"&gt;&lt;/a&gt;
-&lt;a name="rest_code_8889bf0b77c8454fb7910cd9110807f9-13"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;location&lt;/span&gt; &lt;span class="s"&gt;/static&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;a name="rest_code_8889bf0b77c8454fb7910cd9110807f9-14"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;alias&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/appdata/static&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;a name="rest_code_8889bf0b77c8454fb7910cd9110807f9-15"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;a name="rest_code_8889bf0b77c8454fb7910cd9110807f9-16"&gt;&lt;/a&gt;
-&lt;a name="rest_code_8889bf0b77c8454fb7910cd9110807f9-17"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;location&lt;/span&gt; &lt;span class="s"&gt;/favicon.ico&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;a name="rest_code_8889bf0b77c8454fb7910cd9110807f9-18"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;alias&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/appdata/static/favicon.ico&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;a name="rest_code_8889bf0b77c8454fb7910cd9110807f9-19"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;a name="rest_code_8889bf0b77c8454fb7910cd9110807f9-20"&gt;&lt;/a&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;pre class="code nginx"&gt;&lt;a name="rest_code_cbc607a8c16f46b3b69b2e3c22745a66-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;server&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_cbc607a8c16f46b3b69b2e3c22745a66-2"&gt;&lt;/a&gt;    &lt;span class="c1"&gt;# for a public HTTP server:&lt;/span&gt;
+&lt;a name="rest_code_cbc607a8c16f46b3b69b2e3c22745a66-3"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;listen&lt;/span&gt; &lt;span class="mi"&gt;80&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_cbc607a8c16f46b3b69b2e3c22745a66-4"&gt;&lt;/a&gt;    &lt;span class="c1"&gt;# for a public HTTPS server:&lt;/span&gt;
+&lt;a name="rest_code_cbc607a8c16f46b3b69b2e3c22745a66-5"&gt;&lt;/a&gt;    &lt;span class="c1"&gt;# listen 443 ssl;&lt;/span&gt;
+&lt;a name="rest_code_cbc607a8c16f46b3b69b2e3c22745a66-6"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;server_name&lt;/span&gt; &lt;span class="s"&gt;localhost&lt;/span&gt; &lt;span class="s"&gt;myapp.local&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_cbc607a8c16f46b3b69b2e3c22745a66-7"&gt;&lt;/a&gt;
+&lt;a name="rest_code_cbc607a8c16f46b3b69b2e3c22745a66-8"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;location&lt;/span&gt; &lt;span class="s"&gt;/&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_cbc607a8c16f46b3b69b2e3c22745a66-9"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;include&lt;/span&gt; &lt;span class="s"&gt;uwsgi_params&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_cbc607a8c16f46b3b69b2e3c22745a66-10"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;uwsgi_pass&lt;/span&gt; &lt;span class="s"&gt;unix:/srv/myapp/uwsgi.sock&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_cbc607a8c16f46b3b69b2e3c22745a66-11"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;a name="rest_code_cbc607a8c16f46b3b69b2e3c22745a66-12"&gt;&lt;/a&gt;
+&lt;a name="rest_code_cbc607a8c16f46b3b69b2e3c22745a66-13"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;location&lt;/span&gt; &lt;span class="s"&gt;/static&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_cbc607a8c16f46b3b69b2e3c22745a66-14"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;alias&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/appdata/static&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_cbc607a8c16f46b3b69b2e3c22745a66-15"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;a name="rest_code_cbc607a8c16f46b3b69b2e3c22745a66-16"&gt;&lt;/a&gt;
+&lt;a name="rest_code_cbc607a8c16f46b3b69b2e3c22745a66-17"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;location&lt;/span&gt; &lt;span class="s"&gt;/favicon.ico&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_cbc607a8c16f46b3b69b2e3c22745a66-18"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;alias&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/appdata/static/favicon.ico&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_cbc607a8c16f46b3b69b2e3c22745a66-19"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;a name="rest_code_cbc607a8c16f46b3b69b2e3c22745a66-20"&gt;&lt;/a&gt;&lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;Note that this file is a very basic and rudimentary configuration. This configuration is fine for local testing, but for a real deployment, you will need to adjust it:&lt;/p&gt;
 &lt;ul class="simple"&gt;
 &lt;li&gt;set &lt;tt class="docutils literal"&gt;listen&lt;/tt&gt; to &lt;tt class="docutils literal"&gt;443 ssl&lt;/tt&gt; and create a http→https redirect on port 80 (you can get a free SSL certificate from &lt;a class="reference external" href="https://letsencrypt.org/"&gt;Let’s Encrypt&lt;/a&gt;; make sure to &lt;a class="reference external" href="https://raymii.org/s/tutorials/Strong_SSL_Security_On_nginx.html"&gt;configure SSL properly&lt;/a&gt;).&lt;/li&gt;
@@ -882,39 +1242,39 @@ selected text).&lt;/p&gt;
 &lt;div class="section" id="for-arch-linux"&gt;
 &lt;h4&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id19"&gt;For Arch Linux&lt;/a&gt;&lt;/h4&gt;
 &lt;p&gt;All you need is:&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_3c949136893545ca8c05071f5d1d6148-1"&gt;&lt;/a&gt;systemctl &lt;span class="nb"&gt;enable&lt;/span&gt; nginx emperor.uwsgi
-&lt;a name="rest_code_3c949136893545ca8c05071f5d1d6148-2"&gt;&lt;/a&gt;systemctl start nginx emperor.uwsgi
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_9919426eb4f24dfa95b677b48fa1ab1b-1"&gt;&lt;/a&gt;systemctl &lt;span class="nb"&gt;enable&lt;/span&gt; nginx emperor.uwsgi
+&lt;a name="rest_code_9919426eb4f24dfa95b677b48fa1ab1b-2"&gt;&lt;/a&gt;systemctl start nginx emperor.uwsgi
 &lt;/pre&gt;&lt;p&gt;Verify the service is running with &lt;tt class="docutils literal"&gt;systemctl status emperor.uwsgi&lt;/tt&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="for-fedora-and-centos"&gt;
 &lt;h4&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id20"&gt;For Fedora and CentOS&lt;/a&gt;&lt;/h4&gt;
 &lt;p&gt;Make sure you followed the extra note about editing &lt;tt class="docutils literal"&gt;/etc/uwsgi.ini&lt;/tt&gt; earlier and run:&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_c416090db666447ea3766e6ce87a9401-1"&gt;&lt;/a&gt;systemctl &lt;span class="nb"&gt;enable&lt;/span&gt; nginx uwsgi
-&lt;a name="rest_code_c416090db666447ea3766e6ce87a9401-2"&gt;&lt;/a&gt;systemctl start nginx uwsgi
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_b59b053b3ab14c9986590ee5c9f30a61-1"&gt;&lt;/a&gt;systemctl &lt;span class="nb"&gt;enable&lt;/span&gt; nginx uwsgi
+&lt;a name="rest_code_b59b053b3ab14c9986590ee5c9f30a61-2"&gt;&lt;/a&gt;systemctl start nginx uwsgi
 &lt;/pre&gt;&lt;p&gt;Verify the service is running with &lt;tt class="docutils literal"&gt;systemctl status uwsgi&lt;/tt&gt;&lt;/p&gt;
 &lt;p&gt;If you disabled SELinux, this is enough to get an app working and you can skip over to the next section.&lt;/p&gt;
 &lt;p&gt;If you want to use SELinux, you need to do the following to allow nginx to read static files:&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_eed589ba704744bfbfad95c35747df4f-1"&gt;&lt;/a&gt;setenforce &lt;span class="m"&gt;0&lt;/span&gt;
-&lt;a name="rest_code_eed589ba704744bfbfad95c35747df4f-2"&gt;&lt;/a&gt;chcon -R system_u:system_r:httpd_t:s0 /srv/myapp/appdata/static
-&lt;a name="rest_code_eed589ba704744bfbfad95c35747df4f-3"&gt;&lt;/a&gt;setenforce &lt;span class="m"&gt;1&lt;/span&gt;
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_1ad1ab8fc13c49b788bbe1c3f4a50e45-1"&gt;&lt;/a&gt;setenforce &lt;span class="m"&gt;0&lt;/span&gt;
+&lt;a name="rest_code_1ad1ab8fc13c49b788bbe1c3f4a50e45-2"&gt;&lt;/a&gt;chcon -R system_u:system_r:httpd_t:s0 /srv/myapp/appdata/static
+&lt;a name="rest_code_1ad1ab8fc13c49b788bbe1c3f4a50e45-3"&gt;&lt;/a&gt;setenforce &lt;span class="m"&gt;1&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;We now need to install a &lt;a class="reference external" href="https://chriswarrick.com/pub/nginx-uwsgi.pp"&gt;SELinux policy&lt;/a&gt; (that I created for this project) to allow nginx and uWSGI to communicate.
 Download it and run:&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_5c879c09aaed435bafc167607798a3b7-1"&gt;&lt;/a&gt;semodule -i nginx-uwsgi.pp
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_20b89481c02f44bc9ee2a7e1efb3ed53-1"&gt;&lt;/a&gt;semodule -i nginx-uwsgi.pp
 &lt;/pre&gt;&lt;p&gt;Hopefully, this is enough (you can delete the file). In case it isn’t, please read SELinux documentation, check audit logs, and look into &lt;tt class="docutils literal"&gt;audit2allow&lt;/tt&gt;.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="for-ubuntu-and-debian"&gt;
 &lt;h4&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id21"&gt;For Ubuntu and Debian&lt;/a&gt;&lt;/h4&gt;
 &lt;p&gt;Ubuntu and Debian (still!) use LSB services for uWSGI. Because LSB services are awful, we’re going to set up our own systemd-based (native) service.&lt;/p&gt;
 &lt;p&gt;Start by disabling the LSB service that comes with Ubuntu and Debian:&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_d6ce99a9b8c34c8f91b670d0ef5a9549-1"&gt;&lt;/a&gt;systemctl stop uwsgi-emperor
-&lt;a name="rest_code_d6ce99a9b8c34c8f91b670d0ef5a9549-2"&gt;&lt;/a&gt;systemctl disable uwsgi-emperor
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_952abad0008b47c78625f6f98a82648d-1"&gt;&lt;/a&gt;systemctl stop uwsgi-emperor
+&lt;a name="rest_code_952abad0008b47c78625f6f98a82648d-2"&gt;&lt;/a&gt;systemctl disable uwsgi-emperor
 &lt;/pre&gt;&lt;p&gt;Copy the &lt;tt class="docutils literal"&gt;.service&lt;/tt&gt; file from the &lt;a class="reference external" href="https://uwsgi-docs.readthedocs.org/en/latest/Systemd.html#adding-the-emperor-to-systemd"&gt;uWSGI systemd documentation&lt;/a&gt; to &lt;tt class="docutils literal"&gt;/etc/systemd/system/emperor.uwsgi.service&lt;/tt&gt;.  Change the ExecStart line to:&lt;/p&gt;
-&lt;pre class="code ini"&gt;&lt;a name="rest_code_750bb659cee54e9c9d8f89e3e39c5792-1"&gt;&lt;/a&gt;&lt;span class="na"&gt;ExecStart&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/usr/bin/uwsgi --ini /etc/uwsgi-emperor/emperor.ini&lt;/span&gt;
+&lt;pre class="code ini"&gt;&lt;a name="rest_code_3f196c51a29b468fb96d245826d45531-1"&gt;&lt;/a&gt;&lt;span class="na"&gt;ExecStart&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/usr/bin/uwsgi --ini /etc/uwsgi-emperor/emperor.ini&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;You can now reload systemd daemons and enable the services:&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_6305e66ef2ec40c0ace50023e42c7602-1"&gt;&lt;/a&gt;systemctl daemon-reload
-&lt;a name="rest_code_6305e66ef2ec40c0ace50023e42c7602-2"&gt;&lt;/a&gt;systemctl &lt;span class="nb"&gt;enable&lt;/span&gt; nginx emperor.uwsgi
-&lt;a name="rest_code_6305e66ef2ec40c0ace50023e42c7602-3"&gt;&lt;/a&gt;systemctl reload nginx
-&lt;a name="rest_code_6305e66ef2ec40c0ace50023e42c7602-4"&gt;&lt;/a&gt;systemctl start emperor.uwsgi
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_803b64350c1f4579867801e0fbacec51-1"&gt;&lt;/a&gt;systemctl daemon-reload
+&lt;a name="rest_code_803b64350c1f4579867801e0fbacec51-2"&gt;&lt;/a&gt;systemctl &lt;span class="nb"&gt;enable&lt;/span&gt; nginx emperor.uwsgi
+&lt;a name="rest_code_803b64350c1f4579867801e0fbacec51-3"&gt;&lt;/a&gt;systemctl reload nginx
+&lt;a name="rest_code_803b64350c1f4579867801e0fbacec51-4"&gt;&lt;/a&gt;systemctl start emperor.uwsgi
 &lt;/pre&gt;&lt;p&gt;Verify the service is running with &lt;tt class="docutils literal"&gt;systemctl status emperor.uwsgi&lt;/tt&gt;.  (Ignore
 the warning about no request plugin)&lt;/p&gt;
 &lt;/div&gt;
@@ -926,9 +1286,9 @@ the warning about no request plugin)&lt;/p&gt;
 &lt;p&gt;If you used the demo application, you should see something like this (complete with the favicon and image greeting):&lt;/p&gt;
 &lt;img alt="/images/nginx-uwsgi-demo.png" class="centered" src="https://chriswarrick.com/images/nginx-uwsgi-demo.png"&gt;
 &lt;p&gt;If you want to test with cURL:&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_5ff4cff83798493fa4ea464266962466-1"&gt;&lt;/a&gt;curl -v http://localhost/
-&lt;a name="rest_code_5ff4cff83798493fa4ea464266962466-2"&gt;&lt;/a&gt;curl -I http://localhost/favicon.ico
-&lt;a name="rest_code_5ff4cff83798493fa4ea464266962466-3"&gt;&lt;/a&gt;curl -I http://localhost/static/hello.png
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_25205cc4cf2c4c828b1216b1c2a0ac6e-1"&gt;&lt;/a&gt;curl -v http://localhost/
+&lt;a name="rest_code_25205cc4cf2c4c828b1216b1c2a0ac6e-2"&gt;&lt;/a&gt;curl -I http://localhost/favicon.ico
+&lt;a name="rest_code_25205cc4cf2c4c828b1216b1c2a0ac6e-3"&gt;&lt;/a&gt;curl -I http://localhost/static/hello.png
 &lt;/pre&gt;&lt;div class="section" id="troubleshooting"&gt;
 &lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id23"&gt;Troubleshooting&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;Hopefully, everything works. If it doesn’t:&lt;/p&gt;
@@ -938,8 +1298,8 @@ the warning about no request plugin)&lt;/p&gt;
 &lt;li&gt;If you get a default site, disable that site in nginx config (&lt;tt class="docutils literal"&gt;/etc/nginx/nginx.conf&lt;/tt&gt; or your sites directory).&lt;/li&gt;
 &lt;li&gt;If you have a firewall installed, make sure to open the ports your web server runs on (typically 80/443). For &lt;tt class="docutils literal"&gt;firewalld&lt;/tt&gt; (Fedora, CentOS):&lt;/li&gt;
 &lt;/ul&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_d584def48f4843949bafa9b8bd07a8af-1"&gt;&lt;/a&gt;firewall-cmd --add-service http
-&lt;a name="rest_code_d584def48f4843949bafa9b8bd07a8af-2"&gt;&lt;/a&gt;firewall-cmd --add-service https
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_55e7822331a84418ade308d8ff8350b9-1"&gt;&lt;/a&gt;firewall-cmd --add-service http
+&lt;a name="rest_code_55e7822331a84418ade308d8ff8350b9-2"&gt;&lt;/a&gt;firewall-cmd --add-service https
 &lt;/pre&gt;&lt;ul class="simple"&gt;
 &lt;li&gt;If it still does not work, feel free to ask in the comments, mentioning your distribution, installation method, and what doesn’t work.&lt;/li&gt;
 &lt;/ul&gt;
@@ -1018,19 +1378,19 @@ on the second boot, talking about &lt;em&gt;critical structure corruption in CI.
 I rebooted, but I first took a little detour to the Arch Linux USB stick I
 prepared before to get a sane bootloader back. I’ve done this before, and
 usually requires three commands.&lt;/p&gt;
-&lt;pre class="code console"&gt;&lt;a name="rest_code_60c91ec4ddff41a9b24314575d61ec43-1"&gt;&lt;/a&gt;&lt;span class="gp"&gt;#&lt;/span&gt; mount /dev/sda2 /mnt
-&lt;a name="rest_code_60c91ec4ddff41a9b24314575d61ec43-2"&gt;&lt;/a&gt;&lt;span class="go"&gt;Metadata kept in Windows cache, refused to mount.&lt;/span&gt;
-&lt;a name="rest_code_60c91ec4ddff41a9b24314575d61ec43-3"&gt;&lt;/a&gt;&lt;span class="go"&gt;Failed to mount '/dev/sda2': Operation not permitted&lt;/span&gt;
-&lt;a name="rest_code_60c91ec4ddff41a9b24314575d61ec43-4"&gt;&lt;/a&gt;&lt;span class="go"&gt;The NTFS partition is in an unsafe state. Please resume and shutdown&lt;/span&gt;
-&lt;a name="rest_code_60c91ec4ddff41a9b24314575d61ec43-5"&gt;&lt;/a&gt;&lt;span class="go"&gt;Windows fully (no hibernation or fast restarting), or mount the volume&lt;/span&gt;
-&lt;a name="rest_code_60c91ec4ddff41a9b24314575d61ec43-6"&gt;&lt;/a&gt;&lt;span class="go"&gt;read-only with the 'ro' mount option.&lt;/span&gt;
+&lt;pre class="code console"&gt;&lt;a name="rest_code_50e764ec822c487e80ba0b8b79c99213-1"&gt;&lt;/a&gt;&lt;span class="gp"&gt;#&lt;/span&gt; mount /dev/sda2 /mnt
+&lt;a name="rest_code_50e764ec822c487e80ba0b8b79c99213-2"&gt;&lt;/a&gt;&lt;span class="go"&gt;Metadata kept in Windows cache, refused to mount.&lt;/span&gt;
+&lt;a name="rest_code_50e764ec822c487e80ba0b8b79c99213-3"&gt;&lt;/a&gt;&lt;span class="go"&gt;Failed to mount '/dev/sda2': Operation not permitted&lt;/span&gt;
+&lt;a name="rest_code_50e764ec822c487e80ba0b8b79c99213-4"&gt;&lt;/a&gt;&lt;span class="go"&gt;The NTFS partition is in an unsafe state. Please resume and shutdown&lt;/span&gt;
+&lt;a name="rest_code_50e764ec822c487e80ba0b8b79c99213-5"&gt;&lt;/a&gt;&lt;span class="go"&gt;Windows fully (no hibernation or fast restarting), or mount the volume&lt;/span&gt;
+&lt;a name="rest_code_50e764ec822c487e80ba0b8b79c99213-6"&gt;&lt;/a&gt;&lt;span class="go"&gt;read-only with the 'ro' mount option.&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;Wait, what?! I remember my hard drive layout, and &lt;tt class="docutils literal"&gt;/dev/sda2&lt;/tt&gt; is my Linux
 ext4 partition! I checked &lt;tt class="docutils literal"&gt;cfdisk&lt;/tt&gt;, and apparently I now have a &lt;em&gt;Hidden NTFS WinRE&lt;/em&gt;, with Linux moved to &lt;tt class="docutils literal"&gt;/dev/sda3&lt;/tt&gt; and my extended partition moved to &lt;tt class="docutils literal"&gt;/dev/sda4&lt;/tt&gt; (what would happen if I already had four partitions?). This is typical Windows misbehaviour: &lt;strong&gt;not caring about other OSes that might be installed&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;I accepted this defeat, mounted &lt;tt class="docutils literal"&gt;/dev/sda3&lt;/tt&gt;, ran &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;arch-chroot&lt;/span&gt; /mnt&lt;/tt&gt; and
 &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;syslinux-install_update&lt;/span&gt; &lt;span class="pre"&gt;-i&lt;/span&gt; &lt;span class="pre"&gt;-a&lt;/span&gt; &lt;span class="pre"&gt;-m&lt;/span&gt;&lt;/tt&gt; (I’m not a fan of GRUB 2, and I have a MBR
 drive layout). I should test this out by rebooting into Linux.&lt;/p&gt;
-&lt;pre class="code console"&gt;&lt;a name="rest_code_18c10698e9394fcf80c12eb2252d558a-1"&gt;&lt;/a&gt;&lt;span class="go"&gt;Error getting authority: Error initializing authority: Could not connect: No such file or directory (g-io-error-quark, 1)&lt;/span&gt;
-&lt;a name="rest_code_18c10698e9394fcf80c12eb2252d558a-2"&gt;&lt;/a&gt;&lt;span class="go"&gt;Welcome to emergency mode!&lt;/span&gt;
+&lt;pre class="code console"&gt;&lt;a name="rest_code_4e4cd6991afd45d384870c64f7de79c9-1"&gt;&lt;/a&gt;&lt;span class="go"&gt;Error getting authority: Error initializing authority: Could not connect: No such file or directory (g-io-error-quark, 1)&lt;/span&gt;
+&lt;a name="rest_code_4e4cd6991afd45d384870c64f7de79c9-2"&gt;&lt;/a&gt;&lt;span class="go"&gt;Welcome to emergency mode!&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;systemd &lt;strong&gt;really&lt;/strong&gt; values &lt;tt class="docutils literal"&gt;/etc/fstab&lt;/tt&gt;, and you can’t boot if any entry fails
 to mount, which was the case with the Windows drive in &lt;tt class="docutils literal"&gt;/dev/sda1&lt;/tt&gt; and my
 other NTFS partition (note that the error message is very unhelpful)&lt;/p&gt;
@@ -1055,82 +1415,4 @@ on their daily drivers. But I doubt that, because that’s a significant
 investment without any financial gain from helping out a corporation. So,
 virtual machines? I have no idea how they cope.&lt;/p&gt;
 &lt;p&gt;By the way, &lt;tt class="docutils literal"&gt;cmd.exe&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;winver.exe&lt;/tt&gt; claims it’s &lt;em&gt;Copyright © 2016&lt;/em&gt;. Previously, Windows copyright
-notices were outdated. Now, they’re in the future.&lt;/p&gt;&lt;/div&gt;</description><category>rant</category><category>review</category><category>Windows</category><guid>https://chriswarrick.com/blog/2015/12/27/windows-10-november-upgrade-windows-as-a-dis-service/</guid><pubDate>Sun, 27 Dec 2015 11:15:00 GMT</pubDate></item><item><title>Rewriting a Flask app in Django</title><link>https://chriswarrick.com/blog/2015/10/11/rewriting-a-flask-app-in-django/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;I spent Saturday on rewriting a Flask app in Django.  The app in question was
-&lt;a class="reference external" href="https://users.getnikola.com/"&gt;Nikola Users&lt;/a&gt;, which is a very simple CRUD
-app.  And yet, the Flask code was a mess, full of bugs and vulnerabilities.
-Eight hours later, I had a fully functional Django app that did more and fixed
-all problems.&lt;/p&gt;
-&lt;!-- TEASER_END --&gt;
-&lt;div class="section" id="original-flask-app"&gt;
-&lt;h2&gt;Original Flask app&lt;/h2&gt;
-&lt;p&gt;The original Flask app had a ton of problems.  In order to make it anywhere
-near useful, I would need to spend hours.  Here’s just a few of
-them:&lt;/p&gt;
-&lt;ul class="simple"&gt;
-&lt;li&gt;357 lines of spaghetti code (295 SLOC), all in one file&lt;/li&gt;
-&lt;li&gt;No form data validation, no CSRF &lt;a class="footnote-reference" href="https://chriswarrick.com/blog/2015/10/11/rewriting-a-flask-app-in-django/#id2" id="id1"&gt;[1]&lt;/a&gt; protection (it did have XSS protection
-though)&lt;/li&gt;
-&lt;li&gt;Login using Mozilla Persona, which requries JavaScript, is a bit kludgey, and
-feels desolate (and also had me store the admin e-mail list in code)&lt;/li&gt;
-&lt;li&gt;Geopolitics issues: using country flags for languages&lt;/li&gt;
-&lt;li&gt;A lot of things were implemented by hand&lt;/li&gt;
-&lt;li&gt;SQLAlchemy is very verbose&lt;/li&gt;
-&lt;li&gt;no DB migrations (makes enhancements harder)&lt;/li&gt;
-&lt;li&gt;Languages implemented as a PostgreSQL integer array&lt;/li&gt;
-&lt;li&gt;Adding a language required running a command-line script and &lt;strong&gt;restarting the
-app&lt;/strong&gt; (languages were cached in Python dicts with no way to reload them from
-the database; that would require talking through uWSGI anyway because there
-were multiple processes involved)&lt;/li&gt;
-&lt;li&gt;The templates were slightly hacky (the page title was set in each individual
-template and not in the view code); menus hacked together in HTML with no
-highlighting&lt;/li&gt;
-&lt;li&gt;Python 2.7&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/div&gt;
-&lt;div class="section" id="the-rewrite"&gt;
-&lt;h2&gt;The rewrite&lt;/h2&gt;
-&lt;p&gt;I started the process by opening &lt;a class="reference external" href="https://docs.djangoproject.com/en/"&gt;Django documentation&lt;/a&gt;, with its wonderful
-&lt;a class="reference external" href="https://docs.djangoproject.com/en/1.8/intro/tutorial01/"&gt;tutorial&lt;/a&gt;.  Now, I have written a couple basic Django apps before, but
-the majority of them didn’t do much.  In other words, I didn’t have a lot of experience.  Especially with taking user input and relationships.  It took me about 8 hours to get feature parity, and more.&lt;/p&gt;
-&lt;p&gt;Getting all the features was really simple.  For example, to get a many-to-many
-relationship for languages, I had to write just one line.&lt;/p&gt;
-&lt;pre class="code python"&gt;&lt;a name="rest_code_39a2e9553a8947d68dc4897779242994-1"&gt;&lt;/a&gt;&lt;span class="n"&gt;languages&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ManyToManyField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Language&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;p&gt;That’s it.  I didn’t have to run through complicated SQLAlchemy documentation,
-which provides a &lt;a class="reference external" href="http://docs.sqlalchemy.org/en/rel_1_0/orm/basic_relationships.html#many-to-many"&gt;13-line solution&lt;/a&gt; to the same problem.&lt;/p&gt;
-&lt;p&gt;Django also simplified New Relic integration, as the browser JS can be implemented
-using Django template tags.&lt;/p&gt;
-&lt;p&gt;Django is not without its problems, though.  I got a very cryptic traceback
-when I did this:&lt;/p&gt;
-&lt;pre class="code python"&gt;&lt;a name="rest_code_783e3e54a7d24be8bc50e07a5824f107-1"&gt;&lt;/a&gt;&lt;span class="n"&gt;publish_email&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;forms&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;BooleanField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"Publish e-mail"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;required&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;False&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_783e3e54a7d24be8bc50e07a5824f107-2"&gt;&lt;/a&gt;&lt;span class="ne"&gt;TypeError&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;"BooleanField() got multiple values for argument 'required'"&lt;/span&gt;
-&lt;/pre&gt;&lt;p&gt;The real problem with this code?  I forgot the &lt;tt class="docutils literal"&gt;label=&lt;/tt&gt; keyword.  The
-problem is, the model API accepts this syntax — &lt;tt class="docutils literal"&gt;verbose_name&lt;/tt&gt; is the first
-argument.  (I am not actually using the labels though, I write my own form
-HTML)&lt;/p&gt;
-&lt;p&gt;Still, the Django version is much cleaner.  And the best part of all?  There
-are no magic global objects (&lt;tt class="docutils literal"&gt;g&lt;/tt&gt;, &lt;tt class="docutils literal"&gt;session&lt;/tt&gt;, &lt;tt class="docutils literal"&gt;request&lt;/tt&gt;) and
-decorator-based views (which are a bit of syntax abuse IMO).&lt;/p&gt;
-&lt;p&gt;In the end, I have:&lt;/p&gt;
-&lt;ul class="simple"&gt;
-&lt;li&gt;382 lines of code (297 SLOC) over 6 files — much cleaner, and with less long lines&lt;/li&gt;
-&lt;li&gt;form data validation (via Django), CSRF and XSS protection&lt;/li&gt;
-&lt;li&gt;Login using Django built-in authentication, without JavaScript&lt;/li&gt;
-&lt;li&gt;Language codes (granted, I could’ve done that really easily back in Flask)&lt;/li&gt;
-&lt;li&gt;Tried-and-true implementations of common patterns&lt;/li&gt;
-&lt;li&gt;Django models are much more readable and friendly&lt;/li&gt;
-&lt;li&gt;Django-provided DB migrations (generated automatically!)&lt;/li&gt;
-&lt;li&gt;Languages implemented using Django many-to-many relationships&lt;/li&gt;
-&lt;li&gt;Adding a language is possible from the Django built-in admin panel and is
-reflected immediately (no caching)&lt;/li&gt;
-&lt;li&gt;Titles and menus in code&lt;/li&gt;
-&lt;li&gt;Python 3&lt;/li&gt;
-&lt;li&gt;New features: featured sites; show only a specified language — were really easy to add&lt;/li&gt;
-&lt;/ul&gt;
-&lt;table class="docutils footnote" frame="void" id="id2" rules="none"&gt;
-&lt;colgroup&gt;&lt;col class="label"&gt;&lt;col&gt;&lt;/colgroup&gt;
-&lt;tbody valign="top"&gt;
-&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="https://chriswarrick.com/blog/2015/10/11/rewriting-a-flask-app-in-django/#id1"&gt;[1]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;I had some &lt;tt class="docutils literal"&gt;CSRF_ENABLED&lt;/tt&gt; variable, but it did not seem to be actually
-used by anything.&lt;/td&gt;&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;/div&gt;&lt;/div&gt;</description><category>Django</category><category>Flask</category><category>Internet</category><category>Nikola</category><category>Python</category><guid>https://chriswarrick.com/blog/2015/10/11/rewriting-a-flask-app-in-django/</guid><pubDate>Sun, 11 Oct 2015 15:24:43 GMT</pubDate></item></channel></rss>
+notices were outdated. Now, they’re in the future.&lt;/p&gt;&lt;/div&gt;</description><category>rant</category><category>review</category><category>Windows</category><guid>https://chriswarrick.com/blog/2015/12/27/windows-10-november-upgrade-windows-as-a-dis-service/</guid><pubDate>Sun, 27 Dec 2015 11:15:00 GMT</pubDate></item></channel></rss>

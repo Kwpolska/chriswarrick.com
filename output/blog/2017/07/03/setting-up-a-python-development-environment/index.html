@@ -1,0 +1,554 @@
+<html prefix="
+og: http://ogp.me/ns#
+article: http://ogp.me/ns/article#
+" lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Setting up a Python development environment | Chris Warrick</title>
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+<link href="/assets/css/all.css" rel="stylesheet" type="text/css">
+<link rel="alternate" type="application/rss+xml" title="RSS (en)" href="/rss.xml">
+<link rel="alternate" type="application/rss+xml" title="RSS (pl)" href="/pl/rss.xml">
+<link rel="canonical" href="https://chriswarrick.com/blog/2017/07/03/setting-up-a-python-development-environment/">
+<link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="16x16 32x32 48x48 64x64 128x128 256x256">
+<link rel="icon" type="image/png" href="/assets/img/logo384.png">
+<!--[if lt IE 9]><script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]--><meta name="application-name" content="Chris Warrick">
+<meta name="msapplication-starturl" content="https://chriswarrick.com/">
+<meta name="msapplication-navbutton-color" content="#00aadd">
+<meta name="theme-color" content="#00aadd">
+<meta name="generator" content="Nikola (getnikola.com)">
+<meta name="author" content="Chris Warrick">
+<link rel="prev" href="/blog/2017/06/24/apple-broke-the-display-menu-so-i-wrote-my-own/" title="Apple broke the display menu, so I wrote my own" type="text/html">
+<meta property="og:site_name" content="Chris Warrick">
+<meta property="og:title" content="Setting up a Python development environment">
+<meta property="og:url" content="https://chriswarrick.com/blog/2017/07/03/setting-up-a-python-development-environment/">
+<meta property="og:description" content="Setting up Python is usually simple, but there are some places where newcomers
+(and experienced users) need to be careful. What versions are there? What’s the
+difference between Python, CPython, Anaco">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2017-07-03T12:40:00+02:00">
+<meta property="article:tag" content="best practices">
+<meta property="article:tag" content="devel">
+<meta property="article:tag" content="guide">
+<meta property="article:tag" content="Python">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:creator" content="@Kwpolska">
+<link rel="alternate" hreflang="pl" href="/pl/blog/2017/07/03/setting-up-a-python-development-environment/">
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-kw navbar-static-top" role="navigation"><div class="container">
+<!-- This keeps the margins nice -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-kw-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="https://chriswarrick.com/">
+            <img src="/assets/img/logo.png" srcset="/assets/img/logo2x.png 2x" alt="Chris Warrick" id="logo"><span id="blog-title">Chris Warrick</span>
+            </a>
+        </div>
+<!-- /.navbar-header -->
+        <div class="collapse navbar-collapse navbar-kw-collapse">
+            <ul class="nav navbar-nav">
+<li>
+<a href="/blog/">Archives</a>
+                </li>
+<li>
+<a href="/blog/tags/">Tags</a>
+                </li>
+<li>
+<a href="/contact/">Contact</a>
+                </li>
+<li>
+<a href="/brand/">Brand</a>
+                </li>
+<li>
+<a href="/kwbot/">KwBot</a>
+                </li>
+<li>
+<a href="/projects/">Projects</a>
+                </li>
+<li>
+<a href="/guides/">Guides</a>
+                </li>
+<li>
+<a href="/search/">Search</a>
+
+                
+            </li>
+</ul>
+<ul class="nav navbar-nav navbar-right">
+<li>            </li>
+<li><a href="https://chriswarrick.com/pl/" rel="alternate" hreflang="pl">Polski</a></li>
+
+                
+            </ul>
+</div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav><!-- End of Menubar --><div class="container" id="content">
+    <div class="body-content">
+        <!--Body content-->
+        <div class="row">
+        <div id="cookiecontainer"></div>
+            
+<article class="post-text h-entry hentry postpage postbox" itemscope="itemscope" itemtype="http://schema.org/Article"><header class="page-header"><h1 class="p-name entry-title" itemprop="headline name">
+    <a href="/blog/2017/07/03/setting-up-a-python-development-environment/" class="u-url">Setting up a Python development environment</a>
+    </h1>
+
+    <div class="metadata">
+<a href="/blog/2017/07/03/setting-up-a-python-development-environment/" rel="bookmark" class="u-published"><time class="published dt-published" datetime="2017-07-03T12:40:00+02:00" itemprop="datePublished" title="2017-07-03 12:40">2017-07-03 12:40</time></a>
+        <ul itemprop="keywords" class="tags">
+<li class="section-bubble" style="background-color: #ffd43b"><a href="/python/">Python</a></li>
+           <li><a class="tag p-category" href="/blog/tags/best-practices/" rel="tag">best practices</a></li>
+           <li><a class="tag p-category" href="/blog/tags/devel/" rel="tag">devel</a></li>
+           <li><a class="tag p-category" href="/blog/tags/guide/" rel="tag">guide</a></li>
+           <li><a class="tag p-category" href="/blog/tags/python/" rel="tag">Python</a></li>
+        
+<li class="shortlink-bubble"><a href="https://go.chriswarrick.com/pysetup" title="Short link to this article (go.chriswarrick.com/pysetup)"><i class="fa fa-link"></i> pysetup</a></li>        </ul>
+<p class="guide-header">A <a href="/guides/">guide</a> about <span class="guide-topic">Python</span> for <span class="guide-platform">Windows, macOS, Linux</span></p>    </div>
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div class="lead"><div>
+<p>Setting up Python is usually simple, but there are some places where newcomers
+(and experienced users) need to be careful. What versions are there? What’s the
+difference between Python, CPython, Anaconda, PyPy? Those and many other
+questions may stump new developers, or people wanting to use Python.</p>
+</div></div>
+<p>Note: this guide is opinionated.</p>
+<div class="contents alert alert-info pull-right topic" id="contents">
+<p class="topic-title first">Contents</p>
+<ul class="simple">
+<li>
+<a class="reference internal" href="/blog/2017/07/03/setting-up-a-python-development-environment/#glossary-and-questions" id="id2">Glossary and questions</a><ul>
+<li><a class="reference internal" href="/blog/2017/07/03/setting-up-a-python-development-environment/#python-versions-2-vs-3" id="id3">Python versions: 2 vs 3</a></li>
+<li><a class="reference internal" href="/blog/2017/07/03/setting-up-a-python-development-environment/#can-i-run-multiple-pythons-on-the-same-machine" id="id4">Can I run multiple Pythons on the same machine?</a></li>
+<li><a class="reference internal" href="/blog/2017/07/03/setting-up-a-python-development-environment/#implementations" id="id5">Implementations</a></li>
+<li><a class="reference internal" href="/blog/2017/07/03/setting-up-a-python-development-environment/#distributions" id="id6">Distributions</a></li>
+<li><a class="reference internal" href="/blog/2017/07/03/setting-up-a-python-development-environment/#can-i-make-exe-files-from-python-programs" id="id7">Can I make .exe files from Python programs?</a></li>
+<li><a class="reference internal" href="/blog/2017/07/03/setting-up-a-python-development-environment/#where-to-learn-python-where-to-get-help" id="id8">Where to learn Python? Where to get help?</a></li>
+</ul>
+</li>
+<li>
+<a class="reference internal" href="/blog/2017/07/03/setting-up-a-python-development-environment/#installing-python" id="id9">Installing Python</a><ul>
+<li><a class="reference internal" href="/blog/2017/07/03/setting-up-a-python-development-environment/#windows" id="id10">Windows</a></li>
+<li><a class="reference internal" href="/blog/2017/07/03/setting-up-a-python-development-environment/#macos" id="id11">macOS</a></li>
+<li><a class="reference internal" href="/blog/2017/07/03/setting-up-a-python-development-environment/#linux-and-other-unix-like-oses" id="id12">Linux (and other Unix-like OSes)</a></li>
+</ul>
+</li>
+<li>
+<a class="reference internal" href="/blog/2017/07/03/setting-up-a-python-development-environment/#installing-packages" id="id13">Installing packages</a><ul>
+<li><a class="reference internal" href="/blog/2017/07/03/setting-up-a-python-development-environment/#user-installs" id="id14">User installs</a></li>
+<li>
+<a class="reference internal" href="/blog/2017/07/03/setting-up-a-python-development-environment/#virtual-environments" id="id15">Virtual environments</a><ul>
+<li><a class="reference internal" href="/blog/2017/07/03/setting-up-a-python-development-environment/#tools-and-management" id="id16">Tools and management</a></li>
+<li><a class="reference internal" href="/blog/2017/07/03/setting-up-a-python-development-environment/#installation-and-usage" id="id17">Installation and usage</a></li>
+<li><a class="reference internal" href="/blog/2017/07/03/setting-up-a-python-development-environment/#upgrading-and-moving" id="id18">Upgrading and moving</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="/blog/2017/07/03/setting-up-a-python-development-environment/#packages-with-c-extensions-binary" id="id19">Packages with C extensions (binary)</a></li>
+<li><a class="reference internal" href="/blog/2017/07/03/setting-up-a-python-development-environment/#other-stuff" id="id20">Other stuff</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="/blog/2017/07/03/setting-up-a-python-development-environment/#editors-and-ides" id="id21">Editors and IDEs</a></li>
+</ul>
+</div>
+<div class="section" id="glossary-and-questions">
+<h2><a class="toc-backref" href="/blog/2017/07/03/setting-up-a-python-development-environment/#id2">Glossary and questions</a><a href="#glossary-and-questions" class="headerlink" title="Permalink to this heading">¶</a></h2>
+<div class="section" id="python-versions-2-vs-3">
+<h3><a class="toc-backref" href="/blog/2017/07/03/setting-up-a-python-development-environment/#id3">Python versions: 2 vs 3</a><a href="#python-versions-2-vs-3" class="headerlink" title="Permalink to this heading">¶</a></h3>
+<p>The Python community has undergone sort of a <em>schism</em> in recent years. Python
+3, released in 2008, broke backwards compatibility: deprecated some bad
+constructs and libraries (eg. <tt class="docutils literal">raw_input()</tt> became <tt class="docutils literal">input()</tt> and the
+original Python 2 function that ran code input by users is gone; <tt class="docutils literal">print()</tt>
+became a function; many things that returned lists now are iterators — <tt class="docutils literal">zip</tt>,
+<tt class="docutils literal">range</tt>), and completely remodelled strings (which are now Unicode by
+default, and the interpreter behavior is stricter when the wrong type is used)</p>
+<p>For new code, you should use Python 3. <a class="reference external" href="https://python3wos.appspot.com/">Most popular packages support Python 3</a>, and many of them support both Pythons at
+the same time. The early bugs were ironed out in the first few point releases,
+some features that made porting easier were added (back).</p>
+<p>But what if you end up needing Python 2 later? No problem: you can learn the
+differences in a short time, and with the help of a few libraries (eg. <tt class="docutils literal">six</tt>)
+you can easily write code that is compatible with Python 2 and 3 at the same
+time, using the same codebase (most libraries out there do that).</p>
+<p>Python 2 will go EOL and lose official support and updates in 2020.</p>
+<p>Read more: <a class="reference external" href="https://wiki.python.org/moin/Python2orPython3">Python 2 or Python 3 on Python Wiki</a></p>
+</div>
+<div class="section" id="can-i-run-multiple-pythons-on-the-same-machine">
+<h3><a class="toc-backref" href="/blog/2017/07/03/setting-up-a-python-development-environment/#id4">Can I run multiple Pythons on the same machine?</a><a href="#can-i-run-multiple-pythons-on-the-same-machine" class="headerlink" title="Permalink to this heading">¶</a></h3>
+<p>Yes. Note that multiple Python interpreters are completely separate: they have
+their own pip and packages, and you can’t run Python 2 code in a Python 3
+interpreter. You need to specify which interpreter to use when installing
+packages and running some scripts (eg. <tt class="docutils literal">pip2</tt>, <tt class="docutils literal">pip3</tt> or <tt class="docutils literal">python3 <span class="pre">-m</span> pip</tt>).</p>
+<p>It’s best to limit yourself to the latest Python 2 and 3 versions. Python is
+backwards-compatible within the major release, so Python 2.7 runs code
+written with older 2.x versions in mind.</p>
+</div>
+<div class="section" id="implementations">
+<h3><a class="toc-backref" href="/blog/2017/07/03/setting-up-a-python-development-environment/#id5">Implementations</a><a href="#implementations" class="headerlink" title="Permalink to this heading">¶</a></h3>
+<p>A programming language is an abstract construct. To run code written in that
+language, an interpreter or compiler needs to be written. In Python’s case,
+there’s a plethora of implementations. Some of them are:</p>
+<ul class="simple">
+<li>
+<strong>CPython</strong> is the reference implementation. This is the implementation
+distributed on <a class="reference external" href="https://python.org/">https://python.org/</a> and as part of many operating systems.
+Most Python features are first implemented in CPython, and then they are
+ported to other implementations.  If you don’t know what to choose, use
+CPython.</li>
+<li>
+<strong>PyPy</strong> is a fast implementation, written in a subset of Python. It’s compatible with
+Python 2.7 and 3.5 (beta support). It can run all pure Python code, and many
+extension libraries that use CFFI.</li>
+<li>
+<strong>IronPython</strong> is a .NET CLR implementation. It can integrate with .NET code.</li>
+<li>
+<strong>Jython</strong> is a Java JVM implementation. It can integrate with Java code, as
+well as other JVM languages.</li>
+</ul>
+<p>Read more: <a class="reference external" href="https://wiki.python.org/moin/PythonImplementations">Python Implementations on Python Wiki</a></p>
+</div>
+<div class="section" id="distributions">
+<h3><a class="toc-backref" href="/blog/2017/07/03/setting-up-a-python-development-environment/#id6">Distributions</a><a href="#distributions" class="headerlink" title="Permalink to this heading">¶</a></h3>
+<p>There are also Python (CPython) distributions. They ship the CPython
+interpreter and add some extra packages/features.  They are maintained by other
+communities or corporate entities.</p>
+<p>The most popular third-party distribution is <a class="reference external" href="https://www.continuum.io/downloads">Anaconda</a> from Continuum Analytics. It’s popular
+for data scientists, and includes over 100 packages, with extra pre-built
+binaries available from the <tt class="docutils literal">conda</tt> package manager.</p>
+<p>I personally recommend to avoid Anaconda:</p>
+<ul class="simple">
+<li>Most packages have binary wheels for Windows, macOS and Linux (yes, Linux!)
+making the installation as simple as <tt class="docutils literal">pip install numpy</tt>.</li>
+<li>You waste disk space for packages Anaconda installs that you won’t ever need.</li>
+<li>It’s provided by some random for-profit company.</li>
+<li>I’ve seen bugs that were not reproducible outside of Anaconda.</li>
+<li>You can still do data science using the official distribution. There’s
+nothing special about Anaconda.</li>
+</ul>
+<p>Read more: <a class="reference external" href="https://wiki.python.org/moin/PythonDistributions">Python distributions on Python Wiki</a></p>
+</div>
+<div class="section" id="can-i-make-exe-files-from-python-programs">
+<h3><a class="toc-backref" href="/blog/2017/07/03/setting-up-a-python-development-environment/#id7">Can I make .exe files from Python programs?</a><a href="#can-i-make-exe-files-from-python-programs" class="headerlink" title="Permalink to this heading">¶</a></h3>
+<p>Yes, you can. There are tools for this — <a class="reference external" href="http://www.pyinstaller.org/">PyInstaller</a> is the best one. Note that you usually need to
+run it on the destination operating system. And remember that “compiling” to
+exe files like that <strong>is not</strong> a security measure — your source code is still
+easily recoverable. (It’s not a security measure in other languages either,
+even if getting source code back might be more expensive/tricky in those.)</p>
+</div>
+<div class="section" id="where-to-learn-python-where-to-get-help">
+<h3><a class="toc-backref" href="/blog/2017/07/03/setting-up-a-python-development-environment/#id8">Where to learn Python? Where to get help?</a><a href="#where-to-learn-python-where-to-get-help" class="headerlink" title="Permalink to this heading">¶</a></h3>
+<p>The choice of learning material is important. If you get a bad book, it might
+discourage you from learning (because it’s boring), or may teach you
+bad/outdated practices.</p>
+<p>If you can already program in another language, I recommend the <a class="reference external" href="https://docs.python.org/3/tutorial/">official
+Python tutorial</a>. For newcomers to
+programming, I recommend <a class="reference external" href="http://greenteapress.com/wp/think-python-2e/">Think Python</a> or <a class="reference external" href="https://automatetheboringstuff.com/">Automate the Boring Stuff
+with Python</a>.  They teach Python 3, and
+(mostly) best practices.</p>
+<p>If you need help, try <tt class="docutils literal">#python</tt> on freenode IRC, the <a class="reference external" href="https://mail.python.org/mailman/listinfo/tutor">Tutor</a> or <a class="reference external" href="https://mail.python.org/mailman/listinfo/python-list">Python-list</a> mailing lists, or a bunch of other communities. (I’m a regular on <tt class="docutils literal">#python</tt>)</p>
+</div>
+</div>
+<div class="section" id="installing-python">
+<h2><a class="toc-backref" href="/blog/2017/07/03/setting-up-a-python-development-environment/#id9">Installing Python</a><a href="#installing-python" class="headerlink" title="Permalink to this heading">¶</a></h2>
+<p>This guide will focus on installing CPython 2.7 and 3.x (latest), using the standard
+distribution. This choice is satisfactory for most people. Third-party
+distributions, while handy in some cases, are not needed for most. (See
+<a class="reference internal" href="/blog/2017/07/03/setting-up-a-python-development-environment/#distributions">Distributions</a> for arguments)</p>
+<p>Throughout this guide, I’ll refer to the Python interpreter executable as
+<tt class="docutils literal">python</tt>. The exact name depends on your system and desired version. On most
+OSes, <tt class="docutils literal">python</tt> is Python 2 and <tt class="docutils literal">python3</tt> is 3; <tt class="docutils literal">python2</tt> should also
+exist.  On Arch Linux, <tt class="docutils literal">python</tt> is Python 3. On Windows, use the <tt class="docutils literal">py</tt>
+launcher.</p>
+<div class="section" id="windows">
+<h3><a class="toc-backref" href="/blog/2017/07/03/setting-up-a-python-development-environment/#id10">Windows</a><a href="#windows" class="headerlink" title="Permalink to this heading">¶</a></h3>
+<p>Download the installer(s): <a class="reference external" href="https://www.python.org/downloads/">https://www.python.org/downloads/</a></p>
+<p>Those installers come with <tt class="docutils literal">pip</tt>, and modern Python 3.x versions come with
+the <tt class="docutils literal">py</tt> launcher.  You can use that launcher to pick a specific Python
+version, eg.:</p>
+<ul class="simple">
+<li><tt class="docutils literal">py <span class="pre">-3</span> <span class="pre">-m</span> pip install &lt;package&gt;</tt></li>
+<li><tt class="docutils literal">py <span class="pre">-2</span> somefile.py</tt></li>
+<li><tt class="docutils literal">py <span class="pre">-2.7</span></tt></li>
+<li>
+<tt class="docutils literal">py</tt> (default system version)</li>
+</ul>
+<p>It’s recommended for most use, and mandatory for upgrading pip.</p>
+<p>The 32-bit versions are more versatile. Most packages support both (the only
+exception I’m aware of is Tensorflow, which only allows 64-bit Python 3.5 as of
+now).</p>
+</div>
+<div class="section" id="macos">
+<h3><a class="toc-backref" href="/blog/2017/07/03/setting-up-a-python-development-environment/#id11">macOS</a><a href="#macos" class="headerlink" title="Permalink to this heading">¶</a></h3>
+<p>macOS ships with Python 2.7.10 (as of macOS Sierra). It’s not the latest
+version; it’s good enough for most people, but I still recommend installing
+your own (the system Python doesn’t include <tt class="docutils literal">pip</tt>, for example). You can
+install the latest 2.7 version, as well as Python 3, using a package manager. I
+recommend Homebrew — it’s the most popular solution, and lets you install many
+other packages.</p>
+<p><strong>DO NOT</strong> use the python.org installers: they do not have uninstallers, so you
+will have outdated versions lying around after some time. There is no
+auto-update as well.</p>
+<p>If you already have a package manager installed (MacPorts, Fink), don’t install
+a new one and just use the existing one.</p>
+<ol class="arabic simple">
+<li>Install <a class="reference external" href="https://brew.sh/">Homebrew</a>.</li>
+<li>Run <tt class="docutils literal">brew install python python3</tt>.</li>
+<li>You should now have <tt class="docutils literal">python</tt>, <tt class="docutils literal">python3</tt>, <tt class="docutils literal">pip</tt> and <tt class="docutils literal">pip3</tt>.</li>
+</ol>
+<p>To update Homebrew and Python, run <tt class="docutils literal">brew update</tt>.</p>
+</div>
+<div class="section" id="linux-and-other-unix-like-oses">
+<h3><a class="toc-backref" href="/blog/2017/07/03/setting-up-a-python-development-environment/#id12">Linux (and other Unix-like OSes)</a><a href="#linux-and-other-unix-like-oses" class="headerlink" title="Permalink to this heading">¶</a></h3>
+<p>On Linux, there usually are good enough packages in your OS repositories. You
+should be able to install the appropriate package for Python (2 and/or 3).</p>
+<p>If the version that ships with your distribution is too old, there are some
+options. There might be some repositories with better versions, eg. the
+<a class="reference external" href="https://launchpad.net/~fkrull/+archive/ubuntu/deadsnakes">deadsnakes PPA</a>
+for Ubuntu. Then there’s the other option of compiling Python manually. The
+instructions depend on your exact requirements, but here’s a summary:</p>
+<ol class="arabic simple">
+<li>Download the <a class="reference external" href="https://www.python.org/downloads/source/">source distribution from Python.org</a> and unpack it. Go into the unpacked source directory.</li>
+<li>Ensure you’ve got a functional C compiler and Python’s dependencies. You can
+usually use your system’s package manager to install the build dependencies
+of your system Python. Some dependencies are optional (eg. <tt class="docutils literal">sqlite3</tt>
+requires SQLite headers).</li>
+<li>Run <tt class="docutils literal">./configure <span class="pre">--prefix=/opt/python3.6</span></tt> and then <tt class="docutils literal">make</tt>. (You may add other options to both. It will
+take a while.)</li>
+<li>Run <tt class="docutils literal">make altinstall</tt> as root. Avoid <tt class="docutils literal">make install</tt>, as it can override
+<tt class="docutils literal">python</tt> executables.</li>
+</ol>
+<p>Alternatively, you can try <tt class="docutils literal">pyenv</tt> or <tt class="docutils literal">pythonz</tt> — tools that can be used to install and manage different Python versions. Remember: compiling Python should be considered a <strong>last resort</strong>.</p>
+</div>
+</div>
+<div class="section" id="installing-packages">
+<h2><a class="toc-backref" href="/blog/2017/07/03/setting-up-a-python-development-environment/#id13">Installing packages</a><a href="#installing-packages" class="headerlink" title="Permalink to this heading">¶</a></h2>
+<p>To install third-party packages, you should use pip, the Python package
+manager. If you’re using Windows or macOS (from Homebrew), pip is included with
+your copy of Python.  If you’re on Linux and installed Python from a system
+repository, install the correct system package (<tt class="docutils literal"><span class="pre">python-pip</span></tt>,
+<tt class="docutils literal"><span class="pre">python3-pip</span></tt>). If you compiled your own Python, pip is also included.</p>
+<p>To run pip, use <tt class="docutils literal">py <span class="pre">-m</span> pip</tt> (Windows), <tt class="docutils literal">python <span class="pre">-m</span> pip</tt> (other platforms),
+or the short <tt class="docutils literal">pip</tt>/<tt class="docutils literal">pip3</tt> commands.</p>
+<p>Very important: <strong>NEVER use sudo with pip</strong>. That can lead to conflicts with
+system package managers and does not provide isolation between package
+versions.</p>
+<p>Note that a package install is specific to the Python interpreter used to run
+<tt class="docutils literal">pip</tt>. Packages installed to a virtualenv are separate from system packages;
+packages installed for “global” Python 2.7 are separate from 3.6 packages.
+Virtual environments generally don’t use the system packages, unless
+specifically enabled during creation.</p>
+<p>Some distros have pouplar packages in their repositories. Sometimes they’re
+good; in other cases they’re terribly outdated or they lack important
+components, making package managers angry and sick of supporting a 2-year-old
+version. (Especially since most bugs are closed with “we’ve fixed that long
+ago”)</p>
+<div class="section" id="user-installs">
+<h3><a class="toc-backref" href="/blog/2017/07/03/setting-up-a-python-development-environment/#id14">User installs</a><a href="#user-installs" class="headerlink" title="Permalink to this heading">¶</a></h3>
+<p>At a small scale, you can install packages with pip for a single user.  Use
+<tt class="docutils literal">pip install <span class="pre">--user</span> PACKAGE</tt> to do this. If your package installs <a class="reference external" href="https://chriswarrick.com/blog/2014/09/15/python-apps-the-right-way-entry_points-and-scripts/">scripts</a>,
+they will be installed to <tt class="docutils literal"><span class="pre">~/.local/bin</span></tt> on Linux, and
+<tt class="docutils literal">~/Library/Python/X.Y/bin</tt> on macOS (X.Y is Python version), or you can use
+<tt class="docutils literal">python <span class="pre">-m</span></tt> if the package supports it.</p>
+<p>For most people and projects, virtual environments are better. There are,
+however, use cases for putting some packages user-wide — if you don’t work on
+projects, but instead are doing one-off research projects, those are better
+suited by user-wide installs.</p>
+</div>
+<div class="section" id="virtual-environments">
+<h3><a class="toc-backref" href="/blog/2017/07/03/setting-up-a-python-development-environment/#id15">Virtual environments</a><a href="#virtual-environments" class="headerlink" title="Permalink to this heading">¶</a></h3>
+<p>Virtual environments are the best way to install and manage Python packages.
+Advantages include:</p>
+<ul class="simple">
+<li>Isolation of projects and their requirements: if one app/package requires
+library version X, but another requires version Y, they can live in separate
+virtual environments</li>
+<li>Independent from system-wide packages</li>
+<li>Lightweight (an empty virtualenv is about 10 MB)</li>
+<li>Simple to re-create in any place (<tt class="docutils literal">pip freeze &gt; requirements.txt</tt> → <tt class="docutils literal">pip install <span class="pre">-r</span> requirements.txt</tt>)</li>
+</ul>
+<div class="section" id="tools-and-management">
+<h4><a class="toc-backref" href="/blog/2017/07/03/setting-up-a-python-development-environment/#id16">Tools and management</a><a href="#tools-and-management" class="headerlink" title="Permalink to this heading">¶</a></h4>
+<p>There are two tools to facilitate creation of virtual environments: the older
+<a class="reference external" href="https://virtualenv.pypa.io/en/stable/">virtualenv</a> project, and the newer
+<tt class="docutils literal">venv</tt> module. The <tt class="docutils literal">venv</tt> module is shipped with Python 3.x; some
+distributions may put it in a separate package or remove it altogether. I
+recommend using <strong>virtualenv</strong> — it’s compatible with more Python versions
+(it’s better to use the same tool for both Pythons) and cannot be broken by
+incompetent OS package mainainers (<tt class="docutils literal">venv</tt> fails on Debian due to no
+<tt class="docutils literal">ensurepip</tt>; there is a <tt class="docutils literal"><span class="pre">python3-venv</span></tt> package that fixes it but that’s
+hard to discover)</p>
+<p>There are multiple schools of thought regarding virtualenv placement and
+content. Myself, I use <a class="reference external" href="https://virtualenvwrapper.readthedocs.io/en/latest/">virtualenvwrapper</a> to manage virtualenvs
+and put them in <tt class="docutils literal">~/virtualenvs</tt>. Other people put virtualenvs inside their
+git repositories (but they <em>must</em> be in <tt class="docutils literal">.gitignore</tt>) Virtualenvs should only contain packages
+installed with <tt class="docutils literal">pip</tt> so they can be rereated quickly.</p>
+<p>I also use the <tt class="docutils literal">virtualenvwrapper</tt> plugin for Oh My Zsh, which also
+activates virtualenvs with the same name as a git repo, or the environment
+named by a <tt class="docutils literal">.venv</tt> file.</p>
+</div>
+<div class="section" id="installation-and-usage">
+<h4><a class="toc-backref" href="/blog/2017/07/03/setting-up-a-python-development-environment/#id17">Installation and usage</a><a href="#installation-and-usage" class="headerlink" title="Permalink to this heading">¶</a></h4>
+<p>To install virtualenv user-wide, use <tt class="docutils literal">pip install <span class="pre">--user</span> virtualenv</tt>. You can
+then use it with <tt class="docutils literal">python <span class="pre">-m</span> virtualenv DIRECTORY</tt>. You may pass extra
+options, eg. interpreter to use (<tt class="docutils literal"><span class="pre">-p</span> python3</tt>). Sometimes you need to install
+virtualenv for every Python version; usually, one copy is enough.</p>
+<p>How to use them? This is a subject of heated debate in the Python community.
+Some people believe that activating (<tt class="docutils literal">source bin/activate</tt> on *nix;
+<tt class="docutils literal">Scripts\activate</tt> on Windows) is the right thing to do. Others think that
+you should use <tt class="docutils literal">bin/python</tt> (or other scripts in that directory) directly.
+Others still think <a class="reference external" href="https://gist.github.com/datagrok/2199506">virtualenvs should be used in subshells</a>. In my opinion, if activating
+virtualenvs works in your environment, you should do it — it’s the most
+convenient option. There are, however, cases when activation fails, or is
+otherwise impossible — calling <tt class="docutils literal">bin/python</tt> directly is your best bet in that
+case. I’m not a fan of the subshell option, because it complicates stuff if you
+work on multiple projects, and requires tracking usage manually.</p>
+</div>
+<div class="section" id="upgrading-and-moving">
+<h4><a class="toc-backref" href="/blog/2017/07/03/setting-up-a-python-development-environment/#id18">Upgrading and moving</a><a href="#upgrading-and-moving" class="headerlink" title="Permalink to this heading">¶</a></h4>
+<p>Upgrading the system Python may make your virtualenvs unusable.
+For patch version upgrades, you can just update symlinks (see <a class="reference external" href="https://github.com/Kwpolska/scripts/blob/master/fix-venvs.sh">fix-venvs.sh</a>).
+However, if the minor version changes, it’s best to re-create the virtualenv
+(you need to create <tt class="docutils literal">requirements.txt</tt> ahead of time).</p>
+<p>You cannot move a virtualenv between directories/machines or rename
+virtualenvs. You need to use <tt class="docutils literal">pip freeze &gt; requirements.txt</tt>, create a new
+virtualenv, and run <tt class="docutils literal">pip install <span class="pre">-r</span> requirements.txt</tt> (you can then delete
+the old environment with a simple <tt class="docutils literal">rm <span class="pre">-rf</span></tt>)</p>
+</div>
+</div>
+<div class="section" id="packages-with-c-extensions-binary">
+<h3><a class="toc-backref" href="/blog/2017/07/03/setting-up-a-python-development-environment/#id19">Packages with C extensions (binary)</a><a href="#packages-with-c-extensions-binary" class="headerlink" title="Permalink to this heading">¶</a></h3>
+<p>The situation improved drastically in the past year or so. Nowadays, almost
+all packages have a pre-compiled package available in PyPI. Those packages work
+for Windows, macOS, and Linux. There are packages for some of the most
+common <em>offenders</em>, including Pillow, lxml, PyQt5, numpy… However, there might
+still be packages without wheels on PyPI.</p>
+<p>If there is no wheel for a package and you are on Windows, check out <a class="reference external" href="http://www.lfd.uci.edu/~gohlke/pythonlibs/">Christoph
+Gohlke’s unofficial binaries</a>.
+If you can’t find any wheels online, you would have to resort to compiling it
+manually — this requires installign Visual Studio in a version that matches
+your Python, and it’s kind of a pain to do.</p>
+<p>If you are not on Windows, you must install a C compiler and toolchain.
+If you get a warning about missing <tt class="docutils literal">Python.h</tt>, install the appropriate development
+package — for example, <tt class="docutils literal"><span class="pre">python-dev</span></tt> or <tt class="docutils literal"><span class="pre">python3-dev</span></tt>) on Debian/Ubuntu,
+<tt class="docutils literal"><span class="pre">python-devel</span></tt> or <tt class="docutils literal"><span class="pre">python3-devel</span></tt> on RHEL/Fedora. The package you’re trying
+to install might have other dependencies that you need to install (the
+<tt class="docutils literal"><span class="pre">-dev(el)</span></tt> part is important, too)</p>
+</div>
+<div class="section" id="other-stuff">
+<h3><a class="toc-backref" href="/blog/2017/07/03/setting-up-a-python-development-environment/#id20">Other stuff</a><a href="#other-stuff" class="headerlink" title="Permalink to this heading">¶</a></h3>
+<p>If you’re working on a project, use <tt class="docutils literal">pip install <span class="pre">-e</span> .</tt> inside the project
+directory to install the package in your environment in development (editable)
+mode. This loads code directly from your repository — you don’t need to
+re-install on every change; you might need to re-install when your version
+number changes.</p>
+</div>
+</div>
+<div class="section" id="editors-and-ides">
+<h2><a class="toc-backref" href="/blog/2017/07/03/setting-up-a-python-development-environment/#id21">Editors and IDEs</a><a href="#editors-and-ides" class="headerlink" title="Permalink to this heading">¶</a></h2>
+<p>Another important thing a developer should take care of is the choice of an
+editor. This is an important decision, and is the reason for many holy wars in
+the programmer community.</p>
+<p>A good editor should have syntax highlighting for all languages you need to
+work with. It should also have features like visual block/multiple selections,
+sophisticated find-and-replace, file finding, code completion, and many more minor
+but helpful features.</p>
+<p>Then there’s the difference between IDEs and text editors. Text editors are
+simpler, whereas IDEs try to include many extra things not necessairly related
+to writing code. IDEs often use more resources, but you won’t notice it with a
+modern computer (especially with a SSD).</p>
+<p>I spend the most of my time in <a class="reference external" href="http://www.vim.org/">Vim</a> (<a class="reference external" href="https://neovim.io/">neovim</a>/<a class="reference external" href="http://vimr.org/">VimR</a> to be
+precise). Vim is the most powerful text editor out there, and with the right
+set of plugins it can beat IDEs at speed and productivity. Vim has a steep
+learning curve, but it’s worth it — you can do large changes with just a few
+keystrokes. Vim is considered so good that many IDEs (Visual Studio, IntelliJ
+IDEA/PyCharm) have (mediocre) Vim emulation plugins.</p>
+<p>However, if you would prefer an IDE, your best bet would be <a class="reference external" href="https://www.jetbrains.com/pycharm/">PyCharm</a> from JetBrains. It has both a free
+Community and paid Professional edition. The JetBrains folks are experts at
+IDEs — they have fully-fledged tools for many languages. Their Python solution
+offers a plethora of options that aid programmers in their work. If you’re on
+Windows, you might try Python Tools for Visual Studio (although I haven’t
+worked with that and can’t vouch for it)</p>
+<p>Another, lighter option is <a class="reference external" href="https://code.visualstudio.com/">Visual Studio Code</a> — it’s a text editor, but can offer many
+IDE-like features with the right set of plugins. It’s Electron-based
+architecture, or effectively being based on top of Google’s Chromium, is
+unfortunate and can lead to bad performance on lower-end machines. (In my
+experience, it’s better than Atom.) You can also try <a class="reference external" href="https://www.sublimetext.com/">Sublime Text</a> ($70).</p>
+<p>But really, almost any editor will do. But please <strong>avoid</strong> IDLE, the editor
+included with Python. It lacks some of the most basic things — it doesn’t even
+have an option to show line numbers. Not to mention its ugliness. Also, don’t
+use Notepad and TextEdit. Those are too simple, and Notepad has encoding
+issues.</p>
+</div>
+</div>
+    </article>
+</div>
+    <aside class="postpromonav"><div class="panel panel-primary guide-footer">
+  <div class="panel-heading"><h3 class="panel-title">That’s all!</h3></div>
+  <div class="panel-body">
+    Hopefully, the guide worked for you and you can use Python and create something awesome. If so, great! Otherwise, make sure you did everything as stated in this guide. If you are still stuck, ask for help in the comments.
+  </div>
+  <div class="panel-footer"><a href="/guides/">Check out my other guides!</a></div>
+</div>
+    <nav><ul class="pager hidden-print">
+<li class="previous">
+                <a href="/blog/2017/06/24/apple-broke-the-display-menu-so-i-wrote-my-own/" rel="prev" title="Apple broke the display menu, so I wrote my own">Previous post</a>
+            </li>
+        </ul></nav></aside><section class="comments"><h2>Comments</h2>
+                        <div id="disqus_thread"></div>
+        <script>
+        var disqus_shortname ="kwpolska",
+            disqus_url="https://chriswarrick.com/blog/2017/07/03/setting-up-a-python-development-environment/",
+        disqus_title="Setting up a Python development environment",
+        disqus_identifier="cache/posts/2017/07/03/setting-up-a-python-development-environment.html",
+        disqus_config = function () {
+            this.language = "en";
+        };
+        (function() {
+            var dsq = document.createElement('script'); dsq.async = true;
+            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+    <a href="https://disqus.com" class="dsq-brlink" rel="nofollow">Comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+        </section><script>var disqus_shortname="kwpolska";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script>
+</div>
+        <!--End of body content-->
+
+        <footer class="site-footer"><p><a href="/cookies/">this site uses
+cookies.</a><br>by using this site, you agree to our cookie policy.</p>
+<p>
+powered by <strong><a href="https://getnikola.com/">Nikola</a></strong>, <a href="http://nginx.org/">nginx</a> and <a href="https://www.digitalocean.com/?refcode=7983689b2ecc">DigitalOcean</a><br>
+copyright © 2009–2017 <a href="/contact/">Chris Warrick</a><br><a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC
+BY-NC-SA</a>, unless stated otherwise</p>
+            
+        </footer>
+</div>
+
+
+            <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script><script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script><script src="/assets/js/all.js"></script><script>jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script><script>
+    moment.locale("en");
+    fancydates(0, "YYYY-MM-DD HH:mm");
+    </script><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-11937989-1', 'chriswarrick.com');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+
+</script>
+</body>
+</html>

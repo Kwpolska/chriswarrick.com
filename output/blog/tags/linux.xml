@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chris Warrick (Posts about Linux)</title><link>https://chriswarrick.com/</link><description></description><atom:link href="https://chriswarrick.com/blog/tags/linux.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Sat, 24 Jun 2017 19:07:55 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Deploying Python Web Applications with nginx and uWSGI Emperor</title><link>https://chriswarrick.com/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;You’ve just written a great Python web application. Now, you want to share it with the world. In order to do that, you need a server, and some software to do that for you.&lt;/p&gt;
+<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chris Warrick (Posts about Linux)</title><link>https://chriswarrick.com/</link><description></description><atom:link href="https://chriswarrick.com/blog/tags/linux.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Mon, 03 Jul 2017 10:43:28 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Deploying Python Web Applications with nginx and uWSGI Emperor</title><link>https://chriswarrick.com/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;You’ve just written a great Python web application. Now, you want to share it with the world. In order to do that, you need a server, and some software to do that for you.&lt;/p&gt;
 &lt;p&gt;The following is a comprehensive guide on how to accomplish that, on multiple Linux-based operating systems, using nginx and uWSGI Emperor. It doesn’t force you to use any specific web framework — Flask, Django, Pyramid, Bottle will all work. Written for Ubuntu, Debian, Fedora, CentOS and Arch Linux (should be helpful for other systems, too). Now with an Ansible Playbook.&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;Revision 5 (2017-04-29): Better module specification description, environment variable configuration info&lt;/em&gt;&lt;/p&gt;
 &lt;!-- TEASER_END --&gt;
@@ -76,16 +76,16 @@
 &lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id13"&gt;Getting started&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;Start by installing virtualenv, nginx and uWSGI. I recommend using your operating system packages. For uWSGI, we need the &lt;tt class="docutils literal"&gt;logfile&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;python3&lt;/tt&gt; plugins. (Arch Linux names the &lt;tt class="docutils literal"&gt;python3&lt;/tt&gt; plugin &lt;tt class="docutils literal"&gt;python&lt;/tt&gt;; the &lt;tt class="docutils literal"&gt;logfile&lt;/tt&gt; plugin may be built-in — check with your system repositories!). I’ll also install Git to clone the tutorial app, but it’s optional if your workflow does not involve git.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Ubuntu, Debian:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_4d17d579ebde4fd79839840fbfd56ea6-1"&gt;&lt;/a&gt;apt install virtualenv python3 uwsgi uwsgi-emperor uwsgi-plugin-python3 nginx-full git
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_a0190e3c1e3b46c49457cdc5078117b5-1"&gt;&lt;/a&gt;apt install virtualenv python3 uwsgi uwsgi-emperor uwsgi-plugin-python3 nginx-full git
 &lt;/pre&gt;&lt;p&gt;&lt;strong&gt;Fedora:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_03e336d7b4614187a4300da33ff6e2f1-1"&gt;&lt;/a&gt;dnf install python3-virtualenv uwsgi uwsgi-plugin-python3 uwsgi-logger-file nginx git
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_118339b5bacf4ddaa6b5b984df164131-1"&gt;&lt;/a&gt;dnf install python3-virtualenv uwsgi uwsgi-plugin-python3 uwsgi-logger-file nginx git
 &lt;/pre&gt;&lt;p&gt;&lt;strong&gt;CentOS:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_026986883257481982425685076b29e0-1"&gt;&lt;/a&gt;yum install epel-release
-&lt;a name="rest_code_026986883257481982425685076b29e0-2"&gt;&lt;/a&gt;yum install python34 python34-pip uwsgi uwsgi-plugin-python3 uwsgi-logger-file nginx git wget
-&lt;a name="rest_code_026986883257481982425685076b29e0-3"&gt;&lt;/a&gt;python3 -m pip install --user virtualenv
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_8d81fa4439de415eab89a791ca49d612-1"&gt;&lt;/a&gt;yum install epel-release
+&lt;a name="rest_code_8d81fa4439de415eab89a791ca49d612-2"&gt;&lt;/a&gt;yum install python34 python34-pip uwsgi uwsgi-plugin-python3 uwsgi-logger-file nginx git wget
+&lt;a name="rest_code_8d81fa4439de415eab89a791ca49d612-3"&gt;&lt;/a&gt;python3 -m pip install --user virtualenv
 &lt;/pre&gt;&lt;p&gt;We need to install virtualenv manually, because the &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;python-virtualenv&lt;/span&gt;&lt;/tt&gt; package is not compatible. It will be available to root only (user install).&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Arch Linux:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_e180718107134d82a27563bfef002f01-1"&gt;&lt;/a&gt;pacman -S python-virtualenv uwsgi uwsgi-plugin-python nginx git
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_2e5ba4c644cc44e3bc783878aff777e2-1"&gt;&lt;/a&gt;pacman -S python-virtualenv uwsgi uwsgi-plugin-python nginx git
 &lt;/pre&gt;&lt;/div&gt;
 &lt;div class="section" id="preparing-your-application"&gt;
 &lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id14"&gt;Preparing your application&lt;/a&gt;&lt;/h3&gt;
@@ -94,25 +94,25 @@
 &lt;p&gt;If you don’t use Flask, this tutorial also has instructions for other web frameworks (Django, Pyramid, Bottle) in the configuration files; it should be adjustable to any other WSGI-compliant framework/script nevertheless.&lt;/p&gt;
 &lt;p&gt;We’ll start by creating a virtualenv:&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Ubuntu, Debian:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_941c2b546f6147b08aeac8862d987767-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; /srv
-&lt;a name="rest_code_941c2b546f6147b08aeac8862d987767-2"&gt;&lt;/a&gt;virtualenv -p /usr/bin/python3 myapp
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_cebf0b556b264f99a535c3a7bd5fa101-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; /srv
+&lt;a name="rest_code_cebf0b556b264f99a535c3a7bd5fa101-2"&gt;&lt;/a&gt;virtualenv -p /usr/bin/python3 myapp
 &lt;/pre&gt;&lt;p&gt;&lt;strong&gt;Fedora, CentOS, Arch Linux:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_0f6155be226d420aa07c5aed65205e7f-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; /srv
-&lt;a name="rest_code_0f6155be226d420aa07c5aed65205e7f-2"&gt;&lt;/a&gt;python3 -m virtualenv myapp
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_e98799bb388449d3a59127fc6702fde2-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; /srv
+&lt;a name="rest_code_e98799bb388449d3a59127fc6702fde2-2"&gt;&lt;/a&gt;python3 -m virtualenv myapp
 &lt;/pre&gt;&lt;p&gt;(This tutorial assumes Python 3. Make sure you use the correct &lt;tt class="docutils literal"&gt;virtualenv&lt;/tt&gt; command/argument. If you want to use Python 2.7, you’ll need to adjust your uWSGI configuration as well.)&lt;/p&gt;
 &lt;p&gt;Now, we need to put our app there and install requirements. An example for the tutorial demo app:&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_ba71adab4c09468fa84b25e29f586711-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; myapp
-&lt;a name="rest_code_ba71adab4c09468fa84b25e29f586711-2"&gt;&lt;/a&gt;git clone https://github.com/Kwpolska/flask-demo-app appdata
-&lt;a name="rest_code_ba71adab4c09468fa84b25e29f586711-3"&gt;&lt;/a&gt;bin/pip install -r appdata/requirements.txt
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_9de1a23765964a329c008fcb7b84a280-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; myapp
+&lt;a name="rest_code_9de1a23765964a329c008fcb7b84a280-2"&gt;&lt;/a&gt;git clone https://github.com/Kwpolska/flask-demo-app appdata
+&lt;a name="rest_code_9de1a23765964a329c008fcb7b84a280-3"&gt;&lt;/a&gt;bin/pip install -r appdata/requirements.txt
 &lt;/pre&gt;&lt;p&gt;I’m storing my application data in the &lt;tt class="docutils literal"&gt;appdata&lt;/tt&gt; subdirectory so that it doesn’t clutter the virtualenv (or vice versa).  You may also install the &lt;tt class="docutils literal"&gt;uwsgi&lt;/tt&gt; package in the virtualenv, but it’s optional.&lt;/p&gt;
 &lt;p&gt;What this directory should be depends on your web framework.  For example, for a Django app, you should have an &lt;tt class="docutils literal"&gt;appdata/manage.py&lt;/tt&gt; file (in other words, &lt;tt class="docutils literal"&gt;appdata&lt;/tt&gt; is where your app structure starts).  I also assumed that the &lt;tt class="docutils literal"&gt;appdata&lt;/tt&gt; folder should have a &lt;tt class="docutils literal"&gt;static&lt;/tt&gt; subdirectory with all static files, including &lt;tt class="docutils literal"&gt;favicon.ico&lt;/tt&gt; if you have one (we will add support for both in nginx).&lt;/p&gt;
 &lt;p&gt;At this point, you should chown this directory to the user and group your server is going to run as.  This is especially important if uwsgi and nginx run as different users (as they do on Fedora). Run one of the following commands:&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Ubuntu, Debian:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_07f3adaac1a243f6b8fc7064ce095450-1"&gt;&lt;/a&gt;chown -R www-data:www-data /srv/myapp
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_82f242f9bd974c0d9c42dc034edc12eb-1"&gt;&lt;/a&gt;chown -R www-data:www-data /srv/myapp
 &lt;/pre&gt;&lt;p&gt;&lt;strong&gt;Fedora, CentOS:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_57f05dec4f794e29b443677376cc9cd2-1"&gt;&lt;/a&gt;chown -R uwsgi:nginx /srv/myapp
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_f77136e60d9e4147bfef8ff1b2b9b627-1"&gt;&lt;/a&gt;chown -R uwsgi:nginx /srv/myapp
 &lt;/pre&gt;&lt;p&gt;&lt;strong&gt;Arch Linux:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_d8d9d46eb2cb4007848b14d8d80733ff-1"&gt;&lt;/a&gt;chown -R http:http /srv/myapp
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_33c30b70043e4a74baa581558ef15f1d-1"&gt;&lt;/a&gt;chown -R http:http /srv/myapp
 &lt;/pre&gt;&lt;/div&gt;
 &lt;div class="section" id="configuring-uwsgi-and-nginx"&gt;
 &lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id15"&gt;Configuring uWSGI and nginx&lt;/a&gt;&lt;/h3&gt;
@@ -124,20 +124,20 @@
 &lt;div class="section" id="uwsgi-configuration"&gt;
 &lt;h4&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id16"&gt;uWSGI configuration&lt;/a&gt;&lt;/h4&gt;
 &lt;p&gt;Start with this, but read the notes below and change the values accordingly:&lt;/p&gt;
-&lt;pre class="code ini"&gt;&lt;a name="rest_code_47e7a88f4519414881aca9d0bd189797-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;[uwsgi]&lt;/span&gt;
-&lt;a name="rest_code_47e7a88f4519414881aca9d0bd189797-2"&gt;&lt;/a&gt;&lt;span class="na"&gt;socket&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/uwsgi.sock&lt;/span&gt;
-&lt;a name="rest_code_47e7a88f4519414881aca9d0bd189797-3"&gt;&lt;/a&gt;&lt;span class="na"&gt;chmod-socket&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;775&lt;/span&gt;
-&lt;a name="rest_code_47e7a88f4519414881aca9d0bd189797-4"&gt;&lt;/a&gt;&lt;span class="na"&gt;chdir&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/appdata&lt;/span&gt;
-&lt;a name="rest_code_47e7a88f4519414881aca9d0bd189797-5"&gt;&lt;/a&gt;&lt;span class="na"&gt;master&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;true&lt;/span&gt;
-&lt;a name="rest_code_47e7a88f4519414881aca9d0bd189797-6"&gt;&lt;/a&gt;&lt;span class="na"&gt;binary-path&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/bin/uwsgi&lt;/span&gt;
-&lt;a name="rest_code_47e7a88f4519414881aca9d0bd189797-7"&gt;&lt;/a&gt;&lt;span class="na"&gt;virtualenv&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp&lt;/span&gt;
-&lt;a name="rest_code_47e7a88f4519414881aca9d0bd189797-8"&gt;&lt;/a&gt;&lt;span class="na"&gt;module&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;flaskapp:app&lt;/span&gt;
-&lt;a name="rest_code_47e7a88f4519414881aca9d0bd189797-9"&gt;&lt;/a&gt;&lt;span class="na"&gt;uid&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;www-data&lt;/span&gt;
-&lt;a name="rest_code_47e7a88f4519414881aca9d0bd189797-10"&gt;&lt;/a&gt;&lt;span class="na"&gt;gid&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;www-data&lt;/span&gt;
-&lt;a name="rest_code_47e7a88f4519414881aca9d0bd189797-11"&gt;&lt;/a&gt;&lt;span class="na"&gt;processes&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;1&lt;/span&gt;
-&lt;a name="rest_code_47e7a88f4519414881aca9d0bd189797-12"&gt;&lt;/a&gt;&lt;span class="na"&gt;threads&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;1&lt;/span&gt;
-&lt;a name="rest_code_47e7a88f4519414881aca9d0bd189797-13"&gt;&lt;/a&gt;&lt;span class="na"&gt;plugins&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;python3,logfile&lt;/span&gt;
-&lt;a name="rest_code_47e7a88f4519414881aca9d0bd189797-14"&gt;&lt;/a&gt;&lt;span class="na"&gt;logger&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;file:/srv/myapp/uwsgi.log&lt;/span&gt;
+&lt;pre class="code ini"&gt;&lt;a name="rest_code_fe5096cc1d3b429bbcdfdce7a07cebc1-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;[uwsgi]&lt;/span&gt;
+&lt;a name="rest_code_fe5096cc1d3b429bbcdfdce7a07cebc1-2"&gt;&lt;/a&gt;&lt;span class="na"&gt;socket&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/uwsgi.sock&lt;/span&gt;
+&lt;a name="rest_code_fe5096cc1d3b429bbcdfdce7a07cebc1-3"&gt;&lt;/a&gt;&lt;span class="na"&gt;chmod-socket&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;775&lt;/span&gt;
+&lt;a name="rest_code_fe5096cc1d3b429bbcdfdce7a07cebc1-4"&gt;&lt;/a&gt;&lt;span class="na"&gt;chdir&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/appdata&lt;/span&gt;
+&lt;a name="rest_code_fe5096cc1d3b429bbcdfdce7a07cebc1-5"&gt;&lt;/a&gt;&lt;span class="na"&gt;master&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;true&lt;/span&gt;
+&lt;a name="rest_code_fe5096cc1d3b429bbcdfdce7a07cebc1-6"&gt;&lt;/a&gt;&lt;span class="na"&gt;binary-path&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/bin/uwsgi&lt;/span&gt;
+&lt;a name="rest_code_fe5096cc1d3b429bbcdfdce7a07cebc1-7"&gt;&lt;/a&gt;&lt;span class="na"&gt;virtualenv&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp&lt;/span&gt;
+&lt;a name="rest_code_fe5096cc1d3b429bbcdfdce7a07cebc1-8"&gt;&lt;/a&gt;&lt;span class="na"&gt;module&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;flaskapp:app&lt;/span&gt;
+&lt;a name="rest_code_fe5096cc1d3b429bbcdfdce7a07cebc1-9"&gt;&lt;/a&gt;&lt;span class="na"&gt;uid&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;www-data&lt;/span&gt;
+&lt;a name="rest_code_fe5096cc1d3b429bbcdfdce7a07cebc1-10"&gt;&lt;/a&gt;&lt;span class="na"&gt;gid&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;www-data&lt;/span&gt;
+&lt;a name="rest_code_fe5096cc1d3b429bbcdfdce7a07cebc1-11"&gt;&lt;/a&gt;&lt;span class="na"&gt;processes&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;1&lt;/span&gt;
+&lt;a name="rest_code_fe5096cc1d3b429bbcdfdce7a07cebc1-12"&gt;&lt;/a&gt;&lt;span class="na"&gt;threads&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;1&lt;/span&gt;
+&lt;a name="rest_code_fe5096cc1d3b429bbcdfdce7a07cebc1-13"&gt;&lt;/a&gt;&lt;span class="na"&gt;plugins&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;python3,logfile&lt;/span&gt;
+&lt;a name="rest_code_fe5096cc1d3b429bbcdfdce7a07cebc1-14"&gt;&lt;/a&gt;&lt;span class="na"&gt;logger&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;file:/srv/myapp/uwsgi.log&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;Save this file as:&lt;/p&gt;
 &lt;ul class="simple"&gt;
 &lt;li&gt;Ubuntu, Debian: &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;/etc/uwsgi-emperor/vassals/myapp.ini&lt;/span&gt;&lt;/tt&gt;&lt;/li&gt;
@@ -234,26 +234,26 @@
 &lt;li&gt;Fedora, CentOS: &lt;tt class="docutils literal"&gt;/etc/nginx/conf.d/myapp.conf&lt;/tt&gt;&lt;/li&gt;
 &lt;li&gt;Arch Linux: add &lt;tt class="docutils literal"&gt;include &lt;span class="pre"&gt;/etc/nginx/conf.d/*.conf;&lt;/span&gt;&lt;/tt&gt; to your &lt;tt class="docutils literal"&gt;http&lt;/tt&gt; directive in &lt;tt class="docutils literal"&gt;/etc/nginx/nginx.conf&lt;/tt&gt; and use &lt;tt class="docutils literal"&gt;/etc/nginx/conf.d/myapp.conf&lt;/tt&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;pre class="code nginx"&gt;&lt;a name="rest_code_8889bf0b77c8454fb7910cd9110807f9-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;server&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;a name="rest_code_8889bf0b77c8454fb7910cd9110807f9-2"&gt;&lt;/a&gt;    &lt;span class="c1"&gt;# for a public HTTP server:&lt;/span&gt;
-&lt;a name="rest_code_8889bf0b77c8454fb7910cd9110807f9-3"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;listen&lt;/span&gt; &lt;span class="mi"&gt;80&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;a name="rest_code_8889bf0b77c8454fb7910cd9110807f9-4"&gt;&lt;/a&gt;    &lt;span class="c1"&gt;# for a public HTTPS server:&lt;/span&gt;
-&lt;a name="rest_code_8889bf0b77c8454fb7910cd9110807f9-5"&gt;&lt;/a&gt;    &lt;span class="c1"&gt;# listen 443 ssl;&lt;/span&gt;
-&lt;a name="rest_code_8889bf0b77c8454fb7910cd9110807f9-6"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;server_name&lt;/span&gt; &lt;span class="s"&gt;localhost&lt;/span&gt; &lt;span class="s"&gt;myapp.local&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;a name="rest_code_8889bf0b77c8454fb7910cd9110807f9-7"&gt;&lt;/a&gt;
-&lt;a name="rest_code_8889bf0b77c8454fb7910cd9110807f9-8"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;location&lt;/span&gt; &lt;span class="s"&gt;/&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;a name="rest_code_8889bf0b77c8454fb7910cd9110807f9-9"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;include&lt;/span&gt; &lt;span class="s"&gt;uwsgi_params&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;a name="rest_code_8889bf0b77c8454fb7910cd9110807f9-10"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;uwsgi_pass&lt;/span&gt; &lt;span class="s"&gt;unix:/srv/myapp/uwsgi.sock&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;a name="rest_code_8889bf0b77c8454fb7910cd9110807f9-11"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;a name="rest_code_8889bf0b77c8454fb7910cd9110807f9-12"&gt;&lt;/a&gt;
-&lt;a name="rest_code_8889bf0b77c8454fb7910cd9110807f9-13"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;location&lt;/span&gt; &lt;span class="s"&gt;/static&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;a name="rest_code_8889bf0b77c8454fb7910cd9110807f9-14"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;alias&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/appdata/static&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;a name="rest_code_8889bf0b77c8454fb7910cd9110807f9-15"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;a name="rest_code_8889bf0b77c8454fb7910cd9110807f9-16"&gt;&lt;/a&gt;
-&lt;a name="rest_code_8889bf0b77c8454fb7910cd9110807f9-17"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;location&lt;/span&gt; &lt;span class="s"&gt;/favicon.ico&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;a name="rest_code_8889bf0b77c8454fb7910cd9110807f9-18"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;alias&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/appdata/static/favicon.ico&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;a name="rest_code_8889bf0b77c8454fb7910cd9110807f9-19"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;a name="rest_code_8889bf0b77c8454fb7910cd9110807f9-20"&gt;&lt;/a&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;pre class="code nginx"&gt;&lt;a name="rest_code_cbc607a8c16f46b3b69b2e3c22745a66-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;server&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_cbc607a8c16f46b3b69b2e3c22745a66-2"&gt;&lt;/a&gt;    &lt;span class="c1"&gt;# for a public HTTP server:&lt;/span&gt;
+&lt;a name="rest_code_cbc607a8c16f46b3b69b2e3c22745a66-3"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;listen&lt;/span&gt; &lt;span class="mi"&gt;80&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_cbc607a8c16f46b3b69b2e3c22745a66-4"&gt;&lt;/a&gt;    &lt;span class="c1"&gt;# for a public HTTPS server:&lt;/span&gt;
+&lt;a name="rest_code_cbc607a8c16f46b3b69b2e3c22745a66-5"&gt;&lt;/a&gt;    &lt;span class="c1"&gt;# listen 443 ssl;&lt;/span&gt;
+&lt;a name="rest_code_cbc607a8c16f46b3b69b2e3c22745a66-6"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;server_name&lt;/span&gt; &lt;span class="s"&gt;localhost&lt;/span&gt; &lt;span class="s"&gt;myapp.local&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_cbc607a8c16f46b3b69b2e3c22745a66-7"&gt;&lt;/a&gt;
+&lt;a name="rest_code_cbc607a8c16f46b3b69b2e3c22745a66-8"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;location&lt;/span&gt; &lt;span class="s"&gt;/&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_cbc607a8c16f46b3b69b2e3c22745a66-9"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;include&lt;/span&gt; &lt;span class="s"&gt;uwsgi_params&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_cbc607a8c16f46b3b69b2e3c22745a66-10"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;uwsgi_pass&lt;/span&gt; &lt;span class="s"&gt;unix:/srv/myapp/uwsgi.sock&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_cbc607a8c16f46b3b69b2e3c22745a66-11"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;a name="rest_code_cbc607a8c16f46b3b69b2e3c22745a66-12"&gt;&lt;/a&gt;
+&lt;a name="rest_code_cbc607a8c16f46b3b69b2e3c22745a66-13"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;location&lt;/span&gt; &lt;span class="s"&gt;/static&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_cbc607a8c16f46b3b69b2e3c22745a66-14"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;alias&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/appdata/static&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_cbc607a8c16f46b3b69b2e3c22745a66-15"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;a name="rest_code_cbc607a8c16f46b3b69b2e3c22745a66-16"&gt;&lt;/a&gt;
+&lt;a name="rest_code_cbc607a8c16f46b3b69b2e3c22745a66-17"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;location&lt;/span&gt; &lt;span class="s"&gt;/favicon.ico&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_cbc607a8c16f46b3b69b2e3c22745a66-18"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;alias&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/appdata/static/favicon.ico&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_cbc607a8c16f46b3b69b2e3c22745a66-19"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;a name="rest_code_cbc607a8c16f46b3b69b2e3c22745a66-20"&gt;&lt;/a&gt;&lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;Note that this file is a very basic and rudimentary configuration. This configuration is fine for local testing, but for a real deployment, you will need to adjust it:&lt;/p&gt;
 &lt;ul class="simple"&gt;
 &lt;li&gt;set &lt;tt class="docutils literal"&gt;listen&lt;/tt&gt; to &lt;tt class="docutils literal"&gt;443 ssl&lt;/tt&gt; and create a http→https redirect on port 80 (you can get a free SSL certificate from &lt;a class="reference external" href="https://letsencrypt.org/"&gt;Let’s Encrypt&lt;/a&gt;; make sure to &lt;a class="reference external" href="https://raymii.org/s/tutorials/Strong_SSL_Security_On_nginx.html"&gt;configure SSL properly&lt;/a&gt;).&lt;/li&gt;
@@ -269,39 +269,39 @@
 &lt;div class="section" id="for-arch-linux"&gt;
 &lt;h4&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id19"&gt;For Arch Linux&lt;/a&gt;&lt;/h4&gt;
 &lt;p&gt;All you need is:&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_3c949136893545ca8c05071f5d1d6148-1"&gt;&lt;/a&gt;systemctl &lt;span class="nb"&gt;enable&lt;/span&gt; nginx emperor.uwsgi
-&lt;a name="rest_code_3c949136893545ca8c05071f5d1d6148-2"&gt;&lt;/a&gt;systemctl start nginx emperor.uwsgi
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_9919426eb4f24dfa95b677b48fa1ab1b-1"&gt;&lt;/a&gt;systemctl &lt;span class="nb"&gt;enable&lt;/span&gt; nginx emperor.uwsgi
+&lt;a name="rest_code_9919426eb4f24dfa95b677b48fa1ab1b-2"&gt;&lt;/a&gt;systemctl start nginx emperor.uwsgi
 &lt;/pre&gt;&lt;p&gt;Verify the service is running with &lt;tt class="docutils literal"&gt;systemctl status emperor.uwsgi&lt;/tt&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="for-fedora-and-centos"&gt;
 &lt;h4&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id20"&gt;For Fedora and CentOS&lt;/a&gt;&lt;/h4&gt;
 &lt;p&gt;Make sure you followed the extra note about editing &lt;tt class="docutils literal"&gt;/etc/uwsgi.ini&lt;/tt&gt; earlier and run:&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_c416090db666447ea3766e6ce87a9401-1"&gt;&lt;/a&gt;systemctl &lt;span class="nb"&gt;enable&lt;/span&gt; nginx uwsgi
-&lt;a name="rest_code_c416090db666447ea3766e6ce87a9401-2"&gt;&lt;/a&gt;systemctl start nginx uwsgi
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_b59b053b3ab14c9986590ee5c9f30a61-1"&gt;&lt;/a&gt;systemctl &lt;span class="nb"&gt;enable&lt;/span&gt; nginx uwsgi
+&lt;a name="rest_code_b59b053b3ab14c9986590ee5c9f30a61-2"&gt;&lt;/a&gt;systemctl start nginx uwsgi
 &lt;/pre&gt;&lt;p&gt;Verify the service is running with &lt;tt class="docutils literal"&gt;systemctl status uwsgi&lt;/tt&gt;&lt;/p&gt;
 &lt;p&gt;If you disabled SELinux, this is enough to get an app working and you can skip over to the next section.&lt;/p&gt;
 &lt;p&gt;If you want to use SELinux, you need to do the following to allow nginx to read static files:&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_eed589ba704744bfbfad95c35747df4f-1"&gt;&lt;/a&gt;setenforce &lt;span class="m"&gt;0&lt;/span&gt;
-&lt;a name="rest_code_eed589ba704744bfbfad95c35747df4f-2"&gt;&lt;/a&gt;chcon -R system_u:system_r:httpd_t:s0 /srv/myapp/appdata/static
-&lt;a name="rest_code_eed589ba704744bfbfad95c35747df4f-3"&gt;&lt;/a&gt;setenforce &lt;span class="m"&gt;1&lt;/span&gt;
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_1ad1ab8fc13c49b788bbe1c3f4a50e45-1"&gt;&lt;/a&gt;setenforce &lt;span class="m"&gt;0&lt;/span&gt;
+&lt;a name="rest_code_1ad1ab8fc13c49b788bbe1c3f4a50e45-2"&gt;&lt;/a&gt;chcon -R system_u:system_r:httpd_t:s0 /srv/myapp/appdata/static
+&lt;a name="rest_code_1ad1ab8fc13c49b788bbe1c3f4a50e45-3"&gt;&lt;/a&gt;setenforce &lt;span class="m"&gt;1&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;We now need to install a &lt;a class="reference external" href="https://chriswarrick.com/pub/nginx-uwsgi.pp"&gt;SELinux policy&lt;/a&gt; (that I created for this project) to allow nginx and uWSGI to communicate.
 Download it and run:&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_5c879c09aaed435bafc167607798a3b7-1"&gt;&lt;/a&gt;semodule -i nginx-uwsgi.pp
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_20b89481c02f44bc9ee2a7e1efb3ed53-1"&gt;&lt;/a&gt;semodule -i nginx-uwsgi.pp
 &lt;/pre&gt;&lt;p&gt;Hopefully, this is enough (you can delete the file). In case it isn’t, please read SELinux documentation, check audit logs, and look into &lt;tt class="docutils literal"&gt;audit2allow&lt;/tt&gt;.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="for-ubuntu-and-debian"&gt;
 &lt;h4&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id21"&gt;For Ubuntu and Debian&lt;/a&gt;&lt;/h4&gt;
 &lt;p&gt;Ubuntu and Debian (still!) use LSB services for uWSGI. Because LSB services are awful, we’re going to set up our own systemd-based (native) service.&lt;/p&gt;
 &lt;p&gt;Start by disabling the LSB service that comes with Ubuntu and Debian:&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_d6ce99a9b8c34c8f91b670d0ef5a9549-1"&gt;&lt;/a&gt;systemctl stop uwsgi-emperor
-&lt;a name="rest_code_d6ce99a9b8c34c8f91b670d0ef5a9549-2"&gt;&lt;/a&gt;systemctl disable uwsgi-emperor
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_952abad0008b47c78625f6f98a82648d-1"&gt;&lt;/a&gt;systemctl stop uwsgi-emperor
+&lt;a name="rest_code_952abad0008b47c78625f6f98a82648d-2"&gt;&lt;/a&gt;systemctl disable uwsgi-emperor
 &lt;/pre&gt;&lt;p&gt;Copy the &lt;tt class="docutils literal"&gt;.service&lt;/tt&gt; file from the &lt;a class="reference external" href="https://uwsgi-docs.readthedocs.org/en/latest/Systemd.html#adding-the-emperor-to-systemd"&gt;uWSGI systemd documentation&lt;/a&gt; to &lt;tt class="docutils literal"&gt;/etc/systemd/system/emperor.uwsgi.service&lt;/tt&gt;.  Change the ExecStart line to:&lt;/p&gt;
-&lt;pre class="code ini"&gt;&lt;a name="rest_code_750bb659cee54e9c9d8f89e3e39c5792-1"&gt;&lt;/a&gt;&lt;span class="na"&gt;ExecStart&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/usr/bin/uwsgi --ini /etc/uwsgi-emperor/emperor.ini&lt;/span&gt;
+&lt;pre class="code ini"&gt;&lt;a name="rest_code_3f196c51a29b468fb96d245826d45531-1"&gt;&lt;/a&gt;&lt;span class="na"&gt;ExecStart&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/usr/bin/uwsgi --ini /etc/uwsgi-emperor/emperor.ini&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;You can now reload systemd daemons and enable the services:&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_6305e66ef2ec40c0ace50023e42c7602-1"&gt;&lt;/a&gt;systemctl daemon-reload
-&lt;a name="rest_code_6305e66ef2ec40c0ace50023e42c7602-2"&gt;&lt;/a&gt;systemctl &lt;span class="nb"&gt;enable&lt;/span&gt; nginx emperor.uwsgi
-&lt;a name="rest_code_6305e66ef2ec40c0ace50023e42c7602-3"&gt;&lt;/a&gt;systemctl reload nginx
-&lt;a name="rest_code_6305e66ef2ec40c0ace50023e42c7602-4"&gt;&lt;/a&gt;systemctl start emperor.uwsgi
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_803b64350c1f4579867801e0fbacec51-1"&gt;&lt;/a&gt;systemctl daemon-reload
+&lt;a name="rest_code_803b64350c1f4579867801e0fbacec51-2"&gt;&lt;/a&gt;systemctl &lt;span class="nb"&gt;enable&lt;/span&gt; nginx emperor.uwsgi
+&lt;a name="rest_code_803b64350c1f4579867801e0fbacec51-3"&gt;&lt;/a&gt;systemctl reload nginx
+&lt;a name="rest_code_803b64350c1f4579867801e0fbacec51-4"&gt;&lt;/a&gt;systemctl start emperor.uwsgi
 &lt;/pre&gt;&lt;p&gt;Verify the service is running with &lt;tt class="docutils literal"&gt;systemctl status emperor.uwsgi&lt;/tt&gt;.  (Ignore
 the warning about no request plugin)&lt;/p&gt;
 &lt;/div&gt;
@@ -313,9 +313,9 @@ the warning about no request plugin)&lt;/p&gt;
 &lt;p&gt;If you used the demo application, you should see something like this (complete with the favicon and image greeting):&lt;/p&gt;
 &lt;img alt="/images/nginx-uwsgi-demo.png" class="centered" src="https://chriswarrick.com/images/nginx-uwsgi-demo.png"&gt;
 &lt;p&gt;If you want to test with cURL:&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_5ff4cff83798493fa4ea464266962466-1"&gt;&lt;/a&gt;curl -v http://localhost/
-&lt;a name="rest_code_5ff4cff83798493fa4ea464266962466-2"&gt;&lt;/a&gt;curl -I http://localhost/favicon.ico
-&lt;a name="rest_code_5ff4cff83798493fa4ea464266962466-3"&gt;&lt;/a&gt;curl -I http://localhost/static/hello.png
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_25205cc4cf2c4c828b1216b1c2a0ac6e-1"&gt;&lt;/a&gt;curl -v http://localhost/
+&lt;a name="rest_code_25205cc4cf2c4c828b1216b1c2a0ac6e-2"&gt;&lt;/a&gt;curl -I http://localhost/favicon.ico
+&lt;a name="rest_code_25205cc4cf2c4c828b1216b1c2a0ac6e-3"&gt;&lt;/a&gt;curl -I http://localhost/static/hello.png
 &lt;/pre&gt;&lt;div class="section" id="troubleshooting"&gt;
 &lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id23"&gt;Troubleshooting&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;Hopefully, everything works. If it doesn’t:&lt;/p&gt;
@@ -325,8 +325,8 @@ the warning about no request plugin)&lt;/p&gt;
 &lt;li&gt;If you get a default site, disable that site in nginx config (&lt;tt class="docutils literal"&gt;/etc/nginx/nginx.conf&lt;/tt&gt; or your sites directory).&lt;/li&gt;
 &lt;li&gt;If you have a firewall installed, make sure to open the ports your web server runs on (typically 80/443). For &lt;tt class="docutils literal"&gt;firewalld&lt;/tt&gt; (Fedora, CentOS):&lt;/li&gt;
 &lt;/ul&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_d584def48f4843949bafa9b8bd07a8af-1"&gt;&lt;/a&gt;firewall-cmd --add-service http
-&lt;a name="rest_code_d584def48f4843949bafa9b8bd07a8af-2"&gt;&lt;/a&gt;firewall-cmd --add-service https
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_55e7822331a84418ade308d8ff8350b9-1"&gt;&lt;/a&gt;firewall-cmd --add-service http
+&lt;a name="rest_code_55e7822331a84418ade308d8ff8350b9-2"&gt;&lt;/a&gt;firewall-cmd --add-service https
 &lt;/pre&gt;&lt;ul class="simple"&gt;
 &lt;li&gt;If it still does not work, feel free to ask in the comments, mentioning your distribution, installation method, and what doesn’t work.&lt;/li&gt;
 &lt;/ul&gt;
@@ -421,10 +421,10 @@ users can install the &lt;tt class="docutils literal"&gt;think&lt;/tt&gt; packag
 &lt;div class="section" id="configuration"&gt;
 &lt;h2&gt;Configuration&lt;/h2&gt;
 &lt;p&gt;Create a file named &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;~/.config/think.conf&lt;/span&gt;&lt;/tt&gt; (or wherever your &lt;tt class="docutils literal"&gt;XDG_CONFIG_HOME&lt;/tt&gt; is) with the following four lines:&lt;/p&gt;
-&lt;pre class="code ini"&gt;&lt;a name="rest_code_3db21d14da95463da28a29e7cac2c114-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;[Think]&lt;/span&gt;
-&lt;a name="rest_code_3db21d14da95463da28a29e7cac2c114-2"&gt;&lt;/a&gt;&lt;span class="na"&gt;command&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;play&lt;/span&gt;
-&lt;a name="rest_code_3db21d14da95463da28a29e7cac2c114-3"&gt;&lt;/a&gt;&lt;span class="na"&gt;file&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/home/kwpolska/Dropbox/Media/Wielka Gra.mp3&lt;/span&gt;
-&lt;a name="rest_code_3db21d14da95463da28a29e7cac2c114-4"&gt;&lt;/a&gt;&lt;span class="na"&gt;behavior&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;wait&lt;/span&gt;
+&lt;pre class="code ini"&gt;&lt;a name="rest_code_cf202ccb540745948f9b65f0e9c5879a-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;[Think]&lt;/span&gt;
+&lt;a name="rest_code_cf202ccb540745948f9b65f0e9c5879a-2"&gt;&lt;/a&gt;&lt;span class="na"&gt;command&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;play&lt;/span&gt;
+&lt;a name="rest_code_cf202ccb540745948f9b65f0e9c5879a-3"&gt;&lt;/a&gt;&lt;span class="na"&gt;file&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/home/kwpolska/Dropbox/Media/Wielka Gra.mp3&lt;/span&gt;
+&lt;a name="rest_code_cf202ccb540745948f9b65f0e9c5879a-4"&gt;&lt;/a&gt;&lt;span class="na"&gt;behavior&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;wait&lt;/span&gt;
 &lt;/pre&gt;&lt;ul class="simple"&gt;
 &lt;li&gt;&lt;tt class="docutils literal"&gt;command&lt;/tt&gt; is the command of the player that will be executed.  You can use
 &lt;tt class="docutils literal"&gt;play&lt;/tt&gt; (from &lt;tt class="docutils literal"&gt;sox&lt;/tt&gt;) or any other fast CLI music player.&lt;/li&gt;
@@ -440,7 +440,7 @@ users can install the &lt;tt class="docutils literal"&gt;think&lt;/tt&gt; packag
 &lt;div class="section" id="usage"&gt;
 &lt;h2&gt;Usage&lt;/h2&gt;
 &lt;p&gt;Prepend &lt;tt class="docutils literal"&gt;think&lt;/tt&gt; before the command that takes too long to execute:&lt;/p&gt;
-&lt;pre class="code console"&gt;&lt;a name="rest_code_8f36403f87864338811834880a374cf4-1"&gt;&lt;/a&gt;&lt;span class="go"&gt;think sleep 120&lt;/span&gt;
+&lt;pre class="code console"&gt;&lt;a name="rest_code_83018c4c73a141c1b3471e73e96cca30-1"&gt;&lt;/a&gt;&lt;span class="go"&gt;think sleep 120&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</description><category>app</category><category>CLI</category><category>game show</category><category>Jeopardy!</category><category>Linux</category><category>projects</category><category>Python</category><category>think</category><guid>https://chriswarrick.com/blog/2015/05/30/think/</guid><pubDate>Sat, 06 Jun 2015 12:15:00 GMT</pubDate></item><item><title>systemd is awesome.</title><link>https://chriswarrick.com/blog/2015/01/30/systemd-is-awesome/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;I recently switched distros on my server, from Debian to Fedora, to use
 &lt;tt class="docutils literal"&gt;systemd&lt;/tt&gt; and keep it in line with my home &lt;a class="reference external" href="https://chriswarrick.com/blog/2011/01/06/arch-linux-the-best-distro-ever/"&gt;Arch Linux&lt;/a&gt; system (which was
 not reinstalled since 2010, by the way!)  Why is systemd so awesome?  Read
@@ -523,22 +523,22 @@ I feel much better and, more importantly, &lt;strong&gt;safer&lt;/strong&gt; wit
 &lt;div class="section" id="reason-1-intelligent-completion"&gt;
 &lt;h2&gt;Reason #1. Intelligent Completion&lt;/h2&gt;
 &lt;p&gt;The zsh’s bulit-in completion is the best one ever made. For example, here is how regular bash responds to &lt;tt class="docutils literal"&gt;pacman &lt;span class="pre"&gt;&amp;lt;Tab&amp;gt;&amp;lt;Tab&amp;gt;&lt;/span&gt;&lt;/tt&gt;:&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_6f026a32a4974b8b807ef952d4ec9360-1"&gt;&lt;/a&gt;[kwpolska@kwpolska-lin ~]$ pacman
-&lt;a name="rest_code_6f026a32a4974b8b807ef952d4ec9360-2"&gt;&lt;/a&gt;Display all XXX possibilities? (y or n)
+&lt;pre class="code text"&gt;&lt;a name="rest_code_56b5411e07d24969ac246462b794928a-1"&gt;&lt;/a&gt;[kwpolska@kwpolska-lin ~]$ pacman
+&lt;a name="rest_code_56b5411e07d24969ac246462b794928a-2"&gt;&lt;/a&gt;Display all XXX possibilities? (y or n)
 &lt;/pre&gt;&lt;p&gt;(The &lt;em&gt;possibilities&lt;/em&gt; are all the files and directories in the current working directory.)&lt;/p&gt;
 &lt;p&gt;And here’s another bash response, this time with bash-completion:&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_0323fc81a4c6475b9401d9f220fd8542-1"&gt;&lt;/a&gt;[kwpolska@kwpolska-lin ~]$ pacman -
-&lt;a name="rest_code_0323fc81a4c6475b9401d9f220fd8542-2"&gt;&lt;/a&gt;-D          -h          -Q          -R          -S          -U          -V
-&lt;a name="rest_code_0323fc81a4c6475b9401d9f220fd8542-3"&gt;&lt;/a&gt;--database  --help      --query     --remove    --sync      --upgrade   --version
+&lt;pre class="code text"&gt;&lt;a name="rest_code_f1ad924aeaa94f758496d0b256f72cbc-1"&gt;&lt;/a&gt;[kwpolska@kwpolska-lin ~]$ pacman -
+&lt;a name="rest_code_f1ad924aeaa94f758496d0b256f72cbc-2"&gt;&lt;/a&gt;-D          -h          -Q          -R          -S          -U          -V
+&lt;a name="rest_code_f1ad924aeaa94f758496d0b256f72cbc-3"&gt;&lt;/a&gt;--database  --help      --query     --remove    --sync      --upgrade   --version
 &lt;/pre&gt;&lt;p&gt;That’s much more helpful, but a new user still wouldn’t know what to do.&lt;/p&gt;
 &lt;p&gt;Are you wondering what zsh did after adding a &lt;tt class="docutils literal"&gt;-&lt;/tt&gt; before the first &lt;tt class="docutils literal"&gt;&amp;lt;Tab&amp;gt;&lt;/tt&gt;?&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_f866cec4e06f4f47955af96f3da36131-1"&gt;&lt;/a&gt;[kwpolska@kwpolska-lin ~]$ pacman -Q
-&lt;a name="rest_code_f866cec4e06f4f47955af96f3da36131-2"&gt;&lt;/a&gt;-Q  -- Query the package database
-&lt;a name="rest_code_f866cec4e06f4f47955af96f3da36131-3"&gt;&lt;/a&gt;-R  -- Remove a package from the system
-&lt;a name="rest_code_f866cec4e06f4f47955af96f3da36131-4"&gt;&lt;/a&gt;-S  -- Synchronize packages
-&lt;a name="rest_code_f866cec4e06f4f47955af96f3da36131-5"&gt;&lt;/a&gt;-U  -- Upgrade a package
-&lt;a name="rest_code_f866cec4e06f4f47955af96f3da36131-6"&gt;&lt;/a&gt;-V  -- Display version and exit
-&lt;a name="rest_code_f866cec4e06f4f47955af96f3da36131-7"&gt;&lt;/a&gt;-h  -- Display usage
+&lt;pre class="code text"&gt;&lt;a name="rest_code_08511837634644e995f7d56349342160-1"&gt;&lt;/a&gt;[kwpolska@kwpolska-lin ~]$ pacman -Q
+&lt;a name="rest_code_08511837634644e995f7d56349342160-2"&gt;&lt;/a&gt;-Q  -- Query the package database
+&lt;a name="rest_code_08511837634644e995f7d56349342160-3"&gt;&lt;/a&gt;-R  -- Remove a package from the system
+&lt;a name="rest_code_08511837634644e995f7d56349342160-4"&gt;&lt;/a&gt;-S  -- Synchronize packages
+&lt;a name="rest_code_08511837634644e995f7d56349342160-5"&gt;&lt;/a&gt;-U  -- Upgrade a package
+&lt;a name="rest_code_08511837634644e995f7d56349342160-6"&gt;&lt;/a&gt;-V  -- Display version and exit
+&lt;a name="rest_code_08511837634644e995f7d56349342160-7"&gt;&lt;/a&gt;-h  -- Display usage
 &lt;/pre&gt;&lt;p&gt;(If you will press tab once, it will just show the possibilities. If you will press it once again, it will change to -R.)&lt;/p&gt;
 &lt;p&gt;Do you want to start the GNOME’s Preferred Applications dialog box &lt;strong&gt;from the shell, without using the Tab key&lt;/strong&gt;? Good luck! The name is &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;gnome-default-applications-properties&lt;/span&gt;&lt;/tt&gt;. That’s &lt;strong&gt;38&lt;/strong&gt; characters. &lt;strong&gt;THIRTY EIGHT&lt;/strong&gt; characters. If you will make a typo in bash, you’ll see “command not found”, swear a few times and find the typo yourself. With zsh, instead of searching for typo, you can press &lt;tt class="docutils literal"&gt;&amp;lt;Tab&amp;gt;&lt;/tt&gt;. In many cases, you’ll see the proper command.&lt;/p&gt;
 &lt;/div&gt;
@@ -556,20 +556,20 @@ I feel much better and, more importantly, &lt;strong&gt;safer&lt;/strong&gt; wit
 &lt;div class="section" id="reason-4-bindkeys"&gt;
 &lt;h2&gt;Reason #4. &lt;tt class="docutils literal"&gt;bindkeys&lt;/tt&gt;&lt;/h2&gt;
 &lt;p&gt;Wish to use some keys for special text operations? You can use bindkeys. I’m binding these keystrokes:&lt;/p&gt;
-&lt;pre class="code bash"&gt;&lt;a name="rest_code_aaa1081d05244a14aa1c7d238be11c27-1"&gt;&lt;/a&gt;bindkey &lt;span class="s2"&gt;"\e[1~"&lt;/span&gt; beginning-of-line       &lt;span class="c1"&gt;# Home&lt;/span&gt;
-&lt;a name="rest_code_aaa1081d05244a14aa1c7d238be11c27-2"&gt;&lt;/a&gt;bindkey &lt;span class="s2"&gt;"\e[4~"&lt;/span&gt; end-of-line             &lt;span class="c1"&gt;# End&lt;/span&gt;
-&lt;a name="rest_code_aaa1081d05244a14aa1c7d238be11c27-3"&gt;&lt;/a&gt;bindkey &lt;span class="s2"&gt;"\e[5~"&lt;/span&gt; beginning-of-history    &lt;span class="c1"&gt;# PageUp&lt;/span&gt;
-&lt;a name="rest_code_aaa1081d05244a14aa1c7d238be11c27-4"&gt;&lt;/a&gt;bindkey &lt;span class="s2"&gt;"\e[6~"&lt;/span&gt; end-of-history          &lt;span class="c1"&gt;# PageDown&lt;/span&gt;
-&lt;a name="rest_code_aaa1081d05244a14aa1c7d238be11c27-5"&gt;&lt;/a&gt;bindkey &lt;span class="s2"&gt;"\e[2~"&lt;/span&gt; quoted-insert           &lt;span class="c1"&gt;# Ins&lt;/span&gt;
-&lt;a name="rest_code_aaa1081d05244a14aa1c7d238be11c27-6"&gt;&lt;/a&gt;bindkey &lt;span class="s2"&gt;"\e[3~"&lt;/span&gt; delete-char             &lt;span class="c1"&gt;# Del&lt;/span&gt;
-&lt;a name="rest_code_aaa1081d05244a14aa1c7d238be11c27-7"&gt;&lt;/a&gt;bindkey &lt;span class="s2"&gt;"^[OH"&lt;/span&gt;  beginning-of-line       &lt;span class="c1"&gt;# Home&lt;/span&gt;
-&lt;a name="rest_code_aaa1081d05244a14aa1c7d238be11c27-8"&gt;&lt;/a&gt;bindkey &lt;span class="s2"&gt;"^[OF"&lt;/span&gt;  end-of-line             &lt;span class="c1"&gt;# End&lt;/span&gt;
-&lt;a name="rest_code_aaa1081d05244a14aa1c7d238be11c27-9"&gt;&lt;/a&gt;bindkey &lt;span class="s2"&gt;"^[[5~"&lt;/span&gt; beginning-of-history    &lt;span class="c1"&gt;# PageUp&lt;/span&gt;
-&lt;a name="rest_code_aaa1081d05244a14aa1c7d238be11c27-10"&gt;&lt;/a&gt;bindkey &lt;span class="s2"&gt;"^[[6~"&lt;/span&gt; end-of-history          &lt;span class="c1"&gt;# PageDown&lt;/span&gt;
-&lt;a name="rest_code_aaa1081d05244a14aa1c7d238be11c27-11"&gt;&lt;/a&gt;bindkey &lt;span class="s2"&gt;"^[[2~"&lt;/span&gt; quoted-insert           &lt;span class="c1"&gt;# Ins&lt;/span&gt;
-&lt;a name="rest_code_aaa1081d05244a14aa1c7d238be11c27-12"&gt;&lt;/a&gt;bindkey &lt;span class="s2"&gt;"^[[3~"&lt;/span&gt; delete-char             &lt;span class="c1"&gt;# Del&lt;/span&gt;
-&lt;a name="rest_code_aaa1081d05244a14aa1c7d238be11c27-13"&gt;&lt;/a&gt;bindkey &lt;span class="s2"&gt;"^[[1;5D"&lt;/span&gt; backward-word         &lt;span class="c1"&gt;# ^Left&lt;/span&gt;
-&lt;a name="rest_code_aaa1081d05244a14aa1c7d238be11c27-14"&gt;&lt;/a&gt;bindkey &lt;span class="s2"&gt;"^[[1;5C"&lt;/span&gt; forward-word          &lt;span class="c1"&gt;# ^Right&lt;/span&gt;
+&lt;pre class="code bash"&gt;&lt;a name="rest_code_c3b7ecdac9c848c2b51e8b1d302d97b0-1"&gt;&lt;/a&gt;bindkey &lt;span class="s2"&gt;"\e[1~"&lt;/span&gt; beginning-of-line       &lt;span class="c1"&gt;# Home&lt;/span&gt;
+&lt;a name="rest_code_c3b7ecdac9c848c2b51e8b1d302d97b0-2"&gt;&lt;/a&gt;bindkey &lt;span class="s2"&gt;"\e[4~"&lt;/span&gt; end-of-line             &lt;span class="c1"&gt;# End&lt;/span&gt;
+&lt;a name="rest_code_c3b7ecdac9c848c2b51e8b1d302d97b0-3"&gt;&lt;/a&gt;bindkey &lt;span class="s2"&gt;"\e[5~"&lt;/span&gt; beginning-of-history    &lt;span class="c1"&gt;# PageUp&lt;/span&gt;
+&lt;a name="rest_code_c3b7ecdac9c848c2b51e8b1d302d97b0-4"&gt;&lt;/a&gt;bindkey &lt;span class="s2"&gt;"\e[6~"&lt;/span&gt; end-of-history          &lt;span class="c1"&gt;# PageDown&lt;/span&gt;
+&lt;a name="rest_code_c3b7ecdac9c848c2b51e8b1d302d97b0-5"&gt;&lt;/a&gt;bindkey &lt;span class="s2"&gt;"\e[2~"&lt;/span&gt; quoted-insert           &lt;span class="c1"&gt;# Ins&lt;/span&gt;
+&lt;a name="rest_code_c3b7ecdac9c848c2b51e8b1d302d97b0-6"&gt;&lt;/a&gt;bindkey &lt;span class="s2"&gt;"\e[3~"&lt;/span&gt; delete-char             &lt;span class="c1"&gt;# Del&lt;/span&gt;
+&lt;a name="rest_code_c3b7ecdac9c848c2b51e8b1d302d97b0-7"&gt;&lt;/a&gt;bindkey &lt;span class="s2"&gt;"^[OH"&lt;/span&gt;  beginning-of-line       &lt;span class="c1"&gt;# Home&lt;/span&gt;
+&lt;a name="rest_code_c3b7ecdac9c848c2b51e8b1d302d97b0-8"&gt;&lt;/a&gt;bindkey &lt;span class="s2"&gt;"^[OF"&lt;/span&gt;  end-of-line             &lt;span class="c1"&gt;# End&lt;/span&gt;
+&lt;a name="rest_code_c3b7ecdac9c848c2b51e8b1d302d97b0-9"&gt;&lt;/a&gt;bindkey &lt;span class="s2"&gt;"^[[5~"&lt;/span&gt; beginning-of-history    &lt;span class="c1"&gt;# PageUp&lt;/span&gt;
+&lt;a name="rest_code_c3b7ecdac9c848c2b51e8b1d302d97b0-10"&gt;&lt;/a&gt;bindkey &lt;span class="s2"&gt;"^[[6~"&lt;/span&gt; end-of-history          &lt;span class="c1"&gt;# PageDown&lt;/span&gt;
+&lt;a name="rest_code_c3b7ecdac9c848c2b51e8b1d302d97b0-11"&gt;&lt;/a&gt;bindkey &lt;span class="s2"&gt;"^[[2~"&lt;/span&gt; quoted-insert           &lt;span class="c1"&gt;# Ins&lt;/span&gt;
+&lt;a name="rest_code_c3b7ecdac9c848c2b51e8b1d302d97b0-12"&gt;&lt;/a&gt;bindkey &lt;span class="s2"&gt;"^[[3~"&lt;/span&gt; delete-char             &lt;span class="c1"&gt;# Del&lt;/span&gt;
+&lt;a name="rest_code_c3b7ecdac9c848c2b51e8b1d302d97b0-13"&gt;&lt;/a&gt;bindkey &lt;span class="s2"&gt;"^[[1;5D"&lt;/span&gt; backward-word         &lt;span class="c1"&gt;# ^Left&lt;/span&gt;
+&lt;a name="rest_code_c3b7ecdac9c848c2b51e8b1d302d97b0-14"&gt;&lt;/a&gt;bindkey &lt;span class="s2"&gt;"^[[1;5C"&lt;/span&gt; forward-word          &lt;span class="c1"&gt;# ^Right&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;div class="section" id="getting-help"&gt;
 &lt;h2&gt;Getting Help&lt;/h2&gt;
@@ -593,23 +593,23 @@ I feel much better and, more importantly, &lt;strong&gt;safer&lt;/strong&gt; wit
 &lt;div class="section" id="the-man-page-aka-because-zsh-contains-many-features-the-zsh-manual-has-been-split-into-a-number-of-sections"&gt;
 &lt;h3&gt;The Man Page aka &lt;em&gt;Because zsh contains many features, the zsh manual has been split into a number of sections&lt;/em&gt;&lt;/h3&gt;
 &lt;p&gt;The &lt;cite&gt;zsh&lt;/cite&gt; man page just tells you the most important things and informs you about other sections. If you aren’t sure where to search, try &lt;tt class="docutils literal"&gt;man zshall&lt;/tt&gt;.&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_33fa131d70d64a81b184435721f492bb-1"&gt;&lt;/a&gt;zsh          Zsh overview
-&lt;a name="rest_code_33fa131d70d64a81b184435721f492bb-2"&gt;&lt;/a&gt;zshroadmap   Informal introduction to the manual
-&lt;a name="rest_code_33fa131d70d64a81b184435721f492bb-3"&gt;&lt;/a&gt;zshmisc      Anything not fitting into the other sections
-&lt;a name="rest_code_33fa131d70d64a81b184435721f492bb-4"&gt;&lt;/a&gt;zshexpn      Zsh command and parameter expansion
-&lt;a name="rest_code_33fa131d70d64a81b184435721f492bb-5"&gt;&lt;/a&gt;zshparam     Zsh parameters
-&lt;a name="rest_code_33fa131d70d64a81b184435721f492bb-6"&gt;&lt;/a&gt;zshoptions   Zsh options
-&lt;a name="rest_code_33fa131d70d64a81b184435721f492bb-7"&gt;&lt;/a&gt;zshbuiltins  Zsh built-in functions
-&lt;a name="rest_code_33fa131d70d64a81b184435721f492bb-8"&gt;&lt;/a&gt;zshzle       Zsh command line editing
-&lt;a name="rest_code_33fa131d70d64a81b184435721f492bb-9"&gt;&lt;/a&gt;zshcompwid   Zsh completion widgets
-&lt;a name="rest_code_33fa131d70d64a81b184435721f492bb-10"&gt;&lt;/a&gt;zshcompsys   Zsh completion system
-&lt;a name="rest_code_33fa131d70d64a81b184435721f492bb-11"&gt;&lt;/a&gt;zshcompctl   Zsh completion control
-&lt;a name="rest_code_33fa131d70d64a81b184435721f492bb-12"&gt;&lt;/a&gt;zshmodules   Zsh loadable modules
-&lt;a name="rest_code_33fa131d70d64a81b184435721f492bb-13"&gt;&lt;/a&gt;zshcalsys    Zsh built-in calendar functions
-&lt;a name="rest_code_33fa131d70d64a81b184435721f492bb-14"&gt;&lt;/a&gt;zshtcpsys    Zsh built-in TCP functions
-&lt;a name="rest_code_33fa131d70d64a81b184435721f492bb-15"&gt;&lt;/a&gt;zshzftpsys   Zsh built-in FTP client
-&lt;a name="rest_code_33fa131d70d64a81b184435721f492bb-16"&gt;&lt;/a&gt;zshcontrib   Additional zsh functions and utilities
-&lt;a name="rest_code_33fa131d70d64a81b184435721f492bb-17"&gt;&lt;/a&gt;zshall       Meta-man page containing all of the above
+&lt;pre class="code text"&gt;&lt;a name="rest_code_0ec067fabdae46ce826f3ae13789e029-1"&gt;&lt;/a&gt;zsh          Zsh overview
+&lt;a name="rest_code_0ec067fabdae46ce826f3ae13789e029-2"&gt;&lt;/a&gt;zshroadmap   Informal introduction to the manual
+&lt;a name="rest_code_0ec067fabdae46ce826f3ae13789e029-3"&gt;&lt;/a&gt;zshmisc      Anything not fitting into the other sections
+&lt;a name="rest_code_0ec067fabdae46ce826f3ae13789e029-4"&gt;&lt;/a&gt;zshexpn      Zsh command and parameter expansion
+&lt;a name="rest_code_0ec067fabdae46ce826f3ae13789e029-5"&gt;&lt;/a&gt;zshparam     Zsh parameters
+&lt;a name="rest_code_0ec067fabdae46ce826f3ae13789e029-6"&gt;&lt;/a&gt;zshoptions   Zsh options
+&lt;a name="rest_code_0ec067fabdae46ce826f3ae13789e029-7"&gt;&lt;/a&gt;zshbuiltins  Zsh built-in functions
+&lt;a name="rest_code_0ec067fabdae46ce826f3ae13789e029-8"&gt;&lt;/a&gt;zshzle       Zsh command line editing
+&lt;a name="rest_code_0ec067fabdae46ce826f3ae13789e029-9"&gt;&lt;/a&gt;zshcompwid   Zsh completion widgets
+&lt;a name="rest_code_0ec067fabdae46ce826f3ae13789e029-10"&gt;&lt;/a&gt;zshcompsys   Zsh completion system
+&lt;a name="rest_code_0ec067fabdae46ce826f3ae13789e029-11"&gt;&lt;/a&gt;zshcompctl   Zsh completion control
+&lt;a name="rest_code_0ec067fabdae46ce826f3ae13789e029-12"&gt;&lt;/a&gt;zshmodules   Zsh loadable modules
+&lt;a name="rest_code_0ec067fabdae46ce826f3ae13789e029-13"&gt;&lt;/a&gt;zshcalsys    Zsh built-in calendar functions
+&lt;a name="rest_code_0ec067fabdae46ce826f3ae13789e029-14"&gt;&lt;/a&gt;zshtcpsys    Zsh built-in TCP functions
+&lt;a name="rest_code_0ec067fabdae46ce826f3ae13789e029-15"&gt;&lt;/a&gt;zshzftpsys   Zsh built-in FTP client
+&lt;a name="rest_code_0ec067fabdae46ce826f3ae13789e029-16"&gt;&lt;/a&gt;zshcontrib   Additional zsh functions and utilities
+&lt;a name="rest_code_0ec067fabdae46ce826f3ae13789e029-17"&gt;&lt;/a&gt;zshall       Meta-man page containing all of the above
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/div&gt;&lt;/div&gt;</description><category>Linux</category><category>shell</category><category>zsh</category><guid>https://chriswarrick.com/blog/2011/03/05/zsh-a-shell-for-the-power-users/</guid><pubDate>Fri, 04 Mar 2011 23:00:00 GMT</pubDate></item><item><title>Arch Linux: The Best Linux Distro Ever.</title><link>https://chriswarrick.com/blog/2011/01/06/arch-linux-the-best-distro-ever/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;I’m using Linux since 2007. I’ve been on many distros (in order): &lt;a class="reference external" href="http://www2.mandriva.com/en/"&gt;Mandriva&lt;/a&gt;, &lt;a class="reference external" href="http://ubuntu.com"&gt;Ubuntu&lt;/a&gt;, &lt;a class="reference external" href="http://opensuse.org"&gt;openSuSE&lt;/a&gt;, &lt;a class="reference external" href="http://fedoraproject.org"&gt;Fedora&lt;/a&gt;, and only in &lt;a class="reference external" href="http://virtualbox.org"&gt;VirtualBox&lt;/a&gt;: &lt;a class="reference external" href="http://debian.org"&gt;Debian&lt;/a&gt; and &lt;a class="reference external" href="http://linuxmint.com"&gt;Linux Mint&lt;/a&gt;. But since two months there is another distro in both lists (I tested it out on VirtualBox and then set it up on the actual machine): &lt;a class="reference external" href="http://archlinux.org"&gt;Arch Linux&lt;/a&gt;.&lt;/p&gt;
 &lt;!-- TEASER_END --&gt;
