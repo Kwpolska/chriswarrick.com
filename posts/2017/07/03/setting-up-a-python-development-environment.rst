@@ -1,6 +1,7 @@
 .. title: Setting up a Python development environment
 .. slug: setting-up-a-python-development-environment
 .. date: 2017-07-03 12:40:00+02:00
+.. updated: 2017-07-07 12:40:00+02:00
 .. tags: Python, guide, devel, best practices, guide
 .. section: Python
 .. guide: yes
@@ -116,7 +117,6 @@ run it on the destination operating system. And remember that “compiling” to
 exe files like that **is not** a security measure — your source code is still
 easily recoverable. (It’s not a security measure in other languages either,
 even if getting source code back might be more expensive/tricky in those.)
-
 
 Where to learn Python? Where to get help?
 -----------------------------------------
@@ -305,16 +305,23 @@ options, eg. interpreter to use (``-p python3``). Sometimes you need to install
 virtualenv for every Python version; usually, one copy is enough.
 
 How to use them? This is a subject of heated debate in the Python community.
-Some people believe that activating (``source bin/activate`` on \*nix;
-``Scripts\activate`` on Windows) is the right thing to do. Others think that
-you should use ``bin/python`` (or other scripts in that directory) directly.
-Others still think `virtualenvs should be used in subshells
-<https://gist.github.com/datagrok/2199506>`_. In my opinion, if activating
-virtualenvs works in your environment, you should do it — it’s the most
-convenient option. There are, however, cases when activation fails, or is
-otherwise impossible — calling ``bin/python`` directly is your best bet in that
-case. I’m not a fan of the subshell option, because it complicates stuff if you
-work on multiple projects, and requires tracking usage manually.
+
+* Some people believe that activating (``source bin/activate`` on \*nix;
+  ``Scripts\activate`` on Windows) is the right thing to do and simplifies work.
+* Others think that you should use ``bin/python`` (or other scripts in that
+  directory) directly, as activation only changes ``$PATH`` and some helper
+  variables — those variables are not mandatory for operation, running
+  the correct ``python`` is.
+* Others still think `virtualenvs should be used in subshells
+  <https://gist.github.com/datagrok/2199506>`_.
+
+In my opinion, if activating virtualenvs works in your environment, you should
+do it — it’s the most convenient option. There are, however, cases when
+activation fails, or is otherwise impossible — calling ``bin/python`` directly
+is your best bet in that case. If you are working inside shell scripts, do not
+activate virtualenvs.  I’m not a fan of the subshell option, because it
+complicates stuff if you work on multiple projects, and requires tracking usage
+manually.
 
 Upgrading and moving
 ~~~~~~~~~~~~~~~~~~~~
@@ -343,8 +350,8 @@ still be packages without wheels on PyPI.
 If there is no wheel for a package and you are on Windows, check out `Christoph
 Gohlke’s unofficial binaries <http://www.lfd.uci.edu/~gohlke/pythonlibs/>`_.
 If you can’t find any wheels online, you would have to resort to compiling it
-manually — this requires installign Visual Studio in a version that matches
-your Python, and it’s kind of a pain to do.
+manually — this requires installing Visual Studio (Visual C++) in a version
+that matches your Python, and it’s kind of a pain to do.
 
 If you are not on Windows, you must install a C compiler and toolchain.
 If you get a warning about missing ``Python.h``, install the appropriate development

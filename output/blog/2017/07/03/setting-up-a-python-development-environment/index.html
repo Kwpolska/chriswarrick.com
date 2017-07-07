@@ -105,7 +105,7 @@ difference between Python, CPython, Anaco">
     </h1>
 
     <div class="metadata">
-<a href="/blog/2017/07/03/setting-up-a-python-development-environment/" rel="bookmark" class="u-published"><time class="published dt-published" datetime="2017-07-03T12:40:00+02:00" itemprop="datePublished" title="2017-07-03 12:40">2017-07-03 12:40</time></a>
+<a href="/blog/2017/07/03/setting-up-a-python-development-environment/" rel="bookmark" class="u-published"><time class="published dt-published" datetime="2017-07-03T12:40:00+02:00" itemprop="datePublished" title="2017-07-03 12:40">2017-07-03 12:40</time><time class="updated dt-updated" datetime="2017-07-07T12:40:00+02:00" title="Updated 2017-07-07 12:40"> (2017-07-07 12:40)</time></a>
         <ul itemprop="keywords" class="tags">
 <li class="section-bubble" style="background-color: #ffd43b"><a href="/python/">Python</a></li>
            <li><a class="tag p-category" href="/blog/tags/best-practices/" rel="tag">best practices</a></li>
@@ -400,16 +400,23 @@ named by a <tt class="docutils literal">.venv</tt> file.</p>
 then use it with <tt class="docutils literal">python <span class="pre">-m</span> virtualenv DIRECTORY</tt>. You may pass extra
 options, eg. interpreter to use (<tt class="docutils literal"><span class="pre">-p</span> python3</tt>). Sometimes you need to install
 virtualenv for every Python version; usually, one copy is enough.</p>
-<p>How to use them? This is a subject of heated debate in the Python community.
-Some people believe that activating (<tt class="docutils literal">source bin/activate</tt> on *nix;
-<tt class="docutils literal">Scripts\activate</tt> on Windows) is the right thing to do. Others think that
-you should use <tt class="docutils literal">bin/python</tt> (or other scripts in that directory) directly.
-Others still think <a class="reference external" href="https://gist.github.com/datagrok/2199506">virtualenvs should be used in subshells</a>. In my opinion, if activating
-virtualenvs works in your environment, you should do it — it’s the most
-convenient option. There are, however, cases when activation fails, or is
-otherwise impossible — calling <tt class="docutils literal">bin/python</tt> directly is your best bet in that
-case. I’m not a fan of the subshell option, because it complicates stuff if you
-work on multiple projects, and requires tracking usage manually.</p>
+<p>How to use them? This is a subject of heated debate in the Python community.</p>
+<ul class="simple">
+<li>Some people believe that activating (<tt class="docutils literal">source bin/activate</tt> on *nix;
+<tt class="docutils literal">Scripts\activate</tt> on Windows) is the right thing to do and simplifies work.</li>
+<li>Others think that you should use <tt class="docutils literal">bin/python</tt> (or other scripts in that
+directory) directly, as activation only changes <tt class="docutils literal">$PATH</tt> and some helper
+variables — those variables are not mandatory for operation, running
+the correct <tt class="docutils literal">python</tt> is.</li>
+<li>Others still think <a class="reference external" href="https://gist.github.com/datagrok/2199506">virtualenvs should be used in subshells</a>.</li>
+</ul>
+<p>In my opinion, if activating virtualenvs works in your environment, you should
+do it — it’s the most convenient option. There are, however, cases when
+activation fails, or is otherwise impossible — calling <tt class="docutils literal">bin/python</tt> directly
+is your best bet in that case. If you are working inside shell scripts, do not
+activate virtualenvs.  I’m not a fan of the subshell option, because it
+complicates stuff if you work on multiple projects, and requires tracking usage
+manually.</p>
 </div>
 <div class="section" id="upgrading-and-moving">
 <h4><a class="toc-backref" href="/blog/2017/07/03/setting-up-a-python-development-environment/#id18">Upgrading and moving</a><a href="#upgrading-and-moving" class="headerlink" title="Permalink to this heading">¶</a></h4>
@@ -433,8 +440,8 @@ still be packages without wheels on PyPI.</p>
 <p>If there is no wheel for a package and you are on Windows, check out <a class="reference external" href="http://www.lfd.uci.edu/~gohlke/pythonlibs/">Christoph
 Gohlke’s unofficial binaries</a>.
 If you can’t find any wheels online, you would have to resort to compiling it
-manually — this requires installign Visual Studio in a version that matches
-your Python, and it’s kind of a pain to do.</p>
+manually — this requires installing Visual Studio (Visual C++) in a version
+that matches your Python, and it’s kind of a pain to do.</p>
 <p>If you are not on Windows, you must install a C compiler and toolchain.
 If you get a warning about missing <tt class="docutils literal">Python.h</tt>, install the appropriate development
 package — for example, <tt class="docutils literal"><span class="pre">python-dev</span></tt> or <tt class="docutils literal"><span class="pre">python3-dev</span></tt>) on Debian/Ubuntu,
