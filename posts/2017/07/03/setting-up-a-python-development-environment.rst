@@ -237,7 +237,7 @@ packages installed for “global” Python 2.7 are separate from |last3x| packag
 Virtual environments generally don’t use the system packages, unless
 specifically enabled during creation.
 
-Some distros have pouplar packages in their repositories. Sometimes they’re
+Some distros have popular packages in their repositories. Sometimes they’re
 good; in other cases they’re terribly outdated or they lack important
 components, making package managers angry and sick of supporting a 2-year-old
 version. (Especially since most bugs are closed with “we’ve fixed that long
@@ -281,7 +281,7 @@ There are two tools to facilitate creation of virtual environments: the older
 distributions may put it in a separate package or remove it altogether. I
 recommend using **virtualenv** — it’s compatible with more Python versions
 (it’s better to use the same tool for both Pythons) and cannot be broken by
-incompetent OS package mainainers (``venv`` fails on Debian due to no
+incompetent OS package maintainers (``venv`` fails on Debian due to no
 ``ensurepip``; there is a ``python3-venv`` package that fixes it but that’s
 hard to discover)
 
@@ -290,7 +290,7 @@ content. Myself, I use `virtualenvwrapper
 <https://virtualenvwrapper.readthedocs.io/en/latest/>`_ to manage virtualenvs
 and put them in ``~/virtualenvs``. Other people put virtualenvs inside their
 git repositories (but they *must* be in ``.gitignore``) Virtualenvs should only contain packages
-installed with ``pip`` so they can be rereated quickly.
+installed with ``pip`` so they can be recreated quickly.
 
 I also use the ``virtualenvwrapper`` plugin for Oh My Zsh, which also
 activates virtualenvs with the same name as a git repo, or the environment
@@ -382,7 +382,7 @@ sophisticated find-and-replace, file finding, code completion, and many more min
 but helpful features.
 
 Then there’s the difference between IDEs and text editors. Text editors are
-simpler, whereas IDEs try to include many extra things not necessairly related
+simpler, whereas IDEs try to include many extra things not necessarily related
 to writing code. IDEs often use more resources, but you won’t notice it with a
 modern computer (especially with a SSD).
 
