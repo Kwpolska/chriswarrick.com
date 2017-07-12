@@ -1,7 +1,7 @@
 .. title: Setting up a Python development environment
 .. slug: setting-up-a-python-development-environment
 .. date: 2017-07-03 12:40:00+02:00
-.. updated: 2017-07-07 12:40:00+02:00
+.. updated: 2017-07-12 12:00:00+02:00
 .. tags: Python, guide, devel, best practices, guide
 .. section: Python
 .. guide: yes
@@ -180,7 +180,8 @@ other packages.
 
 **DO NOT** use the python.org installers: they do not have uninstallers, so you
 will have outdated versions lying around after some time. There is no
-auto-update as well.
+auto-update as well.  **DO NOT** attempt to remove the system-installed Python,
+this will only damage your system and you’ll need to reinstall.
 
 If you already have a package manager installed (MacPorts, Fink), don’t install
 a new one and just use the existing one.
@@ -196,6 +197,9 @@ Linux (and other Unix-like OSes)
 
 On Linux, there usually are good enough packages in your OS repositories. You
 should be able to install the appropriate package for Python (2 and/or 3).
+Most (if not all) distributions require Python — **do not** remove the
+pre-installed packages, and be careful not to overwrite them with something
+newer.
 
 If the version that ships with your distribution is too old, there are some
 options. There might be some repositories with better versions, eg. the
@@ -413,6 +417,16 @@ included with Python. It lacks some of the most basic things — it doesn’t ev
 have an option to show line numbers. Not to mention its ugliness. Also, don’t
 use Notepad and TextEdit. Those are too simple, and Notepad has encoding
 issues.
+
+
+Update history
+==============
+
+2017-07-10
+    Added notes about not removing built-in Pythons.
+
+2017-07-07
+    Spelling fixes and updates to the virtualenv usage section.
 
 .. |last3x| replace:: 3.6
 .. |conf3x| replace:: ``./configure --prefix=/opt/python3.6``
