@@ -1,7 +1,7 @@
 .. title: Setting up a Python development environment
 .. slug: setting-up-a-python-development-environment
 .. date: 2017-07-03 12:40:00+02:00
-.. updated: 2017-07-12 12:00:00+02:00
+.. updated: 2017-07-19 10:00:00+02:00
 .. tags: Python, guide, devel, best practices, guide
 .. section: Python
 .. guide: yes
@@ -231,9 +231,14 @@ repository, install the correct system package (``python-pip``,
 To run pip, use ``py -m pip`` (Windows), ``python -m pip`` (other platforms),
 or the short ``pip``/``pip3`` commands.
 
-Very important: **NEVER use sudo with pip**. That can lead to conflicts with
-system package managers and does not provide isolation between package
-versions.
+**NEVER use sudo pip.** This can cause numerous problems:
+
+* conflicts between packages installed by pip and your system package
+  manager
+* pip modifying system packages, leading to issues when updating them, or
+  breaking dependencies
+* no isolation between package versions, which is sometimes needed to satisfy
+  dependencies
 
 Note that a package install is specific to the Python interpreter used to run
 ``pip``. Packages installed to a virtualenv are separate from system packages;
@@ -421,6 +426,9 @@ issues.
 
 Update history
 ==============
+
+2017-07-19
+    Better description of problems caused by using sudo pip.
 
 2017-07-10
     Added notes about not removing built-in Pythons.

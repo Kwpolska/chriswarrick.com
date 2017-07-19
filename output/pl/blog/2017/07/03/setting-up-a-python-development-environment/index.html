@@ -106,7 +106,7 @@ difference between Python, CPython, Anaco">
     </h1>
 
     <div class="metadata">
-<a href="/pl/blog/2017/07/03/setting-up-a-python-development-environment/" rel="bookmark" class="u-published"><time class="published dt-published" datetime="2017-07-03T12:40:00+02:00" itemprop="datePublished" title="2017-07-03 12:40">2017-07-03 12:40</time><time class="updated dt-updated" datetime="2017-07-12T12:00:00+02:00" title="Updated 2017-07-12 12:00"> (2017-07-12 12:00)</time></a>
+<a href="/pl/blog/2017/07/03/setting-up-a-python-development-environment/" rel="bookmark" class="u-published"><time class="published dt-published" datetime="2017-07-03T12:40:00+02:00" itemprop="datePublished" title="2017-07-03 12:40">2017-07-03 12:40</time><time class="updated dt-updated" datetime="2017-07-19T10:00:00+02:00" title="Updated 2017-07-19 10:00"> (2017-07-19 10:00)</time></a>
         <ul itemprop="keywords" class="tags">
 <li class="section-bubble" style="background-color: #ffd43b"><a href="/pl/python/">Python</a></li>
            <li><a class="tag p-category" href="/pl/blog/tags/best-practices/" rel="tag">best practices</a></li>
@@ -343,9 +343,15 @@ repository, install the correct system package (<tt class="docutils literal"><sp
 <tt class="docutils literal"><span class="pre">python3-pip</span></tt>). If you compiled your own Python, pip is also included.</p>
 <p>To run pip, use <tt class="docutils literal">py <span class="pre">-m</span> pip</tt> (Windows), <tt class="docutils literal">python <span class="pre">-m</span> pip</tt> (other platforms),
 or the short <tt class="docutils literal">pip</tt>/<tt class="docutils literal">pip3</tt> commands.</p>
-<p>Very important: <strong>NEVER use sudo with pip</strong>. That can lead to conflicts with
-system package managers and does not provide isolation between package
-versions.</p>
+<p><strong>NEVER use sudo pip.</strong> This can cause numerous problems:</p>
+<ul class="simple">
+<li>conflicts between packages installed by pip and your system package
+manager</li>
+<li>pip modifying system packages, leading to issues when updating them, or
+breaking dependencies</li>
+<li>no isolation between package versions, which is sometimes needed to satisfy
+dependencies</li>
+</ul>
 <p>Note that a package install is specific to the Python interpreter used to run
 <tt class="docutils literal">pip</tt>. Packages installed to a virtualenv are separate from system packages;
 packages installed for “global” Python 2.7 are separate from 3.6 packages.
@@ -503,6 +509,8 @@ issues.</p>
 <div class="section" id="update-history">
 <h2><a class="toc-backref" href="/pl/blog/2017/07/03/setting-up-a-python-development-environment/#id22">Update history</a><a href="#update-history" class="headerlink" title="Permalink to this heading">¶</a></h2>
 <dl class="docutils">
+<dt>2017-07-19</dt>
+<dd>Better description of problems caused by using sudo pip.</dd>
 <dt>2017-07-10</dt>
 <dd>Added notes about not removing built-in Pythons.</dd>
 <dt>2017-07-07</dt>
