@@ -7,7 +7,7 @@
 .. description: I solve a mission, reverse-engineer Python bytecode, and write code in Paint.
 .. type: text
 
-Gynvael Coldwind is a security researcher at Google, who hosts weekly livestreams about security and programming in `Polish <https://gaming.youtube.com/user/GynvaelColdwind/live>`_) and `English <https://gaming.youtube.com/user/GynvaelEN/live>`_). As part of the streams, he gives out missions — basically, CTF-style reverse engineering tasks. Yesterday’s mission was about Elvish — I mean Paint — I mean Python programming and bytecode.
+Gynvael Coldwind is a security researcher at Google, who hosts weekly livestreams about security and programming in `Polish <https://gaming.youtube.com/user/GynvaelColdwind/live>`_ and `English <https://gaming.youtube.com/user/GynvaelEN/live>`_). As part of the streams, he gives out missions — basically, CTF-style reverse engineering tasks. Yesterday’s mission was about Elvish — I mean Paint — I mean Python programming and bytecode.
 
 .. TEASER_END
 
