@@ -1,0 +1,493 @@
+<html prefix="
+og: http://ogp.me/ns#
+article: http://ogp.me/ns/article#
+" lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="I solve a mission, reverse-engineer Python bytecode, and write code in Paint.">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gynvael’s Mission 11 (en): Python bytecode reverse-engineering | Chris Warrick</title>
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+<link href="/assets/css/all.css" rel="stylesheet" type="text/css">
+<link rel="alternate" type="application/rss+xml" title="RSS (en)" href="/rss.xml">
+<link rel="alternate" type="application/rss+xml" title="RSS (pl)" href="/pl/rss.xml">
+<link rel="canonical" href="https://chriswarrick.com/pl/blog/2017/08/03/gynvaels-mission-11-en-python-bytecode-reverse-engineering/">
+<link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="16x16 32x32 48x48 64x64 128x128 256x256">
+<link rel="icon" type="image/png" href="/assets/img/logo512.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<!--[if lt IE 9]><script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]--><meta name="application-name" content="Chris Warrick">
+<meta name="msapplication-starturl" content="https://chriswarrick.com/">
+<meta name="msapplication-navbutton-color" content="#00aadd">
+<meta name="theme-color" content="#00aadd">
+<meta name="generator" content="Nikola (getnikola.com)">
+<meta name="description" itemprop="description" content="I solve a mission, reverse-engineer Python bytecode, and write code in Paint.">
+<meta name="author" content="Chris Warrick">
+<link rel="prev" href="/pl/blog/2017/07/03/setting-up-a-python-development-environment/" title="Setting up a Python development environment" type="text/html">
+<meta property="og:site_name" content="Chris Warrick">
+<meta property="og:title" content="Gynvael’s Mission 11 (en): Python bytecode reverse-engineering">
+<meta property="og:url" content="https://chriswarrick.com/pl/blog/2017/08/03/gynvaels-mission-11-en-python-bytecode-reverse-engineering/">
+<meta property="og:description" content="I solve a mission, reverse-engineer Python bytecode, and write code in Paint.">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2017-08-03T12:45:40+02:00">
+<meta property="article:tag" content="BMP">
+<meta property="article:tag" content="Gynvael Coldwind">
+<meta property="article:tag" content="hacking">
+<meta property="article:tag" content="Paint">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="reverse engineering">
+<meta property="article:tag" content="writeup">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:creator" content="@Kwpolska">
+<link rel="alternate" hreflang="en" href="/blog/2017/08/03/gynvaels-mission-11-en-python-bytecode-reverse-engineering/">
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Przejdź do treści</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-kw navbar-static-top" role="navigation"><div class="container">
+<!-- This keeps the margins nice -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-kw-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="https://chriswarrick.com/pl/">
+            <img src="/assets/img/logo.png" srcset="/assets/img/logo2x.png 2x" alt="Chris Warrick" id="logo"><span id="blog-title">Chris Warrick</span>
+            </a>
+        </div>
+<!-- /.navbar-header -->
+        <div class="collapse navbar-collapse navbar-kw-collapse">
+            <ul class="nav navbar-nav">
+<li>
+<a href="/pl/blog/">Archiwum</a>
+                </li>
+<li>
+<a href="/pl/blog/tags/">Tagi</a>
+                </li>
+<li>
+<a href="/pl/contact/">Kontakt</a>
+                </li>
+<li>
+<a href="/pl/brand/">Brand</a>
+                </li>
+<li>
+<a href="/pl/kwbot/">KwBot</a>
+                </li>
+<li>
+<a href="/projects/">Projekty</a>
+                </li>
+<li>
+<a href="/guides/">Przewodniki</a>
+                </li>
+<li>
+<a href="/pl/search/">Szukaj</a>
+
+                
+            </li>
+</ul>
+<ul class="nav navbar-nav navbar-right">
+<li>            </li>
+<li><a href="https://chriswarrick.com/" rel="alternate" hreflang="en">English</a></li>
+
+                
+            </ul>
+</div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav><!-- End of Menubar --><div class="container" id="content">
+    <div class="body-content">
+        <!--Body content-->
+        <div class="row">
+        <div id="cookiecontainer"></div>
+            
+<article class="post-text h-entry hentry postpage postbox" itemscope="itemscope" itemtype="http://schema.org/Article"><header class="page-header"><h1 class="p-name entry-title" itemprop="headline name">
+    <a href="/pl/blog/2017/08/03/gynvaels-mission-11-en-python-bytecode-reverse-engineering/" class="u-url">Gynvael’s Mission 11 (en): Python bytecode reverse-engineering</a>
+    </h1>
+
+    <div class="metadata">
+<a href="/pl/blog/2017/08/03/gynvaels-mission-11-en-python-bytecode-reverse-engineering/" rel="bookmark" class="u-published"><time class="published dt-published" datetime="2017-08-03T12:45:40+02:00" itemprop="datePublished" title="2017-08-03 12:45">2017-08-03 12:45</time></a>
+        <ul itemprop="keywords" class="tags">
+<li class="section-bubble" style="background-color: #ffd43b"><a href="/pl/python/">Python</a></li>
+           <li><a class="tag p-category" href="/pl/blog/tags/bmp/" rel="tag">BMP</a></li>
+           <li><a class="tag p-category" href="/pl/blog/tags/gynvael-coldwind/" rel="tag">Gynvael Coldwind</a></li>
+           <li><a class="tag p-category" href="/pl/blog/tags/hacking/" rel="tag">hacking</a></li>
+           <li><a class="tag p-category" href="/pl/blog/tags/paint/" rel="tag">Paint</a></li>
+           <li><a class="tag p-category" href="/pl/blog/tags/python/" rel="tag">Python</a></li>
+           <li><a class="tag p-category" href="/pl/blog/tags/reverse-engineering/" rel="tag">reverse engineering</a></li>
+           <li><a class="tag p-category" href="/pl/blog/tags/writeup/" rel="tag">writeup</a></li>
+        
+        </ul>
+</div>
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div class="lead"><div>
+<p>Gynvael Coldwind is a security researcher at Google, who hosts weekly livestreams about security and programming in <a class="reference external" href="https://gaming.youtube.com/user/GynvaelColdwind/live">Polish</a>) and <a class="reference external" href="https://gaming.youtube.com/user/GynvaelEN/live">English</a>). As part of the streams, he gives out missions — basically, CTF-style reverse engineering tasks. Yesterday’s mission was about Elvish — I mean Paint — I mean Python programming and bytecode.</p>
+</div></div>
+<pre class="code text"><a name="rest_code_9bc962b5101844ccb1decc38600d0aef-1"></a>MISSION 011               goo.gl/13Bia9             DIFFICULTY: ██████░░░░ [6╱10]
+<a name="rest_code_9bc962b5101844ccb1decc38600d0aef-2"></a>┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅
+<a name="rest_code_9bc962b5101844ccb1decc38600d0aef-3"></a>
+<a name="rest_code_9bc962b5101844ccb1decc38600d0aef-4"></a>Finally some real work!
+<a name="rest_code_9bc962b5101844ccb1decc38600d0aef-5"></a>
+<a name="rest_code_9bc962b5101844ccb1decc38600d0aef-6"></a>One of our field agents managed to infiltrate suspects hideout and steal a
+<a name="rest_code_9bc962b5101844ccb1decc38600d0aef-7"></a>pendrive possibly containing important information. However, the pendrive
+<a name="rest_code_9bc962b5101844ccb1decc38600d0aef-8"></a>actually requires one to authenticate themselves before accessing the stored
+<a name="rest_code_9bc962b5101844ccb1decc38600d0aef-9"></a>files.
+<a name="rest_code_9bc962b5101844ccb1decc38600d0aef-10"></a>
+<a name="rest_code_9bc962b5101844ccb1decc38600d0aef-11"></a>We gave the pendrive to our laboratory and they managed to dump the firmware. We
+<a name="rest_code_9bc962b5101844ccb1decc38600d0aef-12"></a>looked at the deadlisting they sent and for our best knowledge it's some form of
+<a name="rest_code_9bc962b5101844ccb1decc38600d0aef-13"></a>Elvish. We can't read it.
+<a name="rest_code_9bc962b5101844ccb1decc38600d0aef-14"></a>
+<a name="rest_code_9bc962b5101844ccb1decc38600d0aef-15"></a>Here is the firmware: goo.gl/axsAHt
+<a name="rest_code_9bc962b5101844ccb1decc38600d0aef-16"></a>
+<a name="rest_code_9bc962b5101844ccb1decc38600d0aef-17"></a>And off you go. Bring us back the password.
+<a name="rest_code_9bc962b5101844ccb1decc38600d0aef-18"></a>
+<a name="rest_code_9bc962b5101844ccb1decc38600d0aef-19"></a>Good luck!
+<a name="rest_code_9bc962b5101844ccb1decc38600d0aef-20"></a>
+<a name="rest_code_9bc962b5101844ccb1decc38600d0aef-21"></a>---------------------------------------------------------------------------------
+<a name="rest_code_9bc962b5101844ccb1decc38600d0aef-22"></a>
+<a name="rest_code_9bc962b5101844ccb1decc38600d0aef-23"></a>If you decode the answer, put it in the comments under this video! If you write
+<a name="rest_code_9bc962b5101844ccb1decc38600d0aef-24"></a>a blogpost / post your solution online, please add a link in the comments too!
+<a name="rest_code_9bc962b5101844ccb1decc38600d0aef-25"></a>
+<a name="rest_code_9bc962b5101844ccb1decc38600d0aef-26"></a>P.S. I'll show/explain the solution on the stream in ~two weeks.
+<a name="rest_code_9bc962b5101844ccb1decc38600d0aef-27"></a>P.S.2. Bonus points for recreating the original high-level code.
+</pre>
+<p>Here’s the firmware:</p>
+<pre class="code text"><a name="rest_code_e9f4c8b6a2184d40a8e079a27543ce16-1"></a>co_argcount 1
+<a name="rest_code_e9f4c8b6a2184d40a8e079a27543ce16-2"></a>co_consts (None, '4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89', 'hex', 89, 255, 115, 50)
+<a name="rest_code_e9f4c8b6a2184d40a8e079a27543ce16-3"></a>co_flags 67
+<a name="rest_code_e9f4c8b6a2184d40a8e079a27543ce16-4"></a>co_name check_password
+<a name="rest_code_e9f4c8b6a2184d40a8e079a27543ce16-5"></a>co_names ('decode', 'len', 'False', 'all', 'zip', 'ord')
+<a name="rest_code_e9f4c8b6a2184d40a8e079a27543ce16-6"></a>co_nlocals 4
+<a name="rest_code_e9f4c8b6a2184d40a8e079a27543ce16-7"></a>co_stacksize 6
+<a name="rest_code_e9f4c8b6a2184d40a8e079a27543ce16-8"></a>co_varnames ('s', 'good', 'cs', 'cg')
+<a name="rest_code_e9f4c8b6a2184d40a8e079a27543ce16-9"></a>              0 LOAD_CONST               1
+<a name="rest_code_e9f4c8b6a2184d40a8e079a27543ce16-10"></a>              3 LOAD_ATTR                0
+<a name="rest_code_e9f4c8b6a2184d40a8e079a27543ce16-11"></a>              6 LOAD_CONST               2
+<a name="rest_code_e9f4c8b6a2184d40a8e079a27543ce16-12"></a>              9 CALL_FUNCTION            1
+<a name="rest_code_e9f4c8b6a2184d40a8e079a27543ce16-13"></a>             12 STORE_FAST               1
+<a name="rest_code_e9f4c8b6a2184d40a8e079a27543ce16-14"></a>             15 LOAD_GLOBAL              1
+<a name="rest_code_e9f4c8b6a2184d40a8e079a27543ce16-15"></a>             18 LOAD_FAST                0
+<a name="rest_code_e9f4c8b6a2184d40a8e079a27543ce16-16"></a>             21 CALL_FUNCTION            1
+<a name="rest_code_e9f4c8b6a2184d40a8e079a27543ce16-17"></a>             24 LOAD_GLOBAL              1
+<a name="rest_code_e9f4c8b6a2184d40a8e079a27543ce16-18"></a>             27 LOAD_FAST                1
+<a name="rest_code_e9f4c8b6a2184d40a8e079a27543ce16-19"></a>             30 CALL_FUNCTION            1
+<a name="rest_code_e9f4c8b6a2184d40a8e079a27543ce16-20"></a>             33 COMPARE_OP               3 (!=)
+<a name="rest_code_e9f4c8b6a2184d40a8e079a27543ce16-21"></a>             36 POP_JUMP_IF_FALSE       43
+<a name="rest_code_e9f4c8b6a2184d40a8e079a27543ce16-22"></a>             39 LOAD_GLOBAL              2
+<a name="rest_code_e9f4c8b6a2184d40a8e079a27543ce16-23"></a>             42 RETURN_VALUE
+<a name="rest_code_e9f4c8b6a2184d40a8e079a27543ce16-24"></a>        &gt;&gt;   43 LOAD_GLOBAL              3
+<a name="rest_code_e9f4c8b6a2184d40a8e079a27543ce16-25"></a>             46 BUILD_LIST               0
+<a name="rest_code_e9f4c8b6a2184d40a8e079a27543ce16-26"></a>             49 LOAD_GLOBAL              4
+<a name="rest_code_e9f4c8b6a2184d40a8e079a27543ce16-27"></a>             52 LOAD_FAST                0
+<a name="rest_code_e9f4c8b6a2184d40a8e079a27543ce16-28"></a>             55 LOAD_FAST                1
+<a name="rest_code_e9f4c8b6a2184d40a8e079a27543ce16-29"></a>             58 CALL_FUNCTION            2
+<a name="rest_code_e9f4c8b6a2184d40a8e079a27543ce16-30"></a>             61 GET_ITER
+<a name="rest_code_e9f4c8b6a2184d40a8e079a27543ce16-31"></a>        &gt;&gt;   62 FOR_ITER                52 (to 117)
+<a name="rest_code_e9f4c8b6a2184d40a8e079a27543ce16-32"></a>             65 UNPACK_SEQUENCE          2
+<a name="rest_code_e9f4c8b6a2184d40a8e079a27543ce16-33"></a>             68 STORE_FAST               2
+<a name="rest_code_e9f4c8b6a2184d40a8e079a27543ce16-34"></a>             71 STORE_FAST               3
+<a name="rest_code_e9f4c8b6a2184d40a8e079a27543ce16-35"></a>             74 LOAD_GLOBAL              5
+<a name="rest_code_e9f4c8b6a2184d40a8e079a27543ce16-36"></a>             77 LOAD_FAST                2
+<a name="rest_code_e9f4c8b6a2184d40a8e079a27543ce16-37"></a>             80 CALL_FUNCTION            1
+<a name="rest_code_e9f4c8b6a2184d40a8e079a27543ce16-38"></a>             83 LOAD_CONST               3
+<a name="rest_code_e9f4c8b6a2184d40a8e079a27543ce16-39"></a>             86 BINARY_SUBTRACT
+<a name="rest_code_e9f4c8b6a2184d40a8e079a27543ce16-40"></a>             87 LOAD_CONST               4
+<a name="rest_code_e9f4c8b6a2184d40a8e079a27543ce16-41"></a>             90 BINARY_AND
+<a name="rest_code_e9f4c8b6a2184d40a8e079a27543ce16-42"></a>             91 LOAD_CONST               5
+<a name="rest_code_e9f4c8b6a2184d40a8e079a27543ce16-43"></a>             94 BINARY_XOR
+<a name="rest_code_e9f4c8b6a2184d40a8e079a27543ce16-44"></a>             95 LOAD_CONST               6
+<a name="rest_code_e9f4c8b6a2184d40a8e079a27543ce16-45"></a>             98 BINARY_XOR
+<a name="rest_code_e9f4c8b6a2184d40a8e079a27543ce16-46"></a>             99 LOAD_GLOBAL              5
+<a name="rest_code_e9f4c8b6a2184d40a8e079a27543ce16-47"></a>            102 LOAD_FAST                3
+<a name="rest_code_e9f4c8b6a2184d40a8e079a27543ce16-48"></a>            105 CALL_FUNCTION            1
+<a name="rest_code_e9f4c8b6a2184d40a8e079a27543ce16-49"></a>            108 COMPARE_OP               2 (==)
+<a name="rest_code_e9f4c8b6a2184d40a8e079a27543ce16-50"></a>            111 LIST_APPEND              2
+<a name="rest_code_e9f4c8b6a2184d40a8e079a27543ce16-51"></a>            114 JUMP_ABSOLUTE           62
+<a name="rest_code_e9f4c8b6a2184d40a8e079a27543ce16-52"></a>        &gt;&gt;  117 CALL_FUNCTION            1
+<a name="rest_code_e9f4c8b6a2184d40a8e079a27543ce16-53"></a>            120 RETURN_VALUE
+</pre>
+<p>To the uninitiated, this might look like <em>Elvish</em>. In reality, this is Python bytecode — the instruction set understood by Python’s (CPython 2.7) virtual machine. Python, like many other languages, uses a compiler to translate human-readable source code into something more appropriate for computers. Python code compiles to bytecode, which is then executed by CPython’s virtual machine. CPython bytecode can be ported between different hardware, while machine code cannot. However, machine code can often be faster than languages based on virtual machines and bytecode. (Java and C# work the same way as Python, C compiles directly to machine code)</p>
+<p>This is the internal representation of a Python function. The first few lines are the member variables of the <tt class="docutils literal">f.__code__</tt> object of our function. We know that:</p>
+<ul class="simple">
+<li>it takes 1 argument</li>
+<li>it has 7 constants: None, a long string of hex digits, the string <tt class="docutils literal">'hex'</tt>, and numbers: 89, 255, 115, 50.</li>
+<li>its <a class="reference external" href="https://docs.python.org/2.7/library/inspect.html#code-objects-bit-flags">flags</a> are set to 67 (CO_NOFREE, CO_NEWLOCALS, CO_OPTIMIZED). This is the “standard” value that most uncomplicated functions take.</li>
+<li>its name is <tt class="docutils literal">check_password</tt>
+</li>
+<li>it uses the following globals or attribute names: <tt class="docutils literal">decode</tt>, <tt class="docutils literal">len</tt>, <tt class="docutils literal">False</tt>, <tt class="docutils literal">all</tt>, <tt class="docutils literal">zip</tt>, <tt class="docutils literal">ord</tt>
+</li>
+<li>it has 4 local variables</li>
+<li>it uses a stack of size 6</li>
+<li>its variables are named <tt class="docutils literal">s</tt>, <tt class="docutils literal">good</tt>, <tt class="docutils literal">cs</tt>, <tt class="docutils literal">cg</tt>
+</li>
+</ul>
+<p>There are two ways to solve this task: you can re-assemble the <tt class="docutils literal">dis</tt> output, or try to re-create the function by hand, using the bytecode and the <tt class="docutils literal">opcode</tt> module. I chose the latter method.</p>
+<div class="section" id="reverse-engineering-python-bytecode-re-creating-the-function-by-hand">
+<h2>Reverse-engineering Python bytecode: re-creating the function by hand<a href="#reverse-engineering-python-bytecode-re-creating-the-function-by-hand" class="headerlink" title="Permalink to this heading">¶</a></h2>
+<p>I started by recreating the original firmware file. I created an empty function and wrote some code to print out <tt class="docutils literal">__code__</tt> contents and <tt class="docutils literal">dis.dis</tt> output. I also added color-coding to help me read it:</p>
+<pre class="code python"><a name="rest_code_7e7f35913f9e4e34b7074258ebfdd7a9-1"></a><span class="ch">#!/usr/bin/env python2</span>
+<a name="rest_code_7e7f35913f9e4e34b7074258ebfdd7a9-2"></a><span class="kn">import</span> <span class="nn">dis</span>
+<a name="rest_code_7e7f35913f9e4e34b7074258ebfdd7a9-3"></a><span class="kn">import</span> <span class="nn">sys</span>
+<a name="rest_code_7e7f35913f9e4e34b7074258ebfdd7a9-4"></a>
+<a name="rest_code_7e7f35913f9e4e34b7074258ebfdd7a9-5"></a><span class="c1"># Write code here</span>
+<a name="rest_code_7e7f35913f9e4e34b7074258ebfdd7a9-6"></a><span class="k">def</span> <span class="nf">check_password</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+<a name="rest_code_7e7f35913f9e4e34b7074258ebfdd7a9-7"></a>    <span class="k">pass</span>
+<a name="rest_code_7e7f35913f9e4e34b7074258ebfdd7a9-8"></a>
+<a name="rest_code_7e7f35913f9e4e34b7074258ebfdd7a9-9"></a><span class="c1"># Reverse engineering the code</span>
+<a name="rest_code_7e7f35913f9e4e34b7074258ebfdd7a9-10"></a><span class="n">cnames</span> <span class="o">=</span> <span class="p">(</span><span class="s1">'co_argcount'</span><span class="p">,</span> <span class="s1">'co_consts'</span><span class="p">,</span> <span class="s1">'co_flags'</span><span class="p">,</span> <span class="s1">'co_name'</span><span class="p">,</span> <span class="s1">'co_names'</span><span class="p">,</span> <span class="s1">'co_nlocals'</span><span class="p">,</span> <span class="s1">'co_stacksize'</span><span class="p">,</span> <span class="s1">'co_varnames'</span><span class="p">)</span>
+<a name="rest_code_7e7f35913f9e4e34b7074258ebfdd7a9-11"></a><span class="n">cvalues</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="s1">'4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89'</span><span class="p">,</span> <span class="s1">'hex'</span><span class="p">,</span> <span class="mi">89</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">115</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span> <span class="mi">67</span><span class="p">,</span> <span class="s1">'check_password'</span><span class="p">,</span> <span class="p">(</span><span class="s1">'decode'</span><span class="p">,</span> <span class="s1">'len'</span><span class="p">,</span> <span class="s1">'False'</span><span class="p">,</span> <span class="s1">'all'</span><span class="p">,</span> <span class="s1">'zip'</span><span class="p">,</span> <span class="s1">'ord'</span><span class="p">),</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="p">(</span><span class="s1">'s'</span><span class="p">,</span> <span class="s1">'good'</span><span class="p">,</span> <span class="s1">'cs'</span><span class="p">,</span> <span class="s1">'cg'</span><span class="p">))</span>
+<a name="rest_code_7e7f35913f9e4e34b7074258ebfdd7a9-12"></a>
+<a name="rest_code_7e7f35913f9e4e34b7074258ebfdd7a9-13"></a><span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">ov</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">cnames</span><span class="p">,</span> <span class="n">cvalues</span><span class="p">):</span>
+<a name="rest_code_7e7f35913f9e4e34b7074258ebfdd7a9-14"></a>    <span class="n">v</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">check_password</span><span class="o">.</span><span class="vm">__code__</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+<a name="rest_code_7e7f35913f9e4e34b7074258ebfdd7a9-15"></a>    <span class="k">if</span> <span class="n">v</span> <span class="o">==</span> <span class="n">ov</span><span class="p">:</span>
+<a name="rest_code_7e7f35913f9e4e34b7074258ebfdd7a9-16"></a>        <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'</span><span class="se">\033</span><span class="s1">[1;32m'</span><span class="p">)</span>
+<a name="rest_code_7e7f35913f9e4e34b7074258ebfdd7a9-17"></a>    <span class="k">else</span><span class="p">:</span>
+<a name="rest_code_7e7f35913f9e4e34b7074258ebfdd7a9-18"></a>        <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'</span><span class="se">\033</span><span class="s1">[1;31m'</span><span class="p">)</span>
+<a name="rest_code_7e7f35913f9e4e34b7074258ebfdd7a9-19"></a>    <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+<a name="rest_code_7e7f35913f9e4e34b7074258ebfdd7a9-20"></a>
+<a name="rest_code_7e7f35913f9e4e34b7074258ebfdd7a9-21"></a>    <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">+</span> <span class="s2">" "</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">+</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+<a name="rest_code_7e7f35913f9e4e34b7074258ebfdd7a9-22"></a>    <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+<a name="rest_code_7e7f35913f9e4e34b7074258ebfdd7a9-23"></a>
+<a name="rest_code_7e7f35913f9e4e34b7074258ebfdd7a9-24"></a>    <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'</span><span class="se">\033</span><span class="s1">[0m'</span><span class="p">)</span>
+<a name="rest_code_7e7f35913f9e4e34b7074258ebfdd7a9-25"></a>    <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+<a name="rest_code_7e7f35913f9e4e34b7074258ebfdd7a9-26"></a>
+<a name="rest_code_7e7f35913f9e4e34b7074258ebfdd7a9-27"></a><span class="n">dis</span><span class="o">.</span><span class="n">dis</span><span class="p">(</span><span class="n">check_password</span><span class="p">)</span>
+</pre>
+<p>If we run this solver, we get the following output (text in brackets added by me):</p>
+<pre class="code text"><a name="rest_code_d49c8898eaf345d4a58922bd3ee5c073-1"></a>co_argcount 1            [OK]
+<a name="rest_code_d49c8898eaf345d4a58922bd3ee5c073-2"></a>co_consts (None,)        [1/7 match]
+<a name="rest_code_d49c8898eaf345d4a58922bd3ee5c073-3"></a>co_flags 67              [OK]
+<a name="rest_code_d49c8898eaf345d4a58922bd3ee5c073-4"></a>co_name check_password   [OK]
+<a name="rest_code_d49c8898eaf345d4a58922bd3ee5c073-5"></a>co_names ()              [0/6 match]
+<a name="rest_code_d49c8898eaf345d4a58922bd3ee5c073-6"></a>co_nlocals 1             [should be 4]
+<a name="rest_code_d49c8898eaf345d4a58922bd3ee5c073-7"></a>co_stacksize 1           [should be 6]
+<a name="rest_code_d49c8898eaf345d4a58922bd3ee5c073-8"></a>co_varnames ('s',)       [1/4 match]
+<a name="rest_code_d49c8898eaf345d4a58922bd3ee5c073-9"></a>  7           0 LOAD_CONST               0 (None)
+<a name="rest_code_d49c8898eaf345d4a58922bd3ee5c073-10"></a>              3 RETURN_VALUE
+</pre>
+<p>We can see (with the help of colors, not reproduced here), that we’ve got <tt class="docutils literal">co_argcount</tt>, <tt class="docutils literal">co_flags</tt>, <tt class="docutils literal">co_name</tt> correctly. We also have one constant (<tt class="docutils literal">None</tt>, in every function) and one variable name (<tt class="docutils literal">s</tt>, the argument name). We can also see <tt class="docutils literal">dis.dis()</tt> output. While it looks similar to the assignment, there are a few noticeable differences: there is no <tt class="docutils literal">7</tt> at the start, and <tt class="docutils literal">LOAD_CONST</tt> instructions in the original code did not have anything in parentheses (only comparisions and loops did).  This makes reading byte-code harder, but still possible. (I originally thought about using <tt class="docutils literal">diff</tt> for help, but it’s not hard to do it by hand. I did use <tt class="docutils literal">diff</tt> for the final checking after a manual conversion)</p>
+<p>Let’s stop to look at the constants and names for a second. The long string is followed by <tt class="docutils literal">hex</tt>, and one of the constants is <tt class="docutils literal">decode</tt>. This means that we need to use <tt class="docutils literal"><span class="pre">str.decode('hex')</span></tt> to create a (byte)string of some information. Puzzle answers tend to be human-readable, and this string isn’t — so we need to do some more work.</p>
+<p>So, let’s try reproducing the start of the original mission code using what we’ve just discussed. Python’s VM is based on a stack. In the bytecode above, you can see that instructions take 0 or 1 arguments. Some of them put things on the stack, others do actions and remove them. Most instruction names are self-explanatory, but the full list can be found in the <a class="reference external" href="https://docs.python.org/2/library/dis.html#python-bytecode-instructions">dis module documentation</a>.</p>
+<p>Instructions like <tt class="docutils literal">LOAD</tt> and <tt class="docutils literal">STORE</tt> refer to indices in the constants/names/varnames tuples. To make it easier, here’s a “table” of them:</p>
+<pre class="code text"><a name="rest_code_72361123ec3148cd84251b6c131e486b-1"></a>constants
+<a name="rest_code_72361123ec3148cd84251b6c131e486b-2"></a> 0     1                                                       2      3   4    5    6
+<a name="rest_code_72361123ec3148cd84251b6c131e486b-3"></a>(None, '4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89', 'hex', 89, 255, 115, 50)
+<a name="rest_code_72361123ec3148cd84251b6c131e486b-4"></a>
+<a name="rest_code_72361123ec3148cd84251b6c131e486b-5"></a>names (globals, attributes)
+<a name="rest_code_72361123ec3148cd84251b6c131e486b-6"></a> 0         1      2        3      4      5
+<a name="rest_code_72361123ec3148cd84251b6c131e486b-7"></a>('decode', 'len', 'False', 'all', 'zip', 'ord')
+<a name="rest_code_72361123ec3148cd84251b6c131e486b-8"></a>
+<a name="rest_code_72361123ec3148cd84251b6c131e486b-9"></a>varnames (locals, _fast)
+<a name="rest_code_72361123ec3148cd84251b6c131e486b-10"></a> 0    1       2     3
+<a name="rest_code_72361123ec3148cd84251b6c131e486b-11"></a>('s', 'good', 'cs', 'cg')
+</pre>
+<p>In order to improve readability, I will use “new” <tt class="docutils literal">dis</tt> output with names in parentheses below:</p>
+<pre class="code text"><a name="rest_code_395c311da13f4081bc02ca65a668143c-1"></a> 0 LOAD_CONST               1 ('4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89')
+<a name="rest_code_395c311da13f4081bc02ca65a668143c-2"></a> 3 LOAD_ATTR                0 (decode)
+<a name="rest_code_395c311da13f4081bc02ca65a668143c-3"></a> 6 LOAD_CONST               2 ('hex')
+<a name="rest_code_395c311da13f4081bc02ca65a668143c-4"></a> 9 CALL_FUNCTION            1 # function takes 1 argument from stack
+<a name="rest_code_395c311da13f4081bc02ca65a668143c-5"></a>12 STORE_FAST               1 (good)
+</pre>
+<p>As I guessed before, the first line of our function is as follows:</p>
+<pre class="code python"><a name="rest_code_d681955106b943d6b29272c0ebde3e7d-1"></a><span class="k">def</span> <span class="nf">check_password</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+<a name="rest_code_d681955106b943d6b29272c0ebde3e7d-2"></a>    <span class="n">good</span> <span class="o">=</span> <span class="s1">'4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89'</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">'hex'</span><span class="p">)</span>  <span class="c1"># new</span>
+</pre>
+<p>If we run the solver again, we’ll see that the first 12 bytes of our bytecode match the mission text. We can also see that <tt class="docutils literal">varnames</tt> is filled in half, we’ve added two constants, and one name.  The next few lines are as follows:</p>
+<pre class="code text"><a name="rest_code_e307f0daac1144f68ff581ffb9c9c73e-1"></a>15 LOAD_GLOBAL              1
+<a name="rest_code_e307f0daac1144f68ff581ffb9c9c73e-2"></a>18 LOAD_FAST                0
+<a name="rest_code_e307f0daac1144f68ff581ffb9c9c73e-3"></a>21 CALL_FUNCTION            1
+<a name="rest_code_e307f0daac1144f68ff581ffb9c9c73e-4"></a>24 LOAD_GLOBAL              1
+<a name="rest_code_e307f0daac1144f68ff581ffb9c9c73e-5"></a>27 LOAD_FAST                1
+<a name="rest_code_e307f0daac1144f68ff581ffb9c9c73e-6"></a>30 CALL_FUNCTION            1
+<a name="rest_code_e307f0daac1144f68ff581ffb9c9c73e-7"></a>33 COMPARE_OP               3 (!=)
+<a name="rest_code_e307f0daac1144f68ff581ffb9c9c73e-8"></a>36 POP_JUMP_IF_FALSE       43
+<a name="rest_code_e307f0daac1144f68ff581ffb9c9c73e-9"></a>39 LOAD_GLOBAL              2
+<a name="rest_code_e307f0daac1144f68ff581ffb9c9c73e-10"></a>42 RETURN_VALUE
+</pre>
+<p>We can see that we’re putting a global name on stack and calling it with one argument. In both cases, the global has the index 1, that’s <tt class="docutils literal">len</tt>. The two arguments are <tt class="docutils literal">s</tt> and <tt class="docutils literal">good</tt>. We put both lengths on stack, then compare them. If the comparison fails (they’re equal), we jump to the instruction starting at byte 43, otherwise we continue execution to load the second global (False) and return it.  This wall of text translates to the following simple code:</p>
+<pre class="code python"><a name="rest_code_74ee27a38c4541b79f2dd507b3ba67af-1"></a><span class="k">def</span> <span class="nf">check_password</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+<a name="rest_code_74ee27a38c4541b79f2dd507b3ba67af-2"></a>    <span class="n">good</span> <span class="o">=</span> <span class="s1">'4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89'</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">'hex'</span><span class="p">)</span>
+<a name="rest_code_74ee27a38c4541b79f2dd507b3ba67af-3"></a>    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">good</span><span class="p">):</span>  <span class="c1"># new</span>
+<a name="rest_code_74ee27a38c4541b79f2dd507b3ba67af-4"></a>        <span class="k">return</span> <span class="bp">False</span>         <span class="c1"># new</span>
+</pre>
+<p>Let’s take another look at our names. We can see we’re missing <tt class="docutils literal">all</tt>, <tt class="docutils literal">zip</tt>, <tt class="docutils literal">ord</tt>. You can already see a common pattern here: we will iterate over both strings at once (using <tt class="docutils literal">zip</tt>), do some math based on the character’s codes (<tt class="docutils literal">ord</tt>), and then check if all the results are truthy.</p>
+<p>Here’s the bytecode with value annotations and comments, which explain what happens where:</p>
+<pre class="code text"><a name="rest_code_ef87734ba7434e98b6b569b5e76e9c95-1"></a>&gt;&gt;   43 LOAD_GLOBAL              3 (all)
+<a name="rest_code_ef87734ba7434e98b6b569b5e76e9c95-2"></a>     46 BUILD_LIST               0
+<a name="rest_code_ef87734ba7434e98b6b569b5e76e9c95-3"></a>     49 LOAD_GLOBAL              4 (zip)
+<a name="rest_code_ef87734ba7434e98b6b569b5e76e9c95-4"></a>     52 LOAD_FAST                0 (s)
+<a name="rest_code_ef87734ba7434e98b6b569b5e76e9c95-5"></a>     55 LOAD_FAST                1 (good)
+<a name="rest_code_ef87734ba7434e98b6b569b5e76e9c95-6"></a>     58 CALL_FUNCTION            2           # zip(s, good)
+<a name="rest_code_ef87734ba7434e98b6b569b5e76e9c95-7"></a>     61 GET_ITER                             # Start iterating: iter()
+<a name="rest_code_ef87734ba7434e98b6b569b5e76e9c95-8"></a>&gt;&gt;   62 FOR_ITER                52 (to 117)  # for loop iteration start (if iterator exhausted, jump +52 bytes to position 117)
+<a name="rest_code_ef87734ba7434e98b6b569b5e76e9c95-9"></a>     65 UNPACK_SEQUENCE          2           # unpack a sequence (a, b = sequence)
+<a name="rest_code_ef87734ba7434e98b6b569b5e76e9c95-10"></a>     68 STORE_FAST               2 (cs)      # cs = item from s
+<a name="rest_code_ef87734ba7434e98b6b569b5e76e9c95-11"></a>     71 STORE_FAST               3 (cg)      # cg = item from good
+<a name="rest_code_ef87734ba7434e98b6b569b5e76e9c95-12"></a>     74 LOAD_GLOBAL              5 (ord)
+<a name="rest_code_ef87734ba7434e98b6b569b5e76e9c95-13"></a>     77 LOAD_FAST                2 (cs)
+<a name="rest_code_ef87734ba7434e98b6b569b5e76e9c95-14"></a>     80 CALL_FUNCTION            1           # put ord(cs) on stack
+<a name="rest_code_ef87734ba7434e98b6b569b5e76e9c95-15"></a>     83 LOAD_CONST               3 (89)
+<a name="rest_code_ef87734ba7434e98b6b569b5e76e9c95-16"></a>     86 BINARY_SUBTRACT                      # - 89   [subtract 89 from topmost value]
+<a name="rest_code_ef87734ba7434e98b6b569b5e76e9c95-17"></a>     87 LOAD_CONST               4 (255)
+<a name="rest_code_ef87734ba7434e98b6b569b5e76e9c95-18"></a>     90 BINARY_AND                           # &amp; 255  [bitwise AND with topmost value]
+<a name="rest_code_ef87734ba7434e98b6b569b5e76e9c95-19"></a>     91 LOAD_CONST               5 (115)
+<a name="rest_code_ef87734ba7434e98b6b569b5e76e9c95-20"></a>     94 BINARY_XOR                           # ^ 115  [bitwise XOR with topmost value]
+<a name="rest_code_ef87734ba7434e98b6b569b5e76e9c95-21"></a>     95 LOAD_CONST               6 (50)
+<a name="rest_code_ef87734ba7434e98b6b569b5e76e9c95-22"></a>     98 BINARY_XOR                           # ^ 50   [bitwise XOR with topmost value]
+<a name="rest_code_ef87734ba7434e98b6b569b5e76e9c95-23"></a>     99 LOAD_GLOBAL              5 (ord)
+<a name="rest_code_ef87734ba7434e98b6b569b5e76e9c95-24"></a>    102 LOAD_FAST                3 (cg)
+<a name="rest_code_ef87734ba7434e98b6b569b5e76e9c95-25"></a>    105 CALL_FUNCTION            1           # put ord(cs) on stack
+<a name="rest_code_ef87734ba7434e98b6b569b5e76e9c95-26"></a>    108 COMPARE_OP               2 (==)      # compare the two values on stack
+<a name="rest_code_ef87734ba7434e98b6b569b5e76e9c95-27"></a>    111 LIST_APPEND              2           # append topmost value to the list in topmost-1; pop topmost (append to list created in comprehension)
+<a name="rest_code_ef87734ba7434e98b6b569b5e76e9c95-28"></a>    114 JUMP_ABSOLUTE           62           # jump back to start of loop
+<a name="rest_code_ef87734ba7434e98b6b569b5e76e9c95-29"></a>&gt;&gt;  117 CALL_FUNCTION            1           # after loop: call all([list comprehension result])
+<a name="rest_code_ef87734ba7434e98b6b569b5e76e9c95-30"></a>    120 RETURN_VALUE                         # return value returned by all()
+</pre>
+<p>We can now write the full answer.</p>
+<p><a class="reference external" href="/listings/gynvaels-mission-11-en/mission11.py.html">listings/gynvaels-mission-11-en/mission11.py</a>  <a class="reference external" href="/listings/gynvaels-mission-11-en/mission11.py">(Source)</a></p>
+<pre class="code python"><a name="rest_code_eb4123934d2144fc8b9d35fb9a6b2559-1"></a><span class="k">def</span> <span class="nf">check_password</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+<a name="rest_code_eb4123934d2144fc8b9d35fb9a6b2559-2"></a>    <span class="n">good</span> <span class="o">=</span> <span class="s1">'4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89'</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">'hex'</span><span class="p">)</span>
+<a name="rest_code_eb4123934d2144fc8b9d35fb9a6b2559-3"></a>    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">good</span><span class="p">):</span>
+<a name="rest_code_eb4123934d2144fc8b9d35fb9a6b2559-4"></a>        <span class="k">return</span> <span class="bp">False</span>
+<a name="rest_code_eb4123934d2144fc8b9d35fb9a6b2559-5"></a>
+<a name="rest_code_eb4123934d2144fc8b9d35fb9a6b2559-6"></a>    <span class="k">return</span> <span class="nb">all</span><span class="p">([</span><span class="nb">ord</span><span class="p">(</span><span class="n">cs</span><span class="p">)</span> <span class="o">-</span> <span class="mi">89</span> <span class="o">&amp;</span> <span class="mi">255</span> <span class="o">^</span> <span class="mi">115</span> <span class="o">^</span> <span class="mi">50</span> <span class="o">==</span> <span class="nb">ord</span><span class="p">(</span><span class="n">cg</span><span class="p">)</span> <span class="k">for</span> <span class="n">cs</span><span class="p">,</span> <span class="n">cg</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">good</span><span class="p">)])</span>
+</pre>
+<p>In the end, our <tt class="docutils literal">dis.dis()</tt> output matches the mission text (except the removed values, but their IDs do match), our <tt class="docutils literal">co_*</tt> variables are all green, and we can get to work on solving the puzzle itself!</p>
+<p><strong>Side note:</strong> this task uses a list comprehension. You might want to optimize it, remove the brackets, and end up with a generator expression. This would make the task harder, since would require working with the internal generator code object as well:</p>
+<pre class="code text"><a name="rest_code_385f2480e923445ab1d136e2ea2e9e8e-1"></a>co_consts (None, '4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89', 'hex', &lt;code object &lt;genexpr&gt; at 0x104a86c30, file "mission11-genexpr.py", line 11&gt;)
+<a name="rest_code_385f2480e923445ab1d136e2ea2e9e8e-2"></a>
+<a name="rest_code_385f2480e923445ab1d136e2ea2e9e8e-3"></a>46 LOAD_CONST               3 (&lt;code object &lt;genexpr&gt; at 0x104a86c30, file "mission11-genexpr.py", line 11&gt;)
+</pre>
+<p><tt class="docutils literal">BINARY_*</tt> and <tt class="docutils literal">ord</tt> disappeared from the new listing. You can see the <a class="reference external" href="/listings/gynvaels-mission-11-en/mission11-genexpr.py.html">modified code</a> (which differs by two bytes) and <a class="reference external" href="/listings/gynvaels-mission-11-en/mission11-genexpr.txt.html">solver output</a>.</p>
+</div>
+<div class="section" id="solving-the-real-puzzle">
+<h2>Solving the real puzzle<a href="#solving-the-real-puzzle" class="headerlink" title="Permalink to this heading">¶</a></h2>
+<p>I solved the extra credit part of the puzzle. The <em>real</em> aim of the puzzle was to recover the password — the text for which <tt class="docutils literal">check_password()</tt> will return True.</p>
+<p>This part is pretty boring. I built a dictionary, where I mapped every byte (0…256) to the result of the calculation done in the <tt class="docutils literal">check_password()</tt> function’s loop. Then I used that to recover the original text.</p>
+<pre class="code python"><a name="rest_code_4201ce745771403bb733a578ce4b730c-1"></a><span class="n">pass_values</span> <span class="o">=</span> <span class="p">{}</span>
+<a name="rest_code_4201ce745771403bb733a578ce4b730c-2"></a><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">256</span><span class="p">):</span>
+<a name="rest_code_4201ce745771403bb733a578ce4b730c-3"></a>    <span class="n">result</span> <span class="o">=</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">89</span> <span class="o">&amp;</span> <span class="mi">255</span> <span class="o">^</span> <span class="mi">115</span> <span class="o">^</span> <span class="mi">50</span>
+<a name="rest_code_4201ce745771403bb733a578ce4b730c-4"></a>    <span class="n">pass_values</span><span class="p">[</span><span class="n">result</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span>
+<a name="rest_code_4201ce745771403bb733a578ce4b730c-5"></a>
+<a name="rest_code_4201ce745771403bb733a578ce4b730c-6"></a><span class="n">good</span> <span class="o">=</span> <span class="s1">'4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89'</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">'hex'</span><span class="p">)</span>
+<a name="rest_code_4201ce745771403bb733a578ce4b730c-7"></a><span class="n">password</span> <span class="o">=</span> <span class="s1">''</span>
+<a name="rest_code_4201ce745771403bb733a578ce4b730c-8"></a><span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">good</span><span class="p">:</span>
+<a name="rest_code_4201ce745771403bb733a578ce4b730c-9"></a>    <span class="n">password</span> <span class="o">+=</span> <span class="nb">chr</span><span class="p">(</span><span class="n">pass_values</span><span class="p">[</span><span class="nb">ord</span><span class="p">(</span><span class="n">c</span><span class="p">)])</span>
+<a name="rest_code_4201ce745771403bb733a578ce4b730c-10"></a>
+<a name="rest_code_4201ce745771403bb733a578ce4b730c-11"></a><span class="k">print</span><span class="p">(</span><span class="n">password</span><span class="p">)</span>
+<a name="rest_code_4201ce745771403bb733a578ce4b730c-12"></a><span class="k">print</span><span class="p">(</span><span class="n">check_password</span><span class="p">(</span><span class="n">password</span><span class="p">))</span>
+</pre>
+<p><strong>The password is:</strong> <tt class="docutils literal">huh, that actually worked!</tt>.</p>
+</div>
+<div class="section" id="what-was-that-paint-thing-about">
+<h2>What was that Paint thing about?<a href="#what-was-that-paint-thing-about" class="headerlink" title="Permalink to this heading">¶</a></h2>
+<blockquote>Yesterday’s mission was about Elvish — <strong>I mean Paint</strong> — I mean Python programming.<footer>yours truly in this post’s teaser</footer>
+</blockquote>
+<p>Most of my readers were probably puzzled by the mention of Paint. Long-time viewers of Gynvael’s streams in Polish remember the Python 101 video he posted on April Fools last year. See <a class="reference external" href="https://www.youtube.com/watch?v=7VJaprmuHcw">original video</a>, <a class="reference external" href="http://gynvael.coldwind.pl/?id=599">explanation</a>, <a class="reference external" href="https://github.com/gynvael/stream/tree/master/007-python-101">code</a> (video and explanation are both Polish; you can get the gist of the video without hearing the audio commentary though.) <strong>Spoilers ahead.</strong></p>
+<p>In that prank, Gynvael taught Python basics. The first part concerned itself with writing bytecode by hand. The second part was about drawing custom Python modules. In Paint. Yes, Paint, the simple graphics program included with Microsoft Windows. He drew a custom Python module in Paint, and saved it using the BMP format. It looked like this (zoomed PNG below; <a class="reference external" href="/pub/gynvaels-mission-11-en/gynmod.bmp">download gynmod.bmp</a>):</p>
+<img alt="/images/gynvaels-mission-11-en/gynmod-zoom.png" class="align-center" src="/images/gynvaels-mission-11-en/gynmod-zoom.png"><p>How was this done? There are three things that come into play:</p>
+<ul class="simple">
+<li>Python can import modules from a ZIP file (if it’s appended to sys.path). Some tools that produce <tt class="docutils literal">.exe</tt> files of Python code use this technique; the old egg file format also used ZIPs this way.</li>
+<li>BMP files have their header at the start of a file.</li>
+<li>ZIP files have their header at the end of a file.</li>
+<li>Thus, one file can be a valid BMP and ZIP at the same time</li>
+</ul>
+<p>I took the code of <tt class="docutils literal">check_password</tt> and put it in <tt class="docutils literal">mission11.py</tt> (which I already cited above). Then I compiled to <tt class="docutils literal">.pyc</tt> and created a <tt class="docutils literal">.zip</tt> out of it.</p>
+<p><a class="reference external" href="/listings/gynvaels-mission-11-en/mission11.py.html">listings/gynvaels-mission-11-en/mission11.py</a>  <a class="reference external" href="/listings/gynvaels-mission-11-en/mission11.py">(Source)</a></p>
+<pre class="code python"><a name="rest_code_e35385872afe4c5ea4fc98660d906bb3-1"></a><span class="k">def</span> <span class="nf">check_password</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+<a name="rest_code_e35385872afe4c5ea4fc98660d906bb3-2"></a>    <span class="n">good</span> <span class="o">=</span> <span class="s1">'4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89'</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">'hex'</span><span class="p">)</span>
+<a name="rest_code_e35385872afe4c5ea4fc98660d906bb3-3"></a>    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">good</span><span class="p">):</span>
+<a name="rest_code_e35385872afe4c5ea4fc98660d906bb3-4"></a>        <span class="k">return</span> <span class="bp">False</span>
+<a name="rest_code_e35385872afe4c5ea4fc98660d906bb3-5"></a>
+<a name="rest_code_e35385872afe4c5ea4fc98660d906bb3-6"></a>    <span class="k">return</span> <span class="nb">all</span><span class="p">([</span><span class="nb">ord</span><span class="p">(</span><span class="n">cs</span><span class="p">)</span> <span class="o">-</span> <span class="mi">89</span> <span class="o">&amp;</span> <span class="mi">255</span> <span class="o">^</span> <span class="mi">115</span> <span class="o">^</span> <span class="mi">50</span> <span class="o">==</span> <span class="nb">ord</span><span class="p">(</span><span class="n">cg</span><span class="p">)</span> <span class="k">for</span> <span class="n">cs</span><span class="p">,</span> <span class="n">cg</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">good</span><span class="p">)])</span>
+</pre>
+<p>Since I’m not an expert in any of the formats, I booted my Windows virtual machine and blindly copied the <a class="reference external" href="http://gynvael.coldwind.pl/img/secapr16_3.png">parameters used by Gynvael</a> to open the ZIP file (renamed <tt class="docutils literal">.raw</tt>) in IrfanView and save as <tt class="docutils literal">.bmp</tt>. I changed the size to 83×2, because my ZIP file was 498 bytes long (3 BPP * 83 px * 2 px = 498 bytes) — by doing that, and through sheer luck with the size, I could avoid adding comments and editing the <tt class="docutils literal">zip</tt>. I ended up with this (PNG again; <a class="reference external" href="/pub/gynvaels-mission-11-en/mission11.bmp">download mission11.bmp</a>):</p>
+<img alt="/images/gynvaels-mission-11-en/mission11-zoom.png" class="align-center" src="/images/gynvaels-mission-11-en/mission11-zoom.png"><p>The <tt class="docutils literal">.bmp</tt> file is runnable! We can use this code:</p>
+<p><a class="reference external" href="/listings/gynvaels-mission-11-en/ziprunner.py.html">listings/gynvaels-mission-11-en/ziprunner.py</a>  <a class="reference external" href="/listings/gynvaels-mission-11-en/ziprunner.py">(Source)</a></p>
+<pre class="code python"><a name="rest_code_38dd578e7bb349c987fd6ff033ab99af-1"></a><span class="ch">#!/usr/bin/env python2</span>
+<a name="rest_code_38dd578e7bb349c987fd6ff033ab99af-2"></a>
+<a name="rest_code_38dd578e7bb349c987fd6ff033ab99af-3"></a><span class="kn">import</span> <span class="nn">sys</span>
+<a name="rest_code_38dd578e7bb349c987fd6ff033ab99af-4"></a><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"mission11.bmp"</span><span class="p">)</span>
+<a name="rest_code_38dd578e7bb349c987fd6ff033ab99af-5"></a>
+<a name="rest_code_38dd578e7bb349c987fd6ff033ab99af-6"></a><span class="kn">import</span> <span class="nn">mission11</span>
+<a name="rest_code_38dd578e7bb349c987fd6ff033ab99af-7"></a><span class="k">print</span> <span class="s2">"Result:"</span><span class="p">,</span> <span class="n">mission11</span><span class="o">.</span><span class="n">check_password</span><span class="p">(</span><span class="s1">'huh, that actually worked!'</span><span class="p">)</span>
+</pre>
+<p>And we get this:</p>
+<img alt="/images/gynvaels-mission-11-en/running-bmp.png" class="align-center" src="/images/gynvaels-mission-11-en/running-bmp.png">
+</div>
+<div class="section" id="resources">
+<h2>Resources<a href="#resources" class="headerlink" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><a class="reference external" href="/listings/gynvaels-mission-11-en/mission11-solver.py.html">mission11-solver.py (full solver code)</a></li>
+<li>
+<a class="reference external" href="/listings/gynvaels-mission-11-en/mission11-genexpr.py.html">mission11-genexpr.py</a>, <a class="reference external" href="/listings/gynvaels-mission-11-en/mission11-genexpr.txt.html">mission11-genexpr.txt</a> (used for side note regarding generator expressions vs list comprehensions)</li>
+<li><a class="reference external" href="/listings/gynvaels-mission-11-en/mission11.py.html">mission11.py code, used in BMP file</a></li>
+<li>
+<a class="reference external" href="/listings/gynvaels-mission-11-en/ziprunner.py.html">ziprunner.py, file that runs the BMP/ZIP module</a> (adapted from Gynvael’s)</li>
+<li><a class="reference external" href="/pub/gynvaels-mission-11-en/gynmod.bmp">gynmod.bmp</a></li>
+<li><a class="reference external" href="/pub/gynvaels-mission-11-en/mission11.bmp">mission11.bmp</a></li>
+</ul>
+<p>Thanks for the mission (and BMP idea), Gynvael!</p>
+</div>
+</div>
+    </article>
+</div>
+    <aside class="postpromonav"><nav><ul class="pager hidden-print">
+<li class="previous">
+                <a href="/pl/blog/2017/07/03/setting-up-a-python-development-environment/" rel="prev" title="Setting up a Python development environment">Poprzedni post</a>
+            </li>
+        </ul></nav></aside><section class="comments"><h2>Komentarze</h2>
+                        <div id="disqus_thread"></div>
+        <script>
+        var disqus_shortname ="kwpolska",
+            disqus_url="https://chriswarrick.com/pl/blog/2017/08/03/gynvaels-mission-11-en-python-bytecode-reverse-engineering/",
+        disqus_title="Gynvael\u2019s Mission 11 (en): Python bytecode reverse-engineering",
+        disqus_identifier="cache/posts/2017/08/03/gynvaels-mission-11-en-python-bytecode-reverse-engineering.html",
+        disqus_config = function () {
+            this.language = "pl";
+        };
+        (function() {
+            var dsq = document.createElement('script'); dsq.async = true;
+            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+    <a href="https://disqus.com" class="dsq-brlink" rel="nofollow">Comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+        </section><script>var disqus_shortname="kwpolska";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script>
+</div>
+        <!--End of body content-->
+
+        <footer class="site-footer"><p><a href="/pl/cookies/">ta strona używa ciasteczek.</a><br>
+korzystając z tej strony, akceptujesz naszą politykę ciasteczek.
+</p>
+<p>
+powered by <strong><a href="https://getnikola.com/">Nikola</a></strong>, <a href="http://nginx.org/">nginx</a> and <a href="https://www.digitalocean.com/?refcode=7983689b2ecc">DigitalOcean</a><br>
+copyright © 2009–2017 <a href="/pl/contact/">Chris Warrick</a><br><a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC
+BY-NC-SA</a>, unless stated otherwise</p>
+            
+        </footer>
+</div>
+
+
+            <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script><script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script><script src="/assets/js/all.js"></script><script src="/assets/js/colorbox-i18n/jquery.colorbox-pl.js"></script><script>jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script><script>
+    moment.locale("pl");
+    fancydates(0, "YYYY-MM-DD HH:mm");
+    </script><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-11937989-1', 'chriswarrick.com');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+
+</script>
+</body>
+</html>
