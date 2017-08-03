@@ -1,7 +1,7 @@
 .. title: Python Apps the Right Way: entry points and scripts
 .. slug: python-apps-the-right-way-entry_points-and-scripts
 .. date: 2014-09-15 18:00:00+02:00
-.. updated: 2017-04-12 20:35:00+02:00
+.. updated: 2017-08-03 18:20:00+02:00
 .. tags: Python, guide, devel, best practices
 .. section: Python
 .. guide: yes
@@ -119,8 +119,13 @@ This is the real deal: create the entry points in your ``setup.py`` file.
    "name_of_executable = module.with:function_to_execute"
 
 4. If you are developing a GUI application (in Tkinter, PyQt/PySide,
-   WxPython, PyGTK, PyGame…), you should change the declaration to
-   ``gui_scripts``.
+   wxPython, PyGTK, PyGame…), you should change the declaration to
+   ``gui_scripts``.  On \*nix, this makes no difference, but on Windows, it
+   means that running your script by opening the created ``.exe`` files does
+   not show a console window. Note that stdout/stderr do not work in that mode
+   under Windows, which can lead to spurious application crashes.  (GUI-only
+   processes cannot use stdout/stderr because they don’t have a console
+   attached)
 5. You can create **multiple scripts** this way.  You can also have multiple
    ``console_scripts`` *and* ``gui_scripts`` in one setup file.
 
