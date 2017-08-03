@@ -113,7 +113,7 @@ This is the internal representation of a Python function. The first few lines ar
 * it uses a stack of size 6
 * its variables are named ``s``, ``good``, ``cs``, ``cg``
 
-There are two ways to solve this task: you can re-assemble the ``dis`` output, or try to re-create the function by hand, using the bytecode and the ``opcode`` module. I chose the latter method.
+There are two ways to solve this task: you can re-assemble the ``dis`` output with the help of the ``opcode`` module, or try to re-create the function by hand, using the bytecode. I chose the latter method.
 
 Reverse-engineering Python bytecode: re-creating the function by hand
 =====================================================================
@@ -150,7 +150,6 @@ I started by recreating the original firmware file. I created an empty function 
 
    dis.dis(check_password)
 
-
 If we run this solver, we get the following output (text in brackets added by me):
 
 .. code:: text
@@ -166,7 +165,7 @@ If we run this solver, we get the following output (text in brackets added by me
      7           0 LOAD_CONST               0 (None)
                  3 RETURN_VALUE
 
-We can see (with the help of colors, not reproduced here), that we’ve got ``co_argcount``, ``co_flags``, ``co_name`` correctly. We also have one constant (``None``, in every function) and one variable name (``s``, the argument name). We can also see ``dis.dis()`` output. While it looks similar to the assignment, there are a few noticeable differences: there is no ``7`` at the start, and ``LOAD_CONST`` instructions in the original code did not have anything in parentheses (only comparisions and loops did).  This makes reading byte-code harder, but still possible. (I originally thought about using ``diff`` for help, but it’s not hard to do it by hand. I did use ``diff`` for the final checking after a manual conversion)
+We can see (with the help of colors, not reproduced here), that we’ve got ``co_argcount``, ``co_flags``, ``co_name`` correctly. We also have one constant (``None``, in every function) and one variable name (``s``, the argument name). We can also see ``dis.dis()`` output. While it looks similar to the assignment, there are a few noticeable differences: there is no ``7`` (line number) at the start, and ``LOAD_CONST`` instructions in the original code did not have anything in parentheses (only comparisions and loops did).  This makes reading bytecode harder, but still possible. (I originally thought about using ``diff`` for help, but it’s not hard to do it by hand. I did use ``diff`` for the final checking after a manual “conversion”)
 
 Let’s stop to look at the constants and names for a second. The long string is followed by ``hex``, and one of the constants is ``decode``. This means that we need to use ``str.decode('hex')`` to create a (byte)string of some information. Puzzle answers tend to be human-readable, and this string isn’t — so we need to do some more work.
 
@@ -220,7 +219,7 @@ If we run the solver again, we’ll see that the first 12 bytes of our bytecode 
    39 LOAD_GLOBAL              2
    42 RETURN_VALUE
 
-We can see that we’re putting a global name on stack and calling it with one argument. In both cases, the global has the index 1, that’s ``len``. The two arguments are ``s`` and ``good``. We put both lengths on stack, then compare them. If the comparison fails (they’re equal), we jump to the instruction starting at byte 43, otherwise we continue execution to load the second global (False) and return it.  This wall of text translates to the following simple code:
+We can see that we’re putting a global object on stack and calling it with one argument. In both cases, the global has the index 1, that’s ``len``. The two arguments are ``s`` and ``good``. We put both lengths on stack, then compare them. If the comparison fails (they’re equal), we jump to the instruction starting at byte 43, otherwise we continue execution to load the second global (False) and return it.  This wall of text translates to the following simple code:
 
 .. code:: python
 
@@ -229,7 +228,7 @@ We can see that we’re putting a global name on stack and calling it with one a
         if len(s) != len(good):  # new
             return False         # new
 
-Let’s take another look at our names. We can see we’re missing ``all``, ``zip``, ``ord``. You can already see a common pattern here: we will iterate over both strings at once (using ``zip``), do some math based on the character’s codes (``ord``), and then check if all the results are truthy.
+Let’s take another look at our names. We can see we’re missing ``all``, ``zip``, ``ord``. You can already see a common pattern here: we will iterate over both strings at once (using ``zip``), do some math based on the character’s codes (``ord``), and then check if ``all`` results (of a comparison, usually) are truthy.
 
 Here’s the bytecode with value annotations and comments, which explain what happens where:
 
@@ -287,7 +286,7 @@ Solving the real puzzle
 
 I solved the extra credit part of the puzzle. The *real* aim of the puzzle was to recover the password — the text for which ``check_password()`` will return True.
 
-This part is pretty boring. I built a dictionary, where I mapped every byte (0…256) to the result of the calculation done in the ``check_password()`` function’s loop. Then I used that to recover the original text.
+This part is pretty boring. I built a dictionary, where I mapped every byte (0…255) to the result of the calculation done in the ``check_password()`` function’s loop. Then I used that to recover the original text.
 
 .. code:: python
 
@@ -315,23 +314,23 @@ What was that Paint thing about?
 
 Most of my readers were probably puzzled by the mention of Paint. Long-time viewers of Gynvael’s streams in Polish remember the Python 101 video he posted on April Fools last year. See `original video <https://www.youtube.com/watch?v=7VJaprmuHcw>`_, `explanation <http://gynvael.coldwind.pl/?id=599>`_, `code <https://github.com/gynvael/stream/tree/master/007-python-101>`_ (video and explanation are both Polish; you can get the gist of the video without hearing the audio commentary though.) **Spoilers ahead.**
 
-In that prank, Gynvael taught Python basics. The first part concerned itself with writing bytecode by hand. The second part was about drawing custom Python modules. In Paint. Yes, Paint, the simple graphics program included with Microsoft Windows. He drew a custom Python module in Paint, and saved it using the BMP format. It looked like this (zoomed PNG below; `download gynmod.bmp </pub/gynvaels-mission-11-en/gynmod.bmp>`_):
+In that prank, Gynvael taught Python basics. The first part concerned itself with writing bytecode by hand. The second part (starts around 12:00) was about drawing custom Python modules. In Paint. Yes, Paint, the simple graphics program included with Microsoft Windows. He drew a custom Python module in Paint, and saved it using the BMP format. It looked like this (zoomed PNG below; `download gynmod.bmp </pub/gynvaels-mission-11-en/gynmod.bmp>`_):
 
 .. image:: /images/gynvaels-mission-11-en/gynmod-zoom.png
    :align: center
 
 How was this done? There are three things that come into play:
 
-* Python can import modules from a ZIP file (if it’s appended to sys.path). Some tools that produce ``.exe`` files of Python code use this technique; the old egg file format also used ZIPs this way.
+* Python can import modules from a ZIP file (if it’s appended to sys.path). Some tools that produce ``.exe`` files of Python code use this technique; the old ``.egg`` file format also used ZIPs this way.
 * BMP files have their header at the start of a file.
 * ZIP files have their header at the end of a file.
-* Thus, one file can be a valid BMP and ZIP at the same time
+* Thus, one file can be a valid BMP and ZIP at the same time.
 
 I took the code of ``check_password`` and put it in ``mission11.py`` (which I already cited above). Then I compiled to ``.pyc`` and created a ``.zip`` out of it.
 
 .. listing:: listings/gynvaels-mission-11-en/mission11.py python
 
-Since I’m not an expert in any of the formats, I booted my Windows virtual machine and blindly copied the `parameters used by Gynvael <http://gynvael.coldwind.pl/img/secapr16_3.png>`_ to open the ZIP file (renamed ``.raw``) in IrfanView and save as ``.bmp``. I changed the size to 83×2, because my ZIP file was 498 bytes long (3 BPP * 83 px * 2 px = 498 bytes) — by doing that, and through sheer luck with the size, I could avoid adding comments and editing the ``zip``. I ended up with this (PNG again; `download mission11.bmp </pub/gynvaels-mission-11-en/mission11.bmp>`_):
+Since I’m not an expert in any of the formats, I booted my Windows virtual machine and blindly copied the `parameters used by Gynvael <http://gynvael.coldwind.pl/img/secapr16_3.png>`_ to open the ZIP file (renamed ``.raw``) in IrfanView and saved as ``.bmp``. I changed the size to 83×2, because my ZIP file was 498 bytes long (3 BPP * 83 px * 2 px = 498 bytes) — by doing that, and through sheer luck with the size, I could avoid adding comments and editing the ZIP archive. I ended up with this (PNG again; `download mission11.bmp </pub/gynvaels-mission-11-en/mission11.bmp>`_):
 
 .. image:: /images/gynvaels-mission-11-en/mission11-zoom.png
    :align: center
@@ -349,10 +348,11 @@ Resources
 =========
 
 * `mission11-solver.py (full solver code) </listings/gynvaels-mission-11-en/mission11-solver.py.html>`_
-* `mission11-genexpr.py </listings/gynvaels-mission-11-en/mission11-genexpr.py.html>`_, `mission11-genexpr.txt </listings/gynvaels-mission-11-en/mission11-genexpr.txt.html>`_ (used for side note regarding generator expressions vs list comprehensions)
+* `mission11-genexpr.py </listings/gynvaels-mission-11-en/mission11-genexpr.py.html>`_, `mission11-genexpr.txt </listings/gynvaels-mission-11-en/mission11-genexpr.txt.html>`_ (used for side note regarding generator expressions vs. list comprehensions)
 * `mission11.py code, used in BMP file </listings/gynvaels-mission-11-en/mission11.py.html>`_
 * `ziprunner.py, file that runs the BMP/ZIP module </listings/gynvaels-mission-11-en/ziprunner.py.html>`_ (adapted from Gynvael’s)
 * `gynmod.bmp </pub/gynvaels-mission-11-en/gynmod.bmp>`_
 * `mission11.bmp </pub/gynvaels-mission-11-en/mission11.bmp>`_
+* `dis module documentation <https://docs.python.org/2/library/dis.html#python-bytecode-instructions>`_.
 
 Thanks for the mission (and BMP idea), Gynvael!
