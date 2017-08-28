@@ -20,12 +20,12 @@ Downloads
 
 * `KwKeyboard-Windows-2017-03.zip`__
 * `KwKeyboard-Linux-2017-03.zip`__
-* `KwKeyboard-macOS-2017-03.dmg`__
+* `KwKeyboard-macOS-2017-03a.dmg`__
 * Preview: `Layout-macOS.pdf`__
 
 __ /pub/KwKeyboard/KwKeyboard-Windows-2017-03.zip
 __ /pub/KwKeyboard/KwKeyboard-Linux-2017-03.zip
-__ /pub/KwKeyboard/KwKeyboard-macOS-2017-03.dmg
+__ /pub/KwKeyboard/KwKeyboard-macOS-2017-03a.dmg
 __ /pub/KwKeyboard/Layout-macOS.pdf
 
 Usage
@@ -40,6 +40,7 @@ Version differences
 
 * macOS has some Apple additions: Apple logo on Shift-Option-F, Command on Option-G, Option on Shift-Option-G
 * Windows and Linux instead feature a lower single quote on Alt-Shift-F, and the letter eng (Ŋ ŋ) on Alt-G, Alt-Shift-G.
+* Version 2017-03a is for macOS only (released in 2017-08). The only difference is the menubar icon, which has been redrawn to account for dual screen configurations (the @2x icon is downscaled to @1x).
 
 Customization
 =============
