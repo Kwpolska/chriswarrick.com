@@ -17,12 +17,13 @@ Versions: `Java <https://github.com/Kwpolska/fraction.java>`_, `C++ <https://git
 A simple implementation of fractions, used to learn OOP in Java and C++.
 
 The Fraction class supports:
-* addition, subtraction, multiplication and division (via methods in Java and
-  operator overloading in C++)
+
+* addition, subtraction, multiplication and division (via methods in Java and operator overloading in C++)
 * simplification (2/4 -> 1/2)
 * mixed numbers (eg. 5/2 == 2 1/2)
 
 The Fraction class currently does not support:
+
 * comparisons
 * unit testing
 

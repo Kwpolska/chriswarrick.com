@@ -22,13 +22,13 @@ article: http://ogp.me/ns/article#
 <meta name="generator" content="Nikola (getnikola.com)">
 <link rel="alternate" type="application/rss+xml" title="RSS" href="/pl/galleries/inbox-by-google/rss.xml">
 <style type="text/css">
+    #gallery_container {
+        position: relative;
+    }
     .image-block {
-        display: inline-block;
+        position: absolute;
     }
-    .flowr_row {
-        width: 100%;
-    }
-    </style>
+</style>
 <link rel="alternate" hreflang="en" href="/galleries/inbox-by-google/">
 </head>
 <body>
@@ -198,45 +198,47 @@ BY-NC-SA</a>, unless stated otherwise</p>
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script><script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.8.2/baguetteBox.min.js"></script><script src="/assets/js/all.js"></script><script>
     moment.locale("pl");
     fancydates(0, "YYYY-MM-DD HH:mm");
-    </script><script src="/assets/js/flowr.plugin.js"></script><script>
-jsonContent = [{"size": {"h": 180, "w": 101}, "title": "The main inbox view", "url": "../../../galleries/inbox-by-google/01 The main Inbox view.png", "url_thumb": "../../../galleries/inbox-by-google/01 The main Inbox view.thumbnail.png"}, {"size": {"h": 180, "w": 101}, "title": "Pinned e mails", "url": "../../../galleries/inbox-by-google/02 Pinned e-mails.png", "url_thumb": "../../../galleries/inbox-by-google/02 Pinned e-mails.thumbnail.png"}, {"size": {"h": 180, "w": 101}, "title": "One category displayed", "url": "../../../galleries/inbox-by-google/03 One category displayed.png", "url_thumb": "../../../galleries/inbox-by-google/03 One category displayed.thumbnail.png"}, {"size": {"h": 180, "w": 101}, "title": "Reading an e mail", "url": "../../../galleries/inbox-by-google/04 Reading an e-mail.png", "url_thumb": "../../../galleries/inbox-by-google/04 Reading an e-mail.thumbnail.png"}, {"size": {"h": 180, "w": 101}, "title": "Responding to an e mail", "url": "../../../galleries/inbox-by-google/05 Responding to an e-mail.png", "url_thumb": "../../../galleries/inbox-by-google/05 Responding to an e-mail.thumbnail.png"}, {"size": {"h": 180, "w": 101}, "title": "Responding, inline view", "url": "../../../galleries/inbox-by-google/05 Responding, inline view.png", "url_thumb": "../../../galleries/inbox-by-google/05 Responding, inline view.thumbnail.png"}, {"size": {"h": 180, "w": 101}, "title": "Responding, full view", "url": "../../../galleries/inbox-by-google/06 Responding, full view.png", "url_thumb": "../../../galleries/inbox-by-google/06 Responding, full view.thumbnail.png"}, {"size": {"h": 180, "w": 101}, "title": "Creating a reminder", "url": "../../../galleries/inbox-by-google/07 Creating a reminder.png", "url_thumb": "../../../galleries/inbox-by-google/07 Creating a reminder.thumbnail.png"}, {"size": {"h": 180, "w": 101}, "title": "Reminder in inbox", "url": "../../../galleries/inbox-by-google/08 Reminder in Inbox.png", "url_thumb": "../../../galleries/inbox-by-google/08 Reminder in Inbox.thumbnail.png"}, {"size": {"h": 180, "w": 101}, "title": "Snoozing", "url": "../../../galleries/inbox-by-google/09 Snoozing.png", "url_thumb": "../../../galleries/inbox-by-google/09 Snoozing.thumbnail.png"}, {"size": {"h": 180, "w": 101}, "title": "All done view", "url": "../../../galleries/inbox-by-google/10 All done view.png", "url_thumb": "../../../galleries/inbox-by-google/10 All done view.thumbnail.png"}, {"size": {"h": 180, "w": 101}, "title": "New gmail", "url": "../../../galleries/inbox-by-google/11 New Gmail.png", "url_thumb": "../../../galleries/inbox-by-google/11 New Gmail.thumbnail.png"}, {"size": {"h": 180, "w": 101}, "title": "Reading in gmail", "url": "../../../galleries/inbox-by-google/12 Reading in Gmail.png", "url_thumb": "../../../galleries/inbox-by-google/12 Reading in Gmail.thumbnail.png"}, {"size": {"h": 180, "w": 101}, "title": "Details", "url": "../../../galleries/inbox-by-google/13 Details.png", "url_thumb": "../../../galleries/inbox-by-google/13 Details.thumbnail.png"}, {"size": {"h": 180, "w": 101}, "title": "Choice of actions", "url": "../../../galleries/inbox-by-google/14 Choice of actions.png", "url_thumb": "../../../galleries/inbox-by-google/14 Choice of actions.thumbnail.png"}, {"size": {"h": 180, "w": 101}, "title": "More freedom and signatures", "url": "../../../galleries/inbox-by-google/15 More freedom and signatures.png", "url_thumb": "../../../galleries/inbox-by-google/15 More freedom and signatures.thumbnail.png"}, {"size": {"h": 180, "w": 101}, "title": "All done view", "url": "../../../galleries/inbox-by-google/16 All done view.png", "url_thumb": "../../../galleries/inbox-by-google/16 All done view.thumbnail.png"}];
-$("#gallery_container").flowr({
-        data : jsonContent,
-        height : 180*.6,
-        padding: 5,
-        rows: -1,
-        render : function(params) {
-            // Just return a div, string or a dom object, anything works fine
-            img = $("<img />").attr({
-                'src': params.itemData.url_thumb,
-                'width' : params.width,
-                'height' : params.height
-            }).css('max-width', '100%');
-            link = $( "<a></a>").attr({
-                'href': params.itemData.url,
-                'class': 'image-reference'
-            });
-            div = $("<div />").addClass('image-block').attr({
-                'title': params.itemData.title,
-                'data-toggle': "tooltip",
-            });
-            link.append(img);
-            div.append(link);
-            div.hover(div.tooltip());
-            return div;
-        },
-        itemWidth : function(data) { return data.size.w; },
-        itemHeight : function(data) { return data.size.h; },
-        complete : function(params) {
-            if( jsonContent.length > params.renderedItems ) {
-                nextRenderList = jsonContent.slice( params.renderedItems );
-            }
-        }
-    });
+    </script><script src="/assets/js/justified-layout.min.js"></script><script>
+var jsonContent = [{"height": 180, "size": {"h": 180, "w": 101}, "title": "The main inbox view", "url": "../../../galleries/inbox-by-google/01 The main Inbox view.png", "url_thumb": "../../../galleries/inbox-by-google/01 The main Inbox view.thumbnail.png", "width": 101}, {"height": 180, "size": {"h": 180, "w": 101}, "title": "Pinned e mails", "url": "../../../galleries/inbox-by-google/02 Pinned e-mails.png", "url_thumb": "../../../galleries/inbox-by-google/02 Pinned e-mails.thumbnail.png", "width": 101}, {"height": 180, "size": {"h": 180, "w": 101}, "title": "One category displayed", "url": "../../../galleries/inbox-by-google/03 One category displayed.png", "url_thumb": "../../../galleries/inbox-by-google/03 One category displayed.thumbnail.png", "width": 101}, {"height": 180, "size": {"h": 180, "w": 101}, "title": "Reading an e mail", "url": "../../../galleries/inbox-by-google/04 Reading an e-mail.png", "url_thumb": "../../../galleries/inbox-by-google/04 Reading an e-mail.thumbnail.png", "width": 101}, {"height": 180, "size": {"h": 180, "w": 101}, "title": "Responding to an e mail", "url": "../../../galleries/inbox-by-google/05 Responding to an e-mail.png", "url_thumb": "../../../galleries/inbox-by-google/05 Responding to an e-mail.thumbnail.png", "width": 101}, {"height": 180, "size": {"h": 180, "w": 101}, "title": "Responding, inline view", "url": "../../../galleries/inbox-by-google/05 Responding, inline view.png", "url_thumb": "../../../galleries/inbox-by-google/05 Responding, inline view.thumbnail.png", "width": 101}, {"height": 180, "size": {"h": 180, "w": 101}, "title": "Responding, full view", "url": "../../../galleries/inbox-by-google/06 Responding, full view.png", "url_thumb": "../../../galleries/inbox-by-google/06 Responding, full view.thumbnail.png", "width": 101}, {"height": 180, "size": {"h": 180, "w": 101}, "title": "Creating a reminder", "url": "../../../galleries/inbox-by-google/07 Creating a reminder.png", "url_thumb": "../../../galleries/inbox-by-google/07 Creating a reminder.thumbnail.png", "width": 101}, {"height": 180, "size": {"h": 180, "w": 101}, "title": "Reminder in inbox", "url": "../../../galleries/inbox-by-google/08 Reminder in Inbox.png", "url_thumb": "../../../galleries/inbox-by-google/08 Reminder in Inbox.thumbnail.png", "width": 101}, {"height": 180, "size": {"h": 180, "w": 101}, "title": "Snoozing", "url": "../../../galleries/inbox-by-google/09 Snoozing.png", "url_thumb": "../../../galleries/inbox-by-google/09 Snoozing.thumbnail.png", "width": 101}, {"height": 180, "size": {"h": 180, "w": 101}, "title": "All done view", "url": "../../../galleries/inbox-by-google/10 All done view.png", "url_thumb": "../../../galleries/inbox-by-google/10 All done view.thumbnail.png", "width": 101}, {"height": 180, "size": {"h": 180, "w": 101}, "title": "New gmail", "url": "../../../galleries/inbox-by-google/11 New Gmail.png", "url_thumb": "../../../galleries/inbox-by-google/11 New Gmail.thumbnail.png", "width": 101}, {"height": 180, "size": {"h": 180, "w": 101}, "title": "Reading in gmail", "url": "../../../galleries/inbox-by-google/12 Reading in Gmail.png", "url_thumb": "../../../galleries/inbox-by-google/12 Reading in Gmail.thumbnail.png", "width": 101}, {"height": 180, "size": {"h": 180, "w": 101}, "title": "Details", "url": "../../../galleries/inbox-by-google/13 Details.png", "url_thumb": "../../../galleries/inbox-by-google/13 Details.thumbnail.png", "width": 101}, {"height": 180, "size": {"h": 180, "w": 101}, "title": "Choice of actions", "url": "../../../galleries/inbox-by-google/14 Choice of actions.png", "url_thumb": "../../../galleries/inbox-by-google/14 Choice of actions.thumbnail.png", "width": 101}, {"height": 180, "size": {"h": 180, "w": 101}, "title": "More freedom and signatures", "url": "../../../galleries/inbox-by-google/15 More freedom and signatures.png", "url_thumb": "../../../galleries/inbox-by-google/15 More freedom and signatures.thumbnail.png", "width": 101}, {"height": 180, "size": {"h": 180, "w": 101}, "title": "All done view", "url": "../../../galleries/inbox-by-google/16 All done view.png", "url_thumb": "../../../galleries/inbox-by-google/16 All done view.thumbnail.png", "width": 101}];
+
+function renderGallery() {
+    var container = document.getElementById("gallery_container");
+    container.innerHTML = '';
+    var layoutGeometry = require('justified-layout')(jsonContent, {
+    "containerWidth": container.offsetWidth,
+    "targetRowHeight": 180*.6,
+    "boxSpacing": 5});
+    container.style.height = layoutGeometry.containerHeight + 'px';
+    var boxes = layoutGeometry.boxes;
+    for (var i = 0; i < boxes.length; i++) {
+        var img = document.createElement("img");
+        img.setAttribute('src', jsonContent[i].url_thumb);
+        img.setAttribute('alt', jsonContent[i].title);
+        img.style.width = boxes[i].width + 'px';
+        img.style.height = boxes[i].height + 'px';
+        link = document.createElement("a");
+        link.setAttribute('href', jsonContent[i].url);
+        link.setAttribute('class', 'image-reference');
+        div = document.createElement("div");
+        div.setAttribute('class', 'image-block');
+        div.setAttribute('title', jsonContent[i].title);
+        div.setAttribute('data-toggle', "tooltip")
+        div.style.width = boxes[i].width + 'px';
+        div.style.height = boxes[i].height + 'px';
+        div.style.top = boxes[i].top + 'px';
+        div.style.left = boxes[i].left + 'px';
+        link.append(img);
+        div.append(link);
+        container.append(div);
+    }
     baguetteBox.run('#gallery_container', {
         captions: function(element) {
             return element.getElementsByTagName('img')[0].alt;
-    }});</script><script>
+    }});
+}
+renderGallery();
+window.addEventListener('resize', renderGallery);
+</script><script>
     baguetteBox.run('a.reference:not(.islink)', {
         captions: function(element) {
             return element.getElementsByTagName('img')[0].alt;
