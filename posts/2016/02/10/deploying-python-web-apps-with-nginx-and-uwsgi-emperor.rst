@@ -1,7 +1,7 @@
 .. title: Deploying Python Web Applications with nginx and uWSGI Emperor
 .. slug: deploying-python-web-apps-with-nginx-and-uwsgi-emperor
 .. date: 2016-02-10 15:00:00+01:00
-.. updated: 2017-04-29 16:45:00+02:00
+.. updated: 2018-04-16 10:00:00+02:00
 .. tags: Python, Django, Flask, uWSGI, nginx, Internet, Linux, Arch Linux, systemd, Ansible, guide
 .. section: Python
 .. description: A tutorial to deploy Python Web Applications to popular Linux systems.
@@ -16,7 +16,7 @@ You’ve just written a great Python web application. Now, you want to share it 
 
 The following is a comprehensive guide on how to accomplish that, on multiple Linux-based operating systems, using nginx and uWSGI Emperor. It doesn’t force you to use any specific web framework — Flask, Django, Pyramid, Bottle will all work. Written for Ubuntu, Debian, Fedora, CentOS and Arch Linux (should be helpful for other systems, too). Now with an Ansible Playbook.
 
-*Revision 5 (2017-04-29): Better module specification description, environment variable configuration info*
+*Revision 5a (2018-04-16): Better explain why we disable emperor-tyrant mode*
 
 .. TEASER_END
 
@@ -239,7 +239,7 @@ The options are:
 
 You can test your configuration by running ``uwsgi --ini /path/to/myapp.ini`` (disable the logger for stderr output or run ``tail -f /srv/myapp/uwsgi.log`` in another window).
 
-If you’re using **Fedora** or **CentOS**, there are two configuration changes you need to make globally: in ``/etc/uwsgi.ini``, disable the ``emperor-tyrant`` option (which seems to be buggy) and set ``gid = nginx``.  We’ll need this so that nginx can talk to your socket.
+If you’re using **Fedora** or **CentOS**, there are two configuration changes you need to make globally: in ``/etc/uwsgi.ini``, disable the ``emperor-tyrant`` option (which we don’t need, as it sets uid/gid for every process based on the owner of the related ``.ini`` config file — we use one global setup) and set ``gid = nginx``.  We’ll need this so that nginx can talk to your socket.
 
 nginx configuration
 -------------------

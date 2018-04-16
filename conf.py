@@ -618,7 +618,7 @@ def post_lead_format(post):
     teaser_split = TEASER_REGEXP.split(post.text())
     try:
         lead = teaser_split[0]
-        ptext = teaser_split[3]
+        ptext = teaser_split[4]
     except IndexError:
         lead = None
         ptext = post.text()
