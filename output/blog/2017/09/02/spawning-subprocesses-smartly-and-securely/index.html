@@ -8,20 +8,18 @@ article: http://ogp.me/ns/article#
 <meta name="description" content="How to spawn subprocesses securely? Do I need a subprocess?">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Spawning subprocesses smartly and securely | Chris Warrick</title>
-<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.css" integrity="sha256-FqCzNnnyXl5HxHMdb+RQ/RV/X7fqfPcQYy+G2gFL3Xk=" crossorigin="anonymous">
 <link href="/assets/css/all.css" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=EB+Garamond:400,400i,700%7CSource+Sans+Pro&amp;subset=latin-ext" rel="stylesheet">
+<meta name="theme-color" content="#00aadd">
+<meta name="generator" content="Nikola (getnikola.com)">
 <link rel="alternate" type="application/rss+xml" title="RSS (en)" href="/rss.xml">
 <link rel="alternate" type="application/rss+xml" title="RSS (pl)" href="/pl/rss.xml">
 <link rel="canonical" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/">
 <link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="16x16 32x32 48x48 64x64 128x128 256x256">
 <link rel="icon" type="image/png" href="/assets/img/logo512.png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<!--[if lt IE 9]><script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]--><meta name="application-name" content="Chris Warrick">
-<meta name="msapplication-starturl" content="https://chriswarrick.com/">
-<meta name="msapplication-navbutton-color" content="#00aadd">
-<meta name="theme-color" content="#00aadd">
-<meta name="generator" content="Nikola (getnikola.com)">
-<meta name="description" itemprop="description" content="How to spawn subprocesses securely? Do I need a subprocess?">
+<!--[if lt IE 9]><script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]--><meta name="description" itemprop="description" content="How to spawn subprocesses securely? Do I need a subprocess?">
 <meta name="author" content="Chris Warrick">
 <link rel="prev" href="/blog/2017/08/03/gynvaels-mission-11-en-python-bytecode-reverse-engineering/" title="Gynvael’s Mission 11 (en): Python bytecode reverse-engineering" type="text/html">
 <link rel="next" href="/blog/2017/09/22/mobile-phone-woes-or-how-my-carrier-didnt-want-my-money/" title="Mobile phone woes, or how my carrier didn’t want my money" type="text/html">
@@ -49,52 +47,47 @@ article: http://ogp.me/ns/article#
 
 <!-- Menubar -->
 
-<nav class="navbar navbar-kw navbar-static-top" role="navigation"><div class="container">
+<nav class="navbar navbar-expand-md navbar-kw bg-dark static-top mb-4"><div class="container">
 <!-- This keeps the margins nice -->
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-kw-collapse">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="https://chriswarrick.com/">
+        <a class="navbar-brand" href="https://chriswarrick.com/">
             <img src="/assets/img/logo.png" srcset="/assets/img/logo2x.png 2x" alt="Chris Warrick" id="logo"><span id="blog-title">Chris Warrick</span>
-            </a>
-        </div>
-<!-- /.navbar-header -->
-        <div class="collapse navbar-collapse navbar-kw-collapse">
-            <ul class="nav navbar-nav">
-<li>
-<a href="/blog/">Archives</a>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="bs-navbar">
+            <ul class="navbar-nav mr-auto">
+<li class="nav-item">
+<a href="/blog/" class="nav-link">Archives</a>
                 </li>
-<li>
-<a href="/blog/tags/">Tags</a>
+<li class="nav-item">
+<a href="/blog/tags/" class="nav-link">Tags</a>
                 </li>
-<li>
-<a href="/contact/">Contact</a>
+<li class="nav-item">
+<a href="/contact/" class="nav-link">Contact</a>
                 </li>
-<li>
-<a href="/brand/">Brand</a>
+<li class="nav-item">
+<a href="/brand/" class="nav-link">Brand</a>
                 </li>
-<li>
-<a href="/kwbot/">KwBot</a>
+<li class="nav-item">
+<a href="/kwbot/" class="nav-link">KwBot</a>
                 </li>
-<li>
-<a href="/projects/">Projects</a>
+<li class="nav-item">
+<a href="/projects/" class="nav-link">Projects</a>
                 </li>
-<li>
-<a href="/guides/">Guides</a>
+<li class="nav-item">
+<a href="/guides/" class="nav-link">Guides</a>
                 </li>
-<li>
-<a href="/search/">Search</a>
+<li class="nav-item">
+<a href="/search/" class="nav-link">Search</a>
 
                 
             </li>
 </ul>
-<ul class="nav navbar-nav navbar-right">
+<ul class="navbar-nav navbar-right">
 <li>            </li>
-<li><a href="https://chriswarrick.com/pl/" rel="alternate" hreflang="pl">Polski</a></li>
+<li class="nav-item"><a href="https://chriswarrick.com/pl/" rel="alternate" hreflang="pl" class="nav-link">Polski</a></li>
 
                 
             </ul>
@@ -102,20 +95,18 @@ article: http://ogp.me/ns/article#
 <!-- /.navbar-collapse -->
     </div>
 <!-- /.container -->
-</nav><!-- End of Menubar --><div class="container" id="content">
+</nav><!-- End of Menubar --><div class="container" id="content" role="main">
     <div class="body-content">
         <!--Body content-->
-        <div class="row">
-        <div id="cookiecontainer"></div>
-            
+        
 <article class="post-text h-entry hentry postpage postbox" itemscope="itemscope" itemtype="http://schema.org/Article"><header class="page-header"><h1 class="p-name entry-title" itemprop="headline name">
     <a href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/" class="u-url">Spawning subprocesses smartly and securely</a>
     </h1>
 
     <div class="metadata">
 <a href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/" rel="bookmark" class="u-published"><time class="published dt-published" datetime="2017-09-02T20:40:00+02:00" itemprop="datePublished" title="2017-09-02 20:40">2017-09-02 20:40</time></a>
-        <ul itemprop="keywords" class="tags">
-<li class="section-bubble" style="background-color: #00b1a1"><a href="/programming/">Programming</a></li>
+        <ul itemprop="keywords" class="tags post-bubbles list-inline">
+<li class="section-bubble"><a href="/programming/" style="background-color: #00b1a1">Programming</a></li>
            <li><a class="tag p-category" href="/blog/tags/best-practices/" rel="tag">best practices</a></li>
            <li><a class="tag p-category" href="/blog/tags/c/" rel="tag">C</a></li>
            <li><a class="tag p-category" href="/blog/tags/devel/" rel="tag">devel</a></li>
@@ -125,8 +116,8 @@ article: http://ogp.me/ns/article#
            <li><a class="tag p-category" href="/blog/tags/security/" rel="tag">security</a></li>
            <li><a class="tag p-category" href="/blog/tags/subprocess/" rel="tag">subprocess</a></li>
            <li><a class="tag p-category" href="/blog/tags/unix/" rel="tag">Unix</a></li>
-        
-<li class="shortlink-bubble"><a href="https://go.chriswarrick.com/subprocess" title="Short link to this article (go.chriswarrick.com/subprocess)"><i class="fa fa-link"></i> subprocess</a></li>        </ul>
+        </ul>
+<span class="shortlink-bubble"><a href="https://go.chriswarrick.com/subprocess" title="Short link to this article (go.chriswarrick.com/subprocess)"><i class="fa fa-link"></i> subprocess</a></span>        
 <p class="guide-header">A <a href="/guides/">guide</a> about <span class="guide-topic">spawning subprocesses</span> for <span class="guide-platform">Unix/Linux (and partially Windows)</span></p>    </div>
     </header><div class="e-content entry-content" itemprop="articleBody text">
     <div class="lead"><div>
@@ -137,7 +128,7 @@ behind the scenes?</p>
 <p>This article is written from a general perspective, with a Unix/C bias and a
 very slight Python bias. The problems mentioned apply to all languages in most
 environments, including Windows.</p>
-<div class="contents alert alert-info topic" id="contents">
+<div class="contents alert alert-primary float-md-right topic" id="contents">
 <p class="topic-title first">Contents</p>
 <ul class="simple">
 <li><a class="reference internal" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#use-the-right-tool-for-the-job" id="id9">Use the right tool for the job</a></li>
@@ -208,51 +199,51 @@ arguments passed to the process, or</p>
 manpage for <tt class="docutils literal">system(3)</tt> puts it,</p>
 <blockquote>
 <p>The <tt class="docutils literal">system()</tt> library function uses <tt class="docutils literal">fork(2)</tt> to create a child process that executes the shell command specified in command using <tt class="docutils literal">execl(3)</tt> as follows:</p>
-<pre class="code c"><a name="rest_code_43d95a484b4f4eb18d8b1c7fbbf23cab-1"></a><span class="n">execl</span><span class="p">(</span><span class="s">"/bin/sh"</span><span class="p">,</span> <span class="s">"sh"</span><span class="p">,</span> <span class="s">"-c"</span><span class="p">,</span> <span class="n">command</span><span class="p">,</span> <span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="p">)</span> <span class="mi">0</span><span class="p">);</span>
+<pre class="code c"><a name="rest_code_af437dfcd0cd443ca8ad0d2524cbaf60-1"></a><span class="n">execl</span><span class="p">(</span><span class="s">"/bin/sh"</span><span class="p">,</span> <span class="s">"sh"</span><span class="p">,</span> <span class="s">"-c"</span><span class="p">,</span> <span class="n">command</span><span class="p">,</span> <span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="p">)</span> <span class="mi">0</span><span class="p">);</span>
 </pre>
 </blockquote>
 </li>
 </ul>
 <p>If you go through the shell, you pass one string argument, whereas <tt class="docutils literal"><span class="pre">exec*()</span></tt> demands you to specify arguments separately. Let’s write a sample program to print all the arguments it receives. I’ll do it in Python to get a more readable output.</p>
-<pre class="code python"><a name="rest_code_bcd85f1706504393890c8fafa953b6f1-1"></a><span class="ch">#!/usr/bin/env python3</span>
-<a name="rest_code_bcd85f1706504393890c8fafa953b6f1-2"></a><span class="kn">import</span> <span class="nn">sys</span>
-<a name="rest_code_bcd85f1706504393890c8fafa953b6f1-3"></a><span class="k">print</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span>
+<pre class="code python"><a name="rest_code_f428d01e44d64a698f53b06a0a6abb29-1"></a><span class="ch">#!/usr/bin/env python3</span>
+<a name="rest_code_f428d01e44d64a698f53b06a0a6abb29-2"></a><span class="kn">import</span> <span class="nn">sys</span>
+<a name="rest_code_f428d01e44d64a698f53b06a0a6abb29-3"></a><span class="k">print</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span>
 </pre>
 <p>Let’s see what appears:</p>
-<pre class="code text"><a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-1"></a>$ ./argv.py foo bar
-<a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-2"></a>['./argv.py', 'foo', 'bar']
-<a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-3"></a>$ ./argv.py 'foo bar'
-<a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-4"></a>['./argv.py', 'foo bar']
-<a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-5"></a>$ ./argv.py foo\ bar baz
-<a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-6"></a>['./argv.py', 'foo bar', 'baz']
-<a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-7"></a>
-<a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-8"></a>$ ./argv.py $(date)
-<a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-9"></a>['./argv.py', 'Sat', 'Sep', '2', '16:54:52', 'CEST', '2017']
-<a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-10"></a>$ ./argv.py "$(date)"
-<a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-11"></a>['./argv.py', 'Sat Sep  2 16:54:52 CEST 2017']
-<a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-12"></a>
-<a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-13"></a>$ ./argv.py /usr/*
-<a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-14"></a>['./argv.py', '/usr/X11', '/usr/X11R6', '/usr/bin', '/usr/include', '/usr/lib', '/usr/libexec', '/usr/local', '/usr/sbin', '/usr/share', '/usr/standalone']
-<a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-15"></a>$ ./argv.py "/usr/*"
-<a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-16"></a>['./argv.py', '/usr/*']
-<a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-17"></a>
-<a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-18"></a>$ ./argv.py $EDITOR
-<a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-19"></a>['./argv.py', 'nvim']
-<a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-20"></a>
-<a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-21"></a>$ $PWD/argv.py foo bar
-<a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-22"></a>['/Users/kwpolska/Desktop/blog/subprocess/argv.py', 'foo', 'bar']
-<a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-23"></a>$ ./argv.py a{b,c}d
-<a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-24"></a>['./argv.py', 'abd', 'acd']
-<a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-25"></a>
-<a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-26"></a>$ python argv.py foo bar | cat
-<a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-27"></a>['argv.py', 'foo', 'bar']
-<a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-28"></a>$ python argv.py foo bar &gt; foo.txt
-<a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-29"></a>$ cat foo.txt
-<a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-30"></a>['argv.py', 'foo', 'bar']
-<a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-31"></a>
-<a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-32"></a>$ ./argv.py foo; ls /usr
-<a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-33"></a>['./argv.py', 'foo']
-<a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-34"></a>X11@        X11R6@      bin/        include/    lib/        libexec/    local/      sbin/       share/      standalone/
+<pre class="code text"><a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-1"></a>$ ./argv.py foo bar
+<a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-2"></a>['./argv.py', 'foo', 'bar']
+<a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-3"></a>$ ./argv.py 'foo bar'
+<a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-4"></a>['./argv.py', 'foo bar']
+<a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-5"></a>$ ./argv.py foo\ bar baz
+<a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-6"></a>['./argv.py', 'foo bar', 'baz']
+<a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-7"></a>
+<a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-8"></a>$ ./argv.py $(date)
+<a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-9"></a>['./argv.py', 'Sat', 'Sep', '2', '16:54:52', 'CEST', '2017']
+<a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-10"></a>$ ./argv.py "$(date)"
+<a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-11"></a>['./argv.py', 'Sat Sep  2 16:54:52 CEST 2017']
+<a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-12"></a>
+<a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-13"></a>$ ./argv.py /usr/*
+<a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-14"></a>['./argv.py', '/usr/X11', '/usr/X11R6', '/usr/bin', '/usr/include', '/usr/lib', '/usr/libexec', '/usr/local', '/usr/sbin', '/usr/share', '/usr/standalone']
+<a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-15"></a>$ ./argv.py "/usr/*"
+<a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-16"></a>['./argv.py', '/usr/*']
+<a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-17"></a>
+<a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-18"></a>$ ./argv.py $EDITOR
+<a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-19"></a>['./argv.py', 'nvim']
+<a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-20"></a>
+<a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-21"></a>$ $PWD/argv.py foo bar
+<a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-22"></a>['/Users/kwpolska/Desktop/blog/subprocess/argv.py', 'foo', 'bar']
+<a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-23"></a>$ ./argv.py a{b,c}d
+<a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-24"></a>['./argv.py', 'abd', 'acd']
+<a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-25"></a>
+<a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-26"></a>$ python argv.py foo bar | cat
+<a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-27"></a>['argv.py', 'foo', 'bar']
+<a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-28"></a>$ python argv.py foo bar &gt; foo.txt
+<a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-29"></a>$ cat foo.txt
+<a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-30"></a>['argv.py', 'foo', 'bar']
+<a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-31"></a>
+<a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-32"></a>$ ./argv.py foo; ls /usr
+<a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-33"></a>['./argv.py', 'foo']
+<a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-34"></a>X11@        X11R6@      bin/        include/    lib/        libexec/    local/      sbin/       share/      standalone/
 </pre>
 <p>As you can see, the following things are handled by the shell (the process is unaware of this occurring):</p>
 <ul class="simple">
@@ -351,12 +342,12 @@ need to call it via the shell.</p>
 </div>
     </article>
 </div>
-    <aside class="postpromonav"><div class="panel panel-primary guide-footer">
-  <div class="panel-heading"><h3 class="panel-title">That’s all!</h3></div>
-  <div class="panel-body">
+    <aside class="postpromonav"><div class="card guide-footer">
+  <div class="card-header bg-primary border-primary"><h3>That’s all!</h3></div>
+  <div class="card-body">
     Hopefully, the guide worked for you and you know when to spawn subprocesses and how to do it right. If so, great! Otherwise, make sure you did everything as stated in this guide. If you are still stuck, ask for help in the comments.
   </div>
-  <div class="panel-footer"><a href="/guides/">Check out my other guides!</a></div>
+  <div class="card-footer"><a href="/guides/">Check out my other guides!</a></div>
 </div>
     <nav><ul class="pager hidden-print">
 <li class="previous">
@@ -385,11 +376,7 @@ need to call it via the shell.</p>
     <a href="https://disqus.com" class="dsq-brlink" rel="nofollow">Comments powered by <span class="logo-disqus">Disqus</span></a>
 
 
-        </section><script>var disqus_shortname="kwpolska";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script>
-</div>
-        <!--End of body content-->
-
-        <footer class="site-footer"><p><a href="/cookies/">this site uses
+        </section><script>var disqus_shortname="kwpolska";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script><!--End of body content--><footer id="footer"><p><a href="/cookies/">this site uses
 cookies.</a><br>by using this site, you agree to our cookie policy.</p>
 <p>
 powered by <strong><a href="https://getnikola.com/">Nikola</a></strong>, <a href="http://nginx.org/">nginx</a> and <a href="https://www.digitalocean.com/?refcode=7983689b2ecc">DigitalOcean</a><br>
@@ -400,17 +387,14 @@ BY-NC-SA</a>, unless stated otherwise</p>
 </div>
 
 
-            <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script><script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.8.2/baguetteBox.min.js"></script><script src="/assets/js/all.js"></script><script>
+            <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha256-98vAGjEDGN79TjHkYWVD4s87rvWkdWLHPs5MC3FvFX4=" crossorigin="anonymous"></script><script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.js" integrity="sha256-lQrWH6UPtNlJURtEYCgKDqLyBscHa/uF/nFle9bx3tI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.0/moment-with-locales.min.js" integrity="sha256-RD4uaXz3KfJR/tER2O0FDpPftthhg8kJih3adpCUkUU=" crossorigin="anonymous"></script><script src="/assets/js/all.js"></script><script defer src="https://use.fontawesome.com/releases/v5.0.10/js/all.js" integrity="sha384-slN8GvtUJGnv6ca26v8EzVaR9DC58QEwsIk9q1QXdCU8Yu8ck/tL/5szYlBbqmS+" crossorigin="anonymous"></script><!-- fancy dates --><script>
     moment.locale("en");
     fancydates(0, "YYYY-MM-DD HH:mm");
-    </script><script>
-    baguetteBox.run('a.reference:not(.islink)', {
+    </script><!-- end fancy dates --><script>
+    baguetteBox.run('div#content', {
+        ignoreClass: 'islink',
         captions: function(element) {
             return element.getElementsByTagName('img')[0].alt;
-    }});
-    baguetteBox.run('img:not(.islink)', {
-        captions: function(element) {
-            return element.alt;
     }});
     </script><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

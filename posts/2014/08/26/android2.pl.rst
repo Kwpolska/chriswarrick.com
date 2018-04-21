@@ -23,19 +23,19 @@ text-to-speech systemu Android.  Nazwałem ją Speeker.
    <img src="/blog-content/android-adventure/speeker.png" alt="Speeker logo">
    </p>
    <p style="text-align: center; clear: both;">
-   <a href="/pl/galleries/speeker/" class="btn btn-default" style="width: 144px;">
-   <i class="fa fa-picture-o"></i>
+   <a href="/pl/galleries/speeker/" class="btn btn-secondary" style="width: 144px;">
+   <i class="far fa-image"></i>
    Zrzuty ekranu
    </a>
    </p>
    <p style="text-align: center; clear: both;">
-   <a href="https://github.com/Kwpolska/speeker" class="btn btn-default" style="width: 144px;">
-   <i class="fa fa-github"></i>
+   <a href="https://github.com/Kwpolska/speeker" class="btn btn-secondary" style="width: 144px;">
+   <i class="fab fa-github"></i>
    GitHub
    </a>
    </p>
    <p style="text-align: center; clear: both;">
-   <a href="https://github.com/Kwpolska/speeker/releases" class="btn btn-default" style="width: 144px;">
+   <a href="https://github.com/Kwpolska/speeker/releases" class="btn btn-secondary" style="width: 144px;">
    <i class="fa fa-download"></i>
    Pobieranie
    </a>

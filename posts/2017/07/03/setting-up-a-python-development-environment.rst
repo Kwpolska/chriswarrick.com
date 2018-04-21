@@ -19,7 +19,7 @@ questions may stump new developers, or people wanting to use Python.
 
 Note: this guide is opinionated.
 
-.. class:: alert alert-info pull-right
+.. class:: alert alert-primary float-md-right
 
 .. contents::
 
@@ -395,27 +395,31 @@ simpler, whereas IDEs try to include many extra things not necessarily related
 to writing code. IDEs often use more resources, but you won’t notice it with a
 modern computer (especially with a SSD).
 
-I spend the most of my time in `Vim <http://www.vim.org/>`_ (`neovim <https://neovim.io/>`_/`VimR <http://vimr.org/>`_ to be
-precise). Vim is the most powerful text editor out there, and with the right
-set of plugins it can beat IDEs at speed and productivity. Vim has a steep
-learning curve, but it’s worth it — you can do large changes with just a few
-keystrokes. Vim is considered so good that many IDEs (Visual Studio, IntelliJ
-IDEA/PyCharm) have (mediocre) Vim emulation plugins.
+The best IDE out there is `PyCharm <https://www.jetbrains.com/pycharm/>`_ from
+JetBrains. It has both a free Community and paid Professional edition. The
+JetBrains folks are experts at IDEs — they have fully-fledged tools for many
+languages. Their Python solution offers a plethora of options that aid
+programmers in their work.  Also, if you work with Java, or otherwise more than
+one IDEA-supported language, then install IntelliJ IDEA and the Python plugin
+(which has the same features as PyCharm).  Students can get `free
+Professional/Ultimate licenses for JetBrains products
+<https://www.jetbrains.com/student/>`_.
 
-However, if you would prefer an IDE, your best bet would be `PyCharm
-<https://www.jetbrains.com/pycharm/>`_ from JetBrains. It has both a free
-Community and paid Professional edition. The JetBrains folks are experts at
-IDEs — they have fully-fledged tools for many languages. Their Python solution
-offers a plethora of options that aid programmers in their work. If you’re on
-Windows, you might try Python Tools for Visual Studio (although I haven’t
-worked with that and can’t vouch for it)
+I also spend a lot of time in `Vim <http://www.vim.org/>`_ (`neovim
+<https://neovim.io/>`_/`VimR <http://vimr.org/>`_ to be precise). Vim is the
+most powerful text editor out there, and with the right set of plugins it can
+beat IDEs at speed and productivity. Vim has a steep learning curve, but it’s
+worth it — you can do large changes with just a few keystrokes. Vim is
+considered so good that many IDEs (Visual Studio, IntelliJ IDEA/PyCharm) have
+Vim emulation plugins.
 
-Another, lighter option is `Visual Studio Code
-<https://code.visualstudio.com/>`_ — it’s a text editor, but can offer many
-IDE-like features with the right set of plugins. It’s Electron-based
-architecture, or effectively being based on top of Google’s Chromium, is
-unfortunate and can lead to bad performance on lower-end machines. (In my
-experience, it’s better than Atom.) You can also try `Sublime Text <https://www.sublimetext.com/>`_ ($70).
+Another option is `Visual Studio Code <https://code.visualstudio.com/>`_ — it’s
+a text editor, but can offer many IDE-like features with the right set of
+plugins. It’s Electron-based architecture, or effectively being based on top of
+Google’s Chromium, is unfortunate and can lead to terrible performance on
+lower-end machines, and on higher-end ones in some cases. (In my experience,
+it’s better than Atom.) You can also try `Sublime Text
+<https://www.sublimetext.com/>`_ ($80).
 
 But really, almost any editor will do. But please **avoid** IDLE, the editor
 included with Python. It lacks some of the most basic things — it doesn’t even

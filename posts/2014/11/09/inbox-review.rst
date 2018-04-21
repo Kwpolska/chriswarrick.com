@@ -18,8 +18,8 @@ __ https://twitter.com/dav4dav4
 .. raw:: html
 
    <p style="text-align: center; clear: both;">
-   <a href="/galleries/inbox-by-google/" class="btn btn-primary btn-default">
-   <i class="fa fa-picture-o"></i>
+   <a href="/galleries/inbox-by-google/" class="btn btn-primary btn-secondary">
+   <i class="far fa-image"></i>
    Screenshots/Gallery
    </a>
    </p>
@@ -157,8 +157,8 @@ You can easily find apps in all four styles on a typical Android device.  Apps l
 .. raw:: html
 
    <p style="text-align: center; clear: both;">
-   <a href="/galleries/inbox-by-google/" class="btn btn-primary btn-default">
-   <i class="fa fa-picture-o"></i>
+   <a href="/galleries/inbox-by-google/" class="btn btn-primary btn-secondary">
+   <i class="far fa-image"></i>
    Screenshots/Gallery
    </a>
    </p>

@@ -24,19 +24,19 @@ If yes: ``think`` is just for you.  For more details, read on or `hop onto the G
    </a>
    </p>
    <p style="text-align: center; clear: both;">
-   <a href="https://github.com/Kwpolska/think" class="btn btn-default" style="width: 250px;">
-   <i class="fa fa-github"></i>
+   <a href="https://github.com/Kwpolska/think" class="btn btn-secondary" style="width: 250px;">
+   <i class="fab fa-github"></i>
    GitHub
    </a>
    </p>
    <p style="text-align: center; clear: both;">
-   <a href="https://github.com/Kwpolska/think/releases" class="btn btn-default" style="width: 250px;">
+   <a href="https://github.com/Kwpolska/think/releases" class="btn btn-secondary" style="width: 250px;">
    <i class="fa fa-download"></i>
    Downloads (GitHub)
    </a>
    </p>
    <p style="text-align: center; clear: both;">
-   <a href="https://pypi.python.org/pypi/think" class="btn btn-default" style="width: 250px;">
+   <a href="https://pypi.python.org/pypi/think" class="btn btn-secondary" style="width: 250px;">
    <i class="fa fa-download"></i>
    Downloads (PyPI)
    </a>

@@ -4,9 +4,9 @@
 $(document).ready(function() {
     if (document.cookie.indexOf('kw_cookies=1') == -1) {
         if ($('html').attr('lang') == 'en') {
-            $("#cookiecontainer").html('<div class="alert alert-info fade in" role="alert" id="cookiealert">This site uses <strong>cookies</strong>.  <a href="/cookies/" class="alert-link">Read more.</a> <button type="button" class="close" data-dismiss="alert">&times; Got it</button></div>');
+            $("#cookiecontainer").html('<div class="alert alert-primary fade in" role="alert" id="cookiealert">This site uses <strong>cookies</strong>.  <a href="/cookies/" class="alert-link">Read more.</a> <button type="button" class="close" data-dismiss="alert">&times; Got it</button></div>');
         } else if ($('html').attr('lang') == 'pl') {
-            $("#cookiecontainer").html('<div class="alert alert-info fade in" role="alert" id="cookiealert">Ta strona używa <strong>ciasteczek</strong>.  <a href="/pl/cookies/" class="alert-link">Dowiedz się więcej.</a> <button type="button" class="close" data-dismiss="alert">&times; Rozumiem</button></div>');
+            $("#cookiecontainer").html('<div class="alert alert-primary fade in" role="alert" id="cookiealert">Ta strona używa <strong>ciasteczek</strong>.  <a href="/pl/cookies/" class="alert-link">Dowiedz się więcej.</a> <button type="button" class="close" data-dismiss="alert">&times; Rozumiem</button></div>');
         }
     }
 

@@ -22,19 +22,19 @@ Python.
    </a>
    </p>
    <p style="text-align: center; clear: both;">
-   <a href="https://chriswarrick.com/galleries/upass/" class="btn btn-default" style="width: 250px;">
-   <i class="fa fa-picture-o"></i>
+   <a href="https://chriswarrick.com/galleries/upass/" class="btn btn-secondary" style="width: 250px;">
+   <i class="far fa-image"></i>
    Screenshots
    </a>
    </p>
    <p style="text-align: center; clear: both;">
-   <a href="https://github.com/Kwpolska/upass" class="btn btn-default" style="width: 250px;">
-   <i class="fa fa-github"></i>
+   <a href="https://github.com/Kwpolska/upass" class="btn btn-secondary" style="width: 250px;">
+   <i class="fab fa-github"></i>
    GitHub
    </a>
    </p>
    <p style="text-align: center; clear: both;">
-   <a href="https://pypi.python.org/pypi/upass" class="btn btn-default" style="width: 250px;">
+   <a href="https://pypi.python.org/pypi/upass" class="btn btn-secondary" style="width: 250px;">
    <i class="fa fa-download"></i>
    Downloads (PyPI)
    </a>

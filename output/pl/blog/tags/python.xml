@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chris Warrick (Posty o Python)</title><link>https://chriswarrick.com/</link><description></description><atom:link href="https://chriswarrick.com/pl/blog/tags/python.xml" rel="self" type="application/rss+xml"></atom:link><language>pl</language><lastBuildDate>Sat, 21 Apr 2018 07:49:12 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Spawning subprocesses smartly and securely</title><link>https://chriswarrick.com/pl/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;As part of your code, you may be inclined to call a command to do
+<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chris Warrick (Posty o Python)</title><link>https://chriswarrick.com/</link><description></description><atom:link href="https://chriswarrick.com/pl/blog/tags/python.xml" rel="self" type="application/rss+xml"></atom:link><language>pl</language><lastBuildDate>Sat, 21 Apr 2018 21:30:07 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Spawning subprocesses smartly and securely</title><link>https://chriswarrick.com/pl/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;As part of your code, you may be inclined to call a command to do
 something. But is it always a good idea? How to do it safely? What happens
 behind the scenes?&lt;/p&gt;
 &lt;!-- TEASER_END --&gt;
 &lt;p&gt;This article is written from a general perspective, with a Unix/C bias and a
 very slight Python bias. The problems mentioned apply to all languages in most
 environments, including Windows.&lt;/p&gt;
-&lt;div class="contents alert alert-info topic" id="contents"&gt;
+&lt;div class="contents alert alert-primary float-md-right topic" id="contents"&gt;
 &lt;p class="topic-title first"&gt;Contents&lt;/p&gt;
 &lt;ul class="simple"&gt;
 &lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#use-the-right-tool-for-the-job" id="id9"&gt;Use the right tool for the job&lt;/a&gt;&lt;/li&gt;
@@ -75,49 +75,49 @@ arguments passed to the process, or&lt;/p&gt;
 manpage for &lt;tt class="docutils literal"&gt;system(3)&lt;/tt&gt; puts it,&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;The &lt;tt class="docutils literal"&gt;system()&lt;/tt&gt; library function uses &lt;tt class="docutils literal"&gt;fork(2)&lt;/tt&gt; to create a child process that executes the shell command specified in command using &lt;tt class="docutils literal"&gt;execl(3)&lt;/tt&gt; as follows:&lt;/p&gt;
-&lt;pre class="code c"&gt;&lt;a name="rest_code_43d95a484b4f4eb18d8b1c7fbbf23cab-1"&gt;&lt;/a&gt;&lt;span class="n"&gt;execl&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"/bin/sh"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"sh"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"-c"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;command&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;pre class="code c"&gt;&lt;a name="rest_code_af437dfcd0cd443ca8ad0d2524cbaf60-1"&gt;&lt;/a&gt;&lt;span class="n"&gt;execl&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"/bin/sh"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"sh"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"-c"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;command&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 &lt;/pre&gt;&lt;/blockquote&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;If you go through the shell, you pass one string argument, whereas &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;exec*()&lt;/span&gt;&lt;/tt&gt; demands you to specify arguments separately. Let’s write a sample program to print all the arguments it receives. I’ll do it in Python to get a more readable output.&lt;/p&gt;
-&lt;pre class="code python"&gt;&lt;a name="rest_code_bcd85f1706504393890c8fafa953b6f1-1"&gt;&lt;/a&gt;&lt;span class="ch"&gt;#!/usr/bin/env python3&lt;/span&gt;
-&lt;a name="rest_code_bcd85f1706504393890c8fafa953b6f1-2"&gt;&lt;/a&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;sys&lt;/span&gt;
-&lt;a name="rest_code_bcd85f1706504393890c8fafa953b6f1-3"&gt;&lt;/a&gt;&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_f428d01e44d64a698f53b06a0a6abb29-1"&gt;&lt;/a&gt;&lt;span class="ch"&gt;#!/usr/bin/env python3&lt;/span&gt;
+&lt;a name="rest_code_f428d01e44d64a698f53b06a0a6abb29-2"&gt;&lt;/a&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;sys&lt;/span&gt;
+&lt;a name="rest_code_f428d01e44d64a698f53b06a0a6abb29-3"&gt;&lt;/a&gt;&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;Let’s see what appears:&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-1"&gt;&lt;/a&gt;$ ./argv.py foo bar
-&lt;a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-2"&gt;&lt;/a&gt;['./argv.py', 'foo', 'bar']
-&lt;a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-3"&gt;&lt;/a&gt;$ ./argv.py 'foo bar'
-&lt;a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-4"&gt;&lt;/a&gt;['./argv.py', 'foo bar']
-&lt;a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-5"&gt;&lt;/a&gt;$ ./argv.py foo\ bar baz
-&lt;a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-6"&gt;&lt;/a&gt;['./argv.py', 'foo bar', 'baz']
-&lt;a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-7"&gt;&lt;/a&gt;
-&lt;a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-8"&gt;&lt;/a&gt;$ ./argv.py $(date)
-&lt;a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-9"&gt;&lt;/a&gt;['./argv.py', 'Sat', 'Sep', '2', '16:54:52', 'CEST', '2017']
-&lt;a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-10"&gt;&lt;/a&gt;$ ./argv.py "$(date)"
-&lt;a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-11"&gt;&lt;/a&gt;['./argv.py', 'Sat Sep  2 16:54:52 CEST 2017']
-&lt;a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-12"&gt;&lt;/a&gt;
-&lt;a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-13"&gt;&lt;/a&gt;$ ./argv.py /usr/*
-&lt;a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-14"&gt;&lt;/a&gt;['./argv.py', '/usr/X11', '/usr/X11R6', '/usr/bin', '/usr/include', '/usr/lib', '/usr/libexec', '/usr/local', '/usr/sbin', '/usr/share', '/usr/standalone']
-&lt;a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-15"&gt;&lt;/a&gt;$ ./argv.py "/usr/*"
-&lt;a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-16"&gt;&lt;/a&gt;['./argv.py', '/usr/*']
-&lt;a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-17"&gt;&lt;/a&gt;
-&lt;a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-18"&gt;&lt;/a&gt;$ ./argv.py $EDITOR
-&lt;a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-19"&gt;&lt;/a&gt;['./argv.py', 'nvim']
-&lt;a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-20"&gt;&lt;/a&gt;
-&lt;a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-21"&gt;&lt;/a&gt;$ $PWD/argv.py foo bar
-&lt;a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-22"&gt;&lt;/a&gt;['/Users/kwpolska/Desktop/blog/subprocess/argv.py', 'foo', 'bar']
-&lt;a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-23"&gt;&lt;/a&gt;$ ./argv.py a{b,c}d
-&lt;a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-24"&gt;&lt;/a&gt;['./argv.py', 'abd', 'acd']
-&lt;a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-25"&gt;&lt;/a&gt;
-&lt;a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-26"&gt;&lt;/a&gt;$ python argv.py foo bar | cat
-&lt;a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-27"&gt;&lt;/a&gt;['argv.py', 'foo', 'bar']
-&lt;a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-28"&gt;&lt;/a&gt;$ python argv.py foo bar &amp;gt; foo.txt
-&lt;a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-29"&gt;&lt;/a&gt;$ cat foo.txt
-&lt;a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-30"&gt;&lt;/a&gt;['argv.py', 'foo', 'bar']
-&lt;a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-31"&gt;&lt;/a&gt;
-&lt;a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-32"&gt;&lt;/a&gt;$ ./argv.py foo; ls /usr
-&lt;a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-33"&gt;&lt;/a&gt;['./argv.py', 'foo']
-&lt;a name="rest_code_1f9bbe87f13840b195fecc6651d30dc6-34"&gt;&lt;/a&gt;X11@        X11R6@      bin/        include/    lib/        libexec/    local/      sbin/       share/      standalone/
+&lt;pre class="code text"&gt;&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-1"&gt;&lt;/a&gt;$ ./argv.py foo bar
+&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-2"&gt;&lt;/a&gt;['./argv.py', 'foo', 'bar']
+&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-3"&gt;&lt;/a&gt;$ ./argv.py 'foo bar'
+&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-4"&gt;&lt;/a&gt;['./argv.py', 'foo bar']
+&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-5"&gt;&lt;/a&gt;$ ./argv.py foo\ bar baz
+&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-6"&gt;&lt;/a&gt;['./argv.py', 'foo bar', 'baz']
+&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-7"&gt;&lt;/a&gt;
+&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-8"&gt;&lt;/a&gt;$ ./argv.py $(date)
+&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-9"&gt;&lt;/a&gt;['./argv.py', 'Sat', 'Sep', '2', '16:54:52', 'CEST', '2017']
+&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-10"&gt;&lt;/a&gt;$ ./argv.py "$(date)"
+&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-11"&gt;&lt;/a&gt;['./argv.py', 'Sat Sep  2 16:54:52 CEST 2017']
+&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-12"&gt;&lt;/a&gt;
+&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-13"&gt;&lt;/a&gt;$ ./argv.py /usr/*
+&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-14"&gt;&lt;/a&gt;['./argv.py', '/usr/X11', '/usr/X11R6', '/usr/bin', '/usr/include', '/usr/lib', '/usr/libexec', '/usr/local', '/usr/sbin', '/usr/share', '/usr/standalone']
+&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-15"&gt;&lt;/a&gt;$ ./argv.py "/usr/*"
+&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-16"&gt;&lt;/a&gt;['./argv.py', '/usr/*']
+&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-17"&gt;&lt;/a&gt;
+&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-18"&gt;&lt;/a&gt;$ ./argv.py $EDITOR
+&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-19"&gt;&lt;/a&gt;['./argv.py', 'nvim']
+&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-20"&gt;&lt;/a&gt;
+&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-21"&gt;&lt;/a&gt;$ $PWD/argv.py foo bar
+&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-22"&gt;&lt;/a&gt;['/Users/kwpolska/Desktop/blog/subprocess/argv.py', 'foo', 'bar']
+&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-23"&gt;&lt;/a&gt;$ ./argv.py a{b,c}d
+&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-24"&gt;&lt;/a&gt;['./argv.py', 'abd', 'acd']
+&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-25"&gt;&lt;/a&gt;
+&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-26"&gt;&lt;/a&gt;$ python argv.py foo bar | cat
+&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-27"&gt;&lt;/a&gt;['argv.py', 'foo', 'bar']
+&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-28"&gt;&lt;/a&gt;$ python argv.py foo bar &amp;gt; foo.txt
+&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-29"&gt;&lt;/a&gt;$ cat foo.txt
+&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-30"&gt;&lt;/a&gt;['argv.py', 'foo', 'bar']
+&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-31"&gt;&lt;/a&gt;
+&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-32"&gt;&lt;/a&gt;$ ./argv.py foo; ls /usr
+&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-33"&gt;&lt;/a&gt;['./argv.py', 'foo']
+&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-34"&gt;&lt;/a&gt;X11@        X11R6@      bin/        include/    lib/        libexec/    local/      sbin/       share/      standalone/
 &lt;/pre&gt;&lt;p&gt;As you can see, the following things are handled by the shell (the process is unaware of this occurring):&lt;/p&gt;
 &lt;ul class="simple"&gt;
 &lt;li&gt;quotes and escapes&lt;/li&gt;
@@ -489,7 +489,7 @@ difference between Python, CPython, Anaconda, PyPy? Those and many other
 questions may stump new developers, or people wanting to use Python.&lt;/p&gt;
 &lt;!-- TEASER_END --&gt;
 &lt;p&gt;Note: this guide is opinionated.&lt;/p&gt;
-&lt;div class="contents alert alert-info pull-right topic" id="contents"&gt;
+&lt;div class="contents alert alert-primary float-md-right topic" id="contents"&gt;
 &lt;p class="topic-title first"&gt;Contents&lt;/p&gt;
 &lt;ul class="simple"&gt;
 &lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2017/07/03/setting-up-a-python-development-environment/#glossary-and-questions" id="id2"&gt;Glossary and questions&lt;/a&gt;&lt;ul&gt;
@@ -839,23 +839,26 @@ but helpful features.&lt;/p&gt;
 simpler, whereas IDEs try to include many extra things not necessarily related
 to writing code. IDEs often use more resources, but you won’t notice it with a
 modern computer (especially with a SSD).&lt;/p&gt;
-&lt;p&gt;I spend the most of my time in &lt;a class="reference external" href="http://www.vim.org/"&gt;Vim&lt;/a&gt; (&lt;a class="reference external" href="https://neovim.io/"&gt;neovim&lt;/a&gt;/&lt;a class="reference external" href="http://vimr.org/"&gt;VimR&lt;/a&gt; to be
-precise). Vim is the most powerful text editor out there, and with the right
-set of plugins it can beat IDEs at speed and productivity. Vim has a steep
-learning curve, but it’s worth it — you can do large changes with just a few
-keystrokes. Vim is considered so good that many IDEs (Visual Studio, IntelliJ
-IDEA/PyCharm) have (mediocre) Vim emulation plugins.&lt;/p&gt;
-&lt;p&gt;However, if you would prefer an IDE, your best bet would be &lt;a class="reference external" href="https://www.jetbrains.com/pycharm/"&gt;PyCharm&lt;/a&gt; from JetBrains. It has both a free
-Community and paid Professional edition. The JetBrains folks are experts at
-IDEs — they have fully-fledged tools for many languages. Their Python solution
-offers a plethora of options that aid programmers in their work. If you’re on
-Windows, you might try Python Tools for Visual Studio (although I haven’t
-worked with that and can’t vouch for it)&lt;/p&gt;
-&lt;p&gt;Another, lighter option is &lt;a class="reference external" href="https://code.visualstudio.com/"&gt;Visual Studio Code&lt;/a&gt; — it’s a text editor, but can offer many
-IDE-like features with the right set of plugins. It’s Electron-based
-architecture, or effectively being based on top of Google’s Chromium, is
-unfortunate and can lead to bad performance on lower-end machines. (In my
-experience, it’s better than Atom.) You can also try &lt;a class="reference external" href="https://www.sublimetext.com/"&gt;Sublime Text&lt;/a&gt; ($70).&lt;/p&gt;
+&lt;p&gt;The best IDE out there is &lt;a class="reference external" href="https://www.jetbrains.com/pycharm/"&gt;PyCharm&lt;/a&gt; from
+JetBrains. It has both a free Community and paid Professional edition. The
+JetBrains folks are experts at IDEs — they have fully-fledged tools for many
+languages. Their Python solution offers a plethora of options that aid
+programmers in their work.  Also, if you work with Java, or otherwise more than
+one IDEA-supported language, then install IntelliJ IDEA and the Python plugin
+(which has the same features as PyCharm).  Students can get &lt;a class="reference external" href="https://www.jetbrains.com/student/"&gt;free
+Professional/Ultimate licenses for JetBrains products&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;I also spend a lot of time in &lt;a class="reference external" href="http://www.vim.org/"&gt;Vim&lt;/a&gt; (&lt;a class="reference external" href="https://neovim.io/"&gt;neovim&lt;/a&gt;/&lt;a class="reference external" href="http://vimr.org/"&gt;VimR&lt;/a&gt; to be precise). Vim is the
+most powerful text editor out there, and with the right set of plugins it can
+beat IDEs at speed and productivity. Vim has a steep learning curve, but it’s
+worth it — you can do large changes with just a few keystrokes. Vim is
+considered so good that many IDEs (Visual Studio, IntelliJ IDEA/PyCharm) have
+Vim emulation plugins.&lt;/p&gt;
+&lt;p&gt;Another option is &lt;a class="reference external" href="https://code.visualstudio.com/"&gt;Visual Studio Code&lt;/a&gt; — it’s
+a text editor, but can offer many IDE-like features with the right set of
+plugins. It’s Electron-based architecture, or effectively being based on top of
+Google’s Chromium, is unfortunate and can lead to terrible performance on
+lower-end machines, and on higher-end ones in some cases. (In my experience,
+it’s better than Atom.) You can also try &lt;a class="reference external" href="https://www.sublimetext.com/"&gt;Sublime Text&lt;/a&gt; ($80).&lt;/p&gt;
 &lt;p&gt;But really, almost any editor will do. But please &lt;strong&gt;avoid&lt;/strong&gt; IDLE, the editor
 included with Python. It lacks some of the most basic things — it doesn’t even
 have an option to show line numbers. Not to mention its ugliness. Also, don’t
@@ -1033,7 +1036,7 @@ as they are replaced with copies in &lt;tt class="docutils literal"&gt;/docs&lt;
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;div style="text-align: center;"&gt;
-&lt;a href="https://github.com/Kwpolska/python-project-template" class="btn btn-lg btn-primary"&gt;&lt;i class="fa fa-github"&gt;&lt;/i&gt; Check it out on GitHub&lt;/a&gt;
+&lt;a href="https://github.com/Kwpolska/python-project-template" class="btn btn-lg btn-primary"&gt;&lt;i class="fab fa-github"&gt;&lt;/i&gt; Check it out on GitHub&lt;/a&gt;
 &lt;/div&gt;&lt;/div&gt;&lt;/div&gt;</description><guid>https://chriswarrick.com/pl/blog/2017/04/09/python-project-template-structure-and-automation/</guid><pubDate>Sun, 09 Apr 2017 09:00:00 GMT</pubDate></item><item><title>Code writing code: Python and Vim as development aids</title><link>https://chriswarrick.com/pl/blog/2016/05/27/code-writing-code-python-and-vim/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;Recently I was working on some C# and Java code. And along the way, I used
 Python and Vim to (re)write my code. A small Python script and a 6-keystroke
 Vim macro did it faster and better than a human would.&lt;/p&gt;
@@ -1169,7 +1172,7 @@ selected text).&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;Revision 5a (2018-04-16): Better explain why we disable emperor-tyrant mode&lt;/em&gt;&lt;/p&gt;
 &lt;!-- TEASER_END --&gt;
 &lt;p&gt;For easy linking, I set up some aliases: &lt;a class="reference external" href="https://go.chriswarrick.com/pyweb"&gt;https://go.chriswarrick.com/pyweb&lt;/a&gt; and &lt;a class="reference external" href="https://go.chriswarrick.com/uwsgi-tut"&gt;https://go.chriswarrick.com/uwsgi-tut&lt;/a&gt; (powered by a Django web application, deployed with nginx and uWSGI!).&lt;/p&gt;
-&lt;div class="contents alert alert-info pull-right topic" id="contents"&gt;
+&lt;div class="contents alert alert-primary float-md-right topic" id="contents"&gt;
 &lt;p class="topic-title first"&gt;Contents&lt;/p&gt;
 &lt;ul class="simple"&gt;
 &lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#prerequisites" id="id9"&gt;Prerequisites&lt;/a&gt;&lt;/li&gt;
@@ -1241,16 +1244,16 @@ selected text).&lt;/p&gt;
 &lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id13"&gt;Getting started&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;Start by installing virtualenv, nginx and uWSGI. I recommend using your operating system packages. For uWSGI, we need the &lt;tt class="docutils literal"&gt;logfile&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;python3&lt;/tt&gt; plugins. (Arch Linux names the &lt;tt class="docutils literal"&gt;python3&lt;/tt&gt; plugin &lt;tt class="docutils literal"&gt;python&lt;/tt&gt;; the &lt;tt class="docutils literal"&gt;logfile&lt;/tt&gt; plugin may be built-in — check with your system repositories!). I’ll also install Git to clone the tutorial app, but it’s optional if your workflow does not involve git.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Ubuntu, Debian:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_7e26f30bcab148e8b0d395b72b4a23b5-1"&gt;&lt;/a&gt;apt install virtualenv python3 uwsgi uwsgi-emperor uwsgi-plugin-python3 nginx-full git
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_34c94938502c4cc3b0faaf42a4a9ccc1-1"&gt;&lt;/a&gt;apt install virtualenv python3 uwsgi uwsgi-emperor uwsgi-plugin-python3 nginx-full git
 &lt;/pre&gt;&lt;p&gt;&lt;strong&gt;Fedora:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_108bee1b6d2a41a78351cd237ef18c00-1"&gt;&lt;/a&gt;dnf install python3-virtualenv uwsgi uwsgi-plugin-python3 uwsgi-logger-file nginx git
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_5dba078677f64fe5a1785691b24c8420-1"&gt;&lt;/a&gt;dnf install python3-virtualenv uwsgi uwsgi-plugin-python3 uwsgi-logger-file nginx git
 &lt;/pre&gt;&lt;p&gt;&lt;strong&gt;CentOS:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_d59dd52457da40af93eff478bc09fe16-1"&gt;&lt;/a&gt;yum install epel-release
-&lt;a name="rest_code_d59dd52457da40af93eff478bc09fe16-2"&gt;&lt;/a&gt;yum install python34 python34-pip uwsgi uwsgi-plugin-python3 uwsgi-logger-file nginx git wget
-&lt;a name="rest_code_d59dd52457da40af93eff478bc09fe16-3"&gt;&lt;/a&gt;python3 -m pip install --user virtualenv
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_1aaf59075a7c44b1aee3aa758a508569-1"&gt;&lt;/a&gt;yum install epel-release
+&lt;a name="rest_code_1aaf59075a7c44b1aee3aa758a508569-2"&gt;&lt;/a&gt;yum install python34 python34-pip uwsgi uwsgi-plugin-python3 uwsgi-logger-file nginx git wget
+&lt;a name="rest_code_1aaf59075a7c44b1aee3aa758a508569-3"&gt;&lt;/a&gt;python3 -m pip install --user virtualenv
 &lt;/pre&gt;&lt;p&gt;We need to install virtualenv manually, because the &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;python-virtualenv&lt;/span&gt;&lt;/tt&gt; package is not compatible. It will be available to root only (user install).&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Arch Linux:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_7e3e753967e24224b3ca9b46f0ecf129-1"&gt;&lt;/a&gt;pacman -S python-virtualenv uwsgi uwsgi-plugin-python nginx git
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_bfc8a0ed4ece4a818a228df1251ffd8f-1"&gt;&lt;/a&gt;pacman -S python-virtualenv uwsgi uwsgi-plugin-python nginx git
 &lt;/pre&gt;&lt;/div&gt;
 &lt;div class="section" id="preparing-your-application"&gt;
 &lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id14"&gt;Preparing your application&lt;/a&gt;&lt;/h3&gt;
@@ -1259,25 +1262,25 @@ selected text).&lt;/p&gt;
 &lt;p&gt;If you don’t use Flask, this tutorial also has instructions for other web frameworks (Django, Pyramid, Bottle) in the configuration files; it should be adjustable to any other WSGI-compliant framework/script nevertheless.&lt;/p&gt;
 &lt;p&gt;We’ll start by creating a virtualenv:&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Ubuntu, Debian:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_2747f321ebc14e2faed6e8671cd8e857-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; /srv
-&lt;a name="rest_code_2747f321ebc14e2faed6e8671cd8e857-2"&gt;&lt;/a&gt;virtualenv -p /usr/bin/python3 myapp
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_a8e9aa59ec8e4c7993c67ab86c707137-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; /srv
+&lt;a name="rest_code_a8e9aa59ec8e4c7993c67ab86c707137-2"&gt;&lt;/a&gt;virtualenv -p /usr/bin/python3 myapp
 &lt;/pre&gt;&lt;p&gt;&lt;strong&gt;Fedora, CentOS, Arch Linux:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_b167ca292bfa4bf885154179330a603a-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; /srv
-&lt;a name="rest_code_b167ca292bfa4bf885154179330a603a-2"&gt;&lt;/a&gt;python3 -m virtualenv myapp
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_e23377cd30a446d7b9fdc4f85aac18a4-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; /srv
+&lt;a name="rest_code_e23377cd30a446d7b9fdc4f85aac18a4-2"&gt;&lt;/a&gt;python3 -m virtualenv myapp
 &lt;/pre&gt;&lt;p&gt;(This tutorial assumes Python 3. Make sure you use the correct &lt;tt class="docutils literal"&gt;virtualenv&lt;/tt&gt; command/argument. If you want to use Python 2.7, you’ll need to adjust your uWSGI configuration as well.)&lt;/p&gt;
 &lt;p&gt;Now, we need to put our app there and install requirements. An example for the tutorial demo app:&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_986ff6d3e3644bc28223f1d8740f60fb-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; myapp
-&lt;a name="rest_code_986ff6d3e3644bc28223f1d8740f60fb-2"&gt;&lt;/a&gt;git clone https://github.com/Kwpolska/flask-demo-app appdata
-&lt;a name="rest_code_986ff6d3e3644bc28223f1d8740f60fb-3"&gt;&lt;/a&gt;bin/pip install -r appdata/requirements.txt
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_e8047dda4bed4f8b8c3845c6980e4cee-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; myapp
+&lt;a name="rest_code_e8047dda4bed4f8b8c3845c6980e4cee-2"&gt;&lt;/a&gt;git clone https://github.com/Kwpolska/flask-demo-app appdata
+&lt;a name="rest_code_e8047dda4bed4f8b8c3845c6980e4cee-3"&gt;&lt;/a&gt;bin/pip install -r appdata/requirements.txt
 &lt;/pre&gt;&lt;p&gt;I’m storing my application data in the &lt;tt class="docutils literal"&gt;appdata&lt;/tt&gt; subdirectory so that it doesn’t clutter the virtualenv (or vice versa).  You may also install the &lt;tt class="docutils literal"&gt;uwsgi&lt;/tt&gt; package in the virtualenv, but it’s optional.&lt;/p&gt;
 &lt;p&gt;What this directory should be depends on your web framework.  For example, for a Django app, you should have an &lt;tt class="docutils literal"&gt;appdata/manage.py&lt;/tt&gt; file (in other words, &lt;tt class="docutils literal"&gt;appdata&lt;/tt&gt; is where your app structure starts).  I also assumed that the &lt;tt class="docutils literal"&gt;appdata&lt;/tt&gt; folder should have a &lt;tt class="docutils literal"&gt;static&lt;/tt&gt; subdirectory with all static files, including &lt;tt class="docutils literal"&gt;favicon.ico&lt;/tt&gt; if you have one (we will add support for both in nginx).&lt;/p&gt;
 &lt;p&gt;At this point, you should chown this directory to the user and group your server is going to run as.  This is especially important if uwsgi and nginx run as different users (as they do on Fedora). Run one of the following commands:&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Ubuntu, Debian:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_443154631fe741efbc3d3f2afabe7706-1"&gt;&lt;/a&gt;chown -R www-data:www-data /srv/myapp
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_b3d959f0d1c54406aea7f27fcf614924-1"&gt;&lt;/a&gt;chown -R www-data:www-data /srv/myapp
 &lt;/pre&gt;&lt;p&gt;&lt;strong&gt;Fedora, CentOS:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_610cf997db0140cabe0e11762ff87a34-1"&gt;&lt;/a&gt;chown -R uwsgi:nginx /srv/myapp
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_d7eb0985723647278fcb2a2e63d27897-1"&gt;&lt;/a&gt;chown -R uwsgi:nginx /srv/myapp
 &lt;/pre&gt;&lt;p&gt;&lt;strong&gt;Arch Linux:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_c09a84814879420bb89a2d54743eff5d-1"&gt;&lt;/a&gt;chown -R http:http /srv/myapp
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_670f940fbfeb43859402d8a99364f286-1"&gt;&lt;/a&gt;chown -R http:http /srv/myapp
 &lt;/pre&gt;&lt;/div&gt;
 &lt;div class="section" id="configuring-uwsgi-and-nginx"&gt;
 &lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id15"&gt;Configuring uWSGI and nginx&lt;/a&gt;&lt;/h3&gt;
@@ -1289,20 +1292,20 @@ selected text).&lt;/p&gt;
 &lt;div class="section" id="uwsgi-configuration"&gt;
 &lt;h4&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id16"&gt;uWSGI configuration&lt;/a&gt;&lt;/h4&gt;
 &lt;p&gt;Start with this, but read the notes below and change the values accordingly:&lt;/p&gt;
-&lt;pre class="code ini"&gt;&lt;a name="rest_code_7b7b8f6322304ce893344b0caa8f0404-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;[uwsgi]&lt;/span&gt;
-&lt;a name="rest_code_7b7b8f6322304ce893344b0caa8f0404-2"&gt;&lt;/a&gt;&lt;span class="na"&gt;socket&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/uwsgi.sock&lt;/span&gt;
-&lt;a name="rest_code_7b7b8f6322304ce893344b0caa8f0404-3"&gt;&lt;/a&gt;&lt;span class="na"&gt;chmod-socket&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;775&lt;/span&gt;
-&lt;a name="rest_code_7b7b8f6322304ce893344b0caa8f0404-4"&gt;&lt;/a&gt;&lt;span class="na"&gt;chdir&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/appdata&lt;/span&gt;
-&lt;a name="rest_code_7b7b8f6322304ce893344b0caa8f0404-5"&gt;&lt;/a&gt;&lt;span class="na"&gt;master&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;true&lt;/span&gt;
-&lt;a name="rest_code_7b7b8f6322304ce893344b0caa8f0404-6"&gt;&lt;/a&gt;&lt;span class="na"&gt;binary-path&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/bin/uwsgi&lt;/span&gt;
-&lt;a name="rest_code_7b7b8f6322304ce893344b0caa8f0404-7"&gt;&lt;/a&gt;&lt;span class="na"&gt;virtualenv&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp&lt;/span&gt;
-&lt;a name="rest_code_7b7b8f6322304ce893344b0caa8f0404-8"&gt;&lt;/a&gt;&lt;span class="na"&gt;module&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;flaskapp:app&lt;/span&gt;
-&lt;a name="rest_code_7b7b8f6322304ce893344b0caa8f0404-9"&gt;&lt;/a&gt;&lt;span class="na"&gt;uid&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;www-data&lt;/span&gt;
-&lt;a name="rest_code_7b7b8f6322304ce893344b0caa8f0404-10"&gt;&lt;/a&gt;&lt;span class="na"&gt;gid&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;www-data&lt;/span&gt;
-&lt;a name="rest_code_7b7b8f6322304ce893344b0caa8f0404-11"&gt;&lt;/a&gt;&lt;span class="na"&gt;processes&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;1&lt;/span&gt;
-&lt;a name="rest_code_7b7b8f6322304ce893344b0caa8f0404-12"&gt;&lt;/a&gt;&lt;span class="na"&gt;threads&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;1&lt;/span&gt;
-&lt;a name="rest_code_7b7b8f6322304ce893344b0caa8f0404-13"&gt;&lt;/a&gt;&lt;span class="na"&gt;plugins&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;python3,logfile&lt;/span&gt;
-&lt;a name="rest_code_7b7b8f6322304ce893344b0caa8f0404-14"&gt;&lt;/a&gt;&lt;span class="na"&gt;logger&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;file:/srv/myapp/uwsgi.log&lt;/span&gt;
+&lt;pre class="code ini"&gt;&lt;a name="rest_code_01b0bab31f9b422aacd38735125e908f-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;[uwsgi]&lt;/span&gt;
+&lt;a name="rest_code_01b0bab31f9b422aacd38735125e908f-2"&gt;&lt;/a&gt;&lt;span class="na"&gt;socket&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/uwsgi.sock&lt;/span&gt;
+&lt;a name="rest_code_01b0bab31f9b422aacd38735125e908f-3"&gt;&lt;/a&gt;&lt;span class="na"&gt;chmod-socket&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;775&lt;/span&gt;
+&lt;a name="rest_code_01b0bab31f9b422aacd38735125e908f-4"&gt;&lt;/a&gt;&lt;span class="na"&gt;chdir&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/appdata&lt;/span&gt;
+&lt;a name="rest_code_01b0bab31f9b422aacd38735125e908f-5"&gt;&lt;/a&gt;&lt;span class="na"&gt;master&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;true&lt;/span&gt;
+&lt;a name="rest_code_01b0bab31f9b422aacd38735125e908f-6"&gt;&lt;/a&gt;&lt;span class="na"&gt;binary-path&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/bin/uwsgi&lt;/span&gt;
+&lt;a name="rest_code_01b0bab31f9b422aacd38735125e908f-7"&gt;&lt;/a&gt;&lt;span class="na"&gt;virtualenv&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp&lt;/span&gt;
+&lt;a name="rest_code_01b0bab31f9b422aacd38735125e908f-8"&gt;&lt;/a&gt;&lt;span class="na"&gt;module&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;flaskapp:app&lt;/span&gt;
+&lt;a name="rest_code_01b0bab31f9b422aacd38735125e908f-9"&gt;&lt;/a&gt;&lt;span class="na"&gt;uid&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;www-data&lt;/span&gt;
+&lt;a name="rest_code_01b0bab31f9b422aacd38735125e908f-10"&gt;&lt;/a&gt;&lt;span class="na"&gt;gid&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;www-data&lt;/span&gt;
+&lt;a name="rest_code_01b0bab31f9b422aacd38735125e908f-11"&gt;&lt;/a&gt;&lt;span class="na"&gt;processes&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;1&lt;/span&gt;
+&lt;a name="rest_code_01b0bab31f9b422aacd38735125e908f-12"&gt;&lt;/a&gt;&lt;span class="na"&gt;threads&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;1&lt;/span&gt;
+&lt;a name="rest_code_01b0bab31f9b422aacd38735125e908f-13"&gt;&lt;/a&gt;&lt;span class="na"&gt;plugins&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;python3,logfile&lt;/span&gt;
+&lt;a name="rest_code_01b0bab31f9b422aacd38735125e908f-14"&gt;&lt;/a&gt;&lt;span class="na"&gt;logger&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;file:/srv/myapp/uwsgi.log&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;Save this file as:&lt;/p&gt;
 &lt;ul class="simple"&gt;
 &lt;li&gt;Ubuntu, Debian: &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;/etc/uwsgi-emperor/vassals/myapp.ini&lt;/span&gt;&lt;/tt&gt;&lt;/li&gt;
@@ -1399,26 +1402,26 @@ selected text).&lt;/p&gt;
 &lt;li&gt;Fedora, CentOS: &lt;tt class="docutils literal"&gt;/etc/nginx/conf.d/myapp.conf&lt;/tt&gt;&lt;/li&gt;
 &lt;li&gt;Arch Linux: add &lt;tt class="docutils literal"&gt;include &lt;span class="pre"&gt;/etc/nginx/conf.d/*.conf;&lt;/span&gt;&lt;/tt&gt; to your &lt;tt class="docutils literal"&gt;http&lt;/tt&gt; directive in &lt;tt class="docutils literal"&gt;/etc/nginx/nginx.conf&lt;/tt&gt; and use &lt;tt class="docutils literal"&gt;/etc/nginx/conf.d/myapp.conf&lt;/tt&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;pre class="code nginx"&gt;&lt;a name="rest_code_6c26485575f04a00bdf70a7a619519ea-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;server&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;a name="rest_code_6c26485575f04a00bdf70a7a619519ea-2"&gt;&lt;/a&gt;    &lt;span class="c1"&gt;# for a public HTTP server:&lt;/span&gt;
-&lt;a name="rest_code_6c26485575f04a00bdf70a7a619519ea-3"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;listen&lt;/span&gt; &lt;span class="mi"&gt;80&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;a name="rest_code_6c26485575f04a00bdf70a7a619519ea-4"&gt;&lt;/a&gt;    &lt;span class="c1"&gt;# for a public HTTPS server:&lt;/span&gt;
-&lt;a name="rest_code_6c26485575f04a00bdf70a7a619519ea-5"&gt;&lt;/a&gt;    &lt;span class="c1"&gt;# listen 443 ssl;&lt;/span&gt;
-&lt;a name="rest_code_6c26485575f04a00bdf70a7a619519ea-6"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;server_name&lt;/span&gt; &lt;span class="s"&gt;localhost&lt;/span&gt; &lt;span class="s"&gt;myapp.local&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;a name="rest_code_6c26485575f04a00bdf70a7a619519ea-7"&gt;&lt;/a&gt;
-&lt;a name="rest_code_6c26485575f04a00bdf70a7a619519ea-8"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;location&lt;/span&gt; &lt;span class="s"&gt;/&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;a name="rest_code_6c26485575f04a00bdf70a7a619519ea-9"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;include&lt;/span&gt; &lt;span class="s"&gt;uwsgi_params&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;a name="rest_code_6c26485575f04a00bdf70a7a619519ea-10"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;uwsgi_pass&lt;/span&gt; &lt;span class="s"&gt;unix:/srv/myapp/uwsgi.sock&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;a name="rest_code_6c26485575f04a00bdf70a7a619519ea-11"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;a name="rest_code_6c26485575f04a00bdf70a7a619519ea-12"&gt;&lt;/a&gt;
-&lt;a name="rest_code_6c26485575f04a00bdf70a7a619519ea-13"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;location&lt;/span&gt; &lt;span class="s"&gt;/static&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;a name="rest_code_6c26485575f04a00bdf70a7a619519ea-14"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;alias&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/appdata/static&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;a name="rest_code_6c26485575f04a00bdf70a7a619519ea-15"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;a name="rest_code_6c26485575f04a00bdf70a7a619519ea-16"&gt;&lt;/a&gt;
-&lt;a name="rest_code_6c26485575f04a00bdf70a7a619519ea-17"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;location&lt;/span&gt; &lt;span class="s"&gt;/favicon.ico&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;a name="rest_code_6c26485575f04a00bdf70a7a619519ea-18"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;alias&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/appdata/static/favicon.ico&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;a name="rest_code_6c26485575f04a00bdf70a7a619519ea-19"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;a name="rest_code_6c26485575f04a00bdf70a7a619519ea-20"&gt;&lt;/a&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;pre class="code nginx"&gt;&lt;a name="rest_code_4ac502f2cad0425eaadbafd5ad74d99d-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;server&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_4ac502f2cad0425eaadbafd5ad74d99d-2"&gt;&lt;/a&gt;    &lt;span class="c1"&gt;# for a public HTTP server:&lt;/span&gt;
+&lt;a name="rest_code_4ac502f2cad0425eaadbafd5ad74d99d-3"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;listen&lt;/span&gt; &lt;span class="mi"&gt;80&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_4ac502f2cad0425eaadbafd5ad74d99d-4"&gt;&lt;/a&gt;    &lt;span class="c1"&gt;# for a public HTTPS server:&lt;/span&gt;
+&lt;a name="rest_code_4ac502f2cad0425eaadbafd5ad74d99d-5"&gt;&lt;/a&gt;    &lt;span class="c1"&gt;# listen 443 ssl;&lt;/span&gt;
+&lt;a name="rest_code_4ac502f2cad0425eaadbafd5ad74d99d-6"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;server_name&lt;/span&gt; &lt;span class="s"&gt;localhost&lt;/span&gt; &lt;span class="s"&gt;myapp.local&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_4ac502f2cad0425eaadbafd5ad74d99d-7"&gt;&lt;/a&gt;
+&lt;a name="rest_code_4ac502f2cad0425eaadbafd5ad74d99d-8"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;location&lt;/span&gt; &lt;span class="s"&gt;/&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_4ac502f2cad0425eaadbafd5ad74d99d-9"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;include&lt;/span&gt; &lt;span class="s"&gt;uwsgi_params&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_4ac502f2cad0425eaadbafd5ad74d99d-10"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;uwsgi_pass&lt;/span&gt; &lt;span class="s"&gt;unix:/srv/myapp/uwsgi.sock&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_4ac502f2cad0425eaadbafd5ad74d99d-11"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;a name="rest_code_4ac502f2cad0425eaadbafd5ad74d99d-12"&gt;&lt;/a&gt;
+&lt;a name="rest_code_4ac502f2cad0425eaadbafd5ad74d99d-13"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;location&lt;/span&gt; &lt;span class="s"&gt;/static&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_4ac502f2cad0425eaadbafd5ad74d99d-14"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;alias&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/appdata/static&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_4ac502f2cad0425eaadbafd5ad74d99d-15"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;a name="rest_code_4ac502f2cad0425eaadbafd5ad74d99d-16"&gt;&lt;/a&gt;
+&lt;a name="rest_code_4ac502f2cad0425eaadbafd5ad74d99d-17"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;location&lt;/span&gt; &lt;span class="s"&gt;/favicon.ico&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_4ac502f2cad0425eaadbafd5ad74d99d-18"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;alias&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/appdata/static/favicon.ico&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_4ac502f2cad0425eaadbafd5ad74d99d-19"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;a name="rest_code_4ac502f2cad0425eaadbafd5ad74d99d-20"&gt;&lt;/a&gt;&lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;Note that this file is a very basic and rudimentary configuration. This configuration is fine for local testing, but for a real deployment, you will need to adjust it:&lt;/p&gt;
 &lt;ul class="simple"&gt;
 &lt;li&gt;set &lt;tt class="docutils literal"&gt;listen&lt;/tt&gt; to &lt;tt class="docutils literal"&gt;443 ssl&lt;/tt&gt; and create a http→https redirect on port 80 (you can get a free SSL certificate from &lt;a class="reference external" href="https://letsencrypt.org/"&gt;Let’s Encrypt&lt;/a&gt;; make sure to &lt;a class="reference external" href="https://raymii.org/s/tutorials/Strong_SSL_Security_On_nginx.html"&gt;configure SSL properly&lt;/a&gt;).&lt;/li&gt;
@@ -1434,39 +1437,39 @@ selected text).&lt;/p&gt;
 &lt;div class="section" id="for-arch-linux"&gt;
 &lt;h4&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id19"&gt;For Arch Linux&lt;/a&gt;&lt;/h4&gt;
 &lt;p&gt;All you need is:&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_ad2bec2903bb492e8bb87ac42f8c2a4e-1"&gt;&lt;/a&gt;systemctl &lt;span class="nb"&gt;enable&lt;/span&gt; nginx emperor.uwsgi
-&lt;a name="rest_code_ad2bec2903bb492e8bb87ac42f8c2a4e-2"&gt;&lt;/a&gt;systemctl start nginx emperor.uwsgi
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_28bdc154600f447cb325b65b861bccc0-1"&gt;&lt;/a&gt;systemctl &lt;span class="nb"&gt;enable&lt;/span&gt; nginx emperor.uwsgi
+&lt;a name="rest_code_28bdc154600f447cb325b65b861bccc0-2"&gt;&lt;/a&gt;systemctl start nginx emperor.uwsgi
 &lt;/pre&gt;&lt;p&gt;Verify the service is running with &lt;tt class="docutils literal"&gt;systemctl status emperor.uwsgi&lt;/tt&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="for-fedora-and-centos"&gt;
 &lt;h4&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id20"&gt;For Fedora and CentOS&lt;/a&gt;&lt;/h4&gt;
 &lt;p&gt;Make sure you followed the extra note about editing &lt;tt class="docutils literal"&gt;/etc/uwsgi.ini&lt;/tt&gt; earlier and run:&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_13f0ac4ee82d4044979d273fc0144790-1"&gt;&lt;/a&gt;systemctl &lt;span class="nb"&gt;enable&lt;/span&gt; nginx uwsgi
-&lt;a name="rest_code_13f0ac4ee82d4044979d273fc0144790-2"&gt;&lt;/a&gt;systemctl start nginx uwsgi
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_d472f6492707448d86abba9d2bad8b3b-1"&gt;&lt;/a&gt;systemctl &lt;span class="nb"&gt;enable&lt;/span&gt; nginx uwsgi
+&lt;a name="rest_code_d472f6492707448d86abba9d2bad8b3b-2"&gt;&lt;/a&gt;systemctl start nginx uwsgi
 &lt;/pre&gt;&lt;p&gt;Verify the service is running with &lt;tt class="docutils literal"&gt;systemctl status uwsgi&lt;/tt&gt;&lt;/p&gt;
 &lt;p&gt;If you disabled SELinux, this is enough to get an app working and you can skip over to the next section.&lt;/p&gt;
 &lt;p&gt;If you want to use SELinux, you need to do the following to allow nginx to read static files:&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_6e94af80ba28424da8422beb76b301e7-1"&gt;&lt;/a&gt;setenforce &lt;span class="m"&gt;0&lt;/span&gt;
-&lt;a name="rest_code_6e94af80ba28424da8422beb76b301e7-2"&gt;&lt;/a&gt;chcon -R system_u:system_r:httpd_t:s0 /srv/myapp/appdata/static
-&lt;a name="rest_code_6e94af80ba28424da8422beb76b301e7-3"&gt;&lt;/a&gt;setenforce &lt;span class="m"&gt;1&lt;/span&gt;
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_2f9649c90a3e42788835c4c2b1359357-1"&gt;&lt;/a&gt;setenforce &lt;span class="m"&gt;0&lt;/span&gt;
+&lt;a name="rest_code_2f9649c90a3e42788835c4c2b1359357-2"&gt;&lt;/a&gt;chcon -R system_u:system_r:httpd_t:s0 /srv/myapp/appdata/static
+&lt;a name="rest_code_2f9649c90a3e42788835c4c2b1359357-3"&gt;&lt;/a&gt;setenforce &lt;span class="m"&gt;1&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;We now need to install a &lt;a class="reference external" href="https://chriswarrick.com/pub/nginx-uwsgi.pp"&gt;SELinux policy&lt;/a&gt; (that I created for this project) to allow nginx and uWSGI to communicate.
 Download it and run:&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_de8fd3c8363b43b197a69837337b2c51-1"&gt;&lt;/a&gt;semodule -i nginx-uwsgi.pp
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_3c485fcec27240e1ad3bdb96aee33763-1"&gt;&lt;/a&gt;semodule -i nginx-uwsgi.pp
 &lt;/pre&gt;&lt;p&gt;Hopefully, this is enough (you can delete the file). In case it isn’t, please read SELinux documentation, check audit logs, and look into &lt;tt class="docutils literal"&gt;audit2allow&lt;/tt&gt;.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="for-ubuntu-and-debian"&gt;
 &lt;h4&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id21"&gt;For Ubuntu and Debian&lt;/a&gt;&lt;/h4&gt;
 &lt;p&gt;Ubuntu and Debian (still!) use LSB services for uWSGI. Because LSB services are awful, we’re going to set up our own systemd-based (native) service.&lt;/p&gt;
 &lt;p&gt;Start by disabling the LSB service that comes with Ubuntu and Debian:&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_dd1e735f67254cae9da665388b50a678-1"&gt;&lt;/a&gt;systemctl stop uwsgi-emperor
-&lt;a name="rest_code_dd1e735f67254cae9da665388b50a678-2"&gt;&lt;/a&gt;systemctl disable uwsgi-emperor
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_6ff960ce88404fed8bba08ceccc646c9-1"&gt;&lt;/a&gt;systemctl stop uwsgi-emperor
+&lt;a name="rest_code_6ff960ce88404fed8bba08ceccc646c9-2"&gt;&lt;/a&gt;systemctl disable uwsgi-emperor
 &lt;/pre&gt;&lt;p&gt;Copy the &lt;tt class="docutils literal"&gt;.service&lt;/tt&gt; file from the &lt;a class="reference external" href="https://uwsgi-docs.readthedocs.org/en/latest/Systemd.html#adding-the-emperor-to-systemd"&gt;uWSGI systemd documentation&lt;/a&gt; to &lt;tt class="docutils literal"&gt;/etc/systemd/system/emperor.uwsgi.service&lt;/tt&gt;.  Change the ExecStart line to:&lt;/p&gt;
-&lt;pre class="code ini"&gt;&lt;a name="rest_code_43531412dbfa465497f37ea5c222c06e-1"&gt;&lt;/a&gt;&lt;span class="na"&gt;ExecStart&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/usr/bin/uwsgi --ini /etc/uwsgi-emperor/emperor.ini&lt;/span&gt;
+&lt;pre class="code ini"&gt;&lt;a name="rest_code_20378b30a83c451092456f6b35ebc7c4-1"&gt;&lt;/a&gt;&lt;span class="na"&gt;ExecStart&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/usr/bin/uwsgi --ini /etc/uwsgi-emperor/emperor.ini&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;You can now reload systemd daemons and enable the services:&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_8ec31fd3f45b43e9a5e5859cd1883d11-1"&gt;&lt;/a&gt;systemctl daemon-reload
-&lt;a name="rest_code_8ec31fd3f45b43e9a5e5859cd1883d11-2"&gt;&lt;/a&gt;systemctl &lt;span class="nb"&gt;enable&lt;/span&gt; nginx emperor.uwsgi
-&lt;a name="rest_code_8ec31fd3f45b43e9a5e5859cd1883d11-3"&gt;&lt;/a&gt;systemctl reload nginx
-&lt;a name="rest_code_8ec31fd3f45b43e9a5e5859cd1883d11-4"&gt;&lt;/a&gt;systemctl start emperor.uwsgi
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_88db6782f66a4f0bba9b58c4087ebacf-1"&gt;&lt;/a&gt;systemctl daemon-reload
+&lt;a name="rest_code_88db6782f66a4f0bba9b58c4087ebacf-2"&gt;&lt;/a&gt;systemctl &lt;span class="nb"&gt;enable&lt;/span&gt; nginx emperor.uwsgi
+&lt;a name="rest_code_88db6782f66a4f0bba9b58c4087ebacf-3"&gt;&lt;/a&gt;systemctl reload nginx
+&lt;a name="rest_code_88db6782f66a4f0bba9b58c4087ebacf-4"&gt;&lt;/a&gt;systemctl start emperor.uwsgi
 &lt;/pre&gt;&lt;p&gt;Verify the service is running with &lt;tt class="docutils literal"&gt;systemctl status emperor.uwsgi&lt;/tt&gt;.  (Ignore
 the warning about no request plugin)&lt;/p&gt;
 &lt;/div&gt;
@@ -1478,9 +1481,9 @@ the warning about no request plugin)&lt;/p&gt;
 &lt;p&gt;If you used the demo application, you should see something like this (complete with the favicon and image greeting):&lt;/p&gt;
 &lt;img alt="/images/nginx-uwsgi-demo.png" class="centered" src="https://chriswarrick.com/images/nginx-uwsgi-demo.png"&gt;
 &lt;p&gt;If you want to test with cURL:&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_d29e9353f0fd4402b337bcd12dc200bf-1"&gt;&lt;/a&gt;curl -v http://localhost/
-&lt;a name="rest_code_d29e9353f0fd4402b337bcd12dc200bf-2"&gt;&lt;/a&gt;curl -I http://localhost/favicon.ico
-&lt;a name="rest_code_d29e9353f0fd4402b337bcd12dc200bf-3"&gt;&lt;/a&gt;curl -I http://localhost/static/hello.png
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_225f798c47ac49b08da582f606c0eeea-1"&gt;&lt;/a&gt;curl -v http://localhost/
+&lt;a name="rest_code_225f798c47ac49b08da582f606c0eeea-2"&gt;&lt;/a&gt;curl -I http://localhost/favicon.ico
+&lt;a name="rest_code_225f798c47ac49b08da582f606c0eeea-3"&gt;&lt;/a&gt;curl -I http://localhost/static/hello.png
 &lt;/pre&gt;&lt;div class="section" id="troubleshooting"&gt;
 &lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id23"&gt;Troubleshooting&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;Hopefully, everything works. If it doesn’t:&lt;/p&gt;
@@ -1490,8 +1493,8 @@ the warning about no request plugin)&lt;/p&gt;
 &lt;li&gt;If you get a default site, disable that site in nginx config (&lt;tt class="docutils literal"&gt;/etc/nginx/nginx.conf&lt;/tt&gt; or your sites directory).&lt;/li&gt;
 &lt;li&gt;If you have a firewall installed, make sure to open the ports your web server runs on (typically 80/443). For &lt;tt class="docutils literal"&gt;firewalld&lt;/tt&gt; (Fedora, CentOS):&lt;/li&gt;
 &lt;/ul&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_0e75ace5d0e342e1b5425ded9077954c-1"&gt;&lt;/a&gt;firewall-cmd --add-service http
-&lt;a name="rest_code_0e75ace5d0e342e1b5425ded9077954c-2"&gt;&lt;/a&gt;firewall-cmd --add-service https
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_ad6e0fdd0bec431fa573ecab8e0f0b4f-1"&gt;&lt;/a&gt;firewall-cmd --add-service http
+&lt;a name="rest_code_ad6e0fdd0bec431fa573ecab8e0f0b4f-2"&gt;&lt;/a&gt;firewall-cmd --add-service https
 &lt;/pre&gt;&lt;ul class="simple"&gt;
 &lt;li&gt;If it still does not work, feel free to ask in the comments, mentioning your distribution, installation method, and what doesn’t work.&lt;/li&gt;
 &lt;/ul&gt;
@@ -1693,19 +1696,19 @@ Strona projektu
 &lt;/a&gt;
 &lt;/p&gt;
 &lt;p style="text-align: center; clear: both;"&gt;
-&lt;a href="https://chriswarrick.com/pl/galleries/upass/" class="btn btn-default" style="width: 250px;"&gt;
-&lt;i class="fa fa-picture-o"&gt;&lt;/i&gt;
+&lt;a href="https://chriswarrick.com/pl/galleries/upass/" class="btn btn-secondary" style="width: 250px;"&gt;
+&lt;i class="far fa-image"&gt;&lt;/i&gt;
 Zrzuty ekranu
 &lt;/a&gt;
 &lt;/p&gt;
 &lt;p style="text-align: center; clear: both;"&gt;
-&lt;a href="https://github.com/Kwpolska/upass" class="btn btn-default" style="width: 250px;"&gt;
-&lt;i class="fa fa-github"&gt;&lt;/i&gt;
+&lt;a href="https://github.com/Kwpolska/upass" class="btn btn-secondary" style="width: 250px;"&gt;
+&lt;i class="fab fa-github"&gt;&lt;/i&gt;
 GitHub
 &lt;/a&gt;
 &lt;/p&gt;
 &lt;p style="text-align: center; clear: both;"&gt;
-&lt;a href="https://pypi.python.org/pypi/upass" class="btn btn-default" style="width: 250px;"&gt;
+&lt;a href="https://pypi.python.org/pypi/upass" class="btn btn-secondary" style="width: 250px;"&gt;
 &lt;i class="fa fa-download"&gt;&lt;/i&gt;
 Pobierz (PyPI)
 &lt;/a&gt;

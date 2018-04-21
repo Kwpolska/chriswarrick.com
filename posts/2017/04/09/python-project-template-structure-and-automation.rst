@@ -89,7 +89,7 @@ The complete feature list (as of v2.1.5)
 .. raw:: html
 
     <div style="text-align: center;">
-    <a href="https://github.com/Kwpolska/python-project-template" class="btn btn-lg btn-primary"><i class="fa fa-github"></i> Check it out on GitHub</a>
+    <a href="https://github.com/Kwpolska/python-project-template" class="btn btn-lg btn-primary"><i class="fab fa-github"></i> Check it out on GitHub</a>
     </div>
 
 
