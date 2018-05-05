@@ -3,14 +3,14 @@
 .. date: 1970-01-01T00:00:00+00:00
 .. description: INSERT TAGLINE HERE.™
 .. previewimage: /projects/_banners/pypt.png
-.. status: 5
+.. devstatus: 5
 .. github: https://github.com/Kwpolska/python-project-template
 .. bugtracker: https://github.com/Kwpolska/python-project-template/issues
 .. role: Maintainer
 .. license: 3-clause BSD
 .. language: Python
 .. sort: 86
-.. featured: True
+.. status: featured
 
 A template for Python projects.  It makes it easy to create new Python
 projects, with just a few replacements required.  Many things are already

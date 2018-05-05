@@ -2,7 +2,7 @@
 .. slug: todolist
 .. date: 1970-01-01T00:00:00+00:00
 .. description: Chris Warrick’s LaTeX Todo List
-.. status: 6
+.. devstatus: 6
 .. download: https://github.com/Kwpolska/todolist/releases
 .. github: https://github.com/Kwpolska/todolist
 .. bugtracker: https://github.com/Kwpolska/todolist/issues

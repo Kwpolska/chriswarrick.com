@@ -2,12 +2,11 @@
 .. slug: aurqt
 .. date: 1970-01-01T00:00:00+00:00
 .. description: A graphical AUR manager.
-.. status: 7
+.. devstatus: 7
 .. logo: /projects/_logos/aurqt.png
 .. github: https://github.com/Kwpolska/aurqt
 .. role: Maintainer
 .. license: 3-clause BSD
-.. featured: False
 .. language: Python
 .. sort: 9
 

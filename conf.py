@@ -644,17 +644,14 @@ WRITE_TAG_CLOUD = False
 URL_TYPE = 'full_path'
 
 THEME_COLOR = '#00aadd'
-POSTS_SECTION_COLORS = {
-    DEFAULT_LANG: {
-        'python': '#ffd43b',
-        'android-adventure': '#a4c639',
-        'windows': '#00adef',
-    }
+CATEGORY_COLORS = {
+    'Python': '#ffd43b',
+    'Android': '#a4c639',
+    'Windows': '#00adef',
 }
-
-POSTS_SECTION_FROM_META = True
 
 NEW_POST_DATE_PATH = True
 HEADER_PERMALINKS_XPATH_LIST = ['*//div[@class="e-content entry-content"]//{hx}']
 
-GLOBAL_CONTEXT = {'post_lead_format': post_lead_format}
+GLOBAL_CONTEXT = {'post_lead_format': post_lead_format,
+                  'category_colors': CATEGORY_COLORS}

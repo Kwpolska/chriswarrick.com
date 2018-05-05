@@ -2,7 +2,7 @@
 .. slug: seClock
 .. date: 1970-01-01T00:00:00+00:00
 .. description: A simple Android app that displays a clock with seconds.
-.. status: 5
+.. devstatus: 5
 .. download: https://github.com/Kwpolska/seClock/releases
 .. github: https://github.com/Kwpolska/seClock
 .. bugtracker: https://github.com/Kwpolska/seClock/issues

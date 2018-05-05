@@ -2,7 +2,7 @@
 .. slug: kwpbar
 .. date: 1970-01-01T00:00:00+00:00
 .. description: A collection of progress bars.
-.. status: 5
+.. devstatus: 5
 .. role: Maintainer
 .. license: 3-clause BSD
 .. language: Python, C

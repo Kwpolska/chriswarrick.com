@@ -2,7 +2,7 @@
 .. slug: pkgbuilder
 .. date: 1970-01-01T00:00:00+00:00
 .. description: An AUR helper (and library) in Python 3.
-.. status: 6
+.. devstatus: 6
 .. logo: /projects/_logos/pkgbuilder.png
 .. previewimage: /projects/_banners/pkgbuilder.png
 .. download: https://pypi.python.org/pypi/pkgbuilder
@@ -10,7 +10,7 @@
 .. bugtracker: https://github.com/Kwpolska/pkgbuilder/issues
 .. role: Maintainer
 .. license: 3-clause BSD
-.. featured: True
+.. status: featured
 .. language: Python
 .. sort: 100
 

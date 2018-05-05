@@ -2,13 +2,12 @@
 .. slug: nap
 .. date: 1970-01-01T00:00:00+00:00
 .. description: sleep with a progressbar.
-.. status: 5
+.. devstatus: 5
 .. download: https://github.com/Kwpolska/nap/releases
 .. github: https://github.com/Kwpolska/nap
 .. bugtracker: https://github.com/Kwpolska/nap/issues
 .. role: Maintainer
 .. license: 3-clause BSD
-.. featured: False
 .. language: C
 .. sort: 80
 

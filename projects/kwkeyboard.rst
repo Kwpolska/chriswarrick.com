@@ -6,7 +6,7 @@
 .. link:
 .. description: An opinionated keyboard layout for Windows, Linux (X11) and macOS.
 .. type: text
-.. status: 5
+.. devstatus: 5
 .. download: https://chriswarrick.com/projects/kwkeyboard/#downloads
 .. role: Maintainer
 .. license: 3-clause BSD

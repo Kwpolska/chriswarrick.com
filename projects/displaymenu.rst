@@ -2,7 +2,7 @@
 .. slug: displaymenu
 .. date: 1970-01-01T00:00:00+00:00
 .. description: A simple macOS menubar extra to apply display presets.
-.. status: 4
+.. devstatus: 4
 .. download: https://github.com/Kwpolska/DisplayMenu/releases
 .. github: https://github.com/Kwpolska/DisplayMenu
 .. bugtracker: https://github.com/Kwpolska/DisplayMenu/issues

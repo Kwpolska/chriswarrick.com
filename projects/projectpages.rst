@@ -2,7 +2,7 @@
 .. slug: projectpages
 .. date: 1970-01-01T00:00:00+00:00
 .. description: A generator for rich project pages.
-.. status: 5
+.. devstatus: 5
 .. link: https://plugins.getnikola.com/#projectpages
 .. github: https://github.com/getnikola/plugins/tree/master/v7/projectpages
 .. bugtracker: https://github.com/getnikola/plugins/issues

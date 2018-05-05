@@ -2,13 +2,12 @@
 .. slug: peselreader
 .. date: 1970-01-01T00:00:00+00:00
 .. description: A small program for reading PESEL numbers.
-.. status: 6
+.. devstatus: 6
 .. download: https://github.com/Kwpolska/peselreader/releases
 .. github: https://github.com/Kwpolska/peselreader
 .. bugtracker: https://github.com/Kwpolska/peselreader/issues
 .. role: Maintainer
 .. license: 3-clause BSD
-.. featured: False
 .. language: C
 .. sort: 76
 

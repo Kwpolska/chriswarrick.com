@@ -2,7 +2,7 @@
 .. slug: think
 .. date: 1970-01-01T00:00:00+00:00
 .. description: Terminal Think Music: for when it takes too long to do something.
-.. status: 6
+.. devstatus: 6
 .. download: https://pypi.python.org/pypi/think
 .. github: https://github.com/Kwpolska/think
 .. bugtracker: https://github.com/Kwpolska/think/issues

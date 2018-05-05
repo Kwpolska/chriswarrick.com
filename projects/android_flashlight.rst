@@ -2,7 +2,7 @@
 .. slug: android_flashlight
 .. date: 1970-01-01T00:00:00+00:00
 .. description: Yet another Android flashlight.
-.. status: 7
+.. devstatus: 7
 .. download: https://github.com/Kwpolska/flashlight/releases
 .. github: https://github.com/Kwpolska/flashlight
 .. bugtracker: https://github.com/Kwpolska/flashlight/issues

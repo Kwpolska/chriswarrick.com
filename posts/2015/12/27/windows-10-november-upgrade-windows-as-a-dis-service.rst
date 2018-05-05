@@ -6,7 +6,7 @@
 .. description: Windows 10 upgrades are painful.
 .. type: text
 
-.. class:: pull-right
+.. class:: float-md-right
 .. thumbnail:: /images/Windows10-1511.png
    :figwidth: 20%
 

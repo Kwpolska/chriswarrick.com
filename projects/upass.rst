@@ -2,7 +2,7 @@
 .. slug: upass
 .. date: 1970-01-01T00:00:00+00:00
 .. description: upass: because pass is too hard.
-.. status: 3
+.. devstatus: 3
 .. download: https://pypi.python.org/pypi/upass
 .. github: https://github.com/Kwpolska/upass
 .. bugtracker: https://github.com/Kwpolska/upass/issues

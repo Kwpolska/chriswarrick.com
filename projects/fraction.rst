@@ -2,7 +2,7 @@
 .. slug: fraction
 .. date: 1970-01-01T00:00:00+00:00
 .. description: A simple implementation of fractions in Java and C++.
-.. status: 5
+.. devstatus: 5
 .. github: https://github.com/Kwpolska/fraction.java
 .. bugtracker: https://github.com/Kwpolska/fraction.java/issues
 .. role: Maintainer

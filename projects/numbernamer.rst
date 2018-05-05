@@ -2,7 +2,7 @@
 .. slug: numbernamer
 .. date: 1970-01-01T00:00:00+00:00
 .. description: A simple number namer for Java and Android.
-.. status: 5
+.. devstatus: 5
 .. download: https://github.com/Kwpolska/numbernamer/releases
 .. github: https://github.com/Kwpolska/numbernamer
 .. bugtracker: https://github.com/Kwpolska/numbernamer/issues

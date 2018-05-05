@@ -2,7 +2,7 @@
 .. slug: speeker
 .. date: 1970-01-01T00:00:00+00:00
 .. description: An Android TTS client.
-.. status: 4
+.. devstatus: 4
 .. download: https://github.com/Kwpolska/speeker/releases
 .. github: https://github.com/Kwpolska/speeker
 .. bugtracker: https://github.com/Kwpolska/speeker/issues

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chris Warrick (Posty o Python)</title><link>https://chriswarrick.com/</link><description></description><atom:link href="https://chriswarrick.com/pl/blog/tags/python.xml" rel="self" type="application/rss+xml"></atom:link><language>pl</language><lastBuildDate>Sat, 21 Apr 2018 21:30:07 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Spawning subprocesses smartly and securely</title><link>https://chriswarrick.com/pl/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;As part of your code, you may be inclined to call a command to do
+<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chris Warrick (Posty o Python)</title><link>https://chriswarrick.com/</link><description></description><atom:link href="https://chriswarrick.com/pl/blog/tags/python.xml" rel="self" type="application/rss+xml"></atom:link><language>pl</language><lastBuildDate>Sat, 05 May 2018 17:20:40 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Spawning subprocesses smartly and securely</title><link>https://chriswarrick.com/pl/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;As part of your code, you may be inclined to call a command to do
 something. But is it always a good idea? How to do it safely? What happens
 behind the scenes?&lt;/p&gt;
 &lt;!-- TEASER_END --&gt;
@@ -75,49 +75,49 @@ arguments passed to the process, or&lt;/p&gt;
 manpage for &lt;tt class="docutils literal"&gt;system(3)&lt;/tt&gt; puts it,&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;The &lt;tt class="docutils literal"&gt;system()&lt;/tt&gt; library function uses &lt;tt class="docutils literal"&gt;fork(2)&lt;/tt&gt; to create a child process that executes the shell command specified in command using &lt;tt class="docutils literal"&gt;execl(3)&lt;/tt&gt; as follows:&lt;/p&gt;
-&lt;pre class="code c"&gt;&lt;a name="rest_code_af437dfcd0cd443ca8ad0d2524cbaf60-1"&gt;&lt;/a&gt;&lt;span class="n"&gt;execl&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"/bin/sh"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"sh"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"-c"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;command&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;pre class="code c"&gt;&lt;a name="rest_code_19b640166d574e49be3892a47f1d3c99-1"&gt;&lt;/a&gt;&lt;span class="n"&gt;execl&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"/bin/sh"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"sh"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"-c"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;command&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 &lt;/pre&gt;&lt;/blockquote&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;If you go through the shell, you pass one string argument, whereas &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;exec*()&lt;/span&gt;&lt;/tt&gt; demands you to specify arguments separately. Let’s write a sample program to print all the arguments it receives. I’ll do it in Python to get a more readable output.&lt;/p&gt;
-&lt;pre class="code python"&gt;&lt;a name="rest_code_f428d01e44d64a698f53b06a0a6abb29-1"&gt;&lt;/a&gt;&lt;span class="ch"&gt;#!/usr/bin/env python3&lt;/span&gt;
-&lt;a name="rest_code_f428d01e44d64a698f53b06a0a6abb29-2"&gt;&lt;/a&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;sys&lt;/span&gt;
-&lt;a name="rest_code_f428d01e44d64a698f53b06a0a6abb29-3"&gt;&lt;/a&gt;&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_94d658d08aa5472d926c6c2354f02ebe-1"&gt;&lt;/a&gt;&lt;span class="ch"&gt;#!/usr/bin/env python3&lt;/span&gt;
+&lt;a name="rest_code_94d658d08aa5472d926c6c2354f02ebe-2"&gt;&lt;/a&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;sys&lt;/span&gt;
+&lt;a name="rest_code_94d658d08aa5472d926c6c2354f02ebe-3"&gt;&lt;/a&gt;&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;Let’s see what appears:&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-1"&gt;&lt;/a&gt;$ ./argv.py foo bar
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-2"&gt;&lt;/a&gt;['./argv.py', 'foo', 'bar']
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-3"&gt;&lt;/a&gt;$ ./argv.py 'foo bar'
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-4"&gt;&lt;/a&gt;['./argv.py', 'foo bar']
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-5"&gt;&lt;/a&gt;$ ./argv.py foo\ bar baz
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-6"&gt;&lt;/a&gt;['./argv.py', 'foo bar', 'baz']
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-7"&gt;&lt;/a&gt;
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-8"&gt;&lt;/a&gt;$ ./argv.py $(date)
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-9"&gt;&lt;/a&gt;['./argv.py', 'Sat', 'Sep', '2', '16:54:52', 'CEST', '2017']
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-10"&gt;&lt;/a&gt;$ ./argv.py "$(date)"
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-11"&gt;&lt;/a&gt;['./argv.py', 'Sat Sep  2 16:54:52 CEST 2017']
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-12"&gt;&lt;/a&gt;
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-13"&gt;&lt;/a&gt;$ ./argv.py /usr/*
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-14"&gt;&lt;/a&gt;['./argv.py', '/usr/X11', '/usr/X11R6', '/usr/bin', '/usr/include', '/usr/lib', '/usr/libexec', '/usr/local', '/usr/sbin', '/usr/share', '/usr/standalone']
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-15"&gt;&lt;/a&gt;$ ./argv.py "/usr/*"
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-16"&gt;&lt;/a&gt;['./argv.py', '/usr/*']
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-17"&gt;&lt;/a&gt;
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-18"&gt;&lt;/a&gt;$ ./argv.py $EDITOR
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-19"&gt;&lt;/a&gt;['./argv.py', 'nvim']
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-20"&gt;&lt;/a&gt;
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-21"&gt;&lt;/a&gt;$ $PWD/argv.py foo bar
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-22"&gt;&lt;/a&gt;['/Users/kwpolska/Desktop/blog/subprocess/argv.py', 'foo', 'bar']
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-23"&gt;&lt;/a&gt;$ ./argv.py a{b,c}d
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-24"&gt;&lt;/a&gt;['./argv.py', 'abd', 'acd']
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-25"&gt;&lt;/a&gt;
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-26"&gt;&lt;/a&gt;$ python argv.py foo bar | cat
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-27"&gt;&lt;/a&gt;['argv.py', 'foo', 'bar']
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-28"&gt;&lt;/a&gt;$ python argv.py foo bar &amp;gt; foo.txt
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-29"&gt;&lt;/a&gt;$ cat foo.txt
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-30"&gt;&lt;/a&gt;['argv.py', 'foo', 'bar']
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-31"&gt;&lt;/a&gt;
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-32"&gt;&lt;/a&gt;$ ./argv.py foo; ls /usr
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-33"&gt;&lt;/a&gt;['./argv.py', 'foo']
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-34"&gt;&lt;/a&gt;X11@        X11R6@      bin/        include/    lib/        libexec/    local/      sbin/       share/      standalone/
+&lt;pre class="code text"&gt;&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-1"&gt;&lt;/a&gt;$ ./argv.py foo bar
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-2"&gt;&lt;/a&gt;['./argv.py', 'foo', 'bar']
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-3"&gt;&lt;/a&gt;$ ./argv.py 'foo bar'
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-4"&gt;&lt;/a&gt;['./argv.py', 'foo bar']
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-5"&gt;&lt;/a&gt;$ ./argv.py foo\ bar baz
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-6"&gt;&lt;/a&gt;['./argv.py', 'foo bar', 'baz']
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-7"&gt;&lt;/a&gt;
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-8"&gt;&lt;/a&gt;$ ./argv.py $(date)
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-9"&gt;&lt;/a&gt;['./argv.py', 'Sat', 'Sep', '2', '16:54:52', 'CEST', '2017']
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-10"&gt;&lt;/a&gt;$ ./argv.py "$(date)"
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-11"&gt;&lt;/a&gt;['./argv.py', 'Sat Sep  2 16:54:52 CEST 2017']
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-12"&gt;&lt;/a&gt;
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-13"&gt;&lt;/a&gt;$ ./argv.py /usr/*
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-14"&gt;&lt;/a&gt;['./argv.py', '/usr/X11', '/usr/X11R6', '/usr/bin', '/usr/include', '/usr/lib', '/usr/libexec', '/usr/local', '/usr/sbin', '/usr/share', '/usr/standalone']
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-15"&gt;&lt;/a&gt;$ ./argv.py "/usr/*"
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-16"&gt;&lt;/a&gt;['./argv.py', '/usr/*']
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-17"&gt;&lt;/a&gt;
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-18"&gt;&lt;/a&gt;$ ./argv.py $EDITOR
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-19"&gt;&lt;/a&gt;['./argv.py', 'nvim']
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-20"&gt;&lt;/a&gt;
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-21"&gt;&lt;/a&gt;$ $PWD/argv.py foo bar
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-22"&gt;&lt;/a&gt;['/Users/kwpolska/Desktop/blog/subprocess/argv.py', 'foo', 'bar']
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-23"&gt;&lt;/a&gt;$ ./argv.py a{b,c}d
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-24"&gt;&lt;/a&gt;['./argv.py', 'abd', 'acd']
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-25"&gt;&lt;/a&gt;
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-26"&gt;&lt;/a&gt;$ python argv.py foo bar | cat
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-27"&gt;&lt;/a&gt;['argv.py', 'foo', 'bar']
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-28"&gt;&lt;/a&gt;$ python argv.py foo bar &amp;gt; foo.txt
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-29"&gt;&lt;/a&gt;$ cat foo.txt
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-30"&gt;&lt;/a&gt;['argv.py', 'foo', 'bar']
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-31"&gt;&lt;/a&gt;
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-32"&gt;&lt;/a&gt;$ ./argv.py foo; ls /usr
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-33"&gt;&lt;/a&gt;['./argv.py', 'foo']
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-34"&gt;&lt;/a&gt;X11@        X11R6@      bin/        include/    lib/        libexec/    local/      sbin/       share/      standalone/
 &lt;/pre&gt;&lt;p&gt;As you can see, the following things are handled by the shell (the process is unaware of this occurring):&lt;/p&gt;
 &lt;ul class="simple"&gt;
 &lt;li&gt;quotes and escapes&lt;/li&gt;
@@ -196,87 +196,87 @@ need to call it via the shell.&lt;/p&gt;
 &lt;/table&gt;
 &lt;/div&gt;&lt;/div&gt;</description><guid>https://chriswarrick.com/pl/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/</guid><pubDate>Sat, 02 Sep 2017 18:40:00 GMT</pubDate></item><item><title>Misja Gynvaela 11 (stream anglojęzyczny): reverse-engineering bajtkodu Pythona</title><link>https://chriswarrick.com/pl/blog/2017/08/03/gynvaels-mission-11-en-python-bytecode-reverse-engineering/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;Gynvael Coldwind jest badaczem bezpieczeństwa pracującym w Google, który organizuje cotygodniowe livestreamy na tematy bezpieczeństwa i programowania &lt;a class="reference external" href="https://gaming.youtube.com/user/GynvaelColdwind/live"&gt;po polsku&lt;/a&gt; i  &lt;a class="reference external" href="https://gaming.youtube.com/user/GynvaelEN/live"&gt;po angielsku&lt;/a&gt;). Częścią streamów są misje — w skrócie, zadania w stylu CTF-owym dotyczące inżynierii wstecznej. Wczorajsza misja była o elfickim — znaczy o Paint’cie — znaczy o programowaniu w Pythonie i jego bajtkodzie.&lt;/p&gt;
 &lt;!-- TEASER_END --&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_33cb3041c1b643cfbe4a91ae58afe44c-1"&gt;&lt;/a&gt;MISSION 011               goo.gl/13Bia9             DIFFICULTY: ██████░░░░ [6╱10]
-&lt;a name="rest_code_33cb3041c1b643cfbe4a91ae58afe44c-2"&gt;&lt;/a&gt;┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅
-&lt;a name="rest_code_33cb3041c1b643cfbe4a91ae58afe44c-3"&gt;&lt;/a&gt;
-&lt;a name="rest_code_33cb3041c1b643cfbe4a91ae58afe44c-4"&gt;&lt;/a&gt;Finally some real work!
-&lt;a name="rest_code_33cb3041c1b643cfbe4a91ae58afe44c-5"&gt;&lt;/a&gt;
-&lt;a name="rest_code_33cb3041c1b643cfbe4a91ae58afe44c-6"&gt;&lt;/a&gt;One of our field agents managed to infiltrate suspects hideout and steal a
-&lt;a name="rest_code_33cb3041c1b643cfbe4a91ae58afe44c-7"&gt;&lt;/a&gt;pendrive possibly containing important information. However, the pendrive
-&lt;a name="rest_code_33cb3041c1b643cfbe4a91ae58afe44c-8"&gt;&lt;/a&gt;actually requires one to authenticate themselves before accessing the stored
-&lt;a name="rest_code_33cb3041c1b643cfbe4a91ae58afe44c-9"&gt;&lt;/a&gt;files.
-&lt;a name="rest_code_33cb3041c1b643cfbe4a91ae58afe44c-10"&gt;&lt;/a&gt;
-&lt;a name="rest_code_33cb3041c1b643cfbe4a91ae58afe44c-11"&gt;&lt;/a&gt;We gave the pendrive to our laboratory and they managed to dump the firmware. We
-&lt;a name="rest_code_33cb3041c1b643cfbe4a91ae58afe44c-12"&gt;&lt;/a&gt;looked at the deadlisting they sent and for our best knowledge it's some form of
-&lt;a name="rest_code_33cb3041c1b643cfbe4a91ae58afe44c-13"&gt;&lt;/a&gt;Elvish. We can't read it.
-&lt;a name="rest_code_33cb3041c1b643cfbe4a91ae58afe44c-14"&gt;&lt;/a&gt;
-&lt;a name="rest_code_33cb3041c1b643cfbe4a91ae58afe44c-15"&gt;&lt;/a&gt;Here is the firmware: goo.gl/axsAHt
-&lt;a name="rest_code_33cb3041c1b643cfbe4a91ae58afe44c-16"&gt;&lt;/a&gt;
-&lt;a name="rest_code_33cb3041c1b643cfbe4a91ae58afe44c-17"&gt;&lt;/a&gt;And off you go. Bring us back the password.
-&lt;a name="rest_code_33cb3041c1b643cfbe4a91ae58afe44c-18"&gt;&lt;/a&gt;
-&lt;a name="rest_code_33cb3041c1b643cfbe4a91ae58afe44c-19"&gt;&lt;/a&gt;Good luck!
-&lt;a name="rest_code_33cb3041c1b643cfbe4a91ae58afe44c-20"&gt;&lt;/a&gt;
-&lt;a name="rest_code_33cb3041c1b643cfbe4a91ae58afe44c-21"&gt;&lt;/a&gt;---------------------------------------------------------------------------------
-&lt;a name="rest_code_33cb3041c1b643cfbe4a91ae58afe44c-22"&gt;&lt;/a&gt;
-&lt;a name="rest_code_33cb3041c1b643cfbe4a91ae58afe44c-23"&gt;&lt;/a&gt;If you decode the answer, put it in the comments under this video! If you write
-&lt;a name="rest_code_33cb3041c1b643cfbe4a91ae58afe44c-24"&gt;&lt;/a&gt;a blogpost / post your solution online, please add a link in the comments too!
-&lt;a name="rest_code_33cb3041c1b643cfbe4a91ae58afe44c-25"&gt;&lt;/a&gt;
-&lt;a name="rest_code_33cb3041c1b643cfbe4a91ae58afe44c-26"&gt;&lt;/a&gt;P.S. I'll show/explain the solution on the stream in ~two weeks.
-&lt;a name="rest_code_33cb3041c1b643cfbe4a91ae58afe44c-27"&gt;&lt;/a&gt;P.S.2. Bonus points for recreating the original high-level code.
+&lt;pre class="code text"&gt;&lt;a name="rest_code_2b72123b4de04060b89ef91d727c7466-1"&gt;&lt;/a&gt;MISSION 011               goo.gl/13Bia9             DIFFICULTY: ██████░░░░ [6╱10]
+&lt;a name="rest_code_2b72123b4de04060b89ef91d727c7466-2"&gt;&lt;/a&gt;┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅
+&lt;a name="rest_code_2b72123b4de04060b89ef91d727c7466-3"&gt;&lt;/a&gt;
+&lt;a name="rest_code_2b72123b4de04060b89ef91d727c7466-4"&gt;&lt;/a&gt;Finally some real work!
+&lt;a name="rest_code_2b72123b4de04060b89ef91d727c7466-5"&gt;&lt;/a&gt;
+&lt;a name="rest_code_2b72123b4de04060b89ef91d727c7466-6"&gt;&lt;/a&gt;One of our field agents managed to infiltrate suspects hideout and steal a
+&lt;a name="rest_code_2b72123b4de04060b89ef91d727c7466-7"&gt;&lt;/a&gt;pendrive possibly containing important information. However, the pendrive
+&lt;a name="rest_code_2b72123b4de04060b89ef91d727c7466-8"&gt;&lt;/a&gt;actually requires one to authenticate themselves before accessing the stored
+&lt;a name="rest_code_2b72123b4de04060b89ef91d727c7466-9"&gt;&lt;/a&gt;files.
+&lt;a name="rest_code_2b72123b4de04060b89ef91d727c7466-10"&gt;&lt;/a&gt;
+&lt;a name="rest_code_2b72123b4de04060b89ef91d727c7466-11"&gt;&lt;/a&gt;We gave the pendrive to our laboratory and they managed to dump the firmware. We
+&lt;a name="rest_code_2b72123b4de04060b89ef91d727c7466-12"&gt;&lt;/a&gt;looked at the deadlisting they sent and for our best knowledge it's some form of
+&lt;a name="rest_code_2b72123b4de04060b89ef91d727c7466-13"&gt;&lt;/a&gt;Elvish. We can't read it.
+&lt;a name="rest_code_2b72123b4de04060b89ef91d727c7466-14"&gt;&lt;/a&gt;
+&lt;a name="rest_code_2b72123b4de04060b89ef91d727c7466-15"&gt;&lt;/a&gt;Here is the firmware: goo.gl/axsAHt
+&lt;a name="rest_code_2b72123b4de04060b89ef91d727c7466-16"&gt;&lt;/a&gt;
+&lt;a name="rest_code_2b72123b4de04060b89ef91d727c7466-17"&gt;&lt;/a&gt;And off you go. Bring us back the password.
+&lt;a name="rest_code_2b72123b4de04060b89ef91d727c7466-18"&gt;&lt;/a&gt;
+&lt;a name="rest_code_2b72123b4de04060b89ef91d727c7466-19"&gt;&lt;/a&gt;Good luck!
+&lt;a name="rest_code_2b72123b4de04060b89ef91d727c7466-20"&gt;&lt;/a&gt;
+&lt;a name="rest_code_2b72123b4de04060b89ef91d727c7466-21"&gt;&lt;/a&gt;---------------------------------------------------------------------------------
+&lt;a name="rest_code_2b72123b4de04060b89ef91d727c7466-22"&gt;&lt;/a&gt;
+&lt;a name="rest_code_2b72123b4de04060b89ef91d727c7466-23"&gt;&lt;/a&gt;If you decode the answer, put it in the comments under this video! If you write
+&lt;a name="rest_code_2b72123b4de04060b89ef91d727c7466-24"&gt;&lt;/a&gt;a blogpost / post your solution online, please add a link in the comments too!
+&lt;a name="rest_code_2b72123b4de04060b89ef91d727c7466-25"&gt;&lt;/a&gt;
+&lt;a name="rest_code_2b72123b4de04060b89ef91d727c7466-26"&gt;&lt;/a&gt;P.S. I'll show/explain the solution on the stream in ~two weeks.
+&lt;a name="rest_code_2b72123b4de04060b89ef91d727c7466-27"&gt;&lt;/a&gt;P.S.2. Bonus points for recreating the original high-level code.
 &lt;/pre&gt;&lt;p&gt;Kod firmware:&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_323fbbfd5e3b434591b7f331bbc954a1-1"&gt;&lt;/a&gt;co_argcount 1
-&lt;a name="rest_code_323fbbfd5e3b434591b7f331bbc954a1-2"&gt;&lt;/a&gt;co_consts (None, '4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89', 'hex', 89, 255, 115, 50)
-&lt;a name="rest_code_323fbbfd5e3b434591b7f331bbc954a1-3"&gt;&lt;/a&gt;co_flags 67
-&lt;a name="rest_code_323fbbfd5e3b434591b7f331bbc954a1-4"&gt;&lt;/a&gt;co_name check_password
-&lt;a name="rest_code_323fbbfd5e3b434591b7f331bbc954a1-5"&gt;&lt;/a&gt;co_names ('decode', 'len', 'False', 'all', 'zip', 'ord')
-&lt;a name="rest_code_323fbbfd5e3b434591b7f331bbc954a1-6"&gt;&lt;/a&gt;co_nlocals 4
-&lt;a name="rest_code_323fbbfd5e3b434591b7f331bbc954a1-7"&gt;&lt;/a&gt;co_stacksize 6
-&lt;a name="rest_code_323fbbfd5e3b434591b7f331bbc954a1-8"&gt;&lt;/a&gt;co_varnames ('s', 'good', 'cs', 'cg')
-&lt;a name="rest_code_323fbbfd5e3b434591b7f331bbc954a1-9"&gt;&lt;/a&gt;              0 LOAD_CONST               1
-&lt;a name="rest_code_323fbbfd5e3b434591b7f331bbc954a1-10"&gt;&lt;/a&gt;              3 LOAD_ATTR                0
-&lt;a name="rest_code_323fbbfd5e3b434591b7f331bbc954a1-11"&gt;&lt;/a&gt;              6 LOAD_CONST               2
-&lt;a name="rest_code_323fbbfd5e3b434591b7f331bbc954a1-12"&gt;&lt;/a&gt;              9 CALL_FUNCTION            1
-&lt;a name="rest_code_323fbbfd5e3b434591b7f331bbc954a1-13"&gt;&lt;/a&gt;             12 STORE_FAST               1
-&lt;a name="rest_code_323fbbfd5e3b434591b7f331bbc954a1-14"&gt;&lt;/a&gt;             15 LOAD_GLOBAL              1
-&lt;a name="rest_code_323fbbfd5e3b434591b7f331bbc954a1-15"&gt;&lt;/a&gt;             18 LOAD_FAST                0
-&lt;a name="rest_code_323fbbfd5e3b434591b7f331bbc954a1-16"&gt;&lt;/a&gt;             21 CALL_FUNCTION            1
-&lt;a name="rest_code_323fbbfd5e3b434591b7f331bbc954a1-17"&gt;&lt;/a&gt;             24 LOAD_GLOBAL              1
-&lt;a name="rest_code_323fbbfd5e3b434591b7f331bbc954a1-18"&gt;&lt;/a&gt;             27 LOAD_FAST                1
-&lt;a name="rest_code_323fbbfd5e3b434591b7f331bbc954a1-19"&gt;&lt;/a&gt;             30 CALL_FUNCTION            1
-&lt;a name="rest_code_323fbbfd5e3b434591b7f331bbc954a1-20"&gt;&lt;/a&gt;             33 COMPARE_OP               3 (!=)
-&lt;a name="rest_code_323fbbfd5e3b434591b7f331bbc954a1-21"&gt;&lt;/a&gt;             36 POP_JUMP_IF_FALSE       43
-&lt;a name="rest_code_323fbbfd5e3b434591b7f331bbc954a1-22"&gt;&lt;/a&gt;             39 LOAD_GLOBAL              2
-&lt;a name="rest_code_323fbbfd5e3b434591b7f331bbc954a1-23"&gt;&lt;/a&gt;             42 RETURN_VALUE
-&lt;a name="rest_code_323fbbfd5e3b434591b7f331bbc954a1-24"&gt;&lt;/a&gt;        &amp;gt;&amp;gt;   43 LOAD_GLOBAL              3
-&lt;a name="rest_code_323fbbfd5e3b434591b7f331bbc954a1-25"&gt;&lt;/a&gt;             46 BUILD_LIST               0
-&lt;a name="rest_code_323fbbfd5e3b434591b7f331bbc954a1-26"&gt;&lt;/a&gt;             49 LOAD_GLOBAL              4
-&lt;a name="rest_code_323fbbfd5e3b434591b7f331bbc954a1-27"&gt;&lt;/a&gt;             52 LOAD_FAST                0
-&lt;a name="rest_code_323fbbfd5e3b434591b7f331bbc954a1-28"&gt;&lt;/a&gt;             55 LOAD_FAST                1
-&lt;a name="rest_code_323fbbfd5e3b434591b7f331bbc954a1-29"&gt;&lt;/a&gt;             58 CALL_FUNCTION            2
-&lt;a name="rest_code_323fbbfd5e3b434591b7f331bbc954a1-30"&gt;&lt;/a&gt;             61 GET_ITER
-&lt;a name="rest_code_323fbbfd5e3b434591b7f331bbc954a1-31"&gt;&lt;/a&gt;        &amp;gt;&amp;gt;   62 FOR_ITER                52 (to 117)
-&lt;a name="rest_code_323fbbfd5e3b434591b7f331bbc954a1-32"&gt;&lt;/a&gt;             65 UNPACK_SEQUENCE          2
-&lt;a name="rest_code_323fbbfd5e3b434591b7f331bbc954a1-33"&gt;&lt;/a&gt;             68 STORE_FAST               2
-&lt;a name="rest_code_323fbbfd5e3b434591b7f331bbc954a1-34"&gt;&lt;/a&gt;             71 STORE_FAST               3
-&lt;a name="rest_code_323fbbfd5e3b434591b7f331bbc954a1-35"&gt;&lt;/a&gt;             74 LOAD_GLOBAL              5
-&lt;a name="rest_code_323fbbfd5e3b434591b7f331bbc954a1-36"&gt;&lt;/a&gt;             77 LOAD_FAST                2
-&lt;a name="rest_code_323fbbfd5e3b434591b7f331bbc954a1-37"&gt;&lt;/a&gt;             80 CALL_FUNCTION            1
-&lt;a name="rest_code_323fbbfd5e3b434591b7f331bbc954a1-38"&gt;&lt;/a&gt;             83 LOAD_CONST               3
-&lt;a name="rest_code_323fbbfd5e3b434591b7f331bbc954a1-39"&gt;&lt;/a&gt;             86 BINARY_SUBTRACT
-&lt;a name="rest_code_323fbbfd5e3b434591b7f331bbc954a1-40"&gt;&lt;/a&gt;             87 LOAD_CONST               4
-&lt;a name="rest_code_323fbbfd5e3b434591b7f331bbc954a1-41"&gt;&lt;/a&gt;             90 BINARY_AND
-&lt;a name="rest_code_323fbbfd5e3b434591b7f331bbc954a1-42"&gt;&lt;/a&gt;             91 LOAD_CONST               5
-&lt;a name="rest_code_323fbbfd5e3b434591b7f331bbc954a1-43"&gt;&lt;/a&gt;             94 BINARY_XOR
-&lt;a name="rest_code_323fbbfd5e3b434591b7f331bbc954a1-44"&gt;&lt;/a&gt;             95 LOAD_CONST               6
-&lt;a name="rest_code_323fbbfd5e3b434591b7f331bbc954a1-45"&gt;&lt;/a&gt;             98 BINARY_XOR
-&lt;a name="rest_code_323fbbfd5e3b434591b7f331bbc954a1-46"&gt;&lt;/a&gt;             99 LOAD_GLOBAL              5
-&lt;a name="rest_code_323fbbfd5e3b434591b7f331bbc954a1-47"&gt;&lt;/a&gt;            102 LOAD_FAST                3
-&lt;a name="rest_code_323fbbfd5e3b434591b7f331bbc954a1-48"&gt;&lt;/a&gt;            105 CALL_FUNCTION            1
-&lt;a name="rest_code_323fbbfd5e3b434591b7f331bbc954a1-49"&gt;&lt;/a&gt;            108 COMPARE_OP               2 (==)
-&lt;a name="rest_code_323fbbfd5e3b434591b7f331bbc954a1-50"&gt;&lt;/a&gt;            111 LIST_APPEND              2
-&lt;a name="rest_code_323fbbfd5e3b434591b7f331bbc954a1-51"&gt;&lt;/a&gt;            114 JUMP_ABSOLUTE           62
-&lt;a name="rest_code_323fbbfd5e3b434591b7f331bbc954a1-52"&gt;&lt;/a&gt;        &amp;gt;&amp;gt;  117 CALL_FUNCTION            1
-&lt;a name="rest_code_323fbbfd5e3b434591b7f331bbc954a1-53"&gt;&lt;/a&gt;            120 RETURN_VALUE
+&lt;pre class="code text"&gt;&lt;a name="rest_code_a470553ecb0c4fa7aaec88052ebdc707-1"&gt;&lt;/a&gt;co_argcount 1
+&lt;a name="rest_code_a470553ecb0c4fa7aaec88052ebdc707-2"&gt;&lt;/a&gt;co_consts (None, '4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89', 'hex', 89, 255, 115, 50)
+&lt;a name="rest_code_a470553ecb0c4fa7aaec88052ebdc707-3"&gt;&lt;/a&gt;co_flags 67
+&lt;a name="rest_code_a470553ecb0c4fa7aaec88052ebdc707-4"&gt;&lt;/a&gt;co_name check_password
+&lt;a name="rest_code_a470553ecb0c4fa7aaec88052ebdc707-5"&gt;&lt;/a&gt;co_names ('decode', 'len', 'False', 'all', 'zip', 'ord')
+&lt;a name="rest_code_a470553ecb0c4fa7aaec88052ebdc707-6"&gt;&lt;/a&gt;co_nlocals 4
+&lt;a name="rest_code_a470553ecb0c4fa7aaec88052ebdc707-7"&gt;&lt;/a&gt;co_stacksize 6
+&lt;a name="rest_code_a470553ecb0c4fa7aaec88052ebdc707-8"&gt;&lt;/a&gt;co_varnames ('s', 'good', 'cs', 'cg')
+&lt;a name="rest_code_a470553ecb0c4fa7aaec88052ebdc707-9"&gt;&lt;/a&gt;              0 LOAD_CONST               1
+&lt;a name="rest_code_a470553ecb0c4fa7aaec88052ebdc707-10"&gt;&lt;/a&gt;              3 LOAD_ATTR                0
+&lt;a name="rest_code_a470553ecb0c4fa7aaec88052ebdc707-11"&gt;&lt;/a&gt;              6 LOAD_CONST               2
+&lt;a name="rest_code_a470553ecb0c4fa7aaec88052ebdc707-12"&gt;&lt;/a&gt;              9 CALL_FUNCTION            1
+&lt;a name="rest_code_a470553ecb0c4fa7aaec88052ebdc707-13"&gt;&lt;/a&gt;             12 STORE_FAST               1
+&lt;a name="rest_code_a470553ecb0c4fa7aaec88052ebdc707-14"&gt;&lt;/a&gt;             15 LOAD_GLOBAL              1
+&lt;a name="rest_code_a470553ecb0c4fa7aaec88052ebdc707-15"&gt;&lt;/a&gt;             18 LOAD_FAST                0
+&lt;a name="rest_code_a470553ecb0c4fa7aaec88052ebdc707-16"&gt;&lt;/a&gt;             21 CALL_FUNCTION            1
+&lt;a name="rest_code_a470553ecb0c4fa7aaec88052ebdc707-17"&gt;&lt;/a&gt;             24 LOAD_GLOBAL              1
+&lt;a name="rest_code_a470553ecb0c4fa7aaec88052ebdc707-18"&gt;&lt;/a&gt;             27 LOAD_FAST                1
+&lt;a name="rest_code_a470553ecb0c4fa7aaec88052ebdc707-19"&gt;&lt;/a&gt;             30 CALL_FUNCTION            1
+&lt;a name="rest_code_a470553ecb0c4fa7aaec88052ebdc707-20"&gt;&lt;/a&gt;             33 COMPARE_OP               3 (!=)
+&lt;a name="rest_code_a470553ecb0c4fa7aaec88052ebdc707-21"&gt;&lt;/a&gt;             36 POP_JUMP_IF_FALSE       43
+&lt;a name="rest_code_a470553ecb0c4fa7aaec88052ebdc707-22"&gt;&lt;/a&gt;             39 LOAD_GLOBAL              2
+&lt;a name="rest_code_a470553ecb0c4fa7aaec88052ebdc707-23"&gt;&lt;/a&gt;             42 RETURN_VALUE
+&lt;a name="rest_code_a470553ecb0c4fa7aaec88052ebdc707-24"&gt;&lt;/a&gt;        &amp;gt;&amp;gt;   43 LOAD_GLOBAL              3
+&lt;a name="rest_code_a470553ecb0c4fa7aaec88052ebdc707-25"&gt;&lt;/a&gt;             46 BUILD_LIST               0
+&lt;a name="rest_code_a470553ecb0c4fa7aaec88052ebdc707-26"&gt;&lt;/a&gt;             49 LOAD_GLOBAL              4
+&lt;a name="rest_code_a470553ecb0c4fa7aaec88052ebdc707-27"&gt;&lt;/a&gt;             52 LOAD_FAST                0
+&lt;a name="rest_code_a470553ecb0c4fa7aaec88052ebdc707-28"&gt;&lt;/a&gt;             55 LOAD_FAST                1
+&lt;a name="rest_code_a470553ecb0c4fa7aaec88052ebdc707-29"&gt;&lt;/a&gt;             58 CALL_FUNCTION            2
+&lt;a name="rest_code_a470553ecb0c4fa7aaec88052ebdc707-30"&gt;&lt;/a&gt;             61 GET_ITER
+&lt;a name="rest_code_a470553ecb0c4fa7aaec88052ebdc707-31"&gt;&lt;/a&gt;        &amp;gt;&amp;gt;   62 FOR_ITER                52 (to 117)
+&lt;a name="rest_code_a470553ecb0c4fa7aaec88052ebdc707-32"&gt;&lt;/a&gt;             65 UNPACK_SEQUENCE          2
+&lt;a name="rest_code_a470553ecb0c4fa7aaec88052ebdc707-33"&gt;&lt;/a&gt;             68 STORE_FAST               2
+&lt;a name="rest_code_a470553ecb0c4fa7aaec88052ebdc707-34"&gt;&lt;/a&gt;             71 STORE_FAST               3
+&lt;a name="rest_code_a470553ecb0c4fa7aaec88052ebdc707-35"&gt;&lt;/a&gt;             74 LOAD_GLOBAL              5
+&lt;a name="rest_code_a470553ecb0c4fa7aaec88052ebdc707-36"&gt;&lt;/a&gt;             77 LOAD_FAST                2
+&lt;a name="rest_code_a470553ecb0c4fa7aaec88052ebdc707-37"&gt;&lt;/a&gt;             80 CALL_FUNCTION            1
+&lt;a name="rest_code_a470553ecb0c4fa7aaec88052ebdc707-38"&gt;&lt;/a&gt;             83 LOAD_CONST               3
+&lt;a name="rest_code_a470553ecb0c4fa7aaec88052ebdc707-39"&gt;&lt;/a&gt;             86 BINARY_SUBTRACT
+&lt;a name="rest_code_a470553ecb0c4fa7aaec88052ebdc707-40"&gt;&lt;/a&gt;             87 LOAD_CONST               4
+&lt;a name="rest_code_a470553ecb0c4fa7aaec88052ebdc707-41"&gt;&lt;/a&gt;             90 BINARY_AND
+&lt;a name="rest_code_a470553ecb0c4fa7aaec88052ebdc707-42"&gt;&lt;/a&gt;             91 LOAD_CONST               5
+&lt;a name="rest_code_a470553ecb0c4fa7aaec88052ebdc707-43"&gt;&lt;/a&gt;             94 BINARY_XOR
+&lt;a name="rest_code_a470553ecb0c4fa7aaec88052ebdc707-44"&gt;&lt;/a&gt;             95 LOAD_CONST               6
+&lt;a name="rest_code_a470553ecb0c4fa7aaec88052ebdc707-45"&gt;&lt;/a&gt;             98 BINARY_XOR
+&lt;a name="rest_code_a470553ecb0c4fa7aaec88052ebdc707-46"&gt;&lt;/a&gt;             99 LOAD_GLOBAL              5
+&lt;a name="rest_code_a470553ecb0c4fa7aaec88052ebdc707-47"&gt;&lt;/a&gt;            102 LOAD_FAST                3
+&lt;a name="rest_code_a470553ecb0c4fa7aaec88052ebdc707-48"&gt;&lt;/a&gt;            105 CALL_FUNCTION            1
+&lt;a name="rest_code_a470553ecb0c4fa7aaec88052ebdc707-49"&gt;&lt;/a&gt;            108 COMPARE_OP               2 (==)
+&lt;a name="rest_code_a470553ecb0c4fa7aaec88052ebdc707-50"&gt;&lt;/a&gt;            111 LIST_APPEND              2
+&lt;a name="rest_code_a470553ecb0c4fa7aaec88052ebdc707-51"&gt;&lt;/a&gt;            114 JUMP_ABSOLUTE           62
+&lt;a name="rest_code_a470553ecb0c4fa7aaec88052ebdc707-52"&gt;&lt;/a&gt;        &amp;gt;&amp;gt;  117 CALL_FUNCTION            1
+&lt;a name="rest_code_a470553ecb0c4fa7aaec88052ebdc707-53"&gt;&lt;/a&gt;            120 RETURN_VALUE
 &lt;/pre&gt;&lt;p&gt;Dla niewtajemniczonych to może wyglądać na &lt;em&gt;elficki&lt;/em&gt;. W rzeczywistości jest to bajtkod Pythona — zestaw instrukcji używany przez maszynę wirtualną Pythona (CPython 2.7.) Python, podobnie jak wiele innych języków, używa kompilatora do tłumaczenia kodu źródłowego czytelnego dla ludzi na coś bardziej odpowiedniego dla komputerów. Kod Pythona tłumaczony jest na bajtkod, który jest wykonywany przez maszynę wirtualną CPythona. Bajtkod CPythona może być używany na różnym sprzęcie, podczas gdy kod maszynowy nie może. Z drugiej strony kod maszynowy jest zazwyczaj szybszy niż języki oparte na maszynach wirtualnych i bajtkodzie. (Java i C# działają tak jak Python, C jest tłumaczone prosto do kodu maszynowego)&lt;/p&gt;
 &lt;p&gt;To jest wewnętrzna reprezentacja funkcji Pythona. Pierwsze kilka linii to zmienne należące do obiektu &lt;tt class="docutils literal"&gt;f.__code__&lt;/tt&gt; naszej funkcji. Wiemy, że funkcja:&lt;/p&gt;
 &lt;ul class="simple"&gt;
@@ -293,129 +293,129 @@ need to call it via the shell.&lt;/p&gt;
 &lt;div class="section" id="reverse-engineering-bajtkodu-pythona-reczne-odtwarzanie-funkcji"&gt;
 &lt;h2&gt;Reverse-engineering bajtkodu Pythona: ręczne odtwarzanie funkcji&lt;/h2&gt;
 &lt;p&gt;Zacząłem od odtworzenia oryginalnego pliku z firmware’em. Utworzyłem pustą funkcję i napisałem trochę kodu, który wypisuje zawartość &lt;tt class="docutils literal"&gt;__code__&lt;/tt&gt; i wyjście &lt;tt class="docutils literal"&gt;dis.dis&lt;/tt&gt;. Dodałem też kolorowanie wyjścia, by łatwiej się czytało:&lt;/p&gt;
-&lt;pre class="code python"&gt;&lt;a name="rest_code_27179a863014424e8d5e5af3aa0fb05e-1"&gt;&lt;/a&gt;&lt;span class="ch"&gt;#!/usr/bin/env python2&lt;/span&gt;
-&lt;a name="rest_code_27179a863014424e8d5e5af3aa0fb05e-2"&gt;&lt;/a&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;dis&lt;/span&gt;
-&lt;a name="rest_code_27179a863014424e8d5e5af3aa0fb05e-3"&gt;&lt;/a&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;sys&lt;/span&gt;
-&lt;a name="rest_code_27179a863014424e8d5e5af3aa0fb05e-4"&gt;&lt;/a&gt;
-&lt;a name="rest_code_27179a863014424e8d5e5af3aa0fb05e-5"&gt;&lt;/a&gt;&lt;span class="c1"&gt;# Write code here&lt;/span&gt;
-&lt;a name="rest_code_27179a863014424e8d5e5af3aa0fb05e-6"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;check_password&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-&lt;a name="rest_code_27179a863014424e8d5e5af3aa0fb05e-7"&gt;&lt;/a&gt;    &lt;span class="k"&gt;pass&lt;/span&gt;
-&lt;a name="rest_code_27179a863014424e8d5e5af3aa0fb05e-8"&gt;&lt;/a&gt;
-&lt;a name="rest_code_27179a863014424e8d5e5af3aa0fb05e-9"&gt;&lt;/a&gt;&lt;span class="c1"&gt;# Reverse engineering the code&lt;/span&gt;
-&lt;a name="rest_code_27179a863014424e8d5e5af3aa0fb05e-10"&gt;&lt;/a&gt;&lt;span class="n"&gt;cnames&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'co_argcount'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'co_consts'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'co_flags'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'co_name'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'co_names'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'co_nlocals'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'co_stacksize'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'co_varnames'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_27179a863014424e8d5e5af3aa0fb05e-11"&gt;&lt;/a&gt;&lt;span class="n"&gt;cvalues&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'hex'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;89&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;255&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;115&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;50&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="mi"&gt;67&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'check_password'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'decode'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'len'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'False'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'all'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'zip'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'ord'&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;6&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'s'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'good'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'cs'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'cg'&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-&lt;a name="rest_code_27179a863014424e8d5e5af3aa0fb05e-12"&gt;&lt;/a&gt;
-&lt;a name="rest_code_27179a863014424e8d5e5af3aa0fb05e-13"&gt;&lt;/a&gt;&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;ov&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;zip&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cnames&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;cvalues&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-&lt;a name="rest_code_27179a863014424e8d5e5af3aa0fb05e-14"&gt;&lt;/a&gt;    &lt;span class="n"&gt;v&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;getattr&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;check_password&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="vm"&gt;__code__&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_27179a863014424e8d5e5af3aa0fb05e-15"&gt;&lt;/a&gt;    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;v&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="n"&gt;ov&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-&lt;a name="rest_code_27179a863014424e8d5e5af3aa0fb05e-16"&gt;&lt;/a&gt;        &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stderr&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'&lt;/span&gt;&lt;span class="se"&gt;\033&lt;/span&gt;&lt;span class="s1"&gt;[1;32m'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_27179a863014424e8d5e5af3aa0fb05e-17"&gt;&lt;/a&gt;    &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-&lt;a name="rest_code_27179a863014424e8d5e5af3aa0fb05e-18"&gt;&lt;/a&gt;        &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stderr&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'&lt;/span&gt;&lt;span class="se"&gt;\033&lt;/span&gt;&lt;span class="s1"&gt;[1;31m'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_27179a863014424e8d5e5af3aa0fb05e-19"&gt;&lt;/a&gt;    &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stderr&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;flush&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;a name="rest_code_27179a863014424e8d5e5af3aa0fb05e-20"&gt;&lt;/a&gt;
-&lt;a name="rest_code_27179a863014424e8d5e5af3aa0fb05e-21"&gt;&lt;/a&gt;    &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stdout&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="s2"&gt;" "&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;v&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="s2"&gt;"&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s2"&gt;"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_27179a863014424e8d5e5af3aa0fb05e-22"&gt;&lt;/a&gt;    &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stdout&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;flush&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;a name="rest_code_27179a863014424e8d5e5af3aa0fb05e-23"&gt;&lt;/a&gt;
-&lt;a name="rest_code_27179a863014424e8d5e5af3aa0fb05e-24"&gt;&lt;/a&gt;    &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stderr&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'&lt;/span&gt;&lt;span class="se"&gt;\033&lt;/span&gt;&lt;span class="s1"&gt;[0m'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_27179a863014424e8d5e5af3aa0fb05e-25"&gt;&lt;/a&gt;    &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stderr&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;flush&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;a name="rest_code_27179a863014424e8d5e5af3aa0fb05e-26"&gt;&lt;/a&gt;
-&lt;a name="rest_code_27179a863014424e8d5e5af3aa0fb05e-27"&gt;&lt;/a&gt;&lt;span class="n"&gt;dis&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;dis&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;check_password&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_7e3519e576ad482eacd3a4a8b675e621-1"&gt;&lt;/a&gt;&lt;span class="ch"&gt;#!/usr/bin/env python2&lt;/span&gt;
+&lt;a name="rest_code_7e3519e576ad482eacd3a4a8b675e621-2"&gt;&lt;/a&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;dis&lt;/span&gt;
+&lt;a name="rest_code_7e3519e576ad482eacd3a4a8b675e621-3"&gt;&lt;/a&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;sys&lt;/span&gt;
+&lt;a name="rest_code_7e3519e576ad482eacd3a4a8b675e621-4"&gt;&lt;/a&gt;
+&lt;a name="rest_code_7e3519e576ad482eacd3a4a8b675e621-5"&gt;&lt;/a&gt;&lt;span class="c1"&gt;# Write code here&lt;/span&gt;
+&lt;a name="rest_code_7e3519e576ad482eacd3a4a8b675e621-6"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;check_password&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;a name="rest_code_7e3519e576ad482eacd3a4a8b675e621-7"&gt;&lt;/a&gt;    &lt;span class="k"&gt;pass&lt;/span&gt;
+&lt;a name="rest_code_7e3519e576ad482eacd3a4a8b675e621-8"&gt;&lt;/a&gt;
+&lt;a name="rest_code_7e3519e576ad482eacd3a4a8b675e621-9"&gt;&lt;/a&gt;&lt;span class="c1"&gt;# Reverse engineering the code&lt;/span&gt;
+&lt;a name="rest_code_7e3519e576ad482eacd3a4a8b675e621-10"&gt;&lt;/a&gt;&lt;span class="n"&gt;cnames&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'co_argcount'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'co_consts'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'co_flags'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'co_name'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'co_names'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'co_nlocals'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'co_stacksize'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'co_varnames'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_7e3519e576ad482eacd3a4a8b675e621-11"&gt;&lt;/a&gt;&lt;span class="n"&gt;cvalues&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'hex'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;89&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;255&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;115&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;50&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="mi"&gt;67&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'check_password'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'decode'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'len'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'False'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'all'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'zip'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'ord'&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;6&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'s'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'good'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'cs'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'cg'&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;a name="rest_code_7e3519e576ad482eacd3a4a8b675e621-12"&gt;&lt;/a&gt;
+&lt;a name="rest_code_7e3519e576ad482eacd3a4a8b675e621-13"&gt;&lt;/a&gt;&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;ov&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;zip&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cnames&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;cvalues&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;a name="rest_code_7e3519e576ad482eacd3a4a8b675e621-14"&gt;&lt;/a&gt;    &lt;span class="n"&gt;v&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;getattr&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;check_password&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="vm"&gt;__code__&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_7e3519e576ad482eacd3a4a8b675e621-15"&gt;&lt;/a&gt;    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;v&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="n"&gt;ov&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;a name="rest_code_7e3519e576ad482eacd3a4a8b675e621-16"&gt;&lt;/a&gt;        &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stderr&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'&lt;/span&gt;&lt;span class="se"&gt;\033&lt;/span&gt;&lt;span class="s1"&gt;[1;32m'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_7e3519e576ad482eacd3a4a8b675e621-17"&gt;&lt;/a&gt;    &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;a name="rest_code_7e3519e576ad482eacd3a4a8b675e621-18"&gt;&lt;/a&gt;        &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stderr&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'&lt;/span&gt;&lt;span class="se"&gt;\033&lt;/span&gt;&lt;span class="s1"&gt;[1;31m'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_7e3519e576ad482eacd3a4a8b675e621-19"&gt;&lt;/a&gt;    &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stderr&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;flush&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;a name="rest_code_7e3519e576ad482eacd3a4a8b675e621-20"&gt;&lt;/a&gt;
+&lt;a name="rest_code_7e3519e576ad482eacd3a4a8b675e621-21"&gt;&lt;/a&gt;    &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stdout&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="s2"&gt;" "&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;v&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="s2"&gt;"&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s2"&gt;"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_7e3519e576ad482eacd3a4a8b675e621-22"&gt;&lt;/a&gt;    &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stdout&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;flush&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;a name="rest_code_7e3519e576ad482eacd3a4a8b675e621-23"&gt;&lt;/a&gt;
+&lt;a name="rest_code_7e3519e576ad482eacd3a4a8b675e621-24"&gt;&lt;/a&gt;    &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stderr&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'&lt;/span&gt;&lt;span class="se"&gt;\033&lt;/span&gt;&lt;span class="s1"&gt;[0m'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_7e3519e576ad482eacd3a4a8b675e621-25"&gt;&lt;/a&gt;    &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stderr&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;flush&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;a name="rest_code_7e3519e576ad482eacd3a4a8b675e621-26"&gt;&lt;/a&gt;
+&lt;a name="rest_code_7e3519e576ad482eacd3a4a8b675e621-27"&gt;&lt;/a&gt;&lt;span class="n"&gt;dis&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;dis&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;check_password&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;Jeśli uruchomimy ten solver, otrzymamy następujące wyjście (tekst w nawiasach kwadratowych dopisany przeze mnie):&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_9bb4582b37ef403ea2dba6afbf7dc62c-1"&gt;&lt;/a&gt;co_argcount 1            [OK]
-&lt;a name="rest_code_9bb4582b37ef403ea2dba6afbf7dc62c-2"&gt;&lt;/a&gt;co_consts (None,)        [1/7 się zgadza]
-&lt;a name="rest_code_9bb4582b37ef403ea2dba6afbf7dc62c-3"&gt;&lt;/a&gt;co_flags 67              [OK]
-&lt;a name="rest_code_9bb4582b37ef403ea2dba6afbf7dc62c-4"&gt;&lt;/a&gt;co_name check_password   [OK]
-&lt;a name="rest_code_9bb4582b37ef403ea2dba6afbf7dc62c-5"&gt;&lt;/a&gt;co_names ()              [0/6 się zgadza]
-&lt;a name="rest_code_9bb4582b37ef403ea2dba6afbf7dc62c-6"&gt;&lt;/a&gt;co_nlocals 1             [powinno być 4]
-&lt;a name="rest_code_9bb4582b37ef403ea2dba6afbf7dc62c-7"&gt;&lt;/a&gt;co_stacksize 1           [powinno być 6]
-&lt;a name="rest_code_9bb4582b37ef403ea2dba6afbf7dc62c-8"&gt;&lt;/a&gt;co_varnames ('s',)       [1/4 się zgadza]
-&lt;a name="rest_code_9bb4582b37ef403ea2dba6afbf7dc62c-9"&gt;&lt;/a&gt;  7           0 LOAD_CONST               0 (None)
-&lt;a name="rest_code_9bb4582b37ef403ea2dba6afbf7dc62c-10"&gt;&lt;/a&gt;              3 RETURN_VALUE
+&lt;pre class="code text"&gt;&lt;a name="rest_code_e1ad0af9b91c4c3baded450bb45e3d7d-1"&gt;&lt;/a&gt;co_argcount 1            [OK]
+&lt;a name="rest_code_e1ad0af9b91c4c3baded450bb45e3d7d-2"&gt;&lt;/a&gt;co_consts (None,)        [1/7 się zgadza]
+&lt;a name="rest_code_e1ad0af9b91c4c3baded450bb45e3d7d-3"&gt;&lt;/a&gt;co_flags 67              [OK]
+&lt;a name="rest_code_e1ad0af9b91c4c3baded450bb45e3d7d-4"&gt;&lt;/a&gt;co_name check_password   [OK]
+&lt;a name="rest_code_e1ad0af9b91c4c3baded450bb45e3d7d-5"&gt;&lt;/a&gt;co_names ()              [0/6 się zgadza]
+&lt;a name="rest_code_e1ad0af9b91c4c3baded450bb45e3d7d-6"&gt;&lt;/a&gt;co_nlocals 1             [powinno być 4]
+&lt;a name="rest_code_e1ad0af9b91c4c3baded450bb45e3d7d-7"&gt;&lt;/a&gt;co_stacksize 1           [powinno być 6]
+&lt;a name="rest_code_e1ad0af9b91c4c3baded450bb45e3d7d-8"&gt;&lt;/a&gt;co_varnames ('s',)       [1/4 się zgadza]
+&lt;a name="rest_code_e1ad0af9b91c4c3baded450bb45e3d7d-9"&gt;&lt;/a&gt;  7           0 LOAD_CONST               0 (None)
+&lt;a name="rest_code_e1ad0af9b91c4c3baded450bb45e3d7d-10"&gt;&lt;/a&gt;              3 RETURN_VALUE
 &lt;/pre&gt;&lt;p&gt;Widzimy (przy pomocy kolorów, których tu nie ma), że &lt;tt class="docutils literal"&gt;co_argcount&lt;/tt&gt;, &lt;tt class="docutils literal"&gt;co_flags&lt;/tt&gt;, &lt;tt class="docutils literal"&gt;co_name&lt;/tt&gt; są ustawione poprawnie. Mamy też jedną ze zmiennych (&lt;tt class="docutils literal"&gt;None&lt;/tt&gt;, jest w każdej funkcji) i jedną nazwę zmiennej (nazwę argumentu &lt;tt class="docutils literal"&gt;s&lt;/tt&gt;). Widzimy wyjście &lt;tt class="docutils literal"&gt;dis.dis()&lt;/tt&gt;. O ile jest podobne do tego z zadania, to jest kilka zauważalnych różnic: nie ma &lt;tt class="docutils literal"&gt;7&lt;/tt&gt; na początku (numer linii), a instrukcje &lt;tt class="docutils literal"&gt;LOAD_CONST&lt;/tt&gt; nie miały niczego w nawiasach (tylko porównania i pętle coś miały). To utrudnia czytanie bajtkodu, ale to jest wciąż możliwe. (Początkowo chciałem sobie pomóc narzędziem &lt;tt class="docutils literal"&gt;diff&lt;/tt&gt;, ale nie jest trudno to zrobić ręcznie. Użyłem &lt;tt class="docutils literal"&gt;diff&lt;/tt&gt; do ostatecznego sprawdzenia po ręcznej „konwersji”)&lt;/p&gt;
 &lt;p&gt;Zatrzymajmy się na chwilę i spójrzmy na stałe i nazwy. Po długim stringu pojawia się &lt;tt class="docutils literal"&gt;hex&lt;/tt&gt;, a jedną ze stałych jest &lt;tt class="docutils literal"&gt;decode&lt;/tt&gt;. To znaczy, że musimy użyć &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;str.decode('hex')&lt;/span&gt;&lt;/tt&gt; by utworzyć (byte)string z pewną informacją. Odpowiedzi do misji są czytelne dla ludzi, a ten string nie jest — więc musimy zrobić coś więcej.&lt;/p&gt;
 &lt;p&gt;Spróbujmy odtworzyć oryginalny kod misji. VM Pythona opiera się na stosie. W bajtkodzie powyżej widzimy, że instrukcje przyjmują 0 lub 1 argument. Niektóre z nich dodają obiekty na stos, inne wykonują akcje i usuwają rzeczy ze stosu. Większość nazw instrukcji jest łatwa do zrozumienia, ale pełna lista jest dostępna w &lt;a class="reference external" href="https://docs.python.org/2/library/dis.html#python-bytecode-instructions"&gt;dokumentacji modułu dis&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Instrukcje takie jak &lt;tt class="docutils literal"&gt;LOAD&lt;/tt&gt; czy &lt;tt class="docutils literal"&gt;STORE&lt;/tt&gt; odwołują się do indeksów w krotkach constants/names/varnames. Aby było łatwiej, oto “tabelka” tych indeksów:&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_d5849fbf143b4fb4819b0614043a9530-1"&gt;&lt;/a&gt;constants
-&lt;a name="rest_code_d5849fbf143b4fb4819b0614043a9530-2"&gt;&lt;/a&gt; 0     1                                                       2      3   4    5    6
-&lt;a name="rest_code_d5849fbf143b4fb4819b0614043a9530-3"&gt;&lt;/a&gt;(None, '4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89', 'hex', 89, 255, 115, 50)
-&lt;a name="rest_code_d5849fbf143b4fb4819b0614043a9530-4"&gt;&lt;/a&gt;
-&lt;a name="rest_code_d5849fbf143b4fb4819b0614043a9530-5"&gt;&lt;/a&gt;names (globals, attributes)
-&lt;a name="rest_code_d5849fbf143b4fb4819b0614043a9530-6"&gt;&lt;/a&gt; 0         1      2        3      4      5
-&lt;a name="rest_code_d5849fbf143b4fb4819b0614043a9530-7"&gt;&lt;/a&gt;('decode', 'len', 'False', 'all', 'zip', 'ord')
-&lt;a name="rest_code_d5849fbf143b4fb4819b0614043a9530-8"&gt;&lt;/a&gt;
-&lt;a name="rest_code_d5849fbf143b4fb4819b0614043a9530-9"&gt;&lt;/a&gt;varnames (locals, _fast)
-&lt;a name="rest_code_d5849fbf143b4fb4819b0614043a9530-10"&gt;&lt;/a&gt; 0    1       2     3
-&lt;a name="rest_code_d5849fbf143b4fb4819b0614043a9530-11"&gt;&lt;/a&gt;('s', 'good', 'cs', 'cg')
+&lt;pre class="code text"&gt;&lt;a name="rest_code_b1e42ce4b4ff4e09a82bbb590642d266-1"&gt;&lt;/a&gt;constants
+&lt;a name="rest_code_b1e42ce4b4ff4e09a82bbb590642d266-2"&gt;&lt;/a&gt; 0     1                                                       2      3   4    5    6
+&lt;a name="rest_code_b1e42ce4b4ff4e09a82bbb590642d266-3"&gt;&lt;/a&gt;(None, '4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89', 'hex', 89, 255, 115, 50)
+&lt;a name="rest_code_b1e42ce4b4ff4e09a82bbb590642d266-4"&gt;&lt;/a&gt;
+&lt;a name="rest_code_b1e42ce4b4ff4e09a82bbb590642d266-5"&gt;&lt;/a&gt;names (globals, attributes)
+&lt;a name="rest_code_b1e42ce4b4ff4e09a82bbb590642d266-6"&gt;&lt;/a&gt; 0         1      2        3      4      5
+&lt;a name="rest_code_b1e42ce4b4ff4e09a82bbb590642d266-7"&gt;&lt;/a&gt;('decode', 'len', 'False', 'all', 'zip', 'ord')
+&lt;a name="rest_code_b1e42ce4b4ff4e09a82bbb590642d266-8"&gt;&lt;/a&gt;
+&lt;a name="rest_code_b1e42ce4b4ff4e09a82bbb590642d266-9"&gt;&lt;/a&gt;varnames (locals, _fast)
+&lt;a name="rest_code_b1e42ce4b4ff4e09a82bbb590642d266-10"&gt;&lt;/a&gt; 0    1       2     3
+&lt;a name="rest_code_b1e42ce4b4ff4e09a82bbb590642d266-11"&gt;&lt;/a&gt;('s', 'good', 'cs', 'cg')
 &lt;/pre&gt;&lt;p&gt;W celu poprawienia czytelności, użyję “nowe” wyjście &lt;tt class="docutils literal"&gt;dis&lt;/tt&gt; z nazwami w nawiasach poniżej:&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_6468143e2db8422893d3e3c2ca9b52de-1"&gt;&lt;/a&gt; 0 LOAD_CONST               1 ('4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89')
-&lt;a name="rest_code_6468143e2db8422893d3e3c2ca9b52de-2"&gt;&lt;/a&gt; 3 LOAD_ATTR                0 (decode)
-&lt;a name="rest_code_6468143e2db8422893d3e3c2ca9b52de-3"&gt;&lt;/a&gt; 6 LOAD_CONST               2 ('hex')
-&lt;a name="rest_code_6468143e2db8422893d3e3c2ca9b52de-4"&gt;&lt;/a&gt; 9 CALL_FUNCTION            1 # funkcja pobiera 1 argument ze stosu
-&lt;a name="rest_code_6468143e2db8422893d3e3c2ca9b52de-5"&gt;&lt;/a&gt;12 STORE_FAST               1 (good)
+&lt;pre class="code text"&gt;&lt;a name="rest_code_d20ed91a74254a13a20095ed9b368af3-1"&gt;&lt;/a&gt; 0 LOAD_CONST               1 ('4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89')
+&lt;a name="rest_code_d20ed91a74254a13a20095ed9b368af3-2"&gt;&lt;/a&gt; 3 LOAD_ATTR                0 (decode)
+&lt;a name="rest_code_d20ed91a74254a13a20095ed9b368af3-3"&gt;&lt;/a&gt; 6 LOAD_CONST               2 ('hex')
+&lt;a name="rest_code_d20ed91a74254a13a20095ed9b368af3-4"&gt;&lt;/a&gt; 9 CALL_FUNCTION            1 # funkcja pobiera 1 argument ze stosu
+&lt;a name="rest_code_d20ed91a74254a13a20095ed9b368af3-5"&gt;&lt;/a&gt;12 STORE_FAST               1 (good)
 &lt;/pre&gt;&lt;p&gt;Jak wcześniej zgadywałem, pierwsza linia funkcji wygląda tak:&lt;/p&gt;
-&lt;pre class="code python"&gt;&lt;a name="rest_code_9238d91747ab45258efe87ca6168afb0-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;check_password&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-&lt;a name="rest_code_9238d91747ab45258efe87ca6168afb0-2"&gt;&lt;/a&gt;    &lt;span class="n"&gt;good&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;'4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89'&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;decode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'hex'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# new&lt;/span&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_88c80f0b3de44d16ab8e5f1075dd975e-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;check_password&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;a name="rest_code_88c80f0b3de44d16ab8e5f1075dd975e-2"&gt;&lt;/a&gt;    &lt;span class="n"&gt;good&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;'4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89'&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;decode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'hex'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# new&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;Jeśli jeszcze raz uruchomimy solver, zobaczymy że pierwsze 12 bajtów w bajtkodzie zgadza się z treścią misji. Widzimy też, że &lt;tt class="docutils literal"&gt;varnames&lt;/tt&gt; jest wypełnione w połowie, dodaliśmy dwie stałe, i jedną nazwę. Następne kilka linii wygląda tak:&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_13ed8854c4404d2b800bc11f0fd618ab-1"&gt;&lt;/a&gt;15 LOAD_GLOBAL              1
-&lt;a name="rest_code_13ed8854c4404d2b800bc11f0fd618ab-2"&gt;&lt;/a&gt;18 LOAD_FAST                0
-&lt;a name="rest_code_13ed8854c4404d2b800bc11f0fd618ab-3"&gt;&lt;/a&gt;21 CALL_FUNCTION            1
-&lt;a name="rest_code_13ed8854c4404d2b800bc11f0fd618ab-4"&gt;&lt;/a&gt;24 LOAD_GLOBAL              1
-&lt;a name="rest_code_13ed8854c4404d2b800bc11f0fd618ab-5"&gt;&lt;/a&gt;27 LOAD_FAST                1
-&lt;a name="rest_code_13ed8854c4404d2b800bc11f0fd618ab-6"&gt;&lt;/a&gt;30 CALL_FUNCTION            1
-&lt;a name="rest_code_13ed8854c4404d2b800bc11f0fd618ab-7"&gt;&lt;/a&gt;33 COMPARE_OP               3 (!=)
-&lt;a name="rest_code_13ed8854c4404d2b800bc11f0fd618ab-8"&gt;&lt;/a&gt;36 POP_JUMP_IF_FALSE       43
-&lt;a name="rest_code_13ed8854c4404d2b800bc11f0fd618ab-9"&gt;&lt;/a&gt;39 LOAD_GLOBAL              2
-&lt;a name="rest_code_13ed8854c4404d2b800bc11f0fd618ab-10"&gt;&lt;/a&gt;42 RETURN_VALUE
+&lt;pre class="code text"&gt;&lt;a name="rest_code_6deb2d6a49c545039d48e4c6d24b174b-1"&gt;&lt;/a&gt;15 LOAD_GLOBAL              1
+&lt;a name="rest_code_6deb2d6a49c545039d48e4c6d24b174b-2"&gt;&lt;/a&gt;18 LOAD_FAST                0
+&lt;a name="rest_code_6deb2d6a49c545039d48e4c6d24b174b-3"&gt;&lt;/a&gt;21 CALL_FUNCTION            1
+&lt;a name="rest_code_6deb2d6a49c545039d48e4c6d24b174b-4"&gt;&lt;/a&gt;24 LOAD_GLOBAL              1
+&lt;a name="rest_code_6deb2d6a49c545039d48e4c6d24b174b-5"&gt;&lt;/a&gt;27 LOAD_FAST                1
+&lt;a name="rest_code_6deb2d6a49c545039d48e4c6d24b174b-6"&gt;&lt;/a&gt;30 CALL_FUNCTION            1
+&lt;a name="rest_code_6deb2d6a49c545039d48e4c6d24b174b-7"&gt;&lt;/a&gt;33 COMPARE_OP               3 (!=)
+&lt;a name="rest_code_6deb2d6a49c545039d48e4c6d24b174b-8"&gt;&lt;/a&gt;36 POP_JUMP_IF_FALSE       43
+&lt;a name="rest_code_6deb2d6a49c545039d48e4c6d24b174b-9"&gt;&lt;/a&gt;39 LOAD_GLOBAL              2
+&lt;a name="rest_code_6deb2d6a49c545039d48e4c6d24b174b-10"&gt;&lt;/a&gt;42 RETURN_VALUE
 &lt;/pre&gt;&lt;p&gt;Widzimy że umieszczamy obiekt globalny na stosie i wywołujemy go z jednym argumentem. W obu przypadkach, obiekt globalny ma indeks 1, czyli &lt;tt class="docutils literal"&gt;len&lt;/tt&gt;. Dwa argumenty to &lt;tt class="docutils literal"&gt;s&lt;/tt&gt; i &lt;tt class="docutils literal"&gt;good&lt;/tt&gt;. Umieszczamy obie długości na stosie i je porównujemy. Jeśli porównanie się nie uda (są równe), przeskakujemy do instrukcji zaczynającej się na bajcie 43, w przeciwnym razie kontynuujemy wykonywanie, by załadować drugi global (False) i go zwrócić. Ta ściana tekstu tłumaczy się na następujący prosty kod:&lt;/p&gt;
-&lt;pre class="code python"&gt;&lt;a name="rest_code_1d537a0ba13d4014b9ec920e3de3b1b7-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;check_password&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-&lt;a name="rest_code_1d537a0ba13d4014b9ec920e3de3b1b7-2"&gt;&lt;/a&gt;    &lt;span class="n"&gt;good&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;'4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89'&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;decode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'hex'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_1d537a0ba13d4014b9ec920e3de3b1b7-3"&gt;&lt;/a&gt;    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;!=&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;good&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;  &lt;span class="c1"&gt;# new&lt;/span&gt;
-&lt;a name="rest_code_1d537a0ba13d4014b9ec920e3de3b1b7-4"&gt;&lt;/a&gt;        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="bp"&gt;False&lt;/span&gt;         &lt;span class="c1"&gt;# newr&lt;/span&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_e4a668cc66da446f95bb312a1356faad-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;check_password&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;a name="rest_code_e4a668cc66da446f95bb312a1356faad-2"&gt;&lt;/a&gt;    &lt;span class="n"&gt;good&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;'4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89'&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;decode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'hex'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_e4a668cc66da446f95bb312a1356faad-3"&gt;&lt;/a&gt;    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;!=&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;good&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;  &lt;span class="c1"&gt;# new&lt;/span&gt;
+&lt;a name="rest_code_e4a668cc66da446f95bb312a1356faad-4"&gt;&lt;/a&gt;        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="bp"&gt;False&lt;/span&gt;         &lt;span class="c1"&gt;# newr&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;Popatrzmy się jeszcze raz na nasze nazwy. Widzimy, że brakuje &lt;tt class="docutils literal"&gt;all&lt;/tt&gt;, &lt;tt class="docutils literal"&gt;zip&lt;/tt&gt;, &lt;tt class="docutils literal"&gt;ord&lt;/tt&gt;. Można zauważyć pewien znany wzorzec: iterujemy po obu stringach na raz (używając &lt;tt class="docutils literal"&gt;zip&lt;/tt&gt;), wykonujemy obliczenia na podstawie kodów znaków (&lt;tt class="docutils literal"&gt;ord&lt;/tt&gt;) i sprawdzamy czy wszystkie (&lt;tt class="docutils literal"&gt;all&lt;/tt&gt;) wyniki (zazwyczaj porównania) są prawdziwe.&lt;/p&gt;
 &lt;p&gt;Oto bajtkod z dopisanymi wartościami i komentarzami które tłumaczą, co się gdzie dzieje:&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_977cc9edd60442c797d7de83ec433f03-1"&gt;&lt;/a&gt;&amp;gt;&amp;gt;   43 LOAD_GLOBAL              3 (all)
-&lt;a name="rest_code_977cc9edd60442c797d7de83ec433f03-2"&gt;&lt;/a&gt;     46 BUILD_LIST               0
-&lt;a name="rest_code_977cc9edd60442c797d7de83ec433f03-3"&gt;&lt;/a&gt;     49 LOAD_GLOBAL              4 (zip)
-&lt;a name="rest_code_977cc9edd60442c797d7de83ec433f03-4"&gt;&lt;/a&gt;     52 LOAD_FAST                0 (s)
-&lt;a name="rest_code_977cc9edd60442c797d7de83ec433f03-5"&gt;&lt;/a&gt;     55 LOAD_FAST                1 (good)
-&lt;a name="rest_code_977cc9edd60442c797d7de83ec433f03-6"&gt;&lt;/a&gt;     58 CALL_FUNCTION            2           # zip(s, good)
-&lt;a name="rest_code_977cc9edd60442c797d7de83ec433f03-7"&gt;&lt;/a&gt;     61 GET_ITER                             # Początek iteracji: iter()
-&lt;a name="rest_code_977cc9edd60442c797d7de83ec433f03-8"&gt;&lt;/a&gt;&amp;gt;&amp;gt;   62 FOR_ITER                52 (to 117)  # początek iteracji pętli for (jeśli koniec iteratora, skocz +52 bajty do pozycji 117)
-&lt;a name="rest_code_977cc9edd60442c797d7de83ec433f03-9"&gt;&lt;/a&gt;     65 UNPACK_SEQUENCE          2           # rozpakuj sekwencję (a, b = sequence)
-&lt;a name="rest_code_977cc9edd60442c797d7de83ec433f03-10"&gt;&lt;/a&gt;     68 STORE_FAST               2 (cs)      # cs = wartość z s
-&lt;a name="rest_code_977cc9edd60442c797d7de83ec433f03-11"&gt;&lt;/a&gt;     71 STORE_FAST               3 (cg)      # cg = wartość z good
-&lt;a name="rest_code_977cc9edd60442c797d7de83ec433f03-12"&gt;&lt;/a&gt;     74 LOAD_GLOBAL              5 (ord)
-&lt;a name="rest_code_977cc9edd60442c797d7de83ec433f03-13"&gt;&lt;/a&gt;     77 LOAD_FAST                2 (cs)
-&lt;a name="rest_code_977cc9edd60442c797d7de83ec433f03-14"&gt;&lt;/a&gt;     80 CALL_FUNCTION            1           # umieść ord(cs) na stosie
-&lt;a name="rest_code_977cc9edd60442c797d7de83ec433f03-15"&gt;&lt;/a&gt;     83 LOAD_CONST               3 (89)
-&lt;a name="rest_code_977cc9edd60442c797d7de83ec433f03-16"&gt;&lt;/a&gt;     86 BINARY_SUBTRACT                      # - 89   [odejmij 89 od wartości na górze stosu]
-&lt;a name="rest_code_977cc9edd60442c797d7de83ec433f03-17"&gt;&lt;/a&gt;     87 LOAD_CONST               4 (255)
-&lt;a name="rest_code_977cc9edd60442c797d7de83ec433f03-18"&gt;&lt;/a&gt;     90 BINARY_AND                           # &amp;amp; 255  [bitwise AND z wartością na górze stosu]
-&lt;a name="rest_code_977cc9edd60442c797d7de83ec433f03-19"&gt;&lt;/a&gt;     91 LOAD_CONST               5 (115)
-&lt;a name="rest_code_977cc9edd60442c797d7de83ec433f03-20"&gt;&lt;/a&gt;     94 BINARY_XOR                           # ^ 115  [bitwise XOR z wartością na górze stosu]
-&lt;a name="rest_code_977cc9edd60442c797d7de83ec433f03-21"&gt;&lt;/a&gt;     95 LOAD_CONST               6 (50)
-&lt;a name="rest_code_977cc9edd60442c797d7de83ec433f03-22"&gt;&lt;/a&gt;     98 BINARY_XOR                           # ^ 50   [bitwise XOR z wartością na górze stosu]
-&lt;a name="rest_code_977cc9edd60442c797d7de83ec433f03-23"&gt;&lt;/a&gt;     99 LOAD_GLOBAL              5 (ord)
-&lt;a name="rest_code_977cc9edd60442c797d7de83ec433f03-24"&gt;&lt;/a&gt;    102 LOAD_FAST                3 (cg)
-&lt;a name="rest_code_977cc9edd60442c797d7de83ec433f03-25"&gt;&lt;/a&gt;    105 CALL_FUNCTION            1           # umieść ord(cs) na stosie
-&lt;a name="rest_code_977cc9edd60442c797d7de83ec433f03-26"&gt;&lt;/a&gt;    108 COMPARE_OP               2 (==)      # porównaj dwie wartości na stosie
-&lt;a name="rest_code_977cc9edd60442c797d7de83ec433f03-27"&gt;&lt;/a&gt;    111 LIST_APPEND              2           # dodaj wartość umieszczoną na górze sotosu do listy góra-1; usuń górę stosu (dopisz do listy tworzonej w list comprehension)
-&lt;a name="rest_code_977cc9edd60442c797d7de83ec433f03-28"&gt;&lt;/a&gt;    114 JUMP_ABSOLUTE           62           # przeskocz na początek pętli
-&lt;a name="rest_code_977cc9edd60442c797d7de83ec433f03-29"&gt;&lt;/a&gt;&amp;gt;&amp;gt;  117 CALL_FUNCTION            1           # po pętli: wywołaj all([wynik list comprehension])
-&lt;a name="rest_code_977cc9edd60442c797d7de83ec433f03-30"&gt;&lt;/a&gt;    120 RETURN_VALUE                         # zwróć wartość zwróconą przez all()
+&lt;pre class="code text"&gt;&lt;a name="rest_code_2d755efb62464699a76478e982dd777c-1"&gt;&lt;/a&gt;&amp;gt;&amp;gt;   43 LOAD_GLOBAL              3 (all)
+&lt;a name="rest_code_2d755efb62464699a76478e982dd777c-2"&gt;&lt;/a&gt;     46 BUILD_LIST               0
+&lt;a name="rest_code_2d755efb62464699a76478e982dd777c-3"&gt;&lt;/a&gt;     49 LOAD_GLOBAL              4 (zip)
+&lt;a name="rest_code_2d755efb62464699a76478e982dd777c-4"&gt;&lt;/a&gt;     52 LOAD_FAST                0 (s)
+&lt;a name="rest_code_2d755efb62464699a76478e982dd777c-5"&gt;&lt;/a&gt;     55 LOAD_FAST                1 (good)
+&lt;a name="rest_code_2d755efb62464699a76478e982dd777c-6"&gt;&lt;/a&gt;     58 CALL_FUNCTION            2           # zip(s, good)
+&lt;a name="rest_code_2d755efb62464699a76478e982dd777c-7"&gt;&lt;/a&gt;     61 GET_ITER                             # Początek iteracji: iter()
+&lt;a name="rest_code_2d755efb62464699a76478e982dd777c-8"&gt;&lt;/a&gt;&amp;gt;&amp;gt;   62 FOR_ITER                52 (to 117)  # początek iteracji pętli for (jeśli koniec iteratora, skocz +52 bajty do pozycji 117)
+&lt;a name="rest_code_2d755efb62464699a76478e982dd777c-9"&gt;&lt;/a&gt;     65 UNPACK_SEQUENCE          2           # rozpakuj sekwencję (a, b = sequence)
+&lt;a name="rest_code_2d755efb62464699a76478e982dd777c-10"&gt;&lt;/a&gt;     68 STORE_FAST               2 (cs)      # cs = wartość z s
+&lt;a name="rest_code_2d755efb62464699a76478e982dd777c-11"&gt;&lt;/a&gt;     71 STORE_FAST               3 (cg)      # cg = wartość z good
+&lt;a name="rest_code_2d755efb62464699a76478e982dd777c-12"&gt;&lt;/a&gt;     74 LOAD_GLOBAL              5 (ord)
+&lt;a name="rest_code_2d755efb62464699a76478e982dd777c-13"&gt;&lt;/a&gt;     77 LOAD_FAST                2 (cs)
+&lt;a name="rest_code_2d755efb62464699a76478e982dd777c-14"&gt;&lt;/a&gt;     80 CALL_FUNCTION            1           # umieść ord(cs) na stosie
+&lt;a name="rest_code_2d755efb62464699a76478e982dd777c-15"&gt;&lt;/a&gt;     83 LOAD_CONST               3 (89)
+&lt;a name="rest_code_2d755efb62464699a76478e982dd777c-16"&gt;&lt;/a&gt;     86 BINARY_SUBTRACT                      # - 89   [odejmij 89 od wartości na górze stosu]
+&lt;a name="rest_code_2d755efb62464699a76478e982dd777c-17"&gt;&lt;/a&gt;     87 LOAD_CONST               4 (255)
+&lt;a name="rest_code_2d755efb62464699a76478e982dd777c-18"&gt;&lt;/a&gt;     90 BINARY_AND                           # &amp;amp; 255  [bitwise AND z wartością na górze stosu]
+&lt;a name="rest_code_2d755efb62464699a76478e982dd777c-19"&gt;&lt;/a&gt;     91 LOAD_CONST               5 (115)
+&lt;a name="rest_code_2d755efb62464699a76478e982dd777c-20"&gt;&lt;/a&gt;     94 BINARY_XOR                           # ^ 115  [bitwise XOR z wartością na górze stosu]
+&lt;a name="rest_code_2d755efb62464699a76478e982dd777c-21"&gt;&lt;/a&gt;     95 LOAD_CONST               6 (50)
+&lt;a name="rest_code_2d755efb62464699a76478e982dd777c-22"&gt;&lt;/a&gt;     98 BINARY_XOR                           # ^ 50   [bitwise XOR z wartością na górze stosu]
+&lt;a name="rest_code_2d755efb62464699a76478e982dd777c-23"&gt;&lt;/a&gt;     99 LOAD_GLOBAL              5 (ord)
+&lt;a name="rest_code_2d755efb62464699a76478e982dd777c-24"&gt;&lt;/a&gt;    102 LOAD_FAST                3 (cg)
+&lt;a name="rest_code_2d755efb62464699a76478e982dd777c-25"&gt;&lt;/a&gt;    105 CALL_FUNCTION            1           # umieść ord(cs) na stosie
+&lt;a name="rest_code_2d755efb62464699a76478e982dd777c-26"&gt;&lt;/a&gt;    108 COMPARE_OP               2 (==)      # porównaj dwie wartości na stosie
+&lt;a name="rest_code_2d755efb62464699a76478e982dd777c-27"&gt;&lt;/a&gt;    111 LIST_APPEND              2           # dodaj wartość umieszczoną na górze sotosu do listy góra-1; usuń górę stosu (dopisz do listy tworzonej w list comprehension)
+&lt;a name="rest_code_2d755efb62464699a76478e982dd777c-28"&gt;&lt;/a&gt;    114 JUMP_ABSOLUTE           62           # przeskocz na początek pętli
+&lt;a name="rest_code_2d755efb62464699a76478e982dd777c-29"&gt;&lt;/a&gt;&amp;gt;&amp;gt;  117 CALL_FUNCTION            1           # po pętli: wywołaj all([wynik list comprehension])
+&lt;a name="rest_code_2d755efb62464699a76478e982dd777c-30"&gt;&lt;/a&gt;    120 RETURN_VALUE                         # zwróć wartość zwróconą przez all()
 &lt;/pre&gt;&lt;p&gt;Możemy teraz zapisać pełną odpowiedź.&lt;/p&gt;
 &lt;p&gt;&lt;a class="reference external" href="https://chriswarrick.com/listings/gynvaels-mission-11-en/mission11.py.html"&gt;listings/gynvaels-mission-11-en/mission11.py&lt;/a&gt;  &lt;a class="reference external" href="https://chriswarrick.com/listings/gynvaels-mission-11-en/mission11.py"&gt;(Źródło)&lt;/a&gt;&lt;/p&gt;
-&lt;pre class="code python"&gt;&lt;a name="rest_code_73e1d3f97a094fac895cea45e274ae00-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;check_password&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-&lt;a name="rest_code_73e1d3f97a094fac895cea45e274ae00-2"&gt;&lt;/a&gt;    &lt;span class="n"&gt;good&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;'4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89'&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;decode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'hex'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_73e1d3f97a094fac895cea45e274ae00-3"&gt;&lt;/a&gt;    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;!=&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;good&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-&lt;a name="rest_code_73e1d3f97a094fac895cea45e274ae00-4"&gt;&lt;/a&gt;        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="bp"&gt;False&lt;/span&gt;
-&lt;a name="rest_code_73e1d3f97a094fac895cea45e274ae00-5"&gt;&lt;/a&gt;
-&lt;a name="rest_code_73e1d3f97a094fac895cea45e274ae00-6"&gt;&lt;/a&gt;    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nb"&gt;all&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;&lt;span class="nb"&gt;ord&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cs&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;89&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="mi"&gt;255&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="mi"&gt;115&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="mi"&gt;50&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="nb"&gt;ord&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cg&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;cs&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;cg&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;zip&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;good&lt;/span&gt;&lt;span class="p"&gt;)])&lt;/span&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_b5853d60cfd44792baf81cdb26181b9d-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;check_password&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;a name="rest_code_b5853d60cfd44792baf81cdb26181b9d-2"&gt;&lt;/a&gt;    &lt;span class="n"&gt;good&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;'4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89'&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;decode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'hex'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_b5853d60cfd44792baf81cdb26181b9d-3"&gt;&lt;/a&gt;    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;!=&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;good&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;a name="rest_code_b5853d60cfd44792baf81cdb26181b9d-4"&gt;&lt;/a&gt;        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="bp"&gt;False&lt;/span&gt;
+&lt;a name="rest_code_b5853d60cfd44792baf81cdb26181b9d-5"&gt;&lt;/a&gt;
+&lt;a name="rest_code_b5853d60cfd44792baf81cdb26181b9d-6"&gt;&lt;/a&gt;    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nb"&gt;all&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;&lt;span class="nb"&gt;ord&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cs&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;89&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="mi"&gt;255&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="mi"&gt;115&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="mi"&gt;50&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="nb"&gt;ord&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cg&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;cs&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;cg&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;zip&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;good&lt;/span&gt;&lt;span class="p"&gt;)])&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;Ostatecznie, wyjście &lt;tt class="docutils literal"&gt;dis.dis()&lt;/tt&gt; zgadza się z tekstem z misji (za wyjątkiem usuniętych wartości, ale ID się zgadzają), nasze zmienne &lt;tt class="docutils literal"&gt;co_*&lt;/tt&gt; są zielone, i możemy rozwiązać prawdziwą zagadkę!&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Na marginesie:&lt;/strong&gt; zadanie używa list comprehension. Możesz chcieć ją zoptymalizować, usunąć nawiasy kwadratowe, i otrzymać generator expression. W ten sposób zadanie stałoby się trudniejsze, gdyż wymagałoby pracy również z wewnętrznym obiektem kodu generatora:&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_cf1dfae870d04881b6499ec935dc6dc4-1"&gt;&lt;/a&gt;co_consts (None, '4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89', 'hex', &amp;lt;code object &amp;lt;genexpr&amp;gt; at 0x104a86c30, file "mission11-genexpr.py", line 11&amp;gt;)
-&lt;a name="rest_code_cf1dfae870d04881b6499ec935dc6dc4-2"&gt;&lt;/a&gt;
-&lt;a name="rest_code_cf1dfae870d04881b6499ec935dc6dc4-3"&gt;&lt;/a&gt;46 LOAD_CONST               3 (&amp;lt;code object &amp;lt;genexpr&amp;gt; at 0x104a86c30, file "mission11-genexpr.py", line 11&amp;gt;)
+&lt;pre class="code text"&gt;&lt;a name="rest_code_4967f3fae75e4f3d9dc39ed9c1a7c263-1"&gt;&lt;/a&gt;co_consts (None, '4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89', 'hex', &amp;lt;code object &amp;lt;genexpr&amp;gt; at 0x104a86c30, file "mission11-genexpr.py", line 11&amp;gt;)
+&lt;a name="rest_code_4967f3fae75e4f3d9dc39ed9c1a7c263-2"&gt;&lt;/a&gt;
+&lt;a name="rest_code_4967f3fae75e4f3d9dc39ed9c1a7c263-3"&gt;&lt;/a&gt;46 LOAD_CONST               3 (&amp;lt;code object &amp;lt;genexpr&amp;gt; at 0x104a86c30, file "mission11-genexpr.py", line 11&amp;gt;)
 &lt;/pre&gt;&lt;p&gt;&lt;tt class="docutils literal"&gt;BINARY_*&lt;/tt&gt; i &lt;tt class="docutils literal"&gt;ord&lt;/tt&gt; zniknęły z nowego listingu. Możesz zobaczyć &lt;a class="reference external" href="https://chriswarrick.com/listings/gynvaels-mission-11-en/mission11-genexpr.py.html"&gt;zmodyfikowany kod&lt;/a&gt; (który różni się dwoma bajtami) i &lt;a class="reference external" href="https://chriswarrick.com/listings/gynvaels-mission-11-en/mission11-genexpr.txt.html"&gt;wyjście solvera&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Na marginesie marginesu: zna ktoś jakieś dobre tłumaczenie &lt;tt class="docutils literal"&gt;list comprehension&lt;/tt&gt;? Polska język trudna język.&lt;/p&gt;
 &lt;/div&gt;
@@ -423,18 +423,18 @@ need to call it via the shell.&lt;/p&gt;
 &lt;h2&gt;Rozwiązywanie prawdziwej zagadki&lt;/h2&gt;
 &lt;p&gt;Rozwiązałem dodatkową część zagadki. Jej &lt;em&gt;prawdziwym&lt;/em&gt; celem było odzyskanie hasła — tekstu, dla którego &lt;tt class="docutils literal"&gt;check_password()&lt;/tt&gt; zwróci True.&lt;/p&gt;
 &lt;p&gt;Ta część jest dosyć nudna. Zbudowałem słownik, w którym przypisałem każdy bajt (0…255) do wyniku obliczeń wykonywanych w pętli funkcji &lt;tt class="docutils literal"&gt;check_password()&lt;/tt&gt;. Potem użyłem jej do odzyskania oryginalnego tekstu.&lt;/p&gt;
-&lt;pre class="code python"&gt;&lt;a name="rest_code_bd31b467e7c349c59a2c1be1b1cb613a-1"&gt;&lt;/a&gt;&lt;span class="n"&gt;pass_values&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{}&lt;/span&gt;
-&lt;a name="rest_code_bd31b467e7c349c59a2c1be1b1cb613a-2"&gt;&lt;/a&gt;&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;256&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-&lt;a name="rest_code_bd31b467e7c349c59a2c1be1b1cb613a-3"&gt;&lt;/a&gt;    &lt;span class="n"&gt;result&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;89&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="mi"&gt;255&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="mi"&gt;115&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="mi"&gt;50&lt;/span&gt;
-&lt;a name="rest_code_bd31b467e7c349c59a2c1be1b1cb613a-4"&gt;&lt;/a&gt;    &lt;span class="n"&gt;pass_values&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;
-&lt;a name="rest_code_bd31b467e7c349c59a2c1be1b1cb613a-5"&gt;&lt;/a&gt;
-&lt;a name="rest_code_bd31b467e7c349c59a2c1be1b1cb613a-6"&gt;&lt;/a&gt;&lt;span class="n"&gt;good&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;'4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89'&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;decode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'hex'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_bd31b467e7c349c59a2c1be1b1cb613a-7"&gt;&lt;/a&gt;&lt;span class="n"&gt;password&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;''&lt;/span&gt;
-&lt;a name="rest_code_bd31b467e7c349c59a2c1be1b1cb613a-8"&gt;&lt;/a&gt;&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;good&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-&lt;a name="rest_code_bd31b467e7c349c59a2c1be1b1cb613a-9"&gt;&lt;/a&gt;    &lt;span class="n"&gt;password&lt;/span&gt; &lt;span class="o"&gt;+=&lt;/span&gt; &lt;span class="nb"&gt;chr&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pass_values&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nb"&gt;ord&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;)])&lt;/span&gt;
-&lt;a name="rest_code_bd31b467e7c349c59a2c1be1b1cb613a-10"&gt;&lt;/a&gt;
-&lt;a name="rest_code_bd31b467e7c349c59a2c1be1b1cb613a-11"&gt;&lt;/a&gt;&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;password&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_bd31b467e7c349c59a2c1be1b1cb613a-12"&gt;&lt;/a&gt;&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;check_password&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;password&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_727166575ab449c5af2e88b410ed0f3b-1"&gt;&lt;/a&gt;&lt;span class="n"&gt;pass_values&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{}&lt;/span&gt;
+&lt;a name="rest_code_727166575ab449c5af2e88b410ed0f3b-2"&gt;&lt;/a&gt;&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;256&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;a name="rest_code_727166575ab449c5af2e88b410ed0f3b-3"&gt;&lt;/a&gt;    &lt;span class="n"&gt;result&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;89&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="mi"&gt;255&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="mi"&gt;115&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="mi"&gt;50&lt;/span&gt;
+&lt;a name="rest_code_727166575ab449c5af2e88b410ed0f3b-4"&gt;&lt;/a&gt;    &lt;span class="n"&gt;pass_values&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;
+&lt;a name="rest_code_727166575ab449c5af2e88b410ed0f3b-5"&gt;&lt;/a&gt;
+&lt;a name="rest_code_727166575ab449c5af2e88b410ed0f3b-6"&gt;&lt;/a&gt;&lt;span class="n"&gt;good&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;'4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89'&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;decode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'hex'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_727166575ab449c5af2e88b410ed0f3b-7"&gt;&lt;/a&gt;&lt;span class="n"&gt;password&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;''&lt;/span&gt;
+&lt;a name="rest_code_727166575ab449c5af2e88b410ed0f3b-8"&gt;&lt;/a&gt;&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;good&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;a name="rest_code_727166575ab449c5af2e88b410ed0f3b-9"&gt;&lt;/a&gt;    &lt;span class="n"&gt;password&lt;/span&gt; &lt;span class="o"&gt;+=&lt;/span&gt; &lt;span class="nb"&gt;chr&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pass_values&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nb"&gt;ord&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;)])&lt;/span&gt;
+&lt;a name="rest_code_727166575ab449c5af2e88b410ed0f3b-10"&gt;&lt;/a&gt;
+&lt;a name="rest_code_727166575ab449c5af2e88b410ed0f3b-11"&gt;&lt;/a&gt;&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;password&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_727166575ab449c5af2e88b410ed0f3b-12"&gt;&lt;/a&gt;&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;check_password&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;password&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;&lt;strong&gt;Hasło brzmi:&lt;/strong&gt; &lt;tt class="docutils literal"&gt;huh, that actually worked!&lt;/tt&gt;.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="o-co-chodzilo-z-tym-paintem"&gt;
@@ -451,23 +451,23 @@ need to call it via the shell.&lt;/p&gt;
 &lt;/ul&gt;
 &lt;p&gt;Wziąłem kod &lt;tt class="docutils literal"&gt;check_password&lt;/tt&gt; i umieściłem go w pliku &lt;tt class="docutils literal"&gt;mission11.py&lt;/tt&gt; (wcześniej zacytowanym). Potem skompilowałem do &lt;tt class="docutils literal"&gt;.pyc&lt;/tt&gt; i utworzyłem z niego &lt;tt class="docutils literal"&gt;.zip&lt;/tt&gt;.&lt;/p&gt;
 &lt;p&gt;&lt;a class="reference external" href="https://chriswarrick.com/listings/gynvaels-mission-11-en/mission11.py.html"&gt;listings/gynvaels-mission-11-en/mission11.py&lt;/a&gt;  &lt;a class="reference external" href="https://chriswarrick.com/listings/gynvaels-mission-11-en/mission11.py"&gt;(Źródło)&lt;/a&gt;&lt;/p&gt;
-&lt;pre class="code python"&gt;&lt;a name="rest_code_8476882e2d4d46b89cd447409ff91178-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;check_password&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-&lt;a name="rest_code_8476882e2d4d46b89cd447409ff91178-2"&gt;&lt;/a&gt;    &lt;span class="n"&gt;good&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;'4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89'&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;decode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'hex'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_8476882e2d4d46b89cd447409ff91178-3"&gt;&lt;/a&gt;    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;!=&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;good&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-&lt;a name="rest_code_8476882e2d4d46b89cd447409ff91178-4"&gt;&lt;/a&gt;        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="bp"&gt;False&lt;/span&gt;
-&lt;a name="rest_code_8476882e2d4d46b89cd447409ff91178-5"&gt;&lt;/a&gt;
-&lt;a name="rest_code_8476882e2d4d46b89cd447409ff91178-6"&gt;&lt;/a&gt;    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nb"&gt;all&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;&lt;span class="nb"&gt;ord&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cs&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;89&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="mi"&gt;255&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="mi"&gt;115&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="mi"&gt;50&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="nb"&gt;ord&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cg&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;cs&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;cg&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;zip&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;good&lt;/span&gt;&lt;span class="p"&gt;)])&lt;/span&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_c591b860a9a346bcb26350ba5162b29c-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;check_password&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;a name="rest_code_c591b860a9a346bcb26350ba5162b29c-2"&gt;&lt;/a&gt;    &lt;span class="n"&gt;good&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;'4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89'&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;decode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'hex'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_c591b860a9a346bcb26350ba5162b29c-3"&gt;&lt;/a&gt;    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;!=&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;good&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;a name="rest_code_c591b860a9a346bcb26350ba5162b29c-4"&gt;&lt;/a&gt;        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="bp"&gt;False&lt;/span&gt;
+&lt;a name="rest_code_c591b860a9a346bcb26350ba5162b29c-5"&gt;&lt;/a&gt;
+&lt;a name="rest_code_c591b860a9a346bcb26350ba5162b29c-6"&gt;&lt;/a&gt;    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nb"&gt;all&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;&lt;span class="nb"&gt;ord&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cs&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;89&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="mi"&gt;255&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="mi"&gt;115&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="mi"&gt;50&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="nb"&gt;ord&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cg&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;cs&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;cg&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;zip&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;good&lt;/span&gt;&lt;span class="p"&gt;)])&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;Ponieważ nie jestem ekspertem w żadnym z formatów, uruchomiłem maszynę wirtualną z Windowsem i na ślepo &lt;a class="reference external" href="http://gynvael.coldwind.pl/img/secapr16_3.png"&gt;przekopiowałem parametry użyte przez Gynvaela&lt;/a&gt; do otwarcia pliku ZIP (nazwanego &lt;tt class="docutils literal"&gt;.raw&lt;/tt&gt;) w IrfanView i zapisałem jako &lt;tt class="docutils literal"&gt;.bmp&lt;/tt&gt;. Zmieniłem rozmiar na 83×2, ponieważ mój ZIP miał 498 bajty (3 BPP * 83 px * 2 px = 498 bytes) — dzięki temu i odpowiedniemu rozmiarowi plików, mogłem nie dodawać komentarzy i edytowaniu ZIPa. Dostałem ten obrazek (znowu PNG; &lt;a class="reference external" href="https://chriswarrick.com/pub/gynvaels-mission-11-en/mission11.bmp"&gt;pobierz mission11.bmp&lt;/a&gt;):&lt;/p&gt;
 &lt;img alt="/images/gynvaels-mission-11-en/mission11-zoom.png" class="align-center" src="https://chriswarrick.com/images/gynvaels-mission-11-en/mission11-zoom.png"&gt;
 &lt;p&gt;Plik &lt;tt class="docutils literal"&gt;.bmp&lt;/tt&gt; można uruchomić! Używamy tego kodu:&lt;/p&gt;
 &lt;p&gt;&lt;a class="reference external" href="https://chriswarrick.com/listings/gynvaels-mission-11-en/ziprunner.py.html"&gt;listings/gynvaels-mission-11-en/ziprunner.py&lt;/a&gt;  &lt;a class="reference external" href="https://chriswarrick.com/listings/gynvaels-mission-11-en/ziprunner.py"&gt;(Źródło)&lt;/a&gt;&lt;/p&gt;
-&lt;pre class="code python"&gt;&lt;a name="rest_code_d5a66b07f64f479085f0eaef8ee1ebdd-1"&gt;&lt;/a&gt;&lt;span class="ch"&gt;#!/usr/bin/env python2&lt;/span&gt;
-&lt;a name="rest_code_d5a66b07f64f479085f0eaef8ee1ebdd-2"&gt;&lt;/a&gt;
-&lt;a name="rest_code_d5a66b07f64f479085f0eaef8ee1ebdd-3"&gt;&lt;/a&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;sys&lt;/span&gt;
-&lt;a name="rest_code_d5a66b07f64f479085f0eaef8ee1ebdd-4"&gt;&lt;/a&gt;&lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;append&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"mission11.bmp"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_d5a66b07f64f479085f0eaef8ee1ebdd-5"&gt;&lt;/a&gt;
-&lt;a name="rest_code_d5a66b07f64f479085f0eaef8ee1ebdd-6"&gt;&lt;/a&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;mission11&lt;/span&gt;
-&lt;a name="rest_code_d5a66b07f64f479085f0eaef8ee1ebdd-7"&gt;&lt;/a&gt;&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s2"&gt;"Result:"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;mission11&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;check_password&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'huh, that actually worked!'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_96c7bd72c50741b6a355a6da179ce217-1"&gt;&lt;/a&gt;&lt;span class="ch"&gt;#!/usr/bin/env python2&lt;/span&gt;
+&lt;a name="rest_code_96c7bd72c50741b6a355a6da179ce217-2"&gt;&lt;/a&gt;
+&lt;a name="rest_code_96c7bd72c50741b6a355a6da179ce217-3"&gt;&lt;/a&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;sys&lt;/span&gt;
+&lt;a name="rest_code_96c7bd72c50741b6a355a6da179ce217-4"&gt;&lt;/a&gt;&lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;append&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"mission11.bmp"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_96c7bd72c50741b6a355a6da179ce217-5"&gt;&lt;/a&gt;
+&lt;a name="rest_code_96c7bd72c50741b6a355a6da179ce217-6"&gt;&lt;/a&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;mission11&lt;/span&gt;
+&lt;a name="rest_code_96c7bd72c50741b6a355a6da179ce217-7"&gt;&lt;/a&gt;&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s2"&gt;"Result:"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;mission11&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;check_password&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'huh, that actually worked!'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;I dostajemy to:&lt;/p&gt;
 &lt;img alt="/images/gynvaels-mission-11-en/running-bmp.png" class="align-center" src="https://chriswarrick.com/images/gynvaels-mission-11-en/running-bmp.png"&gt;
 &lt;/div&gt;
@@ -880,40 +880,40 @@ to ASCII. Programs might just crash at random. Those are often simple to fix —
 all you need is correct locale configuration.&lt;/p&gt;
 &lt;!-- TEASER_END --&gt;
 &lt;p class="lead"&gt;Has this ever happened to you?&lt;/p&gt;
-&lt;pre class="code pytb"&gt;&lt;a name="rest_code_d64e10a0180441f6847630bb5298c55c-1"&gt;&lt;/a&gt;&lt;span class="gt"&gt;Traceback (most recent call last):&lt;/span&gt;
-&lt;a name="rest_code_d64e10a0180441f6847630bb5298c55c-2"&gt;&lt;/a&gt;  File &lt;span class="nb"&gt;"aogonek.py"&lt;/span&gt;, line &lt;span class="m"&gt;1&lt;/span&gt;, in &lt;span class="n"&gt;&amp;lt;module&amp;gt;&lt;/span&gt;
-&lt;a name="rest_code_d64e10a0180441f6847630bb5298c55c-3"&gt;&lt;/a&gt;    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;u&lt;/span&gt;&lt;span class="s1"&gt;'&lt;/span&gt;&lt;span class="se"&gt;\u0105&lt;/span&gt;&lt;span class="s1"&gt;'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_d64e10a0180441f6847630bb5298c55c-4"&gt;&lt;/a&gt;&lt;span class="gr"&gt;UnicodeEncodeError&lt;/span&gt;: &lt;span class="n"&gt;'ascii' codec can't encode character '\u0105' in position 0: ordinal not in range(128)&lt;/span&gt;
-&lt;/pre&gt;&lt;pre class="code text"&gt;&lt;a name="rest_code_86a4ce4bb24547f5884c0c4aaaefc38b-1"&gt;&lt;/a&gt;Nikola: Could not guess locale for language en, using locale C
-&lt;/pre&gt;&lt;pre class="code text"&gt;&lt;a name="rest_code_72f3fae1c6704fa398da1732f8aff901-1"&gt;&lt;/a&gt;Input: ą
-&lt;a name="rest_code_72f3fae1c6704fa398da1732f8aff901-2"&gt;&lt;/a&gt;Desired ascii(): '\u0105'
-&lt;a name="rest_code_72f3fae1c6704fa398da1732f8aff901-3"&gt;&lt;/a&gt;Real ascii(): '\udcc4\udc85'
-&lt;/pre&gt;&lt;pre class="code text"&gt;&lt;a name="rest_code_527cf1df1e754a0a8a960cf010452e81-1"&gt;&lt;/a&gt;perl: warning: Setting locale failed.
-&lt;a name="rest_code_527cf1df1e754a0a8a960cf010452e81-2"&gt;&lt;/a&gt;perl: warning: Please check that your locale settings:
-&lt;a name="rest_code_527cf1df1e754a0a8a960cf010452e81-3"&gt;&lt;/a&gt;    [...]
-&lt;a name="rest_code_527cf1df1e754a0a8a960cf010452e81-4"&gt;&lt;/a&gt;    are supported and installed on your system.
-&lt;a name="rest_code_527cf1df1e754a0a8a960cf010452e81-5"&gt;&lt;/a&gt;perl: warning: Falling back to the standard locale ("C").
+&lt;pre class="code pytb"&gt;&lt;a name="rest_code_c2aa229922a248458f2e1eb7c1f2c3b9-1"&gt;&lt;/a&gt;&lt;span class="gt"&gt;Traceback (most recent call last):&lt;/span&gt;
+&lt;a name="rest_code_c2aa229922a248458f2e1eb7c1f2c3b9-2"&gt;&lt;/a&gt;  File &lt;span class="nb"&gt;"aogonek.py"&lt;/span&gt;, line &lt;span class="m"&gt;1&lt;/span&gt;, in &lt;span class="n"&gt;&amp;lt;module&amp;gt;&lt;/span&gt;
+&lt;a name="rest_code_c2aa229922a248458f2e1eb7c1f2c3b9-3"&gt;&lt;/a&gt;    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;u&lt;/span&gt;&lt;span class="s1"&gt;'&lt;/span&gt;&lt;span class="se"&gt;\u0105&lt;/span&gt;&lt;span class="s1"&gt;'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_c2aa229922a248458f2e1eb7c1f2c3b9-4"&gt;&lt;/a&gt;&lt;span class="gr"&gt;UnicodeEncodeError&lt;/span&gt;: &lt;span class="n"&gt;'ascii' codec can't encode character '\u0105' in position 0: ordinal not in range(128)&lt;/span&gt;
+&lt;/pre&gt;&lt;pre class="code text"&gt;&lt;a name="rest_code_a59661c51e7f4691bbb1e129b00ff75e-1"&gt;&lt;/a&gt;Nikola: Could not guess locale for language en, using locale C
+&lt;/pre&gt;&lt;pre class="code text"&gt;&lt;a name="rest_code_3da3dde386414ac181b03bdfee66a89c-1"&gt;&lt;/a&gt;Input: ą
+&lt;a name="rest_code_3da3dde386414ac181b03bdfee66a89c-2"&gt;&lt;/a&gt;Desired ascii(): '\u0105'
+&lt;a name="rest_code_3da3dde386414ac181b03bdfee66a89c-3"&gt;&lt;/a&gt;Real ascii(): '\udcc4\udc85'
+&lt;/pre&gt;&lt;pre class="code text"&gt;&lt;a name="rest_code_1bd51653a7834ab49c81055248b04049-1"&gt;&lt;/a&gt;perl: warning: Setting locale failed.
+&lt;a name="rest_code_1bd51653a7834ab49c81055248b04049-2"&gt;&lt;/a&gt;perl: warning: Please check that your locale settings:
+&lt;a name="rest_code_1bd51653a7834ab49c81055248b04049-3"&gt;&lt;/a&gt;    [...]
+&lt;a name="rest_code_1bd51653a7834ab49c81055248b04049-4"&gt;&lt;/a&gt;    are supported and installed on your system.
+&lt;a name="rest_code_1bd51653a7834ab49c81055248b04049-5"&gt;&lt;/a&gt;perl: warning: Falling back to the standard locale ("C").
 &lt;/pre&gt;&lt;p class="lead"&gt;All those errors have the same root cause: incorrect locale configuration.
 To fix them all, you need to generate the missing locales and set them.&lt;/p&gt;
 &lt;div class="section" id="check-currently-used-locale"&gt;
 &lt;h2&gt;Check currently used locale&lt;/h2&gt;
 &lt;p&gt;The &lt;tt class="docutils literal"&gt;locale&lt;/tt&gt; command (without arguments) should tell you which locales you’re
 currently using.  (The list might be shorter on your end)&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_c729b905fd1b4f1195c19033ae210201-1"&gt;&lt;/a&gt;$ locale
-&lt;a name="rest_code_c729b905fd1b4f1195c19033ae210201-2"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LANG&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_c729b905fd1b4f1195c19033ae210201-3"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_CTYPE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_c729b905fd1b4f1195c19033ae210201-4"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_NUMERIC&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_c729b905fd1b4f1195c19033ae210201-5"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_TIME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_c729b905fd1b4f1195c19033ae210201-6"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_COLLATE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_c729b905fd1b4f1195c19033ae210201-7"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_MONETARY&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_c729b905fd1b4f1195c19033ae210201-8"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_MESSAGES&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_c729b905fd1b4f1195c19033ae210201-9"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_PAPER&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_c729b905fd1b4f1195c19033ae210201-10"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_NAME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_c729b905fd1b4f1195c19033ae210201-11"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_ADDRESS&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_c729b905fd1b4f1195c19033ae210201-12"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_TELEPHONE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_c729b905fd1b4f1195c19033ae210201-13"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_MEASUREMENT&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_c729b905fd1b4f1195c19033ae210201-14"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_IDENTIFICATION&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_c729b905fd1b4f1195c19033ae210201-15"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_ALL&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_4a65c327705d4939ade3fd5778cad052-1"&gt;&lt;/a&gt;$ locale
+&lt;a name="rest_code_4a65c327705d4939ade3fd5778cad052-2"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LANG&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_4a65c327705d4939ade3fd5778cad052-3"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_CTYPE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_4a65c327705d4939ade3fd5778cad052-4"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_NUMERIC&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_4a65c327705d4939ade3fd5778cad052-5"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_TIME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_4a65c327705d4939ade3fd5778cad052-6"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_COLLATE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_4a65c327705d4939ade3fd5778cad052-7"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_MONETARY&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_4a65c327705d4939ade3fd5778cad052-8"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_MESSAGES&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_4a65c327705d4939ade3fd5778cad052-9"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_PAPER&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_4a65c327705d4939ade3fd5778cad052-10"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_NAME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_4a65c327705d4939ade3fd5778cad052-11"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_ADDRESS&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_4a65c327705d4939ade3fd5778cad052-12"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_TELEPHONE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_4a65c327705d4939ade3fd5778cad052-13"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_MEASUREMENT&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_4a65c327705d4939ade3fd5778cad052-14"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_IDENTIFICATION&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_4a65c327705d4939ade3fd5778cad052-15"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_ALL&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;If any of those is set to &lt;tt class="docutils literal"&gt;C&lt;/tt&gt; or &lt;tt class="docutils literal"&gt;POSIX&lt;/tt&gt;, has a different encoding than
 &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;UTF-8&lt;/span&gt;&lt;/tt&gt; (sometimes spelled &lt;tt class="docutils literal"&gt;utf8&lt;/tt&gt;) is empty (with the exception of
 &lt;tt class="docutils literal"&gt;LC_ALL&lt;/tt&gt;), or if you see any errors, you need to reconfigure your locale.&lt;/p&gt;
@@ -923,10 +923,10 @@ currently using.  (The list might be shorter on your end)&lt;/p&gt;
 &lt;p&gt;The first thing you need to do is check locale availability. To do this, run
 &lt;tt class="docutils literal"&gt;locale &lt;span class="pre"&gt;-a&lt;/span&gt;&lt;/tt&gt;. This will produce a list of all installed locales.  You can use
 &lt;tt class="docutils literal"&gt;grep&lt;/tt&gt; to get a more reasonable list.&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_9fa587e247d8420b9a39f5a2eb409e0e-1"&gt;&lt;/a&gt;$ locale -a | grep -i utf
-&lt;a name="rest_code_9fa587e247d8420b9a39f5a2eb409e0e-2"&gt;&lt;/a&gt;&amp;lt;lists all UTF-8 locales&amp;gt;
-&lt;a name="rest_code_9fa587e247d8420b9a39f5a2eb409e0e-3"&gt;&lt;/a&gt;$ locale -a | grep -i utf | grep -i en_US
-&lt;a name="rest_code_9fa587e247d8420b9a39f5a2eb409e0e-4"&gt;&lt;/a&gt;en_US.UTF-8
+&lt;pre class="code text"&gt;&lt;a name="rest_code_69167f7fb18b4c0dac7d034668239cc7-1"&gt;&lt;/a&gt;$ locale -a | grep -i utf
+&lt;a name="rest_code_69167f7fb18b4c0dac7d034668239cc7-2"&gt;&lt;/a&gt;&amp;lt;lists all UTF-8 locales&amp;gt;
+&lt;a name="rest_code_69167f7fb18b4c0dac7d034668239cc7-3"&gt;&lt;/a&gt;$ locale -a | grep -i utf | grep -i en_US
+&lt;a name="rest_code_69167f7fb18b4c0dac7d034668239cc7-4"&gt;&lt;/a&gt;en_US.UTF-8
 &lt;/pre&gt;&lt;p&gt;The best locale to use is the one for your language, with the UTF-8 encoding.
 The locale will be used by some console apps for output. I’m going to use
 &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;en_US.UTF-8&lt;/span&gt;&lt;/tt&gt; in this guide.&lt;/p&gt;
@@ -947,7 +947,7 @@ aren’t used by ~anyone these days)&lt;/p&gt;
 &lt;h2&gt;Configure system-wide&lt;/h2&gt;
 &lt;p&gt;On some systems, you may be able to configure locale system-wide.  Check your
 system documentation for details. If your system has systemd, run&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_993f4810d984467e8e179ef429c3a832-1"&gt;&lt;/a&gt;sudo localectl set-locale LANG=en_US.UTF-8
+&lt;pre class="code text"&gt;&lt;a name="rest_code_b7e07f2e57054206ad4d44f94748a2c2-1"&gt;&lt;/a&gt;sudo localectl set-locale LANG=en_US.UTF-8
 &lt;/pre&gt;&lt;/div&gt;
 &lt;div class="section" id="configure-for-a-single-user"&gt;
 &lt;h2&gt;Configure for a single user&lt;/h2&gt;
@@ -957,7 +957,7 @@ ensure it’s always configured independently of system settings.&lt;/p&gt;
 &lt;p&gt;To do this, you need to edit the configuration file for your shell. If you’re
 using bash, it’s &lt;tt class="docutils literal"&gt;.bashrc&lt;/tt&gt; (or &lt;tt class="docutils literal"&gt;.bash_profile&lt;/tt&gt; on macOS). For zsh users,
 &lt;tt class="docutils literal"&gt;.zshrc&lt;/tt&gt;.  Add this line (or equivalent in your shell):&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_836f47221b9c4363ba093ead5f3a2ab0-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;export&lt;/span&gt; &lt;span class="nv"&gt;LANG&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;en_US.UTF-8 &lt;span class="nv"&gt;LC_ALL&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;en_US.UTF-8
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_7f2a60073f7c4d138f8f805f7d1e3159-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;export&lt;/span&gt; &lt;span class="nv"&gt;LANG&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;en_US.UTF-8 &lt;span class="nv"&gt;LC_ALL&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;en_US.UTF-8
 &lt;/pre&gt;&lt;p&gt;That should be enough. Note that those settings don’t apply to programs
 not launched through a shell.&lt;/p&gt;
 &lt;hr class="docutils"&gt;
@@ -1051,20 +1051,20 @@ trainwreck, though). One of the things I used in that project was a DataGrid
 bound to a list of custom objects (a DataGrid is a table, basically). And in
 order to use it, you need to use the &lt;tt class="docutils literal"&gt;INotifyPropertyChanged&lt;/tt&gt; interface &lt;a class="reference external" href="https://msdn.microsoft.com/en-us/library/ms229614(v=vs.100).aspx"&gt;(MSDN)&lt;/a&gt;.
 It involves doing something like this:&lt;/p&gt;
-&lt;pre class="code csharp"&gt;&lt;a name="rest_code_87adbf07b78945bbaf959f1f6cf593be-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;private&lt;/span&gt; &lt;span class="kt"&gt;string&lt;/span&gt; &lt;span class="n"&gt;name_&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="k"&gt;get&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="k"&gt;set&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="p"&gt;};&lt;/span&gt; &lt;span class="c1"&gt;// can also be a field&lt;/span&gt;
-&lt;a name="rest_code_87adbf07b78945bbaf959f1f6cf593be-2"&gt;&lt;/a&gt;
-&lt;a name="rest_code_87adbf07b78945bbaf959f1f6cf593be-3"&gt;&lt;/a&gt;&lt;span class="na"&gt;[JsonProperty]&lt;/span&gt;
-&lt;a name="rest_code_87adbf07b78945bbaf959f1f6cf593be-4"&gt;&lt;/a&gt;&lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;string&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;a name="rest_code_87adbf07b78945bbaf959f1f6cf593be-5"&gt;&lt;/a&gt;    &lt;span class="k"&gt;get&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;a name="rest_code_87adbf07b78945bbaf959f1f6cf593be-6"&gt;&lt;/a&gt;        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;name_&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;a name="rest_code_87adbf07b78945bbaf959f1f6cf593be-7"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;a name="rest_code_87adbf07b78945bbaf959f1f6cf593be-8"&gt;&lt;/a&gt;    &lt;span class="k"&gt;set&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;a name="rest_code_87adbf07b78945bbaf959f1f6cf593be-9"&gt;&lt;/a&gt;        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;value&lt;/span&gt; &lt;span class="p"&gt;!=&lt;/span&gt; &lt;span class="n"&gt;name_&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;a name="rest_code_87adbf07b78945bbaf959f1f6cf593be-10"&gt;&lt;/a&gt;            &lt;span class="n"&gt;name_&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="k"&gt;value&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;a name="rest_code_87adbf07b78945bbaf959f1f6cf593be-11"&gt;&lt;/a&gt;            &lt;span class="n"&gt;NotifyPropertyChanged&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"name"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;a name="rest_code_87adbf07b78945bbaf959f1f6cf593be-12"&gt;&lt;/a&gt;        &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;a name="rest_code_87adbf07b78945bbaf959f1f6cf593be-13"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;a name="rest_code_87adbf07b78945bbaf959f1f6cf593be-14"&gt;&lt;/a&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;pre class="code csharp"&gt;&lt;a name="rest_code_9146ca7ed6ad43c79e3eb09e0f9e8e19-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;private&lt;/span&gt; &lt;span class="kt"&gt;string&lt;/span&gt; &lt;span class="n"&gt;name_&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="k"&gt;get&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="k"&gt;set&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="p"&gt;};&lt;/span&gt; &lt;span class="c1"&gt;// can also be a field&lt;/span&gt;
+&lt;a name="rest_code_9146ca7ed6ad43c79e3eb09e0f9e8e19-2"&gt;&lt;/a&gt;
+&lt;a name="rest_code_9146ca7ed6ad43c79e3eb09e0f9e8e19-3"&gt;&lt;/a&gt;&lt;span class="na"&gt;[JsonProperty]&lt;/span&gt;
+&lt;a name="rest_code_9146ca7ed6ad43c79e3eb09e0f9e8e19-4"&gt;&lt;/a&gt;&lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;string&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_9146ca7ed6ad43c79e3eb09e0f9e8e19-5"&gt;&lt;/a&gt;    &lt;span class="k"&gt;get&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_9146ca7ed6ad43c79e3eb09e0f9e8e19-6"&gt;&lt;/a&gt;        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;name_&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_9146ca7ed6ad43c79e3eb09e0f9e8e19-7"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;a name="rest_code_9146ca7ed6ad43c79e3eb09e0f9e8e19-8"&gt;&lt;/a&gt;    &lt;span class="k"&gt;set&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_9146ca7ed6ad43c79e3eb09e0f9e8e19-9"&gt;&lt;/a&gt;        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;value&lt;/span&gt; &lt;span class="p"&gt;!=&lt;/span&gt; &lt;span class="n"&gt;name_&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_9146ca7ed6ad43c79e3eb09e0f9e8e19-10"&gt;&lt;/a&gt;            &lt;span class="n"&gt;name_&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="k"&gt;value&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_9146ca7ed6ad43c79e3eb09e0f9e8e19-11"&gt;&lt;/a&gt;            &lt;span class="n"&gt;NotifyPropertyChanged&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"name"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;a name="rest_code_9146ca7ed6ad43c79e3eb09e0f9e8e19-12"&gt;&lt;/a&gt;        &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;a name="rest_code_9146ca7ed6ad43c79e3eb09e0f9e8e19-13"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;a name="rest_code_9146ca7ed6ad43c79e3eb09e0f9e8e19-14"&gt;&lt;/a&gt;&lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;That’s 12 lines of code (excluding &lt;tt class="docutils literal"&gt;[JsonProperty]&lt;/tt&gt; which comes from the
 Json.NET library) for that pattern. Oh: and I need to do that for &lt;strong&gt;every&lt;/strong&gt;
 field/property of my class, because otherwise any changes to them would not be
@@ -1077,44 +1077,44 @@ attribute (which does not appear on all properties).&lt;/p&gt;
 really simple &lt;a class="reference external" href="https://www.python.org/"&gt;Python&lt;/a&gt; script and ran it. And I ended up with all 14 fields built
 for me.&lt;/p&gt;
 &lt;p&gt;&lt;a class="reference external" href="https://chriswarrick.com/listings/code-writing-code/write_properties.py.html"&gt;code-writing-code/write_properties.py&lt;/a&gt;  &lt;a class="reference external" href="https://chriswarrick.com/listings/code-writing-code/write_properties.py"&gt;(Source)&lt;/a&gt;&lt;/p&gt;
-&lt;pre class="code python"&gt;&lt;a name="rest_code_35f97d243fbc4e31b54f40576fa3de39-1"&gt;&lt;/a&gt;&lt;span class="ch"&gt;#!/usr/bin/env python3&lt;/span&gt;
-&lt;a name="rest_code_35f97d243fbc4e31b54f40576fa3de39-2"&gt;&lt;/a&gt;&lt;span class="n"&gt;TEMPLATE&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;"""&lt;/span&gt;&lt;span class="se"&gt;\&lt;/span&gt;
-&lt;a name="rest_code_35f97d243fbc4e31b54f40576fa3de39-3"&gt;&lt;/a&gt;&lt;span class="s2"&gt;        &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt;public &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt; &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt; {&lt;/span&gt;
-&lt;a name="rest_code_35f97d243fbc4e31b54f40576fa3de39-4"&gt;&lt;/a&gt;&lt;span class="s2"&gt;            get {&lt;/span&gt;
-&lt;a name="rest_code_35f97d243fbc4e31b54f40576fa3de39-5"&gt;&lt;/a&gt;&lt;span class="s2"&gt;                return &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt;_;&lt;/span&gt;
-&lt;a name="rest_code_35f97d243fbc4e31b54f40576fa3de39-6"&gt;&lt;/a&gt;&lt;span class="s2"&gt;            }&lt;/span&gt;
-&lt;a name="rest_code_35f97d243fbc4e31b54f40576fa3de39-7"&gt;&lt;/a&gt;&lt;span class="s2"&gt;            set {&lt;/span&gt;
-&lt;a name="rest_code_35f97d243fbc4e31b54f40576fa3de39-8"&gt;&lt;/a&gt;&lt;span class="s2"&gt;                if (value != &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt;_) {&lt;/span&gt;
-&lt;a name="rest_code_35f97d243fbc4e31b54f40576fa3de39-9"&gt;&lt;/a&gt;&lt;span class="s2"&gt;                    &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt;_ = value;&lt;/span&gt;
-&lt;a name="rest_code_35f97d243fbc4e31b54f40576fa3de39-10"&gt;&lt;/a&gt;&lt;span class="s2"&gt;                    NotifyPropertyChanged("&lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt;");&lt;/span&gt;
-&lt;a name="rest_code_35f97d243fbc4e31b54f40576fa3de39-11"&gt;&lt;/a&gt;&lt;span class="s2"&gt;                }&lt;/span&gt;
-&lt;a name="rest_code_35f97d243fbc4e31b54f40576fa3de39-12"&gt;&lt;/a&gt;&lt;span class="s2"&gt;            }&lt;/span&gt;
-&lt;a name="rest_code_35f97d243fbc4e31b54f40576fa3de39-13"&gt;&lt;/a&gt;&lt;span class="s2"&gt;        }&lt;/span&gt;
-&lt;a name="rest_code_35f97d243fbc4e31b54f40576fa3de39-14"&gt;&lt;/a&gt;&lt;span class="s2"&gt;"""&lt;/span&gt;
-&lt;a name="rest_code_35f97d243fbc4e31b54f40576fa3de39-15"&gt;&lt;/a&gt;&lt;span class="n"&gt;JSONPROPERTY_TEMPLATE&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;'[JsonProperty]&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s1"&gt;        '&lt;/span&gt;
-&lt;a name="rest_code_35f97d243fbc4e31b54f40576fa3de39-16"&gt;&lt;/a&gt;
-&lt;a name="rest_code_35f97d243fbc4e31b54f40576fa3de39-17"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;has_jsonproperty&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-&lt;a name="rest_code_35f97d243fbc4e31b54f40576fa3de39-18"&gt;&lt;/a&gt;    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;has_jsonproperty&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-&lt;a name="rest_code_35f97d243fbc4e31b54f40576fa3de39-19"&gt;&lt;/a&gt;        &lt;span class="n"&gt;jsonproperty&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;JSONPROPERTY_TEMPLATE&lt;/span&gt;
-&lt;a name="rest_code_35f97d243fbc4e31b54f40576fa3de39-20"&gt;&lt;/a&gt;    &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-&lt;a name="rest_code_35f97d243fbc4e31b54f40576fa3de39-21"&gt;&lt;/a&gt;        &lt;span class="n"&gt;jsonproperty&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;''&lt;/span&gt;
-&lt;a name="rest_code_35f97d243fbc4e31b54f40576fa3de39-22"&gt;&lt;/a&gt;    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;TEMPLATE&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;jsonproperty&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_35f97d243fbc4e31b54f40576fa3de39-23"&gt;&lt;/a&gt;
-&lt;a name="rest_code_35f97d243fbc4e31b54f40576fa3de39-24"&gt;&lt;/a&gt;&lt;span class="n"&gt;properties&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;
-&lt;a name="rest_code_35f97d243fbc4e31b54f40576fa3de39-25"&gt;&lt;/a&gt;    &lt;span class="s1"&gt;'1 string name'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;a name="rest_code_35f97d243fbc4e31b54f40576fa3de39-26"&gt;&lt;/a&gt;    &lt;span class="s1"&gt;'0 int another'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;a name="rest_code_35f97d243fbc4e31b54f40576fa3de39-27"&gt;&lt;/a&gt;    &lt;span class="c1"&gt;# 12 fields omitted for brevity&lt;/span&gt;
-&lt;a name="rest_code_35f97d243fbc4e31b54f40576fa3de39-28"&gt;&lt;/a&gt;&lt;span class="p"&gt;]&lt;/span&gt;
-&lt;a name="rest_code_35f97d243fbc4e31b54f40576fa3de39-29"&gt;&lt;/a&gt;&lt;span class="n"&gt;properties_split&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;split&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;p&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;properties&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
-&lt;a name="rest_code_35f97d243fbc4e31b54f40576fa3de39-30"&gt;&lt;/a&gt;
-&lt;a name="rest_code_35f97d243fbc4e31b54f40576fa3de39-31"&gt;&lt;/a&gt;&lt;span class="c1"&gt;# Private definitions (internal)&lt;/span&gt;
-&lt;a name="rest_code_35f97d243fbc4e31b54f40576fa3de39-32"&gt;&lt;/a&gt;&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;has_jsonproperty&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;properties_split&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-&lt;a name="rest_code_35f97d243fbc4e31b54f40576fa3de39-33"&gt;&lt;/a&gt;    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"        private &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt; &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt;_ { get; set; }"&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-&lt;a name="rest_code_35f97d243fbc4e31b54f40576fa3de39-34"&gt;&lt;/a&gt;
-&lt;a name="rest_code_35f97d243fbc4e31b54f40576fa3de39-35"&gt;&lt;/a&gt;&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;a name="rest_code_35f97d243fbc4e31b54f40576fa3de39-36"&gt;&lt;/a&gt;&lt;span class="c1"&gt;# Public definitions (with notifications)&lt;/span&gt;
-&lt;a name="rest_code_35f97d243fbc4e31b54f40576fa3de39-37"&gt;&lt;/a&gt;&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;has_jsonproperty&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;properties_split&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-&lt;a name="rest_code_35f97d243fbc4e31b54f40576fa3de39-38"&gt;&lt;/a&gt;    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;has_jsonproperty&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s1"&gt;'1'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_bad547c8e4754b8aa3af919066e875cb-1"&gt;&lt;/a&gt;&lt;span class="ch"&gt;#!/usr/bin/env python3&lt;/span&gt;
+&lt;a name="rest_code_bad547c8e4754b8aa3af919066e875cb-2"&gt;&lt;/a&gt;&lt;span class="n"&gt;TEMPLATE&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;"""&lt;/span&gt;&lt;span class="se"&gt;\&lt;/span&gt;
+&lt;a name="rest_code_bad547c8e4754b8aa3af919066e875cb-3"&gt;&lt;/a&gt;&lt;span class="s2"&gt;        &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt;public &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt; &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt; {&lt;/span&gt;
+&lt;a name="rest_code_bad547c8e4754b8aa3af919066e875cb-4"&gt;&lt;/a&gt;&lt;span class="s2"&gt;            get {&lt;/span&gt;
+&lt;a name="rest_code_bad547c8e4754b8aa3af919066e875cb-5"&gt;&lt;/a&gt;&lt;span class="s2"&gt;                return &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt;_;&lt;/span&gt;
+&lt;a name="rest_code_bad547c8e4754b8aa3af919066e875cb-6"&gt;&lt;/a&gt;&lt;span class="s2"&gt;            }&lt;/span&gt;
+&lt;a name="rest_code_bad547c8e4754b8aa3af919066e875cb-7"&gt;&lt;/a&gt;&lt;span class="s2"&gt;            set {&lt;/span&gt;
+&lt;a name="rest_code_bad547c8e4754b8aa3af919066e875cb-8"&gt;&lt;/a&gt;&lt;span class="s2"&gt;                if (value != &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt;_) {&lt;/span&gt;
+&lt;a name="rest_code_bad547c8e4754b8aa3af919066e875cb-9"&gt;&lt;/a&gt;&lt;span class="s2"&gt;                    &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt;_ = value;&lt;/span&gt;
+&lt;a name="rest_code_bad547c8e4754b8aa3af919066e875cb-10"&gt;&lt;/a&gt;&lt;span class="s2"&gt;                    NotifyPropertyChanged("&lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt;");&lt;/span&gt;
+&lt;a name="rest_code_bad547c8e4754b8aa3af919066e875cb-11"&gt;&lt;/a&gt;&lt;span class="s2"&gt;                }&lt;/span&gt;
+&lt;a name="rest_code_bad547c8e4754b8aa3af919066e875cb-12"&gt;&lt;/a&gt;&lt;span class="s2"&gt;            }&lt;/span&gt;
+&lt;a name="rest_code_bad547c8e4754b8aa3af919066e875cb-13"&gt;&lt;/a&gt;&lt;span class="s2"&gt;        }&lt;/span&gt;
+&lt;a name="rest_code_bad547c8e4754b8aa3af919066e875cb-14"&gt;&lt;/a&gt;&lt;span class="s2"&gt;"""&lt;/span&gt;
+&lt;a name="rest_code_bad547c8e4754b8aa3af919066e875cb-15"&gt;&lt;/a&gt;&lt;span class="n"&gt;JSONPROPERTY_TEMPLATE&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;'[JsonProperty]&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s1"&gt;        '&lt;/span&gt;
+&lt;a name="rest_code_bad547c8e4754b8aa3af919066e875cb-16"&gt;&lt;/a&gt;
+&lt;a name="rest_code_bad547c8e4754b8aa3af919066e875cb-17"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;has_jsonproperty&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;a name="rest_code_bad547c8e4754b8aa3af919066e875cb-18"&gt;&lt;/a&gt;    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;has_jsonproperty&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;a name="rest_code_bad547c8e4754b8aa3af919066e875cb-19"&gt;&lt;/a&gt;        &lt;span class="n"&gt;jsonproperty&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;JSONPROPERTY_TEMPLATE&lt;/span&gt;
+&lt;a name="rest_code_bad547c8e4754b8aa3af919066e875cb-20"&gt;&lt;/a&gt;    &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;a name="rest_code_bad547c8e4754b8aa3af919066e875cb-21"&gt;&lt;/a&gt;        &lt;span class="n"&gt;jsonproperty&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;''&lt;/span&gt;
+&lt;a name="rest_code_bad547c8e4754b8aa3af919066e875cb-22"&gt;&lt;/a&gt;    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;TEMPLATE&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;jsonproperty&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_bad547c8e4754b8aa3af919066e875cb-23"&gt;&lt;/a&gt;
+&lt;a name="rest_code_bad547c8e4754b8aa3af919066e875cb-24"&gt;&lt;/a&gt;&lt;span class="n"&gt;properties&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;
+&lt;a name="rest_code_bad547c8e4754b8aa3af919066e875cb-25"&gt;&lt;/a&gt;    &lt;span class="s1"&gt;'1 string name'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;a name="rest_code_bad547c8e4754b8aa3af919066e875cb-26"&gt;&lt;/a&gt;    &lt;span class="s1"&gt;'0 int another'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;a name="rest_code_bad547c8e4754b8aa3af919066e875cb-27"&gt;&lt;/a&gt;    &lt;span class="c1"&gt;# 12 fields omitted for brevity&lt;/span&gt;
+&lt;a name="rest_code_bad547c8e4754b8aa3af919066e875cb-28"&gt;&lt;/a&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;a name="rest_code_bad547c8e4754b8aa3af919066e875cb-29"&gt;&lt;/a&gt;&lt;span class="n"&gt;properties_split&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;split&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;p&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;properties&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;a name="rest_code_bad547c8e4754b8aa3af919066e875cb-30"&gt;&lt;/a&gt;
+&lt;a name="rest_code_bad547c8e4754b8aa3af919066e875cb-31"&gt;&lt;/a&gt;&lt;span class="c1"&gt;# Private definitions (internal)&lt;/span&gt;
+&lt;a name="rest_code_bad547c8e4754b8aa3af919066e875cb-32"&gt;&lt;/a&gt;&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;has_jsonproperty&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;properties_split&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;a name="rest_code_bad547c8e4754b8aa3af919066e875cb-33"&gt;&lt;/a&gt;    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"        private &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt; &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt;_ { get; set; }"&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;a name="rest_code_bad547c8e4754b8aa3af919066e875cb-34"&gt;&lt;/a&gt;
+&lt;a name="rest_code_bad547c8e4754b8aa3af919066e875cb-35"&gt;&lt;/a&gt;&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;a name="rest_code_bad547c8e4754b8aa3af919066e875cb-36"&gt;&lt;/a&gt;&lt;span class="c1"&gt;# Public definitions (with notifications)&lt;/span&gt;
+&lt;a name="rest_code_bad547c8e4754b8aa3af919066e875cb-37"&gt;&lt;/a&gt;&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;has_jsonproperty&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;properties_split&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;a name="rest_code_bad547c8e4754b8aa3af919066e875cb-38"&gt;&lt;/a&gt;    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;has_jsonproperty&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s1"&gt;'1'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;That script takes a list of properties and spits out a block of code, ready to
 be pasted into the code. Visual Studio has a nice &lt;em&gt;Insert File as Text&lt;/em&gt;
 feature, so redirecting the output to a file and using that option is enough.&lt;/p&gt;
@@ -1129,10 +1129,10 @@ looking at you, IntelliJ IDEA aka PyCharm aka Android Studio…)&lt;/p&gt;
 &lt;p&gt;And so, I was building a test suite, using &lt;a class="reference external" href="http://junit.org/"&gt;JUnit&lt;/a&gt;. It’s pretty
 straightforward, and I remember the syntax from Python’s unittest (even though
 I write tests with &lt;a class="reference external" href="http://pytest.org/"&gt;pytest&lt;/a&gt; nowadays). Or so I thought.&lt;/p&gt;
-&lt;pre class="code java"&gt;&lt;a name="rest_code_8e106991228943a6a4e93a06821477e2-1"&gt;&lt;/a&gt;&lt;span class="c1"&gt;// (incorrect)&lt;/span&gt;
-&lt;a name="rest_code_8e106991228943a6a4e93a06821477e2-2"&gt;&lt;/a&gt;&lt;span class="n"&gt;assertEquals&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"Basic integers (7) failed"&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;namer&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;7L&lt;/span&gt;&lt;span class="o"&gt;),&lt;/span&gt; &lt;span class="s"&gt;"seven"&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
-&lt;a name="rest_code_8e106991228943a6a4e93a06821477e2-3"&gt;&lt;/a&gt;&lt;span class="c1"&gt;// (fixed)                              ^ cursor&lt;/span&gt;
-&lt;a name="rest_code_8e106991228943a6a4e93a06821477e2-4"&gt;&lt;/a&gt;&lt;span class="n"&gt;assertEquals&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"Basic integers (7) failed"&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"seven"&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;namer&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;7L&lt;/span&gt;&lt;span class="o"&gt;));&lt;/span&gt;
+&lt;pre class="code java"&gt;&lt;a name="rest_code_5496ef3b57fd488d9700e5176f367b70-1"&gt;&lt;/a&gt;&lt;span class="c1"&gt;// (incorrect)&lt;/span&gt;
+&lt;a name="rest_code_5496ef3b57fd488d9700e5176f367b70-2"&gt;&lt;/a&gt;&lt;span class="n"&gt;assertEquals&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"Basic integers (7) failed"&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;namer&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;7L&lt;/span&gt;&lt;span class="o"&gt;),&lt;/span&gt; &lt;span class="s"&gt;"seven"&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+&lt;a name="rest_code_5496ef3b57fd488d9700e5176f367b70-3"&gt;&lt;/a&gt;&lt;span class="c1"&gt;// (fixed)                              ^ cursor&lt;/span&gt;
+&lt;a name="rest_code_5496ef3b57fd488d9700e5176f367b70-4"&gt;&lt;/a&gt;&lt;span class="n"&gt;assertEquals&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"Basic integers (7) failed"&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"seven"&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;namer&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;7L&lt;/span&gt;&lt;span class="o"&gt;));&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;You see, the typical Python spelling is &lt;tt class="docutils literal"&gt;self.assertEquals(actual,
 expected)&lt;/tt&gt;. Java adds a &lt;tt class="docutils literal"&gt;String&lt;/tt&gt; message parameter and it also swaps
 &lt;tt class="docutils literal"&gt;actual&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;expected&lt;/tt&gt;. Which I didn’t notice at first, and I wrote my
@@ -1244,16 +1244,16 @@ selected text).&lt;/p&gt;
 &lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id13"&gt;Getting started&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;Start by installing virtualenv, nginx and uWSGI. I recommend using your operating system packages. For uWSGI, we need the &lt;tt class="docutils literal"&gt;logfile&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;python3&lt;/tt&gt; plugins. (Arch Linux names the &lt;tt class="docutils literal"&gt;python3&lt;/tt&gt; plugin &lt;tt class="docutils literal"&gt;python&lt;/tt&gt;; the &lt;tt class="docutils literal"&gt;logfile&lt;/tt&gt; plugin may be built-in — check with your system repositories!). I’ll also install Git to clone the tutorial app, but it’s optional if your workflow does not involve git.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Ubuntu, Debian:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_34c94938502c4cc3b0faaf42a4a9ccc1-1"&gt;&lt;/a&gt;apt install virtualenv python3 uwsgi uwsgi-emperor uwsgi-plugin-python3 nginx-full git
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_50fbb0d9d6fd47cc844d8f9d4dc0f89e-1"&gt;&lt;/a&gt;apt install virtualenv python3 uwsgi uwsgi-emperor uwsgi-plugin-python3 nginx-full git
 &lt;/pre&gt;&lt;p&gt;&lt;strong&gt;Fedora:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_5dba078677f64fe5a1785691b24c8420-1"&gt;&lt;/a&gt;dnf install python3-virtualenv uwsgi uwsgi-plugin-python3 uwsgi-logger-file nginx git
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_3a572e18194146f8beb406bd798a47f0-1"&gt;&lt;/a&gt;dnf install python3-virtualenv uwsgi uwsgi-plugin-python3 uwsgi-logger-file nginx git
 &lt;/pre&gt;&lt;p&gt;&lt;strong&gt;CentOS:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_1aaf59075a7c44b1aee3aa758a508569-1"&gt;&lt;/a&gt;yum install epel-release
-&lt;a name="rest_code_1aaf59075a7c44b1aee3aa758a508569-2"&gt;&lt;/a&gt;yum install python34 python34-pip uwsgi uwsgi-plugin-python3 uwsgi-logger-file nginx git wget
-&lt;a name="rest_code_1aaf59075a7c44b1aee3aa758a508569-3"&gt;&lt;/a&gt;python3 -m pip install --user virtualenv
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_ad591ac8420a40898498276e5b25f158-1"&gt;&lt;/a&gt;yum install epel-release
+&lt;a name="rest_code_ad591ac8420a40898498276e5b25f158-2"&gt;&lt;/a&gt;yum install python34 python34-pip uwsgi uwsgi-plugin-python3 uwsgi-logger-file nginx git wget
+&lt;a name="rest_code_ad591ac8420a40898498276e5b25f158-3"&gt;&lt;/a&gt;python3 -m pip install --user virtualenv
 &lt;/pre&gt;&lt;p&gt;We need to install virtualenv manually, because the &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;python-virtualenv&lt;/span&gt;&lt;/tt&gt; package is not compatible. It will be available to root only (user install).&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Arch Linux:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_bfc8a0ed4ece4a818a228df1251ffd8f-1"&gt;&lt;/a&gt;pacman -S python-virtualenv uwsgi uwsgi-plugin-python nginx git
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_46b8ef378d034f8b858005ef7481c224-1"&gt;&lt;/a&gt;pacman -S python-virtualenv uwsgi uwsgi-plugin-python nginx git
 &lt;/pre&gt;&lt;/div&gt;
 &lt;div class="section" id="preparing-your-application"&gt;
 &lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id14"&gt;Preparing your application&lt;/a&gt;&lt;/h3&gt;
@@ -1262,25 +1262,25 @@ selected text).&lt;/p&gt;
 &lt;p&gt;If you don’t use Flask, this tutorial also has instructions for other web frameworks (Django, Pyramid, Bottle) in the configuration files; it should be adjustable to any other WSGI-compliant framework/script nevertheless.&lt;/p&gt;
 &lt;p&gt;We’ll start by creating a virtualenv:&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Ubuntu, Debian:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_a8e9aa59ec8e4c7993c67ab86c707137-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; /srv
-&lt;a name="rest_code_a8e9aa59ec8e4c7993c67ab86c707137-2"&gt;&lt;/a&gt;virtualenv -p /usr/bin/python3 myapp
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_a6743dd334274ed78d25bb2e24537b24-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; /srv
+&lt;a name="rest_code_a6743dd334274ed78d25bb2e24537b24-2"&gt;&lt;/a&gt;virtualenv -p /usr/bin/python3 myapp
 &lt;/pre&gt;&lt;p&gt;&lt;strong&gt;Fedora, CentOS, Arch Linux:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_e23377cd30a446d7b9fdc4f85aac18a4-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; /srv
-&lt;a name="rest_code_e23377cd30a446d7b9fdc4f85aac18a4-2"&gt;&lt;/a&gt;python3 -m virtualenv myapp
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_ffd084301fa04befad17c2c7ab7ee1de-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; /srv
+&lt;a name="rest_code_ffd084301fa04befad17c2c7ab7ee1de-2"&gt;&lt;/a&gt;python3 -m virtualenv myapp
 &lt;/pre&gt;&lt;p&gt;(This tutorial assumes Python 3. Make sure you use the correct &lt;tt class="docutils literal"&gt;virtualenv&lt;/tt&gt; command/argument. If you want to use Python 2.7, you’ll need to adjust your uWSGI configuration as well.)&lt;/p&gt;
 &lt;p&gt;Now, we need to put our app there and install requirements. An example for the tutorial demo app:&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_e8047dda4bed4f8b8c3845c6980e4cee-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; myapp
-&lt;a name="rest_code_e8047dda4bed4f8b8c3845c6980e4cee-2"&gt;&lt;/a&gt;git clone https://github.com/Kwpolska/flask-demo-app appdata
-&lt;a name="rest_code_e8047dda4bed4f8b8c3845c6980e4cee-3"&gt;&lt;/a&gt;bin/pip install -r appdata/requirements.txt
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_14fc855115a04159b4686ab2db31b657-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; myapp
+&lt;a name="rest_code_14fc855115a04159b4686ab2db31b657-2"&gt;&lt;/a&gt;git clone https://github.com/Kwpolska/flask-demo-app appdata
+&lt;a name="rest_code_14fc855115a04159b4686ab2db31b657-3"&gt;&lt;/a&gt;bin/pip install -r appdata/requirements.txt
 &lt;/pre&gt;&lt;p&gt;I’m storing my application data in the &lt;tt class="docutils literal"&gt;appdata&lt;/tt&gt; subdirectory so that it doesn’t clutter the virtualenv (or vice versa).  You may also install the &lt;tt class="docutils literal"&gt;uwsgi&lt;/tt&gt; package in the virtualenv, but it’s optional.&lt;/p&gt;
 &lt;p&gt;What this directory should be depends on your web framework.  For example, for a Django app, you should have an &lt;tt class="docutils literal"&gt;appdata/manage.py&lt;/tt&gt; file (in other words, &lt;tt class="docutils literal"&gt;appdata&lt;/tt&gt; is where your app structure starts).  I also assumed that the &lt;tt class="docutils literal"&gt;appdata&lt;/tt&gt; folder should have a &lt;tt class="docutils literal"&gt;static&lt;/tt&gt; subdirectory with all static files, including &lt;tt class="docutils literal"&gt;favicon.ico&lt;/tt&gt; if you have one (we will add support for both in nginx).&lt;/p&gt;
 &lt;p&gt;At this point, you should chown this directory to the user and group your server is going to run as.  This is especially important if uwsgi and nginx run as different users (as they do on Fedora). Run one of the following commands:&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Ubuntu, Debian:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_b3d959f0d1c54406aea7f27fcf614924-1"&gt;&lt;/a&gt;chown -R www-data:www-data /srv/myapp
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_6cb13f4622a44b5bbed5532f6f2b84ec-1"&gt;&lt;/a&gt;chown -R www-data:www-data /srv/myapp
 &lt;/pre&gt;&lt;p&gt;&lt;strong&gt;Fedora, CentOS:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_d7eb0985723647278fcb2a2e63d27897-1"&gt;&lt;/a&gt;chown -R uwsgi:nginx /srv/myapp
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_86322e1bbb7741f2bf8fb17bb4fdcd0a-1"&gt;&lt;/a&gt;chown -R uwsgi:nginx /srv/myapp
 &lt;/pre&gt;&lt;p&gt;&lt;strong&gt;Arch Linux:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_670f940fbfeb43859402d8a99364f286-1"&gt;&lt;/a&gt;chown -R http:http /srv/myapp
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_88ee7d058eb443ffa5f26112cd8a9a31-1"&gt;&lt;/a&gt;chown -R http:http /srv/myapp
 &lt;/pre&gt;&lt;/div&gt;
 &lt;div class="section" id="configuring-uwsgi-and-nginx"&gt;
 &lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id15"&gt;Configuring uWSGI and nginx&lt;/a&gt;&lt;/h3&gt;
@@ -1292,20 +1292,20 @@ selected text).&lt;/p&gt;
 &lt;div class="section" id="uwsgi-configuration"&gt;
 &lt;h4&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id16"&gt;uWSGI configuration&lt;/a&gt;&lt;/h4&gt;
 &lt;p&gt;Start with this, but read the notes below and change the values accordingly:&lt;/p&gt;
-&lt;pre class="code ini"&gt;&lt;a name="rest_code_01b0bab31f9b422aacd38735125e908f-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;[uwsgi]&lt;/span&gt;
-&lt;a name="rest_code_01b0bab31f9b422aacd38735125e908f-2"&gt;&lt;/a&gt;&lt;span class="na"&gt;socket&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/uwsgi.sock&lt;/span&gt;
-&lt;a name="rest_code_01b0bab31f9b422aacd38735125e908f-3"&gt;&lt;/a&gt;&lt;span class="na"&gt;chmod-socket&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;775&lt;/span&gt;
-&lt;a name="rest_code_01b0bab31f9b422aacd38735125e908f-4"&gt;&lt;/a&gt;&lt;span class="na"&gt;chdir&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/appdata&lt;/span&gt;
-&lt;a name="rest_code_01b0bab31f9b422aacd38735125e908f-5"&gt;&lt;/a&gt;&lt;span class="na"&gt;master&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;true&lt;/span&gt;
-&lt;a name="rest_code_01b0bab31f9b422aacd38735125e908f-6"&gt;&lt;/a&gt;&lt;span class="na"&gt;binary-path&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/bin/uwsgi&lt;/span&gt;
-&lt;a name="rest_code_01b0bab31f9b422aacd38735125e908f-7"&gt;&lt;/a&gt;&lt;span class="na"&gt;virtualenv&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp&lt;/span&gt;
-&lt;a name="rest_code_01b0bab31f9b422aacd38735125e908f-8"&gt;&lt;/a&gt;&lt;span class="na"&gt;module&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;flaskapp:app&lt;/span&gt;
-&lt;a name="rest_code_01b0bab31f9b422aacd38735125e908f-9"&gt;&lt;/a&gt;&lt;span class="na"&gt;uid&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;www-data&lt;/span&gt;
-&lt;a name="rest_code_01b0bab31f9b422aacd38735125e908f-10"&gt;&lt;/a&gt;&lt;span class="na"&gt;gid&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;www-data&lt;/span&gt;
-&lt;a name="rest_code_01b0bab31f9b422aacd38735125e908f-11"&gt;&lt;/a&gt;&lt;span class="na"&gt;processes&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;1&lt;/span&gt;
-&lt;a name="rest_code_01b0bab31f9b422aacd38735125e908f-12"&gt;&lt;/a&gt;&lt;span class="na"&gt;threads&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;1&lt;/span&gt;
-&lt;a name="rest_code_01b0bab31f9b422aacd38735125e908f-13"&gt;&lt;/a&gt;&lt;span class="na"&gt;plugins&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;python3,logfile&lt;/span&gt;
-&lt;a name="rest_code_01b0bab31f9b422aacd38735125e908f-14"&gt;&lt;/a&gt;&lt;span class="na"&gt;logger&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;file:/srv/myapp/uwsgi.log&lt;/span&gt;
+&lt;pre class="code ini"&gt;&lt;a name="rest_code_144913eb0cf740edbf8ce3f97458fcce-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;[uwsgi]&lt;/span&gt;
+&lt;a name="rest_code_144913eb0cf740edbf8ce3f97458fcce-2"&gt;&lt;/a&gt;&lt;span class="na"&gt;socket&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/uwsgi.sock&lt;/span&gt;
+&lt;a name="rest_code_144913eb0cf740edbf8ce3f97458fcce-3"&gt;&lt;/a&gt;&lt;span class="na"&gt;chmod-socket&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;775&lt;/span&gt;
+&lt;a name="rest_code_144913eb0cf740edbf8ce3f97458fcce-4"&gt;&lt;/a&gt;&lt;span class="na"&gt;chdir&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/appdata&lt;/span&gt;
+&lt;a name="rest_code_144913eb0cf740edbf8ce3f97458fcce-5"&gt;&lt;/a&gt;&lt;span class="na"&gt;master&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;true&lt;/span&gt;
+&lt;a name="rest_code_144913eb0cf740edbf8ce3f97458fcce-6"&gt;&lt;/a&gt;&lt;span class="na"&gt;binary-path&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/bin/uwsgi&lt;/span&gt;
+&lt;a name="rest_code_144913eb0cf740edbf8ce3f97458fcce-7"&gt;&lt;/a&gt;&lt;span class="na"&gt;virtualenv&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp&lt;/span&gt;
+&lt;a name="rest_code_144913eb0cf740edbf8ce3f97458fcce-8"&gt;&lt;/a&gt;&lt;span class="na"&gt;module&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;flaskapp:app&lt;/span&gt;
+&lt;a name="rest_code_144913eb0cf740edbf8ce3f97458fcce-9"&gt;&lt;/a&gt;&lt;span class="na"&gt;uid&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;www-data&lt;/span&gt;
+&lt;a name="rest_code_144913eb0cf740edbf8ce3f97458fcce-10"&gt;&lt;/a&gt;&lt;span class="na"&gt;gid&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;www-data&lt;/span&gt;
+&lt;a name="rest_code_144913eb0cf740edbf8ce3f97458fcce-11"&gt;&lt;/a&gt;&lt;span class="na"&gt;processes&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;1&lt;/span&gt;
+&lt;a name="rest_code_144913eb0cf740edbf8ce3f97458fcce-12"&gt;&lt;/a&gt;&lt;span class="na"&gt;threads&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;1&lt;/span&gt;
+&lt;a name="rest_code_144913eb0cf740edbf8ce3f97458fcce-13"&gt;&lt;/a&gt;&lt;span class="na"&gt;plugins&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;python3,logfile&lt;/span&gt;
+&lt;a name="rest_code_144913eb0cf740edbf8ce3f97458fcce-14"&gt;&lt;/a&gt;&lt;span class="na"&gt;logger&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;file:/srv/myapp/uwsgi.log&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;Save this file as:&lt;/p&gt;
 &lt;ul class="simple"&gt;
 &lt;li&gt;Ubuntu, Debian: &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;/etc/uwsgi-emperor/vassals/myapp.ini&lt;/span&gt;&lt;/tt&gt;&lt;/li&gt;
@@ -1402,26 +1402,26 @@ selected text).&lt;/p&gt;
 &lt;li&gt;Fedora, CentOS: &lt;tt class="docutils literal"&gt;/etc/nginx/conf.d/myapp.conf&lt;/tt&gt;&lt;/li&gt;
 &lt;li&gt;Arch Linux: add &lt;tt class="docutils literal"&gt;include &lt;span class="pre"&gt;/etc/nginx/conf.d/*.conf;&lt;/span&gt;&lt;/tt&gt; to your &lt;tt class="docutils literal"&gt;http&lt;/tt&gt; directive in &lt;tt class="docutils literal"&gt;/etc/nginx/nginx.conf&lt;/tt&gt; and use &lt;tt class="docutils literal"&gt;/etc/nginx/conf.d/myapp.conf&lt;/tt&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;pre class="code nginx"&gt;&lt;a name="rest_code_4ac502f2cad0425eaadbafd5ad74d99d-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;server&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;a name="rest_code_4ac502f2cad0425eaadbafd5ad74d99d-2"&gt;&lt;/a&gt;    &lt;span class="c1"&gt;# for a public HTTP server:&lt;/span&gt;
-&lt;a name="rest_code_4ac502f2cad0425eaadbafd5ad74d99d-3"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;listen&lt;/span&gt; &lt;span class="mi"&gt;80&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;a name="rest_code_4ac502f2cad0425eaadbafd5ad74d99d-4"&gt;&lt;/a&gt;    &lt;span class="c1"&gt;# for a public HTTPS server:&lt;/span&gt;
-&lt;a name="rest_code_4ac502f2cad0425eaadbafd5ad74d99d-5"&gt;&lt;/a&gt;    &lt;span class="c1"&gt;# listen 443 ssl;&lt;/span&gt;
-&lt;a name="rest_code_4ac502f2cad0425eaadbafd5ad74d99d-6"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;server_name&lt;/span&gt; &lt;span class="s"&gt;localhost&lt;/span&gt; &lt;span class="s"&gt;myapp.local&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;a name="rest_code_4ac502f2cad0425eaadbafd5ad74d99d-7"&gt;&lt;/a&gt;
-&lt;a name="rest_code_4ac502f2cad0425eaadbafd5ad74d99d-8"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;location&lt;/span&gt; &lt;span class="s"&gt;/&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;a name="rest_code_4ac502f2cad0425eaadbafd5ad74d99d-9"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;include&lt;/span&gt; &lt;span class="s"&gt;uwsgi_params&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;a name="rest_code_4ac502f2cad0425eaadbafd5ad74d99d-10"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;uwsgi_pass&lt;/span&gt; &lt;span class="s"&gt;unix:/srv/myapp/uwsgi.sock&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;a name="rest_code_4ac502f2cad0425eaadbafd5ad74d99d-11"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;a name="rest_code_4ac502f2cad0425eaadbafd5ad74d99d-12"&gt;&lt;/a&gt;
-&lt;a name="rest_code_4ac502f2cad0425eaadbafd5ad74d99d-13"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;location&lt;/span&gt; &lt;span class="s"&gt;/static&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;a name="rest_code_4ac502f2cad0425eaadbafd5ad74d99d-14"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;alias&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/appdata/static&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;a name="rest_code_4ac502f2cad0425eaadbafd5ad74d99d-15"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;a name="rest_code_4ac502f2cad0425eaadbafd5ad74d99d-16"&gt;&lt;/a&gt;
-&lt;a name="rest_code_4ac502f2cad0425eaadbafd5ad74d99d-17"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;location&lt;/span&gt; &lt;span class="s"&gt;/favicon.ico&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;a name="rest_code_4ac502f2cad0425eaadbafd5ad74d99d-18"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;alias&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/appdata/static/favicon.ico&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;a name="rest_code_4ac502f2cad0425eaadbafd5ad74d99d-19"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;a name="rest_code_4ac502f2cad0425eaadbafd5ad74d99d-20"&gt;&lt;/a&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;pre class="code nginx"&gt;&lt;a name="rest_code_ce1586cebe74486a8cc077387cba9b31-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;server&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_ce1586cebe74486a8cc077387cba9b31-2"&gt;&lt;/a&gt;    &lt;span class="c1"&gt;# for a public HTTP server:&lt;/span&gt;
+&lt;a name="rest_code_ce1586cebe74486a8cc077387cba9b31-3"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;listen&lt;/span&gt; &lt;span class="mi"&gt;80&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_ce1586cebe74486a8cc077387cba9b31-4"&gt;&lt;/a&gt;    &lt;span class="c1"&gt;# for a public HTTPS server:&lt;/span&gt;
+&lt;a name="rest_code_ce1586cebe74486a8cc077387cba9b31-5"&gt;&lt;/a&gt;    &lt;span class="c1"&gt;# listen 443 ssl;&lt;/span&gt;
+&lt;a name="rest_code_ce1586cebe74486a8cc077387cba9b31-6"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;server_name&lt;/span&gt; &lt;span class="s"&gt;localhost&lt;/span&gt; &lt;span class="s"&gt;myapp.local&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_ce1586cebe74486a8cc077387cba9b31-7"&gt;&lt;/a&gt;
+&lt;a name="rest_code_ce1586cebe74486a8cc077387cba9b31-8"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;location&lt;/span&gt; &lt;span class="s"&gt;/&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_ce1586cebe74486a8cc077387cba9b31-9"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;include&lt;/span&gt; &lt;span class="s"&gt;uwsgi_params&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_ce1586cebe74486a8cc077387cba9b31-10"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;uwsgi_pass&lt;/span&gt; &lt;span class="s"&gt;unix:/srv/myapp/uwsgi.sock&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_ce1586cebe74486a8cc077387cba9b31-11"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;a name="rest_code_ce1586cebe74486a8cc077387cba9b31-12"&gt;&lt;/a&gt;
+&lt;a name="rest_code_ce1586cebe74486a8cc077387cba9b31-13"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;location&lt;/span&gt; &lt;span class="s"&gt;/static&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_ce1586cebe74486a8cc077387cba9b31-14"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;alias&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/appdata/static&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_ce1586cebe74486a8cc077387cba9b31-15"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;a name="rest_code_ce1586cebe74486a8cc077387cba9b31-16"&gt;&lt;/a&gt;
+&lt;a name="rest_code_ce1586cebe74486a8cc077387cba9b31-17"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;location&lt;/span&gt; &lt;span class="s"&gt;/favicon.ico&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_ce1586cebe74486a8cc077387cba9b31-18"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;alias&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/appdata/static/favicon.ico&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_ce1586cebe74486a8cc077387cba9b31-19"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;a name="rest_code_ce1586cebe74486a8cc077387cba9b31-20"&gt;&lt;/a&gt;&lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;Note that this file is a very basic and rudimentary configuration. This configuration is fine for local testing, but for a real deployment, you will need to adjust it:&lt;/p&gt;
 &lt;ul class="simple"&gt;
 &lt;li&gt;set &lt;tt class="docutils literal"&gt;listen&lt;/tt&gt; to &lt;tt class="docutils literal"&gt;443 ssl&lt;/tt&gt; and create a http→https redirect on port 80 (you can get a free SSL certificate from &lt;a class="reference external" href="https://letsencrypt.org/"&gt;Let’s Encrypt&lt;/a&gt;; make sure to &lt;a class="reference external" href="https://raymii.org/s/tutorials/Strong_SSL_Security_On_nginx.html"&gt;configure SSL properly&lt;/a&gt;).&lt;/li&gt;
@@ -1437,39 +1437,39 @@ selected text).&lt;/p&gt;
 &lt;div class="section" id="for-arch-linux"&gt;
 &lt;h4&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id19"&gt;For Arch Linux&lt;/a&gt;&lt;/h4&gt;
 &lt;p&gt;All you need is:&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_28bdc154600f447cb325b65b861bccc0-1"&gt;&lt;/a&gt;systemctl &lt;span class="nb"&gt;enable&lt;/span&gt; nginx emperor.uwsgi
-&lt;a name="rest_code_28bdc154600f447cb325b65b861bccc0-2"&gt;&lt;/a&gt;systemctl start nginx emperor.uwsgi
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_ee02040c9a8348a8917aad5e1ae0db68-1"&gt;&lt;/a&gt;systemctl &lt;span class="nb"&gt;enable&lt;/span&gt; nginx emperor.uwsgi
+&lt;a name="rest_code_ee02040c9a8348a8917aad5e1ae0db68-2"&gt;&lt;/a&gt;systemctl start nginx emperor.uwsgi
 &lt;/pre&gt;&lt;p&gt;Verify the service is running with &lt;tt class="docutils literal"&gt;systemctl status emperor.uwsgi&lt;/tt&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="for-fedora-and-centos"&gt;
 &lt;h4&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id20"&gt;For Fedora and CentOS&lt;/a&gt;&lt;/h4&gt;
 &lt;p&gt;Make sure you followed the extra note about editing &lt;tt class="docutils literal"&gt;/etc/uwsgi.ini&lt;/tt&gt; earlier and run:&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_d472f6492707448d86abba9d2bad8b3b-1"&gt;&lt;/a&gt;systemctl &lt;span class="nb"&gt;enable&lt;/span&gt; nginx uwsgi
-&lt;a name="rest_code_d472f6492707448d86abba9d2bad8b3b-2"&gt;&lt;/a&gt;systemctl start nginx uwsgi
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_60e18a58e0e043d3a9ae5b80b4c7d93f-1"&gt;&lt;/a&gt;systemctl &lt;span class="nb"&gt;enable&lt;/span&gt; nginx uwsgi
+&lt;a name="rest_code_60e18a58e0e043d3a9ae5b80b4c7d93f-2"&gt;&lt;/a&gt;systemctl start nginx uwsgi
 &lt;/pre&gt;&lt;p&gt;Verify the service is running with &lt;tt class="docutils literal"&gt;systemctl status uwsgi&lt;/tt&gt;&lt;/p&gt;
 &lt;p&gt;If you disabled SELinux, this is enough to get an app working and you can skip over to the next section.&lt;/p&gt;
 &lt;p&gt;If you want to use SELinux, you need to do the following to allow nginx to read static files:&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_2f9649c90a3e42788835c4c2b1359357-1"&gt;&lt;/a&gt;setenforce &lt;span class="m"&gt;0&lt;/span&gt;
-&lt;a name="rest_code_2f9649c90a3e42788835c4c2b1359357-2"&gt;&lt;/a&gt;chcon -R system_u:system_r:httpd_t:s0 /srv/myapp/appdata/static
-&lt;a name="rest_code_2f9649c90a3e42788835c4c2b1359357-3"&gt;&lt;/a&gt;setenforce &lt;span class="m"&gt;1&lt;/span&gt;
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_45601fdabb7040dea563a347edcae917-1"&gt;&lt;/a&gt;setenforce &lt;span class="m"&gt;0&lt;/span&gt;
+&lt;a name="rest_code_45601fdabb7040dea563a347edcae917-2"&gt;&lt;/a&gt;chcon -R system_u:system_r:httpd_t:s0 /srv/myapp/appdata/static
+&lt;a name="rest_code_45601fdabb7040dea563a347edcae917-3"&gt;&lt;/a&gt;setenforce &lt;span class="m"&gt;1&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;We now need to install a &lt;a class="reference external" href="https://chriswarrick.com/pub/nginx-uwsgi.pp"&gt;SELinux policy&lt;/a&gt; (that I created for this project) to allow nginx and uWSGI to communicate.
 Download it and run:&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_3c485fcec27240e1ad3bdb96aee33763-1"&gt;&lt;/a&gt;semodule -i nginx-uwsgi.pp
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_1c018099353d41cf8ff6bb8bfa62340c-1"&gt;&lt;/a&gt;semodule -i nginx-uwsgi.pp
 &lt;/pre&gt;&lt;p&gt;Hopefully, this is enough (you can delete the file). In case it isn’t, please read SELinux documentation, check audit logs, and look into &lt;tt class="docutils literal"&gt;audit2allow&lt;/tt&gt;.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="for-ubuntu-and-debian"&gt;
 &lt;h4&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id21"&gt;For Ubuntu and Debian&lt;/a&gt;&lt;/h4&gt;
 &lt;p&gt;Ubuntu and Debian (still!) use LSB services for uWSGI. Because LSB services are awful, we’re going to set up our own systemd-based (native) service.&lt;/p&gt;
 &lt;p&gt;Start by disabling the LSB service that comes with Ubuntu and Debian:&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_6ff960ce88404fed8bba08ceccc646c9-1"&gt;&lt;/a&gt;systemctl stop uwsgi-emperor
-&lt;a name="rest_code_6ff960ce88404fed8bba08ceccc646c9-2"&gt;&lt;/a&gt;systemctl disable uwsgi-emperor
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_393f4b29bc1c473b9c1d2491723495b6-1"&gt;&lt;/a&gt;systemctl stop uwsgi-emperor
+&lt;a name="rest_code_393f4b29bc1c473b9c1d2491723495b6-2"&gt;&lt;/a&gt;systemctl disable uwsgi-emperor
 &lt;/pre&gt;&lt;p&gt;Copy the &lt;tt class="docutils literal"&gt;.service&lt;/tt&gt; file from the &lt;a class="reference external" href="https://uwsgi-docs.readthedocs.org/en/latest/Systemd.html#adding-the-emperor-to-systemd"&gt;uWSGI systemd documentation&lt;/a&gt; to &lt;tt class="docutils literal"&gt;/etc/systemd/system/emperor.uwsgi.service&lt;/tt&gt;.  Change the ExecStart line to:&lt;/p&gt;
-&lt;pre class="code ini"&gt;&lt;a name="rest_code_20378b30a83c451092456f6b35ebc7c4-1"&gt;&lt;/a&gt;&lt;span class="na"&gt;ExecStart&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/usr/bin/uwsgi --ini /etc/uwsgi-emperor/emperor.ini&lt;/span&gt;
+&lt;pre class="code ini"&gt;&lt;a name="rest_code_45d1602baf934b3bba7072f5d04cf3dc-1"&gt;&lt;/a&gt;&lt;span class="na"&gt;ExecStart&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/usr/bin/uwsgi --ini /etc/uwsgi-emperor/emperor.ini&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;You can now reload systemd daemons and enable the services:&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_88db6782f66a4f0bba9b58c4087ebacf-1"&gt;&lt;/a&gt;systemctl daemon-reload
-&lt;a name="rest_code_88db6782f66a4f0bba9b58c4087ebacf-2"&gt;&lt;/a&gt;systemctl &lt;span class="nb"&gt;enable&lt;/span&gt; nginx emperor.uwsgi
-&lt;a name="rest_code_88db6782f66a4f0bba9b58c4087ebacf-3"&gt;&lt;/a&gt;systemctl reload nginx
-&lt;a name="rest_code_88db6782f66a4f0bba9b58c4087ebacf-4"&gt;&lt;/a&gt;systemctl start emperor.uwsgi
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_93451a429c1447898d8fed2f24cd5dfe-1"&gt;&lt;/a&gt;systemctl daemon-reload
+&lt;a name="rest_code_93451a429c1447898d8fed2f24cd5dfe-2"&gt;&lt;/a&gt;systemctl &lt;span class="nb"&gt;enable&lt;/span&gt; nginx emperor.uwsgi
+&lt;a name="rest_code_93451a429c1447898d8fed2f24cd5dfe-3"&gt;&lt;/a&gt;systemctl reload nginx
+&lt;a name="rest_code_93451a429c1447898d8fed2f24cd5dfe-4"&gt;&lt;/a&gt;systemctl start emperor.uwsgi
 &lt;/pre&gt;&lt;p&gt;Verify the service is running with &lt;tt class="docutils literal"&gt;systemctl status emperor.uwsgi&lt;/tt&gt;.  (Ignore
 the warning about no request plugin)&lt;/p&gt;
 &lt;/div&gt;
@@ -1481,9 +1481,9 @@ the warning about no request plugin)&lt;/p&gt;
 &lt;p&gt;If you used the demo application, you should see something like this (complete with the favicon and image greeting):&lt;/p&gt;
 &lt;img alt="/images/nginx-uwsgi-demo.png" class="centered" src="https://chriswarrick.com/images/nginx-uwsgi-demo.png"&gt;
 &lt;p&gt;If you want to test with cURL:&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_225f798c47ac49b08da582f606c0eeea-1"&gt;&lt;/a&gt;curl -v http://localhost/
-&lt;a name="rest_code_225f798c47ac49b08da582f606c0eeea-2"&gt;&lt;/a&gt;curl -I http://localhost/favicon.ico
-&lt;a name="rest_code_225f798c47ac49b08da582f606c0eeea-3"&gt;&lt;/a&gt;curl -I http://localhost/static/hello.png
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_e34474c8698d4e3b83ba000333f5832e-1"&gt;&lt;/a&gt;curl -v http://localhost/
+&lt;a name="rest_code_e34474c8698d4e3b83ba000333f5832e-2"&gt;&lt;/a&gt;curl -I http://localhost/favicon.ico
+&lt;a name="rest_code_e34474c8698d4e3b83ba000333f5832e-3"&gt;&lt;/a&gt;curl -I http://localhost/static/hello.png
 &lt;/pre&gt;&lt;div class="section" id="troubleshooting"&gt;
 &lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id23"&gt;Troubleshooting&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;Hopefully, everything works. If it doesn’t:&lt;/p&gt;
@@ -1493,8 +1493,8 @@ the warning about no request plugin)&lt;/p&gt;
 &lt;li&gt;If you get a default site, disable that site in nginx config (&lt;tt class="docutils literal"&gt;/etc/nginx/nginx.conf&lt;/tt&gt; or your sites directory).&lt;/li&gt;
 &lt;li&gt;If you have a firewall installed, make sure to open the ports your web server runs on (typically 80/443). For &lt;tt class="docutils literal"&gt;firewalld&lt;/tt&gt; (Fedora, CentOS):&lt;/li&gt;
 &lt;/ul&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_ad6e0fdd0bec431fa573ecab8e0f0b4f-1"&gt;&lt;/a&gt;firewall-cmd --add-service http
-&lt;a name="rest_code_ad6e0fdd0bec431fa573ecab8e0f0b4f-2"&gt;&lt;/a&gt;firewall-cmd --add-service https
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_2bb43d1cca8b44c5ac31de05bd89c589-1"&gt;&lt;/a&gt;firewall-cmd --add-service http
+&lt;a name="rest_code_2bb43d1cca8b44c5ac31de05bd89c589-2"&gt;&lt;/a&gt;firewall-cmd --add-service https
 &lt;/pre&gt;&lt;ul class="simple"&gt;
 &lt;li&gt;If it still does not work, feel free to ask in the comments, mentioning your distribution, installation method, and what doesn’t work.&lt;/li&gt;
 &lt;/ul&gt;
@@ -1556,15 +1556,15 @@ highlighting&lt;/li&gt;
 the majority of them didn’t do much.  In other words, I didn’t have a lot of experience.  Especially with taking user input and relationships.  It took me about 8 hours to get feature parity, and more.&lt;/p&gt;
 &lt;p&gt;Getting all the features was really simple.  For example, to get a many-to-many
 relationship for languages, I had to write just one line.&lt;/p&gt;
-&lt;pre class="code python"&gt;&lt;a name="rest_code_1c7d690ab888430680417640428bb26e-1"&gt;&lt;/a&gt;&lt;span class="n"&gt;languages&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ManyToManyField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Language&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_c8fdc7fd86ce470c90e04d160a75f8e0-1"&gt;&lt;/a&gt;&lt;span class="n"&gt;languages&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ManyToManyField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Language&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;That’s it.  I didn’t have to run through complicated SQLAlchemy documentation,
 which provides a &lt;a class="reference external" href="http://docs.sqlalchemy.org/en/rel_1_0/orm/basic_relationships.html#many-to-many"&gt;13-line solution&lt;/a&gt; to the same problem.&lt;/p&gt;
 &lt;p&gt;Django also simplified New Relic integration, as the browser JS can be implemented
 using Django template tags.&lt;/p&gt;
 &lt;p&gt;Django is not without its problems, though.  I got a very cryptic traceback
 when I did this:&lt;/p&gt;
-&lt;pre class="code python"&gt;&lt;a name="rest_code_50e08708beaf48b7b52053a8bd052e46-1"&gt;&lt;/a&gt;&lt;span class="n"&gt;publish_email&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;forms&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;BooleanField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"Publish e-mail"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;required&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;False&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_50e08708beaf48b7b52053a8bd052e46-2"&gt;&lt;/a&gt;&lt;span class="ne"&gt;TypeError&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;"BooleanField() got multiple values for argument 'required'"&lt;/span&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_3bbbfa4842b04a888663273c9413e0cc-1"&gt;&lt;/a&gt;&lt;span class="n"&gt;publish_email&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;forms&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;BooleanField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"Publish e-mail"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;required&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;False&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_3bbbfa4842b04a888663273c9413e0cc-2"&gt;&lt;/a&gt;&lt;span class="ne"&gt;TypeError&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;"BooleanField() got multiple values for argument 'required'"&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;The real problem with this code?  I forgot the &lt;tt class="docutils literal"&gt;label=&lt;/tt&gt; keyword.  The
 problem is, the model API accepts this syntax — &lt;tt class="docutils literal"&gt;verbose_name&lt;/tt&gt; is the first
 argument.  (I am not actually using the labels though, I write my own form

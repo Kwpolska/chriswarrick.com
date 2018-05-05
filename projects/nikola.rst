@@ -2,7 +2,7 @@
 .. slug: nikola
 .. date: 1970-01-01T00:00:00+00:00
 .. description: A Static Site and Blog Generator.
-.. status: 5
+.. devstatus: 5
 .. logo: /projects/_logos/nikola.png
 .. previewimage: /projects/_banners/nikola.png
 .. link: https://getnikola.com/
@@ -11,7 +11,7 @@
 .. bugtracker: https://github.com/getnikola/nikola/issues
 .. role: Co-Maintainer
 .. license: MIT
-.. featured: True
+.. status: featured
 .. language: Python
 .. sort: 98
 

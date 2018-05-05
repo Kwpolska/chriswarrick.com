@@ -2,7 +2,7 @@
 .. slug: django-kwshortener
 .. date: 1970-01-01T00:00:00+00:00
 .. description: Yet another URL shortener.
-.. status: 4
+.. devstatus: 4
 .. github: https://github.com/Kwpolska/django-kwshortener
 .. bugtracker: https://github.com/Kwpolska/django-kwshortener/issues
 .. role: Maintainer

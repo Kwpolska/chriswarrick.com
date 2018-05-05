@@ -2,7 +2,7 @@
 .. slug: datecond
 .. date: 1970-01-01T00:00:00+00:00
 .. description: Date range parser in Python.
-.. status: 4
+.. devstatus: 4
 .. download: https://github.com/Kwpolska/datecond/releases
 .. github: https://github.com/Kwpolska/datecond
 .. bugtracker: https://github.com/Kwpolska/datecond/issues

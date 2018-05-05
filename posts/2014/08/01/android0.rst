@@ -2,7 +2,7 @@
 .. slug: series-android-adventure
 .. date: 2014-08-01 18:00:00+02:00
 .. tags: android, adventure, review
-.. category: Android Adventure
+.. category: Android
 .. description: An Adventure in Android awaits.
 .. type: text
 

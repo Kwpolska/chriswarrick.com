@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chris Warrick (Posty o best practices)</title><link>https://chriswarrick.com/</link><description></description><atom:link href="https://chriswarrick.com/pl/blog/tags/best-practices.xml" rel="self" type="application/rss+xml"></atom:link><language>pl</language><lastBuildDate>Sat, 21 Apr 2018 21:30:05 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Spawning subprocesses smartly and securely</title><link>https://chriswarrick.com/pl/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;As part of your code, you may be inclined to call a command to do
+<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chris Warrick (Posty o best practices)</title><link>https://chriswarrick.com/</link><description></description><atom:link href="https://chriswarrick.com/pl/blog/tags/best-practices.xml" rel="self" type="application/rss+xml"></atom:link><language>pl</language><lastBuildDate>Sat, 05 May 2018 17:20:39 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Spawning subprocesses smartly and securely</title><link>https://chriswarrick.com/pl/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;As part of your code, you may be inclined to call a command to do
 something. But is it always a good idea? How to do it safely? What happens
 behind the scenes?&lt;/p&gt;
 &lt;!-- TEASER_END --&gt;
@@ -75,49 +75,49 @@ arguments passed to the process, or&lt;/p&gt;
 manpage for &lt;tt class="docutils literal"&gt;system(3)&lt;/tt&gt; puts it,&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;The &lt;tt class="docutils literal"&gt;system()&lt;/tt&gt; library function uses &lt;tt class="docutils literal"&gt;fork(2)&lt;/tt&gt; to create a child process that executes the shell command specified in command using &lt;tt class="docutils literal"&gt;execl(3)&lt;/tt&gt; as follows:&lt;/p&gt;
-&lt;pre class="code c"&gt;&lt;a name="rest_code_af437dfcd0cd443ca8ad0d2524cbaf60-1"&gt;&lt;/a&gt;&lt;span class="n"&gt;execl&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"/bin/sh"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"sh"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"-c"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;command&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;pre class="code c"&gt;&lt;a name="rest_code_19b640166d574e49be3892a47f1d3c99-1"&gt;&lt;/a&gt;&lt;span class="n"&gt;execl&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"/bin/sh"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"sh"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"-c"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;command&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 &lt;/pre&gt;&lt;/blockquote&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;If you go through the shell, you pass one string argument, whereas &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;exec*()&lt;/span&gt;&lt;/tt&gt; demands you to specify arguments separately. Let’s write a sample program to print all the arguments it receives. I’ll do it in Python to get a more readable output.&lt;/p&gt;
-&lt;pre class="code python"&gt;&lt;a name="rest_code_f428d01e44d64a698f53b06a0a6abb29-1"&gt;&lt;/a&gt;&lt;span class="ch"&gt;#!/usr/bin/env python3&lt;/span&gt;
-&lt;a name="rest_code_f428d01e44d64a698f53b06a0a6abb29-2"&gt;&lt;/a&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;sys&lt;/span&gt;
-&lt;a name="rest_code_f428d01e44d64a698f53b06a0a6abb29-3"&gt;&lt;/a&gt;&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_94d658d08aa5472d926c6c2354f02ebe-1"&gt;&lt;/a&gt;&lt;span class="ch"&gt;#!/usr/bin/env python3&lt;/span&gt;
+&lt;a name="rest_code_94d658d08aa5472d926c6c2354f02ebe-2"&gt;&lt;/a&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;sys&lt;/span&gt;
+&lt;a name="rest_code_94d658d08aa5472d926c6c2354f02ebe-3"&gt;&lt;/a&gt;&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;Let’s see what appears:&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-1"&gt;&lt;/a&gt;$ ./argv.py foo bar
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-2"&gt;&lt;/a&gt;['./argv.py', 'foo', 'bar']
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-3"&gt;&lt;/a&gt;$ ./argv.py 'foo bar'
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-4"&gt;&lt;/a&gt;['./argv.py', 'foo bar']
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-5"&gt;&lt;/a&gt;$ ./argv.py foo\ bar baz
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-6"&gt;&lt;/a&gt;['./argv.py', 'foo bar', 'baz']
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-7"&gt;&lt;/a&gt;
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-8"&gt;&lt;/a&gt;$ ./argv.py $(date)
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-9"&gt;&lt;/a&gt;['./argv.py', 'Sat', 'Sep', '2', '16:54:52', 'CEST', '2017']
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-10"&gt;&lt;/a&gt;$ ./argv.py "$(date)"
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-11"&gt;&lt;/a&gt;['./argv.py', 'Sat Sep  2 16:54:52 CEST 2017']
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-12"&gt;&lt;/a&gt;
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-13"&gt;&lt;/a&gt;$ ./argv.py /usr/*
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-14"&gt;&lt;/a&gt;['./argv.py', '/usr/X11', '/usr/X11R6', '/usr/bin', '/usr/include', '/usr/lib', '/usr/libexec', '/usr/local', '/usr/sbin', '/usr/share', '/usr/standalone']
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-15"&gt;&lt;/a&gt;$ ./argv.py "/usr/*"
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-16"&gt;&lt;/a&gt;['./argv.py', '/usr/*']
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-17"&gt;&lt;/a&gt;
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-18"&gt;&lt;/a&gt;$ ./argv.py $EDITOR
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-19"&gt;&lt;/a&gt;['./argv.py', 'nvim']
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-20"&gt;&lt;/a&gt;
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-21"&gt;&lt;/a&gt;$ $PWD/argv.py foo bar
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-22"&gt;&lt;/a&gt;['/Users/kwpolska/Desktop/blog/subprocess/argv.py', 'foo', 'bar']
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-23"&gt;&lt;/a&gt;$ ./argv.py a{b,c}d
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-24"&gt;&lt;/a&gt;['./argv.py', 'abd', 'acd']
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-25"&gt;&lt;/a&gt;
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-26"&gt;&lt;/a&gt;$ python argv.py foo bar | cat
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-27"&gt;&lt;/a&gt;['argv.py', 'foo', 'bar']
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-28"&gt;&lt;/a&gt;$ python argv.py foo bar &amp;gt; foo.txt
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-29"&gt;&lt;/a&gt;$ cat foo.txt
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-30"&gt;&lt;/a&gt;['argv.py', 'foo', 'bar']
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-31"&gt;&lt;/a&gt;
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-32"&gt;&lt;/a&gt;$ ./argv.py foo; ls /usr
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-33"&gt;&lt;/a&gt;['./argv.py', 'foo']
-&lt;a name="rest_code_98877a70e0a647bdb45c3e2ada8c5eb3-34"&gt;&lt;/a&gt;X11@        X11R6@      bin/        include/    lib/        libexec/    local/      sbin/       share/      standalone/
+&lt;pre class="code text"&gt;&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-1"&gt;&lt;/a&gt;$ ./argv.py foo bar
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-2"&gt;&lt;/a&gt;['./argv.py', 'foo', 'bar']
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-3"&gt;&lt;/a&gt;$ ./argv.py 'foo bar'
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-4"&gt;&lt;/a&gt;['./argv.py', 'foo bar']
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-5"&gt;&lt;/a&gt;$ ./argv.py foo\ bar baz
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-6"&gt;&lt;/a&gt;['./argv.py', 'foo bar', 'baz']
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-7"&gt;&lt;/a&gt;
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-8"&gt;&lt;/a&gt;$ ./argv.py $(date)
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-9"&gt;&lt;/a&gt;['./argv.py', 'Sat', 'Sep', '2', '16:54:52', 'CEST', '2017']
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-10"&gt;&lt;/a&gt;$ ./argv.py "$(date)"
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-11"&gt;&lt;/a&gt;['./argv.py', 'Sat Sep  2 16:54:52 CEST 2017']
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-12"&gt;&lt;/a&gt;
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-13"&gt;&lt;/a&gt;$ ./argv.py /usr/*
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-14"&gt;&lt;/a&gt;['./argv.py', '/usr/X11', '/usr/X11R6', '/usr/bin', '/usr/include', '/usr/lib', '/usr/libexec', '/usr/local', '/usr/sbin', '/usr/share', '/usr/standalone']
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-15"&gt;&lt;/a&gt;$ ./argv.py "/usr/*"
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-16"&gt;&lt;/a&gt;['./argv.py', '/usr/*']
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-17"&gt;&lt;/a&gt;
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-18"&gt;&lt;/a&gt;$ ./argv.py $EDITOR
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-19"&gt;&lt;/a&gt;['./argv.py', 'nvim']
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-20"&gt;&lt;/a&gt;
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-21"&gt;&lt;/a&gt;$ $PWD/argv.py foo bar
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-22"&gt;&lt;/a&gt;['/Users/kwpolska/Desktop/blog/subprocess/argv.py', 'foo', 'bar']
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-23"&gt;&lt;/a&gt;$ ./argv.py a{b,c}d
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-24"&gt;&lt;/a&gt;['./argv.py', 'abd', 'acd']
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-25"&gt;&lt;/a&gt;
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-26"&gt;&lt;/a&gt;$ python argv.py foo bar | cat
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-27"&gt;&lt;/a&gt;['argv.py', 'foo', 'bar']
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-28"&gt;&lt;/a&gt;$ python argv.py foo bar &amp;gt; foo.txt
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-29"&gt;&lt;/a&gt;$ cat foo.txt
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-30"&gt;&lt;/a&gt;['argv.py', 'foo', 'bar']
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-31"&gt;&lt;/a&gt;
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-32"&gt;&lt;/a&gt;$ ./argv.py foo; ls /usr
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-33"&gt;&lt;/a&gt;['./argv.py', 'foo']
+&lt;a name="rest_code_f8e1667972d74b4284d07cfd0053708f-34"&gt;&lt;/a&gt;X11@        X11R6@      bin/        include/    lib/        libexec/    local/      sbin/       share/      standalone/
 &lt;/pre&gt;&lt;p&gt;As you can see, the following things are handled by the shell (the process is unaware of this occurring):&lt;/p&gt;
 &lt;ul class="simple"&gt;
 &lt;li&gt;quotes and escapes&lt;/li&gt;
@@ -654,22 +654,22 @@ some other goodies, check out my &lt;a href="https://github.com/Kwpolska/python-
 function that takes no arguments, and also a special passage to determine code
 to run:&lt;/p&gt;
 &lt;p&gt;&lt;a class="reference external" href="https://chriswarrick.com/listings/entry_points_project/my_project/__main__.py.html"&gt;entry_points_project/my_project/__main__.py&lt;/a&gt;  &lt;a class="reference external" href="https://chriswarrick.com/listings/entry_points_project/my_project/__main__.py"&gt;(Source)&lt;/a&gt;&lt;/p&gt;
-&lt;pre class="code python"&gt;&lt;a name="rest_code_d59de70e505c434abef8214032c5413d-1"&gt;&lt;/a&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;sys&lt;/span&gt;
-&lt;a name="rest_code_d59de70e505c434abef8214032c5413d-2"&gt;&lt;/a&gt;
-&lt;a name="rest_code_d59de70e505c434abef8214032c5413d-3"&gt;&lt;/a&gt;
-&lt;a name="rest_code_d59de70e505c434abef8214032c5413d-4"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-&lt;a name="rest_code_d59de70e505c434abef8214032c5413d-5"&gt;&lt;/a&gt;    &lt;span class="sd"&gt;"""The main routine."""&lt;/span&gt;
-&lt;a name="rest_code_d59de70e505c434abef8214032c5413d-6"&gt;&lt;/a&gt;    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;args&lt;/span&gt; &lt;span class="ow"&gt;is&lt;/span&gt; &lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-&lt;a name="rest_code_d59de70e505c434abef8214032c5413d-7"&gt;&lt;/a&gt;        &lt;span class="n"&gt;args&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;:]&lt;/span&gt;
-&lt;a name="rest_code_d59de70e505c434abef8214032c5413d-8"&gt;&lt;/a&gt;
-&lt;a name="rest_code_d59de70e505c434abef8214032c5413d-9"&gt;&lt;/a&gt;    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"This is the main routine."&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_d59de70e505c434abef8214032c5413d-10"&gt;&lt;/a&gt;    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"It should do something interesting."&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_d59de70e505c434abef8214032c5413d-11"&gt;&lt;/a&gt;
-&lt;a name="rest_code_d59de70e505c434abef8214032c5413d-12"&gt;&lt;/a&gt;    &lt;span class="c1"&gt;# Do argument parsing here (eg. with argparse) and anything else&lt;/span&gt;
-&lt;a name="rest_code_d59de70e505c434abef8214032c5413d-13"&gt;&lt;/a&gt;    &lt;span class="c1"&gt;# you want your project to do.&lt;/span&gt;
-&lt;a name="rest_code_d59de70e505c434abef8214032c5413d-14"&gt;&lt;/a&gt;
-&lt;a name="rest_code_d59de70e505c434abef8214032c5413d-15"&gt;&lt;/a&gt;&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="vm"&gt;__name__&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s2"&gt;"__main__"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-&lt;a name="rest_code_d59de70e505c434abef8214032c5413d-16"&gt;&lt;/a&gt;    &lt;span class="n"&gt;main&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_c617aa085d494125b436691b24f4261a-1"&gt;&lt;/a&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;sys&lt;/span&gt;
+&lt;a name="rest_code_c617aa085d494125b436691b24f4261a-2"&gt;&lt;/a&gt;
+&lt;a name="rest_code_c617aa085d494125b436691b24f4261a-3"&gt;&lt;/a&gt;
+&lt;a name="rest_code_c617aa085d494125b436691b24f4261a-4"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;a name="rest_code_c617aa085d494125b436691b24f4261a-5"&gt;&lt;/a&gt;    &lt;span class="sd"&gt;"""The main routine."""&lt;/span&gt;
+&lt;a name="rest_code_c617aa085d494125b436691b24f4261a-6"&gt;&lt;/a&gt;    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;args&lt;/span&gt; &lt;span class="ow"&gt;is&lt;/span&gt; &lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;a name="rest_code_c617aa085d494125b436691b24f4261a-7"&gt;&lt;/a&gt;        &lt;span class="n"&gt;args&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;:]&lt;/span&gt;
+&lt;a name="rest_code_c617aa085d494125b436691b24f4261a-8"&gt;&lt;/a&gt;
+&lt;a name="rest_code_c617aa085d494125b436691b24f4261a-9"&gt;&lt;/a&gt;    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"This is the main routine."&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_c617aa085d494125b436691b24f4261a-10"&gt;&lt;/a&gt;    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"It should do something interesting."&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_c617aa085d494125b436691b24f4261a-11"&gt;&lt;/a&gt;
+&lt;a name="rest_code_c617aa085d494125b436691b24f4261a-12"&gt;&lt;/a&gt;    &lt;span class="c1"&gt;# Do argument parsing here (eg. with argparse) and anything else&lt;/span&gt;
+&lt;a name="rest_code_c617aa085d494125b436691b24f4261a-13"&gt;&lt;/a&gt;    &lt;span class="c1"&gt;# you want your project to do.&lt;/span&gt;
+&lt;a name="rest_code_c617aa085d494125b436691b24f4261a-14"&gt;&lt;/a&gt;
+&lt;a name="rest_code_c617aa085d494125b436691b24f4261a-15"&gt;&lt;/a&gt;&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="vm"&gt;__name__&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s2"&gt;"__main__"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;a name="rest_code_c617aa085d494125b436691b24f4261a-16"&gt;&lt;/a&gt;    &lt;span class="n"&gt;main&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;/pre&gt;&lt;ol class="arabic simple"&gt;
 &lt;li&gt;The &lt;tt class="docutils literal"&gt;if __name__ == "__main__":&lt;/tt&gt; idiom, as &lt;a class="reference external" href="https://docs.python.org/3/library/__main__.html"&gt;documented here&lt;/a&gt;, is used to check whether
 this is executed as the top-level file, or if it has been imported by someone
@@ -682,24 +682,24 @@ else (in this case, executing the &lt;tt class="docutils literal"&gt;main()&lt;/
 &lt;h2&gt;Step 2: adjust &lt;tt class="docutils literal"&gt;setup.py&lt;/tt&gt; accordingly&lt;/h2&gt;
 &lt;p&gt;This is the real deal: create the entry points in your &lt;tt class="docutils literal"&gt;setup.py&lt;/tt&gt; file.&lt;/p&gt;
 &lt;p&gt;&lt;a class="reference external" href="https://chriswarrick.com/listings/entry_points_project/setup.py.html"&gt;entry_points_project/setup.py&lt;/a&gt;  &lt;a class="reference external" href="https://chriswarrick.com/listings/entry_points_project/setup.py"&gt;(Source)&lt;/a&gt;&lt;/p&gt;
-&lt;pre class="code python"&gt;&lt;a name="rest_code_beff5e7ce5c84e2398eafb8fa5484d73-1"&gt;&lt;/a&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;setuptools&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;setup&lt;/span&gt;
-&lt;a name="rest_code_beff5e7ce5c84e2398eafb8fa5484d73-2"&gt;&lt;/a&gt;
-&lt;a name="rest_code_beff5e7ce5c84e2398eafb8fa5484d73-3"&gt;&lt;/a&gt;&lt;span class="n"&gt;setup&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;'my_project'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;a name="rest_code_beff5e7ce5c84e2398eafb8fa5484d73-4"&gt;&lt;/a&gt;      &lt;span class="n"&gt;version&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;'0.1.0'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;a name="rest_code_beff5e7ce5c84e2398eafb8fa5484d73-5"&gt;&lt;/a&gt;      &lt;span class="n"&gt;packages&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;'my_project'&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;
-&lt;a name="rest_code_beff5e7ce5c84e2398eafb8fa5484d73-6"&gt;&lt;/a&gt;      &lt;span class="n"&gt;entry_points&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-&lt;a name="rest_code_beff5e7ce5c84e2398eafb8fa5484d73-7"&gt;&lt;/a&gt;          &lt;span class="s1"&gt;'console_scripts'&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;
-&lt;a name="rest_code_beff5e7ce5c84e2398eafb8fa5484d73-8"&gt;&lt;/a&gt;              &lt;span class="s1"&gt;'my_project = my_project.__main__:main'&lt;/span&gt;
-&lt;a name="rest_code_beff5e7ce5c84e2398eafb8fa5484d73-9"&gt;&lt;/a&gt;          &lt;span class="p"&gt;]&lt;/span&gt;
-&lt;a name="rest_code_beff5e7ce5c84e2398eafb8fa5484d73-10"&gt;&lt;/a&gt;      &lt;span class="p"&gt;},&lt;/span&gt;
-&lt;a name="rest_code_beff5e7ce5c84e2398eafb8fa5484d73-11"&gt;&lt;/a&gt;      &lt;span class="p"&gt;)&lt;/span&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_1dc6625acc1d4de3b44b2710915b1e3c-1"&gt;&lt;/a&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;setuptools&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;setup&lt;/span&gt;
+&lt;a name="rest_code_1dc6625acc1d4de3b44b2710915b1e3c-2"&gt;&lt;/a&gt;
+&lt;a name="rest_code_1dc6625acc1d4de3b44b2710915b1e3c-3"&gt;&lt;/a&gt;&lt;span class="n"&gt;setup&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;'my_project'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;a name="rest_code_1dc6625acc1d4de3b44b2710915b1e3c-4"&gt;&lt;/a&gt;      &lt;span class="n"&gt;version&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;'0.1.0'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;a name="rest_code_1dc6625acc1d4de3b44b2710915b1e3c-5"&gt;&lt;/a&gt;      &lt;span class="n"&gt;packages&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;'my_project'&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;
+&lt;a name="rest_code_1dc6625acc1d4de3b44b2710915b1e3c-6"&gt;&lt;/a&gt;      &lt;span class="n"&gt;entry_points&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_1dc6625acc1d4de3b44b2710915b1e3c-7"&gt;&lt;/a&gt;          &lt;span class="s1"&gt;'console_scripts'&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;
+&lt;a name="rest_code_1dc6625acc1d4de3b44b2710915b1e3c-8"&gt;&lt;/a&gt;              &lt;span class="s1"&gt;'my_project = my_project.__main__:main'&lt;/span&gt;
+&lt;a name="rest_code_1dc6625acc1d4de3b44b2710915b1e3c-9"&gt;&lt;/a&gt;          &lt;span class="p"&gt;]&lt;/span&gt;
+&lt;a name="rest_code_1dc6625acc1d4de3b44b2710915b1e3c-10"&gt;&lt;/a&gt;      &lt;span class="p"&gt;},&lt;/span&gt;
+&lt;a name="rest_code_1dc6625acc1d4de3b44b2710915b1e3c-11"&gt;&lt;/a&gt;      &lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;ol class="arabic simple"&gt;
 &lt;li&gt;You must use setuptools, otherwise this won’t work.&lt;/li&gt;
 &lt;li&gt;The most important piece of code is the &lt;tt class="docutils literal"&gt;entry_points&lt;/tt&gt; declaration
 (unsurprisingly).&lt;/li&gt;
 &lt;li&gt;The declaration reads&lt;/li&gt;
 &lt;/ol&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_16b2f1a924fb461dbb8d916526b3844b-1"&gt;&lt;/a&gt;"name_of_executable = module.with:function_to_execute"
+&lt;pre class="code text"&gt;&lt;a name="rest_code_cc16e57bb5124b08948746ff9707810c-1"&gt;&lt;/a&gt;"name_of_executable = module.with:function_to_execute"
 &lt;/pre&gt;&lt;ol class="arabic simple" start="4"&gt;
 &lt;li&gt;If you are developing a GUI application (in Tkinter, PyQt/PySide,
 wxPython, PyGTK, PyGame…), you should change the declaration to
