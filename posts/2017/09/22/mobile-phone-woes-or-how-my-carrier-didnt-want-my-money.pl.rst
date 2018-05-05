@@ -2,7 +2,7 @@
 .. slug: mobile-phone-woes-or-how-my-carrier-didnt-want-my-money
 .. date: 2017-09-22 16:00:00+02:00
 .. tags: Orange, telecom, mobile, phone
-.. section: Personal
+.. category: Personal
 .. description: Pewien operator telefoniczny nie chciał moich pieniędzy. Więc przeszedłem do konkurencji.
 .. type: text
 

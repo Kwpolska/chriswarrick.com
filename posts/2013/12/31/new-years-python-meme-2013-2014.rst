@@ -2,7 +2,7 @@
 .. slug: new-years-python-meme-2013-2014
 .. date: 2013-12-31 18:15:00
 .. tags: Python, Nikola, programming
-.. section: Python
+.. category: Python
 .. description: Python is Awesome: Take Two.
 
 Via `Tarek Ziadé`_ (original meme, none this year…) and `Alex Clark`_.  Right after the break.

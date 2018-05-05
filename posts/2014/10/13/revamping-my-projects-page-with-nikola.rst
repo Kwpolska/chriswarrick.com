@@ -2,9 +2,9 @@
 .. slug: revamping-my-projects-page-with-nikola
 .. date: 2014-10-13 14:15:00+02:00
 .. tags: Python, devel, Nikola
+.. category: Python
 .. description: A tale on how I revamped my projects page.
 .. type: text
-.. section: Python
 
 A week ago, I was inspired to produce a new `projects page </projects/>`_ for
 myself.  The previous one was a trainwreck with a lot of hacks.  Also hosted on

@@ -1,13 +1,13 @@
 .. title: Adventures in Windows: Music Player Daemon
 .. slug: mpd-on-windows
 .. date: 2013-09-01 19:15:00+02:00
-.. description: A short how-to on installing MPD on Windows.
 .. tags: Windows, mpd, guide
-.. section: Windows
+.. category: Windows
+.. description: A short how-to on installing MPD on Windows.
 .. guide: yes
-.. guide_topic: MPD
-.. guide_platform: Windows
 .. guide_effect: you can now play music the Unix way on Windows
+.. guide_platform: Windows
+.. guide_topic: MPD
 .. shortlink: mpd-win
 
 Recently, I had to reinstall Windows.  One of the things I had to set up

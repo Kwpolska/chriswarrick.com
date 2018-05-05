@@ -2,13 +2,13 @@
 .. slug: python-project-template-structure-and-automation
 .. date: 2017-04-09 11:00:00+02:00
 .. tags: guide, Python, projects, PyPT, Nikola
-.. section: Programming
+.. category: Programming
 .. description: How to structure a Python project and automate releases.
 .. type: text
 .. guide: yes
-.. guide_topic: Python
-.. guide_platform: any platform
 .. guide_effect: your Python project is now well-structured and automated
+.. guide_platform: any platform
+.. guide_topic: Python
 .. shortlink: pypt-blog
 
 To create a project that other people can use and contribute to, you need to

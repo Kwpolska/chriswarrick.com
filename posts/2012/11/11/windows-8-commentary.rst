@@ -2,7 +2,7 @@
 .. slug: windows-8-commentary
 .. date: 2012-11-11 17:15:00
 .. tags: Windows, Windows 8, rant, review
-.. section: Windows
+.. category: Windows
 .. description: A commentary this time.
 
 Windows 8 was released on 2012-10-26.  That is, 16 days ago.  Why am I writing

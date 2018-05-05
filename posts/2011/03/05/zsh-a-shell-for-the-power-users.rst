@@ -2,7 +2,7 @@
 .. slug: zsh-a-shell-for-the-power-users
 .. date: 2011-03-05 00:00:00
 .. tags: Linux, shell, zsh
-.. section: Linux
+.. category: Linux
 .. description: A word or two about Zsh.
 
 What’s the most important non-kernel piece of software in UNIX-like OSes? The shell. A good shell.

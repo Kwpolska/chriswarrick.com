@@ -1,14 +1,14 @@
 .. title: Setting up a Python development environment
 .. slug: setting-up-a-python-development-environment
 .. date: 2017-07-03 12:40:00+02:00
-.. updated: 2017-07-19 10:00:00+02:00
 .. tags: Python, guide, devel, best practices, guide
-.. section: Python
+.. category: Python
 .. guide: yes
-.. guide_topic: Python
-.. guide_platform: Windows, macOS, Linux
 .. guide_effect: you can use Python and create something awesome
+.. guide_platform: Windows, macOS, Linux
+.. guide_topic: Python
 .. shortlink: pysetup
+.. updated: 2017-07-19 10:00:00+02:00
 
 Setting up Python is usually simple, but there are some places where newcomers
 (and experienced users) need to be careful. What versions are there? What’s the

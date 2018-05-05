@@ -2,8 +2,7 @@
 .. slug: rewriting-a-flask-app-in-django
 .. date: 2015-10-11 17:24:43+02:00
 .. tags: Python, Internet, Django, Flask, Nikola
-.. section: Python
-.. link: 
+.. category: Python
 .. description: I spent Saturday on rewriting a Flask app in Django.
 .. type: text
 

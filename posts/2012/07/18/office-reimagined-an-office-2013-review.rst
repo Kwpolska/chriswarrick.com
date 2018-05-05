@@ -2,7 +2,7 @@
 .. slug: office-reimagined-an-office-2013-review
 .. date: 2012-07-18 15:20:00
 .. tags: Microsoft Office, Microsoft Office 15, Windows, Windows 8, rant, review
-.. section: Windows
+.. category: Windows
 .. description: A review of Office 2013/Office 15.
 
 .. raw:: html

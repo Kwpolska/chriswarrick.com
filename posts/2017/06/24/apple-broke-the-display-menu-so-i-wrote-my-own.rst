@@ -2,8 +2,7 @@
 .. slug: apple-broke-the-display-menu-so-i-wrote-my-own
 .. date: 2017-06-24 21:02:47+02:00
 .. tags: Apple, Swift, programming, projects, app, display
-.. section: Programming
-.. link: 
+.. category: Programming
 .. description: I wrote a menu bar extra to manage display settings.
 .. type: text
 

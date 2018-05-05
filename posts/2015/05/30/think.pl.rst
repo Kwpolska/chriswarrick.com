@@ -2,7 +2,7 @@
 .. slug: think
 .. date: 2015-06-06 14:15:00+02:00
 .. tags: Python, projects, Linux, think, app, CLI, game show, Jeopardy!
-.. section: Python
+.. category: Python
 .. link: http://github.com/Kwpolska/think
 .. description: Mój nowy projekt: Terminal Think Music.
 .. type: text

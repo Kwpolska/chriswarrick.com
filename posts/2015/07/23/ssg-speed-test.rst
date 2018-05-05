@@ -2,7 +2,7 @@
 .. slug: ssg-speed-test
 .. date: 2015-07-23 17:10:00+02:00
 .. tags: Nikola, Pelican, Hexo, Octopress, jekyll, test, webmastering, blog, Python
-.. section: Internet
+.. category: Internet
 .. link: https://chriswarrick.com/pub/ssg-test-results.ods
 .. description: Four static site generators: which one is the fastest
 .. type: text

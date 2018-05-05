@@ -2,8 +2,7 @@
 .. slug: windows-10-november-upgrade-windows-as-a-dis-service
 .. date: 2015-12-27 12:15:00+01:00
 .. tags: Windows, review, rant
-.. section: Windows
-.. link:
+.. category: Windows
 .. description: Windows 10 upgrades are painful.
 .. type: text
 

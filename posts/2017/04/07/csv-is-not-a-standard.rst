@@ -2,7 +2,7 @@
 .. slug: csv-is-not-a-standard
 .. date: 2017-04-07 20:00:00+02:00
 .. tags: CSV, Microsoft, Excel, Microsoft Office
-.. section: Programming
+.. category: Programming
 .. description: CSV is not a standard.
 .. type: text
 .. shortlink: csv

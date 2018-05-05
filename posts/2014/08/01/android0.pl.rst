@@ -2,8 +2,7 @@
 .. slug: series-android-adventure
 .. date: 2014-08-01 18:00:00+02:00
 .. tags: android, adventure, review
-.. section: Android Adventure
-.. link: 
+.. category: Android Adventure
 .. description: Przygoda z Androidem czeka.
 .. type: text
 

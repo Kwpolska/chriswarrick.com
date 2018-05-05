@@ -2,7 +2,7 @@
 .. slug: facebook-knows-too-much
 .. date: 2014-11-07 20:20:00+01:00
 .. tags: Internet, Facebook, rant
-.. section: Personal
+.. category: Personal
 .. description: Facebook shouldn’t know that many things.
 .. type: text
 

@@ -2,13 +2,13 @@
 .. slug: spawning-subprocesses-smartly-and-securely
 .. date: 2017-09-02 20:40:00+02:00
 .. tags: Python, C, Unix, Linux, subprocess, security, devel, best practices, guide
-.. section: Programming
+.. category: Programming
 .. description: How to spawn subprocesses securely? Do I need a subprocess?
 .. type: text
 .. guide: yes
-.. guide_topic: spawning subprocesses
-.. guide_platform: Unix/Linux (and partially Windows)
 .. guide_effect: you know when to spawn subprocesses and how to do it right
+.. guide_platform: Unix/Linux (and partially Windows)
+.. guide_topic: spawning subprocesses
 .. shortlink: subprocess
 
 As part of your code, you may be inclined to call a command to do

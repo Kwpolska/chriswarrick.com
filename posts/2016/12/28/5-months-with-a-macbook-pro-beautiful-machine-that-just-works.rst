@@ -2,8 +2,7 @@
 .. slug: 5-months-with-a-macbook-pro-beautiful-machine-that-just-works
 .. date: 2016-12-27 16:15:00+01:00
 .. tags: Apple, MacBook Pro, programming, review
-.. section: Apple
-.. link: 
+.. category: Apple
 .. description: I love my MacBook Pro.
 .. type: text
 

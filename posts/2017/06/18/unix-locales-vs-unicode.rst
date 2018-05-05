@@ -2,13 +2,13 @@
 .. slug: unix-locales-vs-unicode
 .. date: 2017-06-18 20:40:00+02:00
 .. tags: Unix, Unicode, locale, Python, guide
-.. section: Programming
+.. category: Programming
 .. description: How to configure locales for Unicode support.
 .. type: text
 .. guide: yes
-.. guide_topic: Locale support/Unicode
-.. guide_platform: Unix (Linux, macOS, etc.)
 .. guide_effect: you can now use Unicode in many more places
+.. guide_platform: Unix (Linux, macOS, etc.)
+.. guide_topic: Locale support/Unicode
 .. shortlink: locale
 
 You might get unusual errors about Unicode and inability to convert

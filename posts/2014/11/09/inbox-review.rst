@@ -2,9 +2,9 @@
 .. slug: inbox-review
 .. date: 2014-11-09 19:30:00+01:00
 .. tags: review, Google, e-mail, android
+.. category: Internet
 .. description: A short review of Inbox, the new way to use e-mail.
 .. type: text
-.. section: Internet
 .. previewimage: /galleries/inbox-by-google/10 All done view.png
 
 I got a `Inbox`__ invite (hat tip to `Dawid Róż @dav4dav4`__) and spent a day

@@ -2,9 +2,7 @@
 .. slug: apples-new-pricing-strategy-dont-buy-the-12-macbook
 .. date: 2017-06-08 19:35:00+02:00
 .. tags: Apple, MacBook Pro, MacBook, Mac
-.. section: Apple
-.. link: 
-.. description: 
+.. category: Apple
 .. type: text
 
 On Monday, Apple announced some changes to its Mac lineup. All MacBooks (even

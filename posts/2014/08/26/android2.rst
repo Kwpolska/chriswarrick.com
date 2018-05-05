@@ -2,7 +2,7 @@
 .. slug: speeker
 .. date: 2014-08-26 15:00:00+02:00
 .. tags: android, app, devel, programming, projects
-.. section: Android Adventure
+.. category: Android Adventure
 .. description: My little Android app.
 .. type: text
 

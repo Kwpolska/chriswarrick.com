@@ -2,7 +2,7 @@
 .. slug: code-writing-code-python-and-vim
 .. date: 2016-05-27 10:46:35+02:00
 .. tags: programming, Python, Vim, CSharp, Java
-.. section: Programming
+.. category: Programming
 .. description: I built some programs. And programs to write them.
 .. type: text
 

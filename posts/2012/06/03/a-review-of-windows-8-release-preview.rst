@@ -2,7 +2,7 @@
 .. slug: a-review-of-windows-8-release-preview
 .. date: 2012-06-03 16:00:00
 .. tags: Windows, rant, Windows 8, review
-.. section: Windows
+.. category: Windows
 .. description: Here we go again: yet another Windows 8 review, Release Preview this time.
 
 .. raw:: html
