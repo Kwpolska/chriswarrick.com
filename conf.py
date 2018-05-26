@@ -16,7 +16,6 @@ BLOG_TITLE = "Chris Warrick"
 SITE_URL = "https://chriswarrick.com/"
 # This is the URL where nikola's output will be deployed.
 # If not set, defaults to SITE_URL
-# BASE_URL = "http://nikola.ralsina.com.ar"
 BLOG_EMAIL = "chris@chriswarrick.com"
 BLOG_DESCRIPTION = "A blog about everything and nothing."
 
@@ -333,15 +332,14 @@ LICENSE = """<a rel="license" href="https://creativecommons.org/licenses/by-nc-s
 # A small copyright notice for the page footer (in HTML).
 # Default is ''
 CONTENT_FOOTER = {
-    'en': """<p><a href="/cookies/">this site uses
-cookies.</a><br>by using this site, you agree to our cookie policy.</p><p>
+    'en': """<p>this site uses cookies.<br>by using this site, you agree to our <a href="/privacy/">cookie and privacy policy</a>.</p><p>
 powered by <strong><a href="https://getnikola.com/">Nikola</a></strong>, <a href="http://nginx.org/">nginx</a> and <a href="https://www.digitalocean.com/?refcode=7983689b2ecc">DigitalOcean</a><br>
-copyright&nbsp;©&nbsp;2009–2018&nbsp;<a
+copyright © 2009–2018 <a
 href="/contact/">Chris Warrick</a><br> <a rel="license"
 href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC
 BY-NC-SA</a>, unless stated otherwise</p>""",
-    'pl': """<p><a href="/pl/cookies/">ta strona używa ciasteczek.</a><br>
-korzystając z tej strony, akceptujesz naszą politykę ciasteczek.
+    'pl': """<p>ta strona używa ciasteczek.<br>
+korzystając z tej strony, akceptujesz naszą <a href="/pl/privacy/">politykę prywatności i ciasteczek</a>.
 </p><p>
 powered by <strong><a href="https://getnikola.com/">Nikola</a></strong>, <a href="http://nginx.org/">nginx</a> and <a href="https://www.digitalocean.com/?refcode=7983689b2ecc">DigitalOcean</a><br>
 copyright&nbsp;©&nbsp;2009–2018&nbsp;<a

@@ -1,18 +1,18 @@
 // Kw’s JS
-// Copyright © 2014, Chris Warrick.
+// Copyright © 2014-2018, Chris Warrick.
 
 $(document).ready(function() {
-    if (document.cookie.indexOf('kw_cookies=1') == -1) {
-        if ($('html').attr('lang') == 'en') {
-            $("#cookiecontainer").html('<div class="alert alert-primary fade in" role="alert" id="cookiealert">This site uses <strong>cookies</strong>.  <a href="/cookies/" class="alert-link">Read more.</a> <button type="button" class="close" data-dismiss="alert">&times; Got it</button></div>');
-        } else if ($('html').attr('lang') == 'pl') {
-            $("#cookiecontainer").html('<div class="alert alert-primary fade in" role="alert" id="cookiealert">Ta strona używa <strong>ciasteczek</strong>.  <a href="/pl/cookies/" class="alert-link">Dowiedz się więcej.</a> <button type="button" class="close" data-dismiss="alert">&times; Rozumiem</button></div>');
+    if (document.cookie.indexOf('kw_cookies=2') == -1) {
+        if ($('html').attr('lang') == 'pl') {
+            $("#cookiebox").html('<div class="alert alert-primary fade show" role="alert" id="cookiealert">Ta strona używa ciasteczek. <a href="/pl/privacy/" class="alert-link">Dowiedz się więcej.</a> <button type="button" class="close" data-dismiss="alert">&times; Rozumiem</button></div>');
+        } else {
+            $("#cookiebox").html('<div class="alert alert-primary fade show" role="alert" id="cookiealert">This site uses cookies. <a href="/privacy/" class="alert-link">Read more.</a> <button type="button" class="close" data-dismiss="alert">&times; Got it</button></div>');
         }
     }
 
     $('#cookiealert').on('closed.bs.alert', function () {
         // One second before the year 2038 bug.
-        document.cookie = 'kw_cookies=1; expires=17-Jan-2038 03:14:07 GMT; path=/';
+        document.cookie = 'kw_cookies=2; expires=17-Jan-2038 03:14:07 GMT; path=/';
     });
 });
 
@@ -29,13 +29,13 @@ function fancydates(fanciness, date_format) {
         return;
     }
 
-    dates = document.getElementsByClassName('dt-published');
+    var dates = document.getElementsByClassName('dt-published');
 
-    i = 0;
-    l = dates.length;
+    var l = dates.length;
 
-    for (i = 0; i < l; i++) {
-        d = moment(dates[i].attributes.datetime.value);
+    for (var i = 0; i < l; i++) {
+        var d = moment(dates[i].attributes.datetime.value);
+        var o;
         if (fanciness == 1) {
             o = d.local().format(date_format);
         } else {
