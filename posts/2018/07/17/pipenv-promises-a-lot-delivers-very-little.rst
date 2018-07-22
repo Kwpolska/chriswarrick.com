@@ -1,6 +1,7 @@
 .. title: Pipenv: promises a lot, delivers very little
 .. slug: pipenv-promises-a-lot-delivers-very-little
 .. date: 2018-07-17 19:40:00+02:00
+.. updated: 2018-07-22 21:20:00+02:00
 .. tags: Python, Pipenv, packaging
 .. category: Python
 .. description: Pipenv is a Python packaging tool that does one thing reasonably well. It tries to promote itself as much more than it is.
@@ -283,6 +284,12 @@ the locked dependencies — so, roughly nine and a half minutes were spent
 staring at a static screen, with the tool doing *something* in the background —
 and Pipenv doesn’t tell you what happens in this phase.
 
+(Updated 2018-07-22: In the pipenv measurements: the first entry is the total
+time of pipenv executon. The second is the long wait for pipenv to do its
+“main” job: locking dependencies and installing them. The timing starts when
+pipenv starts locking dependencies and ends when the prompt appears. The third
+item is pipenv’s reported installation time.  So, pipenv install ⊇ locking/installing ⊇ Pipfile.lock install.)
+
 .. class:: table table-striped table-bordered
 
 +------+----------------------------------------+---------------+---------------+-------------------------------+-----------+-----------+-----------+-----------+
@@ -504,7 +511,7 @@ Conclusion
   of installation speed. The speed is a noticeable issue with the tool. ``pip
   freeze`` is good enough for this, even if there are no dependency classes
   (production vs development) and no hashes (which
-  have minor benefits)
+  have minor benefits) [2]_
 * Hatch attempts to replace many packaging tools, but some of its practices and
   ideas can be questionable.
 * Poetry supports the same niche Pipenv does, while also adding the ability to
@@ -518,6 +525,6 @@ Conclusion
   because it is based on shell scripts (which can modify the enivironment).
 
 .. [1] On a side note, the tutorial explains nothing. A prospective user only learns it’s similar to npm or bundler (what does that mean?), installs one package, and runs a ``.py`` file through ``pipenv run``.
-.. [2] Note that one can’t change the file on PyPI after uploading it, so this would only be protection against rogue PyPI admins or a MitM attack (in which case you’ve got bigger problems anyways).
+.. [2] Note that one can’t change the file on PyPI after uploading it, so this would only be protection against rogue PyPI admins or a MitM attack (in which case you’ve got bigger problems anyways). `Also, the feature is fairly broken. <https://github.com/nedbat/coveragepy/issues/679#issuecomment-406396761>`_
 .. [3] Fortunately, it looks in the parent directories for Pipfiles as well. Otherwise, you might end up with one environment for ``foo`` and another for ``foo/foo`` and yet another for ``foo/docs`` and so on…
 .. [4] The interruption happened by mistake due to the RAM disk running out of space, but it was actually a good thing to have happened.
