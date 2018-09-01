@@ -287,12 +287,10 @@ Tools and management
 There are two tools to facilitate creation of virtual environments: the older
 `virtualenv <https://virtualenv.pypa.io/en/stable/>`_ project, and the newer
 ``venv`` module. The ``venv`` module is shipped with Python 3.x; some
-distributions may put it in a separate package or remove it altogether. I
-recommend using **virtualenv** — it’s compatible with more Python versions
-(it’s better to use the same tool for both Pythons) and cannot be broken by
-incompetent OS package maintainers (``venv`` fails on Debian due to no
-``ensurepip``; there is a ``python3-venv`` package that fixes it but that’s
-hard to discover)
+distributions may put it in a separate package or remove it altogether. Use
+whichever works for you.  Virtualenv is compatible with more Python versions
+and cannot be broken by incompetent OS package maintainers (``venv`` requires
+an extra package on Debian).
 
 There are multiple schools of thought regarding virtualenv placement and
 content. Myself, I use `virtualenvwrapper

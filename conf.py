@@ -293,7 +293,8 @@ CODE_COLOR_SCHEME = 'monokai'
 
 # date format used to display post dates.
 # (str used by datetime.datetime.strftime)
-DATE_FORMAT = '%Y-%m-%d %H:%M'
+DATE_FORMAT = {"en": "dd MMMM yyyy 'at' HH:mm",
+               "pl": "dd MMMM yyyy 'o' HH:mm"}
 
 DATE_FANCINESS = 0
 

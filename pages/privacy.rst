@@ -14,7 +14,7 @@ Stored information
 
 We store the following information:
 
-* IP addresses, browsers (User Agents), request date/times (for 4 weeks)
+* IP addresses, browsers (User Agents), request date/times (for 2 weeks)
 * User statistics in Google Analtyics (for 14 months since last visit)
 * Comments and author information is stored by Disqus
   (as regulated by Disqus’ privacy policy)
@@ -33,8 +33,8 @@ Cookies
 * A cookie to denote privacy policy acknowledgement
 * Login cookies (``go.chriswarrick.com``)
 
-Blokowanie ciasteczek
----------------------
+Blocking coookies
+-----------------
 
 You may disable cookies in your browser’s settings. Please check your browser’s help system for more details. You may also
 `block Google Analytics

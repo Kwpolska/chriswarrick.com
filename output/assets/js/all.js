@@ -29,7 +29,7 @@ function fancydates(fanciness, date_format) {
         return;
     }
 
-    var dates = document.getElementsByClassName('dt-published');
+    var dates = document.querySelectorAll('.dt-published, .dt-updated');
 
     var l = dates.length;
 

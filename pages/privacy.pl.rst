@@ -15,7 +15,7 @@ Przechowywane dane
 Przechowujemy następujące informacje:
 
 * Informacje o adresach IP, przeglądarkach (User Agent) oraz o czasie żądania
-  (przez 4 tygodnie)
+  (przez 2 tygodnie)
 * Statystyki o użytkownikach w Google Analytics (przez 14 miesięcy od ostatniej
   wizyty)
 * W przypadku korzystania z komentarzy, ich treść oraz dane autora przechowuje
