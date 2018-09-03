@@ -8,7 +8,7 @@
 .. guide_platform: Windows, macOS, Linux
 .. guide_topic: Python
 .. shortlink: pysetup
-.. updated: 2017-07-19 10:00:00+02:00
+.. updated: 2018-09-03 20:45:00+02:00
 
 Setting up Python is usually simple, but there are some places where newcomers
 (and experienced users) need to be careful. What versions are there? What’s the
@@ -204,8 +204,10 @@ newer.
 If the version that ships with your distribution is too old, there are some
 options. There might be some repositories with better versions, eg. the
 `deadsnakes PPA <https://launchpad.net/~fkrull/+archive/ubuntu/deadsnakes>`_
-for Ubuntu. Then there’s the other option of compiling Python manually. The
-instructions depend on your exact requirements, but here’s a summary:
+for Ubuntu. Then there’s the other option of compiling Python. There
+are some tools to help with this, like ``pyenv`` or ``pythonz`` (they can also
+manage multiple Python versions), or you can do it manually.
+The instructions depend on your exact requirements, but here’s a summary:
 
 1. Download the `source distribution from Python.org <https://www.python.org/downloads/source/>`_ and unpack it. Go into the unpacked source directory.
 2. Ensure you’ve got a functional C compiler and Python’s dependencies. You can
@@ -217,7 +219,8 @@ instructions depend on your exact requirements, but here’s a summary:
 4. Run ``make altinstall`` as root. Avoid ``make install``, as it can override
    ``python`` executables.
 
-Alternatively, you can try ``pyenv`` or ``pythonz`` — tools that can be used to install and manage different Python versions. Remember: compiling Python should be considered a **last resort**.
+Remember: compiling Python should be considered a **last resort**, unless you
+have very specific Python version requirements.
 
 Installing packages
 ===================
