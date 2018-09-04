@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html prefix="
+og: http://ogp.me/ns#
+" lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="A short yet descriptive guide on Python virtual environments.">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Python Virtual Environments in Five Minutes | Chris Warrick</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.css" integrity="sha256-FqCzNnnyXl5HxHMdb+RQ/RV/X7fqfPcQYy+G2gFL3Xk=" crossorigin="anonymous">
+<link href="/assets/css/all.css" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=EB+Garamond:400,400i,700%7CSource+Sans+Pro&amp;subset=latin-ext" rel="stylesheet">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+<meta name="theme-color" content="#00aadd">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS (en)" href="/rss.xml">
+<link rel="alternate" type="application/rss+xml" title="RSS (pl)" href="/pl/rss.xml">
+<link rel="canonical" href="https://chriswarrick.com/blog/2018/09/04/python-virtual-environments/">
+<link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="16x16 32x32 48x48 64x64 128x128 256x256">
+<link rel="icon" type="image/png" href="/assets/img/logo512.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<!--[if lt IE 9]><script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]--><meta name="description" itemprop="description" content="A short yet descriptive guide on Python virtual environments.">
+<meta name="author" content="Chris Warrick">
+<link rel="prev" href="/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/" title="Pipenv: promises a lot, delivers very little" type="text/html">
+<meta property="og:site_name" content="Chris Warrick">
+<meta property="og:title" content="Python Virtual Environments in Five Minutes">
+<meta property="og:url" content="https://chriswarrick.com/blog/2018/09/04/python-virtual-environments/">
+<meta property="og:description" content="A short yet descriptive guide on Python virtual environments.">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2018-09-04T20:15:00+02:00">
+<meta property="article:tag" content="best practices">
+<meta property="article:tag" content="devel">
+<meta property="article:tag" content="guide">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="venv">
+<meta property="article:tag" content="virtual environments">
+<meta property="article:tag" content="virtualenv">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:creator" content="@Kwpolska">
+<link rel="alternate" hreflang="pl" href="/pl/blog/2018/09/04/python-virtual-environments/">
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-expand-md navbar-kw bg-dark static-top mb-4"><div class="container">
+<!-- This keeps the margins nice -->
+        <a class="navbar-brand" href="https://chriswarrick.com/">
+            <img src="/assets/img/logo.png" srcset="/assets/img/logo2x.png 2x" alt="Chris Warrick" id="logo"><span id="blog-title">Chris Warrick</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="bs-navbar">
+            <ul class="navbar-nav mr-auto">
+<li class="nav-item">
+<a href="/blog/" class="nav-link">Archives</a>
+                </li>
+<li class="nav-item">
+<a href="/blog/tags/" class="nav-link">Tags</a>
+                </li>
+<li class="nav-item">
+<a href="/contact/" class="nav-link">Contact</a>
+                </li>
+<li class="nav-item">
+<a href="/brand/" class="nav-link">Brand</a>
+                </li>
+<li class="nav-item">
+<a href="/kwbot/" class="nav-link">KwBot</a>
+                </li>
+<li class="nav-item">
+<a href="/projects/" class="nav-link">Projects</a>
+                </li>
+<li class="nav-item">
+<a href="/guides/" class="nav-link">Guides</a>
+                </li>
+<li class="nav-item">
+<a href="/search/" class="nav-link">Search</a>
+
+                
+            </li>
+</ul>
+<ul class="navbar-nav navbar-right">
+<li>            </li>
+<li class="nav-item"><a href="https://chriswarrick.com/pl/" rel="alternate" hreflang="pl" class="nav-link">Polski</a></li>
+
+                
+            </ul>
+</div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav><!-- End of Menubar --><div class="container" id="content" role="main">
+    <div class="body-content">
+        <!--Body content-->
+        
+        <div id="cookiebox"></div>
+<article class="post-text h-entry hentry postpage postbox" itemscope="itemscope" itemtype="http://schema.org/Article"><header class="page-header"><h1 class="p-name entry-title" itemprop="headline name">
+    <a href="/blog/2018/09/04/python-virtual-environments/" class="u-url">Python Virtual Environments in Five Minutes</a>
+    </h1>
+
+    <div class="metadata">
+<a href="/blog/2018/09/04/python-virtual-environments/" rel="bookmark" class="u-published"><time class="published dt-published" datetime="2018-09-04T20:15:00+02:00" itemprop="datePublished" title="04 September 2018 at 20:15">04 September 2018 at 20:15</time></a>
+        <ul itemprop="keywords" class="tags post-bubbles list-inline">
+<li class="category-bubble"><a href="/blog/tags/cat_python/" style="background-color: #ffd43b">Python</a></li>
+           <li><a class="tag p-category" href="/blog/tags/best-practices/" rel="tag">best practices</a></li>
+           <li><a class="tag p-category" href="/blog/tags/devel/" rel="tag">devel</a></li>
+           <li><a class="tag p-category" href="/blog/tags/guide/" rel="tag">guide</a></li>
+           <li><a class="tag p-category" href="/blog/tags/python/" rel="tag">Python</a></li>
+           <li><a class="tag p-category" href="/blog/tags/venv/" rel="tag">venv</a></li>
+           <li><a class="tag p-category" href="/blog/tags/virtual-environments/" rel="tag">virtual environments</a></li>
+           <li><a class="tag p-category" href="/blog/tags/virtualenv/" rel="tag">virtualenv</a></li>
+        </ul>
+<span class="shortlink-bubble"><a href="https://go.chriswarrick.com/venv" title="Short link to this article (go.chriswarrick.com/venv)"><i class="fa fa-link"></i> venv</a></span>        
+<p class="guide-header">A <a href="/guides/">guide</a> about <span class="guide-topic">Python virtual environments</span> for <span class="guide-platform">any platform</span></p>    </div>
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div class="lead"><div>
+<p>In Python, virtual environments are used to isolate projects from each other
+(if they require different versions of the same library, for example). They let
+you install and manage packages without administrative privileges, and without
+conflicting with the system package manager.  They also allow to quickly create
+an environment somewhere else with the same dependencies.</p>
+<p>Virtual environments are a crucial tool for any Python developer. And at that,
+a very simple tool to work with.</p>
+</div></div>
+<p>Let’s get started!</p>
+<div class="section" id="install">
+<h2>Install<a href="#install" class="headerlink" title="Permalink to this heading">¶</a></h2>
+<p>There are two main tools used to create virtual environments:</p>
+<ul class="simple">
+<li>
+<a class="reference external" href="https://virtualenv.pypa.io/">virtualenv</a> has
+been the de facto standard tool for many years. It can be used with both
+Python 2 and 3, including very old versions of Python.</li>
+<li>
+<a class="reference external" href="https://docs.python.org/3/library/venv.html">venv</a> (aka pyvenv) was added to the
+standard library in Python 3.3, and with the addition of <tt class="docutils literal">ensurepip</tt> in 3.4,
+it’s an even easier way to get a virtual environment created.</li>
+</ul>
+<p>virtualenv can be installed with your system package manager, or <tt class="docutils literal">pip
+install <span class="pre">--user</span> virtualenv</tt>.</p>
+<p>venv comes built-in with Python 3, although
+Debian/Ubuntu users will need to run <tt class="docutils literal">sudo <span class="pre">apt-get</span> install <span class="pre">python3-venv</span></tt> to
+make it work. <a class="footnote-reference" href="/blog/2018/09/04/python-virtual-environments/#id5" id="id1">[1]</a></p>
+<p>Which one to use? It’s up to you. Both tools achieve the same goal in similar
+ways. And if one of them does not work, you can try the other and it might just
+work better.</p>
+<p><em>(Terminology note: most of the time, the names of both tools are used
+interchargeably, “venv” was often used as an abbreviation for “virtualenv”
+before the stdlib tool was created)</em></p>
+</div>
+<div class="section" id="create">
+<h2>Create<a href="#create" class="headerlink" title="Permalink to this heading">¶</a></h2>
+<p>To create a virtual environment named <tt class="docutils literal">env</tt>, use (depending on your tool of
+choice):</p>
+<pre class="code text"><a name="rest_code_c5d741848bf646c18b234cc6bef8af44-1"></a>$ python3 -m virtualenv env
+</pre>
+<p>or</p>
+<pre class="code text"><a name="rest_code_046c5609cded49d3b19aeb5031843ae8-1"></a>$ python3 -m venv env
+</pre>
+<p>Afterwards, you will end up with a folder named <tt class="docutils literal">env</tt> that contains folders
+named <tt class="docutils literal">bin</tt> (<tt class="docutils literal">Scripts</tt> on Windows — contains executables, including
+<tt class="docutils literal">python</tt>), <tt class="docutils literal">lib</tt> (contains code), and <tt class="docutils literal">include</tt> (contains C headers).</p>
+<p>Both tools install <tt class="docutils literal">pip</tt> and <tt class="docutils literal">setuptools</tt>, but <tt class="docutils literal">venv</tt> does not ship with
+<tt class="docutils literal">wheel</tt>. In addition, the default versions tend to be more-or-less outdated.
+Let’s upgrade them real quick (first command is Unix, second is Windows): <a class="footnote-reference" href="/blog/2018/09/04/python-virtual-environments/#id6" id="id2">[2]</a></p>
+<pre class="code text"><a name="rest_code_4e8c883f55c54459a0c61a80d322bf1c-1"></a>$ env/bin/python -m pip install --upgrade pip setuptools wheel
+<a name="rest_code_4e8c883f55c54459a0c61a80d322bf1c-2"></a>&gt; env\Scripts\python -m pip install --upgrade pip setuptools wheel
+</pre>
+<div class="section" id="where-to-store-virtual-environments">
+<h3>Where to store virtual environments?<a href="#where-to-store-virtual-environments" class="headerlink" title="Permalink to this heading">¶</a></h3>
+<p>While the tools allow you to put your virtual environments anywhere in the
+system, it is not a desirable thing to do. There are two options:</p>
+<ol class="arabic simple">
+<li>Have one global place for them, like <tt class="docutils literal">~/virtualenvs</tt>.</li>
+<li>Store them in each project’s directory, like <tt class="docutils literal"><span class="pre">~/git/foobar/.venv</span></tt>.</li>
+</ol>
+<p>The first option comes with tools that make it easier, such as
+<a class="reference external" href="https://virtualenvwrapper.readthedocs.io/">virtualenvwrapper</a>.
+The second option is equally easy to work with, but comes with one caveat —
+you must add the venv directory to your <tt class="docutils literal">.gitignore</tt> file, since you don’t
+want it in your repository (it’s binary bloat, and works only on your machine).</p>
+</div>
+</div>
+<div class="section" id="use">
+<h2>Use<a href="#use" class="headerlink" title="Permalink to this heading">¶</a></h2>
+<p>There are three ways of working with virtual environments interactively (in a
+shell):</p>
+<ul class="simple">
+<li>activation (run <tt class="docutils literal">source bin/activate</tt> on *nix;
+<tt class="docutils literal">Scripts\activate</tt> on Windows) — it simplifies work and requires less
+typing, although it can sometimes fail to work properly.</li>
+<li>executing <tt class="docutils literal">bin/python</tt> (<tt class="docutils literal">Scripts\python</tt>) and other scripts directly, as
+activation only changes <tt class="docutils literal">$PATH</tt> and some helper variables — those variables
+are not mandatory for operation, running the correct <tt class="docutils literal">python</tt> is, and that
+method is failsafe.</li>
+<li>
+<a class="reference external" href="https://gist.github.com/datagrok/2199506">in subshells</a> (IMO, it’s bad UX)</li>
+</ul>
+<p>Whichever method you use, you must remember that without doing any of these
+things, you will still be working with the system Python.</p>
+<p>For non-interactive work (eg. crontab entries, system services, etc.),
+activation and subshells are not viable solutions. In these cases, you must
+always use the full path to Python.</p>
+<p>Here are some usage examples (paths can be relative, of course):</p>
+<pre class="code text"><a name="rest_code_f3b3118ca7c0466da800c34f79d2254e-1"></a>## *nix, activation ##
+<a name="rest_code_f3b3118ca7c0466da800c34f79d2254e-2"></a>$ source /path/to/env/bin/activate
+<a name="rest_code_f3b3118ca7c0466da800c34f79d2254e-3"></a>(env)$ pip install Django
+<a name="rest_code_f3b3118ca7c0466da800c34f79d2254e-4"></a>(env)$ deactivate
+<a name="rest_code_f3b3118ca7c0466da800c34f79d2254e-5"></a>
+<a name="rest_code_f3b3118ca7c0466da800c34f79d2254e-6"></a>## *nix, manual execution ##
+<a name="rest_code_f3b3118ca7c0466da800c34f79d2254e-7"></a>$ /path/to/env/bin/pip install Django
+<a name="rest_code_f3b3118ca7c0466da800c34f79d2254e-8"></a>
+<a name="rest_code_f3b3118ca7c0466da800c34f79d2254e-9"></a>## Windows, activation ##
+<a name="rest_code_f3b3118ca7c0466da800c34f79d2254e-10"></a>&gt; C:\path\to\env\Scripts\activate
+<a name="rest_code_f3b3118ca7c0466da800c34f79d2254e-11"></a>(venv)&gt; pip install Django
+<a name="rest_code_f3b3118ca7c0466da800c34f79d2254e-12"></a>(venv)&gt; deactivate
+<a name="rest_code_f3b3118ca7c0466da800c34f79d2254e-13"></a>
+<a name="rest_code_f3b3118ca7c0466da800c34f79d2254e-14"></a>## Windows, manual execution ##
+<a name="rest_code_f3b3118ca7c0466da800c34f79d2254e-15"></a>&gt; C:\path\to\env\Scripts\pip install Django
+</pre>
+<p>The same principle applies to running Python itself, or any other script
+installed by a package. (With Django’s <tt class="docutils literal">manage.py</tt>, calling it as
+<tt class="docutils literal">./manage.py</tt> requires activation, or you can run
+<tt class="docutils literal">venv/bin/python manage.py</tt>.)</p>
+<div class="section" id="moving-renaming-copying-environments">
+<h3>Moving/renaming/copying environments?<a href="#moving-renaming-copying-environments" class="headerlink" title="Permalink to this heading">¶</a></h3>
+<p>If you try to copy or rename a virtual environment, you will discover that the
+copied environment does not work. This is because a virtual environment is
+closely tied to both the Python it was created with, and the location it was
+created in. (The “relocatable” option does not work.) <a class="footnote-reference" href="/blog/2018/09/04/python-virtual-environments/#id7" id="id3">[3]</a></p>
+<p>However, this is very easy to fix. Instead of moving/copying, just create a new
+environment in the new location. Then, run <tt class="docutils literal">pip freeze &gt; requirements.txt</tt> in
+the old environment to create a list of packages installed in it. With that,
+you can just run <tt class="docutils literal">pip install <span class="pre">-r</span> requirements.txt</tt> in the new environment to
+install packages from the saved list. (Of course, you can copy requirements.txt
+between machines. In many cases, it will just work; sometimes, you might need a few
+modifications to <tt class="docutils literal">requirements.txt</tt> to remove OS-specific stuff.)</p>
+<pre class="code text"><a name="rest_code_c1e62bc8017c4c65b27e27f9b6e4b535-1"></a>$ oldenv/bin/pip freeze &gt; requirements.txt
+<a name="rest_code_c1e62bc8017c4c65b27e27f9b6e4b535-2"></a>$ python3 -m venv newenv
+<a name="rest_code_c1e62bc8017c4c65b27e27f9b6e4b535-3"></a>$ newenv/bin/pip install -r requirements.txt
+<a name="rest_code_c1e62bc8017c4c65b27e27f9b6e4b535-4"></a>(You may rm -rf oldenv now if you desire)
+</pre>
+<p>Note that it might also be necessary to re-create your virtual environment
+after a Python upgrade, <a class="footnote-reference" href="/blog/2018/09/04/python-virtual-environments/#id8" id="id4">[4]</a> so it might be handy to keep an up-to-date
+<tt class="docutils literal">requirements.txt</tt> for your virtual environments (for many projects, it makes
+sense to put that in the repository).</p>
+</div>
+</div>
+<div class="section" id="frequently-asked-questions">
+<h2>Frequently Asked Questions<a href="#frequently-asked-questions" class="headerlink" title="Permalink to this heading">¶</a></h2>
+<div class="section" id="do-i-need-to-install-the-virtualenv-tool-for-each-python-i-want-to-use-it-with">
+<h3>Do I need to install the virtualenv tool for each Python I want to use it with?<a href="#do-i-need-to-install-the-virtualenv-tool-for-each-python-i-want-to-use-it-with" class="headerlink" title="Permalink to this heading">¶</a></h3>
+<p>In most cases, you can use <tt class="docutils literal">virtualenv <span class="pre">-p</span> pythonX env</tt> to specify a different
+Python version, but with some Python version combinations, that approach might
+be unsuccessful.</p>
+</div>
+<div class="section" id="im-the-only-user-on-my-system-do-i-still-need-virtual-environments">
+<h3>I’m the only user on my system. Do I still need virtual environments?<a href="#im-the-only-user-on-my-system-do-i-still-need-virtual-environments" class="headerlink" title="Permalink to this heading">¶</a></h3>
+<p>Yes, you do. First, you will still need separation between projects, sooner or
+later.  Moreover, if you were to install packages system-wide with pip, you
+might end up causing conflicts between packages installed by the system package
+manager and by pip. Running <tt class="docutils literal">sudo pip</tt> is never a good idea because of this.</p>
+</div>
+<div class="section" id="im-using-docker-do-i-still-need-virtual-environments">
+<h3>I’m using Docker. Do I still need virtual environments?<a href="#im-using-docker-do-i-still-need-virtual-environments" class="headerlink" title="Permalink to this heading">¶</a></h3>
+<p>They are still a good idea in that case. They protect you against any bad
+system-wide Python packages your OS image might have (and one popular base OS
+is famous for those). They don’t introduce any extra overhead, while allowing
+to have a clean environment and the ability to re-create it outside of Docker
+(eg. for local development without Docker)</p>
+</div>
+<div class="section" id="what-about-pipenv">
+<h3>What about Pipenv?<a href="#what-about-pipenv" class="headerlink" title="Permalink to this heading">¶</a></h3>
+<p>Pipenv is a dependency management tool. It isn’t compatible with most workflows, and comes with many issues. In my opinion, it’s not worth using (Also, that thing about it being an officially recommended tool? Turns out it’s not true.)</p>
+<p>I also wrote a blog post detailing concerns with that tool, titled <a class="reference external" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/">Pipenv: promises a lot, delivers very little</a>.</p>
+</div>
+</div>
+<div class="section" id="footnotes">
+<h2>Footnotes<a href="#footnotes" class="headerlink" title="Permalink to this heading">¶</a></h2>
+<table class="docutils footnote" frame="void" id="id5" rules="none">
+<colgroup>
+<col class="label">
+<col>
+</colgroup>
+<tbody valign="top"><tr>
+<td class="label"><a class="fn-backref" href="/blog/2018/09/04/python-virtual-environments/#id1">[1]</a></td>
+<td>The thing you’re actually installing is <tt class="docutils literal">ensurepip</tt>. In general, Debian isn’t exactly friendly with Python packaging.</td>
+</tr></tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id6" rules="none">
+<colgroup>
+<col class="label">
+<col>
+</colgroup>
+<tbody valign="top"><tr>
+<td class="label"><a class="fn-backref" href="/blog/2018/09/04/python-virtual-environments/#id2">[2]</a></td>
+<td>On Windows, you <em>must</em> run <tt class="docutils literal">python <span class="pre">-m</span> pip</tt> instead of <tt class="docutils literal">pip</tt> if you want to upgrade the package manager itself.</td>
+</tr></tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id7" rules="none">
+<colgroup>
+<col class="label">
+<col>
+</colgroup>
+<tbody valign="top"><tr>
+<td class="label"><a class="fn-backref" href="/blog/2018/09/04/python-virtual-environments/#id3">[3]</a></td>
+<td>All script shebangs contain the direct path to the environment’s Python executable.  Many things in the virtual environment are symlinks that point to the original Python.</td>
+</tr></tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id8" rules="none">
+<colgroup>
+<col class="label">
+<col>
+</colgroup>
+<tbody valign="top"><tr>
+<td class="label"><a class="fn-backref" href="/blog/2018/09/04/python-virtual-environments/#id4">[4]</a></td>
+<td>Definitely after a minor version (3.x → 3.y) upgrade, sometimes after a patch version upgrade (3.x.y → 3.x.z) as well.</td>
+</tr></tbody>
+</table>
+</div>
+</div>
+    </article>
+</div>
+    <aside class="postpromonav"><div class="card guide-footer">
+  <div class="card-header bg-primary border-primary"><h3>That’s all!</h3></div>
+  <div class="card-body">
+    Hopefully, the guide worked for you and you now know how to use virtual environments. If so, great! Otherwise, make sure you did everything as stated in this guide. If you are still stuck, ask for help in the comments.
+  </div>
+  <div class="card-footer"><a href="/guides/">Check out my other guides!</a></div>
+</div>
+    <nav><ul class="pager hidden-print">
+<li class="previous">
+                <a href="/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/" rel="prev" title="Pipenv: promises a lot, delivers very little">Previous post</a>
+            </li>
+        </ul></nav></aside><section class="comments"><h2>Comments</h2>
+                        <div id="disqus_thread"></div>
+        <script>
+        var disqus_shortname ="kwpolska",
+            disqus_url="https://chriswarrick.com/blog/2018/09/04/python-virtual-environments/",
+        disqus_title="Python Virtual Environments in Five Minutes",
+        disqus_identifier="cache/posts/2018/09/04/python-virtual-environments.html",
+        disqus_config = function () {
+            this.language = "en";
+        };
+        (function() {
+            var dsq = document.createElement('script'); dsq.async = true;
+            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+    <a href="https://disqus.com" class="dsq-brlink" rel="nofollow">Comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+        </section><script>var disqus_shortname="kwpolska";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script><!--End of body content--><footer id="footer"><p>this site uses cookies.<br>by using this site, you agree to our <a href="/privacy/">cookie and privacy policy</a>.</p>
+<p>
+powered by <strong><a href="https://getnikola.com/">Nikola</a></strong>, <a href="http://nginx.org/">nginx</a> and <a href="https://www.digitalocean.com/?refcode=7983689b2ecc">DigitalOcean</a><br>
+copyright © 2009–2018 <a href="/contact/">Chris Warrick</a><br><a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC
+BY-NC-SA</a>, unless stated otherwise</p>
+            
+        </footer>
+</div>
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha256-98vAGjEDGN79TjHkYWVD4s87rvWkdWLHPs5MC3FvFX4=" crossorigin="anonymous"></script><script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.js" integrity="sha256-lQrWH6UPtNlJURtEYCgKDqLyBscHa/uF/nFle9bx3tI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment-with-locales.min.js" integrity="sha256-ZykW30UBCXWkPGsVyVPdJlUrce9/PawgYCEzinA4pnU=" crossorigin="anonymous"></script><script src="/assets/js/all.js"></script><script>
+    baguetteBox.run('div#content', {
+        ignoreClass: 'islink',
+        captions: function(element) {
+            return element.getElementsByTagName('img')[0].alt;
+    }});
+    </script><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-11937989-1', 'chriswarrick.com');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+
+</script>
+</body>
+</html>
