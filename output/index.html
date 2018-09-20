@@ -20,7 +20,7 @@ og: http://ogp.me/ns#
 <link rel="icon" type="image/png" href="/assets/img/logo512.png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="next" href="/index-1.html" type="text/html">
-<!--[if lt IE 9]><script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]--><link rel="prefetch" href="/blog/2018/09/04/python-virtual-environments/" type="text/html">
+<!--[if lt IE 9]><script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]--><link rel="prefetch" href="/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/" type="text/html">
 </head>
 <body>
 <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
@@ -84,6 +84,28 @@ og: http://ogp.me/ns#
     
 <div class="postindex">
     <article class="h-entry post-text postbox"><header class="page-header"><h1 class="p-name entry-title" itemprop="headline name">
+    <a href="/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/" class="u-url">Python Hackery: merging signatures of two Python functions</a>
+    </h1>
+
+    <div class="metadata">
+<a href="/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/" rel="bookmark" class="u-published"><time class="published dt-published" datetime="2018-09-20T15:52:20+02:00" itemprop="datePublished" title="20 September 2018 at 15:52">20 September 2018 at 15:52</time></a>
+        <ul itemprop="keywords" class="tags post-bubbles list-inline">
+<li class="category-bubble"><a href="/blog/tags/cat_python/" style="background-color: #ffd43b">Python</a></li>
+           <li><a class="tag p-category" href="/blog/tags/hacking/" rel="tag">hacking</a></li>
+           <li><a class="tag p-category" href="/blog/tags/python/" rel="tag">Python</a></li>
+           <li><a class="tag p-category" href="/blog/tags/python-hackery/" rel="tag">Python hackery</a></li>
+           <li><a class="tag p-category" href="/blog/tags/python-internals/" rel="tag">Python internals</a></li>
+        </ul>
+</div>
+    </header><div class="p-summary entry-summary">
+    <p>Today’s blog post is going to contain fairly advanced Python hackery. We’ll
+take two functions — one is a wrapper for the other, but also adds some
+positional arguments.  And we’ll change the signature displayed everywhere from
+the uninformative <tt class="docutils literal">f(new_arg, *args, **kwargs)</tt> to something more
+appropriate.</p>
+
+    </div>
+    <footer class="post-footer"><a href="/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/" class="morelink">Read more…</a></footer></article><article class="h-entry post-text postbox"><header class="page-header"><h1 class="p-name entry-title" itemprop="headline name">
     <a href="/blog/2018/09/04/python-virtual-environments/" class="u-url">Python Virtual Environments in Five Minutes</a>
     </h1>
 
@@ -197,6 +219,8 @@ behind the scenes?</p>
            <li><a class="tag p-category" href="/blog/tags/hacking/" rel="tag">hacking</a></li>
            <li><a class="tag p-category" href="/blog/tags/paint/" rel="tag">Paint</a></li>
            <li><a class="tag p-category" href="/blog/tags/python/" rel="tag">Python</a></li>
+           <li><a class="tag p-category" href="/blog/tags/python-hackery/" rel="tag">Python hackery</a></li>
+           <li><a class="tag p-category" href="/blog/tags/python-internals/" rel="tag">Python internals</a></li>
            <li><a class="tag p-category" href="/blog/tags/reverse-engineering/" rel="tag">reverse engineering</a></li>
            <li><a class="tag p-category" href="/blog/tags/writeup/" rel="tag">writeup</a></li>
         </ul>
@@ -297,31 +321,7 @@ pointless.</p>
 screen, camera — the only drawback is the storage space.</p>
 </div>
     </div>
-    <footer class="post-footer"><a href="/blog/2017/06/08/apples-new-pricing-strategy-dont-buy-the-12-macbook/" class="morelink">Read more…</a></footer></article><article class="h-entry post-text postbox"><header class="page-header"><h1 class="p-name entry-title" itemprop="headline name">
-    <a href="/blog/2017/04/09/python-project-template-structure-and-automation/" class="u-url">Structuring and automating a Python project with the Python Project Template</a>
-    </h1>
-
-    <div class="metadata">
-<a href="/blog/2017/04/09/python-project-template-structure-and-automation/" rel="bookmark" class="u-published"><time class="published dt-published" datetime="2017-04-09T11:00:00+02:00" itemprop="datePublished" title="09 April 2017 at 11:00">09 April 2017 at 11:00</time></a>
-        <ul itemprop="keywords" class="tags post-bubbles list-inline">
-<li class="category-bubble"><a href="/blog/tags/cat_programming/" style="background-color: #ff5dd6">Programming</a></li>
-           <li><a class="tag p-category" href="/blog/tags/guide/" rel="tag">guide</a></li>
-           <li><a class="tag p-category" href="/blog/tags/nikola/" rel="tag">Nikola</a></li>
-           <li><a class="tag p-category" href="/blog/tags/projects/" rel="tag">projects</a></li>
-           <li><a class="tag p-category" href="/blog/tags/pypt/" rel="tag">PyPT</a></li>
-           <li><a class="tag p-category" href="/blog/tags/python/" rel="tag">Python</a></li>
-        </ul>
-<span class="shortlink-bubble"><a href="https://go.chriswarrick.com/pypt-blog" title="Short link to this article (go.chriswarrick.com/pypt-blog)"><i class="fa fa-link"></i> pypt-blog</a></span>        
-<p class="guide-header">A <a href="/guides/">guide</a> about <span class="guide-topic">Python</span> for <span class="guide-platform">any platform</span></p>    </div>
-    </header><div class="p-summary entry-summary">
-    <p>To create a project that other people can use and contribute to, you need to
-follow a specific directory structure. Moreover, releasing a new version should
-be as simple and painless as possible. For my projects, I use a template that
-has the structure already in place, and comes with automation for almost every
-part of a release.</p>
-
-    </div>
-    <footer class="post-footer"><a href="/blog/2017/04/09/python-project-template-structure-and-automation/" class="morelink">Read more…</a></footer></article>
+    <footer class="post-footer"><a href="/blog/2017/06/08/apples-new-pricing-strategy-dont-buy-the-12-macbook/" class="morelink">Read more…</a></footer></article>
 </div>
         <ul class="pager postindexpager clearfix">
 <li class="next"><a href="/index-1.html" rel="next">Older posts</a></li>

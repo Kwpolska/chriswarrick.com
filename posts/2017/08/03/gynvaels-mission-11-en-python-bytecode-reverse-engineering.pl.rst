@@ -1,7 +1,7 @@
 .. title: Misja Gynvaela 11 (stream anglojęzyczny): reverse-engineering bajtkodu Pythona
 .. slug: gynvaels-mission-11-en-python-bytecode-reverse-engineering
 .. date: 2017-08-03 12:45:40+02:00
-.. tags: hacking, Python, reverse engineering, Gynvael Coldwind, Paint, BMP, writeup
+.. tags: hacking, Python, reverse engineering, Gynvael Coldwind, Paint, BMP, writeup, Python hackery, Python internals
 .. category: Python
 .. description: Rozwiązuję misję, robię reverse-engineering bytecodu Pythona i piszę kod w Paint’cie.
 .. type: text

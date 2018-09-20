@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html prefix="
+og: http://ogp.me/ns#
+" lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="Merging signatures of two functions in Python.">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Python Hackery: merging signatures of two Python functions | Chris Warrick</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.css" integrity="sha256-FqCzNnnyXl5HxHMdb+RQ/RV/X7fqfPcQYy+G2gFL3Xk=" crossorigin="anonymous">
+<link href="/assets/css/all.css" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=EB+Garamond:400,400i,700%7CSource+Sans+Pro&amp;subset=latin-ext" rel="stylesheet">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+<meta name="theme-color" content="#00aadd">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS (en)" href="/rss.xml">
+<link rel="alternate" type="application/rss+xml" title="RSS (pl)" href="/pl/rss.xml">
+<link rel="canonical" href="https://chriswarrick.com/pl/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/">
+<link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="16x16 32x32 48x48 64x64 128x128 256x256">
+<link rel="icon" type="image/png" href="/assets/img/logo512.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<!--[if lt IE 9]><script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]--><meta name="description" itemprop="description" content="Merging signatures of two functions in Python.">
+<meta name="author" content="Chris Warrick">
+<link rel="prev" href="/pl/blog/2018/09/04/python-virtual-environments/" title="Python Virtual Environments in Five Minutes" type="text/html">
+<meta property="og:site_name" content="Chris Warrick">
+<meta property="og:title" content="Python Hackery: merging signatures of two Python functions">
+<meta property="og:url" content="https://chriswarrick.com/pl/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/">
+<meta property="og:description" content="Merging signatures of two functions in Python.">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2018-09-20T15:52:20+02:00">
+<meta property="article:tag" content="hacking">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="Python hackery">
+<meta property="article:tag" content="Python internals">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:creator" content="@Kwpolska">
+<link rel="alternate" hreflang="en" href="/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/">
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Przejdź do treści</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-expand-md navbar-kw bg-dark static-top mb-4"><div class="container">
+<!-- This keeps the margins nice -->
+        <a class="navbar-brand" href="https://chriswarrick.com/pl/">
+            <img src="/assets/img/logo.png" srcset="/assets/img/logo2x.png 2x" alt="Chris Warrick" id="logo"><span id="blog-title">Chris Warrick</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="bs-navbar">
+            <ul class="navbar-nav mr-auto">
+<li class="nav-item">
+<a href="/pl/blog/" class="nav-link">Archiwum</a>
+                </li>
+<li class="nav-item">
+<a href="/pl/blog/tags/" class="nav-link">Tagi</a>
+                </li>
+<li class="nav-item">
+<a href="/pl/contact/" class="nav-link">Kontakt</a>
+                </li>
+<li class="nav-item">
+<a href="/pl/brand/" class="nav-link">Brand</a>
+                </li>
+<li class="nav-item">
+<a href="/pl/kwbot/" class="nav-link">KwBot</a>
+                </li>
+<li class="nav-item">
+<a href="/projects/" class="nav-link">Projekty</a>
+                </li>
+<li class="nav-item">
+<a href="/guides/" class="nav-link">Przewodniki</a>
+                </li>
+<li class="nav-item">
+<a href="/pl/search/" class="nav-link">Szukaj</a>
+
+                
+            </li>
+</ul>
+<ul class="navbar-nav navbar-right">
+<li>            </li>
+<li class="nav-item"><a href="https://chriswarrick.com/" rel="alternate" hreflang="en" class="nav-link">English</a></li>
+
+                
+            </ul>
+</div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav><!-- End of Menubar --><div class="container" id="content" role="main">
+    <div class="body-content">
+        <!--Body content-->
+        
+        <div id="cookiebox"></div>
+<article class="post-text h-entry hentry postpage postbox" itemscope="itemscope" itemtype="http://schema.org/Article"><header class="page-header"><h1 class="p-name entry-title" itemprop="headline name">
+    <a href="/pl/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/" class="u-url">Python Hackery: merging signatures of two Python functions</a>
+    </h1>
+
+    <div class="metadata">
+<a href="/pl/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/" rel="bookmark" class="u-published"><time class="published dt-published" datetime="2018-09-20T15:52:20+02:00" itemprop="datePublished" title="20 września 2018 o 15:52">20 września 2018 o 15:52</time></a>
+        <ul itemprop="keywords" class="tags post-bubbles list-inline">
+<li class="category-bubble"><a href="/pl/blog/tags/cat_python/" style="background-color: #ffd43b">Python</a></li>
+           <li><a class="tag p-category" href="/pl/blog/tags/hacking/" rel="tag">hacking</a></li>
+           <li><a class="tag p-category" href="/pl/blog/tags/python/" rel="tag">Python</a></li>
+           <li><a class="tag p-category" href="/pl/blog/tags/python-hackery/" rel="tag">Python hackery</a></li>
+           <li><a class="tag p-category" href="/pl/blog/tags/python-internals/" rel="tag">Python internals</a></li>
+        </ul>
+</div>
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div class="lead"><div>
+<p>Today’s blog post is going to contain fairly advanced Python hackery. We’ll
+take two functions — one is a wrapper for the other, but also adds some
+positional arguments.  And we’ll change the signature displayed everywhere from
+the uninformative <tt class="docutils literal">f(new_arg, *args, **kwargs)</tt> to something more
+appropriate.</p>
+</div></div>
+<p>This blog post was inspired by F4D3C0D3 on #python (freenode IRC). I also took
+some inspiration from
+Gynvael Coldwind’s classic <a class="reference external" href="https://www.youtube.com/watch?v=7VJaprmuHcw">Python 101</a> (April Fools) video. (Audio and some comments are in Polish, but even if you don’t speak the language, it’s still worth it to click through the time bar and see some (fairly unusual) magic happen.)</p>
+<div class="section" id="starting-point">
+<h2>Starting point<a href="#starting-point" class="headerlink" title="Permalink to this heading">¶</a></h2>
+<pre class="code python"><a name="rest_code_8d4c776e7eeb4370ba2ca1522b2dda33-1"></a><span class="k">def</span> <span class="nf">old</span><span class="p">(</span><span class="n">foo</span><span class="p">,</span> <span class="n">bar</span><span class="p">):</span>
+<a name="rest_code_8d4c776e7eeb4370ba2ca1522b2dda33-2"></a>    <span class="sd">"""This is old's docstring."""</span>
+<a name="rest_code_8d4c776e7eeb4370ba2ca1522b2dda33-3"></a>    <span class="k">print</span><span class="p">(</span><span class="n">foo</span><span class="p">,</span> <span class="n">bar</span><span class="p">)</span>
+<a name="rest_code_8d4c776e7eeb4370ba2ca1522b2dda33-4"></a>    <span class="k">return</span> <span class="n">foo</span> <span class="o">+</span> <span class="n">bar</span>
+<a name="rest_code_8d4c776e7eeb4370ba2ca1522b2dda33-5"></a>
+<a name="rest_code_8d4c776e7eeb4370ba2ca1522b2dda33-6"></a>
+<a name="rest_code_8d4c776e7eeb4370ba2ca1522b2dda33-7"></a><span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">foo</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<a name="rest_code_8d4c776e7eeb4370ba2ca1522b2dda33-8"></a>    <span class="k">return</span> <span class="n">old</span><span class="p">(</span><span class="n">prefix</span> <span class="o">+</span> <span class="n">foo</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</pre>
+<p>Let’s test it.</p>
+<pre class="code pycon"><a name="rest_code_c195931c4fe6458a8d74216916af2aba-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">o</span> <span class="o">=</span> <span class="n">old</span><span class="p">(</span><span class="s1">'a'</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">)</span>
+<a name="rest_code_c195931c4fe6458a8d74216916af2aba-2"></a><span class="go">a b</span>
+<a name="rest_code_c195931c4fe6458a8d74216916af2aba-3"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">n</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="s1">'!'</span><span class="p">,</span> <span class="s1">'a'</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">)</span>
+<a name="rest_code_c195931c4fe6458a8d74216916af2aba-4"></a><span class="go">!a b</span>
+<a name="rest_code_c195931c4fe6458a8d74216916af2aba-5"></a><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">' - '</span><span class="p">)</span>
+<a name="rest_code_c195931c4fe6458a8d74216916af2aba-6"></a><span class="go">ab - !ab</span>
+<a name="rest_code_c195931c4fe6458a8d74216916af2aba-7"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">help</span><span class="p">(</span><span class="n">old</span><span class="p">)</span>
+<a name="rest_code_c195931c4fe6458a8d74216916af2aba-8"></a><span class="go">Help on function old in module __main__:</span>
+<a name="rest_code_c195931c4fe6458a8d74216916af2aba-9"></a>
+<a name="rest_code_c195931c4fe6458a8d74216916af2aba-10"></a><span class="go">old(foo, bar)</span>
+<a name="rest_code_c195931c4fe6458a8d74216916af2aba-11"></a><span class="go">    This is old's docstring.</span>
+<a name="rest_code_c195931c4fe6458a8d74216916af2aba-12"></a>
+<a name="rest_code_c195931c4fe6458a8d74216916af2aba-13"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">help</span><span class="p">(</span><span class="n">new</span><span class="p">)</span>
+<a name="rest_code_c195931c4fe6458a8d74216916af2aba-14"></a><span class="go">Help on function new in module __main__:</span>
+<a name="rest_code_c195931c4fe6458a8d74216916af2aba-15"></a>
+<a name="rest_code_c195931c4fe6458a8d74216916af2aba-16"></a><span class="go">new(prefix, foo, *args, **kwargs)</span>
+</pre>
+<p>The last line is not exactly informative — it doesn’t tell us that we need to
+pass <tt class="docutils literal">bar</tt> as an argument.  Sure, you could define <tt class="docutils literal">new</tt> as just <tt class="docutils literal">(prefix, foo,
+bar)</tt> — but that means every change to <tt class="docutils literal">old</tt> requires editing <tt class="docutils literal">new</tt> as
+well. So, not ideal. Let’s try to fix this.</p>
+</div>
+<div class="section" id="the-existing-infrastructure-functools-wraps">
+<h2>The existing infrastructure: functools.wraps<a href="#the-existing-infrastructure-functools-wraps" class="headerlink" title="Permalink to this heading">¶</a></h2>
+<p>First, let’s start with the basic facility Python already has.  The standard
+library already comes with <tt class="docutils literal">functools.wraps</tt> and
+<tt class="docutils literal">functools.update_wrapper</tt>.</p>
+<p>If you’ve never heard of those two functions, here’s a crash course:</p>
+<pre class="code python"><a name="rest_code_8d2a70ffca0b4bd0bd1718bea844dfe8-1"></a><span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+<a name="rest_code_8d2a70ffca0b4bd0bd1718bea844dfe8-2"></a>    <span class="nd">@functools.wraps</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+<a name="rest_code_8d2a70ffca0b4bd0bd1718bea844dfe8-3"></a>    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<a name="rest_code_8d2a70ffca0b4bd0bd1718bea844dfe8-4"></a>        <span class="k">print</span><span class="p">(</span><span class="s2">"Inside wrapper"</span><span class="p">)</span>
+<a name="rest_code_8d2a70ffca0b4bd0bd1718bea844dfe8-5"></a>        <span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<a name="rest_code_8d2a70ffca0b4bd0bd1718bea844dfe8-6"></a>    <span class="k">return</span> <span class="n">wrapper</span>
+<a name="rest_code_8d2a70ffca0b4bd0bd1718bea844dfe8-7"></a>
+<a name="rest_code_8d2a70ffca0b4bd0bd1718bea844dfe8-8"></a><span class="nd">@decorator</span>
+<a name="rest_code_8d2a70ffca0b4bd0bd1718bea844dfe8-9"></a><span class="k">def</span> <span class="nf">square</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<a name="rest_code_8d2a70ffca0b4bd0bd1718bea844dfe8-10"></a>    <span class="sd">"""Square a number."""</span>
+<a name="rest_code_8d2a70ffca0b4bd0bd1718bea844dfe8-11"></a>    <span class="k">return</span> <span class="n">n</span> <span class="o">*</span> <span class="n">n</span>
+</pre>
+<p>If we try to inspect the <tt class="docutils literal">square</tt> function, we’ll see the original name, arguments,
+annotations, and the docstring.  If we ran this code again, but with the
+<tt class="docutils literal">@functools.wraps(f)</tt> line commented out, we would only see <tt class="docutils literal"><span class="pre">wrapper(*args,</span>
+**kwargs)</tt>.</p>
+<p>This approach gives us a hint of what we need to do.  However, if we apply
+<tt class="docutils literal">wraps</tt> (or <tt class="docutils literal">update_wrapper</tt>, which is what <tt class="docutils literal">wraps</tt> ends up calling)
+to our function, it will only have <tt class="docutils literal">foo</tt> and <tt class="docutils literal">bar</tt> as arguments, and its
+name will be displayed as <tt class="docutils literal">old</tt>.</p>
+<p>So, let’s take a look at <a class="reference external" href="https://github.com/python/cpython/blob/4fe8dc68577f9e22aaf24db08fb6647277c42d4c/Lib/functools.py#L27-L79">functools.update_wrapper</a>. What does it do? Two things:</p>
+<ul class="simple">
+<li>copy some attributes from the old function to the new one
+(<tt class="docutils literal">__module__</tt>, <tt class="docutils literal">__name__</tt>, <tt class="docutils literal">__qualname__</tt>, <tt class="docutils literal">__doc__</tt>, <tt class="docutils literal">__annotations__</tt>)</li>
+<li>update <tt class="docutils literal">__dict__</tt> of the new function</li>
+<li>set <tt class="docutils literal">wrapper.__wrapped__</tt>
+</li>
+</ul>
+<p>If we try to experiment with it — by changing the list of things to copy, for
+example — we’ll find out that the annotations, the docstring, and the displayed name come from
+the copied attributes, but the signature itself is apparently taken from <tt class="docutils literal">__wrapped__</tt>.</p>
+<p>Further investigation reveals this fact about <tt class="docutils literal">inspect.signature</tt>:</p>
+<blockquote>
+<p><tt class="docutils literal">inspect.signature(callable, *, follow_wrapped=True)</tt></p>
+<p><em>New in version 3.5:</em> <tt class="docutils literal">follow_wrapped</tt> parameter. Pass <tt class="docutils literal">False</tt> to get a signature of callable specifically (<tt class="docutils literal">callable.__wrapped__</tt> will not be used to unwrap decorated callables.)</p>
+</blockquote>
+<p>And so, this is our <strong>end goal:</strong></p>
+<p class="lead">Craft a function with a specific signature (that merges <tt class="docutils literal">old</tt> and <tt class="docutils literal">new</tt>) and set it as <tt class="docutils literal">new.__wrapped__</tt>.</p>
+<p>But first, we need to talk about parallel universes.</p>
+<p>Or actually, code objects.</p>
+</div>
+<div class="section" id="defining-a-function-programmatically">
+<h2>Defining a function programmatically<a href="#defining-a-function-programmatically" class="headerlink" title="Permalink to this heading">¶</a></h2>
+<p>Let’s try an experiment.</p>
+<pre class="code pycon"><a name="rest_code_06f2123aa0874e00a1bc0e9996936e5d-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">bar</span><span class="p">):</span> <span class="k">pass</span>
+<a name="rest_code_06f2123aa0874e00a1bc0e9996936e5d-2"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">foo</span><span class="o">.</span><span class="n">__wrapped__</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="bp">None</span>
+<a name="rest_code_06f2123aa0874e00a1bc0e9996936e5d-3"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">help</span><span class="p">(</span><span class="n">foo</span><span class="p">)</span>
+<a name="rest_code_06f2123aa0874e00a1bc0e9996936e5d-4"></a><span class="go">foo(x, y)</span>
+</pre>
+<p>So, there are two ways to do this.  The first one would be to generate a string
+with the signature and just use <tt class="docutils literal">eval</tt> to get a <tt class="docutils literal">__wrapped__</tt> function. But
+that would be cheating, and honestly, quite boring. (The inspect module could
+help us with preparing the string.)  The second one? Create code objects
+manually.</p>
+<div class="section" id="code-objects">
+<h3>Code objects<a href="#code-objects" class="headerlink" title="Permalink to this heading">¶</a></h3>
+<p>To create a function, we’ll need the <tt class="docutils literal">types</tt> module. <tt class="docutils literal">types.FunctionType</tt>
+gives us a function, but it asks us for a code object. As the <a class="reference external" href="https://docs.python.org/3/reference/datamodel.html">docs</a> state,
+<em>Code objects represent byte-compiled executable Python code, or bytecode.</em></p>
+<p>To create one by
+hand, we’ll need <tt class="docutils literal">types.CodeType</tt>. Well, not exactly by hand — we’ll end up doing a three-way merge between
+<tt class="docutils literal">source</tt> (<tt class="docutils literal">old</tt>), <tt class="docutils literal">dest</tt> (<tt class="docutils literal">new</tt>) and <tt class="docutils literal">def <span class="pre">_blank():</span> pass</tt> (a function
+that does nothing).</p>
+<p>Let’s look at the docstring for <tt class="docutils literal">CodeType</tt>:</p>
+<pre class="code text"><a name="rest_code_b90a69c045d14f0fab8741e803199023-1"></a>code(argcount, kwonlyargcount, nlocals, stacksize, flags, codestring,
+<a name="rest_code_b90a69c045d14f0fab8741e803199023-2"></a>    constants, names, varnames, filename, name, firstlineno,
+<a name="rest_code_b90a69c045d14f0fab8741e803199023-3"></a>    lnotab[, freevars[, cellvars]])
+<a name="rest_code_b90a69c045d14f0fab8741e803199023-4"></a>
+<a name="rest_code_b90a69c045d14f0fab8741e803199023-5"></a>Create a code object.  Not for the faint of heart.
+</pre>
+<p>All of the arguments end up being fields of a code objects (name starts with
+<tt class="docutils literal">co_</tt>).  For each
+function <tt class="docutils literal">f</tt>, its code object is <tt class="docutils literal">f.__code__</tt>. You can find the filename in
+<tt class="docutils literal">f.__code__.co_filename</tt>, for example. The meaning of all fields can be
+found in docs for the <a class="reference external" href="https://docs.python.org/3/library/inspect.html#types-and-members">inspect module</a>. We’ll be
+interested in the following three fields:</p>
+<ul class="simple">
+<li>
+<tt class="docutils literal">argcount</tt> — number of arguments (not including keyword only arguments, * or ** args)</li>
+<li>
+<tt class="docutils literal">kwonlyargcount</tt> — number of keyword only arguments (not including ** arg)</li>
+<li>
+<tt class="docutils literal">varnames</tt> — tuple of names of arguments and local variables</li>
+</ul>
+<p>For all the other fields, we’ll copy them from the appropriate function (one of
+the three).  We don’t expect anyone to call the wrapped function directly; as
+long as <tt class="docutils literal">help</tt> and <tt class="docutils literal">inspect</tt> members don’t crash when they look into it,
+we’re fine.</p>
+</div>
+<div class="section" id="everything-you-need-to-know-about-function-arguments">
+<h3>Everything you need to know about function arguments<a href="#everything-you-need-to-know-about-function-arguments" class="headerlink" title="Permalink to this heading">¶</a></h3>
+<pre class="code pycon"><a name="rest_code_9ee57ceba3414d03ba70b55d43e9b078-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span> <span class="k">pass</span>
+<a name="rest_code_9ee57ceba3414d03ba70b55d43e9b078-2"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">inspect</span><span class="o">.</span><span class="n">getfullargspec</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+<a name="rest_code_9ee57ceba3414d03ba70b55d43e9b078-3"></a><span class="go">FullArgSpec(args=['a', 'b', 'c'], varargs=None, varkw=None, defaults=(1, 2), kwonlyargs=['d'], kwonlydefaults={'d': 3}, annotations={})</span>
+</pre>
+<p>A function signature has the following syntax:</p>
+<ol class="arabic simple">
+<li>Any positional (non-optional) arguments</li>
+<li>Variable positional arguments (<tt class="docutils literal">*x</tt>, name stored in <tt class="docutils literal">varargs</tt>)</li>
+<li>Arguments with defaults (keyword-maybe arguments); their value is stored in <tt class="docutils literal">__defaults__</tt> left-to-right</li>
+<li>Keyword-only arguments (after an asterisk); their values are stored in a dictionary.  Cannot be used if <tt class="docutils literal">varargs</tt> are defined.</li>
+<li>Variable keyword arguments (<tt class="docutils literal">**y</tt>, name stored in <tt class="docutils literal">varkw</tt>)</li>
+</ol>
+<p>We’re going to make one assumption: we aren’t going to support a <tt class="docutils literal">source</tt>
+function that uses variable arguments of any kind.  So, our final signature
+will be composed like this:</p>
+<ol class="arabic simple">
+<li>
+<tt class="docutils literal">dest</tt> positional arguments</li>
+<li>
+<tt class="docutils literal">source</tt> positional arguments</li>
+<li>
+<tt class="docutils literal">dest</tt> keyword-maybe arguments</li>
+<li>
+<tt class="docutils literal">source</tt> keyword-maybe arguments</li>
+<li>
+<tt class="docutils literal">dest</tt> keyword-only arguments</li>
+<li>
+<tt class="docutils literal">source</tt> keyword-only arguments</li>
+</ol>
+<p>That will be saved into <tt class="docutils literal">co_names</tt>.  The first two arguments are counts —
+the first one is <tt class="docutils literal">len(1+2+3+4)</tt> and the other is <tt class="docutils literal">len(5+6)</tt>. The remaining
+arguments to <tt class="docutils literal">CodeType</tt> will be either safe minimal defaults, or things taken from
+one of the three functions.</p>
+<p>We’ll also need to do one more thing: we must ensure <tt class="docutils literal">__defaults__</tt>,
+<tt class="docutils literal">__kwdefaults__</tt>, and <tt class="docutils literal">__annotations__</tt> are all in the right places.
+That’s also a fairly simple thing to do (it requires more tuple/dict merging).
+And with that, we’re done.</p>
+</div>
+</div>
+<div class="section" id="final-results">
+<h2>Final results<a href="#final-results" class="headerlink" title="Permalink to this heading">¶</a></h2>
+<p>Before I show you the code, let’s test it out:</p>
+<pre class="code python"><a name="rest_code_3e256195ff704b85b9177bce2da46128-1"></a><span class="c1"># old defined as before</span>
+<a name="rest_code_3e256195ff704b85b9177bce2da46128-2"></a><span class="nd">@merge_args</span><span class="p">(</span><span class="n">old</span><span class="p">)</span>
+<a name="rest_code_3e256195ff704b85b9177bce2da46128-3"></a><span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">foo</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<a name="rest_code_3e256195ff704b85b9177bce2da46128-4"></a>    <span class="k">return</span> <span class="n">old</span><span class="p">(</span><span class="n">prefix</span> <span class="o">+</span> <span class="n">foo</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</pre>
+<p>And the end result — <tt class="docutils literal">help(new)</tt> says:</p>
+<pre class="code text"><a name="rest_code_ef4afb6851fd4684ac5a45be51f65373-1"></a>new(prefix, foo, bar)
+<a name="rest_code_ef4afb6851fd4684ac5a45be51f65373-2"></a>    This is old's docstring.
+</pre>
+<p>We did it!</p>
+<p class="lead">The code is available on <a class="reference external" href="https://github.com/Kwpolska/merge_args">GitHub</a> and on <a href="/pl/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/#id1"><span class="problematic" id="id2">PyPI_</span></a> (<tt class="docutils literal">pip install merge_args</tt>).
+There’s also an extensive test suite.</p>
+<p>PS. you might be interested in another related post of mine, in which I
+reverse-engineer the compilation of a function: <a class="reference external" href="https://chriswarrick.com/blog/2017/08/03/gynvaels-mission-11-en-python-bytecode-reverse-engineering/">Gynvael’s Mission 11 (en): Python bytecode reverse-engineering</a></p>
+</div>
+<div class="system-messages section">
+<h2 id="docutils-system-messages">Docutils System Messages<a href="#docutils-system-messages" class="headerlink" title="Permalink to this heading">¶</a></h2>
+<div class="system-message" id="id1">
+<p class="system-message-title">System Message: ERROR/3 (<tt class="docutils">&lt;string&gt;</tt>, line 233); <em><a href="/pl/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/#id2">backlink</a></em></p>
+Unknown target name: "pypi".</div>
+</div>
+</div>
+    </article>
+</div>
+    <aside class="postpromonav"><nav><ul class="pager hidden-print">
+<li class="previous">
+                <a href="/pl/blog/2018/09/04/python-virtual-environments/" rel="prev" title="Python Virtual Environments in Five Minutes">Poprzedni post</a>
+            </li>
+        </ul></nav></aside><section class="comments"><h2>Komentarze</h2>
+                        <div id="disqus_thread"></div>
+        <script>
+        var disqus_shortname ="kwpolska",
+            disqus_url="https://chriswarrick.com/pl/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/",
+        disqus_title="Python Hackery: merging signatures of two Python functions",
+        disqus_identifier="cache/posts/2018/09/20/python-hackery-merging-signatures-of-two-python-functions.html",
+        disqus_config = function () {
+            this.language = "pl";
+        };
+        (function() {
+            var dsq = document.createElement('script'); dsq.async = true;
+            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+    <a href="https://disqus.com" class="dsq-brlink" rel="nofollow">Comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+        </section><script>var disqus_shortname="kwpolska";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script><!--End of body content--><footer id="footer"><p>ta strona używa ciasteczek.<br>
+korzystając z tej strony, akceptujesz naszą <a href="/pl/privacy/">politykę prywatności i ciasteczek</a>.
+</p>
+<p>
+powered by <strong><a href="https://getnikola.com/">Nikola</a></strong>, <a href="http://nginx.org/">nginx</a> and <a href="https://www.digitalocean.com/?refcode=7983689b2ecc">DigitalOcean</a><br>
+copyright © 2009–2018 <a href="/pl/contact/">Chris Warrick</a><br><a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC
+BY-NC-SA</a>, unless stated otherwise</p>
+            
+        </footer>
+</div>
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha256-98vAGjEDGN79TjHkYWVD4s87rvWkdWLHPs5MC3FvFX4=" crossorigin="anonymous"></script><script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.js" integrity="sha256-lQrWH6UPtNlJURtEYCgKDqLyBscHa/uF/nFle9bx3tI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment-with-locales.min.js" integrity="sha256-ZykW30UBCXWkPGsVyVPdJlUrce9/PawgYCEzinA4pnU=" crossorigin="anonymous"></script><script src="/assets/js/all.js"></script><script>
+    baguetteBox.run('div#content', {
+        ignoreClass: 'islink',
+        captions: function(element) {
+            return element.getElementsByTagName('img')[0].alt;
+    }});
+    </script><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-11937989-1', 'chriswarrick.com');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+
+</script>
+</body>
+</html>

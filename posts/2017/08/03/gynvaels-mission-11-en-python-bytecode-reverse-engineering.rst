@@ -1,7 +1,7 @@
 .. title: Gynvael’s Mission 11 (en): Python bytecode reverse-engineering
 .. slug: gynvaels-mission-11-en-python-bytecode-reverse-engineering
 .. date: 2017-08-03 12:45:40+02:00
-.. tags: hacking, Python, reverse engineering, Gynvael Coldwind, Paint, BMP, writeup
+.. tags: hacking, Python, reverse engineering, Gynvael Coldwind, Paint, BMP, writeup, Python hackery, Python internals
 .. category: Python
 .. description: I solve a mission, reverse-engineer Python bytecode, and write code in Paint.
 .. type: text
