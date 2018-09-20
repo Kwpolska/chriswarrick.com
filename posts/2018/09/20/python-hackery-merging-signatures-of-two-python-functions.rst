@@ -246,3 +246,4 @@ reverse-engineer the compilation of a function: `Gynvael’s Mission 11 (en): Py
 <https://chriswarrick.com/blog/2017/08/03/gynvaels-mission-11-en-python-bytecode-reverse-engineering/>`_
 
 .. _GitHub: https://github.com/Kwpolska/merge_args
+.. _PyPI: https://pypi.org/project/merge-args/
