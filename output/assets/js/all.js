@@ -6,9 +6,9 @@ function changeColors() {
     colorScheme = csOther[colorScheme];
     document.cookie = 'colorScheme=' + colorScheme + '; expires=17-Jan-2038 03:14:07 GMT; path=/';
     if (colorScheme === 'dark') {
-        $("#kw-all-css").attr('href', '/assets/css/all-dark.css');
+        $("#kw-all-css").attr('href', 'https://chriswarrick.com/assets/css/all-dark.css');
     } else {
-        $("#kw-all-css").attr('href', '/assets/css/all.css');
+        $("#kw-all-css").attr('href', 'https://chriswarrick.com/assets/css/all.css');
     }
     csText=csDict[colorScheme][document.getElementsByTagName('html')[0].lang];
     $("#color-changer-text").text(csText);
