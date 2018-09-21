@@ -8,7 +8,7 @@
 .. guide_platform: Windows, macOS, Linux
 .. guide_topic: Python
 .. shortlink: pysetup
-.. updated: 2018-09-03 20:45:00+02:00
+.. updated: 2018-09-21 16:20:00+02:00
 
 Setting up Python is usually simple, but there are some places where newcomers
 (and experienced users) need to be careful. What versions are there? What’s the
@@ -274,6 +274,12 @@ suited by user-wide installs.
 Virtual environments
 --------------------
 
+.. class:: lead
+
+   I wrote a newer, more detailed post about virtualenvs: `Python Virtual
+   Environments in Five Minutes
+   <https://chriswarrick.com/blog/2018/09/04/python-virtual-environments/>`_
+
 Virtual environments are the best way to install and manage Python packages.
 Advantages include:
 
@@ -431,6 +437,9 @@ issues.
 
 Update history
 ==============
+
+2018-09-21
+    Link to python-virtual-environments post.
 
 2017-07-19
     Better description of problems caused by using sudo pip.
