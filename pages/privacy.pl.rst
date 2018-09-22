@@ -36,6 +36,7 @@ Witryna ``chriswarrick.com`` używa następujących ciasteczek:
   <https://support.cloudflare.com/hc/en-us/articles/200170156-What-does-the-Cloudflare-cfduid-cookie-do->`_
 * ciasteczka platformy Disqus, w przypadku korzystania z systemu komentarzy
 * ciasteczko informujące o przyjęciu polityki prywatności do wiadomości.
+* ciasteczko przechowujące preferencje dot. wybranej wersji kolorystycznej
 * ciasteczka logowania (``go.chriswarrick.com``)
 
 Blokowanie ciasteczek
