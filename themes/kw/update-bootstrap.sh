@@ -19,4 +19,7 @@ echo "(light) Minifying..."
 curl -X POST -s --data-urlencode 'input@assets/css/bootstrap.css' https://cssminifier.com/raw > assets/css/bootstrap.min.css
 echo "( dark) Minifying..."
 curl -X POST -s --data-urlencode 'input@assets/css/bootstrap-dark.css' https://cssminifier.com/raw > assets/css/bootstrap-dark.min.css
+echo "Attempting to purge CloudFlare cache..."
+# script contains API keys and is not public
+./purge-cache.sh
 echo "Done."
