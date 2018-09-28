@@ -10,6 +10,8 @@ echo -n "(light) Paste the clipboard contents and copy the output, then press En
 read one
 pbpaste > assets/css/bootstrap.css
 
+sleep 1
+
 pbcopy < bootstrap-dark.noprefix.css
 echo -n "( dark) Paste the clipboard contents and copy the output, then press Enter."
 read two
@@ -19,7 +21,4 @@ echo "(light) Minifying..."
 curl -X POST -s --data-urlencode 'input@assets/css/bootstrap.css' https://cssminifier.com/raw > assets/css/bootstrap.min.css
 echo "( dark) Minifying..."
 curl -X POST -s --data-urlencode 'input@assets/css/bootstrap-dark.css' https://cssminifier.com/raw > assets/css/bootstrap-dark.min.css
-echo "Attempting to purge CloudFlare cache..."
-# script contains API keys and is not public
-./purge-cache.sh
 echo "Done."
