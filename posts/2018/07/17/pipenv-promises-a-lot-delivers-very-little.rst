@@ -528,3 +528,9 @@ Conclusion
 .. [2] Note that one can’t change the file on PyPI after uploading it, so this would only be protection against rogue PyPI admins or a MitM attack (in which case you’ve got bigger problems anyways). `Also, the feature is fairly broken. <https://github.com/nedbat/coveragepy/issues/679#issuecomment-406396761>`_
 .. [3] Fortunately, it looks in the parent directories for Pipfiles as well. Otherwise, you might end up with one environment for ``foo`` and another for ``foo/foo`` and yet another for ``foo/docs`` and so on…
 .. [4] The interruption happened by mistake due to the RAM disk running out of space, but it was actually a good thing to have happened.
+
+-----
+
+.. class:: alert alert-info
+
+**Other discussion threads:** `r/Python <https://www.reddit.com/r/Python/comments/a3h81m/pipenv_promises_a_lot_delivers_very_little/>`_, `Hacker News <https://news.ycombinator.com/item?id=18612590>`_.

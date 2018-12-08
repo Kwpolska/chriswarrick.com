@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chris Warrick (Posty o packaging)</title><link>https://chriswarrick.com/</link><description></description><atom:link href="https://chriswarrick.com/pl/blog/tags/packaging.xml" rel="self" type="application/rss+xml"></atom:link><language>pl</language><lastBuildDate>Sat, 01 Sep 2018 09:06:52 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Pipenv: promises a lot, delivers very little</title><link>https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;Pipenv is a Python packaging tool that does one thing reasonably well — application dependency management. However, it is also plagued by issues, limitations and a break-neck development process. In the past, Pipenv’s promotional material was highly misleading as to its purpose and backers.&lt;/p&gt;
+<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chris Warrick (Posty o packaging)</title><link>https://chriswarrick.com/</link><description></description><atom:link href="https://chriswarrick.com/pl/blog/tags/packaging.xml" rel="self" type="application/rss+xml"></atom:link><language>pl</language><lastBuildDate>Sat, 08 Dec 2018 11:58:13 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Pipenv: promises a lot, delivers very little</title><link>https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;Pipenv is a Python packaging tool that does one thing reasonably well — application dependency management. However, it is also plagued by issues, limitations and a break-neck development process. In the past, Pipenv’s promotional material was highly misleading as to its purpose and backers.&lt;/p&gt;
 &lt;p&gt;In this post, I will explore the problems with Pipenv. Was it really
 recommended by Python.org? Can everyone — or at least, the vast majority
 of people — benefit from it?&lt;/p&gt;
@@ -155,28 +155,28 @@ library has just reported a bug and attached a &lt;tt class="docutils literal"&g
 reproduce the issue. I download that file to &lt;tt class="docutils literal"&gt;~/Downloads&lt;/tt&gt; on my filesystem.
 With plain old virtualenv, I can easily confirm the reproduction in a spare
 shell with:&lt;/p&gt;
-&lt;pre class="code shell"&gt;&lt;a name="rest_code_254383712447448b976cc02465737104-1"&gt;&lt;/a&gt;$ ~/virtualenvs/foobar/bin/python ~/Downloads/repro.py
+&lt;pre class="code shell"&gt;&lt;a name="rest_code_3b647f0df18a4659b24d18d025032706-1"&gt;&lt;/a&gt;$ ~/virtualenvs/foobar/bin/python ~/Downloads/repro.py
 &lt;/pre&gt;&lt;p&gt;And then I can launch my fancy IDE to fix the bug.  I don’t have to &lt;tt class="docutils literal"&gt;cd&lt;/tt&gt; into
 the project. But with Pipenv, I can’t really do that.  If I put the virtualenv
 in &lt;tt class="docutils literal"&gt;.venv&lt;/tt&gt; with the command line option, I can type
 &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;~/git/foobar/.venv/bin/python&lt;/span&gt; ~/Downloads/repro.py&lt;/tt&gt;. If I use the
 centralized directory + hashes thing, Tab completion becomes mandatory, if I
 haven’t memorized the hash.&lt;/p&gt;
-&lt;pre class="code shell"&gt;&lt;a name="rest_code_2337f36efe274ca59216de764084f3c6-1"&gt;&lt;/a&gt;$ &lt;span class="nb"&gt;cd&lt;/span&gt; ~/git/foobar
-&lt;a name="rest_code_2337f36efe274ca59216de764084f3c6-2"&gt;&lt;/a&gt;$ pipenv run python ~/Downloads/repro.py
+&lt;pre class="code shell"&gt;&lt;a name="rest_code_358279452b134bb29c965d2e6a233058-1"&gt;&lt;/a&gt;$ &lt;span class="nb"&gt;cd&lt;/span&gt; ~/git/foobar
+&lt;a name="rest_code_358279452b134bb29c965d2e6a233058-2"&gt;&lt;/a&gt;$ pipenv run python ~/Downloads/repro.py
 &lt;/pre&gt;&lt;p&gt;What if I had two &lt;tt class="docutils literal"&gt;.py&lt;/tt&gt; files, or &lt;tt class="docutils literal"&gt;repro.py&lt;/tt&gt; otherwise depended on being in
 the current working directory?&lt;/p&gt;
-&lt;pre class="code shell"&gt;&lt;a name="rest_code_abfbfa23deed4beba2231b43b5f53676-1"&gt;&lt;/a&gt;$ &lt;span class="nb"&gt;cd&lt;/span&gt; ~/git/foobar
-&lt;a name="rest_code_abfbfa23deed4beba2231b43b5f53676-2"&gt;&lt;/a&gt;$ pipenv shell
-&lt;a name="rest_code_abfbfa23deed4beba2231b43b5f53676-3"&gt;&lt;/a&gt;&lt;span class="o"&gt;(&lt;/span&gt;foobar-Mwd1l2m9&lt;span class="o"&gt;)&lt;/span&gt;$ &lt;span class="nb"&gt;cd&lt;/span&gt; ~/Downloads
-&lt;a name="rest_code_abfbfa23deed4beba2231b43b5f53676-4"&gt;&lt;/a&gt;&lt;span class="o"&gt;(&lt;/span&gt;foobar-Mwd1l2m9&lt;span class="o"&gt;)&lt;/span&gt;$ python repro.py
-&lt;a name="rest_code_abfbfa23deed4beba2231b43b5f53676-5"&gt;&lt;/a&gt;&lt;span class="o"&gt;(&lt;/span&gt;foobar-Mwd1l2m9&lt;span class="o"&gt;)&lt;/span&gt;$ &lt;span class="nb"&gt;exit&lt;/span&gt;  &lt;span class="c1"&gt;# (not deactivate!)&lt;/span&gt;
+&lt;pre class="code shell"&gt;&lt;a name="rest_code_1f3d508093114034bdf9d45da9e3416a-1"&gt;&lt;/a&gt;$ &lt;span class="nb"&gt;cd&lt;/span&gt; ~/git/foobar
+&lt;a name="rest_code_1f3d508093114034bdf9d45da9e3416a-2"&gt;&lt;/a&gt;$ pipenv shell
+&lt;a name="rest_code_1f3d508093114034bdf9d45da9e3416a-3"&gt;&lt;/a&gt;&lt;span class="o"&gt;(&lt;/span&gt;foobar-Mwd1l2m9&lt;span class="o"&gt;)&lt;/span&gt;$ &lt;span class="nb"&gt;cd&lt;/span&gt; ~/Downloads
+&lt;a name="rest_code_1f3d508093114034bdf9d45da9e3416a-4"&gt;&lt;/a&gt;&lt;span class="o"&gt;(&lt;/span&gt;foobar-Mwd1l2m9&lt;span class="o"&gt;)&lt;/span&gt;$ python repro.py
+&lt;a name="rest_code_1f3d508093114034bdf9d45da9e3416a-5"&gt;&lt;/a&gt;&lt;span class="o"&gt;(&lt;/span&gt;foobar-Mwd1l2m9&lt;span class="o"&gt;)&lt;/span&gt;$ &lt;span class="nb"&gt;exit&lt;/span&gt;  &lt;span class="c1"&gt;# (not deactivate!)&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;&lt;strong&gt;This is becoming ugly fairly quickly.&lt;/strong&gt; Also, with virtualenvwrapper, I can
 do this:&lt;/p&gt;
-&lt;pre class="code shell"&gt;&lt;a name="rest_code_f5df74351eeb4a2eb6127697c0aa2fc0-1"&gt;&lt;/a&gt;$ &lt;span class="nb"&gt;cd&lt;/span&gt; ~/Downloads
-&lt;a name="rest_code_f5df74351eeb4a2eb6127697c0aa2fc0-2"&gt;&lt;/a&gt;$ workon foobar
-&lt;a name="rest_code_f5df74351eeb4a2eb6127697c0aa2fc0-3"&gt;&lt;/a&gt;&lt;span class="o"&gt;(&lt;/span&gt;foobar&lt;span class="o"&gt;)&lt;/span&gt;$ python repro.py
-&lt;a name="rest_code_f5df74351eeb4a2eb6127697c0aa2fc0-4"&gt;&lt;/a&gt;&lt;span class="o"&gt;(&lt;/span&gt;foobar&lt;span class="o"&gt;)&lt;/span&gt;$ deactivate
+&lt;pre class="code shell"&gt;&lt;a name="rest_code_646062841035498d9a318c5bd2cd282a-1"&gt;&lt;/a&gt;$ &lt;span class="nb"&gt;cd&lt;/span&gt; ~/Downloads
+&lt;a name="rest_code_646062841035498d9a318c5bd2cd282a-2"&gt;&lt;/a&gt;$ workon foobar
+&lt;a name="rest_code_646062841035498d9a318c5bd2cd282a-3"&gt;&lt;/a&gt;&lt;span class="o"&gt;(&lt;/span&gt;foobar&lt;span class="o"&gt;)&lt;/span&gt;$ python repro.py
+&lt;a name="rest_code_646062841035498d9a318c5bd2cd282a-4"&gt;&lt;/a&gt;&lt;span class="o"&gt;(&lt;/span&gt;foobar&lt;span class="o"&gt;)&lt;/span&gt;$ deactivate
 &lt;/pre&gt;&lt;p&gt;And let’s not forget that Pipenv doesn’t help me to write a &lt;tt class="docutils literal"&gt;setup.py&lt;/tt&gt;,
 distribute code, or manage releases.  It just manages dependencies.  And it
 does it pretty badly.&lt;/p&gt;
@@ -713,4 +713,6 @@ because it is based on shell scripts (which can modify the enivironment).&lt;/li
 &lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id8"&gt;[4]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;The interruption happened by mistake due to the RAM disk running out of space, but it was actually a good thing to have happened.&lt;/td&gt;&lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
+&lt;hr class="docutils"&gt;
+&lt;p class="alert alert-info"&gt;&lt;strong&gt;Other discussion threads:&lt;/strong&gt; &lt;a class="reference external" href="https://www.reddit.com/r/Python/comments/a3h81m/pipenv_promises_a_lot_delivers_very_little/"&gt;r/Python&lt;/a&gt;, &lt;a class="reference external" href="https://news.ycombinator.com/item?id=18612590"&gt;Hacker News&lt;/a&gt;.&lt;/p&gt;
 &lt;/div&gt;&lt;/div&gt;</description><guid>https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/</guid><pubDate>Tue, 17 Jul 2018 17:40:00 GMT</pubDate></item></channel></rss>
