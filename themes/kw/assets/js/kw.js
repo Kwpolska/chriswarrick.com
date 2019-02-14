@@ -31,4 +31,6 @@ $(document).ready(function() {
 
     $("#color-changer-btn").click(changeColors);
     $("#color-changer-mobile").click(changeColors);
+    setTimeout(function() { $("#snackbar-container").addClass("snackbar-container-hidden"); }, 5000);
+    setTimeout(function() { $("#snackbar-container").remove() }, 5500);
 });

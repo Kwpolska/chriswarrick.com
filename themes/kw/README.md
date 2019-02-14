@@ -1,11 +1,8 @@
 CSS build instructions
 ======================
 
-1. Make sure `bootstrap/scss/bootstrap.min.scss` is reachable from CWD. (Use
-   a git clone or the downloadable distribution.)
-2. Run `./update-bootstrap.sh`.
-3. Quietly weep over the state of web development and be grateful that you
-   didn’t actually need 300MB worth of `node_modules` to build this.
+Run `npx gulp`. The state of modern web development means that downloading 50MB
+worth of `node_modules` is easier than the previous, unreliable workflow.
 
-This Bootstrap-derived theme is Copyright © 2013-2018, Chris Warrick. All
+This Bootstrap-derived theme is Copyright © 2013-2019, Chris Warrick. All
 rights reserved.
