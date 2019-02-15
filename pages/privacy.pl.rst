@@ -18,8 +18,9 @@ Przechowujemy następujące informacje:
   (przez 2 tygodnie)
 * Statystyki o użytkownikach w Google Analytics (przez 14 miesięcy od ostatniej
   wizyty)
-* W przypadku korzystania z komentarzy, ich treść oraz dane autora przechowuje
-  platforma Disqus (regulowane przez politykę prywatności Disqus)
+* Treść komentarzy oraz dane autora. Dane te są podawane dobrowolnie. Pseudonim
+  autora, adres strony internetowej oraz treść komentarza będą widoczne
+  publicznie po jego zaakceptowaniu.
 
 Ciasteczka
 ==========
@@ -34,7 +35,7 @@ Witryna ``chriswarrick.com`` używa następujących ciasteczek:
   odwiedzających
 * ciasteczka CloudFlare, używane do `ochrony przed DDOS
   <https://support.cloudflare.com/hc/en-us/articles/200170156-What-does-the-Cloudflare-cfduid-cookie-do->`_
-* ciasteczka platformy Disqus, w przypadku korzystania z systemu komentarzy
+* ciasteczka i dane local storage platformy `Isso <https://posativ.org/isso/>`_, jeżeli napiszesz komentarz
 * ciasteczko informujące o przyjęciu polityki prywatności do wiadomości.
 * ciasteczko przechowujące preferencje dot. wybranej wersji kolorystycznej
 * ciasteczka logowania (``go.chriswarrick.com``)

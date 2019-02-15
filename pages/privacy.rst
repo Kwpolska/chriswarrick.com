@@ -16,8 +16,9 @@ We store the following information:
 
 * IP addresses, browsers (User Agents), request date/times (for 2 weeks)
 * User statistics in Google Analtyics (for 14 months since last visit)
-* Comments and author information is stored by Disqus
-  (as regulated by Disqus’ privacy policy)
+* Comments and author information. This data is provided voluntarily when
+  commenting. Names, websites and comment text will be publicly visible if the
+  comment is approved.
 
 Cookies
 =======
@@ -29,7 +30,7 @@ Cookies
 * Google Analytics cookies, to gather general information about visitors
 * CloudFlare cookies, `for DDOS protection
   <https://support.cloudflare.com/hc/en-us/articles/200170156-What-does-the-Cloudflare-cfduid-cookie-do->`_
-* Disqus cookies, if comments are used
+* `Isso <https://posativ.org/isso/>`_ cookies and local storage data, if you write a comment
 * A cookie to denote privacy policy acknowledgement
 * A cookie to save the user’s preferred color scheme
 * Login cookies (``go.chriswarrick.com``)
