@@ -313,10 +313,13 @@ Doing this… cost me a new dependency. Its name is ``get-stdin``. We’ve alrea
     $ du -hs node_modules
      21M    node_modules
 
+
 Conclusion
 ==========
 
 The task at hand was very simple. So was the JS code (Gulp and custom) I had to write to implement it. But underneath, there was a mess of unknown, unaudited code, duplicated libraries, and libraries created effectively to bump people’s npm download stats. There were already incidents, like ``left-pad`` (the removal of which broke Babel), or ``event-stream`` (which was taken over and modified to steal cryptocurrencies). The modern web development ecosystem is a huge mess of dependencies and one-line packages. Some of them are necessary due to the lackluster JS standard library — but some are just useless. And some of these micro-packages would be better off as larger libraries.
+
+ Sure, the package count went down from the original 545 to 144. But the original point still stands: too much useless stuff.
 
 PS. Five of the packages (in the “large” set) had a ``.DS_Store`` file left over. I’m wondering if there are any other files that shouldn’t be shipped with packages, lurking in ``node_modules`` directories all over the world…
 
