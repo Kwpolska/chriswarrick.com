@@ -648,5 +648,16 @@ CATEGORY_COLORS = {
 NEW_POST_DATE_PATH = True
 HEADER_PERMALINKS_XPATH_LIST = ['*//div[@class="e-content entry-content"]//{hx}']
 
+ISSO_CONFIG = {
+    'require-author': 'true',
+    'require-email': 'true',
+    'gravatar': 'true',
+    'avatar': 'false',
+    'css': 'false',
+    'vote': 'false',
+    'reply-notifications': 'true'
+}
+
 GLOBAL_CONTEXT = {'post_lead_format': post_lead_format,
-                  'category_colors': CATEGORY_COLORS}
+                  'category_colors': CATEGORY_COLORS,
+                  'isso_config': ISSO_CONFIG}
