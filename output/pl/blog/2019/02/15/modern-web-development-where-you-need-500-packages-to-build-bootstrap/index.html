@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html prefix="
+og: http://ogp.me/ns#
+" lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="A rant about the modern JS ecosystem.">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Modern Web Development: where you need 500 packages to build Bootstrap | Chris Warrick</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.css" integrity="sha256-FqCzNnnyXl5HxHMdb+RQ/RV/X7fqfPcQYy+G2gFL3Xk=" crossorigin="anonymous">
+<noscript>
+        <link href="/assets/css/all.css" rel="stylesheet" type="text/css">
+</noscript>
+<script type="text/javascript">var colorScheme=document.cookie.replace(/(?:(?:^|.*;\s*)colorScheme\s*\=\s*([^;]*).*$)|^.*$/,"$1");if(colorScheme==="light"){document.write('<link href="/assets/css/all.css" rel="stylesheet" type="text/css" id="kw-all-css">');}else{colorScheme="dark"; document.write('<link href="/assets/css/all-dark.css" rel="stylesheet" type="text/css" id="kw-all-css">');}var csDict={'dark':{'pl':'Tryb Jasny','en':'Light Mode'},'light':{'pl':'Tryb Ciemny','en':'Dark Mode'}};var csText=csDict[colorScheme][document.getElementsByTagName('html')[0].lang];var colorSchemesEnabled=true;</script><link href="https://fonts.googleapis.com/css?family=EB+Garamond:400,400i,700%7CSource+Sans+Pro&amp;subset=latin-ext" rel="stylesheet">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+<meta name="theme-color" content="#00aadd">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS (en)" href="/rss.xml">
+<link rel="alternate" type="application/rss+xml" title="RSS (pl)" href="/pl/rss.xml">
+<link rel="canonical" href="https://chriswarrick.com/pl/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/">
+<link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="16x16 32x32 48x48 64x64 128x128 256x256">
+<link rel="icon" type="image/png" href="/assets/img/logo512.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<!--[if lt IE 9]><script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]--><meta name="description" itemprop="description" content="A rant about the modern JS ecosystem.">
+<meta name="author" content="Chris Warrick">
+<link rel="prev" href="/pl/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/" title="Python Hackery: merging signatures of two Python functions" type="text/html">
+<meta property="og:site_name" content="Chris Warrick">
+<meta property="og:title" content="Modern Web Development: where you need 500 packages to build Bootstrap">
+<meta property="og:url" content="https://chriswarrick.com/pl/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/">
+<meta property="og:description" content="A rant about the modern JS ecosystem.">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2019-02-15T19:00:00+01:00">
+<meta property="article:tag" content="JavaScript">
+<meta property="article:tag" content="rant">
+<meta property="article:tag" content="web development">
+<meta property="article:tag" content="webmastering">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:creator" content="@Kwpolska">
+<link rel="alternate" hreflang="en" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/">
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Przejdź do treści</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-expand-md navbar-kw bg-dark static-top mb-4"><div class="container">
+<!-- This keeps the margins nice -->
+        <a class="navbar-brand" href="https://chriswarrick.com/pl/">
+            <img src="/assets/img/logo.png" srcset="/assets/img/logo2x.png 2x" alt="Chris Warrick" id="logo"><span id="blog-title">Chris Warrick</span>
+        </a>
+        <div>
+        <button class="navbar-toggler mr-2" id="color-changer-mobile" type="button" aria-label="Change color scheme">
+            <span class="color-changer"></span>
+        </button>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-navbar">
+            <ul class="navbar-nav mr-auto">
+<li class="nav-item">
+<a href="/pl/blog/" class="nav-link">Archiwum</a>
+                </li>
+<li class="nav-item">
+<a href="/pl/blog/tags/" class="nav-link">Tagi</a>
+                </li>
+<li class="nav-item">
+<a href="/pl/contact/" class="nav-link">Kontakt</a>
+                </li>
+<li class="nav-item">
+<a href="/pl/brand/" class="nav-link">Brand</a>
+                </li>
+<li class="nav-item">
+<a href="/pl/kwbot/" class="nav-link">KwBot</a>
+                </li>
+<li class="nav-item">
+<a href="/projects/" class="nav-link">Projekty</a>
+                </li>
+<li class="nav-item">
+<a href="/guides/" class="nav-link">Przewodniki</a>
+                </li>
+<li class="nav-item">
+<a href="/pl/search/" class="nav-link">Szukaj</a>
+
+                
+            </li>
+</ul>
+<ul class="navbar-nav navbar-right">
+<li>            </li>
+<li class="nav-item"><a href="https://chriswarrick.com/" rel="alternate" hreflang="en" class="nav-link">English</a></li>
+
+                
+                <li class="nav-item" id="color-changer-menu">
+<a href="#" class="nav-link" id="color-changer-btn">
+                <div class="color-changer"></div>
+                <span id="color-changer-text"><script type="text/javascript">document.write(csText);</script></span>
+                </a>
+                </li>
+            </ul>
+</div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav><!-- End of Menubar --><div class="container" id="content" role="main">
+    <div class="body-content">
+        <!--Body content-->
+        
+        <div id="cookiebox"></div>
+<article class="post-text h-entry hentry postpage postbox" itemscope="itemscope" itemtype="http://schema.org/Article"><header class="page-header"><h1 class="p-name entry-title" itemprop="headline name">
+    <a href="/pl/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/" class="u-url">Modern Web Development: where you need 500 packages to build Bootstrap</a>
+    </h1>
+
+    <div class="metadata">
+<a href="/pl/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/" rel="bookmark" class="u-published"><time class="published dt-published" datetime="2019-02-15T19:00:00+01:00" itemprop="datePublished" title="15 lutego 2019 o 19:00">15 lutego 2019 o 19:00</time></a>
+        <ul itemprop="keywords" class="tags post-bubbles list-inline">
+<li class="category-bubble"><a href="/pl/blog/tags/cat_internet/" style="background-color: #bf81ff">Internet</a></li>
+           <li><a class="tag p-category" href="/pl/blog/tags/javascript/" rel="tag">JavaScript</a></li>
+           <li><a class="tag p-category" href="/pl/blog/tags/rant/" rel="tag">rant</a></li>
+           <li><a class="tag p-category" href="/pl/blog/tags/web-development/" rel="tag">web development</a></li>
+           <li><a class="tag p-category" href="/pl/blog/tags/webmastering/" rel="tag">webmastering</a></li>
+        </ul>
+</div>
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div class="lead"><div>
+<p>This humble blog is written by an old-school developer who sometimes does web stuff. An attempt to customize the Bootstrap CSS theme requires 50 MB of node_modules, over 500 packages, and comes with a bit of frustration at stupid tools and terrible documentation.</p>
+</div></div>
+<p>You might notice that this website is based on Bootstrap. You might also notice it’s been heavily customized, especially if you’re browsing in the (currently default) Dark Mode. Back in Bootstrap v3 days, the task was accomplished by <a class="reference external" href="https://getbootstrap.com/docs/3.4/customize/">a simple online tool</a> that required no local installs. Bootstrap 4 changed the landscape: now you need to manually compile Sass. Moreover, Autoprefixer is required to make the CSS usable by web browsers.</p>
+<p>Now, when it comes to web development, I believe the old ways were better. Back when nobody thought to make a client-side-JS-based blog or pastebin, and only apps that needed interactivity were JS-first. Gmail is a good example of that, although they <em>still</em> offer a <a class="reference external" href="https://support.google.com/mail/answer/15049?hl=en">basic HTML view</a> and it works good — in fact, I suppose it might be less buggy than the JS-ladden version. (A lot of single-page apps like to randomly glitch out in my experience.)</p>
+<p>I still remember the days when all that one had to do is <tt class="docutils literal">java <span class="pre">-jar</span> yuicompressor.jar style.css &gt; style.min.css</tt>. Then Less and Sass became more popular — and that’s good. The ability to use variables and functions makes it possible to produce well-organized stylesheets. The idea of Autoprefixer is also fine, humans should not waste their time with browser-specific prefixes for experimental features, that can be neatly automated.</p>
+<p>But to use all these fancy tools, glue code is necessary. Autoprefixer is (mainly server-side) JS-only, Sass is currently Node or Dart, minifier tools are available in many languages.</p>
+<div class="section" id="attempt-0-no-js-stuff-no-node-modules">
+<h2>Attempt 0: no JS stuff, no node_modules<a href="#attempt-0-no-js-stuff-no-node-modules" class="headerlink" title="Permalink to this heading">¶</a></h2>
+<p>I installed a Sass compiler. There are web services like cssminifier.com that can be easily used with curl in a Bash script. Autoprefixer has a webpage that lets you use the service without installing it as well. The catch is, the code runs locally in your web browser. Automating a web browser requires some effort. I decided to leave this part un-automated. Here is the Bash script I hacked together (with some messages removed):</p>
+<pre class="code sh"><a name="rest_code_2264b068a1514c4aa52017e0a493929a-1"></a>sass bootstrap-kw.scss &gt; bootstrap.noprefix.css
+<a name="rest_code_2264b068a1514c4aa52017e0a493929a-2"></a>sass bootstrap-kw-dark.scss &gt; bootstrap-dark.noprefix.css
+<a name="rest_code_2264b068a1514c4aa52017e0a493929a-3"></a>
+<a name="rest_code_2264b068a1514c4aa52017e0a493929a-4"></a><span class="nb">echo</span> <span class="s2">"Go to https://autoprefixer.github.io/."</span>
+<a name="rest_code_2264b068a1514c4aa52017e0a493929a-5"></a>
+<a name="rest_code_2264b068a1514c4aa52017e0a493929a-6"></a>pbcopy &lt; bootstrap.noprefix.css
+<a name="rest_code_2264b068a1514c4aa52017e0a493929a-7"></a><span class="nb">echo</span> -n <span class="s2">"(light) Paste the clipboard contents and copy the output, then press Enter."</span>
+<a name="rest_code_2264b068a1514c4aa52017e0a493929a-8"></a><span class="nb">read</span> temp
+<a name="rest_code_2264b068a1514c4aa52017e0a493929a-9"></a>pbpaste &gt; assets/css/bootstrap.css
+<a name="rest_code_2264b068a1514c4aa52017e0a493929a-10"></a>
+<a name="rest_code_2264b068a1514c4aa52017e0a493929a-11"></a>sleep <span class="m">1</span>
+<a name="rest_code_2264b068a1514c4aa52017e0a493929a-12"></a>
+<a name="rest_code_2264b068a1514c4aa52017e0a493929a-13"></a>pbcopy &lt; bootstrap-dark.noprefix.css
+<a name="rest_code_2264b068a1514c4aa52017e0a493929a-14"></a><span class="nb">echo</span> -n <span class="s2">"( dark) Paste the clipboard contents and copy the output, then press Enter."</span>
+<a name="rest_code_2264b068a1514c4aa52017e0a493929a-15"></a><span class="nb">read</span> temp
+<a name="rest_code_2264b068a1514c4aa52017e0a493929a-16"></a>pbpaste &gt; assets/css/bootstrap-dark.css
+<a name="rest_code_2264b068a1514c4aa52017e0a493929a-17"></a>
+<a name="rest_code_2264b068a1514c4aa52017e0a493929a-18"></a>curl -X POST -s --data-urlencode <span class="s1">'input@assets/css/bootstrap.css'</span> https://cssminifier.com/raw &gt; assets/css/bootstrap.min.css
+<a name="rest_code_2264b068a1514c4aa52017e0a493929a-19"></a>curl -X POST -s --data-urlencode <span class="s1">'input@assets/css/bootstrap-dark.css'</span> https://cssminifier.com/raw &gt; assets/css/bootstrap-dark.min.css
+</pre>
+<p>The “manual copy” solution was inconvenient, but it worked.</p>
+<p>Well, most of the time Some lags/glitches with the clipboard meant that sometimes, files had the incorrect content. So, I wanted to fix it, and build it in a more modern, JS-y way. The way Bootstrap does it is a lot of shell commands (that run various Node tools). I don’t feel like building this pipeline with Bash, it would feel fragile. Let’s do it the JS way.</p>
+</div>
+<div class="section" id="attempt-1-webpack">
+<h2>Attempt 1: webpack<a href="#attempt-1-webpack" class="headerlink" title="Permalink to this heading">¶</a></h2>
+<p>I’ve used webpack for <a class="reference external" href="https://github.com/Kwpolska/django-expenses/blob/master/ts/webpack.config.js">another project of mine</a>. It was okay, and it did the job (namely, compiling TypeScript into browser-usable JS).</p>
+<p>I wanted to give it a try for this one. I googled “webpack sass”. The first result was <a class="reference external" href="https://github.com/webpack-contrib/sass-loader">sass-loader</a>. The pipeline for it was:</p>
+<pre class="code javascript"><a name="rest_code_5100048cbd714dc4b6ebf05d7f835ab1-1"></a><span class="s2">"style-loader"</span><span class="p">,</span> <span class="c1">// creates style nodes from JS strings</span>
+<a name="rest_code_5100048cbd714dc4b6ebf05d7f835ab1-2"></a><span class="s2">"css-loader"</span><span class="p">,</span> <span class="c1">// translates CSS into CommonJS</span>
+<a name="rest_code_5100048cbd714dc4b6ebf05d7f835ab1-3"></a><span class="s2">"sass-loader"</span> <span class="c1">// compiles Sass to CSS, using Node Sass by default</span>
+</pre>
+<p>Let’s recap. Someone thought that the right way to do CSS is to use JS imports.</p>
+<p>Yes. <tt class="docutils literal">import <span class="pre">"./style.css";</span></tt> in a JS file. So that your fancy build tool knows about CSS.</p>
+<p>Webpack wasn’t the right tool for my project, but even if I had JS code there, <strong>WHY WOULD I MENTION STYLESHEETS IN MY JS CODE?!</strong> Webpack’s website also lists .jpg and .png assets, are they meant to be imported in JS as well? This is absurd.</p>
+<p>Going back to googling “webpack sass”… The next two results were Medium posts. The stupidity of Medium as a blog platform notwithstanding, one of the posts was from 2017, referring to webpack 2. The next post was a year older, a completely unreadable mess, and it was for webpack 4. That’s not helpful in any way.</p>
+</div>
+<div class="section" id="attempt-2-gulp">
+<h2>Attempt 2: Gulp<a href="#attempt-2-gulp" class="headerlink" title="Permalink to this heading">¶</a></h2>
+<p>Let’s try something else from the JS world: Gulp. Now, the tool is not terrible, but it still requires a lot of dependencies.</p>
+<p>The pipeline that was required for this task sounds very simple:</p>
+<blockquote>
+bootstrap-kw{,-dark}.sass → Sass compiler → Autoprefixer → bootstrap{,-dark}.css → minify → bootstrap{,-dark}.min.css</blockquote>
+<p>The Gulp version is fairly simple: (I based it on examples on Gulp’s website, and pages of all my dependencies).</p>
+<pre class="code javascript"><a name="rest_code_95941b59de18455a9c0e9cde7e483488-1"></a><span class="kr">const</span> <span class="p">{</span> <span class="nx">src</span><span class="p">,</span> <span class="nx">dest</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'gulp'</span><span class="p">);</span>
+<a name="rest_code_95941b59de18455a9c0e9cde7e483488-2"></a><span class="kr">const</span> <span class="nx">minifyCSS</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'gulp-csso'</span><span class="p">);</span>
+<a name="rest_code_95941b59de18455a9c0e9cde7e483488-3"></a><span class="kr">const</span> <span class="nx">sass</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'gulp-sass'</span><span class="p">);</span>
+<a name="rest_code_95941b59de18455a9c0e9cde7e483488-4"></a><span class="kr">const</span> <span class="nx">postcss</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'gulp-postcss'</span><span class="p">);</span>
+<a name="rest_code_95941b59de18455a9c0e9cde7e483488-5"></a><span class="kr">const</span> <span class="nx">autoprefixer</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'autoprefixer'</span><span class="p">);</span>
+<a name="rest_code_95941b59de18455a9c0e9cde7e483488-6"></a><span class="kr">const</span> <span class="nx">rename</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">"gulp-rename"</span><span class="p">);</span>
+<a name="rest_code_95941b59de18455a9c0e9cde7e483488-7"></a><span class="nx">sass</span><span class="p">.</span><span class="nx">compiler</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'node-sass'</span><span class="p">);</span>
+<a name="rest_code_95941b59de18455a9c0e9cde7e483488-8"></a>
+<a name="rest_code_95941b59de18455a9c0e9cde7e483488-9"></a>
+<a name="rest_code_95941b59de18455a9c0e9cde7e483488-10"></a><span class="kd">function</span> <span class="nx">css</span><span class="p">()</span> <span class="p">{</span>
+<a name="rest_code_95941b59de18455a9c0e9cde7e483488-11"></a>    <span class="k">return</span> <span class="nx">src</span><span class="p">(</span><span class="s1">'*.scss'</span><span class="p">)</span>
+<a name="rest_code_95941b59de18455a9c0e9cde7e483488-12"></a>        <span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">sass</span><span class="p">.</span><span class="nx">sync</span><span class="p">().</span><span class="nx">on</span><span class="p">(</span><span class="s1">'error'</span><span class="p">,</span> <span class="nx">sass</span><span class="p">.</span><span class="nx">logError</span><span class="p">))</span>
+<a name="rest_code_95941b59de18455a9c0e9cde7e483488-13"></a>        <span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">postcss</span><span class="p">([</span><span class="nx">autoprefixer</span><span class="p">()]))</span>
+<a name="rest_code_95941b59de18455a9c0e9cde7e483488-14"></a>        <span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">rename</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">path</span><span class="p">)</span> <span class="p">{</span>
+<a name="rest_code_95941b59de18455a9c0e9cde7e483488-15"></a>            <span class="nx">path</span><span class="p">.</span><span class="nx">basename</span> <span class="o">=</span> <span class="nx">path</span><span class="p">.</span><span class="nx">basename</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="s2">"-kw"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
+<a name="rest_code_95941b59de18455a9c0e9cde7e483488-16"></a>        <span class="p">}))</span>
+<a name="rest_code_95941b59de18455a9c0e9cde7e483488-17"></a>        <span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">dest</span><span class="p">(</span><span class="s1">'assets/css'</span><span class="p">))</span>
+<a name="rest_code_95941b59de18455a9c0e9cde7e483488-18"></a>        <span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">minifyCSS</span><span class="p">())</span>
+<a name="rest_code_95941b59de18455a9c0e9cde7e483488-19"></a>        <span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">rename</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">path</span><span class="p">)</span> <span class="p">{</span>
+<a name="rest_code_95941b59de18455a9c0e9cde7e483488-20"></a>            <span class="nx">path</span><span class="p">.</span><span class="nx">basename</span> <span class="o">+=</span> <span class="s2">".min"</span>
+<a name="rest_code_95941b59de18455a9c0e9cde7e483488-21"></a>        <span class="p">}))</span>
+<a name="rest_code_95941b59de18455a9c0e9cde7e483488-22"></a>        <span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">dest</span><span class="p">(</span><span class="s1">'assets/css'</span><span class="p">));</span>
+<a name="rest_code_95941b59de18455a9c0e9cde7e483488-23"></a><span class="p">}</span>
+<a name="rest_code_95941b59de18455a9c0e9cde7e483488-24"></a>
+<a name="rest_code_95941b59de18455a9c0e9cde7e483488-25"></a><span class="nx">exports</span><span class="p">.</span><span class="k">default</span> <span class="o">=</span> <span class="nx">css</span><span class="p">;</span>
+</pre>
+</div>
+<div class="section" id="a-node-modules-extravaganza">
+<h2>A node_modules extravaganza<a href="#a-node-modules-extravaganza" class="headerlink" title="Permalink to this heading">¶</a></h2>
+<p>Can you see all the <tt class="docutils literal">require</tt> lines at the top? Every one of them is a dependency of my build script. With the exception of <tt class="docutils literal"><span class="pre">gulp-rename</span></tt>, which IMO should be a built-in part of Gulp (it’s 45 lines of code and no external dependencies), the list is sensible.</p>
+<p>Well, I already mentioned the size of <tt class="docutils literal">node_modules</tt>: 51 MiB according to <tt class="docutils literal">du</tt> (size-on-disk measurement). How many packages are there?</p>
+<blockquote>
+<ol class="arabic simple" start="545">
+<li>Five hundred and forty-five packages.</li>
+</ol>
+</blockquote>
+<p>Whoa, when did that happen? Most of it comes from gulp/gulp-cli (384 packages), with node-sass taking the second place (177 packages). Some of those are shared between libraries, and a few more belong to the other requirements. And many of these dependencies are a disgrace to programming.</p>
+<p>After a full install of my <tt class="docutils literal">package.json</tt>, npm says <tt class="docutils literal">added 545 packages from 331 contributors and audited 10500 packages in 22.458s</tt>.  I’ve implicitly agreed to licenses imposed by 331 random people. All to build some simple CSS files out of SASS.</p>
+<p>Let’s go on a tour of <tt class="docutils literal">node_modules</tt> and see what we ended up with.</p>
+<div class="section" id="polyfills-reimplementations-oh-my">
+<h3>Polyfills, reimplementations, oh my!<a href="#polyfills-reimplementations-oh-my" class="headerlink" title="Permalink to this heading">¶</a></h3>
+<p>Everything I’ve installed is meant to be used on top of Node.js. Node runs on top of the V8 engine, coming from Chrome. They’ve had almost-full ES2015 (ES6) support since April 2016. And yet, my node_modules is full of small polyfills.</p>
+<p>Let’s pick a random one and work back from it: <tt class="docutils literal"><span class="pre">number-is-nan</span></tt>.</p>
+<pre class="code javascript"><a name="rest_code_9a877b3856fc4f999dbaf6f5b2f56de1-1"></a><span class="c1">// Copyright © Sindre Sorhus, MIT license</span>
+<a name="rest_code_9a877b3856fc4f999dbaf6f5b2f56de1-2"></a><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nb">Number</span><span class="p">.</span><span class="nb">isNaN</span> <span class="o">||</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+<a name="rest_code_9a877b3856fc4f999dbaf6f5b2f56de1-3"></a>    <span class="k">return</span> <span class="nx">x</span> <span class="o">!==</span> <span class="nx">x</span><span class="p">;</span>
+<a name="rest_code_9a877b3856fc4f999dbaf6f5b2f56de1-4"></a><span class="p">};</span>
+</pre>
+<p>That’s a one-liner that re-implements <tt class="docutils literal">Number.isNaN</tt> if it’s not available, which is, according to MDN, <cite>a more robust version of the original, global
+isNaN() &lt;https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/isNaN&gt;</cite>. The original function coerced everything to Number before testing, which apparently wasn’t enough. That’s what you get for using a language designed in a week. The function was added to all sane browsers and Node around 2013, the polyfill was created in 2015.</p>
+<p>It was pulled in by <tt class="docutils literal"><span class="pre">is-fullwidth-code-point</span></tt> and <tt class="docutils literal"><span class="pre">is-finite</span></tt>, both by the same author. The latter one is especially interesting: it’s at version 1.0.2. Version 1.0.1improved the codebase from <tt class="docutils literal">if (x) { return false; } return true</tt> (via pull request), and version 1.0.2 replaced a manual <tt class="docutils literal">val !== val</tt> comparison with <tt class="docutils literal"><span class="pre">number-is-nan</span></tt>. <tt class="docutils literal"><span class="pre">number-is-nan``has</span> 7.5 million weekly downloads, <span class="pre">``is-finite</span></tt> has 6.7M. The build of <tt class="docutils literal"><span class="pre">number-is-nan</span></tt> <a class="reference external" href="https://travis-ci.org/sindresorhus/number-is-nan/builds/363709421">is currently failing.</a></p>
+</div>
+<div class="section" id="fifty-shades-of-terminal">
+<h3>Fifty shades of terminal<a href="#fifty-shades-of-terminal" class="headerlink" title="Permalink to this heading">¶</a></h3>
+<p>Every Node-based CLI tool wants to be cool. And for that, they need colors.</p>
+<p>How does this work in Bash? You could use <tt class="docutils literal">tput setaf XX</tt>, but many people would just manually echo '033[XXm', the codes are available <a class="reference external" href="https://en.wikipedia.org/wiki/ANSI_escape_code#3/4_bit">in Wikipedia</a> or elsewhere.</p>
+<p>How does this work in Python? There are a few libraries for this (and you can always do it manually), but the most popular one is <a class="reference external" href="https://pypi.org/project/colorama/">colorama</a>. That library can even handle Windows.</p>
+<p>What is available in Node?</p>
+<ul class="simple">
+<li>
+<tt class="docutils literal"><span class="pre">color-support</span></tt> and <tt class="docutils literal"><span class="pre">supports-color</span></tt> are both part of my <tt class="docutils literal">node_modules</tt>.</li>
+<li>There seems to be a fairly advanced <tt class="docutils literal">chalk</tt> library, by the aforementioned Sindre Sorhus.</li>
+<li>
+<tt class="docutils literal"><span class="pre">ansi-colors</span></tt> seems to be another, smaller option for it, it claims to be 10-20x faster than <tt class="docutils literal">chalk</tt>.</li>
+<li>There’s a package called <tt class="docutils literal"><span class="pre">has-ansi</span></tt> which checks if a string has ANSI escapes in it. It depends on <tt class="docutils literal"><span class="pre">ansi-regex</span></tt>.</li>
+<li>Also, <tt class="docutils literal"><span class="pre">strip-ansi</span></tt> also uses <tt class="docutils literal"><span class="pre">ansi-regex</span></tt>. All three packages are basically one liners. One exports a regex, the other two do replacement/search with it.</li>
+<li>There’s <tt class="docutils literal"><span class="pre">wrap-ansi</span></tt> and <tt class="docutils literal"><span class="pre">ansi-wrap</span></tt>. <tt class="docutils literal"><span class="pre">wrap-ansi</span></tt> intelligently wraps a string with ANSI escapes in it.  <tt class="docutils literal"><span class="pre">ansi-wrap</span></tt> takes three strings and  returns <tt class="docutils literal"><span class="pre">'\u001b['+</span> a + 'm' + msg + '\u001b[' + b + 'm'</tt> (Copyright © Jon Schlinkert, MIT license)</li>
+<li>There’s also <tt class="docutils literal"><span class="pre">ansi-gray</span></tt>, which calls <tt class="docutils literal"><span class="pre">ansi-wrap</span></tt> with a = 90, b = 39, and a user-specified message. (Copyright © Jon Schlinkert, MIT license)</li>
+<li>
+<tt class="docutils literal"><span class="pre">ansi-red</span></tt> and <tt class="docutils literal"><span class="pre">ansi-cyan</span></tt> are very similar libraries to <tt class="docutils literal"><span class="pre">ansi-gray</span></tt>. Is this a joke?!</li>
+</ul>
+<p>There are definitely other <tt class="docutils literal"><span class="pre">ansi-$color</span></tt> libraries, although they are not in my <tt class="docutils literal">node_modules</tt>. And probably other libraries for color support, but either they are not installed, or I haven’t managed to spot them in my <tt class="docutils literal">npm list</tt> output.</p>
+</div>
+<div class="section" id="copyrighted-one-liners">
+<h3>Copyrighted one-liners<a href="#copyrighted-one-liners" class="headerlink" title="Permalink to this heading">¶</a></h3>
+<p>Another famous library by Jon Schlinkert is called <tt class="docutils literal"><span class="pre">is-even</span></tt>. Here is the complete code, verbatim:</p>
+<pre class="code javascript"><a name="rest_code_4eb50799402243c892b78ba2a2689e76-1"></a><span class="cm">/*!</span>
+<a name="rest_code_4eb50799402243c892b78ba2a2689e76-2"></a><span class="cm"> * is-even &lt;https://github.com/jonschlinkert/is-even&gt;</span>
+<a name="rest_code_4eb50799402243c892b78ba2a2689e76-3"></a><span class="cm"> *</span>
+<a name="rest_code_4eb50799402243c892b78ba2a2689e76-4"></a><span class="cm"> * Copyright (c) 2015, 2017, Jon Schlinkert.</span>
+<a name="rest_code_4eb50799402243c892b78ba2a2689e76-5"></a><span class="cm"> * Released under the MIT License.</span>
+<a name="rest_code_4eb50799402243c892b78ba2a2689e76-6"></a><span class="cm"> */</span>
+<a name="rest_code_4eb50799402243c892b78ba2a2689e76-7"></a>
+<a name="rest_code_4eb50799402243c892b78ba2a2689e76-8"></a><span class="s1">'use strict'</span><span class="p">;</span>
+<a name="rest_code_4eb50799402243c892b78ba2a2689e76-9"></a>
+<a name="rest_code_4eb50799402243c892b78ba2a2689e76-10"></a><span class="kd">var</span> <span class="nx">isOdd</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'is-odd'</span><span class="p">);</span>
+<a name="rest_code_4eb50799402243c892b78ba2a2689e76-11"></a>
+<a name="rest_code_4eb50799402243c892b78ba2a2689e76-12"></a><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="kd">function</span> <span class="nx">isEven</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span> <span class="p">{</span>
+<a name="rest_code_4eb50799402243c892b78ba2a2689e76-13"></a>  <span class="k">return</span> <span class="o">!</span><span class="nx">isOdd</span><span class="p">(</span><span class="nx">i</span><span class="p">);</span>
+<a name="rest_code_4eb50799402243c892b78ba2a2689e76-14"></a><span class="p">};</span>
+</pre>
+<p><tt class="docutils literal"><span class="pre">is-odd</span></tt> is slightly longer:</p>
+<pre class="code javascript"><a name="rest_code_0343397733364fe99896b3f4c44af663-1"></a><span class="cm">/*!</span>
+<a name="rest_code_0343397733364fe99896b3f4c44af663-2"></a><span class="cm"> * is-odd &lt;https://github.com/jonschlinkert/is-odd&gt;</span>
+<a name="rest_code_0343397733364fe99896b3f4c44af663-3"></a><span class="cm"> *</span>
+<a name="rest_code_0343397733364fe99896b3f4c44af663-4"></a><span class="cm"> * Copyright (c) 2015-2017, Jon Schlinkert.</span>
+<a name="rest_code_0343397733364fe99896b3f4c44af663-5"></a><span class="cm"> * Released under the MIT License.</span>
+<a name="rest_code_0343397733364fe99896b3f4c44af663-6"></a><span class="cm"> */</span>
+<a name="rest_code_0343397733364fe99896b3f4c44af663-7"></a>
+<a name="rest_code_0343397733364fe99896b3f4c44af663-8"></a><span class="s1">'use strict'</span><span class="p">;</span>
+<a name="rest_code_0343397733364fe99896b3f4c44af663-9"></a>
+<a name="rest_code_0343397733364fe99896b3f4c44af663-10"></a><span class="kr">const</span> <span class="nx">isNumber</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'is-number'</span><span class="p">);</span>
+<a name="rest_code_0343397733364fe99896b3f4c44af663-11"></a>
+<a name="rest_code_0343397733364fe99896b3f4c44af663-12"></a><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="kd">function</span> <span class="nx">isOdd</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
+<a name="rest_code_0343397733364fe99896b3f4c44af663-13"></a>  <span class="kr">const</span> <span class="nx">n</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">abs</span><span class="p">(</span><span class="nx">value</span><span class="p">);</span>
+<a name="rest_code_0343397733364fe99896b3f4c44af663-14"></a>  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">isNumber</span><span class="p">(</span><span class="nx">n</span><span class="p">))</span> <span class="p">{</span>
+<a name="rest_code_0343397733364fe99896b3f4c44af663-15"></a>    <span class="k">throw</span> <span class="k">new</span> <span class="nx">TypeError</span><span class="p">(</span><span class="s1">'expected a number'</span><span class="p">);</span>
+<a name="rest_code_0343397733364fe99896b3f4c44af663-16"></a>  <span class="p">}</span>
+<a name="rest_code_0343397733364fe99896b3f4c44af663-17"></a>  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nb">Number</span><span class="p">.</span><span class="nx">isInteger</span><span class="p">(</span><span class="nx">n</span><span class="p">))</span> <span class="p">{</span>
+<a name="rest_code_0343397733364fe99896b3f4c44af663-18"></a>    <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s1">'expected an integer'</span><span class="p">);</span>
+<a name="rest_code_0343397733364fe99896b3f4c44af663-19"></a>  <span class="p">}</span>
+<a name="rest_code_0343397733364fe99896b3f4c44af663-20"></a>  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nb">Number</span><span class="p">.</span><span class="nb">isSafeInteger</span><span class="p">(</span><span class="nx">n</span><span class="p">))</span> <span class="p">{</span>
+<a name="rest_code_0343397733364fe99896b3f4c44af663-21"></a>    <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s1">'value exceeds maximum safe integer'</span><span class="p">);</span>
+<a name="rest_code_0343397733364fe99896b3f4c44af663-22"></a>  <span class="p">}</span>
+<a name="rest_code_0343397733364fe99896b3f4c44af663-23"></a>  <span class="k">return</span> <span class="p">(</span><span class="nx">n</span> <span class="o">%</span> <span class="mi">2</span><span class="p">)</span> <span class="o">===</span> <span class="mi">1</span><span class="p">;</span>
+<a name="rest_code_0343397733364fe99896b3f4c44af663-24"></a><span class="p">};</span>
+</pre>
+<p><tt class="docutils literal"><span class="pre">is-number</span></tt> is another fun library; it says <tt class="docutils literal">true</tt> for strings of numbers, and <tt class="docutils literal">false</tt> for NaN (<tt class="docutils literal">typeof NaN === 'number'</tt>). <tt class="docutils literal"><span class="pre">is-even</span></tt> is used by, for example, <tt class="docutils literal">even</tt>, which calls <tt class="docutils literal">Array.filter</tt> with <tt class="docutils literal"><span class="pre">is-even</span></tt> as the argument. There’s also <tt class="docutils literal">odd</tt>, and for some reason, the two packages are separate.</p>
+<p>The checks found in <tt class="docutils literal"><span class="pre">is-odd</span></tt> make some more sense if you’re working with a dynamically-typed language where every number is a float (like JS). But you could release <tt class="docutils literal"><span class="pre">check-odd</span></tt>, which is 100x faster than <tt class="docutils literal"><span class="pre">is-odd</span></tt> (it assumes its input is correct), and exports <tt class="docutils literal">function checkOdd(value) { return (value % 2) !== 0; }</tt> <s>(Copyright © 2019, Chris Warrick. Licensed under the 4-clause BSD license.)</s> <i>(No, not really.)</i></p>
+</div>
+<div class="section" id="this-product-includes-software-developed-by">
+<h3>This product includes software developed by…<a href="#this-product-includes-software-developed-by" class="headerlink" title="Permalink to this heading">¶</a></h3>
+<p>Hold on a second, 4-clause BSD? That license contains the following clause:</p>
+<pre class="code text"><a name="rest_code_37e4aa30186f4cb9b35370af70ee4d96-1"></a>Redistribution and use in source and binary forms, with or without
+<a name="rest_code_37e4aa30186f4cb9b35370af70ee4d96-2"></a>modification, are permitted provided that the following conditions are met:
+<a name="rest_code_37e4aa30186f4cb9b35370af70ee4d96-3"></a>3. All advertising materials mentioning features or use of this software
+<a name="rest_code_37e4aa30186f4cb9b35370af70ee4d96-4"></a>   must display the following acknowledgement:
+<a name="rest_code_37e4aa30186f4cb9b35370af70ee4d96-5"></a>     This product includes software developed by the University of
+<a name="rest_code_37e4aa30186f4cb9b35370af70ee4d96-6"></a>     California, Berkeley and its contributors.
+</pre>
+<p>This clause was removed by UC Berkeley in 1999, but there is still old code that has clauses (with other names), and someone could create something with the old license. I actually found one such clause in my <tt class="docutils literal">node_modules</tt> (from <tt class="docutils literal">bcrypt_pbkdf</tt>). <a class="reference external" href="https://www.gnu.org/licenses/bsd.html">NetBSD had 75 different clauses</a> in 1997. It would be fun to see figures for the Node ecosystem… or more packages with equally problematic clauses.</p>
+<p>Most people aren’t aware of the licenses of their node dependencies. Going back to Colorama, I can quickly verify that Colorama has no dependencies, and itself uses the 3-clause BSD license. (That version of the license lacks the advertising clause and is considered GPL-compatible.) There is a helpful <tt class="docutils literal"><span class="pre">license-checker</span></tt> package that can tell you what licenses you have (based on the details provided in <tt class="docutils literal">package.json</tt>)</p>
+<pre class="code text"><a name="rest_code_b375a6b174f44b729420c5cf4822571c-1"></a>├─ MIT: 380
+<a name="rest_code_b375a6b174f44b729420c5cf4822571c-2"></a>├─ ISC: 64
+<a name="rest_code_b375a6b174f44b729420c5cf4822571c-3"></a>├─ Apache-2.0: 10
+<a name="rest_code_b375a6b174f44b729420c5cf4822571c-4"></a>├─ BSD-3-Clause: 10
+<a name="rest_code_b375a6b174f44b729420c5cf4822571c-5"></a>├─ BSD-2-Clause: 3
+<a name="rest_code_b375a6b174f44b729420c5cf4822571c-6"></a>├─ CC-BY-3.0: 2
+<a name="rest_code_b375a6b174f44b729420c5cf4822571c-7"></a>├─ BSD-3-Clause OR MIT: 1
+<a name="rest_code_b375a6b174f44b729420c5cf4822571c-8"></a>├─ MIT*: 1
+<a name="rest_code_b375a6b174f44b729420c5cf4822571c-9"></a>├─ (MIT OR Apache-2.0): 1
+<a name="rest_code_b375a6b174f44b729420c5cf4822571c-10"></a>├─ CC-BY-4.0: 1
+<a name="rest_code_b375a6b174f44b729420c5cf4822571c-11"></a>├─ AFLv2.1,BSD: 1
+<a name="rest_code_b375a6b174f44b729420c5cf4822571c-12"></a>├─ MPL-2.0: 1
+<a name="rest_code_b375a6b174f44b729420c5cf4822571c-13"></a>├─ (BSD-2-Clause OR MIT OR Apache-2.0): 1
+<a name="rest_code_b375a6b174f44b729420c5cf4822571c-14"></a>├─ CC0-1.0: 1
+<a name="rest_code_b375a6b174f44b729420c5cf4822571c-15"></a>└─ Unlicense: 1
+</pre>
+</div>
+</div>
+<div class="section" id="attempt-2-back-to-bash">
+<h2>Attempt 2: back to Bash<a href="#attempt-2-back-to-bash" class="headerlink" title="Permalink to this heading">¶</a></h2>
+<p>I decided to get rid of Gulp, it’s not necessary for this pipeline. I replaced
+it with Bash and <tt class="docutils literal"><span class="pre">postcss-cli</span></tt>. <tt class="docutils literal"><span class="pre">node-sass</span></tt> was replaced by <tt class="docutils literal"><span class="pre">dart-sass</span></tt>
+(a two-file binary distribution), and <tt class="docutils literal">csso</tt> was replaced by <tt class="docutils literal">cssnano</tt> (it
+works with postcss). Here is the resulting Bash file:</p>
+<pre class="code bash"><a name="rest_code_3cee7ef319b44b74ab4e88ad868c5938-1"></a>sass bootstrap-kw.scss <span class="p">|</span> npx postcss --no-map --use autoprefixer -o assets/css/bootstrap.css
+<a name="rest_code_3cee7ef319b44b74ab4e88ad868c5938-2"></a>sass bootstrap-kw-dark.scss <span class="p">|</span> npx postcss --no-map --use autoprefixer -o assets/css/bootstrap-dark.css
+<a name="rest_code_3cee7ef319b44b74ab4e88ad868c5938-3"></a>npx postcss --no-map --use cssnano -o assets/css/bootstrap.min.css assets/css/bootstrap.css
+<a name="rest_code_3cee7ef319b44b74ab4e88ad868c5938-4"></a>npx postcss --no-map --use cssnano -o assets/css/bootstrap-dark.min.css assets/css/bootstrap-dark.css
+</pre>
+<p>The simplified dependency list cost me 37 MiB of disk space, and I’ve got 438
+packages from 232 contributors.</p>
+</div>
+<div class="section" id="attempt-3-node-clis-are-unnecessary">
+<h2>Attempt 3: node CLIs are unnecessary<a href="#attempt-3-node-clis-are-unnecessary" class="headerlink" title="Permalink to this heading">¶</a></h2>
+<p>Let’s try something else: replace <tt class="docutils literal">npx postcss</tt> with a custom tool.</p>
+<pre class="code javascript"><a name="rest_code_8598157748ac4a4caeff099dc14f0651-1"></a><span class="kr">const</span> <span class="nx">fs</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'fs'</span><span class="p">);</span>
+<a name="rest_code_8598157748ac4a4caeff099dc14f0651-2"></a><span class="kr">const</span> <span class="nx">getStdin</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'get-stdin'</span><span class="p">);</span>
+<a name="rest_code_8598157748ac4a4caeff099dc14f0651-3"></a>
+<a name="rest_code_8598157748ac4a4caeff099dc14f0651-4"></a><span class="kr">const</span> <span class="nx">postcss</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'postcss'</span><span class="p">);</span>
+<a name="rest_code_8598157748ac4a4caeff099dc14f0651-5"></a><span class="kr">const</span> <span class="nx">autoprefixer</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'autoprefixer'</span><span class="p">);</span>
+<a name="rest_code_8598157748ac4a4caeff099dc14f0651-6"></a><span class="kr">const</span> <span class="nx">cssnano</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'cssnano'</span><span class="p">);</span>
+<a name="rest_code_8598157748ac4a4caeff099dc14f0651-7"></a>
+<a name="rest_code_8598157748ac4a4caeff099dc14f0651-8"></a><span class="kr">const</span> <span class="nx">name</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+<a name="rest_code_8598157748ac4a4caeff099dc14f0651-9"></a>
+<a name="rest_code_8598157748ac4a4caeff099dc14f0651-10"></a><span class="nx">getStdin</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="nx">css</span> <span class="p">=&gt;</span> <span class="p">{</span>
+<a name="rest_code_8598157748ac4a4caeff099dc14f0651-11"></a>    <span class="nx">postcss</span><span class="p">([</span><span class="nx">autoprefixer</span><span class="p">]).</span><span class="nx">process</span><span class="p">(</span><span class="nx">css</span><span class="p">,</span> <span class="p">{</span><span class="nx">from</span><span class="o">:</span> <span class="kc">undefined</span><span class="p">}).</span><span class="nx">then</span><span class="p">(</span><span class="nx">result1</span> <span class="p">=&gt;</span> <span class="p">{</span>
+<a name="rest_code_8598157748ac4a4caeff099dc14f0651-12"></a>        <span class="nx">fs</span><span class="p">.</span><span class="nx">writeFileSync</span><span class="p">(</span><span class="sb">`assets/css/</span><span class="si">${</span><span class="nx">name</span><span class="si">}</span><span class="sb">.css`</span><span class="p">,</span> <span class="nx">result1</span><span class="p">.</span><span class="nx">css</span><span class="p">);</span>
+<a name="rest_code_8598157748ac4a4caeff099dc14f0651-13"></a>
+<a name="rest_code_8598157748ac4a4caeff099dc14f0651-14"></a>        <span class="nx">postcss</span><span class="p">([</span><span class="nx">cssnano</span><span class="p">]).</span><span class="nx">process</span><span class="p">(</span><span class="nx">result1</span><span class="p">.</span><span class="nx">css</span><span class="p">,</span> <span class="p">{</span><span class="nx">from</span><span class="o">:</span> <span class="kc">undefined</span><span class="p">}).</span><span class="nx">then</span><span class="p">(</span><span class="nx">result2</span> <span class="p">=&gt;</span> <span class="p">{</span>
+<a name="rest_code_8598157748ac4a4caeff099dc14f0651-15"></a>            <span class="nx">fs</span><span class="p">.</span><span class="nx">writeFileSync</span><span class="p">(</span><span class="sb">`assets/css/</span><span class="si">${</span><span class="nx">name</span><span class="si">}</span><span class="sb">.min.css`</span><span class="p">,</span> <span class="nx">result2</span><span class="p">.</span><span class="nx">css</span><span class="p">)</span>
+<a name="rest_code_8598157748ac4a4caeff099dc14f0651-16"></a>        <span class="p">});</span>
+<a name="rest_code_8598157748ac4a4caeff099dc14f0651-17"></a>    <span class="p">});</span>
+<a name="rest_code_8598157748ac4a4caeff099dc14f0651-18"></a><span class="p">});</span>
+</pre>
+<p>The bash script now pipes <tt class="docutils literal">sass</tt> output to <tt class="docutils literal">node run_postcss.js <span class="pre">bootstrap(-dark)</span></tt>.</p>
+<p>Doing this… cost me a new dependency. Its name is <tt class="docutils literal"><span class="pre">get-stdin</span></tt>. We’ve already met its author, Sindre Sorhus. While the library has its deficiencies <a class="reference external" href="https://github.com/sindresorhus/get-stdin/issues/21">(namely, it doesn’t support reading from TTY)</a>, it’s good enough. I could do it manually or use some other tricks, but since <tt class="docutils literal"><span class="pre">get-stdin</span></tt> does not pull in any other dependencies, I’m going to accept it. After cleaning up <tt class="docutils literal">packages.json</tt>, we end up with:</p>
+<pre class="code console"><a name="rest_code_8f5811c6715d4bef9130a0abd3c476d3-1"></a><span class="gp">$</span> npm install
+<a name="rest_code_8f5811c6715d4bef9130a0abd3c476d3-2"></a><span class="go">added 144 packages from 119 contributors and audited 637 packages in 8.127s</span>
+<a name="rest_code_8f5811c6715d4bef9130a0abd3c476d3-3"></a><span class="go">found 0 vulnerabilities</span>
+<a name="rest_code_8f5811c6715d4bef9130a0abd3c476d3-4"></a><span class="gp">$</span> du -hs node_modules
+<a name="rest_code_8f5811c6715d4bef9130a0abd3c476d3-5"></a><span class="go"> 21M    node_modules</span>
+</pre>
+</div>
+<div class="section" id="conclusion">
+<h2>Conclusion<a href="#conclusion" class="headerlink" title="Permalink to this heading">¶</a></h2>
+<p>The task at hand was very simple. So was the JS code (Gulp and custom) I had to write to implement it. But underneath, there was a mess of unknown, unaudited code, duplicated libraries, and libraries created effectively to bump people’s npm download stats. There were already incidents, like <tt class="docutils literal"><span class="pre">left-pad</span></tt> (the removal of which broke Babel), or <tt class="docutils literal"><span class="pre">event-stream</span></tt> (which was taken over and modified to steal cryptocurrencies). The modern web development ecosystem is a huge mess of dependencies and one-line packages. Some of them are necessary due to the lackluster JS standard library — but some are just useless. And some of these micro-packages would be better off as larger libraries.</p>
+<p>PS. Five of the packages (in the “large” set) had a <tt class="docutils literal">.DS_Store</tt> file left over. I’m wondering if there are any other files that shouldn’t be shipped with packages, lurking in <tt class="docutils literal">node_modules</tt> directories all over the world…</p>
+<p>PPS. I’ve replaced Disqus with Isso, because it had too many advertisements. If you experience any issues with the comment system (after force-refreshing), e-mail me.</p>
+</div>
+</div>
+    </article>
+</div>
+    <aside class="postpromonav"><nav><ul class="pager hidden-print">
+<li class="previous">
+                <a href="/pl/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/" rel="prev" title="Python Hackery: merging signatures of two Python functions">Poprzedni post</a>
+            </li>
+        </ul></nav></aside><section class="comments"><div data-title="Modern%20Web%20Development%3A%20where%20you%20need%20500%20packages%20to%20build%20Bootstrap" id="isso-thread"></div>
+        <script src="https://isso.chriswarrick.com/js/embed.min.js" data-isso="https://isso.chriswarrick.com/" data-isso-lang="pl" data-isso-require-author="true" data-isso-require-email="true" data-isso-gravatar="true" data-isso-avatar="false" data-isso-css="false" data-isso-vote="false" data-isso-reply-notifications="true"></script></section><!--End of body content--><footer id="footer"><p>ta strona używa ciasteczek.<br>
+korzystając z tej strony, akceptujesz naszą <a href="/pl/privacy/">politykę prywatności i ciasteczek</a>.
+</p>
+<p>
+powered by <strong><a href="https://getnikola.com/">Nikola</a></strong>, <a href="http://nginx.org/">nginx</a> and <a href="https://www.digitalocean.com/?refcode=7983689b2ecc">DigitalOcean</a><br>
+copyright © 2009–2019 <a href="/pl/contact/">Chris Warrick</a><br><a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC
+BY-NC-SA</a>, unless stated otherwise</p>
+            
+        </footer>
+</div>
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha256-ZvOgfh+ptkpoa2Y4HkRY28ir89u/+VRyDE7sB7hEEcI=" crossorigin="anonymous"></script><script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.11.0/baguetteBox.min.js" integrity="sha256-yQGjQhFs3LtyiN5hhr3k9s9TWZOh/RzCkD3gwwCKlkg=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js" integrity="sha256-AdQN98MVZs44Eq2yTwtoKufhnU+uZ7v2kXnD5vqzZVo=" crossorigin="anonymous"></script><script src="/assets/js/all.js"></script><script>
+    baguetteBox.run('div#content', {
+        ignoreClass: 'islink',
+        captions: function(element) {
+            return element.getElementsByTagName('img')[0].alt;
+    }});
+    </script><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-11937989-1', 'chriswarrick.com');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+
+</script>
+</body>
+</html>

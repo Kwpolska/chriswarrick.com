@@ -24,6 +24,7 @@ og: http://ogp.me/ns#
 <!--[if lt IE 9]><script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]--><meta name="description" itemprop="description" content="Merging signatures of two functions in Python.">
 <meta name="author" content="Chris Warrick">
 <link rel="prev" href="/pl/blog/2018/09/04/python-virtual-environments/" title="Python Virtual Environments in Five Minutes" type="text/html">
+<link rel="next" href="/pl/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/" title="Modern Web Development: where you need 500 packages to build Bootstrap" type="text/html">
 <meta property="og:site_name" content="Chris Warrick">
 <meta property="og:title" content="Python Hackery: merging signatures of two Python functions">
 <meta property="og:url" content="https://chriswarrick.com/pl/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/">
@@ -133,32 +134,32 @@ some inspiration from
 Gynvael Coldwind’s classic <a class="reference external" href="https://www.youtube.com/watch?v=7VJaprmuHcw">Python 101</a> (April Fools) video. (Audio and some comments are in Polish, but even if you don’t speak the language, it’s still worth it to click through the time bar and see some (fairly unusual) magic happen.)</p>
 <div class="section" id="starting-point">
 <h2>Starting point<a href="#starting-point" class="headerlink" title="Permalink to this heading">¶</a></h2>
-<pre class="code python"><a name="rest_code_8e5db486a35e4ddfa01e7439e797adee-1"></a><span class="k">def</span> <span class="nf">old</span><span class="p">(</span><span class="n">foo</span><span class="p">,</span> <span class="n">bar</span><span class="p">):</span>
-<a name="rest_code_8e5db486a35e4ddfa01e7439e797adee-2"></a>    <span class="sd">"""This is old's docstring."""</span>
-<a name="rest_code_8e5db486a35e4ddfa01e7439e797adee-3"></a>    <span class="k">print</span><span class="p">(</span><span class="n">foo</span><span class="p">,</span> <span class="n">bar</span><span class="p">)</span>
-<a name="rest_code_8e5db486a35e4ddfa01e7439e797adee-4"></a>    <span class="k">return</span> <span class="n">foo</span> <span class="o">+</span> <span class="n">bar</span>
-<a name="rest_code_8e5db486a35e4ddfa01e7439e797adee-5"></a>
-<a name="rest_code_8e5db486a35e4ddfa01e7439e797adee-6"></a>
-<a name="rest_code_8e5db486a35e4ddfa01e7439e797adee-7"></a><span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">foo</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<a name="rest_code_8e5db486a35e4ddfa01e7439e797adee-8"></a>    <span class="k">return</span> <span class="n">old</span><span class="p">(</span><span class="n">prefix</span> <span class="o">+</span> <span class="n">foo</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<pre class="code python"><a name="rest_code_60d7a6a7da7d4c6abad745cb231298a0-1"></a><span class="k">def</span> <span class="nf">old</span><span class="p">(</span><span class="n">foo</span><span class="p">,</span> <span class="n">bar</span><span class="p">):</span>
+<a name="rest_code_60d7a6a7da7d4c6abad745cb231298a0-2"></a>    <span class="sd">"""This is old's docstring."""</span>
+<a name="rest_code_60d7a6a7da7d4c6abad745cb231298a0-3"></a>    <span class="k">print</span><span class="p">(</span><span class="n">foo</span><span class="p">,</span> <span class="n">bar</span><span class="p">)</span>
+<a name="rest_code_60d7a6a7da7d4c6abad745cb231298a0-4"></a>    <span class="k">return</span> <span class="n">foo</span> <span class="o">+</span> <span class="n">bar</span>
+<a name="rest_code_60d7a6a7da7d4c6abad745cb231298a0-5"></a>
+<a name="rest_code_60d7a6a7da7d4c6abad745cb231298a0-6"></a>
+<a name="rest_code_60d7a6a7da7d4c6abad745cb231298a0-7"></a><span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">foo</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<a name="rest_code_60d7a6a7da7d4c6abad745cb231298a0-8"></a>    <span class="k">return</span> <span class="n">old</span><span class="p">(</span><span class="n">prefix</span> <span class="o">+</span> <span class="n">foo</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </pre>
 <p>Let’s test it.</p>
-<pre class="code pycon"><a name="rest_code_2e5160958c8d42babec78898951bb515-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">o</span> <span class="o">=</span> <span class="n">old</span><span class="p">(</span><span class="s1">'a'</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">)</span>
-<a name="rest_code_2e5160958c8d42babec78898951bb515-2"></a><span class="go">a b</span>
-<a name="rest_code_2e5160958c8d42babec78898951bb515-3"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">n</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="s1">'!'</span><span class="p">,</span> <span class="s1">'a'</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">)</span>
-<a name="rest_code_2e5160958c8d42babec78898951bb515-4"></a><span class="go">!a b</span>
-<a name="rest_code_2e5160958c8d42babec78898951bb515-5"></a><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">' - '</span><span class="p">)</span>
-<a name="rest_code_2e5160958c8d42babec78898951bb515-6"></a><span class="go">ab - !ab</span>
-<a name="rest_code_2e5160958c8d42babec78898951bb515-7"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">help</span><span class="p">(</span><span class="n">old</span><span class="p">)</span>
-<a name="rest_code_2e5160958c8d42babec78898951bb515-8"></a><span class="go">Help on function old in module __main__:</span>
-<a name="rest_code_2e5160958c8d42babec78898951bb515-9"></a>
-<a name="rest_code_2e5160958c8d42babec78898951bb515-10"></a><span class="go">old(foo, bar)</span>
-<a name="rest_code_2e5160958c8d42babec78898951bb515-11"></a><span class="go">    This is old's docstring.</span>
-<a name="rest_code_2e5160958c8d42babec78898951bb515-12"></a>
-<a name="rest_code_2e5160958c8d42babec78898951bb515-13"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">help</span><span class="p">(</span><span class="n">new</span><span class="p">)</span>
-<a name="rest_code_2e5160958c8d42babec78898951bb515-14"></a><span class="go">Help on function new in module __main__:</span>
-<a name="rest_code_2e5160958c8d42babec78898951bb515-15"></a>
-<a name="rest_code_2e5160958c8d42babec78898951bb515-16"></a><span class="go">new(prefix, foo, *args, **kwargs)</span>
+<pre class="code pycon"><a name="rest_code_0e800cbe91ca45c2b1563839ef478179-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">o</span> <span class="o">=</span> <span class="n">old</span><span class="p">(</span><span class="s1">'a'</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">)</span>
+<a name="rest_code_0e800cbe91ca45c2b1563839ef478179-2"></a><span class="go">a b</span>
+<a name="rest_code_0e800cbe91ca45c2b1563839ef478179-3"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">n</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="s1">'!'</span><span class="p">,</span> <span class="s1">'a'</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">)</span>
+<a name="rest_code_0e800cbe91ca45c2b1563839ef478179-4"></a><span class="go">!a b</span>
+<a name="rest_code_0e800cbe91ca45c2b1563839ef478179-5"></a><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">' - '</span><span class="p">)</span>
+<a name="rest_code_0e800cbe91ca45c2b1563839ef478179-6"></a><span class="go">ab - !ab</span>
+<a name="rest_code_0e800cbe91ca45c2b1563839ef478179-7"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">help</span><span class="p">(</span><span class="n">old</span><span class="p">)</span>
+<a name="rest_code_0e800cbe91ca45c2b1563839ef478179-8"></a><span class="go">Help on function old in module __main__:</span>
+<a name="rest_code_0e800cbe91ca45c2b1563839ef478179-9"></a>
+<a name="rest_code_0e800cbe91ca45c2b1563839ef478179-10"></a><span class="go">old(foo, bar)</span>
+<a name="rest_code_0e800cbe91ca45c2b1563839ef478179-11"></a><span class="go">    This is old's docstring.</span>
+<a name="rest_code_0e800cbe91ca45c2b1563839ef478179-12"></a>
+<a name="rest_code_0e800cbe91ca45c2b1563839ef478179-13"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">help</span><span class="p">(</span><span class="n">new</span><span class="p">)</span>
+<a name="rest_code_0e800cbe91ca45c2b1563839ef478179-14"></a><span class="go">Help on function new in module __main__:</span>
+<a name="rest_code_0e800cbe91ca45c2b1563839ef478179-15"></a>
+<a name="rest_code_0e800cbe91ca45c2b1563839ef478179-16"></a><span class="go">new(prefix, foo, *args, **kwargs)</span>
 </pre>
 <p>The last line is not exactly informative — it doesn’t tell us that we need to
 pass <tt class="docutils literal">bar</tt> as an argument.  Sure, you could define <tt class="docutils literal">new</tt> as just <tt class="docutils literal">(prefix, foo,
@@ -171,17 +172,17 @@ well. So, not ideal. Let’s try to fix this.</p>
 library already comes with <tt class="docutils literal">functools.wraps</tt> and
 <tt class="docutils literal">functools.update_wrapper</tt>.</p>
 <p>If you’ve never heard of those two functions, here’s a crash course:</p>
-<pre class="code python"><a name="rest_code_fb632f6fb11a41e8b8fbcff8b22fe799-1"></a><span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
-<a name="rest_code_fb632f6fb11a41e8b8fbcff8b22fe799-2"></a>    <span class="nd">@functools.wraps</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-<a name="rest_code_fb632f6fb11a41e8b8fbcff8b22fe799-3"></a>    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<a name="rest_code_fb632f6fb11a41e8b8fbcff8b22fe799-4"></a>        <span class="k">print</span><span class="p">(</span><span class="s2">"Inside wrapper"</span><span class="p">)</span>
-<a name="rest_code_fb632f6fb11a41e8b8fbcff8b22fe799-5"></a>        <span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-<a name="rest_code_fb632f6fb11a41e8b8fbcff8b22fe799-6"></a>    <span class="k">return</span> <span class="n">wrapper</span>
-<a name="rest_code_fb632f6fb11a41e8b8fbcff8b22fe799-7"></a>
-<a name="rest_code_fb632f6fb11a41e8b8fbcff8b22fe799-8"></a><span class="nd">@decorator</span>
-<a name="rest_code_fb632f6fb11a41e8b8fbcff8b22fe799-9"></a><span class="k">def</span> <span class="nf">square</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<a name="rest_code_fb632f6fb11a41e8b8fbcff8b22fe799-10"></a>    <span class="sd">"""Square a number."""</span>
-<a name="rest_code_fb632f6fb11a41e8b8fbcff8b22fe799-11"></a>    <span class="k">return</span> <span class="n">n</span> <span class="o">*</span> <span class="n">n</span>
+<pre class="code python"><a name="rest_code_4b0624d4be964236935d8cb17a983d50-1"></a><span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+<a name="rest_code_4b0624d4be964236935d8cb17a983d50-2"></a>    <span class="nd">@functools.wraps</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+<a name="rest_code_4b0624d4be964236935d8cb17a983d50-3"></a>    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<a name="rest_code_4b0624d4be964236935d8cb17a983d50-4"></a>        <span class="k">print</span><span class="p">(</span><span class="s2">"Inside wrapper"</span><span class="p">)</span>
+<a name="rest_code_4b0624d4be964236935d8cb17a983d50-5"></a>        <span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<a name="rest_code_4b0624d4be964236935d8cb17a983d50-6"></a>    <span class="k">return</span> <span class="n">wrapper</span>
+<a name="rest_code_4b0624d4be964236935d8cb17a983d50-7"></a>
+<a name="rest_code_4b0624d4be964236935d8cb17a983d50-8"></a><span class="nd">@decorator</span>
+<a name="rest_code_4b0624d4be964236935d8cb17a983d50-9"></a><span class="k">def</span> <span class="nf">square</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<a name="rest_code_4b0624d4be964236935d8cb17a983d50-10"></a>    <span class="sd">"""Square a number."""</span>
+<a name="rest_code_4b0624d4be964236935d8cb17a983d50-11"></a>    <span class="k">return</span> <span class="n">n</span> <span class="o">*</span> <span class="n">n</span>
 </pre>
 <p>If we try to inspect the <tt class="docutils literal">square</tt> function, we’ll see the original name, arguments,
 annotations, and the docstring.  If we ran this code again, but with the
@@ -215,10 +216,10 @@ the copied attributes, but the signature itself is apparently taken from <tt cla
 <div class="section" id="defining-a-function-programmatically">
 <h2>Defining a function programmatically<a href="#defining-a-function-programmatically" class="headerlink" title="Permalink to this heading">¶</a></h2>
 <p>Let’s try an experiment.</p>
-<pre class="code pycon"><a name="rest_code_7d75ff8f0f5a48ce8d25bd7e63fbcb55-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">bar</span><span class="p">):</span> <span class="k">pass</span>
-<a name="rest_code_7d75ff8f0f5a48ce8d25bd7e63fbcb55-2"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">foo</span><span class="o">.</span><span class="n">__wrapped__</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="bp">None</span>
-<a name="rest_code_7d75ff8f0f5a48ce8d25bd7e63fbcb55-3"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">help</span><span class="p">(</span><span class="n">foo</span><span class="p">)</span>
-<a name="rest_code_7d75ff8f0f5a48ce8d25bd7e63fbcb55-4"></a><span class="go">foo(x, y)</span>
+<pre class="code pycon"><a name="rest_code_723281c5e9d746848f7d4a3f3e8309a1-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">bar</span><span class="p">):</span> <span class="k">pass</span>
+<a name="rest_code_723281c5e9d746848f7d4a3f3e8309a1-2"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">foo</span><span class="o">.</span><span class="n">__wrapped__</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="bp">None</span>
+<a name="rest_code_723281c5e9d746848f7d4a3f3e8309a1-3"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">help</span><span class="p">(</span><span class="n">foo</span><span class="p">)</span>
+<a name="rest_code_723281c5e9d746848f7d4a3f3e8309a1-4"></a><span class="go">foo(x, y)</span>
 </pre>
 <p>So, there are two ways to do this.  The first one would be to generate a string
 with the signature and just use <tt class="docutils literal">eval</tt> to get a <tt class="docutils literal">__wrapped__</tt> function. But
@@ -235,11 +236,11 @@ hand, we’ll need <tt class="docutils literal">types.CodeType</tt>. Well, not e
 <tt class="docutils literal">source</tt> (<tt class="docutils literal">old</tt>), <tt class="docutils literal">dest</tt> (<tt class="docutils literal">new</tt>) and <tt class="docutils literal">def <span class="pre">_blank():</span> pass</tt> (a function
 that does nothing).</p>
 <p>Let’s look at the docstring for <tt class="docutils literal">CodeType</tt>:</p>
-<pre class="code text"><a name="rest_code_7d185f53d49945a4aca29937c1fb0307-1"></a>code(argcount, kwonlyargcount, nlocals, stacksize, flags, codestring,
-<a name="rest_code_7d185f53d49945a4aca29937c1fb0307-2"></a>    constants, names, varnames, filename, name, firstlineno,
-<a name="rest_code_7d185f53d49945a4aca29937c1fb0307-3"></a>    lnotab[, freevars[, cellvars]])
-<a name="rest_code_7d185f53d49945a4aca29937c1fb0307-4"></a>
-<a name="rest_code_7d185f53d49945a4aca29937c1fb0307-5"></a>Create a code object.  Not for the faint of heart.
+<pre class="code text"><a name="rest_code_6e81522f913242bca1ac9550d6188935-1"></a>code(argcount, kwonlyargcount, nlocals, stacksize, flags, codestring,
+<a name="rest_code_6e81522f913242bca1ac9550d6188935-2"></a>    constants, names, varnames, filename, name, firstlineno,
+<a name="rest_code_6e81522f913242bca1ac9550d6188935-3"></a>    lnotab[, freevars[, cellvars]])
+<a name="rest_code_6e81522f913242bca1ac9550d6188935-4"></a>
+<a name="rest_code_6e81522f913242bca1ac9550d6188935-5"></a>Create a code object.  Not for the faint of heart.
 </pre>
 <p>All of the arguments end up being fields of a code objects (name starts with
 <tt class="docutils literal">co_</tt>).  For each
@@ -262,9 +263,9 @@ we’re fine.</p>
 </div>
 <div class="section" id="everything-you-need-to-know-about-function-arguments">
 <h3>Everything you need to know about function arguments<a href="#everything-you-need-to-know-about-function-arguments" class="headerlink" title="Permalink to this heading">¶</a></h3>
-<pre class="code pycon"><a name="rest_code_f50e9176706a4afe86adc1215514685a-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span> <span class="k">pass</span>
-<a name="rest_code_f50e9176706a4afe86adc1215514685a-2"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">inspect</span><span class="o">.</span><span class="n">getfullargspec</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-<a name="rest_code_f50e9176706a4afe86adc1215514685a-3"></a><span class="go">FullArgSpec(args=['a', 'b', 'c'], varargs=None, varkw=None, defaults=(1, 2), kwonlyargs=['d'], kwonlydefaults={'d': 3}, annotations={})</span>
+<pre class="code pycon"><a name="rest_code_1ca9efea8fe14c8fae3f138dfc7635e6-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span> <span class="k">pass</span>
+<a name="rest_code_1ca9efea8fe14c8fae3f138dfc7635e6-2"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">inspect</span><span class="o">.</span><span class="n">getfullargspec</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+<a name="rest_code_1ca9efea8fe14c8fae3f138dfc7635e6-3"></a><span class="go">FullArgSpec(args=['a', 'b', 'c'], varargs=None, varkw=None, defaults=(1, 2), kwonlyargs=['d'], kwonlydefaults={'d': 3}, annotations={})</span>
 </pre>
 <p>A function signature has the following syntax:</p>
 <ol class="arabic simple">
@@ -304,14 +305,14 @@ And with that, we’re done.</p>
 <div class="section" id="final-results">
 <h2>Final results<a href="#final-results" class="headerlink" title="Permalink to this heading">¶</a></h2>
 <p>Before I show you the code, let’s test it out:</p>
-<pre class="code python"><a name="rest_code_8e797acd44c74349ba709a6b8d5542b1-1"></a><span class="c1"># old defined as before</span>
-<a name="rest_code_8e797acd44c74349ba709a6b8d5542b1-2"></a><span class="nd">@merge_args</span><span class="p">(</span><span class="n">old</span><span class="p">)</span>
-<a name="rest_code_8e797acd44c74349ba709a6b8d5542b1-3"></a><span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">foo</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<a name="rest_code_8e797acd44c74349ba709a6b8d5542b1-4"></a>    <span class="k">return</span> <span class="n">old</span><span class="p">(</span><span class="n">prefix</span> <span class="o">+</span> <span class="n">foo</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<pre class="code python"><a name="rest_code_285e7f2545614352aa0ce42a1732e49a-1"></a><span class="c1"># old defined as before</span>
+<a name="rest_code_285e7f2545614352aa0ce42a1732e49a-2"></a><span class="nd">@merge_args</span><span class="p">(</span><span class="n">old</span><span class="p">)</span>
+<a name="rest_code_285e7f2545614352aa0ce42a1732e49a-3"></a><span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">foo</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<a name="rest_code_285e7f2545614352aa0ce42a1732e49a-4"></a>    <span class="k">return</span> <span class="n">old</span><span class="p">(</span><span class="n">prefix</span> <span class="o">+</span> <span class="n">foo</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </pre>
 <p>And the end result — <tt class="docutils literal">help(new)</tt> says:</p>
-<pre class="code text"><a name="rest_code_6a2041192361425d931d995e5d8e321a-1"></a>new(prefix, foo, bar)
-<a name="rest_code_6a2041192361425d931d995e5d8e321a-2"></a>    This is old's docstring.
+<pre class="code text"><a name="rest_code_766fd1fa6a2b4cbe99b2efaa40627640-1"></a>new(prefix, foo, bar)
+<a name="rest_code_766fd1fa6a2b4cbe99b2efaa40627640-2"></a>    This is old's docstring.
 </pre>
 <p>We did it!</p>
 <p class="lead">The code is available on <a class="reference external" href="https://github.com/Kwpolska/merge_args">GitHub</a> and on <a class="reference external" href="https://pypi.org/project/merge-args/">PyPI</a> (<tt class="docutils literal">pip install merge_args</tt>).
@@ -325,6 +326,9 @@ reverse-engineer the compilation of a function: <a class="reference external" hr
     <aside class="postpromonav"><nav><ul class="pager hidden-print">
 <li class="previous">
                 <a href="/pl/blog/2018/09/04/python-virtual-environments/" rel="prev" title="Python Virtual Environments in Five Minutes">Poprzedni post</a>
+            </li>
+            <li class="next">
+                <a href="/pl/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/" rel="next" title="Modern Web Development: where you need 500 packages to build Bootstrap">Następny post</a>
             </li>
         </ul></nav></aside><section class="comments"><div data-title="Python%20Hackery%3A%20merging%20signatures%20of%20two%20Python%20functions" id="isso-thread"></div>
         <script src="https://isso.chriswarrick.com/js/embed.min.js" data-isso="https://isso.chriswarrick.com/" data-isso-lang="pl" data-isso-require-author="true" data-isso-require-email="true" data-isso-gravatar="true" data-isso-avatar="false" data-isso-css="false" data-isso-vote="false" data-isso-reply-notifications="true"></script></section><!--End of body content--><footer id="footer"><p>ta strona używa ciasteczek.<br>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chris Warrick (Posty o Python)</title><link>https://chriswarrick.com/</link><description></description><atom:link href="https://chriswarrick.com/pl/blog/tags/cat_python.xml" rel="self" type="application/rss+xml"></atom:link><language>pl</language><lastBuildDate>Sat, 08 Dec 2018 11:58:12 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Python Hackery: merging signatures of two Python functions</title><link>https://chriswarrick.com/pl/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;Today’s blog post is going to contain fairly advanced Python hackery. We’ll
+<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chris Warrick (Posty o Python)</title><link>https://chriswarrick.com/</link><description></description><atom:link href="https://chriswarrick.com/pl/blog/tags/cat_python.xml" rel="self" type="application/rss+xml"></atom:link><language>pl</language><lastBuildDate>Fri, 15 Feb 2019 16:27:09 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Python Hackery: merging signatures of two Python functions</title><link>https://chriswarrick.com/pl/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;Today’s blog post is going to contain fairly advanced Python hackery. We’ll
 take two functions — one is a wrapper for the other, but also adds some
 positional arguments.  And we’ll change the signature displayed everywhere from
 the uninformative &lt;tt class="docutils literal"&gt;f(new_arg, *args, **kwargs)&lt;/tt&gt; to something more
@@ -10,31 +10,31 @@ some inspiration from
 Gynvael Coldwind’s classic &lt;a class="reference external" href="https://www.youtube.com/watch?v=7VJaprmuHcw"&gt;Python 101&lt;/a&gt; (April Fools) video. (Audio and some comments are in Polish, but even if you don’t speak the language, it’s still worth it to click through the time bar and see some (fairly unusual) magic happen.)&lt;/p&gt;
 &lt;div class="section" id="starting-point"&gt;
 &lt;h2&gt;Starting point&lt;/h2&gt;
-&lt;pre class="code python"&gt;&lt;a name="rest_code_8e5db486a35e4ddfa01e7439e797adee-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;old&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;bar&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-&lt;a name="rest_code_8e5db486a35e4ddfa01e7439e797adee-2"&gt;&lt;/a&gt;    &lt;span class="sd"&gt;"""This is old's docstring."""&lt;/span&gt;
-&lt;a name="rest_code_8e5db486a35e4ddfa01e7439e797adee-3"&gt;&lt;/a&gt;    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;bar&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_8e5db486a35e4ddfa01e7439e797adee-4"&gt;&lt;/a&gt;    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;foo&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;bar&lt;/span&gt;
-&lt;a name="rest_code_8e5db486a35e4ddfa01e7439e797adee-5"&gt;&lt;/a&gt;
-&lt;a name="rest_code_8e5db486a35e4ddfa01e7439e797adee-6"&gt;&lt;/a&gt;
-&lt;a name="rest_code_8e5db486a35e4ddfa01e7439e797adee-7"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;new&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;prefix&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;kwargs&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-&lt;a name="rest_code_8e5db486a35e4ddfa01e7439e797adee-8"&gt;&lt;/a&gt;    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;old&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;prefix&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;kwargs&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_60d7a6a7da7d4c6abad745cb231298a0-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;old&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;bar&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;a name="rest_code_60d7a6a7da7d4c6abad745cb231298a0-2"&gt;&lt;/a&gt;    &lt;span class="sd"&gt;"""This is old's docstring."""&lt;/span&gt;
+&lt;a name="rest_code_60d7a6a7da7d4c6abad745cb231298a0-3"&gt;&lt;/a&gt;    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;bar&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_60d7a6a7da7d4c6abad745cb231298a0-4"&gt;&lt;/a&gt;    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;foo&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;bar&lt;/span&gt;
+&lt;a name="rest_code_60d7a6a7da7d4c6abad745cb231298a0-5"&gt;&lt;/a&gt;
+&lt;a name="rest_code_60d7a6a7da7d4c6abad745cb231298a0-6"&gt;&lt;/a&gt;
+&lt;a name="rest_code_60d7a6a7da7d4c6abad745cb231298a0-7"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;new&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;prefix&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;kwargs&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;a name="rest_code_60d7a6a7da7d4c6abad745cb231298a0-8"&gt;&lt;/a&gt;    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;old&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;prefix&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;kwargs&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;Let’s test it.&lt;/p&gt;
-&lt;pre class="code pycon"&gt;&lt;a name="rest_code_2e5160958c8d42babec78898951bb515-1"&gt;&lt;/a&gt;&lt;span class="gp"&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class="n"&gt;o&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;old&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'a'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'b'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_2e5160958c8d42babec78898951bb515-2"&gt;&lt;/a&gt;&lt;span class="go"&gt;a b&lt;/span&gt;
-&lt;a name="rest_code_2e5160958c8d42babec78898951bb515-3"&gt;&lt;/a&gt;&lt;span class="gp"&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;new&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'!'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'a'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'b'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_2e5160958c8d42babec78898951bb515-4"&gt;&lt;/a&gt;&lt;span class="go"&gt;!a b&lt;/span&gt;
-&lt;a name="rest_code_2e5160958c8d42babec78898951bb515-5"&gt;&lt;/a&gt;&lt;span class="gp"&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;o&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;sep&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;' - '&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_2e5160958c8d42babec78898951bb515-6"&gt;&lt;/a&gt;&lt;span class="go"&gt;ab - !ab&lt;/span&gt;
-&lt;a name="rest_code_2e5160958c8d42babec78898951bb515-7"&gt;&lt;/a&gt;&lt;span class="gp"&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class="n"&gt;help&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;old&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_2e5160958c8d42babec78898951bb515-8"&gt;&lt;/a&gt;&lt;span class="go"&gt;Help on function old in module __main__:&lt;/span&gt;
-&lt;a name="rest_code_2e5160958c8d42babec78898951bb515-9"&gt;&lt;/a&gt;
-&lt;a name="rest_code_2e5160958c8d42babec78898951bb515-10"&gt;&lt;/a&gt;&lt;span class="go"&gt;old(foo, bar)&lt;/span&gt;
-&lt;a name="rest_code_2e5160958c8d42babec78898951bb515-11"&gt;&lt;/a&gt;&lt;span class="go"&gt;    This is old's docstring.&lt;/span&gt;
-&lt;a name="rest_code_2e5160958c8d42babec78898951bb515-12"&gt;&lt;/a&gt;
-&lt;a name="rest_code_2e5160958c8d42babec78898951bb515-13"&gt;&lt;/a&gt;&lt;span class="gp"&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class="n"&gt;help&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;new&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_2e5160958c8d42babec78898951bb515-14"&gt;&lt;/a&gt;&lt;span class="go"&gt;Help on function new in module __main__:&lt;/span&gt;
-&lt;a name="rest_code_2e5160958c8d42babec78898951bb515-15"&gt;&lt;/a&gt;
-&lt;a name="rest_code_2e5160958c8d42babec78898951bb515-16"&gt;&lt;/a&gt;&lt;span class="go"&gt;new(prefix, foo, *args, **kwargs)&lt;/span&gt;
+&lt;pre class="code pycon"&gt;&lt;a name="rest_code_0e800cbe91ca45c2b1563839ef478179-1"&gt;&lt;/a&gt;&lt;span class="gp"&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class="n"&gt;o&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;old&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'a'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'b'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_0e800cbe91ca45c2b1563839ef478179-2"&gt;&lt;/a&gt;&lt;span class="go"&gt;a b&lt;/span&gt;
+&lt;a name="rest_code_0e800cbe91ca45c2b1563839ef478179-3"&gt;&lt;/a&gt;&lt;span class="gp"&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;new&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'!'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'a'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'b'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_0e800cbe91ca45c2b1563839ef478179-4"&gt;&lt;/a&gt;&lt;span class="go"&gt;!a b&lt;/span&gt;
+&lt;a name="rest_code_0e800cbe91ca45c2b1563839ef478179-5"&gt;&lt;/a&gt;&lt;span class="gp"&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;o&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;sep&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;' - '&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_0e800cbe91ca45c2b1563839ef478179-6"&gt;&lt;/a&gt;&lt;span class="go"&gt;ab - !ab&lt;/span&gt;
+&lt;a name="rest_code_0e800cbe91ca45c2b1563839ef478179-7"&gt;&lt;/a&gt;&lt;span class="gp"&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class="n"&gt;help&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;old&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_0e800cbe91ca45c2b1563839ef478179-8"&gt;&lt;/a&gt;&lt;span class="go"&gt;Help on function old in module __main__:&lt;/span&gt;
+&lt;a name="rest_code_0e800cbe91ca45c2b1563839ef478179-9"&gt;&lt;/a&gt;
+&lt;a name="rest_code_0e800cbe91ca45c2b1563839ef478179-10"&gt;&lt;/a&gt;&lt;span class="go"&gt;old(foo, bar)&lt;/span&gt;
+&lt;a name="rest_code_0e800cbe91ca45c2b1563839ef478179-11"&gt;&lt;/a&gt;&lt;span class="go"&gt;    This is old's docstring.&lt;/span&gt;
+&lt;a name="rest_code_0e800cbe91ca45c2b1563839ef478179-12"&gt;&lt;/a&gt;
+&lt;a name="rest_code_0e800cbe91ca45c2b1563839ef478179-13"&gt;&lt;/a&gt;&lt;span class="gp"&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class="n"&gt;help&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;new&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_0e800cbe91ca45c2b1563839ef478179-14"&gt;&lt;/a&gt;&lt;span class="go"&gt;Help on function new in module __main__:&lt;/span&gt;
+&lt;a name="rest_code_0e800cbe91ca45c2b1563839ef478179-15"&gt;&lt;/a&gt;
+&lt;a name="rest_code_0e800cbe91ca45c2b1563839ef478179-16"&gt;&lt;/a&gt;&lt;span class="go"&gt;new(prefix, foo, *args, **kwargs)&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;The last line is not exactly informative — it doesn’t tell us that we need to
 pass &lt;tt class="docutils literal"&gt;bar&lt;/tt&gt; as an argument.  Sure, you could define &lt;tt class="docutils literal"&gt;new&lt;/tt&gt; as just &lt;tt class="docutils literal"&gt;(prefix, foo,
 bar)&lt;/tt&gt; — but that means every change to &lt;tt class="docutils literal"&gt;old&lt;/tt&gt; requires editing &lt;tt class="docutils literal"&gt;new&lt;/tt&gt; as
@@ -46,17 +46,17 @@ well. So, not ideal. Let’s try to fix this.&lt;/p&gt;
 library already comes with &lt;tt class="docutils literal"&gt;functools.wraps&lt;/tt&gt; and
 &lt;tt class="docutils literal"&gt;functools.update_wrapper&lt;/tt&gt;.&lt;/p&gt;
 &lt;p&gt;If you’ve never heard of those two functions, here’s a crash course:&lt;/p&gt;
-&lt;pre class="code python"&gt;&lt;a name="rest_code_fb632f6fb11a41e8b8fbcff8b22fe799-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;decorator&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-&lt;a name="rest_code_fb632f6fb11a41e8b8fbcff8b22fe799-2"&gt;&lt;/a&gt;    &lt;span class="nd"&gt;@functools.wraps&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_fb632f6fb11a41e8b8fbcff8b22fe799-3"&gt;&lt;/a&gt;    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;wrapper&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;kwargs&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-&lt;a name="rest_code_fb632f6fb11a41e8b8fbcff8b22fe799-4"&gt;&lt;/a&gt;        &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"Inside wrapper"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_fb632f6fb11a41e8b8fbcff8b22fe799-5"&gt;&lt;/a&gt;        &lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;kwargs&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_fb632f6fb11a41e8b8fbcff8b22fe799-6"&gt;&lt;/a&gt;    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;wrapper&lt;/span&gt;
-&lt;a name="rest_code_fb632f6fb11a41e8b8fbcff8b22fe799-7"&gt;&lt;/a&gt;
-&lt;a name="rest_code_fb632f6fb11a41e8b8fbcff8b22fe799-8"&gt;&lt;/a&gt;&lt;span class="nd"&gt;@decorator&lt;/span&gt;
-&lt;a name="rest_code_fb632f6fb11a41e8b8fbcff8b22fe799-9"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;square&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;float&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="nb"&gt;float&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-&lt;a name="rest_code_fb632f6fb11a41e8b8fbcff8b22fe799-10"&gt;&lt;/a&gt;    &lt;span class="sd"&gt;"""Square a number."""&lt;/span&gt;
-&lt;a name="rest_code_fb632f6fb11a41e8b8fbcff8b22fe799-11"&gt;&lt;/a&gt;    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_4b0624d4be964236935d8cb17a983d50-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;decorator&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;a name="rest_code_4b0624d4be964236935d8cb17a983d50-2"&gt;&lt;/a&gt;    &lt;span class="nd"&gt;@functools.wraps&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_4b0624d4be964236935d8cb17a983d50-3"&gt;&lt;/a&gt;    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;wrapper&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;kwargs&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;a name="rest_code_4b0624d4be964236935d8cb17a983d50-4"&gt;&lt;/a&gt;        &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"Inside wrapper"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_4b0624d4be964236935d8cb17a983d50-5"&gt;&lt;/a&gt;        &lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;kwargs&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_4b0624d4be964236935d8cb17a983d50-6"&gt;&lt;/a&gt;    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;wrapper&lt;/span&gt;
+&lt;a name="rest_code_4b0624d4be964236935d8cb17a983d50-7"&gt;&lt;/a&gt;
+&lt;a name="rest_code_4b0624d4be964236935d8cb17a983d50-8"&gt;&lt;/a&gt;&lt;span class="nd"&gt;@decorator&lt;/span&gt;
+&lt;a name="rest_code_4b0624d4be964236935d8cb17a983d50-9"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;square&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;float&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="nb"&gt;float&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;a name="rest_code_4b0624d4be964236935d8cb17a983d50-10"&gt;&lt;/a&gt;    &lt;span class="sd"&gt;"""Square a number."""&lt;/span&gt;
+&lt;a name="rest_code_4b0624d4be964236935d8cb17a983d50-11"&gt;&lt;/a&gt;    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;If we try to inspect the &lt;tt class="docutils literal"&gt;square&lt;/tt&gt; function, we’ll see the original name, arguments,
 annotations, and the docstring.  If we ran this code again, but with the
 &lt;tt class="docutils literal"&gt;@functools.wraps(f)&lt;/tt&gt; line commented out, we would only see &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;wrapper(*args,&lt;/span&gt;
@@ -88,10 +88,10 @@ the copied attributes, but the signature itself is apparently taken from &lt;tt 
 &lt;div class="section" id="defining-a-function-programmatically"&gt;
 &lt;h2&gt;Defining a function programmatically&lt;/h2&gt;
 &lt;p&gt;Let’s try an experiment.&lt;/p&gt;
-&lt;pre class="code pycon"&gt;&lt;a name="rest_code_7d75ff8f0f5a48ce8d25bd7e63fbcb55-1"&gt;&lt;/a&gt;&lt;span class="gp"&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;foo&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bar&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt; &lt;span class="k"&gt;pass&lt;/span&gt;
-&lt;a name="rest_code_7d75ff8f0f5a48ce8d25bd7e63fbcb55-2"&gt;&lt;/a&gt;&lt;span class="gp"&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;__wrapped__&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;lambda&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="bp"&gt;None&lt;/span&gt;
-&lt;a name="rest_code_7d75ff8f0f5a48ce8d25bd7e63fbcb55-3"&gt;&lt;/a&gt;&lt;span class="gp"&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class="n"&gt;help&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_7d75ff8f0f5a48ce8d25bd7e63fbcb55-4"&gt;&lt;/a&gt;&lt;span class="go"&gt;foo(x, y)&lt;/span&gt;
+&lt;pre class="code pycon"&gt;&lt;a name="rest_code_723281c5e9d746848f7d4a3f3e8309a1-1"&gt;&lt;/a&gt;&lt;span class="gp"&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;foo&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bar&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt; &lt;span class="k"&gt;pass&lt;/span&gt;
+&lt;a name="rest_code_723281c5e9d746848f7d4a3f3e8309a1-2"&gt;&lt;/a&gt;&lt;span class="gp"&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;__wrapped__&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;lambda&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="bp"&gt;None&lt;/span&gt;
+&lt;a name="rest_code_723281c5e9d746848f7d4a3f3e8309a1-3"&gt;&lt;/a&gt;&lt;span class="gp"&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class="n"&gt;help&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_723281c5e9d746848f7d4a3f3e8309a1-4"&gt;&lt;/a&gt;&lt;span class="go"&gt;foo(x, y)&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;So, there are two ways to do this.  The first one would be to generate a string
 with the signature and just use &lt;tt class="docutils literal"&gt;eval&lt;/tt&gt; to get a &lt;tt class="docutils literal"&gt;__wrapped__&lt;/tt&gt; function. But
 that would be cheating, and honestly, quite boring. (The inspect module could
@@ -107,11 +107,11 @@ hand, we’ll need &lt;tt class="docutils literal"&gt;types.CodeType&lt;/tt&gt;.
 &lt;tt class="docutils literal"&gt;source&lt;/tt&gt; (&lt;tt class="docutils literal"&gt;old&lt;/tt&gt;), &lt;tt class="docutils literal"&gt;dest&lt;/tt&gt; (&lt;tt class="docutils literal"&gt;new&lt;/tt&gt;) and &lt;tt class="docutils literal"&gt;def &lt;span class="pre"&gt;_blank():&lt;/span&gt; pass&lt;/tt&gt; (a function
 that does nothing).&lt;/p&gt;
 &lt;p&gt;Let’s look at the docstring for &lt;tt class="docutils literal"&gt;CodeType&lt;/tt&gt;:&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_7d185f53d49945a4aca29937c1fb0307-1"&gt;&lt;/a&gt;code(argcount, kwonlyargcount, nlocals, stacksize, flags, codestring,
-&lt;a name="rest_code_7d185f53d49945a4aca29937c1fb0307-2"&gt;&lt;/a&gt;    constants, names, varnames, filename, name, firstlineno,
-&lt;a name="rest_code_7d185f53d49945a4aca29937c1fb0307-3"&gt;&lt;/a&gt;    lnotab[, freevars[, cellvars]])
-&lt;a name="rest_code_7d185f53d49945a4aca29937c1fb0307-4"&gt;&lt;/a&gt;
-&lt;a name="rest_code_7d185f53d49945a4aca29937c1fb0307-5"&gt;&lt;/a&gt;Create a code object.  Not for the faint of heart.
+&lt;pre class="code text"&gt;&lt;a name="rest_code_6e81522f913242bca1ac9550d6188935-1"&gt;&lt;/a&gt;code(argcount, kwonlyargcount, nlocals, stacksize, flags, codestring,
+&lt;a name="rest_code_6e81522f913242bca1ac9550d6188935-2"&gt;&lt;/a&gt;    constants, names, varnames, filename, name, firstlineno,
+&lt;a name="rest_code_6e81522f913242bca1ac9550d6188935-3"&gt;&lt;/a&gt;    lnotab[, freevars[, cellvars]])
+&lt;a name="rest_code_6e81522f913242bca1ac9550d6188935-4"&gt;&lt;/a&gt;
+&lt;a name="rest_code_6e81522f913242bca1ac9550d6188935-5"&gt;&lt;/a&gt;Create a code object.  Not for the faint of heart.
 &lt;/pre&gt;&lt;p&gt;All of the arguments end up being fields of a code objects (name starts with
 &lt;tt class="docutils literal"&gt;co_&lt;/tt&gt;).  For each
 function &lt;tt class="docutils literal"&gt;f&lt;/tt&gt;, its code object is &lt;tt class="docutils literal"&gt;f.__code__&lt;/tt&gt;. You can find the filename in
@@ -130,9 +130,9 @@ we’re fine.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="everything-you-need-to-know-about-function-arguments"&gt;
 &lt;h3&gt;Everything you need to know about function arguments&lt;/h3&gt;
-&lt;pre class="code pycon"&gt;&lt;a name="rest_code_f50e9176706a4afe86adc1215514685a-1"&gt;&lt;/a&gt;&lt;span class="gp"&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;f&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;d&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt; &lt;span class="k"&gt;pass&lt;/span&gt;
-&lt;a name="rest_code_f50e9176706a4afe86adc1215514685a-2"&gt;&lt;/a&gt;&lt;span class="gp"&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class="n"&gt;inspect&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getfullargspec&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_f50e9176706a4afe86adc1215514685a-3"&gt;&lt;/a&gt;&lt;span class="go"&gt;FullArgSpec(args=['a', 'b', 'c'], varargs=None, varkw=None, defaults=(1, 2), kwonlyargs=['d'], kwonlydefaults={'d': 3}, annotations={})&lt;/span&gt;
+&lt;pre class="code pycon"&gt;&lt;a name="rest_code_1ca9efea8fe14c8fae3f138dfc7635e6-1"&gt;&lt;/a&gt;&lt;span class="gp"&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;f&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;d&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt; &lt;span class="k"&gt;pass&lt;/span&gt;
+&lt;a name="rest_code_1ca9efea8fe14c8fae3f138dfc7635e6-2"&gt;&lt;/a&gt;&lt;span class="gp"&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class="n"&gt;inspect&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getfullargspec&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_1ca9efea8fe14c8fae3f138dfc7635e6-3"&gt;&lt;/a&gt;&lt;span class="go"&gt;FullArgSpec(args=['a', 'b', 'c'], varargs=None, varkw=None, defaults=(1, 2), kwonlyargs=['d'], kwonlydefaults={'d': 3}, annotations={})&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;A function signature has the following syntax:&lt;/p&gt;
 &lt;ol class="arabic simple"&gt;
 &lt;li&gt;Any positional (non-optional) arguments&lt;/li&gt;
@@ -165,13 +165,13 @@ And with that, we’re done.&lt;/p&gt;
 &lt;div class="section" id="final-results"&gt;
 &lt;h2&gt;Final results&lt;/h2&gt;
 &lt;p&gt;Before I show you the code, let’s test it out:&lt;/p&gt;
-&lt;pre class="code python"&gt;&lt;a name="rest_code_8e797acd44c74349ba709a6b8d5542b1-1"&gt;&lt;/a&gt;&lt;span class="c1"&gt;# old defined as before&lt;/span&gt;
-&lt;a name="rest_code_8e797acd44c74349ba709a6b8d5542b1-2"&gt;&lt;/a&gt;&lt;span class="nd"&gt;@merge_args&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;old&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_8e797acd44c74349ba709a6b8d5542b1-3"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;new&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;prefix&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;kwargs&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-&lt;a name="rest_code_8e797acd44c74349ba709a6b8d5542b1-4"&gt;&lt;/a&gt;    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;old&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;prefix&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;kwargs&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_285e7f2545614352aa0ce42a1732e49a-1"&gt;&lt;/a&gt;&lt;span class="c1"&gt;# old defined as before&lt;/span&gt;
+&lt;a name="rest_code_285e7f2545614352aa0ce42a1732e49a-2"&gt;&lt;/a&gt;&lt;span class="nd"&gt;@merge_args&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;old&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_285e7f2545614352aa0ce42a1732e49a-3"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;new&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;prefix&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;kwargs&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;a name="rest_code_285e7f2545614352aa0ce42a1732e49a-4"&gt;&lt;/a&gt;    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;old&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;prefix&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;kwargs&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;And the end result — &lt;tt class="docutils literal"&gt;help(new)&lt;/tt&gt; says:&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_6a2041192361425d931d995e5d8e321a-1"&gt;&lt;/a&gt;new(prefix, foo, bar)
-&lt;a name="rest_code_6a2041192361425d931d995e5d8e321a-2"&gt;&lt;/a&gt;    This is old's docstring.
+&lt;pre class="code text"&gt;&lt;a name="rest_code_766fd1fa6a2b4cbe99b2efaa40627640-1"&gt;&lt;/a&gt;new(prefix, foo, bar)
+&lt;a name="rest_code_766fd1fa6a2b4cbe99b2efaa40627640-2"&gt;&lt;/a&gt;    This is old's docstring.
 &lt;/pre&gt;&lt;p&gt;We did it!&lt;/p&gt;
 &lt;p class="lead"&gt;The code is available on &lt;a class="reference external" href="https://github.com/Kwpolska/merge_args"&gt;GitHub&lt;/a&gt; and on &lt;a class="reference external" href="https://pypi.org/project/merge-args/"&gt;PyPI&lt;/a&gt; (&lt;tt class="docutils literal"&gt;pip install merge_args&lt;/tt&gt;).
 There’s also an extensive test suite.&lt;/p&gt;
@@ -213,17 +213,17 @@ before the stdlib tool was created)&lt;/em&gt;&lt;/p&gt;
 &lt;h2&gt;Create&lt;/h2&gt;
 &lt;p&gt;To create a virtual environment named &lt;tt class="docutils literal"&gt;env&lt;/tt&gt;, use (depending on your tool of
 choice):&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_c5d741848bf646c18b234cc6bef8af44-1"&gt;&lt;/a&gt;$ python3 -m virtualenv env
+&lt;pre class="code text"&gt;&lt;a name="rest_code_aa8aa46bc9e545adae02ea881218dd89-1"&gt;&lt;/a&gt;$ python3 -m virtualenv env
 &lt;/pre&gt;&lt;p&gt;or&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_046c5609cded49d3b19aeb5031843ae8-1"&gt;&lt;/a&gt;$ python3 -m venv env
+&lt;pre class="code text"&gt;&lt;a name="rest_code_9f3b0f10248049f79eeb63113f8e918b-1"&gt;&lt;/a&gt;$ python3 -m venv env
 &lt;/pre&gt;&lt;p&gt;Afterwards, you will end up with a folder named &lt;tt class="docutils literal"&gt;env&lt;/tt&gt; that contains folders
 named &lt;tt class="docutils literal"&gt;bin&lt;/tt&gt; (&lt;tt class="docutils literal"&gt;Scripts&lt;/tt&gt; on Windows — contains executables, including
 &lt;tt class="docutils literal"&gt;python&lt;/tt&gt;), &lt;tt class="docutils literal"&gt;lib&lt;/tt&gt; (contains code), and &lt;tt class="docutils literal"&gt;include&lt;/tt&gt; (contains C headers).&lt;/p&gt;
 &lt;p&gt;Both tools install &lt;tt class="docutils literal"&gt;pip&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;setuptools&lt;/tt&gt;, but &lt;tt class="docutils literal"&gt;venv&lt;/tt&gt; does not ship with
 &lt;tt class="docutils literal"&gt;wheel&lt;/tt&gt;. In addition, the default versions tend to be more-or-less outdated.
 Let’s upgrade them real quick (first command is Unix, second is Windows): &lt;a class="footnote-reference" href="https://chriswarrick.com/pl/blog/2018/09/04/python-virtual-environments/#id6" id="id2"&gt;[2]&lt;/a&gt;&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_4e8c883f55c54459a0c61a80d322bf1c-1"&gt;&lt;/a&gt;$ env/bin/python -m pip install --upgrade pip setuptools wheel
-&lt;a name="rest_code_4e8c883f55c54459a0c61a80d322bf1c-2"&gt;&lt;/a&gt;&amp;gt; env\Scripts\python -m pip install --upgrade pip setuptools wheel
+&lt;pre class="code text"&gt;&lt;a name="rest_code_1757b20098744d5a85dca5e138066bc5-1"&gt;&lt;/a&gt;$ env/bin/python -m pip install --upgrade pip setuptools wheel
+&lt;a name="rest_code_1757b20098744d5a85dca5e138066bc5-2"&gt;&lt;/a&gt;&amp;gt; env\Scripts\python -m pip install --upgrade pip setuptools wheel
 &lt;/pre&gt;&lt;div class="section" id="where-to-store-virtual-environments"&gt;
 &lt;h3&gt;Where to store virtual environments?&lt;/h3&gt;
 &lt;p&gt;While the tools allow you to put your virtual environments anywhere in the
@@ -259,21 +259,21 @@ things, you will still be working with the system Python.&lt;/p&gt;
 activation and subshells are not viable solutions. In these cases, you must
 always use the full path to Python.&lt;/p&gt;
 &lt;p&gt;Here are some usage examples (paths can be relative, of course):&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_f3b3118ca7c0466da800c34f79d2254e-1"&gt;&lt;/a&gt;## *nix, activation ##
-&lt;a name="rest_code_f3b3118ca7c0466da800c34f79d2254e-2"&gt;&lt;/a&gt;$ source /path/to/env/bin/activate
-&lt;a name="rest_code_f3b3118ca7c0466da800c34f79d2254e-3"&gt;&lt;/a&gt;(env)$ pip install Django
-&lt;a name="rest_code_f3b3118ca7c0466da800c34f79d2254e-4"&gt;&lt;/a&gt;(env)$ deactivate
-&lt;a name="rest_code_f3b3118ca7c0466da800c34f79d2254e-5"&gt;&lt;/a&gt;
-&lt;a name="rest_code_f3b3118ca7c0466da800c34f79d2254e-6"&gt;&lt;/a&gt;## *nix, manual execution ##
-&lt;a name="rest_code_f3b3118ca7c0466da800c34f79d2254e-7"&gt;&lt;/a&gt;$ /path/to/env/bin/pip install Django
-&lt;a name="rest_code_f3b3118ca7c0466da800c34f79d2254e-8"&gt;&lt;/a&gt;
-&lt;a name="rest_code_f3b3118ca7c0466da800c34f79d2254e-9"&gt;&lt;/a&gt;## Windows, activation ##
-&lt;a name="rest_code_f3b3118ca7c0466da800c34f79d2254e-10"&gt;&lt;/a&gt;&amp;gt; C:\path\to\env\Scripts\activate
-&lt;a name="rest_code_f3b3118ca7c0466da800c34f79d2254e-11"&gt;&lt;/a&gt;(venv)&amp;gt; pip install Django
-&lt;a name="rest_code_f3b3118ca7c0466da800c34f79d2254e-12"&gt;&lt;/a&gt;(venv)&amp;gt; deactivate
-&lt;a name="rest_code_f3b3118ca7c0466da800c34f79d2254e-13"&gt;&lt;/a&gt;
-&lt;a name="rest_code_f3b3118ca7c0466da800c34f79d2254e-14"&gt;&lt;/a&gt;## Windows, manual execution ##
-&lt;a name="rest_code_f3b3118ca7c0466da800c34f79d2254e-15"&gt;&lt;/a&gt;&amp;gt; C:\path\to\env\Scripts\pip install Django
+&lt;pre class="code text"&gt;&lt;a name="rest_code_c6f628895ba145c58dea4d95179016f1-1"&gt;&lt;/a&gt;## *nix, activation ##
+&lt;a name="rest_code_c6f628895ba145c58dea4d95179016f1-2"&gt;&lt;/a&gt;$ source /path/to/env/bin/activate
+&lt;a name="rest_code_c6f628895ba145c58dea4d95179016f1-3"&gt;&lt;/a&gt;(env)$ pip install Django
+&lt;a name="rest_code_c6f628895ba145c58dea4d95179016f1-4"&gt;&lt;/a&gt;(env)$ deactivate
+&lt;a name="rest_code_c6f628895ba145c58dea4d95179016f1-5"&gt;&lt;/a&gt;
+&lt;a name="rest_code_c6f628895ba145c58dea4d95179016f1-6"&gt;&lt;/a&gt;## *nix, manual execution ##
+&lt;a name="rest_code_c6f628895ba145c58dea4d95179016f1-7"&gt;&lt;/a&gt;$ /path/to/env/bin/pip install Django
+&lt;a name="rest_code_c6f628895ba145c58dea4d95179016f1-8"&gt;&lt;/a&gt;
+&lt;a name="rest_code_c6f628895ba145c58dea4d95179016f1-9"&gt;&lt;/a&gt;## Windows, activation ##
+&lt;a name="rest_code_c6f628895ba145c58dea4d95179016f1-10"&gt;&lt;/a&gt;&amp;gt; C:\path\to\env\Scripts\activate
+&lt;a name="rest_code_c6f628895ba145c58dea4d95179016f1-11"&gt;&lt;/a&gt;(venv)&amp;gt; pip install Django
+&lt;a name="rest_code_c6f628895ba145c58dea4d95179016f1-12"&gt;&lt;/a&gt;(venv)&amp;gt; deactivate
+&lt;a name="rest_code_c6f628895ba145c58dea4d95179016f1-13"&gt;&lt;/a&gt;
+&lt;a name="rest_code_c6f628895ba145c58dea4d95179016f1-14"&gt;&lt;/a&gt;## Windows, manual execution ##
+&lt;a name="rest_code_c6f628895ba145c58dea4d95179016f1-15"&gt;&lt;/a&gt;&amp;gt; C:\path\to\env\Scripts\pip install Django
 &lt;/pre&gt;&lt;p&gt;The same principle applies to running Python itself, or any other script
 installed by a package. (With Django’s &lt;tt class="docutils literal"&gt;manage.py&lt;/tt&gt;, calling it as
 &lt;tt class="docutils literal"&gt;./manage.py&lt;/tt&gt; requires activation, or you can run
@@ -291,10 +291,10 @@ you can just run &lt;tt class="docutils literal"&gt;pip install &lt;span class="
 install packages from the saved list. (Of course, you can copy requirements.txt
 between machines. In many cases, it will just work; sometimes, you might need a few
 modifications to &lt;tt class="docutils literal"&gt;requirements.txt&lt;/tt&gt; to remove OS-specific stuff.)&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_c1e62bc8017c4c65b27e27f9b6e4b535-1"&gt;&lt;/a&gt;$ oldenv/bin/pip freeze &amp;gt; requirements.txt
-&lt;a name="rest_code_c1e62bc8017c4c65b27e27f9b6e4b535-2"&gt;&lt;/a&gt;$ python3 -m venv newenv
-&lt;a name="rest_code_c1e62bc8017c4c65b27e27f9b6e4b535-3"&gt;&lt;/a&gt;$ newenv/bin/pip install -r requirements.txt
-&lt;a name="rest_code_c1e62bc8017c4c65b27e27f9b6e4b535-4"&gt;&lt;/a&gt;(You may rm -rf oldenv now if you desire)
+&lt;pre class="code text"&gt;&lt;a name="rest_code_1f7f691f7d734a86ad43d8f05ce140f0-1"&gt;&lt;/a&gt;$ oldenv/bin/pip freeze &amp;gt; requirements.txt
+&lt;a name="rest_code_1f7f691f7d734a86ad43d8f05ce140f0-2"&gt;&lt;/a&gt;$ python3 -m venv newenv
+&lt;a name="rest_code_1f7f691f7d734a86ad43d8f05ce140f0-3"&gt;&lt;/a&gt;$ newenv/bin/pip install -r requirements.txt
+&lt;a name="rest_code_1f7f691f7d734a86ad43d8f05ce140f0-4"&gt;&lt;/a&gt;(You may rm -rf oldenv now if you desire)
 &lt;/pre&gt;&lt;p&gt;Note that it might also be necessary to re-create your virtual environment
 after a Python upgrade, &lt;a class="footnote-reference" href="https://chriswarrick.com/pl/blog/2018/09/04/python-virtual-environments/#id8" id="id4"&gt;[4]&lt;/a&gt; so it might be handy to keep an up-to-date
 &lt;tt class="docutils literal"&gt;requirements.txt&lt;/tt&gt; for your virtual environments (for many projects, it makes
@@ -512,28 +512,28 @@ library has just reported a bug and attached a &lt;tt class="docutils literal"&g
 reproduce the issue. I download that file to &lt;tt class="docutils literal"&gt;~/Downloads&lt;/tt&gt; on my filesystem.
 With plain old virtualenv, I can easily confirm the reproduction in a spare
 shell with:&lt;/p&gt;
-&lt;pre class="code shell"&gt;&lt;a name="rest_code_3b647f0df18a4659b24d18d025032706-1"&gt;&lt;/a&gt;$ ~/virtualenvs/foobar/bin/python ~/Downloads/repro.py
+&lt;pre class="code shell"&gt;&lt;a name="rest_code_bab38ab8dc7046f6a9ee8f17c369f167-1"&gt;&lt;/a&gt;$ ~/virtualenvs/foobar/bin/python ~/Downloads/repro.py
 &lt;/pre&gt;&lt;p&gt;And then I can launch my fancy IDE to fix the bug.  I don’t have to &lt;tt class="docutils literal"&gt;cd&lt;/tt&gt; into
 the project. But with Pipenv, I can’t really do that.  If I put the virtualenv
 in &lt;tt class="docutils literal"&gt;.venv&lt;/tt&gt; with the command line option, I can type
 &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;~/git/foobar/.venv/bin/python&lt;/span&gt; ~/Downloads/repro.py&lt;/tt&gt;. If I use the
 centralized directory + hashes thing, Tab completion becomes mandatory, if I
 haven’t memorized the hash.&lt;/p&gt;
-&lt;pre class="code shell"&gt;&lt;a name="rest_code_358279452b134bb29c965d2e6a233058-1"&gt;&lt;/a&gt;$ &lt;span class="nb"&gt;cd&lt;/span&gt; ~/git/foobar
-&lt;a name="rest_code_358279452b134bb29c965d2e6a233058-2"&gt;&lt;/a&gt;$ pipenv run python ~/Downloads/repro.py
+&lt;pre class="code shell"&gt;&lt;a name="rest_code_13f017b000544eb1ac10a48650f6b0aa-1"&gt;&lt;/a&gt;$ &lt;span class="nb"&gt;cd&lt;/span&gt; ~/git/foobar
+&lt;a name="rest_code_13f017b000544eb1ac10a48650f6b0aa-2"&gt;&lt;/a&gt;$ pipenv run python ~/Downloads/repro.py
 &lt;/pre&gt;&lt;p&gt;What if I had two &lt;tt class="docutils literal"&gt;.py&lt;/tt&gt; files, or &lt;tt class="docutils literal"&gt;repro.py&lt;/tt&gt; otherwise depended on being in
 the current working directory?&lt;/p&gt;
-&lt;pre class="code shell"&gt;&lt;a name="rest_code_1f3d508093114034bdf9d45da9e3416a-1"&gt;&lt;/a&gt;$ &lt;span class="nb"&gt;cd&lt;/span&gt; ~/git/foobar
-&lt;a name="rest_code_1f3d508093114034bdf9d45da9e3416a-2"&gt;&lt;/a&gt;$ pipenv shell
-&lt;a name="rest_code_1f3d508093114034bdf9d45da9e3416a-3"&gt;&lt;/a&gt;&lt;span class="o"&gt;(&lt;/span&gt;foobar-Mwd1l2m9&lt;span class="o"&gt;)&lt;/span&gt;$ &lt;span class="nb"&gt;cd&lt;/span&gt; ~/Downloads
-&lt;a name="rest_code_1f3d508093114034bdf9d45da9e3416a-4"&gt;&lt;/a&gt;&lt;span class="o"&gt;(&lt;/span&gt;foobar-Mwd1l2m9&lt;span class="o"&gt;)&lt;/span&gt;$ python repro.py
-&lt;a name="rest_code_1f3d508093114034bdf9d45da9e3416a-5"&gt;&lt;/a&gt;&lt;span class="o"&gt;(&lt;/span&gt;foobar-Mwd1l2m9&lt;span class="o"&gt;)&lt;/span&gt;$ &lt;span class="nb"&gt;exit&lt;/span&gt;  &lt;span class="c1"&gt;# (not deactivate!)&lt;/span&gt;
+&lt;pre class="code shell"&gt;&lt;a name="rest_code_7e5ea6067af24b858ddfe5234e5b1579-1"&gt;&lt;/a&gt;$ &lt;span class="nb"&gt;cd&lt;/span&gt; ~/git/foobar
+&lt;a name="rest_code_7e5ea6067af24b858ddfe5234e5b1579-2"&gt;&lt;/a&gt;$ pipenv shell
+&lt;a name="rest_code_7e5ea6067af24b858ddfe5234e5b1579-3"&gt;&lt;/a&gt;&lt;span class="o"&gt;(&lt;/span&gt;foobar-Mwd1l2m9&lt;span class="o"&gt;)&lt;/span&gt;$ &lt;span class="nb"&gt;cd&lt;/span&gt; ~/Downloads
+&lt;a name="rest_code_7e5ea6067af24b858ddfe5234e5b1579-4"&gt;&lt;/a&gt;&lt;span class="o"&gt;(&lt;/span&gt;foobar-Mwd1l2m9&lt;span class="o"&gt;)&lt;/span&gt;$ python repro.py
+&lt;a name="rest_code_7e5ea6067af24b858ddfe5234e5b1579-5"&gt;&lt;/a&gt;&lt;span class="o"&gt;(&lt;/span&gt;foobar-Mwd1l2m9&lt;span class="o"&gt;)&lt;/span&gt;$ &lt;span class="nb"&gt;exit&lt;/span&gt;  &lt;span class="c1"&gt;# (not deactivate!)&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;&lt;strong&gt;This is becoming ugly fairly quickly.&lt;/strong&gt; Also, with virtualenvwrapper, I can
 do this:&lt;/p&gt;
-&lt;pre class="code shell"&gt;&lt;a name="rest_code_646062841035498d9a318c5bd2cd282a-1"&gt;&lt;/a&gt;$ &lt;span class="nb"&gt;cd&lt;/span&gt; ~/Downloads
-&lt;a name="rest_code_646062841035498d9a318c5bd2cd282a-2"&gt;&lt;/a&gt;$ workon foobar
-&lt;a name="rest_code_646062841035498d9a318c5bd2cd282a-3"&gt;&lt;/a&gt;&lt;span class="o"&gt;(&lt;/span&gt;foobar&lt;span class="o"&gt;)&lt;/span&gt;$ python repro.py
-&lt;a name="rest_code_646062841035498d9a318c5bd2cd282a-4"&gt;&lt;/a&gt;&lt;span class="o"&gt;(&lt;/span&gt;foobar&lt;span class="o"&gt;)&lt;/span&gt;$ deactivate
+&lt;pre class="code shell"&gt;&lt;a name="rest_code_84a346e7087c4a16b52b5817c47d6403-1"&gt;&lt;/a&gt;$ &lt;span class="nb"&gt;cd&lt;/span&gt; ~/Downloads
+&lt;a name="rest_code_84a346e7087c4a16b52b5817c47d6403-2"&gt;&lt;/a&gt;$ workon foobar
+&lt;a name="rest_code_84a346e7087c4a16b52b5817c47d6403-3"&gt;&lt;/a&gt;&lt;span class="o"&gt;(&lt;/span&gt;foobar&lt;span class="o"&gt;)&lt;/span&gt;$ python repro.py
+&lt;a name="rest_code_84a346e7087c4a16b52b5817c47d6403-4"&gt;&lt;/a&gt;&lt;span class="o"&gt;(&lt;/span&gt;foobar&lt;span class="o"&gt;)&lt;/span&gt;$ deactivate
 &lt;/pre&gt;&lt;p&gt;And let’s not forget that Pipenv doesn’t help me to write a &lt;tt class="docutils literal"&gt;setup.py&lt;/tt&gt;,
 distribute code, or manage releases.  It just manages dependencies.  And it
 does it pretty badly.&lt;/p&gt;
@@ -1074,87 +1074,87 @@ because it is based on shell scripts (which can modify the enivironment).&lt;/li
 &lt;p class="alert alert-info"&gt;&lt;strong&gt;Other discussion threads:&lt;/strong&gt; &lt;a class="reference external" href="https://www.reddit.com/r/Python/comments/a3h81m/pipenv_promises_a_lot_delivers_very_little/"&gt;r/Python&lt;/a&gt;, &lt;a class="reference external" href="https://news.ycombinator.com/item?id=18612590"&gt;Hacker News&lt;/a&gt;.&lt;/p&gt;
 &lt;/div&gt;&lt;/div&gt;</description><guid>https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/</guid><pubDate>Tue, 17 Jul 2018 17:40:00 GMT</pubDate></item><item><title>Misja Gynvaela 11 (stream anglojęzyczny): reverse-engineering bajtkodu Pythona</title><link>https://chriswarrick.com/pl/blog/2017/08/03/gynvaels-mission-11-en-python-bytecode-reverse-engineering/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;Gynvael Coldwind jest badaczem bezpieczeństwa pracującym w Google, który organizuje cotygodniowe livestreamy na tematy bezpieczeństwa i programowania &lt;a class="reference external" href="https://gaming.youtube.com/user/GynvaelColdwind/live"&gt;po polsku&lt;/a&gt; i  &lt;a class="reference external" href="https://gaming.youtube.com/user/GynvaelEN/live"&gt;po angielsku&lt;/a&gt;). Częścią streamów są misje — w skrócie, zadania w stylu CTF-owym dotyczące inżynierii wstecznej. Wczorajsza misja była o elfickim — znaczy o Paint’cie — znaczy o programowaniu w Pythonie i jego bajtkodzie.&lt;/p&gt;
 &lt;!-- TEASER_END --&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_25fd8cb692b2490ab8a3d736eff3c17b-1"&gt;&lt;/a&gt;MISSION 011               goo.gl/13Bia9             DIFFICULTY: ██████░░░░ [6╱10]
-&lt;a name="rest_code_25fd8cb692b2490ab8a3d736eff3c17b-2"&gt;&lt;/a&gt;┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅
-&lt;a name="rest_code_25fd8cb692b2490ab8a3d736eff3c17b-3"&gt;&lt;/a&gt;
-&lt;a name="rest_code_25fd8cb692b2490ab8a3d736eff3c17b-4"&gt;&lt;/a&gt;Finally some real work!
-&lt;a name="rest_code_25fd8cb692b2490ab8a3d736eff3c17b-5"&gt;&lt;/a&gt;
-&lt;a name="rest_code_25fd8cb692b2490ab8a3d736eff3c17b-6"&gt;&lt;/a&gt;One of our field agents managed to infiltrate suspects hideout and steal a
-&lt;a name="rest_code_25fd8cb692b2490ab8a3d736eff3c17b-7"&gt;&lt;/a&gt;pendrive possibly containing important information. However, the pendrive
-&lt;a name="rest_code_25fd8cb692b2490ab8a3d736eff3c17b-8"&gt;&lt;/a&gt;actually requires one to authenticate themselves before accessing the stored
-&lt;a name="rest_code_25fd8cb692b2490ab8a3d736eff3c17b-9"&gt;&lt;/a&gt;files.
-&lt;a name="rest_code_25fd8cb692b2490ab8a3d736eff3c17b-10"&gt;&lt;/a&gt;
-&lt;a name="rest_code_25fd8cb692b2490ab8a3d736eff3c17b-11"&gt;&lt;/a&gt;We gave the pendrive to our laboratory and they managed to dump the firmware. We
-&lt;a name="rest_code_25fd8cb692b2490ab8a3d736eff3c17b-12"&gt;&lt;/a&gt;looked at the deadlisting they sent and for our best knowledge it's some form of
-&lt;a name="rest_code_25fd8cb692b2490ab8a3d736eff3c17b-13"&gt;&lt;/a&gt;Elvish. We can't read it.
-&lt;a name="rest_code_25fd8cb692b2490ab8a3d736eff3c17b-14"&gt;&lt;/a&gt;
-&lt;a name="rest_code_25fd8cb692b2490ab8a3d736eff3c17b-15"&gt;&lt;/a&gt;Here is the firmware: goo.gl/axsAHt
-&lt;a name="rest_code_25fd8cb692b2490ab8a3d736eff3c17b-16"&gt;&lt;/a&gt;
-&lt;a name="rest_code_25fd8cb692b2490ab8a3d736eff3c17b-17"&gt;&lt;/a&gt;And off you go. Bring us back the password.
-&lt;a name="rest_code_25fd8cb692b2490ab8a3d736eff3c17b-18"&gt;&lt;/a&gt;
-&lt;a name="rest_code_25fd8cb692b2490ab8a3d736eff3c17b-19"&gt;&lt;/a&gt;Good luck!
-&lt;a name="rest_code_25fd8cb692b2490ab8a3d736eff3c17b-20"&gt;&lt;/a&gt;
-&lt;a name="rest_code_25fd8cb692b2490ab8a3d736eff3c17b-21"&gt;&lt;/a&gt;---------------------------------------------------------------------------------
-&lt;a name="rest_code_25fd8cb692b2490ab8a3d736eff3c17b-22"&gt;&lt;/a&gt;
-&lt;a name="rest_code_25fd8cb692b2490ab8a3d736eff3c17b-23"&gt;&lt;/a&gt;If you decode the answer, put it in the comments under this video! If you write
-&lt;a name="rest_code_25fd8cb692b2490ab8a3d736eff3c17b-24"&gt;&lt;/a&gt;a blogpost / post your solution online, please add a link in the comments too!
-&lt;a name="rest_code_25fd8cb692b2490ab8a3d736eff3c17b-25"&gt;&lt;/a&gt;
-&lt;a name="rest_code_25fd8cb692b2490ab8a3d736eff3c17b-26"&gt;&lt;/a&gt;P.S. I'll show/explain the solution on the stream in ~two weeks.
-&lt;a name="rest_code_25fd8cb692b2490ab8a3d736eff3c17b-27"&gt;&lt;/a&gt;P.S.2. Bonus points for recreating the original high-level code.
+&lt;pre class="code text"&gt;&lt;a name="rest_code_ba1c60ff19144350909d8e409f07a36f-1"&gt;&lt;/a&gt;MISSION 011               goo.gl/13Bia9             DIFFICULTY: ██████░░░░ [6╱10]
+&lt;a name="rest_code_ba1c60ff19144350909d8e409f07a36f-2"&gt;&lt;/a&gt;┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅
+&lt;a name="rest_code_ba1c60ff19144350909d8e409f07a36f-3"&gt;&lt;/a&gt;
+&lt;a name="rest_code_ba1c60ff19144350909d8e409f07a36f-4"&gt;&lt;/a&gt;Finally some real work!
+&lt;a name="rest_code_ba1c60ff19144350909d8e409f07a36f-5"&gt;&lt;/a&gt;
+&lt;a name="rest_code_ba1c60ff19144350909d8e409f07a36f-6"&gt;&lt;/a&gt;One of our field agents managed to infiltrate suspects hideout and steal a
+&lt;a name="rest_code_ba1c60ff19144350909d8e409f07a36f-7"&gt;&lt;/a&gt;pendrive possibly containing important information. However, the pendrive
+&lt;a name="rest_code_ba1c60ff19144350909d8e409f07a36f-8"&gt;&lt;/a&gt;actually requires one to authenticate themselves before accessing the stored
+&lt;a name="rest_code_ba1c60ff19144350909d8e409f07a36f-9"&gt;&lt;/a&gt;files.
+&lt;a name="rest_code_ba1c60ff19144350909d8e409f07a36f-10"&gt;&lt;/a&gt;
+&lt;a name="rest_code_ba1c60ff19144350909d8e409f07a36f-11"&gt;&lt;/a&gt;We gave the pendrive to our laboratory and they managed to dump the firmware. We
+&lt;a name="rest_code_ba1c60ff19144350909d8e409f07a36f-12"&gt;&lt;/a&gt;looked at the deadlisting they sent and for our best knowledge it's some form of
+&lt;a name="rest_code_ba1c60ff19144350909d8e409f07a36f-13"&gt;&lt;/a&gt;Elvish. We can't read it.
+&lt;a name="rest_code_ba1c60ff19144350909d8e409f07a36f-14"&gt;&lt;/a&gt;
+&lt;a name="rest_code_ba1c60ff19144350909d8e409f07a36f-15"&gt;&lt;/a&gt;Here is the firmware: goo.gl/axsAHt
+&lt;a name="rest_code_ba1c60ff19144350909d8e409f07a36f-16"&gt;&lt;/a&gt;
+&lt;a name="rest_code_ba1c60ff19144350909d8e409f07a36f-17"&gt;&lt;/a&gt;And off you go. Bring us back the password.
+&lt;a name="rest_code_ba1c60ff19144350909d8e409f07a36f-18"&gt;&lt;/a&gt;
+&lt;a name="rest_code_ba1c60ff19144350909d8e409f07a36f-19"&gt;&lt;/a&gt;Good luck!
+&lt;a name="rest_code_ba1c60ff19144350909d8e409f07a36f-20"&gt;&lt;/a&gt;
+&lt;a name="rest_code_ba1c60ff19144350909d8e409f07a36f-21"&gt;&lt;/a&gt;---------------------------------------------------------------------------------
+&lt;a name="rest_code_ba1c60ff19144350909d8e409f07a36f-22"&gt;&lt;/a&gt;
+&lt;a name="rest_code_ba1c60ff19144350909d8e409f07a36f-23"&gt;&lt;/a&gt;If you decode the answer, put it in the comments under this video! If you write
+&lt;a name="rest_code_ba1c60ff19144350909d8e409f07a36f-24"&gt;&lt;/a&gt;a blogpost / post your solution online, please add a link in the comments too!
+&lt;a name="rest_code_ba1c60ff19144350909d8e409f07a36f-25"&gt;&lt;/a&gt;
+&lt;a name="rest_code_ba1c60ff19144350909d8e409f07a36f-26"&gt;&lt;/a&gt;P.S. I'll show/explain the solution on the stream in ~two weeks.
+&lt;a name="rest_code_ba1c60ff19144350909d8e409f07a36f-27"&gt;&lt;/a&gt;P.S.2. Bonus points for recreating the original high-level code.
 &lt;/pre&gt;&lt;p&gt;Kod firmware:&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_2f65d687d2424104a39efdf0d5edee37-1"&gt;&lt;/a&gt;co_argcount 1
-&lt;a name="rest_code_2f65d687d2424104a39efdf0d5edee37-2"&gt;&lt;/a&gt;co_consts (None, '4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89', 'hex', 89, 255, 115, 50)
-&lt;a name="rest_code_2f65d687d2424104a39efdf0d5edee37-3"&gt;&lt;/a&gt;co_flags 67
-&lt;a name="rest_code_2f65d687d2424104a39efdf0d5edee37-4"&gt;&lt;/a&gt;co_name check_password
-&lt;a name="rest_code_2f65d687d2424104a39efdf0d5edee37-5"&gt;&lt;/a&gt;co_names ('decode', 'len', 'False', 'all', 'zip', 'ord')
-&lt;a name="rest_code_2f65d687d2424104a39efdf0d5edee37-6"&gt;&lt;/a&gt;co_nlocals 4
-&lt;a name="rest_code_2f65d687d2424104a39efdf0d5edee37-7"&gt;&lt;/a&gt;co_stacksize 6
-&lt;a name="rest_code_2f65d687d2424104a39efdf0d5edee37-8"&gt;&lt;/a&gt;co_varnames ('s', 'good', 'cs', 'cg')
-&lt;a name="rest_code_2f65d687d2424104a39efdf0d5edee37-9"&gt;&lt;/a&gt;              0 LOAD_CONST               1
-&lt;a name="rest_code_2f65d687d2424104a39efdf0d5edee37-10"&gt;&lt;/a&gt;              3 LOAD_ATTR                0
-&lt;a name="rest_code_2f65d687d2424104a39efdf0d5edee37-11"&gt;&lt;/a&gt;              6 LOAD_CONST               2
-&lt;a name="rest_code_2f65d687d2424104a39efdf0d5edee37-12"&gt;&lt;/a&gt;              9 CALL_FUNCTION            1
-&lt;a name="rest_code_2f65d687d2424104a39efdf0d5edee37-13"&gt;&lt;/a&gt;             12 STORE_FAST               1
-&lt;a name="rest_code_2f65d687d2424104a39efdf0d5edee37-14"&gt;&lt;/a&gt;             15 LOAD_GLOBAL              1
-&lt;a name="rest_code_2f65d687d2424104a39efdf0d5edee37-15"&gt;&lt;/a&gt;             18 LOAD_FAST                0
-&lt;a name="rest_code_2f65d687d2424104a39efdf0d5edee37-16"&gt;&lt;/a&gt;             21 CALL_FUNCTION            1
-&lt;a name="rest_code_2f65d687d2424104a39efdf0d5edee37-17"&gt;&lt;/a&gt;             24 LOAD_GLOBAL              1
-&lt;a name="rest_code_2f65d687d2424104a39efdf0d5edee37-18"&gt;&lt;/a&gt;             27 LOAD_FAST                1
-&lt;a name="rest_code_2f65d687d2424104a39efdf0d5edee37-19"&gt;&lt;/a&gt;             30 CALL_FUNCTION            1
-&lt;a name="rest_code_2f65d687d2424104a39efdf0d5edee37-20"&gt;&lt;/a&gt;             33 COMPARE_OP               3 (!=)
-&lt;a name="rest_code_2f65d687d2424104a39efdf0d5edee37-21"&gt;&lt;/a&gt;             36 POP_JUMP_IF_FALSE       43
-&lt;a name="rest_code_2f65d687d2424104a39efdf0d5edee37-22"&gt;&lt;/a&gt;             39 LOAD_GLOBAL              2
-&lt;a name="rest_code_2f65d687d2424104a39efdf0d5edee37-23"&gt;&lt;/a&gt;             42 RETURN_VALUE
-&lt;a name="rest_code_2f65d687d2424104a39efdf0d5edee37-24"&gt;&lt;/a&gt;        &amp;gt;&amp;gt;   43 LOAD_GLOBAL              3
-&lt;a name="rest_code_2f65d687d2424104a39efdf0d5edee37-25"&gt;&lt;/a&gt;             46 BUILD_LIST               0
-&lt;a name="rest_code_2f65d687d2424104a39efdf0d5edee37-26"&gt;&lt;/a&gt;             49 LOAD_GLOBAL              4
-&lt;a name="rest_code_2f65d687d2424104a39efdf0d5edee37-27"&gt;&lt;/a&gt;             52 LOAD_FAST                0
-&lt;a name="rest_code_2f65d687d2424104a39efdf0d5edee37-28"&gt;&lt;/a&gt;             55 LOAD_FAST                1
-&lt;a name="rest_code_2f65d687d2424104a39efdf0d5edee37-29"&gt;&lt;/a&gt;             58 CALL_FUNCTION            2
-&lt;a name="rest_code_2f65d687d2424104a39efdf0d5edee37-30"&gt;&lt;/a&gt;             61 GET_ITER
-&lt;a name="rest_code_2f65d687d2424104a39efdf0d5edee37-31"&gt;&lt;/a&gt;        &amp;gt;&amp;gt;   62 FOR_ITER                52 (to 117)
-&lt;a name="rest_code_2f65d687d2424104a39efdf0d5edee37-32"&gt;&lt;/a&gt;             65 UNPACK_SEQUENCE          2
-&lt;a name="rest_code_2f65d687d2424104a39efdf0d5edee37-33"&gt;&lt;/a&gt;             68 STORE_FAST               2
-&lt;a name="rest_code_2f65d687d2424104a39efdf0d5edee37-34"&gt;&lt;/a&gt;             71 STORE_FAST               3
-&lt;a name="rest_code_2f65d687d2424104a39efdf0d5edee37-35"&gt;&lt;/a&gt;             74 LOAD_GLOBAL              5
-&lt;a name="rest_code_2f65d687d2424104a39efdf0d5edee37-36"&gt;&lt;/a&gt;             77 LOAD_FAST                2
-&lt;a name="rest_code_2f65d687d2424104a39efdf0d5edee37-37"&gt;&lt;/a&gt;             80 CALL_FUNCTION            1
-&lt;a name="rest_code_2f65d687d2424104a39efdf0d5edee37-38"&gt;&lt;/a&gt;             83 LOAD_CONST               3
-&lt;a name="rest_code_2f65d687d2424104a39efdf0d5edee37-39"&gt;&lt;/a&gt;             86 BINARY_SUBTRACT
-&lt;a name="rest_code_2f65d687d2424104a39efdf0d5edee37-40"&gt;&lt;/a&gt;             87 LOAD_CONST               4
-&lt;a name="rest_code_2f65d687d2424104a39efdf0d5edee37-41"&gt;&lt;/a&gt;             90 BINARY_AND
-&lt;a name="rest_code_2f65d687d2424104a39efdf0d5edee37-42"&gt;&lt;/a&gt;             91 LOAD_CONST               5
-&lt;a name="rest_code_2f65d687d2424104a39efdf0d5edee37-43"&gt;&lt;/a&gt;             94 BINARY_XOR
-&lt;a name="rest_code_2f65d687d2424104a39efdf0d5edee37-44"&gt;&lt;/a&gt;             95 LOAD_CONST               6
-&lt;a name="rest_code_2f65d687d2424104a39efdf0d5edee37-45"&gt;&lt;/a&gt;             98 BINARY_XOR
-&lt;a name="rest_code_2f65d687d2424104a39efdf0d5edee37-46"&gt;&lt;/a&gt;             99 LOAD_GLOBAL              5
-&lt;a name="rest_code_2f65d687d2424104a39efdf0d5edee37-47"&gt;&lt;/a&gt;            102 LOAD_FAST                3
-&lt;a name="rest_code_2f65d687d2424104a39efdf0d5edee37-48"&gt;&lt;/a&gt;            105 CALL_FUNCTION            1
-&lt;a name="rest_code_2f65d687d2424104a39efdf0d5edee37-49"&gt;&lt;/a&gt;            108 COMPARE_OP               2 (==)
-&lt;a name="rest_code_2f65d687d2424104a39efdf0d5edee37-50"&gt;&lt;/a&gt;            111 LIST_APPEND              2
-&lt;a name="rest_code_2f65d687d2424104a39efdf0d5edee37-51"&gt;&lt;/a&gt;            114 JUMP_ABSOLUTE           62
-&lt;a name="rest_code_2f65d687d2424104a39efdf0d5edee37-52"&gt;&lt;/a&gt;        &amp;gt;&amp;gt;  117 CALL_FUNCTION            1
-&lt;a name="rest_code_2f65d687d2424104a39efdf0d5edee37-53"&gt;&lt;/a&gt;            120 RETURN_VALUE
+&lt;pre class="code text"&gt;&lt;a name="rest_code_772f3dc1eb1d4713b2592cef283d159f-1"&gt;&lt;/a&gt;co_argcount 1
+&lt;a name="rest_code_772f3dc1eb1d4713b2592cef283d159f-2"&gt;&lt;/a&gt;co_consts (None, '4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89', 'hex', 89, 255, 115, 50)
+&lt;a name="rest_code_772f3dc1eb1d4713b2592cef283d159f-3"&gt;&lt;/a&gt;co_flags 67
+&lt;a name="rest_code_772f3dc1eb1d4713b2592cef283d159f-4"&gt;&lt;/a&gt;co_name check_password
+&lt;a name="rest_code_772f3dc1eb1d4713b2592cef283d159f-5"&gt;&lt;/a&gt;co_names ('decode', 'len', 'False', 'all', 'zip', 'ord')
+&lt;a name="rest_code_772f3dc1eb1d4713b2592cef283d159f-6"&gt;&lt;/a&gt;co_nlocals 4
+&lt;a name="rest_code_772f3dc1eb1d4713b2592cef283d159f-7"&gt;&lt;/a&gt;co_stacksize 6
+&lt;a name="rest_code_772f3dc1eb1d4713b2592cef283d159f-8"&gt;&lt;/a&gt;co_varnames ('s', 'good', 'cs', 'cg')
+&lt;a name="rest_code_772f3dc1eb1d4713b2592cef283d159f-9"&gt;&lt;/a&gt;              0 LOAD_CONST               1
+&lt;a name="rest_code_772f3dc1eb1d4713b2592cef283d159f-10"&gt;&lt;/a&gt;              3 LOAD_ATTR                0
+&lt;a name="rest_code_772f3dc1eb1d4713b2592cef283d159f-11"&gt;&lt;/a&gt;              6 LOAD_CONST               2
+&lt;a name="rest_code_772f3dc1eb1d4713b2592cef283d159f-12"&gt;&lt;/a&gt;              9 CALL_FUNCTION            1
+&lt;a name="rest_code_772f3dc1eb1d4713b2592cef283d159f-13"&gt;&lt;/a&gt;             12 STORE_FAST               1
+&lt;a name="rest_code_772f3dc1eb1d4713b2592cef283d159f-14"&gt;&lt;/a&gt;             15 LOAD_GLOBAL              1
+&lt;a name="rest_code_772f3dc1eb1d4713b2592cef283d159f-15"&gt;&lt;/a&gt;             18 LOAD_FAST                0
+&lt;a name="rest_code_772f3dc1eb1d4713b2592cef283d159f-16"&gt;&lt;/a&gt;             21 CALL_FUNCTION            1
+&lt;a name="rest_code_772f3dc1eb1d4713b2592cef283d159f-17"&gt;&lt;/a&gt;             24 LOAD_GLOBAL              1
+&lt;a name="rest_code_772f3dc1eb1d4713b2592cef283d159f-18"&gt;&lt;/a&gt;             27 LOAD_FAST                1
+&lt;a name="rest_code_772f3dc1eb1d4713b2592cef283d159f-19"&gt;&lt;/a&gt;             30 CALL_FUNCTION            1
+&lt;a name="rest_code_772f3dc1eb1d4713b2592cef283d159f-20"&gt;&lt;/a&gt;             33 COMPARE_OP               3 (!=)
+&lt;a name="rest_code_772f3dc1eb1d4713b2592cef283d159f-21"&gt;&lt;/a&gt;             36 POP_JUMP_IF_FALSE       43
+&lt;a name="rest_code_772f3dc1eb1d4713b2592cef283d159f-22"&gt;&lt;/a&gt;             39 LOAD_GLOBAL              2
+&lt;a name="rest_code_772f3dc1eb1d4713b2592cef283d159f-23"&gt;&lt;/a&gt;             42 RETURN_VALUE
+&lt;a name="rest_code_772f3dc1eb1d4713b2592cef283d159f-24"&gt;&lt;/a&gt;        &amp;gt;&amp;gt;   43 LOAD_GLOBAL              3
+&lt;a name="rest_code_772f3dc1eb1d4713b2592cef283d159f-25"&gt;&lt;/a&gt;             46 BUILD_LIST               0
+&lt;a name="rest_code_772f3dc1eb1d4713b2592cef283d159f-26"&gt;&lt;/a&gt;             49 LOAD_GLOBAL              4
+&lt;a name="rest_code_772f3dc1eb1d4713b2592cef283d159f-27"&gt;&lt;/a&gt;             52 LOAD_FAST                0
+&lt;a name="rest_code_772f3dc1eb1d4713b2592cef283d159f-28"&gt;&lt;/a&gt;             55 LOAD_FAST                1
+&lt;a name="rest_code_772f3dc1eb1d4713b2592cef283d159f-29"&gt;&lt;/a&gt;             58 CALL_FUNCTION            2
+&lt;a name="rest_code_772f3dc1eb1d4713b2592cef283d159f-30"&gt;&lt;/a&gt;             61 GET_ITER
+&lt;a name="rest_code_772f3dc1eb1d4713b2592cef283d159f-31"&gt;&lt;/a&gt;        &amp;gt;&amp;gt;   62 FOR_ITER                52 (to 117)
+&lt;a name="rest_code_772f3dc1eb1d4713b2592cef283d159f-32"&gt;&lt;/a&gt;             65 UNPACK_SEQUENCE          2
+&lt;a name="rest_code_772f3dc1eb1d4713b2592cef283d159f-33"&gt;&lt;/a&gt;             68 STORE_FAST               2
+&lt;a name="rest_code_772f3dc1eb1d4713b2592cef283d159f-34"&gt;&lt;/a&gt;             71 STORE_FAST               3
+&lt;a name="rest_code_772f3dc1eb1d4713b2592cef283d159f-35"&gt;&lt;/a&gt;             74 LOAD_GLOBAL              5
+&lt;a name="rest_code_772f3dc1eb1d4713b2592cef283d159f-36"&gt;&lt;/a&gt;             77 LOAD_FAST                2
+&lt;a name="rest_code_772f3dc1eb1d4713b2592cef283d159f-37"&gt;&lt;/a&gt;             80 CALL_FUNCTION            1
+&lt;a name="rest_code_772f3dc1eb1d4713b2592cef283d159f-38"&gt;&lt;/a&gt;             83 LOAD_CONST               3
+&lt;a name="rest_code_772f3dc1eb1d4713b2592cef283d159f-39"&gt;&lt;/a&gt;             86 BINARY_SUBTRACT
+&lt;a name="rest_code_772f3dc1eb1d4713b2592cef283d159f-40"&gt;&lt;/a&gt;             87 LOAD_CONST               4
+&lt;a name="rest_code_772f3dc1eb1d4713b2592cef283d159f-41"&gt;&lt;/a&gt;             90 BINARY_AND
+&lt;a name="rest_code_772f3dc1eb1d4713b2592cef283d159f-42"&gt;&lt;/a&gt;             91 LOAD_CONST               5
+&lt;a name="rest_code_772f3dc1eb1d4713b2592cef283d159f-43"&gt;&lt;/a&gt;             94 BINARY_XOR
+&lt;a name="rest_code_772f3dc1eb1d4713b2592cef283d159f-44"&gt;&lt;/a&gt;             95 LOAD_CONST               6
+&lt;a name="rest_code_772f3dc1eb1d4713b2592cef283d159f-45"&gt;&lt;/a&gt;             98 BINARY_XOR
+&lt;a name="rest_code_772f3dc1eb1d4713b2592cef283d159f-46"&gt;&lt;/a&gt;             99 LOAD_GLOBAL              5
+&lt;a name="rest_code_772f3dc1eb1d4713b2592cef283d159f-47"&gt;&lt;/a&gt;            102 LOAD_FAST                3
+&lt;a name="rest_code_772f3dc1eb1d4713b2592cef283d159f-48"&gt;&lt;/a&gt;            105 CALL_FUNCTION            1
+&lt;a name="rest_code_772f3dc1eb1d4713b2592cef283d159f-49"&gt;&lt;/a&gt;            108 COMPARE_OP               2 (==)
+&lt;a name="rest_code_772f3dc1eb1d4713b2592cef283d159f-50"&gt;&lt;/a&gt;            111 LIST_APPEND              2
+&lt;a name="rest_code_772f3dc1eb1d4713b2592cef283d159f-51"&gt;&lt;/a&gt;            114 JUMP_ABSOLUTE           62
+&lt;a name="rest_code_772f3dc1eb1d4713b2592cef283d159f-52"&gt;&lt;/a&gt;        &amp;gt;&amp;gt;  117 CALL_FUNCTION            1
+&lt;a name="rest_code_772f3dc1eb1d4713b2592cef283d159f-53"&gt;&lt;/a&gt;            120 RETURN_VALUE
 &lt;/pre&gt;&lt;p&gt;Dla niewtajemniczonych to może wyglądać na &lt;em&gt;elficki&lt;/em&gt;. W rzeczywistości jest to bajtkod Pythona — zestaw instrukcji używany przez maszynę wirtualną Pythona (CPython 2.7.) Python, podobnie jak wiele innych języków, używa kompilatora do tłumaczenia kodu źródłowego czytelnego dla ludzi na coś bardziej odpowiedniego dla komputerów. Kod Pythona tłumaczony jest na bajtkod, który jest wykonywany przez maszynę wirtualną CPythona. Bajtkod CPythona może być używany na różnym sprzęcie, podczas gdy kod maszynowy nie może. Z drugiej strony kod maszynowy jest zazwyczaj szybszy niż języki oparte na maszynach wirtualnych i bajtkodzie. (Java i C# działają tak jak Python, C jest tłumaczone prosto do kodu maszynowego)&lt;/p&gt;
 &lt;p&gt;To jest wewnętrzna reprezentacja funkcji Pythona. Pierwsze kilka linii to zmienne należące do obiektu &lt;tt class="docutils literal"&gt;f.__code__&lt;/tt&gt; naszej funkcji. Wiemy, że funkcja:&lt;/p&gt;
 &lt;ul class="simple"&gt;
@@ -1171,129 +1171,129 @@ because it is based on shell scripts (which can modify the enivironment).&lt;/li
 &lt;div class="section" id="reverse-engineering-bajtkodu-pythona-reczne-odtwarzanie-funkcji"&gt;
 &lt;h2&gt;Reverse-engineering bajtkodu Pythona: ręczne odtwarzanie funkcji&lt;/h2&gt;
 &lt;p&gt;Zacząłem od odtworzenia oryginalnego pliku z firmware’em. Utworzyłem pustą funkcję i napisałem trochę kodu, który wypisuje zawartość &lt;tt class="docutils literal"&gt;__code__&lt;/tt&gt; i wyjście &lt;tt class="docutils literal"&gt;dis.dis&lt;/tt&gt;. Dodałem też kolorowanie wyjścia, by łatwiej się czytało:&lt;/p&gt;
-&lt;pre class="code python"&gt;&lt;a name="rest_code_167e8283f5354fc88603d8de0be8088a-1"&gt;&lt;/a&gt;&lt;span class="ch"&gt;#!/usr/bin/env python2&lt;/span&gt;
-&lt;a name="rest_code_167e8283f5354fc88603d8de0be8088a-2"&gt;&lt;/a&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;dis&lt;/span&gt;
-&lt;a name="rest_code_167e8283f5354fc88603d8de0be8088a-3"&gt;&lt;/a&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;sys&lt;/span&gt;
-&lt;a name="rest_code_167e8283f5354fc88603d8de0be8088a-4"&gt;&lt;/a&gt;
-&lt;a name="rest_code_167e8283f5354fc88603d8de0be8088a-5"&gt;&lt;/a&gt;&lt;span class="c1"&gt;# Write code here&lt;/span&gt;
-&lt;a name="rest_code_167e8283f5354fc88603d8de0be8088a-6"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;check_password&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-&lt;a name="rest_code_167e8283f5354fc88603d8de0be8088a-7"&gt;&lt;/a&gt;    &lt;span class="k"&gt;pass&lt;/span&gt;
-&lt;a name="rest_code_167e8283f5354fc88603d8de0be8088a-8"&gt;&lt;/a&gt;
-&lt;a name="rest_code_167e8283f5354fc88603d8de0be8088a-9"&gt;&lt;/a&gt;&lt;span class="c1"&gt;# Reverse engineering the code&lt;/span&gt;
-&lt;a name="rest_code_167e8283f5354fc88603d8de0be8088a-10"&gt;&lt;/a&gt;&lt;span class="n"&gt;cnames&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'co_argcount'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'co_consts'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'co_flags'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'co_name'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'co_names'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'co_nlocals'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'co_stacksize'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'co_varnames'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_167e8283f5354fc88603d8de0be8088a-11"&gt;&lt;/a&gt;&lt;span class="n"&gt;cvalues&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'hex'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;89&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;255&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;115&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;50&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="mi"&gt;67&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'check_password'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'decode'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'len'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'False'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'all'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'zip'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'ord'&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;6&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'s'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'good'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'cs'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'cg'&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-&lt;a name="rest_code_167e8283f5354fc88603d8de0be8088a-12"&gt;&lt;/a&gt;
-&lt;a name="rest_code_167e8283f5354fc88603d8de0be8088a-13"&gt;&lt;/a&gt;&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;ov&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;zip&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cnames&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;cvalues&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-&lt;a name="rest_code_167e8283f5354fc88603d8de0be8088a-14"&gt;&lt;/a&gt;    &lt;span class="n"&gt;v&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;getattr&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;check_password&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="vm"&gt;__code__&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_167e8283f5354fc88603d8de0be8088a-15"&gt;&lt;/a&gt;    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;v&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="n"&gt;ov&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-&lt;a name="rest_code_167e8283f5354fc88603d8de0be8088a-16"&gt;&lt;/a&gt;        &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stderr&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'&lt;/span&gt;&lt;span class="se"&gt;\033&lt;/span&gt;&lt;span class="s1"&gt;[1;32m'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_167e8283f5354fc88603d8de0be8088a-17"&gt;&lt;/a&gt;    &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-&lt;a name="rest_code_167e8283f5354fc88603d8de0be8088a-18"&gt;&lt;/a&gt;        &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stderr&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'&lt;/span&gt;&lt;span class="se"&gt;\033&lt;/span&gt;&lt;span class="s1"&gt;[1;31m'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_167e8283f5354fc88603d8de0be8088a-19"&gt;&lt;/a&gt;    &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stderr&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;flush&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;a name="rest_code_167e8283f5354fc88603d8de0be8088a-20"&gt;&lt;/a&gt;
-&lt;a name="rest_code_167e8283f5354fc88603d8de0be8088a-21"&gt;&lt;/a&gt;    &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stdout&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="s2"&gt;" "&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;v&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="s2"&gt;"&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s2"&gt;"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_167e8283f5354fc88603d8de0be8088a-22"&gt;&lt;/a&gt;    &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stdout&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;flush&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;a name="rest_code_167e8283f5354fc88603d8de0be8088a-23"&gt;&lt;/a&gt;
-&lt;a name="rest_code_167e8283f5354fc88603d8de0be8088a-24"&gt;&lt;/a&gt;    &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stderr&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'&lt;/span&gt;&lt;span class="se"&gt;\033&lt;/span&gt;&lt;span class="s1"&gt;[0m'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_167e8283f5354fc88603d8de0be8088a-25"&gt;&lt;/a&gt;    &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stderr&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;flush&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;a name="rest_code_167e8283f5354fc88603d8de0be8088a-26"&gt;&lt;/a&gt;
-&lt;a name="rest_code_167e8283f5354fc88603d8de0be8088a-27"&gt;&lt;/a&gt;&lt;span class="n"&gt;dis&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;dis&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;check_password&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_074704c41ff14df8a0254abf18f92ee3-1"&gt;&lt;/a&gt;&lt;span class="ch"&gt;#!/usr/bin/env python2&lt;/span&gt;
+&lt;a name="rest_code_074704c41ff14df8a0254abf18f92ee3-2"&gt;&lt;/a&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;dis&lt;/span&gt;
+&lt;a name="rest_code_074704c41ff14df8a0254abf18f92ee3-3"&gt;&lt;/a&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;sys&lt;/span&gt;
+&lt;a name="rest_code_074704c41ff14df8a0254abf18f92ee3-4"&gt;&lt;/a&gt;
+&lt;a name="rest_code_074704c41ff14df8a0254abf18f92ee3-5"&gt;&lt;/a&gt;&lt;span class="c1"&gt;# Write code here&lt;/span&gt;
+&lt;a name="rest_code_074704c41ff14df8a0254abf18f92ee3-6"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;check_password&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;a name="rest_code_074704c41ff14df8a0254abf18f92ee3-7"&gt;&lt;/a&gt;    &lt;span class="k"&gt;pass&lt;/span&gt;
+&lt;a name="rest_code_074704c41ff14df8a0254abf18f92ee3-8"&gt;&lt;/a&gt;
+&lt;a name="rest_code_074704c41ff14df8a0254abf18f92ee3-9"&gt;&lt;/a&gt;&lt;span class="c1"&gt;# Reverse engineering the code&lt;/span&gt;
+&lt;a name="rest_code_074704c41ff14df8a0254abf18f92ee3-10"&gt;&lt;/a&gt;&lt;span class="n"&gt;cnames&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'co_argcount'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'co_consts'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'co_flags'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'co_name'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'co_names'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'co_nlocals'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'co_stacksize'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'co_varnames'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_074704c41ff14df8a0254abf18f92ee3-11"&gt;&lt;/a&gt;&lt;span class="n"&gt;cvalues&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'hex'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;89&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;255&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;115&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;50&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="mi"&gt;67&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'check_password'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'decode'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'len'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'False'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'all'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'zip'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'ord'&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;6&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'s'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'good'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'cs'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'cg'&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;a name="rest_code_074704c41ff14df8a0254abf18f92ee3-12"&gt;&lt;/a&gt;
+&lt;a name="rest_code_074704c41ff14df8a0254abf18f92ee3-13"&gt;&lt;/a&gt;&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;ov&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;zip&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cnames&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;cvalues&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;a name="rest_code_074704c41ff14df8a0254abf18f92ee3-14"&gt;&lt;/a&gt;    &lt;span class="n"&gt;v&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;getattr&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;check_password&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="vm"&gt;__code__&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_074704c41ff14df8a0254abf18f92ee3-15"&gt;&lt;/a&gt;    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;v&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="n"&gt;ov&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;a name="rest_code_074704c41ff14df8a0254abf18f92ee3-16"&gt;&lt;/a&gt;        &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stderr&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'&lt;/span&gt;&lt;span class="se"&gt;\033&lt;/span&gt;&lt;span class="s1"&gt;[1;32m'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_074704c41ff14df8a0254abf18f92ee3-17"&gt;&lt;/a&gt;    &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;a name="rest_code_074704c41ff14df8a0254abf18f92ee3-18"&gt;&lt;/a&gt;        &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stderr&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'&lt;/span&gt;&lt;span class="se"&gt;\033&lt;/span&gt;&lt;span class="s1"&gt;[1;31m'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_074704c41ff14df8a0254abf18f92ee3-19"&gt;&lt;/a&gt;    &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stderr&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;flush&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;a name="rest_code_074704c41ff14df8a0254abf18f92ee3-20"&gt;&lt;/a&gt;
+&lt;a name="rest_code_074704c41ff14df8a0254abf18f92ee3-21"&gt;&lt;/a&gt;    &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stdout&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="s2"&gt;" "&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;v&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="s2"&gt;"&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s2"&gt;"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_074704c41ff14df8a0254abf18f92ee3-22"&gt;&lt;/a&gt;    &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stdout&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;flush&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;a name="rest_code_074704c41ff14df8a0254abf18f92ee3-23"&gt;&lt;/a&gt;
+&lt;a name="rest_code_074704c41ff14df8a0254abf18f92ee3-24"&gt;&lt;/a&gt;    &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stderr&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'&lt;/span&gt;&lt;span class="se"&gt;\033&lt;/span&gt;&lt;span class="s1"&gt;[0m'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_074704c41ff14df8a0254abf18f92ee3-25"&gt;&lt;/a&gt;    &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stderr&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;flush&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;a name="rest_code_074704c41ff14df8a0254abf18f92ee3-26"&gt;&lt;/a&gt;
+&lt;a name="rest_code_074704c41ff14df8a0254abf18f92ee3-27"&gt;&lt;/a&gt;&lt;span class="n"&gt;dis&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;dis&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;check_password&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;Jeśli uruchomimy ten solver, otrzymamy następujące wyjście (tekst w nawiasach kwadratowych dopisany przeze mnie):&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_756af7f3f58f42b1bc02e3f03c309cda-1"&gt;&lt;/a&gt;co_argcount 1            [OK]
-&lt;a name="rest_code_756af7f3f58f42b1bc02e3f03c309cda-2"&gt;&lt;/a&gt;co_consts (None,)        [1/7 się zgadza]
-&lt;a name="rest_code_756af7f3f58f42b1bc02e3f03c309cda-3"&gt;&lt;/a&gt;co_flags 67              [OK]
-&lt;a name="rest_code_756af7f3f58f42b1bc02e3f03c309cda-4"&gt;&lt;/a&gt;co_name check_password   [OK]
-&lt;a name="rest_code_756af7f3f58f42b1bc02e3f03c309cda-5"&gt;&lt;/a&gt;co_names ()              [0/6 się zgadza]
-&lt;a name="rest_code_756af7f3f58f42b1bc02e3f03c309cda-6"&gt;&lt;/a&gt;co_nlocals 1             [powinno być 4]
-&lt;a name="rest_code_756af7f3f58f42b1bc02e3f03c309cda-7"&gt;&lt;/a&gt;co_stacksize 1           [powinno być 6]
-&lt;a name="rest_code_756af7f3f58f42b1bc02e3f03c309cda-8"&gt;&lt;/a&gt;co_varnames ('s',)       [1/4 się zgadza]
-&lt;a name="rest_code_756af7f3f58f42b1bc02e3f03c309cda-9"&gt;&lt;/a&gt;  7           0 LOAD_CONST               0 (None)
-&lt;a name="rest_code_756af7f3f58f42b1bc02e3f03c309cda-10"&gt;&lt;/a&gt;              3 RETURN_VALUE
+&lt;pre class="code text"&gt;&lt;a name="rest_code_63137902ef054cae8dd072fef34673fc-1"&gt;&lt;/a&gt;co_argcount 1            [OK]
+&lt;a name="rest_code_63137902ef054cae8dd072fef34673fc-2"&gt;&lt;/a&gt;co_consts (None,)        [1/7 się zgadza]
+&lt;a name="rest_code_63137902ef054cae8dd072fef34673fc-3"&gt;&lt;/a&gt;co_flags 67              [OK]
+&lt;a name="rest_code_63137902ef054cae8dd072fef34673fc-4"&gt;&lt;/a&gt;co_name check_password   [OK]
+&lt;a name="rest_code_63137902ef054cae8dd072fef34673fc-5"&gt;&lt;/a&gt;co_names ()              [0/6 się zgadza]
+&lt;a name="rest_code_63137902ef054cae8dd072fef34673fc-6"&gt;&lt;/a&gt;co_nlocals 1             [powinno być 4]
+&lt;a name="rest_code_63137902ef054cae8dd072fef34673fc-7"&gt;&lt;/a&gt;co_stacksize 1           [powinno być 6]
+&lt;a name="rest_code_63137902ef054cae8dd072fef34673fc-8"&gt;&lt;/a&gt;co_varnames ('s',)       [1/4 się zgadza]
+&lt;a name="rest_code_63137902ef054cae8dd072fef34673fc-9"&gt;&lt;/a&gt;  7           0 LOAD_CONST               0 (None)
+&lt;a name="rest_code_63137902ef054cae8dd072fef34673fc-10"&gt;&lt;/a&gt;              3 RETURN_VALUE
 &lt;/pre&gt;&lt;p&gt;Widzimy (przy pomocy kolorów, których tu nie ma), że &lt;tt class="docutils literal"&gt;co_argcount&lt;/tt&gt;, &lt;tt class="docutils literal"&gt;co_flags&lt;/tt&gt;, &lt;tt class="docutils literal"&gt;co_name&lt;/tt&gt; są ustawione poprawnie. Mamy też jedną ze zmiennych (&lt;tt class="docutils literal"&gt;None&lt;/tt&gt;, jest w każdej funkcji) i jedną nazwę zmiennej (nazwę argumentu &lt;tt class="docutils literal"&gt;s&lt;/tt&gt;). Widzimy wyjście &lt;tt class="docutils literal"&gt;dis.dis()&lt;/tt&gt;. O ile jest podobne do tego z zadania, to jest kilka zauważalnych różnic: nie ma &lt;tt class="docutils literal"&gt;7&lt;/tt&gt; na początku (numer linii), a instrukcje &lt;tt class="docutils literal"&gt;LOAD_CONST&lt;/tt&gt; nie miały niczego w nawiasach (tylko porównania i pętle coś miały). To utrudnia czytanie bajtkodu, ale to jest wciąż możliwe. (Początkowo chciałem sobie pomóc narzędziem &lt;tt class="docutils literal"&gt;diff&lt;/tt&gt;, ale nie jest trudno to zrobić ręcznie. Użyłem &lt;tt class="docutils literal"&gt;diff&lt;/tt&gt; do ostatecznego sprawdzenia po ręcznej „konwersji”)&lt;/p&gt;
 &lt;p&gt;Zatrzymajmy się na chwilę i spójrzmy na stałe i nazwy. Po długim stringu pojawia się &lt;tt class="docutils literal"&gt;hex&lt;/tt&gt;, a jedną ze stałych jest &lt;tt class="docutils literal"&gt;decode&lt;/tt&gt;. To znaczy, że musimy użyć &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;str.decode('hex')&lt;/span&gt;&lt;/tt&gt; by utworzyć (byte)string z pewną informacją. Odpowiedzi do misji są czytelne dla ludzi, a ten string nie jest — więc musimy zrobić coś więcej.&lt;/p&gt;
 &lt;p&gt;Spróbujmy odtworzyć oryginalny kod misji. VM Pythona opiera się na stosie. W bajtkodzie powyżej widzimy, że instrukcje przyjmują 0 lub 1 argument. Niektóre z nich dodają obiekty na stos, inne wykonują akcje i usuwają rzeczy ze stosu. Większość nazw instrukcji jest łatwa do zrozumienia, ale pełna lista jest dostępna w &lt;a class="reference external" href="https://docs.python.org/2/library/dis.html#python-bytecode-instructions"&gt;dokumentacji modułu dis&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Instrukcje takie jak &lt;tt class="docutils literal"&gt;LOAD&lt;/tt&gt; czy &lt;tt class="docutils literal"&gt;STORE&lt;/tt&gt; odwołują się do indeksów w krotkach constants/names/varnames. Aby było łatwiej, oto “tabelka” tych indeksów:&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_5e48644ae98a4f30960302503b6eebdb-1"&gt;&lt;/a&gt;constants
-&lt;a name="rest_code_5e48644ae98a4f30960302503b6eebdb-2"&gt;&lt;/a&gt; 0     1                                                       2      3   4    5    6
-&lt;a name="rest_code_5e48644ae98a4f30960302503b6eebdb-3"&gt;&lt;/a&gt;(None, '4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89', 'hex', 89, 255, 115, 50)
-&lt;a name="rest_code_5e48644ae98a4f30960302503b6eebdb-4"&gt;&lt;/a&gt;
-&lt;a name="rest_code_5e48644ae98a4f30960302503b6eebdb-5"&gt;&lt;/a&gt;names (globals, attributes)
-&lt;a name="rest_code_5e48644ae98a4f30960302503b6eebdb-6"&gt;&lt;/a&gt; 0         1      2        3      4      5
-&lt;a name="rest_code_5e48644ae98a4f30960302503b6eebdb-7"&gt;&lt;/a&gt;('decode', 'len', 'False', 'all', 'zip', 'ord')
-&lt;a name="rest_code_5e48644ae98a4f30960302503b6eebdb-8"&gt;&lt;/a&gt;
-&lt;a name="rest_code_5e48644ae98a4f30960302503b6eebdb-9"&gt;&lt;/a&gt;varnames (locals, _fast)
-&lt;a name="rest_code_5e48644ae98a4f30960302503b6eebdb-10"&gt;&lt;/a&gt; 0    1       2     3
-&lt;a name="rest_code_5e48644ae98a4f30960302503b6eebdb-11"&gt;&lt;/a&gt;('s', 'good', 'cs', 'cg')
+&lt;pre class="code text"&gt;&lt;a name="rest_code_c8cd2c5ee8e44617ab5b8097eedfacc7-1"&gt;&lt;/a&gt;constants
+&lt;a name="rest_code_c8cd2c5ee8e44617ab5b8097eedfacc7-2"&gt;&lt;/a&gt; 0     1                                                       2      3   4    5    6
+&lt;a name="rest_code_c8cd2c5ee8e44617ab5b8097eedfacc7-3"&gt;&lt;/a&gt;(None, '4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89', 'hex', 89, 255, 115, 50)
+&lt;a name="rest_code_c8cd2c5ee8e44617ab5b8097eedfacc7-4"&gt;&lt;/a&gt;
+&lt;a name="rest_code_c8cd2c5ee8e44617ab5b8097eedfacc7-5"&gt;&lt;/a&gt;names (globals, attributes)
+&lt;a name="rest_code_c8cd2c5ee8e44617ab5b8097eedfacc7-6"&gt;&lt;/a&gt; 0         1      2        3      4      5
+&lt;a name="rest_code_c8cd2c5ee8e44617ab5b8097eedfacc7-7"&gt;&lt;/a&gt;('decode', 'len', 'False', 'all', 'zip', 'ord')
+&lt;a name="rest_code_c8cd2c5ee8e44617ab5b8097eedfacc7-8"&gt;&lt;/a&gt;
+&lt;a name="rest_code_c8cd2c5ee8e44617ab5b8097eedfacc7-9"&gt;&lt;/a&gt;varnames (locals, _fast)
+&lt;a name="rest_code_c8cd2c5ee8e44617ab5b8097eedfacc7-10"&gt;&lt;/a&gt; 0    1       2     3
+&lt;a name="rest_code_c8cd2c5ee8e44617ab5b8097eedfacc7-11"&gt;&lt;/a&gt;('s', 'good', 'cs', 'cg')
 &lt;/pre&gt;&lt;p&gt;W celu poprawienia czytelności, użyję “nowe” wyjście &lt;tt class="docutils literal"&gt;dis&lt;/tt&gt; z nazwami w nawiasach poniżej:&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_a052aed287d14e178e4d9974856d11e5-1"&gt;&lt;/a&gt; 0 LOAD_CONST               1 ('4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89')
-&lt;a name="rest_code_a052aed287d14e178e4d9974856d11e5-2"&gt;&lt;/a&gt; 3 LOAD_ATTR                0 (decode)
-&lt;a name="rest_code_a052aed287d14e178e4d9974856d11e5-3"&gt;&lt;/a&gt; 6 LOAD_CONST               2 ('hex')
-&lt;a name="rest_code_a052aed287d14e178e4d9974856d11e5-4"&gt;&lt;/a&gt; 9 CALL_FUNCTION            1 # funkcja pobiera 1 argument ze stosu
-&lt;a name="rest_code_a052aed287d14e178e4d9974856d11e5-5"&gt;&lt;/a&gt;12 STORE_FAST               1 (good)
+&lt;pre class="code text"&gt;&lt;a name="rest_code_4f5e5c3a05ce43849ab287afab398776-1"&gt;&lt;/a&gt; 0 LOAD_CONST               1 ('4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89')
+&lt;a name="rest_code_4f5e5c3a05ce43849ab287afab398776-2"&gt;&lt;/a&gt; 3 LOAD_ATTR                0 (decode)
+&lt;a name="rest_code_4f5e5c3a05ce43849ab287afab398776-3"&gt;&lt;/a&gt; 6 LOAD_CONST               2 ('hex')
+&lt;a name="rest_code_4f5e5c3a05ce43849ab287afab398776-4"&gt;&lt;/a&gt; 9 CALL_FUNCTION            1 # funkcja pobiera 1 argument ze stosu
+&lt;a name="rest_code_4f5e5c3a05ce43849ab287afab398776-5"&gt;&lt;/a&gt;12 STORE_FAST               1 (good)
 &lt;/pre&gt;&lt;p&gt;Jak wcześniej zgadywałem, pierwsza linia funkcji wygląda tak:&lt;/p&gt;
-&lt;pre class="code python"&gt;&lt;a name="rest_code_3dbcd1fe3c6d41d1884aaef061f053b5-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;check_password&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-&lt;a name="rest_code_3dbcd1fe3c6d41d1884aaef061f053b5-2"&gt;&lt;/a&gt;    &lt;span class="n"&gt;good&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;'4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89'&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;decode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'hex'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# new&lt;/span&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_8f7168601e91469a902fac9444eb3538-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;check_password&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;a name="rest_code_8f7168601e91469a902fac9444eb3538-2"&gt;&lt;/a&gt;    &lt;span class="n"&gt;good&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;'4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89'&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;decode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'hex'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# new&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;Jeśli jeszcze raz uruchomimy solver, zobaczymy że pierwsze 12 bajtów w bajtkodzie zgadza się z treścią misji. Widzimy też, że &lt;tt class="docutils literal"&gt;varnames&lt;/tt&gt; jest wypełnione w połowie, dodaliśmy dwie stałe, i jedną nazwę. Następne kilka linii wygląda tak:&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_db985ec0bfaf48eb856217cbb9ae7d60-1"&gt;&lt;/a&gt;15 LOAD_GLOBAL              1
-&lt;a name="rest_code_db985ec0bfaf48eb856217cbb9ae7d60-2"&gt;&lt;/a&gt;18 LOAD_FAST                0
-&lt;a name="rest_code_db985ec0bfaf48eb856217cbb9ae7d60-3"&gt;&lt;/a&gt;21 CALL_FUNCTION            1
-&lt;a name="rest_code_db985ec0bfaf48eb856217cbb9ae7d60-4"&gt;&lt;/a&gt;24 LOAD_GLOBAL              1
-&lt;a name="rest_code_db985ec0bfaf48eb856217cbb9ae7d60-5"&gt;&lt;/a&gt;27 LOAD_FAST                1
-&lt;a name="rest_code_db985ec0bfaf48eb856217cbb9ae7d60-6"&gt;&lt;/a&gt;30 CALL_FUNCTION            1
-&lt;a name="rest_code_db985ec0bfaf48eb856217cbb9ae7d60-7"&gt;&lt;/a&gt;33 COMPARE_OP               3 (!=)
-&lt;a name="rest_code_db985ec0bfaf48eb856217cbb9ae7d60-8"&gt;&lt;/a&gt;36 POP_JUMP_IF_FALSE       43
-&lt;a name="rest_code_db985ec0bfaf48eb856217cbb9ae7d60-9"&gt;&lt;/a&gt;39 LOAD_GLOBAL              2
-&lt;a name="rest_code_db985ec0bfaf48eb856217cbb9ae7d60-10"&gt;&lt;/a&gt;42 RETURN_VALUE
+&lt;pre class="code text"&gt;&lt;a name="rest_code_1a9de10f80fd4a19ab939e22fe358831-1"&gt;&lt;/a&gt;15 LOAD_GLOBAL              1
+&lt;a name="rest_code_1a9de10f80fd4a19ab939e22fe358831-2"&gt;&lt;/a&gt;18 LOAD_FAST                0
+&lt;a name="rest_code_1a9de10f80fd4a19ab939e22fe358831-3"&gt;&lt;/a&gt;21 CALL_FUNCTION            1
+&lt;a name="rest_code_1a9de10f80fd4a19ab939e22fe358831-4"&gt;&lt;/a&gt;24 LOAD_GLOBAL              1
+&lt;a name="rest_code_1a9de10f80fd4a19ab939e22fe358831-5"&gt;&lt;/a&gt;27 LOAD_FAST                1
+&lt;a name="rest_code_1a9de10f80fd4a19ab939e22fe358831-6"&gt;&lt;/a&gt;30 CALL_FUNCTION            1
+&lt;a name="rest_code_1a9de10f80fd4a19ab939e22fe358831-7"&gt;&lt;/a&gt;33 COMPARE_OP               3 (!=)
+&lt;a name="rest_code_1a9de10f80fd4a19ab939e22fe358831-8"&gt;&lt;/a&gt;36 POP_JUMP_IF_FALSE       43
+&lt;a name="rest_code_1a9de10f80fd4a19ab939e22fe358831-9"&gt;&lt;/a&gt;39 LOAD_GLOBAL              2
+&lt;a name="rest_code_1a9de10f80fd4a19ab939e22fe358831-10"&gt;&lt;/a&gt;42 RETURN_VALUE
 &lt;/pre&gt;&lt;p&gt;Widzimy że umieszczamy obiekt globalny na stosie i wywołujemy go z jednym argumentem. W obu przypadkach, obiekt globalny ma indeks 1, czyli &lt;tt class="docutils literal"&gt;len&lt;/tt&gt;. Dwa argumenty to &lt;tt class="docutils literal"&gt;s&lt;/tt&gt; i &lt;tt class="docutils literal"&gt;good&lt;/tt&gt;. Umieszczamy obie długości na stosie i je porównujemy. Jeśli porównanie się nie uda (są równe), przeskakujemy do instrukcji zaczynającej się na bajcie 43, w przeciwnym razie kontynuujemy wykonywanie, by załadować drugi global (False) i go zwrócić. Ta ściana tekstu tłumaczy się na następujący prosty kod:&lt;/p&gt;
-&lt;pre class="code python"&gt;&lt;a name="rest_code_2c6c4db4fae24fd2b6433f6d72eb7e17-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;check_password&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-&lt;a name="rest_code_2c6c4db4fae24fd2b6433f6d72eb7e17-2"&gt;&lt;/a&gt;    &lt;span class="n"&gt;good&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;'4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89'&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;decode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'hex'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_2c6c4db4fae24fd2b6433f6d72eb7e17-3"&gt;&lt;/a&gt;    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;!=&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;good&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;  &lt;span class="c1"&gt;# new&lt;/span&gt;
-&lt;a name="rest_code_2c6c4db4fae24fd2b6433f6d72eb7e17-4"&gt;&lt;/a&gt;        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="bp"&gt;False&lt;/span&gt;         &lt;span class="c1"&gt;# newr&lt;/span&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_e1edcc9474af42058911c417c5126c6b-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;check_password&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;a name="rest_code_e1edcc9474af42058911c417c5126c6b-2"&gt;&lt;/a&gt;    &lt;span class="n"&gt;good&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;'4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89'&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;decode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'hex'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_e1edcc9474af42058911c417c5126c6b-3"&gt;&lt;/a&gt;    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;!=&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;good&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;  &lt;span class="c1"&gt;# new&lt;/span&gt;
+&lt;a name="rest_code_e1edcc9474af42058911c417c5126c6b-4"&gt;&lt;/a&gt;        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="bp"&gt;False&lt;/span&gt;         &lt;span class="c1"&gt;# newr&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;Popatrzmy się jeszcze raz na nasze nazwy. Widzimy, że brakuje &lt;tt class="docutils literal"&gt;all&lt;/tt&gt;, &lt;tt class="docutils literal"&gt;zip&lt;/tt&gt;, &lt;tt class="docutils literal"&gt;ord&lt;/tt&gt;. Można zauważyć pewien znany wzorzec: iterujemy po obu stringach na raz (używając &lt;tt class="docutils literal"&gt;zip&lt;/tt&gt;), wykonujemy obliczenia na podstawie kodów znaków (&lt;tt class="docutils literal"&gt;ord&lt;/tt&gt;) i sprawdzamy czy wszystkie (&lt;tt class="docutils literal"&gt;all&lt;/tt&gt;) wyniki (zazwyczaj porównania) są prawdziwe.&lt;/p&gt;
 &lt;p&gt;Oto bajtkod z dopisanymi wartościami i komentarzami które tłumaczą, co się gdzie dzieje:&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_14dc72c6eb8b473ba83c505bbe71f339-1"&gt;&lt;/a&gt;&amp;gt;&amp;gt;   43 LOAD_GLOBAL              3 (all)
-&lt;a name="rest_code_14dc72c6eb8b473ba83c505bbe71f339-2"&gt;&lt;/a&gt;     46 BUILD_LIST               0
-&lt;a name="rest_code_14dc72c6eb8b473ba83c505bbe71f339-3"&gt;&lt;/a&gt;     49 LOAD_GLOBAL              4 (zip)
-&lt;a name="rest_code_14dc72c6eb8b473ba83c505bbe71f339-4"&gt;&lt;/a&gt;     52 LOAD_FAST                0 (s)
-&lt;a name="rest_code_14dc72c6eb8b473ba83c505bbe71f339-5"&gt;&lt;/a&gt;     55 LOAD_FAST                1 (good)
-&lt;a name="rest_code_14dc72c6eb8b473ba83c505bbe71f339-6"&gt;&lt;/a&gt;     58 CALL_FUNCTION            2           # zip(s, good)
-&lt;a name="rest_code_14dc72c6eb8b473ba83c505bbe71f339-7"&gt;&lt;/a&gt;     61 GET_ITER                             # Początek iteracji: iter()
-&lt;a name="rest_code_14dc72c6eb8b473ba83c505bbe71f339-8"&gt;&lt;/a&gt;&amp;gt;&amp;gt;   62 FOR_ITER                52 (to 117)  # początek iteracji pętli for (jeśli koniec iteratora, skocz +52 bajty do pozycji 117)
-&lt;a name="rest_code_14dc72c6eb8b473ba83c505bbe71f339-9"&gt;&lt;/a&gt;     65 UNPACK_SEQUENCE          2           # rozpakuj sekwencję (a, b = sequence)
-&lt;a name="rest_code_14dc72c6eb8b473ba83c505bbe71f339-10"&gt;&lt;/a&gt;     68 STORE_FAST               2 (cs)      # cs = wartość z s
-&lt;a name="rest_code_14dc72c6eb8b473ba83c505bbe71f339-11"&gt;&lt;/a&gt;     71 STORE_FAST               3 (cg)      # cg = wartość z good
-&lt;a name="rest_code_14dc72c6eb8b473ba83c505bbe71f339-12"&gt;&lt;/a&gt;     74 LOAD_GLOBAL              5 (ord)
-&lt;a name="rest_code_14dc72c6eb8b473ba83c505bbe71f339-13"&gt;&lt;/a&gt;     77 LOAD_FAST                2 (cs)
-&lt;a name="rest_code_14dc72c6eb8b473ba83c505bbe71f339-14"&gt;&lt;/a&gt;     80 CALL_FUNCTION            1           # umieść ord(cs) na stosie
-&lt;a name="rest_code_14dc72c6eb8b473ba83c505bbe71f339-15"&gt;&lt;/a&gt;     83 LOAD_CONST               3 (89)
-&lt;a name="rest_code_14dc72c6eb8b473ba83c505bbe71f339-16"&gt;&lt;/a&gt;     86 BINARY_SUBTRACT                      # - 89   [odejmij 89 od wartości na górze stosu]
-&lt;a name="rest_code_14dc72c6eb8b473ba83c505bbe71f339-17"&gt;&lt;/a&gt;     87 LOAD_CONST               4 (255)
-&lt;a name="rest_code_14dc72c6eb8b473ba83c505bbe71f339-18"&gt;&lt;/a&gt;     90 BINARY_AND                           # &amp;amp; 255  [bitwise AND z wartością na górze stosu]
-&lt;a name="rest_code_14dc72c6eb8b473ba83c505bbe71f339-19"&gt;&lt;/a&gt;     91 LOAD_CONST               5 (115)
-&lt;a name="rest_code_14dc72c6eb8b473ba83c505bbe71f339-20"&gt;&lt;/a&gt;     94 BINARY_XOR                           # ^ 115  [bitwise XOR z wartością na górze stosu]
-&lt;a name="rest_code_14dc72c6eb8b473ba83c505bbe71f339-21"&gt;&lt;/a&gt;     95 LOAD_CONST               6 (50)
-&lt;a name="rest_code_14dc72c6eb8b473ba83c505bbe71f339-22"&gt;&lt;/a&gt;     98 BINARY_XOR                           # ^ 50   [bitwise XOR z wartością na górze stosu]
-&lt;a name="rest_code_14dc72c6eb8b473ba83c505bbe71f339-23"&gt;&lt;/a&gt;     99 LOAD_GLOBAL              5 (ord)
-&lt;a name="rest_code_14dc72c6eb8b473ba83c505bbe71f339-24"&gt;&lt;/a&gt;    102 LOAD_FAST                3 (cg)
-&lt;a name="rest_code_14dc72c6eb8b473ba83c505bbe71f339-25"&gt;&lt;/a&gt;    105 CALL_FUNCTION            1           # umieść ord(cs) na stosie
-&lt;a name="rest_code_14dc72c6eb8b473ba83c505bbe71f339-26"&gt;&lt;/a&gt;    108 COMPARE_OP               2 (==)      # porównaj dwie wartości na stosie
-&lt;a name="rest_code_14dc72c6eb8b473ba83c505bbe71f339-27"&gt;&lt;/a&gt;    111 LIST_APPEND              2           # dodaj wartość umieszczoną na górze sotosu do listy góra-1; usuń górę stosu (dopisz do listy tworzonej w list comprehension)
-&lt;a name="rest_code_14dc72c6eb8b473ba83c505bbe71f339-28"&gt;&lt;/a&gt;    114 JUMP_ABSOLUTE           62           # przeskocz na początek pętli
-&lt;a name="rest_code_14dc72c6eb8b473ba83c505bbe71f339-29"&gt;&lt;/a&gt;&amp;gt;&amp;gt;  117 CALL_FUNCTION            1           # po pętli: wywołaj all([wynik list comprehension])
-&lt;a name="rest_code_14dc72c6eb8b473ba83c505bbe71f339-30"&gt;&lt;/a&gt;    120 RETURN_VALUE                         # zwróć wartość zwróconą przez all()
+&lt;pre class="code text"&gt;&lt;a name="rest_code_8c451d07dbea48d7bc9c8a5375d09c4b-1"&gt;&lt;/a&gt;&amp;gt;&amp;gt;   43 LOAD_GLOBAL              3 (all)
+&lt;a name="rest_code_8c451d07dbea48d7bc9c8a5375d09c4b-2"&gt;&lt;/a&gt;     46 BUILD_LIST               0
+&lt;a name="rest_code_8c451d07dbea48d7bc9c8a5375d09c4b-3"&gt;&lt;/a&gt;     49 LOAD_GLOBAL              4 (zip)
+&lt;a name="rest_code_8c451d07dbea48d7bc9c8a5375d09c4b-4"&gt;&lt;/a&gt;     52 LOAD_FAST                0 (s)
+&lt;a name="rest_code_8c451d07dbea48d7bc9c8a5375d09c4b-5"&gt;&lt;/a&gt;     55 LOAD_FAST                1 (good)
+&lt;a name="rest_code_8c451d07dbea48d7bc9c8a5375d09c4b-6"&gt;&lt;/a&gt;     58 CALL_FUNCTION            2           # zip(s, good)
+&lt;a name="rest_code_8c451d07dbea48d7bc9c8a5375d09c4b-7"&gt;&lt;/a&gt;     61 GET_ITER                             # Początek iteracji: iter()
+&lt;a name="rest_code_8c451d07dbea48d7bc9c8a5375d09c4b-8"&gt;&lt;/a&gt;&amp;gt;&amp;gt;   62 FOR_ITER                52 (to 117)  # początek iteracji pętli for (jeśli koniec iteratora, skocz +52 bajty do pozycji 117)
+&lt;a name="rest_code_8c451d07dbea48d7bc9c8a5375d09c4b-9"&gt;&lt;/a&gt;     65 UNPACK_SEQUENCE          2           # rozpakuj sekwencję (a, b = sequence)
+&lt;a name="rest_code_8c451d07dbea48d7bc9c8a5375d09c4b-10"&gt;&lt;/a&gt;     68 STORE_FAST               2 (cs)      # cs = wartość z s
+&lt;a name="rest_code_8c451d07dbea48d7bc9c8a5375d09c4b-11"&gt;&lt;/a&gt;     71 STORE_FAST               3 (cg)      # cg = wartość z good
+&lt;a name="rest_code_8c451d07dbea48d7bc9c8a5375d09c4b-12"&gt;&lt;/a&gt;     74 LOAD_GLOBAL              5 (ord)
+&lt;a name="rest_code_8c451d07dbea48d7bc9c8a5375d09c4b-13"&gt;&lt;/a&gt;     77 LOAD_FAST                2 (cs)
+&lt;a name="rest_code_8c451d07dbea48d7bc9c8a5375d09c4b-14"&gt;&lt;/a&gt;     80 CALL_FUNCTION            1           # umieść ord(cs) na stosie
+&lt;a name="rest_code_8c451d07dbea48d7bc9c8a5375d09c4b-15"&gt;&lt;/a&gt;     83 LOAD_CONST               3 (89)
+&lt;a name="rest_code_8c451d07dbea48d7bc9c8a5375d09c4b-16"&gt;&lt;/a&gt;     86 BINARY_SUBTRACT                      # - 89   [odejmij 89 od wartości na górze stosu]
+&lt;a name="rest_code_8c451d07dbea48d7bc9c8a5375d09c4b-17"&gt;&lt;/a&gt;     87 LOAD_CONST               4 (255)
+&lt;a name="rest_code_8c451d07dbea48d7bc9c8a5375d09c4b-18"&gt;&lt;/a&gt;     90 BINARY_AND                           # &amp;amp; 255  [bitwise AND z wartością na górze stosu]
+&lt;a name="rest_code_8c451d07dbea48d7bc9c8a5375d09c4b-19"&gt;&lt;/a&gt;     91 LOAD_CONST               5 (115)
+&lt;a name="rest_code_8c451d07dbea48d7bc9c8a5375d09c4b-20"&gt;&lt;/a&gt;     94 BINARY_XOR                           # ^ 115  [bitwise XOR z wartością na górze stosu]
+&lt;a name="rest_code_8c451d07dbea48d7bc9c8a5375d09c4b-21"&gt;&lt;/a&gt;     95 LOAD_CONST               6 (50)
+&lt;a name="rest_code_8c451d07dbea48d7bc9c8a5375d09c4b-22"&gt;&lt;/a&gt;     98 BINARY_XOR                           # ^ 50   [bitwise XOR z wartością na górze stosu]
+&lt;a name="rest_code_8c451d07dbea48d7bc9c8a5375d09c4b-23"&gt;&lt;/a&gt;     99 LOAD_GLOBAL              5 (ord)
+&lt;a name="rest_code_8c451d07dbea48d7bc9c8a5375d09c4b-24"&gt;&lt;/a&gt;    102 LOAD_FAST                3 (cg)
+&lt;a name="rest_code_8c451d07dbea48d7bc9c8a5375d09c4b-25"&gt;&lt;/a&gt;    105 CALL_FUNCTION            1           # umieść ord(cs) na stosie
+&lt;a name="rest_code_8c451d07dbea48d7bc9c8a5375d09c4b-26"&gt;&lt;/a&gt;    108 COMPARE_OP               2 (==)      # porównaj dwie wartości na stosie
+&lt;a name="rest_code_8c451d07dbea48d7bc9c8a5375d09c4b-27"&gt;&lt;/a&gt;    111 LIST_APPEND              2           # dodaj wartość umieszczoną na górze sotosu do listy góra-1; usuń górę stosu (dopisz do listy tworzonej w list comprehension)
+&lt;a name="rest_code_8c451d07dbea48d7bc9c8a5375d09c4b-28"&gt;&lt;/a&gt;    114 JUMP_ABSOLUTE           62           # przeskocz na początek pętli
+&lt;a name="rest_code_8c451d07dbea48d7bc9c8a5375d09c4b-29"&gt;&lt;/a&gt;&amp;gt;&amp;gt;  117 CALL_FUNCTION            1           # po pętli: wywołaj all([wynik list comprehension])
+&lt;a name="rest_code_8c451d07dbea48d7bc9c8a5375d09c4b-30"&gt;&lt;/a&gt;    120 RETURN_VALUE                         # zwróć wartość zwróconą przez all()
 &lt;/pre&gt;&lt;p&gt;Możemy teraz zapisać pełną odpowiedź.&lt;/p&gt;
 &lt;p&gt;&lt;a class="reference external" href="https://chriswarrick.com/listings/gynvaels-mission-11-en/mission11.py.html"&gt;listings/gynvaels-mission-11-en/mission11.py&lt;/a&gt;  &lt;a class="reference external" href="https://chriswarrick.com/listings/gynvaels-mission-11-en/mission11.py"&gt;(Źródło)&lt;/a&gt;&lt;/p&gt;
-&lt;pre class="code python"&gt;&lt;a name="rest_code_f5a865716f8c42e0a109aaad72009507-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;check_password&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-&lt;a name="rest_code_f5a865716f8c42e0a109aaad72009507-2"&gt;&lt;/a&gt;    &lt;span class="n"&gt;good&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;'4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89'&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;decode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'hex'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_f5a865716f8c42e0a109aaad72009507-3"&gt;&lt;/a&gt;    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;!=&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;good&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-&lt;a name="rest_code_f5a865716f8c42e0a109aaad72009507-4"&gt;&lt;/a&gt;        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="bp"&gt;False&lt;/span&gt;
-&lt;a name="rest_code_f5a865716f8c42e0a109aaad72009507-5"&gt;&lt;/a&gt;
-&lt;a name="rest_code_f5a865716f8c42e0a109aaad72009507-6"&gt;&lt;/a&gt;    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nb"&gt;all&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;&lt;span class="nb"&gt;ord&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cs&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;89&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="mi"&gt;255&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="mi"&gt;115&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="mi"&gt;50&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="nb"&gt;ord&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cg&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;cs&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;cg&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;zip&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;good&lt;/span&gt;&lt;span class="p"&gt;)])&lt;/span&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_8c7f208e37844aff948b6977ef0bf4a5-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;check_password&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;a name="rest_code_8c7f208e37844aff948b6977ef0bf4a5-2"&gt;&lt;/a&gt;    &lt;span class="n"&gt;good&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;'4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89'&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;decode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'hex'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_8c7f208e37844aff948b6977ef0bf4a5-3"&gt;&lt;/a&gt;    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;!=&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;good&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;a name="rest_code_8c7f208e37844aff948b6977ef0bf4a5-4"&gt;&lt;/a&gt;        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="bp"&gt;False&lt;/span&gt;
+&lt;a name="rest_code_8c7f208e37844aff948b6977ef0bf4a5-5"&gt;&lt;/a&gt;
+&lt;a name="rest_code_8c7f208e37844aff948b6977ef0bf4a5-6"&gt;&lt;/a&gt;    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nb"&gt;all&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;&lt;span class="nb"&gt;ord&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cs&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;89&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="mi"&gt;255&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="mi"&gt;115&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="mi"&gt;50&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="nb"&gt;ord&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cg&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;cs&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;cg&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;zip&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;good&lt;/span&gt;&lt;span class="p"&gt;)])&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;Ostatecznie, wyjście &lt;tt class="docutils literal"&gt;dis.dis()&lt;/tt&gt; zgadza się z tekstem z misji (za wyjątkiem usuniętych wartości, ale ID się zgadzają), nasze zmienne &lt;tt class="docutils literal"&gt;co_*&lt;/tt&gt; są zielone, i możemy rozwiązać prawdziwą zagadkę!&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Na marginesie:&lt;/strong&gt; zadanie używa list comprehension. Możesz chcieć ją zoptymalizować, usunąć nawiasy kwadratowe, i otrzymać generator expression. W ten sposób zadanie stałoby się trudniejsze, gdyż wymagałoby pracy również z wewnętrznym obiektem kodu generatora:&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_8651b6cc474f496b9ec909636d8451d0-1"&gt;&lt;/a&gt;co_consts (None, '4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89', 'hex', &amp;lt;code object &amp;lt;genexpr&amp;gt; at 0x104a86c30, file "mission11-genexpr.py", line 11&amp;gt;)
-&lt;a name="rest_code_8651b6cc474f496b9ec909636d8451d0-2"&gt;&lt;/a&gt;
-&lt;a name="rest_code_8651b6cc474f496b9ec909636d8451d0-3"&gt;&lt;/a&gt;46 LOAD_CONST               3 (&amp;lt;code object &amp;lt;genexpr&amp;gt; at 0x104a86c30, file "mission11-genexpr.py", line 11&amp;gt;)
+&lt;pre class="code text"&gt;&lt;a name="rest_code_efb1bc43fcee440f94763185f7ab1502-1"&gt;&lt;/a&gt;co_consts (None, '4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89', 'hex', &amp;lt;code object &amp;lt;genexpr&amp;gt; at 0x104a86c30, file "mission11-genexpr.py", line 11&amp;gt;)
+&lt;a name="rest_code_efb1bc43fcee440f94763185f7ab1502-2"&gt;&lt;/a&gt;
+&lt;a name="rest_code_efb1bc43fcee440f94763185f7ab1502-3"&gt;&lt;/a&gt;46 LOAD_CONST               3 (&amp;lt;code object &amp;lt;genexpr&amp;gt; at 0x104a86c30, file "mission11-genexpr.py", line 11&amp;gt;)
 &lt;/pre&gt;&lt;p&gt;&lt;tt class="docutils literal"&gt;BINARY_*&lt;/tt&gt; i &lt;tt class="docutils literal"&gt;ord&lt;/tt&gt; zniknęły z nowego listingu. Możesz zobaczyć &lt;a class="reference external" href="https://chriswarrick.com/listings/gynvaels-mission-11-en/mission11-genexpr.py.html"&gt;zmodyfikowany kod&lt;/a&gt; (który różni się dwoma bajtami) i &lt;a class="reference external" href="https://chriswarrick.com/listings/gynvaels-mission-11-en/mission11-genexpr.txt.html"&gt;wyjście solvera&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Na marginesie marginesu: zna ktoś jakieś dobre tłumaczenie &lt;tt class="docutils literal"&gt;list comprehension&lt;/tt&gt;? Polska język trudna język.&lt;/p&gt;
 &lt;/div&gt;
@@ -1301,18 +1301,18 @@ because it is based on shell scripts (which can modify the enivironment).&lt;/li
 &lt;h2&gt;Rozwiązywanie prawdziwej zagadki&lt;/h2&gt;
 &lt;p&gt;Rozwiązałem dodatkową część zagadki. Jej &lt;em&gt;prawdziwym&lt;/em&gt; celem było odzyskanie hasła — tekstu, dla którego &lt;tt class="docutils literal"&gt;check_password()&lt;/tt&gt; zwróci True.&lt;/p&gt;
 &lt;p&gt;Ta część jest dosyć nudna. Zbudowałem słownik, w którym przypisałem każdy bajt (0…255) do wyniku obliczeń wykonywanych w pętli funkcji &lt;tt class="docutils literal"&gt;check_password()&lt;/tt&gt;. Potem użyłem jej do odzyskania oryginalnego tekstu.&lt;/p&gt;
-&lt;pre class="code python"&gt;&lt;a name="rest_code_aa793b4f0db74728a8294e7c4b641c9d-1"&gt;&lt;/a&gt;&lt;span class="n"&gt;pass_values&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{}&lt;/span&gt;
-&lt;a name="rest_code_aa793b4f0db74728a8294e7c4b641c9d-2"&gt;&lt;/a&gt;&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;256&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-&lt;a name="rest_code_aa793b4f0db74728a8294e7c4b641c9d-3"&gt;&lt;/a&gt;    &lt;span class="n"&gt;result&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;89&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="mi"&gt;255&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="mi"&gt;115&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="mi"&gt;50&lt;/span&gt;
-&lt;a name="rest_code_aa793b4f0db74728a8294e7c4b641c9d-4"&gt;&lt;/a&gt;    &lt;span class="n"&gt;pass_values&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;
-&lt;a name="rest_code_aa793b4f0db74728a8294e7c4b641c9d-5"&gt;&lt;/a&gt;
-&lt;a name="rest_code_aa793b4f0db74728a8294e7c4b641c9d-6"&gt;&lt;/a&gt;&lt;span class="n"&gt;good&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;'4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89'&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;decode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'hex'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_aa793b4f0db74728a8294e7c4b641c9d-7"&gt;&lt;/a&gt;&lt;span class="n"&gt;password&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;''&lt;/span&gt;
-&lt;a name="rest_code_aa793b4f0db74728a8294e7c4b641c9d-8"&gt;&lt;/a&gt;&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;good&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-&lt;a name="rest_code_aa793b4f0db74728a8294e7c4b641c9d-9"&gt;&lt;/a&gt;    &lt;span class="n"&gt;password&lt;/span&gt; &lt;span class="o"&gt;+=&lt;/span&gt; &lt;span class="nb"&gt;chr&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pass_values&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nb"&gt;ord&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;)])&lt;/span&gt;
-&lt;a name="rest_code_aa793b4f0db74728a8294e7c4b641c9d-10"&gt;&lt;/a&gt;
-&lt;a name="rest_code_aa793b4f0db74728a8294e7c4b641c9d-11"&gt;&lt;/a&gt;&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;password&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_aa793b4f0db74728a8294e7c4b641c9d-12"&gt;&lt;/a&gt;&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;check_password&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;password&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_02247e6b39f54412a488c94128ee8aec-1"&gt;&lt;/a&gt;&lt;span class="n"&gt;pass_values&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{}&lt;/span&gt;
+&lt;a name="rest_code_02247e6b39f54412a488c94128ee8aec-2"&gt;&lt;/a&gt;&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;256&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;a name="rest_code_02247e6b39f54412a488c94128ee8aec-3"&gt;&lt;/a&gt;    &lt;span class="n"&gt;result&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;89&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="mi"&gt;255&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="mi"&gt;115&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="mi"&gt;50&lt;/span&gt;
+&lt;a name="rest_code_02247e6b39f54412a488c94128ee8aec-4"&gt;&lt;/a&gt;    &lt;span class="n"&gt;pass_values&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;
+&lt;a name="rest_code_02247e6b39f54412a488c94128ee8aec-5"&gt;&lt;/a&gt;
+&lt;a name="rest_code_02247e6b39f54412a488c94128ee8aec-6"&gt;&lt;/a&gt;&lt;span class="n"&gt;good&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;'4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89'&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;decode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'hex'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_02247e6b39f54412a488c94128ee8aec-7"&gt;&lt;/a&gt;&lt;span class="n"&gt;password&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;''&lt;/span&gt;
+&lt;a name="rest_code_02247e6b39f54412a488c94128ee8aec-8"&gt;&lt;/a&gt;&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;good&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;a name="rest_code_02247e6b39f54412a488c94128ee8aec-9"&gt;&lt;/a&gt;    &lt;span class="n"&gt;password&lt;/span&gt; &lt;span class="o"&gt;+=&lt;/span&gt; &lt;span class="nb"&gt;chr&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pass_values&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nb"&gt;ord&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;)])&lt;/span&gt;
+&lt;a name="rest_code_02247e6b39f54412a488c94128ee8aec-10"&gt;&lt;/a&gt;
+&lt;a name="rest_code_02247e6b39f54412a488c94128ee8aec-11"&gt;&lt;/a&gt;&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;password&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_02247e6b39f54412a488c94128ee8aec-12"&gt;&lt;/a&gt;&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;check_password&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;password&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;&lt;strong&gt;Hasło brzmi:&lt;/strong&gt; &lt;tt class="docutils literal"&gt;huh, that actually worked!&lt;/tt&gt;.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="o-co-chodzilo-z-tym-paintem"&gt;
@@ -1329,23 +1329,23 @@ because it is based on shell scripts (which can modify the enivironment).&lt;/li
 &lt;/ul&gt;
 &lt;p&gt;Wziąłem kod &lt;tt class="docutils literal"&gt;check_password&lt;/tt&gt; i umieściłem go w pliku &lt;tt class="docutils literal"&gt;mission11.py&lt;/tt&gt; (wcześniej zacytowanym). Potem skompilowałem do &lt;tt class="docutils literal"&gt;.pyc&lt;/tt&gt; i utworzyłem z niego &lt;tt class="docutils literal"&gt;.zip&lt;/tt&gt;.&lt;/p&gt;
 &lt;p&gt;&lt;a class="reference external" href="https://chriswarrick.com/listings/gynvaels-mission-11-en/mission11.py.html"&gt;listings/gynvaels-mission-11-en/mission11.py&lt;/a&gt;  &lt;a class="reference external" href="https://chriswarrick.com/listings/gynvaels-mission-11-en/mission11.py"&gt;(Źródło)&lt;/a&gt;&lt;/p&gt;
-&lt;pre class="code python"&gt;&lt;a name="rest_code_2f7ba81c4b144b6196deafa8cb605002-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;check_password&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-&lt;a name="rest_code_2f7ba81c4b144b6196deafa8cb605002-2"&gt;&lt;/a&gt;    &lt;span class="n"&gt;good&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;'4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89'&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;decode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'hex'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_2f7ba81c4b144b6196deafa8cb605002-3"&gt;&lt;/a&gt;    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;!=&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;good&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-&lt;a name="rest_code_2f7ba81c4b144b6196deafa8cb605002-4"&gt;&lt;/a&gt;        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="bp"&gt;False&lt;/span&gt;
-&lt;a name="rest_code_2f7ba81c4b144b6196deafa8cb605002-5"&gt;&lt;/a&gt;
-&lt;a name="rest_code_2f7ba81c4b144b6196deafa8cb605002-6"&gt;&lt;/a&gt;    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nb"&gt;all&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;&lt;span class="nb"&gt;ord&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cs&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;89&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="mi"&gt;255&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="mi"&gt;115&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="mi"&gt;50&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="nb"&gt;ord&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cg&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;cs&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;cg&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;zip&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;good&lt;/span&gt;&lt;span class="p"&gt;)])&lt;/span&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_3c159704e69f41e199f1c5dae7d3a321-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;check_password&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;a name="rest_code_3c159704e69f41e199f1c5dae7d3a321-2"&gt;&lt;/a&gt;    &lt;span class="n"&gt;good&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;'4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89'&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;decode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'hex'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_3c159704e69f41e199f1c5dae7d3a321-3"&gt;&lt;/a&gt;    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;!=&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;good&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;a name="rest_code_3c159704e69f41e199f1c5dae7d3a321-4"&gt;&lt;/a&gt;        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="bp"&gt;False&lt;/span&gt;
+&lt;a name="rest_code_3c159704e69f41e199f1c5dae7d3a321-5"&gt;&lt;/a&gt;
+&lt;a name="rest_code_3c159704e69f41e199f1c5dae7d3a321-6"&gt;&lt;/a&gt;    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nb"&gt;all&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;&lt;span class="nb"&gt;ord&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cs&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;89&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="mi"&gt;255&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="mi"&gt;115&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="mi"&gt;50&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="nb"&gt;ord&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cg&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;cs&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;cg&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;zip&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;good&lt;/span&gt;&lt;span class="p"&gt;)])&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;Ponieważ nie jestem ekspertem w żadnym z formatów, uruchomiłem maszynę wirtualną z Windowsem i na ślepo &lt;a class="reference external" href="http://gynvael.coldwind.pl/img/secapr16_3.png"&gt;przekopiowałem parametry użyte przez Gynvaela&lt;/a&gt; do otwarcia pliku ZIP (nazwanego &lt;tt class="docutils literal"&gt;.raw&lt;/tt&gt;) w IrfanView i zapisałem jako &lt;tt class="docutils literal"&gt;.bmp&lt;/tt&gt;. Zmieniłem rozmiar na 83×2, ponieważ mój ZIP miał 498 bajty (3 BPP * 83 px * 2 px = 498 bytes) — dzięki temu i odpowiedniemu rozmiarowi plików, mogłem nie dodawać komentarzy i edytowaniu ZIPa. Dostałem ten obrazek (znowu PNG; &lt;a class="reference external" href="https://chriswarrick.com/pub/gynvaels-mission-11-en/mission11.bmp"&gt;pobierz mission11.bmp&lt;/a&gt;):&lt;/p&gt;
 &lt;img alt="/images/gynvaels-mission-11-en/mission11-zoom.png" class="align-center" src="https://chriswarrick.com/images/gynvaels-mission-11-en/mission11-zoom.png"&gt;
 &lt;p&gt;Plik &lt;tt class="docutils literal"&gt;.bmp&lt;/tt&gt; można uruchomić! Używamy tego kodu:&lt;/p&gt;
 &lt;p&gt;&lt;a class="reference external" href="https://chriswarrick.com/listings/gynvaels-mission-11-en/ziprunner.py.html"&gt;listings/gynvaels-mission-11-en/ziprunner.py&lt;/a&gt;  &lt;a class="reference external" href="https://chriswarrick.com/listings/gynvaels-mission-11-en/ziprunner.py"&gt;(Źródło)&lt;/a&gt;&lt;/p&gt;
-&lt;pre class="code python"&gt;&lt;a name="rest_code_65c1b375a99a410ba6110d8c2cf4956e-1"&gt;&lt;/a&gt;&lt;span class="ch"&gt;#!/usr/bin/env python2&lt;/span&gt;
-&lt;a name="rest_code_65c1b375a99a410ba6110d8c2cf4956e-2"&gt;&lt;/a&gt;
-&lt;a name="rest_code_65c1b375a99a410ba6110d8c2cf4956e-3"&gt;&lt;/a&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;sys&lt;/span&gt;
-&lt;a name="rest_code_65c1b375a99a410ba6110d8c2cf4956e-4"&gt;&lt;/a&gt;&lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;append&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"mission11.bmp"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_65c1b375a99a410ba6110d8c2cf4956e-5"&gt;&lt;/a&gt;
-&lt;a name="rest_code_65c1b375a99a410ba6110d8c2cf4956e-6"&gt;&lt;/a&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;mission11&lt;/span&gt;
-&lt;a name="rest_code_65c1b375a99a410ba6110d8c2cf4956e-7"&gt;&lt;/a&gt;&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s2"&gt;"Result:"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;mission11&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;check_password&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'huh, that actually worked!'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_773de89724a84aa1ac3623ce5f901bb1-1"&gt;&lt;/a&gt;&lt;span class="ch"&gt;#!/usr/bin/env python2&lt;/span&gt;
+&lt;a name="rest_code_773de89724a84aa1ac3623ce5f901bb1-2"&gt;&lt;/a&gt;
+&lt;a name="rest_code_773de89724a84aa1ac3623ce5f901bb1-3"&gt;&lt;/a&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;sys&lt;/span&gt;
+&lt;a name="rest_code_773de89724a84aa1ac3623ce5f901bb1-4"&gt;&lt;/a&gt;&lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;append&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"mission11.bmp"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_773de89724a84aa1ac3623ce5f901bb1-5"&gt;&lt;/a&gt;
+&lt;a name="rest_code_773de89724a84aa1ac3623ce5f901bb1-6"&gt;&lt;/a&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;mission11&lt;/span&gt;
+&lt;a name="rest_code_773de89724a84aa1ac3623ce5f901bb1-7"&gt;&lt;/a&gt;&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s2"&gt;"Result:"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;mission11&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;check_password&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'huh, that actually worked!'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;I dostajemy to:&lt;/p&gt;
 &lt;img alt="/images/gynvaels-mission-11-en/running-bmp.png" class="align-center" src="https://chriswarrick.com/images/gynvaels-mission-11-en/running-bmp.png"&gt;
 &lt;/div&gt;
@@ -1835,16 +1835,16 @@ issues.&lt;/p&gt;
 &lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id13"&gt;Getting started&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;Start by installing virtualenv, nginx and uWSGI. I recommend using your operating system packages. For uWSGI, we need the &lt;tt class="docutils literal"&gt;logfile&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;python3&lt;/tt&gt; plugins. (Arch Linux names the &lt;tt class="docutils literal"&gt;python3&lt;/tt&gt; plugin &lt;tt class="docutils literal"&gt;python&lt;/tt&gt;; the &lt;tt class="docutils literal"&gt;logfile&lt;/tt&gt; plugin may be built-in — check with your system repositories!). I’ll also install Git to clone the tutorial app, but it’s optional if your workflow does not involve git.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Ubuntu, Debian:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_50fbb0d9d6fd47cc844d8f9d4dc0f89e-1"&gt;&lt;/a&gt;apt install virtualenv python3 uwsgi uwsgi-emperor uwsgi-plugin-python3 nginx-full git
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_5e2eeb93bfcf4f5598fd9703b0f6ddda-1"&gt;&lt;/a&gt;apt install virtualenv python3 uwsgi uwsgi-emperor uwsgi-plugin-python3 nginx-full git
 &lt;/pre&gt;&lt;p&gt;&lt;strong&gt;Fedora:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_3a572e18194146f8beb406bd798a47f0-1"&gt;&lt;/a&gt;dnf install python3-virtualenv uwsgi uwsgi-plugin-python3 uwsgi-logger-file nginx git
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_ff69539070d34bfc92e3e48f92843e68-1"&gt;&lt;/a&gt;dnf install python3-virtualenv uwsgi uwsgi-plugin-python3 uwsgi-logger-file nginx git
 &lt;/pre&gt;&lt;p&gt;&lt;strong&gt;CentOS:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_ad591ac8420a40898498276e5b25f158-1"&gt;&lt;/a&gt;yum install epel-release
-&lt;a name="rest_code_ad591ac8420a40898498276e5b25f158-2"&gt;&lt;/a&gt;yum install python34 python34-pip uwsgi uwsgi-plugin-python3 uwsgi-logger-file nginx git wget
-&lt;a name="rest_code_ad591ac8420a40898498276e5b25f158-3"&gt;&lt;/a&gt;python3 -m pip install --user virtualenv
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_e06f0a95234b41d681a404993a4baf9d-1"&gt;&lt;/a&gt;yum install epel-release
+&lt;a name="rest_code_e06f0a95234b41d681a404993a4baf9d-2"&gt;&lt;/a&gt;yum install python34 python34-pip uwsgi uwsgi-plugin-python3 uwsgi-logger-file nginx git wget
+&lt;a name="rest_code_e06f0a95234b41d681a404993a4baf9d-3"&gt;&lt;/a&gt;python3 -m pip install --user virtualenv
 &lt;/pre&gt;&lt;p&gt;We need to install virtualenv manually, because the &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;python-virtualenv&lt;/span&gt;&lt;/tt&gt; package is not compatible. It will be available to root only (user install).&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Arch Linux:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_46b8ef378d034f8b858005ef7481c224-1"&gt;&lt;/a&gt;pacman -S python-virtualenv uwsgi uwsgi-plugin-python nginx git
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_80eac04104564828a78d092a08d98f42-1"&gt;&lt;/a&gt;pacman -S python-virtualenv uwsgi uwsgi-plugin-python nginx git
 &lt;/pre&gt;&lt;/div&gt;
 &lt;div class="section" id="preparing-your-application"&gt;
 &lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id14"&gt;Preparing your application&lt;/a&gt;&lt;/h3&gt;
@@ -1853,25 +1853,25 @@ issues.&lt;/p&gt;
 &lt;p&gt;If you don’t use Flask, this tutorial also has instructions for other web frameworks (Django, Pyramid, Bottle) in the configuration files; it should be adjustable to any other WSGI-compliant framework/script nevertheless.&lt;/p&gt;
 &lt;p&gt;We’ll start by creating a virtualenv:&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Ubuntu, Debian:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_a6743dd334274ed78d25bb2e24537b24-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; /srv
-&lt;a name="rest_code_a6743dd334274ed78d25bb2e24537b24-2"&gt;&lt;/a&gt;virtualenv -p /usr/bin/python3 myapp
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_e5e0ee6ffbad4d5a9291a2b0ba96f00e-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; /srv
+&lt;a name="rest_code_e5e0ee6ffbad4d5a9291a2b0ba96f00e-2"&gt;&lt;/a&gt;virtualenv -p /usr/bin/python3 myapp
 &lt;/pre&gt;&lt;p&gt;&lt;strong&gt;Fedora, CentOS, Arch Linux:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_ffd084301fa04befad17c2c7ab7ee1de-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; /srv
-&lt;a name="rest_code_ffd084301fa04befad17c2c7ab7ee1de-2"&gt;&lt;/a&gt;python3 -m virtualenv myapp
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_4a0023f80caf445d871abb5c383e99dc-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; /srv
+&lt;a name="rest_code_4a0023f80caf445d871abb5c383e99dc-2"&gt;&lt;/a&gt;python3 -m virtualenv myapp
 &lt;/pre&gt;&lt;p&gt;(This tutorial assumes Python 3. Make sure you use the correct &lt;tt class="docutils literal"&gt;virtualenv&lt;/tt&gt; command/argument. If you want to use Python 2.7, you’ll need to adjust your uWSGI configuration as well.)&lt;/p&gt;
 &lt;p&gt;Now, we need to put our app there and install requirements. An example for the tutorial demo app:&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_14fc855115a04159b4686ab2db31b657-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; myapp
-&lt;a name="rest_code_14fc855115a04159b4686ab2db31b657-2"&gt;&lt;/a&gt;git clone https://github.com/Kwpolska/flask-demo-app appdata
-&lt;a name="rest_code_14fc855115a04159b4686ab2db31b657-3"&gt;&lt;/a&gt;bin/pip install -r appdata/requirements.txt
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_7d785cff10e6425a84eac07461137593-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; myapp
+&lt;a name="rest_code_7d785cff10e6425a84eac07461137593-2"&gt;&lt;/a&gt;git clone https://github.com/Kwpolska/flask-demo-app appdata
+&lt;a name="rest_code_7d785cff10e6425a84eac07461137593-3"&gt;&lt;/a&gt;bin/pip install -r appdata/requirements.txt
 &lt;/pre&gt;&lt;p&gt;I’m storing my application data in the &lt;tt class="docutils literal"&gt;appdata&lt;/tt&gt; subdirectory so that it doesn’t clutter the virtualenv (or vice versa).  You may also install the &lt;tt class="docutils literal"&gt;uwsgi&lt;/tt&gt; package in the virtualenv, but it’s optional.&lt;/p&gt;
 &lt;p&gt;What this directory should be depends on your web framework.  For example, for a Django app, you should have an &lt;tt class="docutils literal"&gt;appdata/manage.py&lt;/tt&gt; file (in other words, &lt;tt class="docutils literal"&gt;appdata&lt;/tt&gt; is where your app structure starts).  I also assumed that the &lt;tt class="docutils literal"&gt;appdata&lt;/tt&gt; folder should have a &lt;tt class="docutils literal"&gt;static&lt;/tt&gt; subdirectory with all static files, including &lt;tt class="docutils literal"&gt;favicon.ico&lt;/tt&gt; if you have one (we will add support for both in nginx).&lt;/p&gt;
 &lt;p&gt;At this point, you should chown this directory to the user and group your server is going to run as.  This is especially important if uwsgi and nginx run as different users (as they do on Fedora). Run one of the following commands:&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Ubuntu, Debian:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_6cb13f4622a44b5bbed5532f6f2b84ec-1"&gt;&lt;/a&gt;chown -R www-data:www-data /srv/myapp
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_dbfd5f846aed48bb9e19e6dca207f9f8-1"&gt;&lt;/a&gt;chown -R www-data:www-data /srv/myapp
 &lt;/pre&gt;&lt;p&gt;&lt;strong&gt;Fedora, CentOS:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_86322e1bbb7741f2bf8fb17bb4fdcd0a-1"&gt;&lt;/a&gt;chown -R uwsgi:nginx /srv/myapp
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_8af38a2664d3426ca4eaba583443cfcf-1"&gt;&lt;/a&gt;chown -R uwsgi:nginx /srv/myapp
 &lt;/pre&gt;&lt;p&gt;&lt;strong&gt;Arch Linux:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_88ee7d058eb443ffa5f26112cd8a9a31-1"&gt;&lt;/a&gt;chown -R http:http /srv/myapp
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_7728c66936cd445cadca7704c666acaf-1"&gt;&lt;/a&gt;chown -R http:http /srv/myapp
 &lt;/pre&gt;&lt;/div&gt;
 &lt;div class="section" id="configuring-uwsgi-and-nginx"&gt;
 &lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id15"&gt;Configuring uWSGI and nginx&lt;/a&gt;&lt;/h3&gt;
@@ -1883,20 +1883,20 @@ issues.&lt;/p&gt;
 &lt;div class="section" id="uwsgi-configuration"&gt;
 &lt;h4&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id16"&gt;uWSGI configuration&lt;/a&gt;&lt;/h4&gt;
 &lt;p&gt;Start with this, but read the notes below and change the values accordingly:&lt;/p&gt;
-&lt;pre class="code ini"&gt;&lt;a name="rest_code_144913eb0cf740edbf8ce3f97458fcce-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;[uwsgi]&lt;/span&gt;
-&lt;a name="rest_code_144913eb0cf740edbf8ce3f97458fcce-2"&gt;&lt;/a&gt;&lt;span class="na"&gt;socket&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/uwsgi.sock&lt;/span&gt;
-&lt;a name="rest_code_144913eb0cf740edbf8ce3f97458fcce-3"&gt;&lt;/a&gt;&lt;span class="na"&gt;chmod-socket&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;775&lt;/span&gt;
-&lt;a name="rest_code_144913eb0cf740edbf8ce3f97458fcce-4"&gt;&lt;/a&gt;&lt;span class="na"&gt;chdir&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/appdata&lt;/span&gt;
-&lt;a name="rest_code_144913eb0cf740edbf8ce3f97458fcce-5"&gt;&lt;/a&gt;&lt;span class="na"&gt;master&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;true&lt;/span&gt;
-&lt;a name="rest_code_144913eb0cf740edbf8ce3f97458fcce-6"&gt;&lt;/a&gt;&lt;span class="na"&gt;binary-path&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/bin/uwsgi&lt;/span&gt;
-&lt;a name="rest_code_144913eb0cf740edbf8ce3f97458fcce-7"&gt;&lt;/a&gt;&lt;span class="na"&gt;virtualenv&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp&lt;/span&gt;
-&lt;a name="rest_code_144913eb0cf740edbf8ce3f97458fcce-8"&gt;&lt;/a&gt;&lt;span class="na"&gt;module&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;flaskapp:app&lt;/span&gt;
-&lt;a name="rest_code_144913eb0cf740edbf8ce3f97458fcce-9"&gt;&lt;/a&gt;&lt;span class="na"&gt;uid&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;www-data&lt;/span&gt;
-&lt;a name="rest_code_144913eb0cf740edbf8ce3f97458fcce-10"&gt;&lt;/a&gt;&lt;span class="na"&gt;gid&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;www-data&lt;/span&gt;
-&lt;a name="rest_code_144913eb0cf740edbf8ce3f97458fcce-11"&gt;&lt;/a&gt;&lt;span class="na"&gt;processes&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;1&lt;/span&gt;
-&lt;a name="rest_code_144913eb0cf740edbf8ce3f97458fcce-12"&gt;&lt;/a&gt;&lt;span class="na"&gt;threads&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;1&lt;/span&gt;
-&lt;a name="rest_code_144913eb0cf740edbf8ce3f97458fcce-13"&gt;&lt;/a&gt;&lt;span class="na"&gt;plugins&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;python3,logfile&lt;/span&gt;
-&lt;a name="rest_code_144913eb0cf740edbf8ce3f97458fcce-14"&gt;&lt;/a&gt;&lt;span class="na"&gt;logger&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;file:/srv/myapp/uwsgi.log&lt;/span&gt;
+&lt;pre class="code ini"&gt;&lt;a name="rest_code_21a1e9f699fd4774af210d47abf84d2c-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;[uwsgi]&lt;/span&gt;
+&lt;a name="rest_code_21a1e9f699fd4774af210d47abf84d2c-2"&gt;&lt;/a&gt;&lt;span class="na"&gt;socket&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/uwsgi.sock&lt;/span&gt;
+&lt;a name="rest_code_21a1e9f699fd4774af210d47abf84d2c-3"&gt;&lt;/a&gt;&lt;span class="na"&gt;chmod-socket&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;775&lt;/span&gt;
+&lt;a name="rest_code_21a1e9f699fd4774af210d47abf84d2c-4"&gt;&lt;/a&gt;&lt;span class="na"&gt;chdir&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/appdata&lt;/span&gt;
+&lt;a name="rest_code_21a1e9f699fd4774af210d47abf84d2c-5"&gt;&lt;/a&gt;&lt;span class="na"&gt;master&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;true&lt;/span&gt;
+&lt;a name="rest_code_21a1e9f699fd4774af210d47abf84d2c-6"&gt;&lt;/a&gt;&lt;span class="na"&gt;binary-path&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/bin/uwsgi&lt;/span&gt;
+&lt;a name="rest_code_21a1e9f699fd4774af210d47abf84d2c-7"&gt;&lt;/a&gt;&lt;span class="na"&gt;virtualenv&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp&lt;/span&gt;
+&lt;a name="rest_code_21a1e9f699fd4774af210d47abf84d2c-8"&gt;&lt;/a&gt;&lt;span class="na"&gt;module&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;flaskapp:app&lt;/span&gt;
+&lt;a name="rest_code_21a1e9f699fd4774af210d47abf84d2c-9"&gt;&lt;/a&gt;&lt;span class="na"&gt;uid&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;www-data&lt;/span&gt;
+&lt;a name="rest_code_21a1e9f699fd4774af210d47abf84d2c-10"&gt;&lt;/a&gt;&lt;span class="na"&gt;gid&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;www-data&lt;/span&gt;
+&lt;a name="rest_code_21a1e9f699fd4774af210d47abf84d2c-11"&gt;&lt;/a&gt;&lt;span class="na"&gt;processes&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;1&lt;/span&gt;
+&lt;a name="rest_code_21a1e9f699fd4774af210d47abf84d2c-12"&gt;&lt;/a&gt;&lt;span class="na"&gt;threads&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;1&lt;/span&gt;
+&lt;a name="rest_code_21a1e9f699fd4774af210d47abf84d2c-13"&gt;&lt;/a&gt;&lt;span class="na"&gt;plugins&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;python3,logfile&lt;/span&gt;
+&lt;a name="rest_code_21a1e9f699fd4774af210d47abf84d2c-14"&gt;&lt;/a&gt;&lt;span class="na"&gt;logger&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;file:/srv/myapp/uwsgi.log&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;Save this file as:&lt;/p&gt;
 &lt;ul class="simple"&gt;
 &lt;li&gt;Ubuntu, Debian: &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;/etc/uwsgi-emperor/vassals/myapp.ini&lt;/span&gt;&lt;/tt&gt;&lt;/li&gt;
@@ -1993,26 +1993,26 @@ issues.&lt;/p&gt;
 &lt;li&gt;Fedora, CentOS: &lt;tt class="docutils literal"&gt;/etc/nginx/conf.d/myapp.conf&lt;/tt&gt;&lt;/li&gt;
 &lt;li&gt;Arch Linux: add &lt;tt class="docutils literal"&gt;include &lt;span class="pre"&gt;/etc/nginx/conf.d/*.conf;&lt;/span&gt;&lt;/tt&gt; to your &lt;tt class="docutils literal"&gt;http&lt;/tt&gt; directive in &lt;tt class="docutils literal"&gt;/etc/nginx/nginx.conf&lt;/tt&gt; and use &lt;tt class="docutils literal"&gt;/etc/nginx/conf.d/myapp.conf&lt;/tt&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;pre class="code nginx"&gt;&lt;a name="rest_code_ce1586cebe74486a8cc077387cba9b31-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;server&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;a name="rest_code_ce1586cebe74486a8cc077387cba9b31-2"&gt;&lt;/a&gt;    &lt;span class="c1"&gt;# for a public HTTP server:&lt;/span&gt;
-&lt;a name="rest_code_ce1586cebe74486a8cc077387cba9b31-3"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;listen&lt;/span&gt; &lt;span class="mi"&gt;80&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;a name="rest_code_ce1586cebe74486a8cc077387cba9b31-4"&gt;&lt;/a&gt;    &lt;span class="c1"&gt;# for a public HTTPS server:&lt;/span&gt;
-&lt;a name="rest_code_ce1586cebe74486a8cc077387cba9b31-5"&gt;&lt;/a&gt;    &lt;span class="c1"&gt;# listen 443 ssl;&lt;/span&gt;
-&lt;a name="rest_code_ce1586cebe74486a8cc077387cba9b31-6"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;server_name&lt;/span&gt; &lt;span class="s"&gt;localhost&lt;/span&gt; &lt;span class="s"&gt;myapp.local&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;a name="rest_code_ce1586cebe74486a8cc077387cba9b31-7"&gt;&lt;/a&gt;
-&lt;a name="rest_code_ce1586cebe74486a8cc077387cba9b31-8"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;location&lt;/span&gt; &lt;span class="s"&gt;/&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;a name="rest_code_ce1586cebe74486a8cc077387cba9b31-9"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;include&lt;/span&gt; &lt;span class="s"&gt;uwsgi_params&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;a name="rest_code_ce1586cebe74486a8cc077387cba9b31-10"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;uwsgi_pass&lt;/span&gt; &lt;span class="s"&gt;unix:/srv/myapp/uwsgi.sock&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;a name="rest_code_ce1586cebe74486a8cc077387cba9b31-11"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;a name="rest_code_ce1586cebe74486a8cc077387cba9b31-12"&gt;&lt;/a&gt;
-&lt;a name="rest_code_ce1586cebe74486a8cc077387cba9b31-13"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;location&lt;/span&gt; &lt;span class="s"&gt;/static&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;a name="rest_code_ce1586cebe74486a8cc077387cba9b31-14"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;alias&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/appdata/static&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;a name="rest_code_ce1586cebe74486a8cc077387cba9b31-15"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;a name="rest_code_ce1586cebe74486a8cc077387cba9b31-16"&gt;&lt;/a&gt;
-&lt;a name="rest_code_ce1586cebe74486a8cc077387cba9b31-17"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;location&lt;/span&gt; &lt;span class="s"&gt;/favicon.ico&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;a name="rest_code_ce1586cebe74486a8cc077387cba9b31-18"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;alias&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/appdata/static/favicon.ico&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;a name="rest_code_ce1586cebe74486a8cc077387cba9b31-19"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;a name="rest_code_ce1586cebe74486a8cc077387cba9b31-20"&gt;&lt;/a&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;pre class="code nginx"&gt;&lt;a name="rest_code_aa7c49e292604deda8970d402a8f013f-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;server&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_aa7c49e292604deda8970d402a8f013f-2"&gt;&lt;/a&gt;    &lt;span class="c1"&gt;# for a public HTTP server:&lt;/span&gt;
+&lt;a name="rest_code_aa7c49e292604deda8970d402a8f013f-3"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;listen&lt;/span&gt; &lt;span class="mi"&gt;80&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_aa7c49e292604deda8970d402a8f013f-4"&gt;&lt;/a&gt;    &lt;span class="c1"&gt;# for a public HTTPS server:&lt;/span&gt;
+&lt;a name="rest_code_aa7c49e292604deda8970d402a8f013f-5"&gt;&lt;/a&gt;    &lt;span class="c1"&gt;# listen 443 ssl;&lt;/span&gt;
+&lt;a name="rest_code_aa7c49e292604deda8970d402a8f013f-6"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;server_name&lt;/span&gt; &lt;span class="s"&gt;localhost&lt;/span&gt; &lt;span class="s"&gt;myapp.local&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_aa7c49e292604deda8970d402a8f013f-7"&gt;&lt;/a&gt;
+&lt;a name="rest_code_aa7c49e292604deda8970d402a8f013f-8"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;location&lt;/span&gt; &lt;span class="s"&gt;/&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_aa7c49e292604deda8970d402a8f013f-9"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;include&lt;/span&gt; &lt;span class="s"&gt;uwsgi_params&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_aa7c49e292604deda8970d402a8f013f-10"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;uwsgi_pass&lt;/span&gt; &lt;span class="s"&gt;unix:/srv/myapp/uwsgi.sock&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_aa7c49e292604deda8970d402a8f013f-11"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;a name="rest_code_aa7c49e292604deda8970d402a8f013f-12"&gt;&lt;/a&gt;
+&lt;a name="rest_code_aa7c49e292604deda8970d402a8f013f-13"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;location&lt;/span&gt; &lt;span class="s"&gt;/static&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_aa7c49e292604deda8970d402a8f013f-14"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;alias&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/appdata/static&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_aa7c49e292604deda8970d402a8f013f-15"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;a name="rest_code_aa7c49e292604deda8970d402a8f013f-16"&gt;&lt;/a&gt;
+&lt;a name="rest_code_aa7c49e292604deda8970d402a8f013f-17"&gt;&lt;/a&gt;    &lt;span class="kn"&gt;location&lt;/span&gt; &lt;span class="s"&gt;/favicon.ico&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_aa7c49e292604deda8970d402a8f013f-18"&gt;&lt;/a&gt;        &lt;span class="kn"&gt;alias&lt;/span&gt; &lt;span class="s"&gt;/srv/myapp/appdata/static/favicon.ico&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_aa7c49e292604deda8970d402a8f013f-19"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;a name="rest_code_aa7c49e292604deda8970d402a8f013f-20"&gt;&lt;/a&gt;&lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;Note that this file is a very basic and rudimentary configuration. This configuration is fine for local testing, but for a real deployment, you will need to adjust it:&lt;/p&gt;
 &lt;ul class="simple"&gt;
 &lt;li&gt;set &lt;tt class="docutils literal"&gt;listen&lt;/tt&gt; to &lt;tt class="docutils literal"&gt;443 ssl&lt;/tt&gt; and create a http→https redirect on port 80 (you can get a free SSL certificate from &lt;a class="reference external" href="https://letsencrypt.org/"&gt;Let’s Encrypt&lt;/a&gt;; make sure to &lt;a class="reference external" href="https://raymii.org/s/tutorials/Strong_SSL_Security_On_nginx.html"&gt;configure SSL properly&lt;/a&gt;).&lt;/li&gt;
@@ -2028,39 +2028,39 @@ issues.&lt;/p&gt;
 &lt;div class="section" id="for-arch-linux"&gt;
 &lt;h4&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id19"&gt;For Arch Linux&lt;/a&gt;&lt;/h4&gt;
 &lt;p&gt;All you need is:&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_ee02040c9a8348a8917aad5e1ae0db68-1"&gt;&lt;/a&gt;systemctl &lt;span class="nb"&gt;enable&lt;/span&gt; nginx emperor.uwsgi
-&lt;a name="rest_code_ee02040c9a8348a8917aad5e1ae0db68-2"&gt;&lt;/a&gt;systemctl start nginx emperor.uwsgi
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_f7a1fec3110e4dd9b5eb212c6258785a-1"&gt;&lt;/a&gt;systemctl &lt;span class="nb"&gt;enable&lt;/span&gt; nginx emperor.uwsgi
+&lt;a name="rest_code_f7a1fec3110e4dd9b5eb212c6258785a-2"&gt;&lt;/a&gt;systemctl start nginx emperor.uwsgi
 &lt;/pre&gt;&lt;p&gt;Verify the service is running with &lt;tt class="docutils literal"&gt;systemctl status emperor.uwsgi&lt;/tt&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="for-fedora-and-centos"&gt;
 &lt;h4&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id20"&gt;For Fedora and CentOS&lt;/a&gt;&lt;/h4&gt;
 &lt;p&gt;Make sure you followed the extra note about editing &lt;tt class="docutils literal"&gt;/etc/uwsgi.ini&lt;/tt&gt; earlier and run:&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_60e18a58e0e043d3a9ae5b80b4c7d93f-1"&gt;&lt;/a&gt;systemctl &lt;span class="nb"&gt;enable&lt;/span&gt; nginx uwsgi
-&lt;a name="rest_code_60e18a58e0e043d3a9ae5b80b4c7d93f-2"&gt;&lt;/a&gt;systemctl start nginx uwsgi
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_d8ae1499da244be7836687013dd69bbc-1"&gt;&lt;/a&gt;systemctl &lt;span class="nb"&gt;enable&lt;/span&gt; nginx uwsgi
+&lt;a name="rest_code_d8ae1499da244be7836687013dd69bbc-2"&gt;&lt;/a&gt;systemctl start nginx uwsgi
 &lt;/pre&gt;&lt;p&gt;Verify the service is running with &lt;tt class="docutils literal"&gt;systemctl status uwsgi&lt;/tt&gt;&lt;/p&gt;
 &lt;p&gt;If you disabled SELinux, this is enough to get an app working and you can skip over to the next section.&lt;/p&gt;
 &lt;p&gt;If you want to use SELinux, you need to do the following to allow nginx to read static files:&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_45601fdabb7040dea563a347edcae917-1"&gt;&lt;/a&gt;setenforce &lt;span class="m"&gt;0&lt;/span&gt;
-&lt;a name="rest_code_45601fdabb7040dea563a347edcae917-2"&gt;&lt;/a&gt;chcon -R system_u:system_r:httpd_t:s0 /srv/myapp/appdata/static
-&lt;a name="rest_code_45601fdabb7040dea563a347edcae917-3"&gt;&lt;/a&gt;setenforce &lt;span class="m"&gt;1&lt;/span&gt;
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_ac68d8afb52b4f60a91380ecbad923d8-1"&gt;&lt;/a&gt;setenforce &lt;span class="m"&gt;0&lt;/span&gt;
+&lt;a name="rest_code_ac68d8afb52b4f60a91380ecbad923d8-2"&gt;&lt;/a&gt;chcon -R system_u:system_r:httpd_t:s0 /srv/myapp/appdata/static
+&lt;a name="rest_code_ac68d8afb52b4f60a91380ecbad923d8-3"&gt;&lt;/a&gt;setenforce &lt;span class="m"&gt;1&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;We now need to install a &lt;a class="reference external" href="https://chriswarrick.com/pub/nginx-uwsgi.pp"&gt;SELinux policy&lt;/a&gt; (that I created for this project) to allow nginx and uWSGI to communicate.
 Download it and run:&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_1c018099353d41cf8ff6bb8bfa62340c-1"&gt;&lt;/a&gt;semodule -i nginx-uwsgi.pp
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_0df7d8d4819f468fa7e61023c53083d9-1"&gt;&lt;/a&gt;semodule -i nginx-uwsgi.pp
 &lt;/pre&gt;&lt;p&gt;Hopefully, this is enough (you can delete the file). In case it isn’t, please read SELinux documentation, check audit logs, and look into &lt;tt class="docutils literal"&gt;audit2allow&lt;/tt&gt;.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="for-ubuntu-and-debian"&gt;
 &lt;h4&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id21"&gt;For Ubuntu and Debian&lt;/a&gt;&lt;/h4&gt;
 &lt;p&gt;Ubuntu and Debian (still!) use LSB services for uWSGI. Because LSB services are awful, we’re going to set up our own systemd-based (native) service.&lt;/p&gt;
 &lt;p&gt;Start by disabling the LSB service that comes with Ubuntu and Debian:&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_393f4b29bc1c473b9c1d2491723495b6-1"&gt;&lt;/a&gt;systemctl stop uwsgi-emperor
-&lt;a name="rest_code_393f4b29bc1c473b9c1d2491723495b6-2"&gt;&lt;/a&gt;systemctl disable uwsgi-emperor
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_6d8bbc62570c48fd9e5fcf44140eb779-1"&gt;&lt;/a&gt;systemctl stop uwsgi-emperor
+&lt;a name="rest_code_6d8bbc62570c48fd9e5fcf44140eb779-2"&gt;&lt;/a&gt;systemctl disable uwsgi-emperor
 &lt;/pre&gt;&lt;p&gt;Copy the &lt;tt class="docutils literal"&gt;.service&lt;/tt&gt; file from the &lt;a class="reference external" href="https://uwsgi-docs.readthedocs.org/en/latest/Systemd.html#adding-the-emperor-to-systemd"&gt;uWSGI systemd documentation&lt;/a&gt; to &lt;tt class="docutils literal"&gt;/etc/systemd/system/emperor.uwsgi.service&lt;/tt&gt;.  Change the ExecStart line to:&lt;/p&gt;
-&lt;pre class="code ini"&gt;&lt;a name="rest_code_45d1602baf934b3bba7072f5d04cf3dc-1"&gt;&lt;/a&gt;&lt;span class="na"&gt;ExecStart&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/usr/bin/uwsgi --ini /etc/uwsgi-emperor/emperor.ini&lt;/span&gt;
+&lt;pre class="code ini"&gt;&lt;a name="rest_code_9b69718e78904381906d9956831f09d8-1"&gt;&lt;/a&gt;&lt;span class="na"&gt;ExecStart&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/usr/bin/uwsgi --ini /etc/uwsgi-emperor/emperor.ini&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;You can now reload systemd daemons and enable the services:&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_93451a429c1447898d8fed2f24cd5dfe-1"&gt;&lt;/a&gt;systemctl daemon-reload
-&lt;a name="rest_code_93451a429c1447898d8fed2f24cd5dfe-2"&gt;&lt;/a&gt;systemctl &lt;span class="nb"&gt;enable&lt;/span&gt; nginx emperor.uwsgi
-&lt;a name="rest_code_93451a429c1447898d8fed2f24cd5dfe-3"&gt;&lt;/a&gt;systemctl reload nginx
-&lt;a name="rest_code_93451a429c1447898d8fed2f24cd5dfe-4"&gt;&lt;/a&gt;systemctl start emperor.uwsgi
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_b94fec76ae4444ec9429651741b21ec9-1"&gt;&lt;/a&gt;systemctl daemon-reload
+&lt;a name="rest_code_b94fec76ae4444ec9429651741b21ec9-2"&gt;&lt;/a&gt;systemctl &lt;span class="nb"&gt;enable&lt;/span&gt; nginx emperor.uwsgi
+&lt;a name="rest_code_b94fec76ae4444ec9429651741b21ec9-3"&gt;&lt;/a&gt;systemctl reload nginx
+&lt;a name="rest_code_b94fec76ae4444ec9429651741b21ec9-4"&gt;&lt;/a&gt;systemctl start emperor.uwsgi
 &lt;/pre&gt;&lt;p&gt;Verify the service is running with &lt;tt class="docutils literal"&gt;systemctl status emperor.uwsgi&lt;/tt&gt;.  (Ignore
 the warning about no request plugin)&lt;/p&gt;
 &lt;/div&gt;
@@ -2072,9 +2072,9 @@ the warning about no request plugin)&lt;/p&gt;
 &lt;p&gt;If you used the demo application, you should see something like this (complete with the favicon and image greeting):&lt;/p&gt;
 &lt;img alt="/images/nginx-uwsgi-demo.png" class="centered" src="https://chriswarrick.com/images/nginx-uwsgi-demo.png"&gt;
 &lt;p&gt;If you want to test with cURL:&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_e34474c8698d4e3b83ba000333f5832e-1"&gt;&lt;/a&gt;curl -v http://localhost/
-&lt;a name="rest_code_e34474c8698d4e3b83ba000333f5832e-2"&gt;&lt;/a&gt;curl -I http://localhost/favicon.ico
-&lt;a name="rest_code_e34474c8698d4e3b83ba000333f5832e-3"&gt;&lt;/a&gt;curl -I http://localhost/static/hello.png
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_cd888ef4fc1f4a3297d2a651cb84aa34-1"&gt;&lt;/a&gt;curl -v http://localhost/
+&lt;a name="rest_code_cd888ef4fc1f4a3297d2a651cb84aa34-2"&gt;&lt;/a&gt;curl -I http://localhost/favicon.ico
+&lt;a name="rest_code_cd888ef4fc1f4a3297d2a651cb84aa34-3"&gt;&lt;/a&gt;curl -I http://localhost/static/hello.png
 &lt;/pre&gt;&lt;div class="section" id="troubleshooting"&gt;
 &lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id23"&gt;Troubleshooting&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;Hopefully, everything works. If it doesn’t:&lt;/p&gt;
@@ -2084,8 +2084,8 @@ the warning about no request plugin)&lt;/p&gt;
 &lt;li&gt;If you get a default site, disable that site in nginx config (&lt;tt class="docutils literal"&gt;/etc/nginx/nginx.conf&lt;/tt&gt; or your sites directory).&lt;/li&gt;
 &lt;li&gt;If you have a firewall installed, make sure to open the ports your web server runs on (typically 80/443). For &lt;tt class="docutils literal"&gt;firewalld&lt;/tt&gt; (Fedora, CentOS):&lt;/li&gt;
 &lt;/ul&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_2bb43d1cca8b44c5ac31de05bd89c589-1"&gt;&lt;/a&gt;firewall-cmd --add-service http
-&lt;a name="rest_code_2bb43d1cca8b44c5ac31de05bd89c589-2"&gt;&lt;/a&gt;firewall-cmd --add-service https
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_89f6794ccef74fe2b4e4609b7de8d213-1"&gt;&lt;/a&gt;firewall-cmd --add-service http
+&lt;a name="rest_code_89f6794ccef74fe2b4e4609b7de8d213-2"&gt;&lt;/a&gt;firewall-cmd --add-service https
 &lt;/pre&gt;&lt;ul class="simple"&gt;
 &lt;li&gt;If it still does not work, feel free to ask in the comments, mentioning your distribution, installation method, and what doesn’t work.&lt;/li&gt;
 &lt;/ul&gt;
@@ -2147,15 +2147,15 @@ highlighting&lt;/li&gt;
 the majority of them didn’t do much.  In other words, I didn’t have a lot of experience.  Especially with taking user input and relationships.  It took me about 8 hours to get feature parity, and more.&lt;/p&gt;
 &lt;p&gt;Getting all the features was really simple.  For example, to get a many-to-many
 relationship for languages, I had to write just one line.&lt;/p&gt;
-&lt;pre class="code python"&gt;&lt;a name="rest_code_c8fdc7fd86ce470c90e04d160a75f8e0-1"&gt;&lt;/a&gt;&lt;span class="n"&gt;languages&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ManyToManyField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Language&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_a011bc0d5d844bb5994b8cf71398d311-1"&gt;&lt;/a&gt;&lt;span class="n"&gt;languages&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ManyToManyField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Language&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;That’s it.  I didn’t have to run through complicated SQLAlchemy documentation,
 which provides a &lt;a class="reference external" href="http://docs.sqlalchemy.org/en/rel_1_0/orm/basic_relationships.html#many-to-many"&gt;13-line solution&lt;/a&gt; to the same problem.&lt;/p&gt;
 &lt;p&gt;Django also simplified New Relic integration, as the browser JS can be implemented
 using Django template tags.&lt;/p&gt;
 &lt;p&gt;Django is not without its problems, though.  I got a very cryptic traceback
 when I did this:&lt;/p&gt;
-&lt;pre class="code python"&gt;&lt;a name="rest_code_3bbbfa4842b04a888663273c9413e0cc-1"&gt;&lt;/a&gt;&lt;span class="n"&gt;publish_email&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;forms&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;BooleanField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"Publish e-mail"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;required&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;False&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_3bbbfa4842b04a888663273c9413e0cc-2"&gt;&lt;/a&gt;&lt;span class="ne"&gt;TypeError&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;"BooleanField() got multiple values for argument 'required'"&lt;/span&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_c6f36eaa935148d8a515036ca14a9ccf-1"&gt;&lt;/a&gt;&lt;span class="n"&gt;publish_email&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;forms&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;BooleanField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"Publish e-mail"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;required&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;False&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_c6f36eaa935148d8a515036ca14a9ccf-2"&gt;&lt;/a&gt;&lt;span class="ne"&gt;TypeError&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;"BooleanField() got multiple values for argument 'required'"&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;The real problem with this code?  I forgot the &lt;tt class="docutils literal"&gt;label=&lt;/tt&gt; keyword.  The
 problem is, the model API accepts this syntax — &lt;tt class="docutils literal"&gt;verbose_name&lt;/tt&gt; is the first
 argument.  (I am not actually using the labels though, I write my own form
@@ -2260,10 +2260,10 @@ mogą zainstalować pakiet &lt;tt class="docutils literal"&gt;think&lt;/tt&gt; z
 &lt;h2&gt;Konfiguracja&lt;/h2&gt;
 &lt;p&gt;Utwórz plik &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;~/.config/think.conf&lt;/span&gt;&lt;/tt&gt; (tam, gdzie jest &lt;tt class="docutils literal"&gt;XDG_CONFIG_HOME&lt;/tt&gt;),
 zawierający poniższe cztery linie:&lt;/p&gt;
-&lt;pre class="code ini"&gt;&lt;a name="rest_code_3e63338497e44b6592af55a9cc3fb1f6-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;[Think]&lt;/span&gt;
-&lt;a name="rest_code_3e63338497e44b6592af55a9cc3fb1f6-2"&gt;&lt;/a&gt;&lt;span class="na"&gt;command&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;play&lt;/span&gt;
-&lt;a name="rest_code_3e63338497e44b6592af55a9cc3fb1f6-3"&gt;&lt;/a&gt;&lt;span class="na"&gt;file&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/home/kwpolska/Dropbox/Media/Wielka Gra.mp3&lt;/span&gt;
-&lt;a name="rest_code_3e63338497e44b6592af55a9cc3fb1f6-4"&gt;&lt;/a&gt;&lt;span class="na"&gt;behavior&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;wait&lt;/span&gt;
+&lt;pre class="code ini"&gt;&lt;a name="rest_code_0ea7743339e64359b9de130c5fea3543-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;[Think]&lt;/span&gt;
+&lt;a name="rest_code_0ea7743339e64359b9de130c5fea3543-2"&gt;&lt;/a&gt;&lt;span class="na"&gt;command&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;play&lt;/span&gt;
+&lt;a name="rest_code_0ea7743339e64359b9de130c5fea3543-3"&gt;&lt;/a&gt;&lt;span class="na"&gt;file&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/home/kwpolska/Dropbox/Media/Wielka Gra.mp3&lt;/span&gt;
+&lt;a name="rest_code_0ea7743339e64359b9de130c5fea3543-4"&gt;&lt;/a&gt;&lt;span class="na"&gt;behavior&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;wait&lt;/span&gt;
 &lt;/pre&gt;&lt;ul class="simple"&gt;
 &lt;li&gt;&lt;tt class="docutils literal"&gt;command&lt;/tt&gt; to komenda odtwarzacza, która zostanie wywołana. Możesz użyć
 &lt;tt class="docutils literal"&gt;play&lt;/tt&gt; (z pakietu &lt;tt class="docutils literal"&gt;sox&lt;/tt&gt;) albo jakiegokolwiek innego szybkiego odtwarzacza
@@ -2280,7 +2280,7 @@ muzyki działającego w konsoli.&lt;/li&gt;
 &lt;div class="section" id="uzycie"&gt;
 &lt;h2&gt;Użycie&lt;/h2&gt;
 &lt;p&gt;Dodaj &lt;tt class="docutils literal"&gt;think&lt;/tt&gt; przed komendą, która długo się wykonuje:&lt;/p&gt;
-&lt;pre class="code console"&gt;&lt;a name="rest_code_2beed0690b2d4e8c822ef96dad69c9c5-1"&gt;&lt;/a&gt;&lt;span class="go"&gt;think sleep 120&lt;/span&gt;
+&lt;pre class="code console"&gt;&lt;a name="rest_code_2295d4d5e56344278922ea3d0a8f5f6b-1"&gt;&lt;/a&gt;&lt;span class="go"&gt;think sleep 120&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</description><category>app</category><category>CLI</category><category>game show</category><category>Jeopardy!</category><category>Linux</category><category>projects</category><category>Python</category><category>think</category><guid>https://chriswarrick.com/pl/blog/2015/05/30/think/</guid><pubDate>Sat, 06 Jun 2015 12:15:00 GMT</pubDate></item><item><title>Revamping My Projects Page with Nikola</title><link>https://chriswarrick.com/pl/blog/2014/10/13/revamping-my-projects-page-with-nikola/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;A week ago, I was inspired to produce a new &lt;a class="reference external" href="https://chriswarrick.com/projects/"&gt;projects page&lt;/a&gt; for
 myself.  The previous one was a trainwreck with a lot of hacks.  Also hosted on
 GitHub Pages for some reason.&lt;/p&gt;
