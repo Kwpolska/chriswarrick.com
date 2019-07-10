@@ -140,16 +140,16 @@ Let’s pick a random one and work back from it: ``number-is-nan``.
     };
 
 That’s a one-liner that re-implements ``Number.isNaN`` if it’s not available, which is, according to MDN, `a more robust version of the original, global
-isNaN() <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/isNaN>`. The original function coerced everything to Number before testing, which apparently wasn’t enough. That’s what you get for using a language designed in a week. The function was added to all sane browsers and Node around 2013, the polyfill was created in 2015.
+isNaN() <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/isNaN>`_. The original function coerced everything to Number before testing, which apparently wasn’t enough. That’s what you get for using a language designed in a week. The function was added to all sane browsers and Node around 2013, the polyfill was created in 2015.
 
-It was pulled in by ``is-fullwidth-code-point`` and ``is-finite``, both by the same author. The latter one is especially interesting: it’s at version 1.0.2. Version 1.0.1improved the codebase from ``if (x) { return false; } return true`` (via pull request), and version 1.0.2 replaced a manual ``val !== val`` comparison with ``number-is-nan``. ``number-is-nan``has 7.5 million weekly downloads, ``is-finite`` has 6.7M. The build of ``number-is-nan`` `is currently failing. <https://travis-ci.org/sindresorhus/number-is-nan/builds/363709421>`_
+It was pulled in by ``is-fullwidth-code-point`` and ``is-finite``, both by the same author. The latter one is especially interesting: it’s at version 1.0.2. Version 1.0.1improved the codebase from ``if (x) { return false; } return true`` (via pull request), and version 1.0.2 replaced a manual ``val !== val`` comparison with ``number-is-nan``. ``number-is-nan`` has 7.5 million weekly downloads, ``is-finite`` has 6.7M. The build of ``number-is-nan`` `is currently failing. <https://travis-ci.org/sindresorhus/number-is-nan/builds/363709421>`_
 
 Fifty shades of terminal
 ------------------------
 
 Every Node-based CLI tool wants to be cool. And for that, they need colors.
 
-How does this work in Bash? You could use ``tput setaf XX``, but many people would just manually echo '\033[XXm', the codes are available `in Wikipedia <https://en.wikipedia.org/wiki/ANSI_escape_code#3/4_bit>`_ or elsewhere.
+How does this work in Bash? You could use ``tput setaf XX``, but many people would just manually ``echo '\033[XXm'``, the codes are available `in Wikipedia <https://en.wikipedia.org/wiki/ANSI_escape_code#3/4_bit>`_ or elsewhere.
 
 How does this work in Python? There are a few libraries for this (and you can always do it manually), but the most popular one is `colorama <https://pypi.org/project/colorama/>`_. That library can even handle Windows.
 

@@ -25,9 +25,9 @@ function changeColors() {
     setTimeout(function() {
         document.cookie = 'colorScheme=' + colorScheme + '; expires=17-Jan-2038 03:14:07 GMT; path=/';
         if (colorScheme === 'light') {
-            document.querySelector("#kw-all-css").href = '/assets/css/all.css';
+            document.querySelector("#kw-all-css").href = 'https://chriswarrick.com/assets/css/all.css';
         } else {
-            document.querySelector("#kw-all-css").href = '/assets/css/all-dark.css';
+            document.querySelector("#kw-all-css").href = 'https://chriswarrick.com/assets/css/all-dark.css';
         }
         updateCsText();
         document.querySelector("#color-changer-text").innerText = csText;

@@ -29,13 +29,13 @@ For easy linking, I set up some aliases: https://go.chriswarrick.com/pyweb and h
 Prerequisites
 ~~~~~~~~~~~~~
 
-In order to deploy your web application, you need a server that gives you root and ssh access — in other words, a VPS (or a dedicated server, or a datacenter lease…). If you’re looking for a great VPS service for a low price, I recommend `DigitalOcean`_ (reflink [#]_), which offers a $5/mo service [#]_. If you want to play along at home, without buying a VPS, you can create a virtual machine on your own, or use Vagrant with a Vagrant box for Fedora 25 (``fedora/25-cloud-base``).
+In order to deploy your web application, you need a server that gives you root and ssh access — in other words, a VPS (or a dedicated server, or a datacenter lease…). If you’re looking for a great VPS service for a low price, I recommend `DigitalOcean`_ (reflink [#]_), which offers a $5/mo service [#]_. If you want to play along at home, without buying a VPS, you can create a virtual machine on your own, or use Vagrant with a Vagrant box for Fedora 30 (``fedora/30-cloud-base``).
 
 .. _DigitalOcean: https://www.digitalocean.com/?refcode=7983689b2ecc
 
 Your server should also run a modern Linux-based operating system. This guide was written and tested on:
 
-* Ubuntu 16.04 LTS or newer
+* Ubuntu 16.04 LTS, 18.04 LTS or newer
 * Debian 8 (jessie) or newer
 * Fedora 24 or newer (with SELinux enabled and disabled)
 * CentOS 7 (with SELinux enabled and disabled) — manual guide should also work on RHEL 7
