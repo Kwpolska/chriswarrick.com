@@ -115,7 +115,7 @@ og: http://ogp.me/ns#
     </h1>
 
     <div class="metadata">
-<a href="/blog/2018/09/04/python-virtual-environments/" rel="bookmark" class="u-published"><time class="published dt-published" datetime="2018-09-04T20:15:00+02:00" itemprop="datePublished" title="04 September 2018 at 20:15">04 September 2018 at 20:15</time></a>
+<a href="/blog/2018/09/04/python-virtual-environments/" rel="bookmark" class="u-published"><time class="published dt-published" datetime="2018-09-04T20:15:00+02:00" itemprop="datePublished" title="04 September 2018 at 20:15">04 September 2018 at 20:15</time><time class="updated dt-updated" datetime="2019-07-22T23:00:00+02:00" title="updated 22 July 2019 at 23:00"> (updated 22 July 2019 at 23:00)</time></a>
         <ul itemprop="keywords" class="tags post-bubbles list-inline">
 <li class="category-bubble"><a href="/blog/tags/cat_python/" style="background-color: #ffd43b">Python</a></li>
            <li><a class="tag p-category" href="/blog/tags/best-practices/" rel="tag">best practices</a></li>
@@ -168,10 +168,10 @@ before the stdlib tool was created)</em></p>
 <h2>Create<a href="#create" class="headerlink" title="Permalink to this heading">¶</a></h2>
 <p>To create a virtual environment named <tt class="docutils literal">env</tt>, use (depending on your tool of
 choice):</p>
-<pre class="code text"><a name="rest_code_aa8aa46bc9e545adae02ea881218dd89-1"></a>$ python3 -m virtualenv env
+<pre class="code text"><a name="rest_code_3c09915a8db549b091ec000d491a94e4-1"></a>$ python3 -m virtualenv env
 </pre>
 <p>or</p>
-<pre class="code text"><a name="rest_code_9f3b0f10248049f79eeb63113f8e918b-1"></a>$ python3 -m venv env
+<pre class="code text"><a name="rest_code_b478c28202294970a8b312b7d67f7155-1"></a>$ python3 -m venv env
 </pre>
 <p>Afterwards, you will end up with a folder named <tt class="docutils literal">env</tt> that contains folders
 named <tt class="docutils literal">bin</tt> (<tt class="docutils literal">Scripts</tt> on Windows — contains executables, including
@@ -179,8 +179,8 @@ named <tt class="docutils literal">bin</tt> (<tt class="docutils literal">Script
 <p>Both tools install <tt class="docutils literal">pip</tt> and <tt class="docutils literal">setuptools</tt>, but <tt class="docutils literal">venv</tt> does not ship with
 <tt class="docutils literal">wheel</tt>. In addition, the default versions tend to be more-or-less outdated.
 Let’s upgrade them real quick (first command is Unix, second is Windows): <a class="footnote-reference" href="/blog/2018/09/04/python-virtual-environments/#id6" id="id2">[2]</a></p>
-<pre class="code text"><a name="rest_code_1757b20098744d5a85dca5e138066bc5-1"></a>$ env/bin/python -m pip install --upgrade pip setuptools wheel
-<a name="rest_code_1757b20098744d5a85dca5e138066bc5-2"></a>&gt; env\Scripts\python -m pip install --upgrade pip setuptools wheel
+<pre class="code text"><a name="rest_code_2e227e9d482d4c5d933cd5d96040c369-1"></a>$ env/bin/python -m pip install --upgrade pip setuptools wheel
+<a name="rest_code_2e227e9d482d4c5d933cd5d96040c369-2"></a>&gt; env\Scripts\python -m pip install --upgrade pip setuptools wheel
 </pre>
 <div class="section" id="where-to-store-virtual-environments">
 <h3>Where to store virtual environments?<a href="#where-to-store-virtual-environments" class="headerlink" title="Permalink to this heading">¶</a></h3>
@@ -202,10 +202,10 @@ want it in your repository (it’s binary bloat, and works only on your machine)
 <p>There are three ways of working with virtual environments interactively (in a
 shell):</p>
 <ul class="simple">
-<li>activation (run <tt class="docutils literal">source bin/activate</tt> on *nix;
-<tt class="docutils literal">Scripts\activate</tt> on Windows) — it simplifies work and requires less
+<li>activation (run <tt class="docutils literal">source env/bin/activate</tt> on *nix;
+<tt class="docutils literal">env\Scripts\activate</tt> on Windows) — it simplifies work and requires less
 typing, although it can sometimes fail to work properly.</li>
-<li>executing <tt class="docutils literal">bin/python</tt> (<tt class="docutils literal">Scripts\python</tt>) and other scripts directly, as
+<li>executing <tt class="docutils literal">env/bin/python</tt> (<tt class="docutils literal">env\Scripts\python</tt>) and other scripts directly, as
 activation only changes <tt class="docutils literal">$PATH</tt> and some helper variables — those variables
 are not mandatory for operation, running the correct <tt class="docutils literal">python</tt> is, and that
 method is failsafe.</li>
@@ -218,21 +218,21 @@ things, you will still be working with the system Python.</p>
 activation and subshells are not viable solutions. In these cases, you must
 always use the full path to Python.</p>
 <p>Here are some usage examples (paths can be relative, of course):</p>
-<pre class="code text"><a name="rest_code_c6f628895ba145c58dea4d95179016f1-1"></a>## *nix, activation ##
-<a name="rest_code_c6f628895ba145c58dea4d95179016f1-2"></a>$ source /path/to/env/bin/activate
-<a name="rest_code_c6f628895ba145c58dea4d95179016f1-3"></a>(env)$ pip install Django
-<a name="rest_code_c6f628895ba145c58dea4d95179016f1-4"></a>(env)$ deactivate
-<a name="rest_code_c6f628895ba145c58dea4d95179016f1-5"></a>
-<a name="rest_code_c6f628895ba145c58dea4d95179016f1-6"></a>## *nix, manual execution ##
-<a name="rest_code_c6f628895ba145c58dea4d95179016f1-7"></a>$ /path/to/env/bin/pip install Django
-<a name="rest_code_c6f628895ba145c58dea4d95179016f1-8"></a>
-<a name="rest_code_c6f628895ba145c58dea4d95179016f1-9"></a>## Windows, activation ##
-<a name="rest_code_c6f628895ba145c58dea4d95179016f1-10"></a>&gt; C:\path\to\env\Scripts\activate
-<a name="rest_code_c6f628895ba145c58dea4d95179016f1-11"></a>(venv)&gt; pip install Django
-<a name="rest_code_c6f628895ba145c58dea4d95179016f1-12"></a>(venv)&gt; deactivate
-<a name="rest_code_c6f628895ba145c58dea4d95179016f1-13"></a>
-<a name="rest_code_c6f628895ba145c58dea4d95179016f1-14"></a>## Windows, manual execution ##
-<a name="rest_code_c6f628895ba145c58dea4d95179016f1-15"></a>&gt; C:\path\to\env\Scripts\pip install Django
+<pre class="code text"><a name="rest_code_e705dc937c014ab19b3ede20747390fb-1"></a>## *nix, activation ##
+<a name="rest_code_e705dc937c014ab19b3ede20747390fb-2"></a>$ source /path/to/env/bin/activate
+<a name="rest_code_e705dc937c014ab19b3ede20747390fb-3"></a>(env)$ pip install Django
+<a name="rest_code_e705dc937c014ab19b3ede20747390fb-4"></a>(env)$ deactivate
+<a name="rest_code_e705dc937c014ab19b3ede20747390fb-5"></a>
+<a name="rest_code_e705dc937c014ab19b3ede20747390fb-6"></a>## *nix, manual execution ##
+<a name="rest_code_e705dc937c014ab19b3ede20747390fb-7"></a>$ /path/to/env/bin/pip install Django
+<a name="rest_code_e705dc937c014ab19b3ede20747390fb-8"></a>
+<a name="rest_code_e705dc937c014ab19b3ede20747390fb-9"></a>## Windows, activation ##
+<a name="rest_code_e705dc937c014ab19b3ede20747390fb-10"></a>&gt; C:\path\to\env\Scripts\activate
+<a name="rest_code_e705dc937c014ab19b3ede20747390fb-11"></a>(venv)&gt; pip install Django
+<a name="rest_code_e705dc937c014ab19b3ede20747390fb-12"></a>(venv)&gt; deactivate
+<a name="rest_code_e705dc937c014ab19b3ede20747390fb-13"></a>
+<a name="rest_code_e705dc937c014ab19b3ede20747390fb-14"></a>## Windows, manual execution ##
+<a name="rest_code_e705dc937c014ab19b3ede20747390fb-15"></a>&gt; C:\path\to\env\Scripts\pip install Django
 </pre>
 <p>The same principle applies to running Python itself, or any other script
 installed by a package. (With Django’s <tt class="docutils literal">manage.py</tt>, calling it as
@@ -243,18 +243,19 @@ installed by a package. (With Django’s <tt class="docutils literal">manage.py<
 <p>If you try to copy or rename a virtual environment, you will discover that the
 copied environment does not work. This is because a virtual environment is
 closely tied to both the Python it was created with, and the location it was
-created in. (The “relocatable” option does not work.) <a class="footnote-reference" href="/blog/2018/09/04/python-virtual-environments/#id7" id="id3">[3]</a></p>
+created in. (The “relocatable” option is deprecated and generally fails to
+solve the problem.) <a class="footnote-reference" href="/blog/2018/09/04/python-virtual-environments/#id7" id="id3">[3]</a></p>
 <p>However, this is very easy to fix. Instead of moving/copying, just create a new
 environment in the new location. Then, run <tt class="docutils literal">pip freeze &gt; requirements.txt</tt> in
 the old environment to create a list of packages installed in it. With that,
 you can just run <tt class="docutils literal">pip install <span class="pre">-r</span> requirements.txt</tt> in the new environment to
-install packages from the saved list. (Of course, you can copy requirements.txt
+install packages from the saved list. (Of course, you can copy <tt class="docutils literal">requirements.txt</tt>
 between machines. In many cases, it will just work; sometimes, you might need a few
 modifications to <tt class="docutils literal">requirements.txt</tt> to remove OS-specific stuff.)</p>
-<pre class="code text"><a name="rest_code_1f7f691f7d734a86ad43d8f05ce140f0-1"></a>$ oldenv/bin/pip freeze &gt; requirements.txt
-<a name="rest_code_1f7f691f7d734a86ad43d8f05ce140f0-2"></a>$ python3 -m venv newenv
-<a name="rest_code_1f7f691f7d734a86ad43d8f05ce140f0-3"></a>$ newenv/bin/pip install -r requirements.txt
-<a name="rest_code_1f7f691f7d734a86ad43d8f05ce140f0-4"></a>(You may rm -rf oldenv now if you desire)
+<pre class="code text"><a name="rest_code_0b633f971a5c4d59b5a3d62a07831fb5-1"></a>$ oldenv/bin/pip freeze &gt; requirements.txt
+<a name="rest_code_0b633f971a5c4d59b5a3d62a07831fb5-2"></a>$ python3 -m venv newenv
+<a name="rest_code_0b633f971a5c4d59b5a3d62a07831fb5-3"></a>$ newenv/bin/pip install -r requirements.txt
+<a name="rest_code_0b633f971a5c4d59b5a3d62a07831fb5-4"></a>(You may rm -rf oldenv now if you desire)
 </pre>
 <p>Note that it might also be necessary to re-create your virtual environment
 after a Python upgrade, <a class="footnote-reference" href="/blog/2018/09/04/python-virtual-environments/#id8" id="id4">[4]</a> so it might be handy to keep an up-to-date

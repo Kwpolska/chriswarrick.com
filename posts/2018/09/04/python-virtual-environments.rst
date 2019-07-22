@@ -1,6 +1,7 @@
 .. title: Python Virtual Environments in Five Minutes
 .. slug: python-virtual-environments
 .. date: 2018-09-04 20:15:00+02:00
+.. updated: 2019-07-22 23:00:00+02:00
 .. description: A short yet descriptive guide on Python virtual environments.
 .. tags: Python, guide, devel, best practices, virtual environments, venv, virtualenv
 .. category: Python
@@ -101,10 +102,10 @@ Use
 There are three ways of working with virtual environments interactively (in a
 shell):
 
-* activation (run ``source bin/activate`` on \*nix;
-  ``Scripts\activate`` on Windows) — it simplifies work and requires less
+* activation (run ``source env/bin/activate`` on \*nix;
+  ``env\Scripts\activate`` on Windows) — it simplifies work and requires less
   typing, although it can sometimes fail to work properly.
-* executing ``bin/python`` (``Scripts\python``) and other scripts directly, as
+* executing ``env/bin/python`` (``env\Scripts\python``) and other scripts directly, as
   activation only changes ``$PATH`` and some helper variables — those variables
   are not mandatory for operation, running the correct ``python`` is, and that
   method is failsafe.
@@ -148,13 +149,14 @@ Moving/renaming/copying environments?
 If you try to copy or rename a virtual environment, you will discover that the
 copied environment does not work. This is because a virtual environment is
 closely tied to both the Python it was created with, and the location it was
-created in. (The “relocatable” option does not work.) [3]_
+created in. (The “relocatable” option is deprecated and generally fails to
+solve the problem.) [3]_
 
 However, this is very easy to fix. Instead of moving/copying, just create a new
 environment in the new location. Then, run ``pip freeze > requirements.txt`` in
 the old environment to create a list of packages installed in it. With that,
 you can just run ``pip install -r requirements.txt`` in the new environment to
-install packages from the saved list. (Of course, you can copy requirements.txt
+install packages from the saved list. (Of course, you can copy ``requirements.txt``
 between machines. In many cases, it will just work; sometimes, you might need a few
 modifications to ``requirements.txt`` to remove OS-specific stuff.)
 
