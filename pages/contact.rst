@@ -1,7 +1,6 @@
 .. title: Contact
 .. slug: contact
 .. date: 2013-02-07 00:00:00
-.. link: 
 .. description: Contact me!
 
 
@@ -14,11 +13,13 @@ I am a Pythonista.  You can find some of my projects at `GitHub
 Contact me:
 ===========
 
+**READ ME FIRST:** I am not available for hire.  This blog does not accept any forms
+of advertising, guest posts, “collaboration”, or other similar nonsense.
+
 * **via e-mail** — chris \[at\] chriswarrick.com
 * **on IRC** — ChrisWarrick on freenode
 * **on Twitter** — `@Kwpolska <https://twitter.com/Kwpolska>`_
 * **on GitHub** — `Kwpolska <https://github.com/Kwpolska>`_
 * GPG key: 0x5EAAEA16 (``gpg --keyserver hkp://keys.gnupg.net --recv-key 0x5EAAEA16``)
 
-**WARNING:** I am not available for hire.
 
