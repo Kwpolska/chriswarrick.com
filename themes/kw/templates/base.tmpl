@@ -53,7 +53,7 @@
                 {{ template_hooks['menu_alt']() }}
                 <li class="nav-item" id="color-changer-menu"><a href="#" class="nav-link" id="color-changer-btn">
                 <div class="color-changer"></div>
-                <span id="color-changer-text"></span>
+                <span id="color-changer-text"><!--#if expr="$HTTP_COOKIE=/colorScheme\=light/" -->{% if lang == "en" %}Dark Mode{% else %}Tryb Ciemny{% endif %}<!--#else -->{% if lang == "en" %}Light Mode{% else %}Tryb Jasny{% endif %}<!--#endif--></span>
                 </a>
                 </li>
             </ul>
@@ -70,6 +70,23 @@
         <div id="cookiebox"></div>
         {% block content %}{% endblock %}
         <!--End of body content-->
+
+        <nav id="footer-links"><div class="row">
+        {% for box_title, nav_links in navigation_alt_links[lang] %}
+            <div class="col-sm-4">
+                <h6>{{ box_title }}</h6>
+                <ul>
+                {% for url, text in nav_links %}
+                    {% if rel_link(permalink, url) == "#" %}
+                        <li class="nav-item active"><a href="{{ permalink }}" class="nav-link">{{ text }} <span class="sr-only">{{ messages("(active)", lang) }}</span></a>
+                    {% else %}
+                        <li class="nav-item"><a href="{{ url }}" class="nav-link">{{ text }}</a>
+                    {% endif %}
+                {% endfor %}
+                </ul>
+            </div>
+        {% endfor %}
+        </div></nav>
 
         <footer id="footer">
             {{ content_footer }}

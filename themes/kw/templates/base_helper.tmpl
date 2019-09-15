@@ -78,10 +78,8 @@ lang="{{ lang }}">
 
 {% macro late_load_js() %}
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha256-ZvOgfh+ptkpoa2Y4HkRY28ir89u/+VRyDE7sB7hEEcI=" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.11.0/baguetteBox.min.js" integrity="sha256-yQGjQhFs3LtyiN5hhr3k9s9TWZOh/RzCkD3gwwCKlkg=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js" integrity="sha256-AdQN98MVZs44Eq2yTwtoKufhnU+uZ7v2kXnD5vqzZVo=" crossorigin="anonymous"></script>
     <script src="/assets/js/all.js"></script>
     {{ social_buttons_code }}
 {% endmacro %}
@@ -90,10 +88,13 @@ lang="{{ lang }}">
 {% macro html_stylesheets() %}
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.css" integrity="sha256-FqCzNnnyXl5HxHMdb+RQ/RV/X7fqfPcQYy+G2gFL3Xk=" crossorigin="anonymous">
 
-        <noscript>
-        <link href="/assets/css/all-dark.css" rel="stylesheet" type="text/css" id="kw-all-css">
-        </noscript>
-        <script type="text/javascript">var colorScheme=document.cookie.replace(/(?:(?:^|.*;\s*)colorScheme\s*\=\s*([^;]*).*$)|^.*$/,"$1");if(colorScheme==="light"){document.write('<link href="/assets/css/all.css" rel="stylesheet" type="text/css" id="kw-all-css">');}else{colorScheme="dark";document.write('<link href="/assets/css/all-dark.css" rel="stylesheet" type="text/css" id="kw-all-css">');}var colorSchemesEnabled=true;</script>
+        <!--#if expr="$HTTP_COOKIE=/colorScheme\=light/" -->
+            <link href="/assets/css/all.css" rel="stylesheet" type="text/css" id="kw-all-css">
+            <script type="text/javascript">var colorScheme='light';var colorSchemesEnabled=true;</script>
+        <!--#else-->
+            <link href="/assets/css/all-dark.css" rel="stylesheet" type="text/css" id="kw-all-css">
+            <script type="text/javascript">var colorScheme='dark';var colorSchemesEnabled=true;</script>
+        <!--#endif-->
 
     {% if needs_ipython_css %}
         <link href="/assets/css/ipython.min.css" rel="stylesheet" type="text/css">
@@ -104,7 +105,8 @@ lang="{{ lang }}">
     {% elif not annotations and post and post.meta('annotations') %}
         {{ notes.css() }}
     {% endif %}
-    <link href="https://fonts.googleapis.com/css?family=EB+Garamond:500|Source+Sans+Pro:400,400i,700,700i&amp;subset=latin-ext" rel="stylesheet">
+    <!--link href="https://fonts.googleapis.com/css?family=EB+Garamond:500|Source+Sans+Pro:400,400i,700,700i&amp;subset=latin-ext" rel="stylesheet"-->
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,700,700i|Source+Serif+Pro:600&display=swap&subset=latin-ext" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
 {% endmacro %}
 

@@ -56,29 +56,65 @@ TRANSLATIONS_PATTERN = '{path}.{lang}.{ext}'
 # Links for the sidebar / navigation bar.
 # You should provide a key-value pair for each used language.
 NAVIGATION_LINKS = {
-    DEFAULT_LANG: (
-        ('/blog/', 'Archives'),
-        ('/blog/tags/', 'Tags'),
+    'en': (
         ('/contact/', 'Contact'),
-        ('/brand/', 'Brand'),
-        ('/kwbot/', 'KwBot'),
         ('/projects/', 'Projects'),
         ('/guides/', 'Guides'),
+        ('/blog/', 'Archives'),
         ('/search/', 'Search'),
     ),
 
     'pl': (
-        ('/pl/blog/', 'Archiwum'),
-        ('/pl/blog/tags/', 'Tagi'),
         ('/pl/contact/', 'Kontakt'),
-        ('/pl/brand/', 'Brand'),
-        ('/pl/kwbot/', 'KwBot'),
         ('/projects/', 'Projekty'),
         ('/guides/', 'Przewodniki'),
+        ('/pl/blog/', 'Archiwum'),
         ('/pl/search/', 'Szukaj'),
     ),
 }
 
+NAVIGATION_ALT_LINKS = {
+    'en': (
+        ('Blog', (
+            ('/blog/', 'Archive'),
+            ('/blog/tags/', 'Tags'),
+            ('/rss.xml', 'RSS Feed'),
+            ('/search/', 'Search'),
+        )),
+        ('Projects and Work', (
+            ('/projects/', 'Projects'),
+            ('/guides/', 'Guides'),
+            ('/kwbot/', 'KwBot'),
+            ('/blog/tags/cat_python', 'Posts about Python'),
+        )),
+        ('Me', (
+            ('/contact/', 'Contact'),
+            ('/brand/', 'Brand'),
+            ('https://twitter.com/Kwpolska', 'Twitter'),
+            ('https://github.com/Kwpolska', 'GitHub'),
+        )),
+    ),
+    'pl': (
+        ('Blog', (
+            ('/pl/blog/', 'Archiwum'),
+            ('/pl/blog/tags/', 'Tagi'),
+            ('/pl/rss.xml', 'Kanał RSS'),
+            ('/pl/search/', 'Wyszukiwarka'),
+        )),
+        ('Projekty i Twórczość', (
+            ('/projects/', 'Projekty (en)'),
+            ('/guides/', 'Przewodniki (en)'),
+            ('/pl/kwbot/', 'KwBot'),
+            ('/pl/blog/tags/cat_python', 'Posty o Pythonie'),
+        )),
+        ('Ja', (
+            ('/pl/contact/', 'Kontakt'),
+            ('/pl/brand/', 'Brand'),
+            ('https://twitter.com/Kwpolska', 'Twitter'),
+            ('https://github.com/Kwpolska', 'GitHub'),
+        )),
+    ),
+}
 
 ##############################################
 # Below this point, everything is optional
