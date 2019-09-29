@@ -10,15 +10,19 @@
 .. guide_platform: Ubuntu, Debian, Fedora, CentOS, Arch Linux
 .. guide_topic: Python, web apps
 .. shortlink: pyweb
-.. updated: 2018-04-16 10:00:00+02:00
+.. updated: 2019-09-29 20:15:00+02:00
 
 You’ve just written a great Python web application. Now, you want to share it with the world. In order to do that, you need a server, and some software to do that for you.
 
-The following is a comprehensive guide on how to accomplish that, on multiple Linux-based operating systems, using nginx and uWSGI Emperor. It doesn’t force you to use any specific web framework — Flask, Django, Pyramid, Bottle will all work. Written for Ubuntu, Debian, Fedora, CentOS and Arch Linux (should be helpful for other systems, too). Now with an Ansible Playbook.
+The following is a comprehensive guide on how to accomplish that, on multiple Linux-based operating systems, using nginx and uWSGI Emperor. It doesn’t force you to use any specific web framework — Flask, Django, Pyramid, Bottle will all work. Written for Ubuntu, Debian, Fedora, CentOS 7 and Arch Linux (should be helpful for other systems, too). Now with an Ansible Playbook.
 
-*Revision 5a (2018-04-16): Better explain why we disable emperor-tyrant mode*
+*Revision 6b (2019-09-29): Use venv instead of virtualenv; CentOS 7 has Python 3.6 now; CentOS 8 current-lack-of-support note; update supported versions list*
 
 .. TEASER_END
+
+.. |ci-status| image:: https://github.com/Kwpolska/ansible-nginx-uwsgi/workflows/CI%20in%20Docker%20for%20ansible-nginx-uwsgi%20%28pyweb%29/badge.svg
+
+CI status for the associated Ansible Playbook: |ci-status|
 
 For easy linking, I set up some aliases: https://go.chriswarrick.com/pyweb and https://go.chriswarrick.com/uwsgi-tut (powered by a Django web application, deployed with nginx and uWSGI!).
 
@@ -36,10 +40,12 @@ In order to deploy your web application, you need a server that gives you root a
 Your server should also run a modern Linux-based operating system. This guide was written and tested on:
 
 * Ubuntu 16.04 LTS, 18.04 LTS or newer
-* Debian 8 (jessie) or newer
-* Fedora 24 or newer (with SELinux enabled and disabled)
-* CentOS 7 (with SELinux enabled and disabled) — manual guide should also work on RHEL 7
+* Debian 9 (stretch) or newer
+* Fedora 29 or newer (with SELinux enabled and disabled)
+* CentOS 7 (with SELinux enabled and disabled) — manual guide should also work on RHEL 7. CentOS 8 does not have uWSGI packages in EPEL as of September 2019; if they become available, follow Fedora instructions after installing ``epel-release``.
 * Arch Linux
+
+Debian 8 (jessie), and Fedora 24 through 28 are not officially supported, even though they still probably work.
 
 Users of other Linux distributions (and perhaps other Unix flavors) can also follow this tutorial. This guide assumes ``systemd`` as your init system; if you are not using systemd, you will have to get your own daemon files somewhere else. In places where the instructions are split three-way, try coming up with your own, reading documentation and config files; the Arch Linux instructions are probably the closest to upstream (but not always).  Unfortunately, all Linux distributions have their own ideas when it comes to running and managing nginx and uWSGI.
 
@@ -50,7 +56,7 @@ Automate everything: Ansible Playbook
 
 .. class:: lead
 
-A Playbook_ that automates everything in this tutorial is available.
+A Playbook_ that automates everything in this tutorial is available. |ci-status|
 
 How to use
 ==========
@@ -81,35 +87,32 @@ Even if you are using the Playbook, you should still read this to find out what 
 Getting started
 ===============
 
-Start by installing virtualenv, nginx and uWSGI. I recommend using your operating system packages. For uWSGI, we need the ``logfile`` and ``python3`` plugins. (Arch Linux names the ``python3`` plugin ``python``; the ``logfile`` plugin may be built-in — check with your system repositories!). I’ll also install Git to clone the tutorial app, but it’s optional if your workflow does not involve git.
+Start by installing Python 3 (with venv), nginx and uWSGI. I recommend using your operating system packages. For uWSGI, we need the ``logfile`` and ``python3`` plugins. (Arch Linux names the ``python3`` plugin ``python``; the ``logfile`` plugin may be built-in — check with your system repositories!). I’ll also install Git to clone the tutorial app, but it’s optional if your workflow does not involve git.
 
 **Ubuntu, Debian:**
 
 .. code:: sh
 
-   apt install virtualenv python3 uwsgi uwsgi-emperor uwsgi-plugin-python3 nginx-full git
+   apt install python3 python3-venv uwsgi uwsgi-emperor uwsgi-plugin-python3 nginx-full git
 
 **Fedora:**
 
 .. code:: sh
 
-   dnf install python3-virtualenv uwsgi uwsgi-plugin-python3 uwsgi-logger-file nginx git
+   dnf install python3 uwsgi uwsgi-plugin-python3 uwsgi-logger-file nginx git
 
-**CentOS:**
+**CentOS 7:**
 
 .. code:: sh
 
    yum install epel-release
-   yum install python34 python34-pip uwsgi uwsgi-plugin-python3 uwsgi-logger-file nginx git wget
-   python3 -m pip install --user virtualenv
-
-We need to install virtualenv manually, because the ``python-virtualenv`` package is not compatible. It will be available to root only (user install).
+   yum install python36 uwsgi uwsgi-plugin-python36 uwsgi-logger-file nginx git wget
 
 **Arch Linux:**
 
 .. code:: sh
 
-   pacman -S python-virtualenv uwsgi uwsgi-plugin-python nginx git
+   pacman -S python uwsgi uwsgi-plugin-python nginx git
 
 Preparing your application
 ==========================
@@ -122,23 +125,14 @@ The app will be installed somewhere under the ``/srv`` directory, which is a gre
 
 If you don’t use Flask, this tutorial also has instructions for other web frameworks (Django, Pyramid, Bottle) in the configuration files; it should be adjustable to any other WSGI-compliant framework/script nevertheless.
 
-We’ll start by creating a virtualenv:
-
-**Ubuntu, Debian:**
+We’ll start by creating a virtual environment:
 
 .. code:: sh
 
    cd /srv
-   virtualenv -p /usr/bin/python3 myapp
+   python3 -m venv myapp
 
-**Fedora, CentOS, Arch Linux:**
-
-.. code:: sh
-
-   cd /srv
-   python3 -m virtualenv myapp
-
-(This tutorial assumes Python 3. Make sure you use the correct ``virtualenv`` command/argument. If you want to use Python 2.7, you’ll need to adjust your uWSGI configuration as well.)
+(This tutorial assumes Python 3. Python 2.7 is legacy software. If you want to use legacy software, you’ll need to use virtualenv and adjust your uWSGI configuration.)
 
 Now, we need to put our app there and install requirements. An example for the tutorial demo app:
 
@@ -148,7 +142,7 @@ Now, we need to put our app there and install requirements. An example for the t
    git clone https://github.com/Kwpolska/flask-demo-app appdata
    bin/pip install -r appdata/requirements.txt
 
-I’m storing my application data in the ``appdata`` subdirectory so that it doesn’t clutter the virtualenv (or vice versa).  You may also install the ``uwsgi`` package in the virtualenv, but it’s optional.
+I’m storing my application data in the ``appdata`` subdirectory so that it doesn’t clutter the virtual environment (or vice versa).  You may also install the ``uwsgi`` package in the virtual environment, but it’s optional.
 
 What this directory should be depends on your web framework.  For example, for a Django app, you should have an ``appdata/manage.py`` file (in other words, ``appdata`` is where your app structure starts).  I also assumed that the ``appdata`` folder should have a ``static`` subdirectory with all static files, including ``favicon.ico`` if you have one (we will add support for both in nginx).
 
@@ -213,8 +207,8 @@ The options are:
 
 * ``socket`` — the socket file that will be used by your application. It’s usually a file path (Unix domain socket). You could use a local TCP socket, but it’s not recommended.
 * ``chdir`` — the app directory.
-* ``binary-path`` — the uWSGI executable to use. Remove if you didn’t install the (optional) ``uwsgi`` package in your virtualenv.
-* ``virtualenv`` — the virtualenv for your application.
+* ``binary-path`` — the uWSGI executable to use. Remove if you didn’t install the (optional) ``uwsgi`` package in your virtual environment.
+* ``virtualenv`` — the virtual environment for your application.
 * ``module`` — the name of the module that houses your application, and the object that speaks the WSGI interface, separated by colons. This depends on your web framework (use the **Module name**):
 
   .. class:: table table-striped table-bordered
@@ -233,7 +227,7 @@ The options are:
 
 * ``uid`` and ``gid`` — the names of the user account to use for your server.  Use the same values as in the ``chown`` command above.
 * ``processes`` and ``threads`` — control the resources devoted to this application. Because this is a simple hello app, I used one process with one thread, but for a real app, you will probably need more (you need to see what works the best; there is no algorithm to decide). Also, remember that if you use multiple processes, they don’t share memory (you need a database to share data between them).
-* ``plugins`` — the list of uWSGI plugins to use. For Arch Linux, use ``plugins = python`` (the ``logfile`` plugin is always active).
+* ``plugins`` — the list of uWSGI plugins to use. For Arch Linux, use ``plugins = python`` (the ``logfile`` plugin is always active).  For CentOS, use ``plugins = python36``.
 * ``logger`` — the path to your app-specific logfile. (Other logging facilities are available, but this one is the easiest, especially for multiple applications on the same server)
 * ``env`` — environment variables to pass to your app. Useful for configuration, may be specified multiple times. Example for Django: ``env = DJANGO_SETTINGS_MODULE=project.settings``
 
