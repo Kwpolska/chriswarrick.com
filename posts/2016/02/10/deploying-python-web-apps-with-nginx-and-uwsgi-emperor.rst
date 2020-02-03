@@ -10,13 +10,13 @@
 .. guide_platform: Ubuntu, Debian, Fedora, CentOS, Arch Linux
 .. guide_topic: Python, web apps
 .. shortlink: pyweb
-.. updated: 2019-09-29 20:15:00+02:00
+.. updated: 2020-02-03 18:00:00+01:00
 
 You’ve just written a great Python web application. Now, you want to share it with the world. In order to do that, you need a server, and some software to do that for you.
 
 The following is a comprehensive guide on how to accomplish that, on multiple Linux-based operating systems, using nginx and uWSGI Emperor. It doesn’t force you to use any specific web framework — Flask, Django, Pyramid, Bottle will all work. Written for Ubuntu, Debian, Fedora, CentOS 7 and Arch Linux (should be helpful for other systems, too). Now with an Ansible Playbook.
 
-*Revision 6b (2019-09-29): Use venv instead of virtualenv; CentOS 7 has Python 3.6 now; CentOS 8 current-lack-of-support note; update supported versions list*
+*Revision 6c (2020-02-03): Reorganized module name table to use more readable cards; updated support list*
 
 .. TEASER_END
 
@@ -33,16 +33,16 @@ For easy linking, I set up some aliases: https://go.chriswarrick.com/pyweb and h
 Prerequisites
 ~~~~~~~~~~~~~
 
-In order to deploy your web application, you need a server that gives you root and ssh access — in other words, a VPS (or a dedicated server, or a datacenter lease…). If you’re looking for a great VPS service for a low price, I recommend `DigitalOcean`_ (reflink [#]_), which offers a $5/mo service [#]_. If you want to play along at home, without buying a VPS, you can create a virtual machine on your own, or use Vagrant with a Vagrant box for Fedora 30 (``fedora/30-cloud-base``).
+In order to deploy your web application, you need a server that gives you root and ssh access — in other words, a VPS (or a dedicated server, or a datacenter lease…). If you’re looking for a great VPS service for a low price, I recommend `DigitalOcean`_ (reflink [#]_), which offers a $5/mo service [#]_. If you want to play along at home, without buying a VPS, you can create a virtual machine on your own, or use Vagrant with a Vagrant box for Fedora 31 (``fedora/31-cloud-base``).
 
 .. _DigitalOcean: https://www.digitalocean.com/?refcode=7983689b2ecc
 
 Your server should also run a modern Linux-based operating system. This guide was written and tested on:
 
 * Ubuntu 16.04 LTS, 18.04 LTS or newer
-* Debian 9 (stretch) or newer
+* Debian 9 (stretch), 10 (buster) or newer
 * Fedora 29 or newer (with SELinux enabled and disabled)
-* CentOS 7 (with SELinux enabled and disabled) — manual guide should also work on RHEL 7. CentOS 8 does not have uWSGI packages in EPEL as of September 2019; if they become available, follow Fedora instructions after installing ``epel-release``.
+* CentOS 7 (with SELinux enabled and disabled) — manual guide should also work on RHEL 7. CentOS 8 does not have uWSGI packages in EPEL as of January 2020, but they should become available soon.
 * Arch Linux
 
 Debian 8 (jessie), and Fedora 24 through 28 are not officially supported, even though they still probably work.
@@ -209,21 +209,46 @@ The options are:
 * ``chdir`` — the app directory.
 * ``binary-path`` — the uWSGI executable to use. Remove if you didn’t install the (optional) ``uwsgi`` package in your virtual environment.
 * ``virtualenv`` — the virtual environment for your application.
-* ``module`` — the name of the module that houses your application, and the object that speaks the WSGI interface, separated by colons. This depends on your web framework (use the **Module name**):
+* ``module`` — the name of the module that houses your application, and the object that speaks the WSGI interface, separated by colons. This depends on your web framework:
 
-  .. class:: table table-striped table-bordered
+  .. raw:: html
 
-  +-----------+--------------+-------------+--------------------------+----------------------------------------------------------------------------------------+----------------------------------+----------------------------------------------------------------------------------------------+
-  | Framework | Package      | Callable    | Module name              | Package is…                                                                            | Callable is…                     | Caveats                                                                                      |
-  +===========+==============+=============+==========================+========================================================================================+==================================+==============================================================================================+
-  | Flask     | filename     | app         | filename:app             | module name (for a Python import)                                                      | Flask object                     | —                                                                                            |
-  +-----------+--------------+-------------+--------------------------+----------------------------------------------------------------------------------------+----------------------------------+----------------------------------------------------------------------------------------------+
-  | Django    | project.wsgi | application | project.wsgi:application | ``project`` is name of your project (directory with settings.py); ``wsgi`` is constant | constant                         | add an environment variable for settings: ``env = DJANGO_SETTINGS_MODULE=project.settings``  |
-  +-----------+--------------+-------------+--------------------------+----------------------------------------------------------------------------------------+----------------------------------+----------------------------------------------------------------------------------------------+
-  | Bottle    | filename     | app         | filename:app             | module name (for a Python import)                                                      | ``app = bottle.default_app()``   | —                                                                                            |
-  +-----------+--------------+-------------+--------------------------+----------------------------------------------------------------------------------------+----------------------------------+----------------------------------------------------------------------------------------------+
-  | Pyramid   | filename     | app         | filename:app             | module name (for a Python import)                                                      | ``app = config.make_wsgi_app()`` | make sure it’s **not** in an ``if __name__ == '__main__':`` block — the demo app does that!) |
-  +-----------+--------------+-------------+--------------------------+----------------------------------------------------------------------------------------+----------------------------------+----------------------------------------------------------------------------------------------+
+    <div class="table-responsive-lg">
+    <table class="table table-bordered">
+    <thead><tr>
+    <th style="width: 10%">Framework</th>
+    <th style="width: 30%">Flask, Bottle</th>
+    <th style="width: 30%">Django</th>
+    <th style="width: 30%">Pyramid</th>
+    </tr></thead>
+    <tbody>
+    <tr>
+    <th>Package</th>
+    <td>module where <code>app</code> is defined</td>
+    <td><code><em>project</em>.wsgi</code><br><span style="font-size: 0.9rem">(<code style="font-size: 0.9rem"><em>project</em></code> is the package with <code style="font-size: 0.9rem">settings.py</code>)</span></td>
+    <td>module where <code>app</code> is defined</td>
+    </tr>
+    <tr>
+    <th>Callable</th>
+    <td>Flask: <code>app</code> instance<br>Bottle: <code>app = bottle.default_app()</code></td>
+    <td><code>application</code></td>
+    <td><code>app = config.make_wsgi_app()</code></td>
+    </tr>
+    <tr class="table-active">
+    <th>Module</th>
+    <td><code style="font-size: 1.2rem"><em>package</em>:app</code></td>
+    <td><code style="font-size: 1.2rem"><em>project</em>.wsgi:application</code></td>
+    <td><code style="font-size: 1.2rem"><em>package</em>:app</code></td>
+    </tr>
+    <tr>
+    <th>Caveats</th>
+    <td>Make sure <code>app</code> is <strong>not</strong> in an <code style="font-size: 0.85rem">if __name__ == '__main__':</code> block</td>
+    <td>Add environment variable for settings:<br><code style="font-size: 0.7rem">env = DJANGO_SETTINGS_MODULE=<em>project</em>.settings</code></td>
+    <td>Make sure <code>app</code> is <strong>not</strong> in an <code style="font-size: 0.85rem">if __name__ == '__main__':</code> block (the demo quickstart does that!)</td>
+    </tr>
+    </tbody>
+    </table>
+    </div>
 
 * ``uid`` and ``gid`` — the names of the user account to use for your server.  Use the same values as in the ``chown`` command above.
 * ``processes`` and ``threads`` — control the resources devoted to this application. Because this is a simple hello app, I used one process with one thread, but for a real app, you will probably need more (you need to see what works the best; there is no algorithm to decide). Also, remember that if you use multiple processes, they don’t share memory (you need a database to share data between them).
@@ -399,3 +424,6 @@ Hopefully, everything works. If it doesn’t:
 .. [#] This reflink gives you $10 in credit, which is enough to run a server for up to two months without paying a thing. I earn $15.
 .. [#] For the cheapest plan. If you’re in the EU (and thus have to pay VAT), or want DO to handle your backups, it will cost you a little more.
 .. [#] This app does not use templates, but you should in any real project. This app is meant to be as simple as possible.
+
+.. role:: raw-role(raw)
+   :format: html
