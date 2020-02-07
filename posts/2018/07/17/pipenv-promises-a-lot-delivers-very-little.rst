@@ -493,7 +493,7 @@ when it comes to informing users what happened in each of the releases.
 
 Extra reading:
 
-* `Kenneth Reitz, A Letter to /r/python (with some notes about bipolar disorder) <https://journal.kennethreitz.org/entry/r-python>`_
+* `Kenneth Reitz, A Letter to /r/python (with some notes about bipolar disorder) <http://web.archive.org/web/20180717140106/https://journal.kennethreitz.org/entry/r-python>`_ (replaced with Wayback Machine link on 2020-02-07)
 * Reddit comment threads for the letter: `first <https://np.reddit.com/r/Python/comments/8kdfd6/kenneth_reitz_a_letter_to_rpython_with_some_notes/>`_ and `second <https://np.reddit.com/r/Python/comments/8kjv8x/a_letter_to_rpython_kenneth_reitzs_journal/>`_
 
 Conclusion

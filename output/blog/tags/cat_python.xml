@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chris Warrick (Posts about Python)</title><link>https://chriswarrick.com/</link><description></description><atom:link href="https://chriswarrick.com/blog/tags/cat_python.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Mon, 03 Feb 2020 17:00:13 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Python Hackery: merging signatures of two Python functions</title><link>https://chriswarrick.com/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;Today’s blog post is going to contain fairly advanced Python hackery. We’ll
+<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chris Warrick (Posts about Python)</title><link>https://chriswarrick.com/</link><description></description><atom:link href="https://chriswarrick.com/blog/tags/cat_python.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Fri, 07 Feb 2020 10:24:40 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Python Hackery: merging signatures of two Python functions</title><link>https://chriswarrick.com/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;Today’s blog post is going to contain fairly advanced Python hackery. We’ll
 take two functions — one is a wrapper for the other, but also adds some
 positional arguments.  And we’ll change the signature displayed everywhere from
 the uninformative &lt;tt class="docutils literal"&gt;f(new_arg, *args, **kwargs)&lt;/tt&gt; to something more
@@ -365,34 +365,38 @@ of people — benefit from it?&lt;/p&gt;
 &lt;div class="contents alert alert-primary topic" id="contents"&gt;
 &lt;p class="topic-title first"&gt;Contents&lt;/p&gt;
 &lt;ul class="simple"&gt;
-&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#officially-recommended-tool-or-how-we-got-here" id="id16"&gt;“Officially recommended tool”, or how we got here&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#what-pipenv-does" id="id17"&gt;What pipenv does&lt;/a&gt;&lt;ul&gt;
-&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#application-dependencies" id="id18"&gt;Application dependencies&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#running-scripts-badly" id="id19"&gt;Running scripts (badly)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#finishing-it-all-up" id="id20"&gt;Finishing it all up&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#officially-recommended-tool-or-how-we-got-here" id="id16"&gt;“Officially recommended tool”, or how we got here&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#what-pipenv-does" id="id17"&gt;What pipenv does&lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#application-dependencies" id="id18"&gt;Application dependencies&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#running-scripts-badly" id="id19"&gt;Running scripts (badly)&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#finishing-it-all-up" id="id20"&gt;Finishing it all up&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
-&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#what-pipenv-doesnt-do" id="id21"&gt;What pipenv doesn’t do&lt;/a&gt;&lt;ul&gt;
-&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#setup-py-source-distributions-and-wheels" id="id22"&gt;Setup.py, source distributions, and wheels&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#working-outside-of-the-project-root" id="id23"&gt;Working outside of the project root&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#nikola" id="id24"&gt;Nikola&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#what-pipenv-doesnt-do" id="id21"&gt;What pipenv doesn’t do&lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#setup-py-source-distributions-and-wheels" id="id22"&gt;Setup.py, source distributions, and wheels&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#working-outside-of-the-project-root" id="id23"&gt;Working outside of the project root&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#nikola" id="id24"&gt;Nikola&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
-&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#the-part-where-i-try-to-measure-times" id="id25"&gt;The part where I try to measure times&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#alternatives-and-new-tools" id="id26"&gt;Alternatives and new tools&lt;/a&gt;&lt;ul&gt;
-&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#hatch" id="id27"&gt;Hatch&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#poetry" id="id28"&gt;Poetry&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#pip-is-here-to-stay" id="id29"&gt;Pip is here to stay!&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#the-part-where-i-try-to-measure-times" id="id25"&gt;The part where I try to measure times&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#alternatives-and-new-tools" id="id26"&gt;Alternatives and new tools&lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#hatch" id="id27"&gt;Hatch&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#poetry" id="id28"&gt;Poetry&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#pip-is-here-to-stay" id="id29"&gt;Pip is here to stay!&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
-&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#the-break-neck-pace-of-pipenv" id="id30"&gt;The break-neck pace of Pipenv&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#conclusion" id="id31"&gt;Conclusion&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#the-break-neck-pace-of-pipenv" id="id30"&gt;The break-neck pace of Pipenv&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#conclusion" id="id31"&gt;Conclusion&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/div&gt;
 &lt;div class="section" id="officially-recommended-tool-or-how-we-got-here"&gt;
 &lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id16"&gt;“Officially recommended tool”, or how we got here&lt;/a&gt;&lt;/h2&gt;
 &lt;blockquote&gt;
-“Pipenv — the officially recommended Python packaging tool from Python.org, free (as in freedom).”&lt;/blockquote&gt;
+&lt;p&gt;“Pipenv — the officially recommended Python packaging tool from Python.org, free (as in freedom).”&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;Pipenv’s README used to have a version of the above line in their README for
 many months: it was added on  &lt;a class="reference external" href="https://github.com/pypa/pipenv/commit/6e06fc451767a57e6fccb828c74a1412f6cef687"&gt;2017-08-31&lt;/a&gt; and eventually disappeared on &lt;a class="reference external" href="https://github.com/pypa/pipenv/commit/47debed9a1c2a3649bef4d59a3f1cf01bf059522"&gt;2018-05-19&lt;/a&gt;. For a short while (2018-05-16), it was clarified (&lt;em&gt;managing application dependencies&lt;/em&gt;, and &lt;em&gt;PyPA&lt;/em&gt; instead of &lt;em&gt;Python.org&lt;/em&gt;), and for about 15 minutes, the tagline called Pipenv &lt;em&gt;the world’s worst&lt;/em&gt; or &lt;a class="reference external" href="https://github.com/pypa/pipenv/commit/6d77e4a0551528d5d72d81e8a15da4722ad82f26"&gt;something&lt;/a&gt; &lt;a class="reference external" href="https://github.com/pypa/pipenv/commit/1c956d37e6ad20babdb5021610b2ed2c9c4203f2"&gt;along&lt;/a&gt; &lt;a class="reference external" href="https://github.com/pypa/pipenv/commit/e3c72e167d21b921bd3bd89d4217b04628919bb2"&gt;these&lt;/a&gt; &lt;a class="reference external" href="https://github.com/pypa/pipenv/commit/fe78628903948013e8687d1a3be9fd4da2b6bd3d"&gt;lines&lt;/a&gt; (this coming from the maintainer).&lt;/p&gt;
 &lt;p&gt;The README tagline claimed that Pipenv is the be-all, end-all of Python
@@ -400,7 +404,7 @@ packaging. The problem is: it isn’t that. There are some use cases that benefi
 from Pipenv, but for many others, trying to use that tool will only lead to
 frustration. We will explore this issue later.&lt;/p&gt;
 &lt;p&gt;Another issue with this tagline was the &lt;em&gt;Python.org&lt;/em&gt; and &lt;em&gt;official&lt;/em&gt; parts. The
-thing that made it “official” was a &lt;a class="reference external" href="https://packaging.python.org/tutorials/managing-dependencies/"&gt;short tutorial&lt;/a&gt; &lt;a class="footnote-reference" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id12" id="id1"&gt;[1]&lt;/a&gt; on packaging.python.org,
+thing that made it “official” was a &lt;a class="reference external" href="https://packaging.python.org/tutorials/managing-dependencies/"&gt;short tutorial&lt;/a&gt; &lt;a class="footnote-reference brackets" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id12" id="id1"&gt;1&lt;/a&gt; on packaging.python.org,
 which is the PyPA’s packaging user guide. Also of note is the &lt;em&gt;Python.org&lt;/em&gt;
 domain used. It makes it sound as if Pipenv was endorsed by the Python core
 team. PyPA (Python Packaging Authority) is a separate organization — they are
@@ -421,13 +425,13 @@ Let’s learn what that term really means.&lt;/p&gt;
 &lt;div class="section" id="application-dependencies"&gt;
 &lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id18"&gt;Application dependencies&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;Here is an example use case for Pipenv:
-I’m working on a website based on Django.  I create &lt;tt class="docutils literal"&gt;~/git/website&lt;/tt&gt; and run
-&lt;tt class="docutils literal"&gt;pipenv install Django&lt;/tt&gt; in that directory.  Pipenv:&lt;/p&gt;
+I’m working on a website based on Django.  I create &lt;code class="docutils literal"&gt;~/git/website&lt;/code&gt; and run
+&lt;code class="docutils literal"&gt;pipenv install Django&lt;/code&gt; in that directory.  Pipenv:&lt;/p&gt;
 &lt;ul class="simple"&gt;
-&lt;li&gt;automatically creates a virtualenv somewhere in my home directory&lt;/li&gt;
-&lt;li&gt;writes a Pipfile, which lists Django as my dependency&lt;/li&gt;
-&lt;li&gt;installs Django using pip&lt;/li&gt;
-&lt;li&gt;proceeds to write &lt;tt class="docutils literal"&gt;Pipfile.lock&lt;/tt&gt;, which stores the exact version and source file hash &lt;a class="footnote-reference" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id13" id="id5"&gt;[2]&lt;/a&gt; of each package installed (including &lt;tt class="docutils literal"&gt;pytz&lt;/tt&gt;, Django’s dependency).&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;automatically creates a virtualenv somewhere in my home directory&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;writes a Pipfile, which lists Django as my dependency&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;installs Django using pip&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;proceeds to write &lt;code class="docutils literal"&gt;Pipfile.lock&lt;/code&gt;, which stores the exact version and source file hash &lt;a class="footnote-reference brackets" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id13" id="id5"&gt;2&lt;/a&gt; of each package installed (including &lt;code class="docutils literal"&gt;pytz&lt;/code&gt;, Django’s dependency).&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;The last part of the process was the most time consuming. At one point, while
 locking the dependency versions, Pipenv hangs for 46 seconds. This is one of
@@ -438,51 +442,51 @@ could easily discourage users from using a package.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="running-scripts-badly"&gt;
 &lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id19"&gt;Running scripts (badly)&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;But let’s continue with our workflow. &lt;tt class="docutils literal"&gt;pipenv run &lt;span class="pre"&gt;django-admin&lt;/span&gt; startproject
-foobanizer&lt;/tt&gt; is what I must use now, which is rather unwieldy to type, and
-requires running pipenv even for the smallest things. (The &lt;tt class="docutils literal"&gt;manage.py&lt;/tt&gt; script
-has &lt;tt class="docutils literal"&gt;/usr/bin/env python&lt;/tt&gt; in its shebang.) I can run &lt;tt class="docutils literal"&gt;pipenv shell&lt;/tt&gt; to get
-a new shell which runs the &lt;tt class="docutils literal"&gt;activate&lt;/tt&gt; script by default, giving you the worst
+&lt;p&gt;But let’s continue with our workflow. &lt;code class="docutils literal"&gt;pipenv run &lt;span class="pre"&gt;django-admin&lt;/span&gt; startproject
+foobanizer&lt;/code&gt; is what I must use now, which is rather unwieldy to type, and
+requires running pipenv even for the smallest things. (The &lt;code class="docutils literal"&gt;manage.py&lt;/code&gt; script
+has &lt;code class="docutils literal"&gt;/usr/bin/env python&lt;/code&gt; in its shebang.) I can run &lt;code class="docutils literal"&gt;pipenv shell&lt;/code&gt; to get
+a new shell which runs the &lt;code class="docutils literal"&gt;activate&lt;/code&gt; script by default, giving you the worst
 of both worlds when it comes to virtualenv activation: the unwieldiness of a
 new shell, and the activate script, which the proponents of the shell spawning
 dislike.&lt;/p&gt;
-&lt;p&gt;Using &lt;tt class="docutils literal"&gt;pipenv shell&lt;/tt&gt; means spawning a new subshell, executing the shell
-startup scripts (eg. &lt;tt class="docutils literal"&gt;.bashrc&lt;/tt&gt;), and requiring you to exit with &lt;tt class="docutils literal"&gt;exit&lt;/tt&gt; or
-^D. If you type &lt;tt class="docutils literal"&gt;deactivate&lt;/tt&gt;, you are working with an extra shell, but now
-outside of the virtualenv. Or you can use the &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;--fancy&lt;/span&gt;&lt;/tt&gt; mode that manipulates
-&lt;tt class="docutils literal"&gt;$PATH&lt;/tt&gt; before launching the subshell, but it requires a specific shell
-configuration, in which &lt;tt class="docutils literal"&gt;$PATH&lt;/tt&gt; is not overridden in non-login shells — and
+&lt;p&gt;Using &lt;code class="docutils literal"&gt;pipenv shell&lt;/code&gt; means spawning a new subshell, executing the shell
+startup scripts (eg. &lt;code class="docutils literal"&gt;.bashrc&lt;/code&gt;), and requiring you to exit with &lt;code class="docutils literal"&gt;exit&lt;/code&gt; or
+^D. If you type &lt;code class="docutils literal"&gt;deactivate&lt;/code&gt;, you are working with an extra shell, but now
+outside of the virtualenv. Or you can use the &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;--fancy&lt;/span&gt;&lt;/code&gt; mode that manipulates
+&lt;code class="docutils literal"&gt;$PATH&lt;/code&gt; before launching the subshell, but it requires a specific shell
+configuration, in which &lt;code class="docutils literal"&gt;$PATH&lt;/code&gt; is not overridden in non-login shells — and
 also often changing the config of your terminal emulator to run a login shell,
 as many of the Linux terminals don’t do it.&lt;/p&gt;
 &lt;p&gt;Now, why does all this happen? Because a command cannot manipulate the
 environment of the shell it spawns. This means that Pipenv must pretend what it
 does is a reasonable thing instead of a workaround. This can be solved with
-manual activation using &lt;tt class="docutils literal"&gt;source $(pipenv &lt;span class="pre"&gt;--venv)/bin/activate&lt;/span&gt;&lt;/tt&gt; (can be made
+manual activation using &lt;code class="docutils literal"&gt;source $(pipenv &lt;span class="pre"&gt;--venv)/bin/activate&lt;/span&gt;&lt;/code&gt; (can be made
 into a neat alias), or shell wrappers (similar to what virtualenvwrapper does).&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="finishing-it-all-up"&gt;
 &lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id20"&gt;Finishing it all up&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;Anyway, I want a blog on my site. I want to write them in Markdown syntax, so I
-run &lt;tt class="docutils literal"&gt;pipenv install Markdown&lt;/tt&gt;, and a few long seconds later, it’s added to
-both Pipfiles.  Another thing I can do is &lt;tt class="docutils literal"&gt;pipenv install &lt;span class="pre"&gt;--dev&lt;/span&gt; ipython&lt;/tt&gt; and
+run &lt;code class="docutils literal"&gt;pipenv install Markdown&lt;/code&gt;, and a few long seconds later, it’s added to
+both Pipfiles.  Another thing I can do is &lt;code class="docutils literal"&gt;pipenv install &lt;span class="pre"&gt;--dev&lt;/span&gt; ipython&lt;/code&gt; and
 get a handy shell for tinkering, but it will be marked as a development
 dependency — so, not installed in production. That last part is an important
 advantage of using Pipenv.&lt;/p&gt;
 &lt;p&gt;When I’m done working on my website, I commit both Pipfiles to my git
 repository, and push it to the remote server. Then I can clone it to, say,
-&lt;tt class="docutils literal"&gt;/srv/website&lt;/tt&gt;. Now I can just &lt;tt class="docutils literal"&gt;pipenv install&lt;/tt&gt; to get all the production
+&lt;code class="docutils literal"&gt;/srv/website&lt;/code&gt;. Now I can just &lt;code class="docutils literal"&gt;pipenv install&lt;/code&gt; to get all the production
 packages installed (but not the development ones — Django, pytz, Markdown will
 be installed, but IPython and all its million dependencies won’t). There’s just
 one caveat: by default, the virtualenv will still be created in the current
 user’s home directory. This is a problem in this case, since it needs to be
 accessible by &lt;a class="reference external" href="https://chriswarrick.com/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/"&gt;nginx and uWSGI&lt;/a&gt;, which do not have access to my (or root’s)
 home directory, and don’t have a home directory of their own.  This can be
-solved with &lt;tt class="docutils literal"&gt;export PIPENV_VENV_IN_PROJECT=1&lt;/tt&gt;. But note that I will now need
-to export this environment variable every time I work with the app in &lt;tt class="docutils literal"&gt;/srv&lt;/tt&gt;
-via Pipenv. The tool supports loading &lt;tt class="docutils literal"&gt;.env&lt;/tt&gt; files, &lt;strong&gt;but&lt;/strong&gt; only when
-running &lt;tt class="docutils literal"&gt;pipenv shell&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;pipenv run&lt;/tt&gt;. You can’t use it to configure
+solved with &lt;code class="docutils literal"&gt;export PIPENV_VENV_IN_PROJECT=1&lt;/code&gt;. But note that I will now need
+to export this environment variable every time I work with the app in &lt;code class="docutils literal"&gt;/srv&lt;/code&gt;
+via Pipenv. The tool supports loading &lt;code class="docutils literal"&gt;.env&lt;/code&gt; files, &lt;strong&gt;but&lt;/strong&gt; only when
+running &lt;code class="docutils literal"&gt;pipenv shell&lt;/code&gt; and &lt;code class="docutils literal"&gt;pipenv run&lt;/code&gt;. You can’t use it to configure
 Pipenv. And to run my app with nginx/uWSGI, I will need to know the exact virtualenv
-path anyway, since I can’t use &lt;tt class="docutils literal"&gt;pipenv run&lt;/tt&gt; as part of uWSGI configuration.&lt;/p&gt;
+path anyway, since I can’t use &lt;code class="docutils literal"&gt;pipenv run&lt;/code&gt; as part of uWSGI configuration.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class="section" id="what-pipenv-doesnt-do"&gt;
@@ -495,47 +499,47 @@ anything else, and you end up facing multiple obstacles.&lt;/p&gt;
 &lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id22"&gt;Setup.py, source distributions, and wheels&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;Pipenv only concerns itself with managing dependencies. &lt;strong&gt;It isn’t a packaging
 tool.&lt;/strong&gt; If you want your thing up on PyPI, Pipenv won’t help you with anything.
-You still need to write a &lt;tt class="docutils literal"&gt;setup.py&lt;/tt&gt; with &lt;tt class="docutils literal"&gt;install_requires&lt;/tt&gt;, because the
+You still need to write a &lt;code class="docutils literal"&gt;setup.py&lt;/code&gt; with &lt;code class="docutils literal"&gt;install_requires&lt;/code&gt;, because the
 Pipfile format only specifies the dependencies and runtime requirements (Python
 version), there is no place in it for the package name, and Pipenv does not
 mandate/expect you to install your project. It can come in handy to manage the
-development environment (as a &lt;tt class="docutils literal"&gt;requirements.txt&lt;/tt&gt; replacement, or something
-used to write said file), but if your project has a &lt;tt class="docutils literal"&gt;setup.py&lt;/tt&gt;, you still
-need to manually manage &lt;tt class="docutils literal"&gt;install_requires&lt;/tt&gt;. Pipenv can’t create wheels on its
-own either. And &lt;tt class="docutils literal"&gt;pip freeze&lt;/tt&gt; is going to be a lot faster than Pipenv ever
+development environment (as a &lt;code class="docutils literal"&gt;requirements.txt&lt;/code&gt; replacement, or something
+used to write said file), but if your project has a &lt;code class="docutils literal"&gt;setup.py&lt;/code&gt;, you still
+need to manually manage &lt;code class="docutils literal"&gt;install_requires&lt;/code&gt;. Pipenv can’t create wheels on its
+own either. And &lt;code class="docutils literal"&gt;pip freeze&lt;/code&gt; is going to be a lot faster than Pipenv ever
 will be.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="working-outside-of-the-project-root"&gt;
 &lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id23"&gt;Working outside of the project root&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;Another issue with Pipenv is the use of the working directory to select
-the virtual environment. &lt;a class="footnote-reference" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id14" id="id6"&gt;[3]&lt;/a&gt; Let’s say I’m a library author.  A user of my &lt;tt class="docutils literal"&gt;foobar&lt;/tt&gt;
-library has just reported a bug and attached a &lt;tt class="docutils literal"&gt;repro.py&lt;/tt&gt; file that lets me
-reproduce the issue. I download that file to &lt;tt class="docutils literal"&gt;~/Downloads&lt;/tt&gt; on my filesystem.
+the virtual environment. &lt;a class="footnote-reference brackets" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id14" id="id6"&gt;3&lt;/a&gt; Let’s say I’m a library author.  A user of my &lt;code class="docutils literal"&gt;foobar&lt;/code&gt;
+library has just reported a bug and attached a &lt;code class="docutils literal"&gt;repro.py&lt;/code&gt; file that lets me
+reproduce the issue. I download that file to &lt;code class="docutils literal"&gt;~/Downloads&lt;/code&gt; on my filesystem.
 With plain old virtualenv, I can easily confirm the reproduction in a spare
 shell with:&lt;/p&gt;
-&lt;pre class="code shell"&gt;&lt;a name="rest_code_bab38ab8dc7046f6a9ee8f17c369f167-1"&gt;&lt;/a&gt;$ ~/virtualenvs/foobar/bin/python ~/Downloads/repro.py
-&lt;/pre&gt;&lt;p&gt;And then I can launch my fancy IDE to fix the bug.  I don’t have to &lt;tt class="docutils literal"&gt;cd&lt;/tt&gt; into
+&lt;pre class="code shell"&gt;&lt;a name="rest_code_740033e42f3f4fbca5a5c7cd282160cb-1"&gt;&lt;/a&gt;$ ~/virtualenvs/foobar/bin/python ~/Downloads/repro.py
+&lt;/pre&gt;&lt;p&gt;And then I can launch my fancy IDE to fix the bug.  I don’t have to &lt;code class="docutils literal"&gt;cd&lt;/code&gt; into
 the project. But with Pipenv, I can’t really do that.  If I put the virtualenv
-in &lt;tt class="docutils literal"&gt;.venv&lt;/tt&gt; with the command line option, I can type
-&lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;~/git/foobar/.venv/bin/python&lt;/span&gt; ~/Downloads/repro.py&lt;/tt&gt;. If I use the
+in &lt;code class="docutils literal"&gt;.venv&lt;/code&gt; with the command line option, I can type
+&lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;~/git/foobar/.venv/bin/python&lt;/span&gt; ~/Downloads/repro.py&lt;/code&gt;. If I use the
 centralized directory + hashes thing, Tab completion becomes mandatory, if I
 haven’t memorized the hash.&lt;/p&gt;
-&lt;pre class="code shell"&gt;&lt;a name="rest_code_13f017b000544eb1ac10a48650f6b0aa-1"&gt;&lt;/a&gt;$ &lt;span class="nb"&gt;cd&lt;/span&gt; ~/git/foobar
-&lt;a name="rest_code_13f017b000544eb1ac10a48650f6b0aa-2"&gt;&lt;/a&gt;$ pipenv run python ~/Downloads/repro.py
-&lt;/pre&gt;&lt;p&gt;What if I had two &lt;tt class="docutils literal"&gt;.py&lt;/tt&gt; files, or &lt;tt class="docutils literal"&gt;repro.py&lt;/tt&gt; otherwise depended on being in
+&lt;pre class="code shell"&gt;&lt;a name="rest_code_99a484ac55db4a90b53ad0ad9485e8ef-1"&gt;&lt;/a&gt;$ &lt;span class="nb"&gt;cd&lt;/span&gt; ~/git/foobar
+&lt;a name="rest_code_99a484ac55db4a90b53ad0ad9485e8ef-2"&gt;&lt;/a&gt;$ pipenv run python ~/Downloads/repro.py
+&lt;/pre&gt;&lt;p&gt;What if I had two &lt;code class="docutils literal"&gt;.py&lt;/code&gt; files, or &lt;code class="docutils literal"&gt;repro.py&lt;/code&gt; otherwise depended on being in
 the current working directory?&lt;/p&gt;
-&lt;pre class="code shell"&gt;&lt;a name="rest_code_7e5ea6067af24b858ddfe5234e5b1579-1"&gt;&lt;/a&gt;$ &lt;span class="nb"&gt;cd&lt;/span&gt; ~/git/foobar
-&lt;a name="rest_code_7e5ea6067af24b858ddfe5234e5b1579-2"&gt;&lt;/a&gt;$ pipenv shell
-&lt;a name="rest_code_7e5ea6067af24b858ddfe5234e5b1579-3"&gt;&lt;/a&gt;&lt;span class="o"&gt;(&lt;/span&gt;foobar-Mwd1l2m9&lt;span class="o"&gt;)&lt;/span&gt;$ &lt;span class="nb"&gt;cd&lt;/span&gt; ~/Downloads
-&lt;a name="rest_code_7e5ea6067af24b858ddfe5234e5b1579-4"&gt;&lt;/a&gt;&lt;span class="o"&gt;(&lt;/span&gt;foobar-Mwd1l2m9&lt;span class="o"&gt;)&lt;/span&gt;$ python repro.py
-&lt;a name="rest_code_7e5ea6067af24b858ddfe5234e5b1579-5"&gt;&lt;/a&gt;&lt;span class="o"&gt;(&lt;/span&gt;foobar-Mwd1l2m9&lt;span class="o"&gt;)&lt;/span&gt;$ &lt;span class="nb"&gt;exit&lt;/span&gt;  &lt;span class="c1"&gt;# (not deactivate!)&lt;/span&gt;
+&lt;pre class="code shell"&gt;&lt;a name="rest_code_69e68b316fda418980de9f0ea4610ca1-1"&gt;&lt;/a&gt;$ &lt;span class="nb"&gt;cd&lt;/span&gt; ~/git/foobar
+&lt;a name="rest_code_69e68b316fda418980de9f0ea4610ca1-2"&gt;&lt;/a&gt;$ pipenv shell
+&lt;a name="rest_code_69e68b316fda418980de9f0ea4610ca1-3"&gt;&lt;/a&gt;&lt;span class="o"&gt;(&lt;/span&gt;foobar-Mwd1l2m9&lt;span class="o"&gt;)&lt;/span&gt;$ &lt;span class="nb"&gt;cd&lt;/span&gt; ~/Downloads
+&lt;a name="rest_code_69e68b316fda418980de9f0ea4610ca1-4"&gt;&lt;/a&gt;&lt;span class="o"&gt;(&lt;/span&gt;foobar-Mwd1l2m9&lt;span class="o"&gt;)&lt;/span&gt;$ python repro.py
+&lt;a name="rest_code_69e68b316fda418980de9f0ea4610ca1-5"&gt;&lt;/a&gt;&lt;span class="o"&gt;(&lt;/span&gt;foobar-Mwd1l2m9&lt;span class="o"&gt;)&lt;/span&gt;$ &lt;span class="nb"&gt;exit&lt;/span&gt;  &lt;span class="c1"&gt;# (not deactivate!)&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;&lt;strong&gt;This is becoming ugly fairly quickly.&lt;/strong&gt; Also, with virtualenvwrapper, I can
 do this:&lt;/p&gt;
-&lt;pre class="code shell"&gt;&lt;a name="rest_code_84a346e7087c4a16b52b5817c47d6403-1"&gt;&lt;/a&gt;$ &lt;span class="nb"&gt;cd&lt;/span&gt; ~/Downloads
-&lt;a name="rest_code_84a346e7087c4a16b52b5817c47d6403-2"&gt;&lt;/a&gt;$ workon foobar
-&lt;a name="rest_code_84a346e7087c4a16b52b5817c47d6403-3"&gt;&lt;/a&gt;&lt;span class="o"&gt;(&lt;/span&gt;foobar&lt;span class="o"&gt;)&lt;/span&gt;$ python repro.py
-&lt;a name="rest_code_84a346e7087c4a16b52b5817c47d6403-4"&gt;&lt;/a&gt;&lt;span class="o"&gt;(&lt;/span&gt;foobar&lt;span class="o"&gt;)&lt;/span&gt;$ deactivate
-&lt;/pre&gt;&lt;p&gt;And let’s not forget that Pipenv doesn’t help me to write a &lt;tt class="docutils literal"&gt;setup.py&lt;/tt&gt;,
+&lt;pre class="code shell"&gt;&lt;a name="rest_code_0f0cfd79b88d41b1b22eb2f2561e3bed-1"&gt;&lt;/a&gt;$ &lt;span class="nb"&gt;cd&lt;/span&gt; ~/Downloads
+&lt;a name="rest_code_0f0cfd79b88d41b1b22eb2f2561e3bed-2"&gt;&lt;/a&gt;$ workon foobar
+&lt;a name="rest_code_0f0cfd79b88d41b1b22eb2f2561e3bed-3"&gt;&lt;/a&gt;&lt;span class="o"&gt;(&lt;/span&gt;foobar&lt;span class="o"&gt;)&lt;/span&gt;$ python repro.py
+&lt;a name="rest_code_0f0cfd79b88d41b1b22eb2f2561e3bed-4"&gt;&lt;/a&gt;&lt;span class="o"&gt;(&lt;/span&gt;foobar&lt;span class="o"&gt;)&lt;/span&gt;$ deactivate
+&lt;/pre&gt;&lt;p&gt;And let’s not forget that Pipenv doesn’t help me to write a &lt;code class="docutils literal"&gt;setup.py&lt;/code&gt;,
 distribute code, or manage releases.  It just manages dependencies.  And it
 does it pretty badly.&lt;/p&gt;
 &lt;/div&gt;
@@ -544,24 +548,24 @@ does it pretty badly.&lt;/p&gt;
 &lt;p&gt;I’m a co-maintainer of a static site generator, &lt;a class="reference external" href="https://getnikola.com"&gt;Nikola&lt;/a&gt;.  As part of this, I have the following places where
 I need to run Nikola:&lt;/p&gt;
 &lt;ul class="simple"&gt;
-&lt;li&gt;&lt;tt class="docutils literal"&gt;~/git/nikola&lt;/tt&gt;&lt;/li&gt;
-&lt;li&gt;&lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;~/git/nikola-site&lt;/span&gt;&lt;/tt&gt;&lt;/li&gt;
-&lt;li&gt;&lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;~/git/nikola-plugins&lt;/span&gt;&lt;/tt&gt;&lt;/li&gt;
-&lt;li&gt;&lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;~/git/nikola-themes&lt;/span&gt;&lt;/tt&gt;&lt;/li&gt;
-&lt;li&gt;&lt;tt class="docutils literal"&gt;~/website&lt;/tt&gt; (this blog)&lt;/li&gt;
-&lt;li&gt;&lt;tt class="docutils literal"&gt;/Volumes/RAMDisk/n&lt;/tt&gt; (demo site, used for testing and created when needed, on a &lt;a class="reference external" href="https://en.wikipedia.org/wiki/RAM_drive"&gt;RAM disk&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code class="docutils literal"&gt;~/git/nikola&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;~/git/nikola-site&lt;/span&gt;&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;~/git/nikola-plugins&lt;/span&gt;&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;~/git/nikola-themes&lt;/span&gt;&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code class="docutils literal"&gt;~/website&lt;/code&gt; (this blog)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code class="docutils literal"&gt;/Volumes/RAMDisk/n&lt;/code&gt; (demo site, used for testing and created when needed, on a &lt;a class="reference external" href="https://en.wikipedia.org/wiki/RAM_drive"&gt;RAM disk&lt;/a&gt;)&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;That list is long.  End users of Nikola probably don’t have a list that long,
 but they might just have more than one Nikola site.  For me, and for the
 aforementioned users, Pipenv does not work.  To use Pipenv, all those
 repositories would need to live in one directory. I would also need to have a
-&lt;em&gt;separate&lt;/em&gt; Pipenv environment for &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;nikola-users&lt;/span&gt;&lt;/tt&gt;, because that needs Django.
-Moreover, the Pipfile would have to be symlinked from &lt;tt class="docutils literal"&gt;~/git/nikola&lt;/tt&gt; if we
-were to make use of those in the project.  So, I would have a &lt;tt class="docutils literal"&gt;~/nikola&lt;/tt&gt;
+&lt;em&gt;separate&lt;/em&gt; Pipenv environment for &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;nikola-users&lt;/span&gt;&lt;/code&gt;, because that needs Django.
+Moreover, the Pipfile would have to be symlinked from &lt;code class="docutils literal"&gt;~/git/nikola&lt;/code&gt; if we
+were to make use of those in the project.  So, I would have a &lt;code class="docutils literal"&gt;~/nikola&lt;/code&gt;
 directory just to make Pipenv happy, do testing/bug reproduction on a SSD (and
 wear it out faster), and so on… Well, I could also use the virtualenv directly.
 But in that case, Pipenv loses its usefulness, and makes my workflow more
-complicated. I can’t use &lt;tt class="docutils literal"&gt;virtualenvwrapper&lt;/tt&gt;, because I would need to hack a
+complicated. I can’t use &lt;code class="docutils literal"&gt;virtualenvwrapper&lt;/code&gt;, because I would need to hack a
 fuzzy matching system onto it, or memorize the random string appended to my
 virtualenv name.  All because Pipenv relies on the current directory too much.&lt;/p&gt;
 &lt;p&gt;Nikola end users who want to use Pipenv will also have a specific directory
@@ -577,25 +581,25 @@ contributors.&lt;/p&gt;
 &lt;p&gt;Pipenv is famous for being slow.  But how slow is it really?
 I put it to the test.  I used two test environments:&lt;/p&gt;
 &lt;ul class="simple"&gt;
-&lt;li&gt;Remote: a DigitalOcean VPS, the cheapest option (1 vCPU), Python 3.6/Fedora
-28, in Frankfurt&lt;/li&gt;
-&lt;li&gt;Local: my 2015 13” MacBook Pro (base model), Python 3.7, on a rather slow
+&lt;li&gt;&lt;p&gt;Remote: a DigitalOcean VPS, the cheapest option (1 vCPU), Python 3.6/Fedora
+28, in Frankfurt&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Local: my 2015 13” MacBook Pro (base model), Python 3.7, on a rather slow
 Internet connection (10 Mbps on a good day, and the test was not performed on
-one of them)&lt;/li&gt;
+one of them)&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;Both were runninng Pipenv 2018.7.1, installed from pip.&lt;/p&gt;
 &lt;p&gt;And with the following cache setups:&lt;/p&gt;
 &lt;ul class="simple"&gt;
-&lt;li&gt;Removed: &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;~/.cache/pipenv&lt;/span&gt;&lt;/tt&gt; removed&lt;/li&gt;
-&lt;li&gt;Partial: &lt;tt class="docutils literal"&gt;rm &lt;span class="pre"&gt;-rf&lt;/span&gt; &lt;span class="pre"&gt;~/.cache/pipenv/depcache-py*.json&lt;/span&gt; &lt;span class="pre"&gt;~/.cache/pipenv/hash-cache/&lt;/span&gt;&lt;/tt&gt;&lt;/li&gt;
-&lt;li&gt;Kept: no changes done from previous run&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Removed: &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;~/.cache/pipenv&lt;/span&gt;&lt;/code&gt; removed&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Partial: &lt;code class="docutils literal"&gt;rm &lt;span class="pre"&gt;-rf&lt;/span&gt; &lt;span class="pre"&gt;~/.cache/pipenv/depcache-py*.json&lt;/span&gt; &lt;span class="pre"&gt;~/.cache/pipenv/hash-cache/&lt;/span&gt;&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Kept: no changes done from previous run&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;Well, turns out Pipenv likes doing strange things with caching and locking.  A
 look at the Activity Monitor hinted that there is network activity going on
 when Pipenv displays its &lt;em&gt;Locking [packages] dependencies...&lt;/em&gt; line and
 hangs. Now, the docs don’t tell you that. The most atrocious example was a
-local Nikola install that was done in two runs: the first &lt;tt class="docutils literal"&gt;pipenv install
-Nikola&lt;/tt&gt; run was interrupted &lt;a class="footnote-reference" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id15" id="id8"&gt;[4]&lt;/a&gt; right after it was done installing packages,
+local Nikola install that was done in two runs: the first &lt;code class="docutils literal"&gt;pipenv install
+Nikola&lt;/code&gt; run was interrupted &lt;a class="footnote-reference brackets" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id15" id="id8"&gt;4&lt;/a&gt; right after it was done installing packages,
 so the cache had all the necessary wheels in it. The install took 10 minutes
 and 7 seconds, 9:50 of which were taken by locking dependencies and installing
 the locked dependencies — so, roughly nine and a half minutes were spent
@@ -606,281 +610,281 @@ time of pipenv executon. The second is the long wait for pipenv to do its
 “main” job: locking dependencies and installing them. The timing starts when
 pipenv starts locking dependencies and ends when the prompt appears. The third
 item is pipenv’s reported installation time.  So, pipenv install ⊇ locking/installing ⊇ Pipfile.lock install.)&lt;/p&gt;
-&lt;table border="1" class="table table-striped table-bordered docutils"&gt;
+&lt;table class="table table-striped table-bordered"&gt;
 &lt;colgroup&gt;
-&lt;col width="4%"&gt;
-&lt;col width="26%"&gt;
-&lt;col width="10%"&gt;
-&lt;col width="10%"&gt;
-&lt;col width="21%"&gt;
-&lt;col width="7%"&gt;
-&lt;col width="7%"&gt;
-&lt;col width="7%"&gt;
-&lt;col width="7%"&gt;
+&lt;col style="width: 4%"&gt;
+&lt;col style="width: 26%"&gt;
+&lt;col style="width: 10%"&gt;
+&lt;col style="width: 10%"&gt;
+&lt;col style="width: 21%"&gt;
+&lt;col style="width: 7%"&gt;
+&lt;col style="width: 7%"&gt;
+&lt;col style="width: 7%"&gt;
+&lt;col style="width: 7%"&gt;
 &lt;/colgroup&gt;
-&lt;thead valign="bottom"&gt;
-&lt;tr&gt;&lt;th class="head" rowspan="2"&gt;Task&lt;/th&gt;
-&lt;th class="head" rowspan="2"&gt;Action&lt;/th&gt;
-&lt;th class="head" rowspan="2"&gt;Measurement
-method&lt;/th&gt;
-&lt;th class="head" rowspan="2"&gt;Environment&lt;/th&gt;
-&lt;th class="head" rowspan="2"&gt;Cache&lt;/th&gt;
-&lt;th class="head" colspan="4"&gt;Times in seconds&lt;/th&gt;
+&lt;thead&gt;
+&lt;tr&gt;&lt;th class="head" rowspan="2"&gt;&lt;p&gt;Task&lt;/p&gt;&lt;/th&gt;
+&lt;th class="head" rowspan="2"&gt;&lt;p&gt;Action&lt;/p&gt;&lt;/th&gt;
+&lt;th class="head" rowspan="2"&gt;&lt;p&gt;Measurement
+method&lt;/p&gt;&lt;/th&gt;
+&lt;th class="head" rowspan="2"&gt;&lt;p&gt;Environment&lt;/p&gt;&lt;/th&gt;
+&lt;th class="head" rowspan="2"&gt;&lt;p&gt;Cache&lt;/p&gt;&lt;/th&gt;
+&lt;th class="head" colspan="4"&gt;&lt;p&gt;Times in seconds&lt;/p&gt;&lt;/th&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;th class="head"&gt;Attempt 1&lt;/th&gt;
-&lt;th class="head"&gt;Attempt 2&lt;/th&gt;
-&lt;th class="head"&gt;Attempt 3&lt;/th&gt;
-&lt;th class="head"&gt;Average&lt;/th&gt;
+&lt;tr&gt;&lt;th class="head"&gt;&lt;p&gt;Attempt 1&lt;/p&gt;&lt;/th&gt;
+&lt;th class="head"&gt;&lt;p&gt;Attempt 2&lt;/p&gt;&lt;/th&gt;
+&lt;th class="head"&gt;&lt;p&gt;Attempt 3&lt;/p&gt;&lt;/th&gt;
+&lt;th class="head"&gt;&lt;p&gt;Average&lt;/p&gt;&lt;/th&gt;
 &lt;/tr&gt;
 &lt;/thead&gt;
-&lt;tbody valign="top"&gt;
-&lt;tr&gt;&lt;td&gt;1&lt;/td&gt;
-&lt;td&gt;virtualenv&lt;/td&gt;
-&lt;td&gt;&lt;tt class="docutils literal"&gt;time&lt;/tt&gt;&lt;/td&gt;
-&lt;td&gt;Remote&lt;/td&gt;
-&lt;td&gt;(not applicable)&lt;/td&gt;
-&lt;td&gt;3.911&lt;/td&gt;
-&lt;td&gt;4.052&lt;/td&gt;
-&lt;td&gt;3.914&lt;/td&gt;
-&lt;td&gt;3.959&lt;/td&gt;
+&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;&lt;p&gt;1&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;virtualenv&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;&lt;code class="docutils literal"&gt;time&lt;/code&gt;&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;Remote&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;(not applicable)&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;3.911&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;4.052&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;3.914&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;3.959&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;2&lt;/td&gt;
-&lt;td&gt;pip install Nikola&lt;/td&gt;
-&lt;td&gt;&lt;tt class="docutils literal"&gt;time&lt;/tt&gt;&lt;/td&gt;
-&lt;td&gt;Remote&lt;/td&gt;
-&lt;td&gt;Removed&lt;/td&gt;
-&lt;td&gt;11.562&lt;/td&gt;
-&lt;td&gt;11.943&lt;/td&gt;
-&lt;td&gt;11.773&lt;/td&gt;
-&lt;td&gt;11.759&lt;/td&gt;
+&lt;tr&gt;&lt;td&gt;&lt;p&gt;2&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;pip install Nikola&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;&lt;code class="docutils literal"&gt;time&lt;/code&gt;&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;Remote&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;Removed&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;11.562&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;11.943&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;11.773&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;11.759&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;3&lt;/td&gt;
-&lt;td&gt;pip install Nikola&lt;/td&gt;
-&lt;td&gt;&lt;tt class="docutils literal"&gt;time&lt;/tt&gt;&lt;/td&gt;
-&lt;td&gt;Remote&lt;/td&gt;
-&lt;td&gt;Kept&lt;/td&gt;
-&lt;td&gt;7.404&lt;/td&gt;
-&lt;td&gt;7.681&lt;/td&gt;
-&lt;td&gt;7.569&lt;/td&gt;
-&lt;td&gt;7.551&lt;/td&gt;
+&lt;tr&gt;&lt;td&gt;&lt;p&gt;3&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;pip install Nikola&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;&lt;code class="docutils literal"&gt;time&lt;/code&gt;&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;Remote&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;Kept&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;7.404&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;7.681&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;7.569&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;7.551&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td rowspan="3"&gt;4&lt;/td&gt;
-&lt;td&gt;pipenv install Nikola&lt;/td&gt;
-&lt;td&gt;&lt;tt class="docutils literal"&gt;time&lt;/tt&gt;&lt;/td&gt;
-&lt;td rowspan="3"&gt;Remote&lt;/td&gt;
-&lt;td rowspan="3"&gt;Removed&lt;/td&gt;
-&lt;td&gt;67.536&lt;/td&gt;
-&lt;td&gt;62.973&lt;/td&gt;
-&lt;td&gt;71.305&lt;/td&gt;
-&lt;td&gt;67.271&lt;/td&gt;
+&lt;tr&gt;&lt;td rowspan="3"&gt;&lt;p&gt;4&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;pipenv install Nikola&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;&lt;code class="docutils literal"&gt;time&lt;/code&gt;&lt;/p&gt;&lt;/td&gt;
+&lt;td rowspan="3"&gt;&lt;p&gt;Remote&lt;/p&gt;&lt;/td&gt;
+&lt;td rowspan="3"&gt;&lt;p&gt;Removed&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;67.536&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;62.973&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;71.305&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;67.271&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;├─ locking/installing from lockfile&lt;/td&gt;
-&lt;td&gt;stopwatch&lt;/td&gt;
-&lt;td&gt;42.6&lt;/td&gt;
-&lt;td&gt;40.5&lt;/td&gt;
-&lt;td&gt;39.6&lt;/td&gt;
-&lt;td&gt;40.9&lt;/td&gt;
+&lt;tr&gt;&lt;td&gt;&lt;p&gt;├─ locking/installing from lockfile&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;stopwatch&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;42.6&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;40.5&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;39.6&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;40.9&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;└─ Pipfile.lock install&lt;/td&gt;
-&lt;td&gt;pipenv&lt;/td&gt;
-&lt;td&gt;14&lt;/td&gt;
-&lt;td&gt;14&lt;/td&gt;
-&lt;td&gt;13&lt;/td&gt;
-&lt;td&gt;13.667&lt;/td&gt;
+&lt;tr&gt;&lt;td&gt;&lt;p&gt;└─ Pipfile.lock install&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;pipenv&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;14&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;14&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;13&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;13.667&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td rowspan="3"&gt;5&lt;/td&gt;
-&lt;td&gt;adding Django to an environment&lt;/td&gt;
-&lt;td&gt;&lt;tt class="docutils literal"&gt;time&lt;/tt&gt;&lt;/td&gt;
-&lt;td rowspan="3"&gt;Remote&lt;/td&gt;
-&lt;td rowspan="3"&gt;Kept (only Nikola in cache)&lt;/td&gt;
-&lt;td&gt;39.576&lt;/td&gt;
-&lt;td&gt;—&lt;/td&gt;
-&lt;td&gt;—&lt;/td&gt;
-&lt;td&gt;39.576&lt;/td&gt;
+&lt;tr&gt;&lt;td rowspan="3"&gt;&lt;p&gt;5&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;adding Django to an environment&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;&lt;code class="docutils literal"&gt;time&lt;/code&gt;&lt;/p&gt;&lt;/td&gt;
+&lt;td rowspan="3"&gt;&lt;p&gt;Remote&lt;/p&gt;&lt;/td&gt;
+&lt;td rowspan="3"&gt;&lt;p&gt;Kept (only Nikola in cache)&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;39.576&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;—&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;—&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;39.576&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;├─ locking/installing from lockfile&lt;/td&gt;
-&lt;td&gt;stopwatch&lt;/td&gt;
-&lt;td&gt;32&lt;/td&gt;
-&lt;td&gt;—&lt;/td&gt;
-&lt;td&gt;—&lt;/td&gt;
-&lt;td&gt;32&lt;/td&gt;
+&lt;tr&gt;&lt;td&gt;&lt;p&gt;├─ locking/installing from lockfile&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;stopwatch&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;32&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;—&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;—&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;32&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;└─ Pipfile.lock install&lt;/td&gt;
-&lt;td&gt;pipenv&lt;/td&gt;
-&lt;td&gt;14&lt;/td&gt;
-&lt;td&gt;—&lt;/td&gt;
-&lt;td&gt;—&lt;/td&gt;
-&lt;td&gt;14&lt;/td&gt;
+&lt;tr&gt;&lt;td&gt;&lt;p&gt;└─ Pipfile.lock install&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;pipenv&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;14&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;—&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;—&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;14&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td rowspan="3"&gt;6&lt;/td&gt;
-&lt;td&gt;adding Django to another environment&lt;/td&gt;
-&lt;td&gt;&lt;tt class="docutils literal"&gt;time&lt;/tt&gt;&lt;/td&gt;
-&lt;td rowspan="3"&gt;Remote&lt;/td&gt;
-&lt;td rowspan="3"&gt;Kept (both in cache)&lt;/td&gt;
-&lt;td&gt;37.978&lt;/td&gt;
-&lt;td&gt;—&lt;/td&gt;
-&lt;td&gt;—&lt;/td&gt;
-&lt;td&gt;37.978&lt;/td&gt;
+&lt;tr&gt;&lt;td rowspan="3"&gt;&lt;p&gt;6&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;adding Django to another environment&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;&lt;code class="docutils literal"&gt;time&lt;/code&gt;&lt;/p&gt;&lt;/td&gt;
+&lt;td rowspan="3"&gt;&lt;p&gt;Remote&lt;/p&gt;&lt;/td&gt;
+&lt;td rowspan="3"&gt;&lt;p&gt;Kept (both in cache)&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;37.978&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;—&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;—&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;37.978&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;├─ locking/installing from lockfile&lt;/td&gt;
-&lt;td&gt;stopwatch&lt;/td&gt;
-&lt;td&gt;30.2&lt;/td&gt;
-&lt;td&gt;—&lt;/td&gt;
-&lt;td&gt;—&lt;/td&gt;
-&lt;td&gt;30.2&lt;/td&gt;
+&lt;tr&gt;&lt;td&gt;&lt;p&gt;├─ locking/installing from lockfile&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;stopwatch&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;30.2&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;—&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;—&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;30.2&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;└─ Pipfile.lock install&lt;/td&gt;
-&lt;td&gt;pipenv&lt;/td&gt;
-&lt;td&gt;14&lt;/td&gt;
-&lt;td&gt;—&lt;/td&gt;
-&lt;td&gt;—&lt;/td&gt;
-&lt;td&gt;14&lt;/td&gt;
+&lt;tr&gt;&lt;td&gt;&lt;p&gt;└─ Pipfile.lock install&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;pipenv&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;14&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;—&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;—&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;14&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td rowspan="3"&gt;7&lt;/td&gt;
-&lt;td&gt;pipenv install Django&lt;/td&gt;
-&lt;td&gt;&lt;tt class="docutils literal"&gt;time&lt;/tt&gt;&lt;/td&gt;
-&lt;td rowspan="3"&gt;Remote&lt;/td&gt;
-&lt;td rowspan="3"&gt;Removed&lt;/td&gt;
-&lt;td&gt;20.612&lt;/td&gt;
-&lt;td&gt;20.666&lt;/td&gt;
-&lt;td&gt;20.665&lt;/td&gt;
-&lt;td&gt;20.648&lt;/td&gt;
+&lt;tr&gt;&lt;td rowspan="3"&gt;&lt;p&gt;7&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;pipenv install Django&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;&lt;code class="docutils literal"&gt;time&lt;/code&gt;&lt;/p&gt;&lt;/td&gt;
+&lt;td rowspan="3"&gt;&lt;p&gt;Remote&lt;/p&gt;&lt;/td&gt;
+&lt;td rowspan="3"&gt;&lt;p&gt;Removed&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;20.612&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;20.666&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;20.665&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;20.648&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;├─ locking/installing from lockfile&lt;/td&gt;
-&lt;td&gt;stopwatch&lt;/td&gt;
-&lt;td&gt;6.6&lt;/td&gt;
-&lt;td&gt;6.4&lt;/td&gt;
-&lt;td&gt;6&lt;/td&gt;
-&lt;td&gt;6.333&lt;/td&gt;
+&lt;tr&gt;&lt;td&gt;&lt;p&gt;├─ locking/installing from lockfile&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;stopwatch&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;6.6&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;6.4&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;6&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;6.333&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;└─ Pipfile.lock install&lt;/td&gt;
-&lt;td&gt;pipenv&lt;/td&gt;
-&lt;td&gt;1&lt;/td&gt;
-&lt;td&gt;1&lt;/td&gt;
-&lt;td&gt;1&lt;/td&gt;
-&lt;td&gt;1&lt;/td&gt;
+&lt;tr&gt;&lt;td&gt;&lt;p&gt;└─ Pipfile.lock install&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;pipenv&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;1&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;1&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;1&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;1&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td rowspan="3"&gt;8&lt;/td&gt;
-&lt;td&gt;pipenv install Django (new env)&lt;/td&gt;
-&lt;td&gt;&lt;tt class="docutils literal"&gt;time&lt;/tt&gt;&lt;/td&gt;
-&lt;td rowspan="3"&gt;Remote&lt;/td&gt;
-&lt;td rowspan="3"&gt;Kept&lt;/td&gt;
-&lt;td&gt;17.615&lt;/td&gt;
-&lt;td&gt;—&lt;/td&gt;
-&lt;td&gt;—&lt;/td&gt;
-&lt;td&gt;17.615&lt;/td&gt;
+&lt;tr&gt;&lt;td rowspan="3"&gt;&lt;p&gt;8&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;pipenv install Django (new env)&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;&lt;code class="docutils literal"&gt;time&lt;/code&gt;&lt;/p&gt;&lt;/td&gt;
+&lt;td rowspan="3"&gt;&lt;p&gt;Remote&lt;/p&gt;&lt;/td&gt;
+&lt;td rowspan="3"&gt;&lt;p&gt;Kept&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;17.615&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;—&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;—&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;17.615&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;├─ locking/installing from lockfile&lt;/td&gt;
-&lt;td&gt;stopwatch&lt;/td&gt;
-&lt;td&gt;3.5&lt;/td&gt;
-&lt;td&gt;—&lt;/td&gt;
-&lt;td&gt;—&lt;/td&gt;
-&lt;td&gt;3.5&lt;/td&gt;
+&lt;tr&gt;&lt;td&gt;&lt;p&gt;├─ locking/installing from lockfile&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;stopwatch&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;3.5&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;—&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;—&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;3.5&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;└─ Pipfile.lock install&lt;/td&gt;
-&lt;td&gt;pipenv&lt;/td&gt;
-&lt;td&gt;1&lt;/td&gt;
-&lt;td&gt;—&lt;/td&gt;
-&lt;td&gt;—&lt;/td&gt;
-&lt;td&gt;1&lt;/td&gt;
+&lt;tr&gt;&lt;td&gt;&lt;p&gt;└─ Pipfile.lock install&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;pipenv&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;1&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;—&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;—&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;1&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td rowspan="3"&gt;9&lt;/td&gt;
-&lt;td&gt;pipenv install Nikola&lt;/td&gt;
-&lt;td&gt;&lt;tt class="docutils literal"&gt;time&lt;/tt&gt;&lt;/td&gt;
-&lt;td rowspan="3"&gt;Remote&lt;/td&gt;
-&lt;td rowspan="3"&gt;Partial&lt;/td&gt;
-&lt;td&gt;61.507&lt;/td&gt;
-&lt;td&gt;—&lt;/td&gt;
-&lt;td&gt;—&lt;/td&gt;
-&lt;td&gt;61.507&lt;/td&gt;
+&lt;tr&gt;&lt;td rowspan="3"&gt;&lt;p&gt;9&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;pipenv install Nikola&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;&lt;code class="docutils literal"&gt;time&lt;/code&gt;&lt;/p&gt;&lt;/td&gt;
+&lt;td rowspan="3"&gt;&lt;p&gt;Remote&lt;/p&gt;&lt;/td&gt;
+&lt;td rowspan="3"&gt;&lt;p&gt;Partial&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;61.507&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;—&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;—&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;61.507&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;├─ locking/installing from lockfile&lt;/td&gt;
-&lt;td&gt;stopwatch&lt;/td&gt;
-&lt;td&gt;38.40&lt;/td&gt;
-&lt;td&gt;—&lt;/td&gt;
-&lt;td&gt;—&lt;/td&gt;
-&lt;td&gt;38.40&lt;/td&gt;
+&lt;tr&gt;&lt;td&gt;&lt;p&gt;├─ locking/installing from lockfile&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;stopwatch&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;38.40&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;—&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;—&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;38.40&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;└─ Pipfile.lock install&lt;/td&gt;
-&lt;td&gt;pipenv&lt;/td&gt;
-&lt;td&gt;14&lt;/td&gt;
-&lt;td&gt;—&lt;/td&gt;
-&lt;td&gt;—&lt;/td&gt;
-&lt;td&gt;14&lt;/td&gt;
+&lt;tr&gt;&lt;td&gt;&lt;p&gt;└─ Pipfile.lock install&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;pipenv&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;14&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;—&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;—&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;14&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td rowspan="3"&gt;10&lt;/td&gt;
-&lt;td&gt;pipenv install Django&lt;/td&gt;
-&lt;td&gt;&lt;tt class="docutils literal"&gt;time&lt;/tt&gt;&lt;/td&gt;
-&lt;td rowspan="3"&gt;Local&lt;/td&gt;
-&lt;td rowspan="3"&gt;Removed&lt;/td&gt;
-&lt;td&gt;73.933&lt;/td&gt;
-&lt;td&gt;—&lt;/td&gt;
-&lt;td&gt;—&lt;/td&gt;
-&lt;td&gt;73.933&lt;/td&gt;
+&lt;tr&gt;&lt;td rowspan="3"&gt;&lt;p&gt;10&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;pipenv install Django&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;&lt;code class="docutils literal"&gt;time&lt;/code&gt;&lt;/p&gt;&lt;/td&gt;
+&lt;td rowspan="3"&gt;&lt;p&gt;Local&lt;/p&gt;&lt;/td&gt;
+&lt;td rowspan="3"&gt;&lt;p&gt;Removed&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;73.933&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;—&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;—&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;73.933&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;├─ locking/installing from lockfile&lt;/td&gt;
-&lt;td&gt;stopwatch&lt;/td&gt;
-&lt;td&gt;46&lt;/td&gt;
-&lt;td&gt;—&lt;/td&gt;
-&lt;td&gt;—&lt;/td&gt;
-&lt;td&gt;46&lt;/td&gt;
+&lt;tr&gt;&lt;td&gt;&lt;p&gt;├─ locking/installing from lockfile&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;stopwatch&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;46&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;—&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;—&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;46&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;└─ Pipfile.lock install&lt;/td&gt;
-&lt;td&gt;pipenv&lt;/td&gt;
-&lt;td&gt;0&lt;/td&gt;
-&lt;td&gt;—&lt;/td&gt;
-&lt;td&gt;—&lt;/td&gt;
-&lt;td&gt;0&lt;/td&gt;
+&lt;tr&gt;&lt;td&gt;&lt;p&gt;└─ Pipfile.lock install&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;pipenv&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;0&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;—&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;—&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;0&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;11&lt;/td&gt;
-&lt;td&gt;virtualenv&lt;/td&gt;
-&lt;td&gt;&lt;tt class="docutils literal"&gt;time&lt;/tt&gt;&lt;/td&gt;
-&lt;td&gt;Local&lt;/td&gt;
-&lt;td&gt;(not applicable)&lt;/td&gt;
-&lt;td&gt;5.864&lt;/td&gt;
-&lt;td&gt;—&lt;/td&gt;
-&lt;td&gt;—&lt;/td&gt;
-&lt;td&gt;5.864&lt;/td&gt;
+&lt;tr&gt;&lt;td&gt;&lt;p&gt;11&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;virtualenv&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;&lt;code class="docutils literal"&gt;time&lt;/code&gt;&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;Local&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;(not applicable)&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;5.864&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;—&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;—&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;5.864&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;12&lt;/td&gt;
-&lt;td&gt;pip install Nikola (cached)&lt;/td&gt;
-&lt;td&gt;&lt;tt class="docutils literal"&gt;time&lt;/tt&gt;&lt;/td&gt;
-&lt;td&gt;Local&lt;/td&gt;
-&lt;td&gt;Kept&lt;/td&gt;
-&lt;td&gt;10.951&lt;/td&gt;
-&lt;td&gt;—&lt;/td&gt;
-&lt;td&gt;—&lt;/td&gt;
-&lt;td&gt;10.951&lt;/td&gt;
+&lt;tr&gt;&lt;td&gt;&lt;p&gt;12&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;pip install Nikola (cached)&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;&lt;code class="docutils literal"&gt;time&lt;/code&gt;&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;Local&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;Kept&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;10.951&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;—&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;—&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;10.951&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td rowspan="3"&gt;13&lt;/td&gt;
-&lt;td&gt;pipenv install Nikola&lt;/td&gt;
-&lt;td&gt;&lt;tt class="docutils literal"&gt;time&lt;/tt&gt;&lt;/td&gt;
-&lt;td rowspan="3"&gt;Local&lt;/td&gt;
-&lt;td rowspan="3"&gt;Partial, after interruption&lt;/td&gt;
-&lt;td&gt;607.647&lt;/td&gt;
-&lt;td colspan="2"&gt;(10m 7s)&lt;/td&gt;
-&lt;td&gt;607.647&lt;/td&gt;
+&lt;tr&gt;&lt;td rowspan="3"&gt;&lt;p&gt;13&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;pipenv install Nikola&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;&lt;code class="docutils literal"&gt;time&lt;/code&gt;&lt;/p&gt;&lt;/td&gt;
+&lt;td rowspan="3"&gt;&lt;p&gt;Local&lt;/p&gt;&lt;/td&gt;
+&lt;td rowspan="3"&gt;&lt;p&gt;Partial, after interruption&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;607.647&lt;/p&gt;&lt;/td&gt;
+&lt;td colspan="2"&gt;&lt;p&gt;(10m 7s)&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;607.647&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;├─ locking/installing from lockfile&lt;/td&gt;
-&lt;td&gt;stopwatch&lt;/td&gt;
-&lt;td&gt;590.85&lt;/td&gt;
-&lt;td colspan="2"&gt;(9m 50s)&lt;/td&gt;
-&lt;td&gt;590.85&lt;/td&gt;
+&lt;tr&gt;&lt;td&gt;&lt;p&gt;├─ locking/installing from lockfile&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;stopwatch&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;590.85&lt;/p&gt;&lt;/td&gt;
+&lt;td colspan="2"&gt;&lt;p&gt;(9m 50s)&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;590.85&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;└─ Pipfile.lock install&lt;/td&gt;
-&lt;td&gt;pipenv&lt;/td&gt;
-&lt;td&gt;6&lt;/td&gt;
-&lt;td colspan="2"&gt; &lt;/td&gt;
-&lt;td&gt;6&lt;/td&gt;
+&lt;tr&gt;&lt;td&gt;&lt;p&gt;└─ Pipfile.lock install&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;pipenv&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;6&lt;/p&gt;&lt;/td&gt;
+&lt;td colspan="2"&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;6&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;14&lt;/td&gt;
-&lt;td&gt;pipenv install&lt;/td&gt;
-&lt;td&gt;&lt;tt class="docutils literal"&gt;time&lt;/tt&gt;&lt;/td&gt;
-&lt;td&gt;Local&lt;/td&gt;
-&lt;td&gt;Kept&lt;/td&gt;
-&lt;td&gt;31.399&lt;/td&gt;
-&lt;td colspan="2"&gt;(L/I: 10.51 s)&lt;/td&gt;
-&lt;td&gt;31.399&lt;/td&gt;
+&lt;tr&gt;&lt;td&gt;&lt;p&gt;14&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;pipenv install&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;&lt;code class="docutils literal"&gt;time&lt;/code&gt;&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;Local&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;Kept&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;31.399&lt;/p&gt;&lt;/td&gt;
+&lt;td colspan="2"&gt;&lt;p&gt;(L/I: 10.51 s)&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;31.399&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
@@ -900,7 +904,7 @@ argued that it adds a single point of failure. Hatch works on already standard
 files, such as requirements.txt and setup.py, so it can be replaced with
 something else quite easily. It doesn’t use as much magic as Pipenv and is more
 configurable.  Some choices made by
-Hatch are questionable (such as manually parsing &lt;tt class="docutils literal"&gt;pkg/__init__.py&lt;/tt&gt; for a
+Hatch are questionable (such as manually parsing &lt;code class="docutils literal"&gt;pkg/__init__.py&lt;/code&gt; for a
 version number, &lt;a class="reference external" href="https://github.com/ofek/hatch/pull/60"&gt;installing test suites to site-packages&lt;/a&gt; (a rather common oversight), or its shell feature which is as ugly as Pipenv’s), and it does
 not do anything to manage dependencies.  It doesn’t necessarily work for the
 Django use case I mentioned earlier, or for end-users of software.&lt;/p&gt;
@@ -912,14 +916,14 @@ also makes it possible to distribute things to PyPI. It tries really hard to
 hide that it uses Pip behind the scenes. Its README comes with an extensive
 &lt;a class="reference external" href="https://github.com/sdispater/poetry#what-about-pipenv"&gt;“What about Pipenv?”&lt;/a&gt;
 section, which I recommend reading — it has a few more examples of bad Pipenv
-features.  Poetry claims to use the standardized (PEP 518) &lt;tt class="docutils literal"&gt;pyproject.toml&lt;/tt&gt;
+features.  Poetry claims to use the standardized (PEP 518) &lt;code class="docutils literal"&gt;pyproject.toml&lt;/code&gt;
 file to replace the usual lot of files. Unfortunately, the only thing that is
-standardized is the file name and syntax. Poetry uses custom &lt;tt class="docutils literal"&gt;[tool.poetry]&lt;/tt&gt;
+standardized is the file name and syntax. Poetry uses custom &lt;code class="docutils literal"&gt;[tool.poetry]&lt;/code&gt;
 sections, which means that one needs Poetry to fully use the packages created
 with it, leading to vendor lock-in. (The aforementioned Hatch tool also
-produces a &lt;tt class="docutils literal"&gt;pyproject.tmpl&lt;/tt&gt;, which contains a &lt;tt class="docutils literal"&gt;metadata&lt;/tt&gt; section…) There is
-a &lt;tt class="docutils literal"&gt;build&lt;/tt&gt; feature to produce a sdist with setup.py and friends.&lt;/p&gt;
-&lt;p&gt;In a simple &lt;tt class="docutils literal"&gt;poetry add Nikola&lt;/tt&gt; test, it took 24.4s/15.1s/15.3s to resolve
+produces a &lt;code class="docutils literal"&gt;pyproject.tmpl&lt;/code&gt;, which contains a &lt;code class="docutils literal"&gt;metadata&lt;/code&gt; section…) There is
+a &lt;code class="docutils literal"&gt;build&lt;/code&gt; feature to produce a sdist with setup.py and friends.&lt;/p&gt;
+&lt;p&gt;In a simple &lt;code class="docutils literal"&gt;poetry add Nikola&lt;/code&gt; test, it took 24.4s/15.1s/15.3s to resolve
 dependencies (according to Poetry’s own count, Remote environment, caches
 removed), complete with reassuring output and no quiet lockups.  Not as good as
 pip, but it’s more reasonable than Pipenv.  Also, the codebase and its layout
@@ -933,13 +937,13 @@ they do their job well — so well in fact, that the new tools still need them
 under the covers.&lt;/p&gt;
 &lt;p&gt;Pip is fast. It does its job well enough. It lacks support for splitting
 packages between production and development (as Pipenv and Poetry do). This
-means that &lt;tt class="docutils literal"&gt;pip freeze&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;pip install&lt;/tt&gt; are instant, at the cost of (a)
+means that &lt;code class="docutils literal"&gt;pip freeze&lt;/code&gt; and &lt;code class="docutils literal"&gt;pip install&lt;/code&gt; are instant, at the cost of (a)
 needing two separate environments, or (b) installing development dependencies
 in production (which &lt;em&gt;should&lt;/em&gt; only be a waste of HDD space and nothing more in
 a well-architected system).&lt;/p&gt;
 &lt;p&gt;The virtualenv management features can be provided by virtualenvwrapper. That
 tool’s main advantage is the shell script implementation, which means that
-&lt;tt class="docutils literal"&gt;workon foo&lt;/tt&gt; activates the &lt;tt class="docutils literal"&gt;foo&lt;/tt&gt; virtualenv without spawning a new
+&lt;code class="docutils literal"&gt;workon foo&lt;/code&gt; activates the &lt;code class="docutils literal"&gt;foo&lt;/code&gt; virtualenv without spawning a new
 subshell (an issue with Pipenv, Hatch, and Poetry, that I already covered when
 describing Pipenv’s operation in the &lt;a class="reference internal" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#running-scripts-badly"&gt;Running scripts (badly)&lt;/a&gt; chapter.) An
 argument often raised by Pipenv proponents is that one does not need to concern
@@ -949,8 +953,8 @@ specific location, or require it to be different to the home directory.&lt;/p&gt
 &lt;p&gt;And for a reasonable project template with release automation — well, I have my
 own entry in that category, called (rather unoriginally) the &lt;a class="reference external" href="https://github.com/Kwpolska/python-project-template"&gt;Python Project
 Template (PyPT)&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;Yes, setup.py files are not ideal, since they use &lt;tt class="docutils literal"&gt;.py&lt;/tt&gt; code and a function
-execution, making access to meta information hard (&lt;tt class="docutils literal"&gt;./setup.py egg_info&lt;/tt&gt;
+&lt;p&gt;Yes, setup.py files are not ideal, since they use &lt;code class="docutils literal"&gt;.py&lt;/code&gt; code and a function
+execution, making access to meta information hard (&lt;code class="docutils literal"&gt;./setup.py egg_info&lt;/code&gt;
 creates tool-accessible text files). Their main advantage is that they are the
 &lt;em&gt;only&lt;/em&gt; format that is widely supported — pip is the de-facto default
 Python package manager (which is pre-installed on Windows and Mac), and other
@@ -961,47 +965,47 @@ tools would require installation/bootstrapping first.&lt;/p&gt;
 &lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id30"&gt;The break-neck pace of Pipenv&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;A good packaging tool is stable. In other words, it doesn’t change often, and
 it strives to support existing environments. It wouldn’t be fun to re-download
-everything on your system, because someone decided that &lt;tt class="docutils literal"&gt;/usr&lt;/tt&gt; is now called
-&lt;tt class="docutils literal"&gt;/stuff&lt;/tt&gt;, and all the files in &lt;tt class="docutils literal"&gt;/usr&lt;/tt&gt; would become forgotten and not
+everything on your system, because someone decided that &lt;code class="docutils literal"&gt;/usr&lt;/code&gt; is now called
+&lt;code class="docutils literal"&gt;/stuff&lt;/code&gt;, and all the files in &lt;code class="docutils literal"&gt;/usr&lt;/code&gt; would become forgotten and not
 removed. Well, this is what Pipenv did:&lt;/p&gt;
-&lt;table border="1" class="table table-striped table-bordered docutils"&gt;
+&lt;table class="table table-striped table-bordered"&gt;
 &lt;colgroup&gt;
-&lt;col width="11%"&gt;
-&lt;col width="89%"&gt;
+&lt;col style="width: 11%"&gt;
+&lt;col style="width: 89%"&gt;
 &lt;/colgroup&gt;
-&lt;thead valign="bottom"&gt;
-&lt;tr&gt;&lt;th class="head"&gt;Date/Time (UTC)&lt;/th&gt;
-&lt;th class="head"&gt;Event&lt;/th&gt;
+&lt;thead&gt;
+&lt;tr&gt;&lt;th class="head"&gt;&lt;p&gt;Date/Time (UTC)&lt;/p&gt;&lt;/th&gt;
+&lt;th class="head"&gt;&lt;p&gt;Event&lt;/p&gt;&lt;/th&gt;
 &lt;/tr&gt;
 &lt;/thead&gt;
-&lt;tbody valign="top"&gt;
-&lt;tr&gt;&lt;td&gt;2017-01-31 22:01&lt;/td&gt;
-&lt;td&gt;v3.2.14 released. &lt;tt class="docutils literal"&gt;pipenv &lt;span class="pre"&gt;--three&lt;/span&gt;&lt;/tt&gt; creates &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;./.venv&lt;/span&gt;&lt;/tt&gt; (eg. &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;~/git/foo/.venv&lt;/span&gt;&lt;/tt&gt;). Last version with the original behavior of pipenv.&lt;/td&gt;
+&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;&lt;p&gt;2017-01-31 22:01&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;v3.2.14 released. &lt;code class="docutils literal"&gt;pipenv &lt;span class="pre"&gt;--three&lt;/span&gt;&lt;/code&gt; creates &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;./.venv&lt;/span&gt;&lt;/code&gt; (eg. &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;~/git/foo/.venv&lt;/span&gt;&lt;/code&gt;). Last version with the original behavior of pipenv.&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;2017-02-01 05:36&lt;/td&gt;
-&lt;td&gt;v3.3.0 released. &lt;tt class="docutils literal"&gt;pipenv &lt;span class="pre"&gt;--three&lt;/span&gt;&lt;/tt&gt; creates &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;~/.local/share/virtualenvs/foo&lt;/span&gt;&lt;/tt&gt; (to be precise, &lt;tt class="docutils literal"&gt;$WORKON_HOME/foo&lt;/tt&gt;).&lt;/td&gt;
+&lt;tr&gt;&lt;td&gt;&lt;p&gt;2017-02-01 05:36&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;v3.3.0 released. &lt;code class="docutils literal"&gt;pipenv &lt;span class="pre"&gt;--three&lt;/span&gt;&lt;/code&gt; creates &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;~/.local/share/virtualenvs/foo&lt;/span&gt;&lt;/code&gt; (to be precise, &lt;code class="docutils literal"&gt;$WORKON_HOME/foo&lt;/code&gt;).&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;2017-02-01 06:10&lt;/td&gt;
-&lt;td&gt;&lt;a class="reference external" href="https://github.com/pypa/pipenv/issues/178"&gt;Issue #178&lt;/a&gt; is reported regarding the behavior change.&lt;/td&gt;
+&lt;tr&gt;&lt;td&gt;&lt;p&gt;2017-02-01 06:10&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;&lt;a class="reference external" href="https://github.com/pypa/pipenv/issues/178"&gt;Issue #178&lt;/a&gt; is reported regarding the behavior change.&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;2017-02-01 06:18&lt;/td&gt;
-&lt;td&gt;Kenneth Reitz responds: “no plans for making it configurable.” and closes the issue.&lt;/td&gt;
+&lt;tr&gt;&lt;td&gt;&lt;p&gt;2017-02-01 06:18&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;Kenneth Reitz responds: “no plans for making it configurable.” and closes the issue.&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;2017-02-02 03:05&lt;/td&gt;
-&lt;td&gt;Kenneth Reitz responds: “added &lt;tt class="docutils literal"&gt;PIPENV_VENV_IN_PROJECT&lt;/tt&gt; mode for classic operation. Not released yet.”&lt;/td&gt;
+&lt;tr&gt;&lt;td&gt;&lt;p&gt;2017-02-02 03:05&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;Kenneth Reitz responds: “added &lt;code class="docutils literal"&gt;PIPENV_VENV_IN_PROJECT&lt;/code&gt; mode for classic operation. Not released yet.”&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;2017-02-02 04:29&lt;/td&gt;
-&lt;td&gt;v3.3.3 released. The default is still uses a “remote” location, but &lt;tt class="docutils literal"&gt;.venv&lt;/tt&gt; can now be used.&lt;/td&gt;
+&lt;tr&gt;&lt;td&gt;&lt;p&gt;2017-02-02 04:29&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;v3.3.3 released. The default is still uses a “remote” location, but &lt;code class="docutils literal"&gt;.venv&lt;/code&gt; can now be used.&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;2017-03-02 13:48&lt;/td&gt;
-&lt;td&gt;v3.5.0 released. The new default path is &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;$WORKON_HOME/foo-HASH&lt;/span&gt;&lt;/tt&gt;, eg. &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;~/.local/share/virtualenvs/foo-7pl2iuUI&lt;/span&gt;&lt;/tt&gt;.&lt;/td&gt;
+&lt;tr&gt;&lt;td&gt;&lt;p&gt;2017-03-02 13:48&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;v3.5.0 released. The new default path is &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;$WORKON_HOME/foo-HASH&lt;/span&gt;&lt;/code&gt;, eg. &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;~/.local/share/virtualenvs/foo-7pl2iuUI&lt;/span&gt;&lt;/code&gt;.&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;Over the course of a month, the location of the virtualenv changed twice. If
 the user didn’t read the changelog and didn’t manually intervene (also of note,
 the option name was mentioned in the issue and in v3.3.4’s changelog), they
-would have a stale &lt;tt class="docutils literal"&gt;.venv&lt;/tt&gt; directory, since the new scheme was adopted for
+would have a stale &lt;code class="docutils literal"&gt;.venv&lt;/code&gt; directory, since the new scheme was adopted for
 them. And then, after switching to v3.5.0, they would have a stale virtualenv
 hidden somewhere in their home directory, because pipenv decided to add hashes.&lt;/p&gt;
 &lt;p&gt;Also, this is not configurable. One cannot disable the hashes in paths, even
@@ -1015,62 +1019,52 @@ releases, ranging from v11.6.2 to v11.7.3. The &lt;a class="reference external" 
 when it comes to informing users what happened in each of the releases.&lt;/p&gt;
 &lt;p&gt;Extra reading:&lt;/p&gt;
 &lt;ul class="simple"&gt;
-&lt;li&gt;&lt;a class="reference external" href="https://journal.kennethreitz.org/entry/r-python"&gt;Kenneth Reitz, A Letter to /r/python (with some notes about bipolar disorder)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;Reddit comment threads for the letter: &lt;a class="reference external" href="https://np.reddit.com/r/Python/comments/8kdfd6/kenneth_reitz_a_letter_to_rpython_with_some_notes/"&gt;first&lt;/a&gt; and &lt;a class="reference external" href="https://np.reddit.com/r/Python/comments/8kjv8x/a_letter_to_rpython_kenneth_reitzs_journal/"&gt;second&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference external" href="http://web.archive.org/web/20180717140106/https://journal.kennethreitz.org/entry/r-python"&gt;Kenneth Reitz, A Letter to /r/python (with some notes about bipolar disorder)&lt;/a&gt; (replaced with Wayback Machine link on 2020-02-07)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Reddit comment threads for the letter: &lt;a class="reference external" href="https://np.reddit.com/r/Python/comments/8kdfd6/kenneth_reitz_a_letter_to_rpython_with_some_notes/"&gt;first&lt;/a&gt; and &lt;a class="reference external" href="https://np.reddit.com/r/Python/comments/8kjv8x/a_letter_to_rpython_kenneth_reitzs_journal/"&gt;second&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/div&gt;
 &lt;div class="section" id="conclusion"&gt;
 &lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id31"&gt;Conclusion&lt;/a&gt;&lt;/h2&gt;
 &lt;ul class="simple"&gt;
-&lt;li&gt;Pipenv, contrary to popular belief and (now removed) propaganda, is not an
+&lt;li&gt;&lt;p&gt;Pipenv, contrary to popular belief and (now removed) propaganda, is not an
 officially recommended tool of Python.org. It merely has a tutorial written
-about it on packaging.python.org (page run by the PyPA).&lt;/li&gt;
-&lt;li&gt;Pipenv solves one use case reasonably well, but fails at many others, because
-it forces a particular workflow on its users.&lt;/li&gt;
-&lt;li&gt;Pipenv does not handle any parts of packaging (cannot produce sdists and
-wheels).  Users who want to upload to PyPI need to manage a &lt;tt class="docutils literal"&gt;setup.py&lt;/tt&gt; file
-manually, alongside and independently of Pipenv.&lt;/li&gt;
-&lt;li&gt;Pipenv produces lockfiles, which are useful for reproducibility, at the cost
-of installation speed. The speed is a noticeable issue with the tool. &lt;tt class="docutils literal"&gt;pip
-freeze&lt;/tt&gt; is good enough for this, even if there are no dependency classes
+about it on packaging.python.org (page run by the PyPA).&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Pipenv solves one use case reasonably well, but fails at many others, because
+it forces a particular workflow on its users.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Pipenv does not handle any parts of packaging (cannot produce sdists and
+wheels).  Users who want to upload to PyPI need to manage a &lt;code class="docutils literal"&gt;setup.py&lt;/code&gt; file
+manually, alongside and independently of Pipenv.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Pipenv produces lockfiles, which are useful for reproducibility, at the cost
+of installation speed. The speed is a noticeable issue with the tool. &lt;code class="docutils literal"&gt;pip
+freeze&lt;/code&gt; is good enough for this, even if there are no dependency classes
 (production vs development) and no hashes (which
-have minor benefits) &lt;a class="footnote-reference" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id13" id="id11"&gt;[2]&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;Hatch attempts to replace many packaging tools, but some of its practices and
-ideas can be questionable.&lt;/li&gt;
-&lt;li&gt;Poetry supports the same niche Pipenv does, while also adding the ability to
+have minor benefits) &lt;a class="footnote-reference brackets" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id13" id="id11"&gt;2&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Hatch attempts to replace many packaging tools, but some of its practices and
+ideas can be questionable.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Poetry supports the same niche Pipenv does, while also adding the ability to
 create packages and improving over many gripes of Pipenv. A notable issue is
 the use of a custom all-encompassing file format, which makes switching tools
-more difficult (vendor lock-in).&lt;/li&gt;
-&lt;li&gt;Pip, setup.py, and virtualenv — the traditional, tried-and-true tools — are
+more difficult (vendor lock-in).&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Pip, setup.py, and virtualenv — the traditional, tried-and-true tools — are
 still available, undergoing constant development. Using them can lead to a
 simpler, better experience.  Also of note, tools like virtualenvwrapper
 can manage virtualenvs better than the aforementioned new Python tools,
-because it is based on shell scripts (which can modify the enivironment).&lt;/li&gt;
+because it is based on shell scripts (which can modify the enivironment).&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;table class="docutils footnote" frame="void" id="id12" rules="none"&gt;
-&lt;colgroup&gt;&lt;col class="label"&gt;&lt;col&gt;&lt;/colgroup&gt;
-&lt;tbody valign="top"&gt;
-&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id1"&gt;[1]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;On a side note, the tutorial explains nothing. A prospective user only learns it’s similar to npm or bundler (what does that mean?), installs one package, and runs a &lt;tt class="docutils literal"&gt;.py&lt;/tt&gt; file through &lt;tt class="docutils literal"&gt;pipenv run&lt;/tt&gt;.&lt;/td&gt;&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;table class="docutils footnote" frame="void" id="id13" rules="none"&gt;
-&lt;colgroup&gt;&lt;col class="label"&gt;&lt;col&gt;&lt;/colgroup&gt;
-&lt;tbody valign="top"&gt;
-&lt;tr&gt;&lt;td class="label"&gt;[2]&lt;/td&gt;&lt;td&gt;&lt;em&gt;(&lt;a class="fn-backref" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id5"&gt;1&lt;/a&gt;, &lt;a class="fn-backref" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id11"&gt;2&lt;/a&gt;)&lt;/em&gt; Note that one can’t change the file on PyPI after uploading it, so this would only be protection against rogue PyPI admins or a MitM attack (in which case you’ve got bigger problems anyways). &lt;a class="reference external" href="https://github.com/nedbat/coveragepy/issues/679#issuecomment-406396761"&gt;Also, the feature is fairly broken.&lt;/a&gt;&lt;/td&gt;&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;table class="docutils footnote" frame="void" id="id14" rules="none"&gt;
-&lt;colgroup&gt;&lt;col class="label"&gt;&lt;col&gt;&lt;/colgroup&gt;
-&lt;tbody valign="top"&gt;
-&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id6"&gt;[3]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;Fortunately, it looks in the parent directories for Pipfiles as well. Otherwise, you might end up with one environment for &lt;tt class="docutils literal"&gt;foo&lt;/tt&gt; and another for &lt;tt class="docutils literal"&gt;foo/foo&lt;/tt&gt; and yet another for &lt;tt class="docutils literal"&gt;foo/docs&lt;/tt&gt; and so on…&lt;/td&gt;&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;table class="docutils footnote" frame="void" id="id15" rules="none"&gt;
-&lt;colgroup&gt;&lt;col class="label"&gt;&lt;col&gt;&lt;/colgroup&gt;
-&lt;tbody valign="top"&gt;
-&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id8"&gt;[4]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;The interruption happened by mistake due to the RAM disk running out of space, but it was actually a good thing to have happened.&lt;/td&gt;&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
+&lt;dl class="footnote brackets"&gt;
+&lt;dt class="label" id="id12"&gt;&lt;span class="brackets"&gt;&lt;a class="fn-backref" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id1"&gt;1&lt;/a&gt;&lt;/span&gt;&lt;/dt&gt;
+&lt;dd&gt;&lt;p&gt;On a side note, the tutorial explains nothing. A prospective user only learns it’s similar to npm or bundler (what does that mean?), installs one package, and runs a &lt;code class="docutils literal"&gt;.py&lt;/code&gt; file through &lt;code class="docutils literal"&gt;pipenv run&lt;/code&gt;.&lt;/p&gt;
+&lt;/dd&gt;
+&lt;dt class="label" id="id13"&gt;&lt;span class="brackets"&gt;2&lt;/span&gt;&lt;span class="fn-backref"&gt;(&lt;a href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id5"&gt;1&lt;/a&gt;,&lt;a href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id11"&gt;2&lt;/a&gt;)&lt;/span&gt;&lt;/dt&gt;
+&lt;dd&gt;&lt;p&gt;Note that one can’t change the file on PyPI after uploading it, so this would only be protection against rogue PyPI admins or a MitM attack (in which case you’ve got bigger problems anyways). &lt;a class="reference external" href="https://github.com/nedbat/coveragepy/issues/679#issuecomment-406396761"&gt;Also, the feature is fairly broken.&lt;/a&gt;&lt;/p&gt;
+&lt;/dd&gt;
+&lt;dt class="label" id="id14"&gt;&lt;span class="brackets"&gt;&lt;a class="fn-backref" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id6"&gt;3&lt;/a&gt;&lt;/span&gt;&lt;/dt&gt;
+&lt;dd&gt;&lt;p&gt;Fortunately, it looks in the parent directories for Pipfiles as well. Otherwise, you might end up with one environment for &lt;code class="docutils literal"&gt;foo&lt;/code&gt; and another for &lt;code class="docutils literal"&gt;foo/foo&lt;/code&gt; and yet another for &lt;code class="docutils literal"&gt;foo/docs&lt;/code&gt; and so on…&lt;/p&gt;
+&lt;/dd&gt;
+&lt;dt class="label" id="id15"&gt;&lt;span class="brackets"&gt;&lt;a class="fn-backref" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id8"&gt;4&lt;/a&gt;&lt;/span&gt;&lt;/dt&gt;
+&lt;dd&gt;&lt;p&gt;The interruption happened by mistake due to the RAM disk running out of space, but it was actually a good thing to have happened.&lt;/p&gt;
+&lt;/dd&gt;
+&lt;/dl&gt;
 &lt;hr class="docutils"&gt;
 &lt;p class="alert alert-info"&gt;&lt;strong&gt;Other discussion threads:&lt;/strong&gt; &lt;a class="reference external" href="https://www.reddit.com/r/Python/comments/a3h81m/pipenv_promises_a_lot_delivers_very_little/"&gt;r/Python&lt;/a&gt;, &lt;a class="reference external" href="https://news.ycombinator.com/item?id=18612590"&gt;Hacker News&lt;/a&gt;.&lt;/p&gt;
 &lt;/div&gt;&lt;/div&gt;</description><category>packaging</category><category>Pipenv</category><category>Python</category><guid>https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/</guid><pubDate>Tue, 17 Jul 2018 17:40:00 GMT</pubDate></item><item><title>Gynvael’s Mission 11 (en): Python bytecode reverse-engineering</title><link>https://chriswarrick.com/blog/2017/08/03/gynvaels-mission-11-en-python-bytecode-reverse-engineering/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;Gynvael Coldwind is a security researcher at Google, who hosts weekly livestreams about security and programming in &lt;a class="reference external" href="https://gaming.youtube.com/user/GynvaelColdwind/live"&gt;Polish&lt;/a&gt; and &lt;a class="reference external" href="https://gaming.youtube.com/user/GynvaelEN/live"&gt;English&lt;/a&gt;). As part of the streams, he gives out missions — basically, CTF-style reverse engineering tasks. Yesterday’s mission was about Elvish — I mean Paint — I mean Python programming and bytecode.&lt;/p&gt;
