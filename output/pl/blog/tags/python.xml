@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chris Warrick (Posty o Python)</title><link>https://chriswarrick.com/</link><description></description><atom:link href="https://chriswarrick.com/pl/blog/tags/python.xml" rel="self" type="application/rss+xml"></atom:link><language>pl</language><lastBuildDate>Fri, 07 Feb 2020 10:24:40 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Python Hackery: merging signatures of two Python functions</title><link>https://chriswarrick.com/pl/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;Today’s blog post is going to contain fairly advanced Python hackery. We’ll
+<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chris Warrick (Posty o Python)</title><link>https://chriswarrick.com/</link><description></description><atom:link href="https://chriswarrick.com/pl/blog/tags/python.xml" rel="self" type="application/rss+xml"></atom:link><language>pl</language><lastBuildDate>Sat, 08 Feb 2020 19:53:57 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Python Hackery: merging signatures of two Python functions</title><link>https://chriswarrick.com/pl/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;Today’s blog post is going to contain fairly advanced Python hackery. We’ll
 take two functions — one is a wrapper for the other, but also adds some
 positional arguments.  And we’ll change the signature displayed everywhere from
 the uninformative &lt;tt class="docutils literal"&gt;f(new_arg, *args, **kwargs)&lt;/tt&gt; to something more
@@ -361,39 +361,62 @@ to have a clean environment and the ability to re-create it outside of Docker
 &lt;p&gt;In this post, I will explore the problems with Pipenv. Was it really
 recommended by Python.org? Can everyone — or at least, the vast majority
 of people — benefit from it?&lt;/p&gt;
+&lt;p&gt;(This post has been updated in February 2020 to reflect the current state of
+Pipenv.)&lt;/p&gt;
 &lt;!-- TEASER_END --&gt;
 &lt;div class="contents alert alert-primary topic" id="contents"&gt;
-&lt;p class="topic-title first"&gt;Contents&lt;/p&gt;
+&lt;p class="topic-title"&gt;Contents&lt;/p&gt;
 &lt;ul class="simple"&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#officially-recommended-tool-or-how-we-got-here" id="id16"&gt;“Officially recommended tool”, or how we got here&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#what-pipenv-does" id="id17"&gt;What pipenv does&lt;/a&gt;&lt;/p&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#a-2020-update" id="id14"&gt;A 2020 update&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#officially-recommended-tool-or-how-we-got-here" id="id15"&gt;“Officially recommended tool”, or how we got here&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#what-pipenv-does" id="id16"&gt;What pipenv does&lt;/a&gt;&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#application-dependencies" id="id18"&gt;Application dependencies&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#running-scripts-badly" id="id19"&gt;Running scripts (badly)&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#finishing-it-all-up" id="id20"&gt;Finishing it all up&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#application-dependencies" id="id17"&gt;Application dependencies&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#running-scripts-badly" id="id18"&gt;Running scripts (badly)&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#finishing-it-all-up" id="id19"&gt;Finishing it all up&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#what-pipenv-doesnt-do" id="id21"&gt;What pipenv doesn’t do&lt;/a&gt;&lt;/p&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#what-pipenv-doesnt-do" id="id20"&gt;What pipenv doesn’t do&lt;/a&gt;&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#setup-py-source-distributions-and-wheels" id="id22"&gt;Setup.py, source distributions, and wheels&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#working-outside-of-the-project-root" id="id23"&gt;Working outside of the project root&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#nikola" id="id24"&gt;Nikola&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#setup-py-source-distributions-and-wheels" id="id21"&gt;Setup.py, source distributions, and wheels&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#working-outside-of-the-project-root" id="id22"&gt;Working outside of the project root&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#nikola" id="id23"&gt;Nikola&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#the-part-where-i-try-to-measure-times" id="id25"&gt;The part where I try to measure times&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#alternatives-and-new-tools" id="id26"&gt;Alternatives and new tools&lt;/a&gt;&lt;/p&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#the-part-where-i-try-to-measure-times" id="id24"&gt;The part where I try to measure times&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#alternative-tools" id="id25"&gt;Alternative tools&lt;/a&gt;&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#hatch" id="id27"&gt;Hatch&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#poetry" id="id28"&gt;Poetry&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#pip-is-here-to-stay" id="id29"&gt;Pip is here to stay!&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#pip-tools-locking-and-hashing-and-that-is-all" id="id26"&gt;Pip-tools: locking and hashing, and that is all&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#poetry-better-but-still-not-convincing" id="id27"&gt;Poetry: better, but still not convincing&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#the-break-neck-pace-of-pipenv" id="id30"&gt;The break-neck pace of Pipenv&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#conclusion" id="id31"&gt;Conclusion&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#pip-is-here-to-stay" id="id28"&gt;Pip is here to stay!&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#the-break-neck-pace-of-pipenv" id="id29"&gt;The break-neck pace of Pipenv&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#conclusion" id="id30"&gt;Conclusion&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/div&gt;
+&lt;div class="section" id="a-2020-update"&gt;
+&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id14"&gt;A 2020 update&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;This blog post was written in 2018, and it’s still pretty accurate when it
+comes to the criticisms of Pipenv, but something else happened since then.&lt;/p&gt;
+&lt;p class="lead"&gt;As of 2020, Pipenv is dead.&lt;/p&gt;
+&lt;p&gt;The last release of Pipenv was in November 2018. No new releases were made in
+2019. There were about 683 new commits made to Pipenv since then, but this is
+fairly slow progress considering this project’s status and previous
+release cadence. The developers claimed &lt;a class="reference external" href="https://github.com/pypa/pipenv/issues/4058#issuecomment-565550646"&gt;a new release is in the works&lt;/a&gt; in
+mid December, but not much has happened in almost 2 months since that post.
+All in all, Pipenv is effectively not maintained anymore. Yes, one of the
+chapters in this post is &lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#the-break-neck-pace-of-pipenv"&gt;The break-neck pace of Pipenv&lt;/a&gt;, and that is a
+problem. But zero updates in over a year to a packaging tool is also worrying.
+Pip has updates every few months in a fairly stable pace (with the exception of
+emergency bugfixe releases), and Pip has years of development behind it, unlike
+the fairly new pipenv.&lt;/p&gt;
+&lt;p&gt;In February 2020, the &lt;em&gt;Alternative tools&lt;/em&gt; section was updated to remove
+mentions of Hatch, and pip-tools was added. Poetry information was updated:
+it’s kinda slow, and the documentation is lacking.&lt;/p&gt;
+&lt;/div&gt;
 &lt;div class="section" id="officially-recommended-tool-or-how-we-got-here"&gt;
-&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id16"&gt;“Officially recommended tool”, or how we got here&lt;/a&gt;&lt;/h2&gt;
+&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id15"&gt;“Officially recommended tool”, or how we got here&lt;/a&gt;&lt;/h2&gt;
 &lt;blockquote&gt;
 &lt;p&gt;“Pipenv — the officially recommended Python packaging tool from Python.org, free (as in freedom).”&lt;/p&gt;
 &lt;/blockquote&gt;
@@ -404,7 +427,7 @@ packaging. The problem is: it isn’t that. There are some use cases that benefi
 from Pipenv, but for many others, trying to use that tool will only lead to
 frustration. We will explore this issue later.&lt;/p&gt;
 &lt;p&gt;Another issue with this tagline was the &lt;em&gt;Python.org&lt;/em&gt; and &lt;em&gt;official&lt;/em&gt; parts. The
-thing that made it “official” was a &lt;a class="reference external" href="https://packaging.python.org/tutorials/managing-dependencies/"&gt;short tutorial&lt;/a&gt; &lt;a class="footnote-reference brackets" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id12" id="id1"&gt;1&lt;/a&gt; on packaging.python.org,
+thing that made it “official” was a &lt;a class="reference external" href="https://packaging.python.org/tutorials/managing-dependencies/"&gt;short tutorial&lt;/a&gt; &lt;a class="footnote-reference brackets" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id10" id="id1"&gt;1&lt;/a&gt; on packaging.python.org,
 which is the PyPA’s packaging user guide. Also of note is the &lt;em&gt;Python.org&lt;/em&gt;
 domain used. It makes it sound as if Pipenv was endorsed by the Python core
 team. PyPA (Python Packaging Authority) is a separate organization — they are
@@ -419,11 +442,11 @@ was the direct result of this Reddit thread. I recommend reading this thread in
 full.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="what-pipenv-does"&gt;
-&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id17"&gt;What pipenv does&lt;/a&gt;&lt;/h2&gt;
+&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id16"&gt;What pipenv does&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;We’ve already learned that Pipenv is used to &lt;em&gt;manage application dependencies&lt;/em&gt;.
 Let’s learn what that term really means.&lt;/p&gt;
 &lt;div class="section" id="application-dependencies"&gt;
-&lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id18"&gt;Application dependencies&lt;/a&gt;&lt;/h3&gt;
+&lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id17"&gt;Application dependencies&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;Here is an example use case for Pipenv:
 I’m working on a website based on Django.  I create &lt;code class="docutils literal"&gt;~/git/website&lt;/code&gt; and run
 &lt;code class="docutils literal"&gt;pipenv install Django&lt;/code&gt; in that directory.  Pipenv:&lt;/p&gt;
@@ -431,7 +454,7 @@ I’m working on a website based on Django.  I create &lt;code class="docutils l
 &lt;li&gt;&lt;p&gt;automatically creates a virtualenv somewhere in my home directory&lt;/p&gt;&lt;/li&gt;
 &lt;li&gt;&lt;p&gt;writes a Pipfile, which lists Django as my dependency&lt;/p&gt;&lt;/li&gt;
 &lt;li&gt;&lt;p&gt;installs Django using pip&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;proceeds to write &lt;code class="docutils literal"&gt;Pipfile.lock&lt;/code&gt;, which stores the exact version and source file hash &lt;a class="footnote-reference brackets" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id13" id="id5"&gt;2&lt;/a&gt; of each package installed (including &lt;code class="docutils literal"&gt;pytz&lt;/code&gt;, Django’s dependency).&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;proceeds to write &lt;code class="docutils literal"&gt;Pipfile.lock&lt;/code&gt;, which stores the exact version and source file hash &lt;a class="footnote-reference brackets" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id11" id="id5"&gt;2&lt;/a&gt; of each package installed (including &lt;code class="docutils literal"&gt;pytz&lt;/code&gt;, Django’s dependency).&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;The last part of the process was the most time consuming. At one point, while
 locking the dependency versions, Pipenv hangs for 46 seconds. This is one of
@@ -441,7 +464,7 @@ the longer waits in the timing test section later, we’ll see something that
 could easily discourage users from using a package.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="running-scripts-badly"&gt;
-&lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id19"&gt;Running scripts (badly)&lt;/a&gt;&lt;/h3&gt;
+&lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id18"&gt;Running scripts (badly)&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;But let’s continue with our workflow. &lt;code class="docutils literal"&gt;pipenv run &lt;span class="pre"&gt;django-admin&lt;/span&gt; startproject
 foobanizer&lt;/code&gt; is what I must use now, which is rather unwieldy to type, and
 requires running pipenv even for the smallest things. (The &lt;code class="docutils literal"&gt;manage.py&lt;/code&gt; script
@@ -465,7 +488,7 @@ manual activation using &lt;code class="docutils literal"&gt;source $(pipenv &lt
 into a neat alias), or shell wrappers (similar to what virtualenvwrapper does).&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="finishing-it-all-up"&gt;
-&lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id20"&gt;Finishing it all up&lt;/a&gt;&lt;/h3&gt;
+&lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id19"&gt;Finishing it all up&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;Anyway, I want a blog on my site. I want to write them in Markdown syntax, so I
 run &lt;code class="docutils literal"&gt;pipenv install Markdown&lt;/code&gt;, and a few long seconds later, it’s added to
 both Pipfiles.  Another thing I can do is &lt;code class="docutils literal"&gt;pipenv install &lt;span class="pre"&gt;--dev&lt;/span&gt; ipython&lt;/code&gt; and
@@ -490,13 +513,13 @@ path anyway, since I can’t use &lt;code class="docutils literal"&gt;pipenv run
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class="section" id="what-pipenv-doesnt-do"&gt;
-&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id21"&gt;What pipenv doesn’t do&lt;/a&gt;&lt;/h2&gt;
+&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id20"&gt;What pipenv doesn’t do&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;The workflow I mentioned above looks pretty reasonable, right? There are some
 deficiencies, but other than that, it seems to work well. The main issue with
 Pipenv is: &lt;strong&gt;it works with one workflow, and one workflow only.&lt;/strong&gt; Try to do
 anything else, and you end up facing multiple obstacles.&lt;/p&gt;
 &lt;div class="section" id="setup-py-source-distributions-and-wheels"&gt;
-&lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id22"&gt;Setup.py, source distributions, and wheels&lt;/a&gt;&lt;/h3&gt;
+&lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id21"&gt;Setup.py, source distributions, and wheels&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;Pipenv only concerns itself with managing dependencies. &lt;strong&gt;It isn’t a packaging
 tool.&lt;/strong&gt; If you want your thing up on PyPI, Pipenv won’t help you with anything.
 You still need to write a &lt;code class="docutils literal"&gt;setup.py&lt;/code&gt; with &lt;code class="docutils literal"&gt;install_requires&lt;/code&gt;, because the
@@ -510,41 +533,41 @@ own either. And &lt;code class="docutils literal"&gt;pip freeze&lt;/code&gt; is 
 will be.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="working-outside-of-the-project-root"&gt;
-&lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id23"&gt;Working outside of the project root&lt;/a&gt;&lt;/h3&gt;
+&lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id22"&gt;Working outside of the project root&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;Another issue with Pipenv is the use of the working directory to select
-the virtual environment. &lt;a class="footnote-reference brackets" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id14" id="id6"&gt;3&lt;/a&gt; Let’s say I’m a library author.  A user of my &lt;code class="docutils literal"&gt;foobar&lt;/code&gt;
+the virtual environment. &lt;a class="footnote-reference brackets" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id12" id="id6"&gt;3&lt;/a&gt; Let’s say I’m a library author.  A user of my &lt;code class="docutils literal"&gt;foobar&lt;/code&gt;
 library has just reported a bug and attached a &lt;code class="docutils literal"&gt;repro.py&lt;/code&gt; file that lets me
 reproduce the issue. I download that file to &lt;code class="docutils literal"&gt;~/Downloads&lt;/code&gt; on my filesystem.
 With plain old virtualenv, I can easily confirm the reproduction in a spare
 shell with:&lt;/p&gt;
-&lt;pre class="code shell"&gt;&lt;a name="rest_code_740033e42f3f4fbca5a5c7cd282160cb-1"&gt;&lt;/a&gt;$ ~/virtualenvs/foobar/bin/python ~/Downloads/repro.py
+&lt;pre class="code shell"&gt;&lt;a name="rest_code_23a2a42663984ef8955c374a6b82758e-1"&gt;&lt;/a&gt;$ ~/virtualenvs/foobar/bin/python ~/Downloads/repro.py
 &lt;/pre&gt;&lt;p&gt;And then I can launch my fancy IDE to fix the bug.  I don’t have to &lt;code class="docutils literal"&gt;cd&lt;/code&gt; into
 the project. But with Pipenv, I can’t really do that.  If I put the virtualenv
 in &lt;code class="docutils literal"&gt;.venv&lt;/code&gt; with the command line option, I can type
 &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;~/git/foobar/.venv/bin/python&lt;/span&gt; ~/Downloads/repro.py&lt;/code&gt;. If I use the
 centralized directory + hashes thing, Tab completion becomes mandatory, if I
 haven’t memorized the hash.&lt;/p&gt;
-&lt;pre class="code shell"&gt;&lt;a name="rest_code_99a484ac55db4a90b53ad0ad9485e8ef-1"&gt;&lt;/a&gt;$ &lt;span class="nb"&gt;cd&lt;/span&gt; ~/git/foobar
-&lt;a name="rest_code_99a484ac55db4a90b53ad0ad9485e8ef-2"&gt;&lt;/a&gt;$ pipenv run python ~/Downloads/repro.py
+&lt;pre class="code shell"&gt;&lt;a name="rest_code_f8a42989f5374ffa94f098a8d1233c16-1"&gt;&lt;/a&gt;$ &lt;span class="nb"&gt;cd&lt;/span&gt; ~/git/foobar
+&lt;a name="rest_code_f8a42989f5374ffa94f098a8d1233c16-2"&gt;&lt;/a&gt;$ pipenv run python ~/Downloads/repro.py
 &lt;/pre&gt;&lt;p&gt;What if I had two &lt;code class="docutils literal"&gt;.py&lt;/code&gt; files, or &lt;code class="docutils literal"&gt;repro.py&lt;/code&gt; otherwise depended on being in
 the current working directory?&lt;/p&gt;
-&lt;pre class="code shell"&gt;&lt;a name="rest_code_69e68b316fda418980de9f0ea4610ca1-1"&gt;&lt;/a&gt;$ &lt;span class="nb"&gt;cd&lt;/span&gt; ~/git/foobar
-&lt;a name="rest_code_69e68b316fda418980de9f0ea4610ca1-2"&gt;&lt;/a&gt;$ pipenv shell
-&lt;a name="rest_code_69e68b316fda418980de9f0ea4610ca1-3"&gt;&lt;/a&gt;&lt;span class="o"&gt;(&lt;/span&gt;foobar-Mwd1l2m9&lt;span class="o"&gt;)&lt;/span&gt;$ &lt;span class="nb"&gt;cd&lt;/span&gt; ~/Downloads
-&lt;a name="rest_code_69e68b316fda418980de9f0ea4610ca1-4"&gt;&lt;/a&gt;&lt;span class="o"&gt;(&lt;/span&gt;foobar-Mwd1l2m9&lt;span class="o"&gt;)&lt;/span&gt;$ python repro.py
-&lt;a name="rest_code_69e68b316fda418980de9f0ea4610ca1-5"&gt;&lt;/a&gt;&lt;span class="o"&gt;(&lt;/span&gt;foobar-Mwd1l2m9&lt;span class="o"&gt;)&lt;/span&gt;$ &lt;span class="nb"&gt;exit&lt;/span&gt;  &lt;span class="c1"&gt;# (not deactivate!)&lt;/span&gt;
+&lt;pre class="code shell"&gt;&lt;a name="rest_code_176908c053d0409db2fb97c4b1b64fca-1"&gt;&lt;/a&gt;$ &lt;span class="nb"&gt;cd&lt;/span&gt; ~/git/foobar
+&lt;a name="rest_code_176908c053d0409db2fb97c4b1b64fca-2"&gt;&lt;/a&gt;$ pipenv shell
+&lt;a name="rest_code_176908c053d0409db2fb97c4b1b64fca-3"&gt;&lt;/a&gt;&lt;span class="o"&gt;(&lt;/span&gt;foobar-Mwd1l2m9&lt;span class="o"&gt;)&lt;/span&gt;$ &lt;span class="nb"&gt;cd&lt;/span&gt; ~/Downloads
+&lt;a name="rest_code_176908c053d0409db2fb97c4b1b64fca-4"&gt;&lt;/a&gt;&lt;span class="o"&gt;(&lt;/span&gt;foobar-Mwd1l2m9&lt;span class="o"&gt;)&lt;/span&gt;$ python repro.py
+&lt;a name="rest_code_176908c053d0409db2fb97c4b1b64fca-5"&gt;&lt;/a&gt;&lt;span class="o"&gt;(&lt;/span&gt;foobar-Mwd1l2m9&lt;span class="o"&gt;)&lt;/span&gt;$ &lt;span class="nb"&gt;exit&lt;/span&gt;  &lt;span class="c1"&gt;# (not deactivate!)&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;&lt;strong&gt;This is becoming ugly fairly quickly.&lt;/strong&gt; Also, with virtualenvwrapper, I can
 do this:&lt;/p&gt;
-&lt;pre class="code shell"&gt;&lt;a name="rest_code_0f0cfd79b88d41b1b22eb2f2561e3bed-1"&gt;&lt;/a&gt;$ &lt;span class="nb"&gt;cd&lt;/span&gt; ~/Downloads
-&lt;a name="rest_code_0f0cfd79b88d41b1b22eb2f2561e3bed-2"&gt;&lt;/a&gt;$ workon foobar
-&lt;a name="rest_code_0f0cfd79b88d41b1b22eb2f2561e3bed-3"&gt;&lt;/a&gt;&lt;span class="o"&gt;(&lt;/span&gt;foobar&lt;span class="o"&gt;)&lt;/span&gt;$ python repro.py
-&lt;a name="rest_code_0f0cfd79b88d41b1b22eb2f2561e3bed-4"&gt;&lt;/a&gt;&lt;span class="o"&gt;(&lt;/span&gt;foobar&lt;span class="o"&gt;)&lt;/span&gt;$ deactivate
+&lt;pre class="code shell"&gt;&lt;a name="rest_code_5a8b1ac6f9eb46ea93e0177c94e6acf4-1"&gt;&lt;/a&gt;$ &lt;span class="nb"&gt;cd&lt;/span&gt; ~/Downloads
+&lt;a name="rest_code_5a8b1ac6f9eb46ea93e0177c94e6acf4-2"&gt;&lt;/a&gt;$ workon foobar
+&lt;a name="rest_code_5a8b1ac6f9eb46ea93e0177c94e6acf4-3"&gt;&lt;/a&gt;&lt;span class="o"&gt;(&lt;/span&gt;foobar&lt;span class="o"&gt;)&lt;/span&gt;$ python repro.py
+&lt;a name="rest_code_5a8b1ac6f9eb46ea93e0177c94e6acf4-4"&gt;&lt;/a&gt;&lt;span class="o"&gt;(&lt;/span&gt;foobar&lt;span class="o"&gt;)&lt;/span&gt;$ deactivate
 &lt;/pre&gt;&lt;p&gt;And let’s not forget that Pipenv doesn’t help me to write a &lt;code class="docutils literal"&gt;setup.py&lt;/code&gt;,
 distribute code, or manage releases.  It just manages dependencies.  And it
 does it pretty badly.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="nikola"&gt;
-&lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id24"&gt;Nikola&lt;/a&gt;&lt;/h3&gt;
+&lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id23"&gt;Nikola&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;I’m a co-maintainer of a static site generator, &lt;a class="reference external" href="https://getnikola.com"&gt;Nikola&lt;/a&gt;.  As part of this, I have the following places where
 I need to run Nikola:&lt;/p&gt;
 &lt;ul class="simple"&gt;
@@ -577,7 +600,7 @@ contributors.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class="section" id="the-part-where-i-try-to-measure-times"&gt;
-&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id25"&gt;The part where I try to measure times&lt;/a&gt;&lt;/h2&gt;
+&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id24"&gt;The part where I try to measure times&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;Pipenv is famous for being slow.  But how slow is it really?
 I put it to the test.  I used two test environments:&lt;/p&gt;
 &lt;ul class="simple"&gt;
@@ -599,7 +622,7 @@ look at the Activity Monitor hinted that there is network activity going on
 when Pipenv displays its &lt;em&gt;Locking [packages] dependencies...&lt;/em&gt; line and
 hangs. Now, the docs don’t tell you that. The most atrocious example was a
 local Nikola install that was done in two runs: the first &lt;code class="docutils literal"&gt;pipenv install
-Nikola&lt;/code&gt; run was interrupted &lt;a class="footnote-reference brackets" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id15" id="id8"&gt;4&lt;/a&gt; right after it was done installing packages,
+Nikola&lt;/code&gt; run was interrupted &lt;a class="footnote-reference brackets" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id13" id="id8"&gt;4&lt;/a&gt; right after it was done installing packages,
 so the cache had all the necessary wheels in it. The install took 10 minutes
 and 7 seconds, 9:50 of which were taken by locking dependencies and installing
 the locked dependencies — so, roughly nine and a half minutes were spent
@@ -889,28 +912,33 @@ method&lt;/p&gt;&lt;/th&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;/div&gt;
-&lt;div class="section" id="alternatives-and-new-tools"&gt;
-&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id26"&gt;Alternatives and new tools&lt;/a&gt;&lt;/h2&gt;
+&lt;div class="section" id="alternative-tools"&gt;
+&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id25"&gt;Alternative tools&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;Python packaging is something with the state of which nobody seems to be
 satisfied. As such, there are many new contenders for the role of “best new
-packaging tool”. Apart from Pipenv, there are &lt;a class="reference external" href="https://github.com/ofek/hatch"&gt;Hatch&lt;/a&gt; (by Ofek Lev) and &lt;a class="reference external" href="https://github.com/sdispater/poetry"&gt;Poetry&lt;/a&gt;
-(by Sébastien Eustace). Both are listed in the “official” tutorial as alternate
-options.&lt;/p&gt;
-&lt;div class="section" id="hatch"&gt;
-&lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id27"&gt;Hatch&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;&lt;strong&gt;Hatch&lt;/strong&gt; tries to take care of &lt;em&gt;everything&lt;/em&gt; in the packaging process. This is
-mostly an asset, as it helps replace other tools. However, it can also be
-argued that it adds a single point of failure. Hatch works on already standard
-files, such as requirements.txt and setup.py, so it can be replaced with
-something else quite easily. It doesn’t use as much magic as Pipenv and is more
-configurable.  Some choices made by
-Hatch are questionable (such as manually parsing &lt;code class="docutils literal"&gt;pkg/__init__.py&lt;/code&gt; for a
-version number, &lt;a class="reference external" href="https://github.com/ofek/hatch/pull/60"&gt;installing test suites to site-packages&lt;/a&gt; (a rather common oversight), or its shell feature which is as ugly as Pipenv’s), and it does
-not do anything to manage dependencies.  It doesn’t necessarily work for the
-Django use case I mentioned earlier, or for end-users of software.&lt;/p&gt;
+packaging tool”.&lt;/p&gt;
+&lt;p&gt;Two popular alternatives packaging tools are &lt;a class="reference external" href="https://github.com/jazzband/pip-tools"&gt;pip-tools&lt;/a&gt; (by Vincent Driessen
+and Jazzband) and &lt;a class="reference external" href="https://github.com/sdispater/poetry"&gt;Poetry&lt;/a&gt; (by Sébastien Eustace).&lt;/p&gt;
+&lt;div class="section" id="pip-tools-locking-and-hashing-and-that-is-all"&gt;
+&lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id26"&gt;Pip-tools: locking and hashing, and that is all&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;Pip-tools&lt;/strong&gt; contains two tools. The first one is &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;pip-compile&lt;/span&gt;&lt;/code&gt;. It locks
+dependencies in &lt;code class="docutils literal"&gt;requirements.txt&lt;/code&gt; files, and that’s all it does. It allows
+updating dependencies in the file based on what’s on PyPI. You can optionally
+add hashes to that file. The second tool is &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;pip-sync&lt;/span&gt;&lt;/code&gt;. It will synchronize
+your virtualenv and the requirements file: it will delete packages not in that
+file, so that you don’t work with stuff not declared in requirements, and will
+ensure versions match the requirements file.  &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;pip-compile&lt;/span&gt;&lt;/code&gt; takes roughly
+10-20 seconds to run in the Nikola repo with a clean pip-tools cache (but with
+the pip cache intact).&lt;/p&gt;
+&lt;p&gt;Its speed is fairly reasonable, and it does not try to be the be-all-end-all
+tool for development. It handles a specific task, does it well, and does not
+try to handle tasks it should not. Pip-tools lets you work with venvs in any
+way you like, and it does not require anything specific. Unlike Pipenv and
+Poetry, you can install it into the virtualenvs that need it, and not
+system-wide.&lt;/p&gt;
 &lt;/div&gt;
-&lt;div class="section" id="poetry"&gt;
-&lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id28"&gt;Poetry&lt;/a&gt;&lt;/h3&gt;
+&lt;div class="section" id="poetry-better-but-still-not-convincing"&gt;
+&lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id27"&gt;Poetry: better, but still not convincing&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;&lt;strong&gt;Poetry&lt;/strong&gt; is somewhere in between. Its main aim is close to Pipenv, but it
 also makes it possible to distribute things to PyPI. It tries really hard to
 hide that it uses Pip behind the scenes. Its README comes with an extensive
@@ -920,18 +948,20 @@ features.  Poetry claims to use the standardized (PEP 518) &lt;code class="docut
 file to replace the usual lot of files. Unfortunately, the only thing that is
 standardized is the file name and syntax. Poetry uses custom &lt;code class="docutils literal"&gt;[tool.poetry]&lt;/code&gt;
 sections, which means that one needs Poetry to fully use the packages created
-with it, leading to vendor lock-in. (The aforementioned Hatch tool also
-produces a &lt;code class="docutils literal"&gt;pyproject.tmpl&lt;/code&gt;, which contains a &lt;code class="docutils literal"&gt;metadata&lt;/code&gt; section…) There is
-a &lt;code class="docutils literal"&gt;build&lt;/code&gt; feature to produce a sdist with setup.py and friends.&lt;/p&gt;
-&lt;p&gt;In a simple &lt;code class="docutils literal"&gt;poetry add Nikola&lt;/code&gt; test, it took 24.4s/15.1s/15.3s to resolve
-dependencies (according to Poetry’s own count, Remote environment, caches
-removed), complete with reassuring output and no quiet lockups.  Not as good as
-pip, but it’s more reasonable than Pipenv.  Also, the codebase and its layout
-are rather convoluted. Poetry produces packages instead of just managing
-dependencies, so it’s generally more useful than Pipenv.&lt;/p&gt;
+with it, leading to vendor lock-in. There is a &lt;code class="docutils literal"&gt;build&lt;/code&gt; feature to produce a
+sdist with setup.py and friends.&lt;/p&gt;
+&lt;p&gt;In February 2020, in a simple &lt;code class="docutils literal"&gt;poetry add Nikola&lt;/code&gt; test, it took &lt;strong&gt;about a
+minute&lt;/strong&gt; (55.1/50.8/53.6 s) to resolve dependencies (according to Poetry’s own
+count, Local environment, Poetry cache removed), complete with reassuring output and
+no quiet lockups.  Not as good as pip, but it’s more reasonable than Pipenv.
+Also, the codebase and its layout are rather convoluted, and the docs are very
+sparse and lacking. Poetry produces packages instead of just managing
+dependencies, so it’s generally more useful than Pipenv. That said, I am not
+convinced by that tool either.&lt;/p&gt;
+&lt;/div&gt;
 &lt;/div&gt;
 &lt;div class="section" id="pip-is-here-to-stay"&gt;
-&lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id29"&gt;Pip is here to stay!&lt;/a&gt;&lt;/h3&gt;
+&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id28"&gt;Pip is here to stay!&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;But in all the talk about new tools, we’re forgetting about the old ones, and
 they do their job well — so well in fact, that the new tools still need them
 under the covers.&lt;/p&gt;
@@ -940,11 +970,13 @@ packages between production and development (as Pipenv and Poetry do). This
 means that &lt;code class="docutils literal"&gt;pip freeze&lt;/code&gt; and &lt;code class="docutils literal"&gt;pip install&lt;/code&gt; are instant, at the cost of (a)
 needing two separate environments, or (b) installing development dependencies
 in production (which &lt;em&gt;should&lt;/em&gt; only be a waste of HDD space and nothing more in
-a well-architected system).&lt;/p&gt;
+a well-architected system). But at the same time, pip-tools can help keep the
+environments separate, as long as you take some time to write separate
+&lt;code class="docutils literal"&gt;requirements.in&lt;/code&gt; files.&lt;/p&gt;
 &lt;p&gt;The virtualenv management features can be provided by virtualenvwrapper. That
 tool’s main advantage is the shell script implementation, which means that
 &lt;code class="docutils literal"&gt;workon foo&lt;/code&gt; activates the &lt;code class="docutils literal"&gt;foo&lt;/code&gt; virtualenv without spawning a new
-subshell (an issue with Pipenv, Hatch, and Poetry, that I already covered when
+subshell (an issue with Pipenv and Poetry, that I already covered when
 describing Pipenv’s operation in the &lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#running-scripts-badly"&gt;Running scripts (badly)&lt;/a&gt; chapter.) An
 argument often raised by Pipenv proponents is that one does not need to concern
 itself with creating the virtualenv, and doesn’t need to care where it is.
@@ -960,9 +992,8 @@ creates tool-accessible text files). Their main advantage is that they are the
 Python package manager (which is pre-installed on Windows and Mac), and other
 tools would require installation/bootstrapping first.&lt;/p&gt;
 &lt;/div&gt;
-&lt;/div&gt;
 &lt;div class="section" id="the-break-neck-pace-of-pipenv"&gt;
-&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id30"&gt;The break-neck pace of Pipenv&lt;/a&gt;&lt;/h2&gt;
+&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id29"&gt;The break-neck pace of Pipenv&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;A good packaging tool is stable. In other words, it doesn’t change often, and
 it strives to support existing environments. It wouldn’t be fun to re-download
 everything on your system, because someone decided that &lt;code class="docutils literal"&gt;/usr&lt;/code&gt; is now called
@@ -1024,7 +1055,7 @@ when it comes to informing users what happened in each of the releases.&lt;/p&gt
 &lt;/ul&gt;
 &lt;/div&gt;
 &lt;div class="section" id="conclusion"&gt;
-&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id31"&gt;Conclusion&lt;/a&gt;&lt;/h2&gt;
+&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id30"&gt;Conclusion&lt;/a&gt;&lt;/h2&gt;
 &lt;ul class="simple"&gt;
 &lt;li&gt;&lt;p&gt;Pipenv, contrary to popular belief and (now removed) propaganda, is not an
 officially recommended tool of Python.org. It merely has a tutorial written
@@ -1038,7 +1069,7 @@ manually, alongside and independently of Pipenv.&lt;/p&gt;&lt;/li&gt;
 of installation speed. The speed is a noticeable issue with the tool. &lt;code class="docutils literal"&gt;pip
 freeze&lt;/code&gt; is good enough for this, even if there are no dependency classes
 (production vs development) and no hashes (which
-have minor benefits) &lt;a class="footnote-reference brackets" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id13" id="id11"&gt;2&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+have minor benefits) &lt;a class="footnote-reference brackets" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id11" id="id9"&gt;2&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
 &lt;li&gt;&lt;p&gt;Hatch attempts to replace many packaging tools, but some of its practices and
 ideas can be questionable.&lt;/p&gt;&lt;/li&gt;
 &lt;li&gt;&lt;p&gt;Poetry supports the same niche Pipenv does, while also adding the ability to
@@ -1052,16 +1083,16 @@ can manage virtualenvs better than the aforementioned new Python tools,
 because it is based on shell scripts (which can modify the enivironment).&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;dl class="footnote brackets"&gt;
-&lt;dt class="label" id="id12"&gt;&lt;span class="brackets"&gt;&lt;a class="fn-backref" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id1"&gt;1&lt;/a&gt;&lt;/span&gt;&lt;/dt&gt;
+&lt;dt class="label" id="id10"&gt;&lt;span class="brackets"&gt;&lt;a class="fn-backref" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id1"&gt;1&lt;/a&gt;&lt;/span&gt;&lt;/dt&gt;
 &lt;dd&gt;&lt;p&gt;On a side note, the tutorial explains nothing. A prospective user only learns it’s similar to npm or bundler (what does that mean?), installs one package, and runs a &lt;code class="docutils literal"&gt;.py&lt;/code&gt; file through &lt;code class="docutils literal"&gt;pipenv run&lt;/code&gt;.&lt;/p&gt;
 &lt;/dd&gt;
-&lt;dt class="label" id="id13"&gt;&lt;span class="brackets"&gt;2&lt;/span&gt;&lt;span class="fn-backref"&gt;(&lt;a href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id5"&gt;1&lt;/a&gt;,&lt;a href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id11"&gt;2&lt;/a&gt;)&lt;/span&gt;&lt;/dt&gt;
+&lt;dt class="label" id="id11"&gt;&lt;span class="brackets"&gt;2&lt;/span&gt;&lt;span class="fn-backref"&gt;(&lt;a href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id5"&gt;1&lt;/a&gt;,&lt;a href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id9"&gt;2&lt;/a&gt;)&lt;/span&gt;&lt;/dt&gt;
 &lt;dd&gt;&lt;p&gt;Note that one can’t change the file on PyPI after uploading it, so this would only be protection against rogue PyPI admins or a MitM attack (in which case you’ve got bigger problems anyways). &lt;a class="reference external" href="https://github.com/nedbat/coveragepy/issues/679#issuecomment-406396761"&gt;Also, the feature is fairly broken.&lt;/a&gt;&lt;/p&gt;
 &lt;/dd&gt;
-&lt;dt class="label" id="id14"&gt;&lt;span class="brackets"&gt;&lt;a class="fn-backref" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id6"&gt;3&lt;/a&gt;&lt;/span&gt;&lt;/dt&gt;
+&lt;dt class="label" id="id12"&gt;&lt;span class="brackets"&gt;&lt;a class="fn-backref" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id6"&gt;3&lt;/a&gt;&lt;/span&gt;&lt;/dt&gt;
 &lt;dd&gt;&lt;p&gt;Fortunately, it looks in the parent directories for Pipfiles as well. Otherwise, you might end up with one environment for &lt;code class="docutils literal"&gt;foo&lt;/code&gt; and another for &lt;code class="docutils literal"&gt;foo/foo&lt;/code&gt; and yet another for &lt;code class="docutils literal"&gt;foo/docs&lt;/code&gt; and so on…&lt;/p&gt;
 &lt;/dd&gt;
-&lt;dt class="label" id="id15"&gt;&lt;span class="brackets"&gt;&lt;a class="fn-backref" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id8"&gt;4&lt;/a&gt;&lt;/span&gt;&lt;/dt&gt;
+&lt;dt class="label" id="id13"&gt;&lt;span class="brackets"&gt;&lt;a class="fn-backref" href="https://chriswarrick.com/pl/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id8"&gt;4&lt;/a&gt;&lt;/span&gt;&lt;/dt&gt;
 &lt;dd&gt;&lt;p&gt;The interruption happened by mistake due to the RAM disk running out of space, but it was actually a good thing to have happened.&lt;/p&gt;
 &lt;/dd&gt;
 &lt;/dl&gt;

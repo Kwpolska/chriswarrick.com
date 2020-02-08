@@ -1,7 +1,7 @@
 .. title: Pipenv: promises a lot, delivers very little
 .. slug: pipenv-promises-a-lot-delivers-very-little
 .. date: 2018-07-17 19:40:00+02:00
-.. updated: 2018-07-22 21:20:00+02:00
+.. updated: 2020-02-08 21:00:00+01:00
 .. tags: Python, Pipenv, packaging
 .. category: Python
 .. description: Pipenv is a Python packaging tool that does one thing reasonably well. It tries to promote itself as much more than it is.
@@ -14,11 +14,41 @@ In this post, I will explore the problems with Pipenv. Was it really
 recommended by Python.org? Can everyone — or at least, the vast majority
 of people — benefit from it?
 
+(This post has been updated in February 2020 to reflect the current state of
+Pipenv.)
+
 .. TEASER_END
 
 .. class:: alert alert-primary
 
 .. contents::
+
+A 2020 update
+=============
+
+This blog post was written in 2018, and it’s still pretty accurate when it
+comes to the criticisms of Pipenv, but something else happened since then.
+
+.. class:: lead
+
+As of 2020, Pipenv is dead.
+
+The last release of Pipenv was in November 2018. No new releases were made in
+2019. There were about 683 new commits made to Pipenv since then, but this is
+fairly slow progress considering this project’s status and previous
+release cadence. The developers claimed `a new release is in the works
+<https://github.com/pypa/pipenv/issues/4058#issuecomment-565550646>`__ in
+mid December, but not much has happened in almost 2 months since that post.
+All in all, Pipenv is effectively not maintained anymore. Yes, one of the
+chapters in this post is `The break-neck pace of Pipenv`_, and that is a
+problem. But zero updates in over a year to a packaging tool is also worrying.
+Pip has updates every few months in a fairly stable pace (with the exception of
+emergency bugfixe releases), and Pip has years of development behind it, unlike
+the fairly new pipenv.
+
+In February 2020, the *Alternative tools* section was updated to remove
+mentions of Hatch, and pip-tools was added. Poetry information was updated:
+it’s kinda slow, and the documentation is lacking.
 
 “Officially recommended tool”, or how we got here
 =================================================
@@ -358,32 +388,42 @@ item is pipenv’s reported installation time.  So, pipenv install ⊇ locking/i
 |   14 | pipenv install                         | ``time``      | Local         | Kept                          | 31.399    | (L/I: 10.51 s)        | 31.399    |
 +------+----------------------------------------+---------------+---------------+-------------------------------+-----------+-----------+-----------+-----------+
 
-Alternatives and new tools
-==========================
+Alternative tools
+=================
 
 Python packaging is something with the state of which nobody seems to be
 satisfied. As such, there are many new contenders for the role of “best new
-packaging tool”. Apart from Pipenv, there are Hatch_ (by Ofek Lev) and Poetry_
-(by Sébastien Eustace). Both are listed in the “official” tutorial as alternate
-options.
+packaging tool”.
 
-Hatch
------
 
-**Hatch** tries to take care of *everything* in the packaging process. This is
-mostly an asset, as it helps replace other tools. However, it can also be
-argued that it adds a single point of failure. Hatch works on already standard
-files, such as requirements.txt and setup.py, so it can be replaced with
-something else quite easily. It doesn’t use as much magic as Pipenv and is more
-configurable.  Some choices made by
-Hatch are questionable (such as manually parsing ``pkg/__init__.py`` for a
-version number, `installing test suites to site-packages
-<https://github.com/ofek/hatch/pull/60>`_ (a rather common oversight), or its shell feature which is as ugly as Pipenv’s), and it does
-not do anything to manage dependencies.  It doesn’t necessarily work for the
-Django use case I mentioned earlier, or for end-users of software.
+Two popular alternatives packaging tools are `pip-tools`_ (by Vincent Driessen
+and Jazzband) and Poetry_ (by Sébastien Eustace).
 
-Poetry
-------
+.. _pip-tools: https://github.com/jazzband/pip-tools
+.. _Poetry: https://github.com/sdispater/poetry
+
+Pip-tools: locking and hashing, and that is all
+-----------------------------------------------
+
+**Pip-tools** contains two tools. The first one is ``pip-compile``. It locks
+dependencies in ``requirements.txt`` files, and that’s all it does. It allows
+updating dependencies in the file based on what’s on PyPI. You can optionally
+add hashes to that file. The second tool is ``pip-sync``. It will synchronize
+your virtualenv and the requirements file: it will delete packages not in that
+file, so that you don’t work with stuff not declared in requirements, and will
+ensure versions match the requirements file.  ``pip-compile`` takes roughly
+10-20 seconds to run in the Nikola repo with a clean pip-tools cache (but with
+the pip cache intact).
+
+Its speed is fairly reasonable, and it does not try to be the be-all-end-all
+tool for development. It handles a specific task, does it well, and does not
+try to handle tasks it should not. Pip-tools lets you work with venvs in any
+way you like, and it does not require anything specific. Unlike Pipenv and
+Poetry, you can install it into the virtualenvs that need it, and not
+system-wide.
+
+Poetry: better, but still not convincing
+----------------------------------------
 
 **Poetry** is somewhere in between. Its main aim is close to Pipenv, but it
 also makes it possible to distribute things to PyPI. It tries really hard to
@@ -394,22 +434,20 @@ features.  Poetry claims to use the standardized (PEP 518) ``pyproject.toml``
 file to replace the usual lot of files. Unfortunately, the only thing that is
 standardized is the file name and syntax. Poetry uses custom ``[tool.poetry]``
 sections, which means that one needs Poetry to fully use the packages created
-with it, leading to vendor lock-in. (The aforementioned Hatch tool also
-produces a ``pyproject.tmpl``, which contains a ``metadata`` section…) There is
-a ``build`` feature to produce a sdist with setup.py and friends.
+with it, leading to vendor lock-in. There is a ``build`` feature to produce a
+sdist with setup.py and friends.
 
-In a simple ``poetry add Nikola`` test, it took 24.4s/15.1s/15.3s to resolve
-dependencies (according to Poetry’s own count, Remote environment, caches
-removed), complete with reassuring output and no quiet lockups.  Not as good as
-pip, but it’s more reasonable than Pipenv.  Also, the codebase and its layout
-are rather convoluted. Poetry produces packages instead of just managing
-dependencies, so it’s generally more useful than Pipenv.
-
-.. _Hatch: https://github.com/ofek/hatch
-.. _Poetry: https://github.com/sdispater/poetry
+In February 2020, in a simple ``poetry add Nikola`` test, it took **about a
+minute** (55.1/50.8/53.6 s) to resolve dependencies (according to Poetry’s own
+count, Local environment, Poetry cache removed), complete with reassuring output and
+no quiet lockups.  Not as good as pip, but it’s more reasonable than Pipenv.
+Also, the codebase and its layout are rather convoluted, and the docs are very
+sparse and lacking. Poetry produces packages instead of just managing
+dependencies, so it’s generally more useful than Pipenv. That said, I am not
+convinced by that tool either.
 
 Pip is here to stay!
---------------------
+====================
 
 But in all the talk about new tools, we’re forgetting about the old ones, and
 they do their job well — so well in fact, that the new tools still need them
@@ -420,12 +458,14 @@ packages between production and development (as Pipenv and Poetry do). This
 means that ``pip freeze`` and ``pip install`` are instant, at the cost of (a)
 needing two separate environments, or (b) installing development dependencies
 in production (which *should* only be a waste of HDD space and nothing more in
-a well-architected system).
+a well-architected system). But at the same time, pip-tools can help keep the
+environments separate, as long as you take some time to write separate
+``requirements.in`` files.
 
 The virtualenv management features can be provided by virtualenvwrapper. That
 tool’s main advantage is the shell script implementation, which means that
 ``workon foo`` activates the ``foo`` virtualenv without spawning a new
-subshell (an issue with Pipenv, Hatch, and Poetry, that I already covered when
+subshell (an issue with Pipenv and Poetry, that I already covered when
 describing Pipenv’s operation in the `Running scripts (badly)`_ chapter.) An
 argument often raised by Pipenv proponents is that one does not need to concern
 itself with creating the virtualenv, and doesn’t need to care where it is.
@@ -451,7 +491,6 @@ it strives to support existing environments. It wouldn’t be fun to re-download
 everything on your system, because someone decided that ``/usr`` is now called
 ``/stuff``, and all the files in ``/usr`` would become forgotten and not
 removed. Well, this is what Pipenv did:
-
 
 .. class:: table table-striped table-bordered
 
