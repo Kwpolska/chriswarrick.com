@@ -1,5 +1,163 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chris Warrick (Blog)</title><link>https://chriswarrick.com/</link><description>A blog about everything and nothing.</description><atom:link href="https://chriswarrick.com/rss.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Sat, 08 Feb 2020 19:53:54 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Modern Web Development: where you need 500 packages to build Bootstrap</title><link>https://chriswarrick.com/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;This humble blog is written by an old-school developer who sometimes does web stuff. An attempt to customize the Bootstrap CSS theme requires 50 MB of node_modules, over 500 packages, and comes with a bit of frustration at stupid tools and terrible documentation.&lt;/p&gt;
+<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chris Warrick (Blog)</title><link>https://chriswarrick.com/</link><description>A blog about everything and nothing.</description><atom:link href="https://chriswarrick.com/rss.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Sun, 09 Feb 2020 15:30:13 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>When HTML is not enough: a tale of the &lt;datalist&gt; element</title><link>https://chriswarrick.com/blog/2020/02/09/when-html-is-not-enough-a-tale-of-the-datalist-element/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;HTML 5.0 was finalized in 2014 (and its drafts were published even earlier), and with it came the &lt;code class="docutils literal"&gt;&amp;lt;datalist&amp;gt;&lt;/code&gt; element.  It’s
+2020, and even though it might look like a good replacement for custom
+autocomplete widgets, browser issues made me get rid of it.&lt;/p&gt;
+&lt;!-- TEASER_END --&gt;
+&lt;p&gt;I’ve built a web app to help me track my expenses. The app is written in Django,
+and &lt;a class="reference external" href="https://github.com/Kwpolska/django-expenses"&gt;it’s open source&lt;/a&gt;. One of
+the goals was to have a simple codebase with limited external JS dependencies,
+as well as basic usability with JS disabled. This is partially to facilitate
+learning of standard DOM manipulation routines and TypeScript.&lt;/p&gt;
+&lt;p&gt;The JS/TS bits are called the &lt;em&gt;Scripting Enhancements&lt;/em&gt; to reflect their nature.
+The biggest items are an interactive bill editor (a table with add/edit/remove
+operations, that submits its data as a regular HTML POST &lt;code class="docutils literal"&gt;&amp;lt;form&amp;gt;&lt;/code&gt;) and an
+autocomplete framework (used by the bill editor in an advanced way, and by
+other screens in the app with a more basic featureset). The autocomplete
+framework is exactly what you’d expect: point it at an input field and a URL,
+and keypresses lead to the URL being queried for previous values for this
+field, which are displayed as possible values to the user to save typing.&lt;/p&gt;
+&lt;div class="section" id="autocomplete-with-html-5-the-datalist-tag"&gt;
+&lt;h2&gt;Autocomplete with HTML 5: the &amp;lt;datalist&amp;gt; tag&lt;/h2&gt;
+&lt;p&gt;But how to display the options to the user? Most people would display a
+&lt;code class="docutils literal"&gt;position: absolute&lt;/code&gt; box with links/buttons, throw in some more logic around
+the focus and blur events, and call it a day. There are tons of ready-made
+solutions that do all that for you, although most of them are terrible. But!
+HTML 5 introduced a &lt;code class="docutils literal"&gt;&amp;lt;datalist&amp;gt;&lt;/code&gt; tag. And it looks like everything you could
+need. You link a &lt;code class="docutils literal"&gt;&amp;lt;datalist&amp;gt;&lt;/code&gt; tag to an &lt;code class="docutils literal"&gt;&amp;lt;input&amp;gt;&lt;/code&gt; and it shows matching
+options in an autocomplete-style box.  In fact, here’s a simple demo, in case
+your browser supports it:&lt;/p&gt;
+&lt;div class="card mb-3 text-center"&gt;
+    &lt;div class="card-body"&gt;
+        &lt;label for="dldemo" class="ml-1 mr-1"&gt;Favorite programming language:&lt;/label&gt;
+        &lt;input class="form-control d-inline-block ml-1 mr-1" style="width: auto" placeholder="Start typing…" list="dldemolist" id="dldemo"&gt;
+        &lt;datalist id="dldemolist"&gt;
+            &lt;option value="Swift"&gt;
+            &lt;/option&gt;&lt;option value="Rust"&gt;
+            &lt;/option&gt;&lt;option value="Ruby"&gt;
+            &lt;/option&gt;&lt;option value="Python"&gt;
+            &lt;/option&gt;&lt;option value="PHP"&gt;
+            &lt;/option&gt;&lt;option value="Kotlin"&gt;
+            &lt;/option&gt;&lt;option value="JavaScript"&gt;
+            &lt;/option&gt;&lt;option value="Java"&gt;
+            &lt;/option&gt;&lt;option value="Go"&gt;
+            &lt;/option&gt;&lt;option value="C++"&gt;
+            &lt;/option&gt;&lt;option value="C#"&gt;C Sharp&lt;/option&gt;
+            &lt;option value="C"&gt;
+        &lt;/option&gt;&lt;/datalist&gt;
+    &lt;/div&gt;
+    &lt;div class="card-footer"&gt;&lt;a href="https://chriswarrick.com/listings/datalist/datalist-demo.html.html"&gt;View demo source&lt;/a&gt;&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;Now, here are a few takeaways from that demo:&lt;/p&gt;
+&lt;ol class="arabic simple"&gt;
+&lt;li&gt;&lt;p&gt;Options are displayed in the same order as in the &lt;code class="docutils literal"&gt;&amp;lt;datalist&amp;gt;&lt;/code&gt; tag in the
+source, this list was sorted reverse-alphabetically in the source, and
+that’s how it appears in the source.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;The list is filtered case-insensitively based on user-input substrings. In
+Chrome, Firefox and Safari, the substring can appear at any point in the
+string.  But in Edge (old Microsoft engine), it looks only at the beginning
+of the string.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Some browsers show an arrow on the field to show the entries, sometimes
+double-clicking opens the list.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;The entry for C# is as follows: &lt;code class="docutils literal"&gt;&amp;lt;option &lt;span class="pre"&gt;value="C#"&amp;gt;C&lt;/span&gt; &lt;span class="pre"&gt;Sharp&amp;lt;/option&amp;gt;&lt;/span&gt;&lt;/code&gt;.
+Chrome displays it on as &lt;span class="raw-html"&gt;“&lt;strong&gt;C#&lt;/strong&gt; &lt;small&gt;C
+Sharp&lt;/small&gt;”&lt;/span&gt; (on two lines), Safari shows only “C#”, Firefox and Edge
+show “C Sharp”. Selecting the option always inputs C#.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Mobile Safari does not expand the list by default, but displays some of the
+options above the keyboard (as typing predictions). You can click on the
+arrow to display all the options in a &lt;a class="reference external" href="https://developer.apple.com/design/human-interface-guidelines/ios/controls/pickers/"&gt;scrolling picker&lt;/a&gt;.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Chrome on Android displays it the same way as on desktop (drop-down list).&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;This demo uses static, hardcoded data. Doing that for the Expenses app would
+be terrible for performance — that would waste bandwidth, force the browser to
+parse a fairly long list, and it could easily overload the browser when it
+tries to expand the list. But wiring it up to a &lt;code class="docutils literal"&gt;fetch()&lt;/code&gt; call to a REST API
+should not be hard, and browsers work correctly when the datalist changes.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="an-emoji-hack"&gt;
+&lt;h2&gt;An emoji hack&lt;/h2&gt;
+&lt;p&gt;One of the features I needed was to make the auto-complete fill out more than
+one field at once. Well, &lt;code class="docutils literal"&gt;&amp;lt;datalist&amp;gt;&lt;/code&gt; has no specific support for that. It only
+supports showing a list and putting the value in the input box it’s connected
+to. But choosing something from the list fires the usual &lt;code class="docutils literal"&gt;input&lt;/code&gt; event. I
+opted to do this: show every entry with a sparkles emoji (✨) in front, with the
+two other fields also inside this string, delimited by other emoji, and then
+catch the &lt;code class="docutils literal"&gt;input&lt;/code&gt; event.  If the field beigns with ✨, then use a regex to go
+from one emoji-delimited string to three, and place the correct strings in
+three input boxes (while also removing the sparkles from the first field).&lt;/p&gt;
+&lt;p&gt;Yes, it’s a hack. But it’s pretty okay appearance-wise, and it does work. It
+wouldn’t have worked so well in Edge, but I didn’t even know about this
+behavior before writing this blog post, and the initial sparkles emoji could be
+dropped and I could still make it work.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="works-on-mobile-yes-except"&gt;
+&lt;h2&gt;Works on mobile? Yes, except…&lt;/h2&gt;
+&lt;p&gt;I went on and deployed the &lt;code class="docutils literal"&gt;&amp;lt;datalist&amp;gt;&lt;/code&gt;-based autocomplete to my site. It
+looked good, worked fine. To use the thing on mobile, I’ve got a special
+launcher app. Its main reason for existence? I want a home screen icon, but
+Chrome only allows progressive web apps to do that (and that’s busywork I don’t
+feel like doing), and back then, Firefox (which has no such restrictions) did
+not support &lt;code class="docutils literal"&gt;&amp;lt;datalist&amp;gt;&lt;/code&gt; on Android.  The app is fairly simple, with a
+standard WebView widget and a slide-out navigation drawer, and a few other nice
+things, and it’s 120 SLOC of Kotlin.&lt;/p&gt;
+&lt;p&gt;But then, I bought a new phone, and with it, upgraded from Android 7 to 9. And
+I hit a bug in Chrome, which is still not fixed. The bug?
+&lt;a class="reference external" href="https://bugs.chromium.org/p/chromium/issues/detail?id=949555"&gt;HTML datalist doesn’t work on Android 8 or higher in WebView&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Oh. We’ve got a bit of a problem. Firefox still didn’t seem to support
+&lt;code class="docutils literal"&gt;&amp;lt;datalist&amp;gt;&lt;/code&gt;. But there’s one more way to make an app show a webpage: Custom
+Tabs. This is a feature you’ve probably seen around Android, and it’s somewhere
+in between. The app gets minimum control over the appearance of the toolbar,
+but the “real” web browser is responsible for rendering the page. Chrome in a
+Custom Tab supports &lt;code class="docutils literal"&gt;&amp;lt;datalist&amp;gt;&lt;/code&gt;. So I built a small app to do what I wanted.&lt;/p&gt;
+&lt;p&gt;There was just one minor thing to fix. My default browser on mobile is &lt;a class="reference external" href="https://support.mozilla.org/en-US/kb/focus"&gt;Firefox
+Focus&lt;/a&gt;. The main features of
+Focus are tracking protection, content blocking, and storing zero
+history and cookies (permanent incognito mode with one-click clearing). This is
+perfect for clicking random links, especially since I hate Chrome’s insistence
+on showing webpages you visited 5 years ago once when autocompleting URLs.
+(Chrome is my secondary browser on mobile; on desktop, I almost always have an
+incognito window open.)&lt;/p&gt;
+&lt;p&gt;Why is Focus relevant to this story? One, it (still) does not support the tag.
+Two, the default browser is also the provider of the Custom Tabs. Which is
+great for my web-browsing habits, but won’t solve the problem.  Fortunately,
+it’s just a one-line change to send the intent directly to Chrome. The entire
+thing is less than 30 lines long. You can see the full &lt;a class="reference external" href="https://chriswarrick.com/listings/android-chrome-custom-tabs/CustomTabsActivity.java.html"&gt;CustomTabsActivity.java&lt;/a&gt; file, but the relevant bits are below.&lt;/p&gt;
+&lt;pre class="code java"&gt;&lt;a name="rest_code_60f08794a96848f1b6dc4f494c6abcba-1"&gt;&lt;/a&gt;&lt;span class="n"&gt;CustomTabsIntent&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="na"&gt;Builder&lt;/span&gt; &lt;span class="n"&gt;builder&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="n"&gt;CustomTabsIntent&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="na"&gt;Builder&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+&lt;a name="rest_code_60f08794a96848f1b6dc4f494c6abcba-2"&gt;&lt;/a&gt;&lt;span class="c1"&gt;// Optionally, configure appearance and buttons on toolbar.&lt;/span&gt;
+&lt;a name="rest_code_60f08794a96848f1b6dc4f494c6abcba-3"&gt;&lt;/a&gt;&lt;span class="n"&gt;CustomTabsIntent&lt;/span&gt; &lt;span class="n"&gt;intent&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;builder&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="na"&gt;build&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+&lt;a name="rest_code_60f08794a96848f1b6dc4f494c6abcba-4"&gt;&lt;/a&gt;&lt;span class="c1"&gt;// Force browser to Chrome instead of system default.&lt;/span&gt;
+&lt;a name="rest_code_60f08794a96848f1b6dc4f494c6abcba-5"&gt;&lt;/a&gt;&lt;span class="n"&gt;intent&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="na"&gt;intent&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="na"&gt;setPackage&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"com.android.chrome"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;a name="rest_code_60f08794a96848f1b6dc4f494c6abcba-6"&gt;&lt;/a&gt;&lt;span class="n"&gt;intent&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="na"&gt;launchUrl&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;this&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;Uri&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="na"&gt;parse&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"https://chriswarrick.com/"&lt;/span&gt;&lt;span class="p"&gt;));&lt;/span&gt;
+&lt;/pre&gt;&lt;p&gt;It seems to work well, the list is displayed, and it can be used to input
+stuff, the emoji hack works too.&lt;/p&gt;
+&lt;p&gt;There was one more bug with Chrome on Android. Typing a character sometimes led to
+it appearing twice: I typed &lt;em&gt;A&lt;/em&gt;, the hints appeared, then the text box started
+showing &lt;em&gt;AA&lt;/em&gt;, and my hints disappeared. I can’t reproduce it right now, but
+that also made the entire flow just annoying.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="aftermath"&gt;
+&lt;h2&gt;Aftermath&lt;/h2&gt;
+&lt;p&gt;With all the browser bugs, support issues, and various glitches, I decided to
+build an autocomplete widget of my own. I took the CSS from Bootstrap 4, and
+used Popper.js to do the positioning. It looks and works better, has keyboard
+support, and is definitely less hacky (the emoji is still there, because they
+look good, but my entries know the original object they were made from and can
+just tell the handler to use that instead of using regex). And it beats many of
+the autocomplete widgets out there, because they often fail when you hold the
+mouse a bit longer; also, it can reposition itself to the top if there’s more
+space. All that in just 198 SLOC of TypeScript. (I also discovered a bug in my
+code that made it work a bit worse, fixing it for the old implementation would
+still not fix the other issues.)&lt;/p&gt;
+&lt;p&gt;What’s the moral of the story? Even though HTML 5 has been a standard for many
+years, browser support for the new tags still seems to be an issue. And
+sometimes, it’s better to just put in the extra work and build a good UI on
+your own, instead of trusting the browser to do it right.&lt;/p&gt;
+&lt;p&gt;The same applies to other “new” HTML 5 form elements.  &lt;code class="docutils literal"&gt;&amp;lt;input &lt;span class="pre"&gt;type="date"&amp;gt;&lt;/span&gt;&lt;/code&gt;
+is not supported in desktop Safari, and is fairly ugly in desktop Firefox and
+Chrome.  It displays the standard OS picker on mobile, which gets you a
+calendar on Android, but a &lt;a class="reference external" href="https://developer.apple.com/design/human-interface-guidelines/ios/controls/pickers/"&gt;scrolling picker&lt;/a&gt; on iOS.
+&lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;datetime-local&lt;/span&gt;&lt;/code&gt; is currently Chrome-only.  &lt;code class="docutils literal"&gt;month&lt;/code&gt; lets you click on a day
+and end up with an entire month selected in Chrome.  A custom component with
+JavaScript would be far more consistent and often easier to use.&lt;/p&gt;
+&lt;/div&gt;&lt;/div&gt;</description><category>HTML</category><category>HTML5</category><category>JavaScript</category><category>TypeScript</category><category>web development</category><guid>https://chriswarrick.com/blog/2020/02/09/when-html-is-not-enough-a-tale-of-the-datalist-element/</guid><pubDate>Sun, 09 Feb 2020 15:30:00 GMT</pubDate></item><item><title>Modern Web Development: where you need 500 packages to build Bootstrap</title><link>https://chriswarrick.com/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;This humble blog is written by an old-school developer who sometimes does web stuff. An attempt to customize the Bootstrap CSS theme requires 50 MB of node_modules, over 500 packages, and comes with a bit of frustration at stupid tools and terrible documentation.&lt;/p&gt;
 &lt;!-- TEASER_END --&gt;
 &lt;p&gt;You might notice that this website is based on Bootstrap. You might also notice it’s been heavily customized, especially if you’re browsing in the (currently default) Dark Mode. Back in Bootstrap v3 days, the task was accomplished by &lt;a class="reference external" href="https://getbootstrap.com/docs/3.4/customize/"&gt;a simple online tool&lt;/a&gt; that required no local installs. Bootstrap 4 changed the landscape: now you need to manually compile Sass. Moreover, Autoprefixer is required to make the CSS usable by web browsers.&lt;/p&gt;
 &lt;p&gt;Now, when it comes to web development, I believe the old ways were better. Back when nobody thought to make a client-side-JS-based blog or pastebin, and only apps that needed interactivity were JS-first. Gmail is a good example of that, although they &lt;em&gt;still&lt;/em&gt; offer a &lt;a class="reference external" href="https://support.google.com/mail/answer/15049?hl=en"&gt;basic HTML view&lt;/a&gt; and it works good — in fact, I suppose it might be less buggy than the JS-ladden version. (A lot of single-page apps like to randomly glitch out in my experience.)&lt;/p&gt;
@@ -2276,94 +2434,4 @@ issues.&lt;/p&gt;
 &lt;tbody valign="top"&gt;
 &lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="https://chriswarrick.com/blog/2017/06/24/apple-broke-the-display-menu-so-i-wrote-my-own/#id2"&gt;[2]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;also, in dual-screen mode, I can have the dock on one screen only, and the dock must live on the edge of the “extended” display — so either on the left side of the MacBook screen, or on the right side of the external display.&lt;/td&gt;&lt;/tr&gt;
 &lt;/tbody&gt;
-&lt;/table&gt;&lt;/div&gt;</description><category>app</category><category>Apple</category><category>display</category><category>programming</category><category>projects</category><category>Swift</category><guid>https://chriswarrick.com/blog/2017/06/24/apple-broke-the-display-menu-so-i-wrote-my-own/</guid><pubDate>Sat, 24 Jun 2017 19:02:47 GMT</pubDate></item><item><title>Unix locales vs Unicode (‘ascii’ codec can’t encode character…)</title><link>https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;You might get unusual errors about Unicode and inability to convert
-to ASCII. Programs might just crash at random. Those are often simple to fix —
-all you need is correct locale configuration.&lt;/p&gt;
-&lt;!-- TEASER_END --&gt;
-&lt;p class="lead"&gt;Has this ever happened to you?&lt;/p&gt;
-&lt;pre class="code pytb"&gt;&lt;a name="rest_code_8d6fcd3f4c0f4652a9d965e0efdc8e35-1"&gt;&lt;/a&gt;&lt;span class="gt"&gt;Traceback (most recent call last):&lt;/span&gt;
-&lt;a name="rest_code_8d6fcd3f4c0f4652a9d965e0efdc8e35-2"&gt;&lt;/a&gt;  File &lt;span class="nb"&gt;"aogonek.py"&lt;/span&gt;, line &lt;span class="m"&gt;1&lt;/span&gt;, in &lt;span class="n"&gt;&amp;lt;module&amp;gt;&lt;/span&gt;
-&lt;a name="rest_code_8d6fcd3f4c0f4652a9d965e0efdc8e35-3"&gt;&lt;/a&gt;    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;u&lt;/span&gt;&lt;span class="s1"&gt;'&lt;/span&gt;&lt;span class="se"&gt;\u0105&lt;/span&gt;&lt;span class="s1"&gt;'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_8d6fcd3f4c0f4652a9d965e0efdc8e35-4"&gt;&lt;/a&gt;&lt;span class="gr"&gt;UnicodeEncodeError&lt;/span&gt;: &lt;span class="n"&gt;'ascii' codec can't encode character '\u0105' in position 0: ordinal not in range(128)&lt;/span&gt;
-&lt;/pre&gt;&lt;pre class="code text"&gt;&lt;a name="rest_code_788f970c06c24772896caf6c849e108b-1"&gt;&lt;/a&gt;Nikola: Could not guess locale for language en, using locale C
-&lt;/pre&gt;&lt;pre class="code text"&gt;&lt;a name="rest_code_60dd0fd51d70492a9aec6e85853faa20-1"&gt;&lt;/a&gt;Input: ą
-&lt;a name="rest_code_60dd0fd51d70492a9aec6e85853faa20-2"&gt;&lt;/a&gt;Desired ascii(): '\u0105'
-&lt;a name="rest_code_60dd0fd51d70492a9aec6e85853faa20-3"&gt;&lt;/a&gt;Real ascii(): '\udcc4\udc85'
-&lt;/pre&gt;&lt;pre class="code text"&gt;&lt;a name="rest_code_387ca5641e414788a18da62e53935f2b-1"&gt;&lt;/a&gt;perl: warning: Setting locale failed.
-&lt;a name="rest_code_387ca5641e414788a18da62e53935f2b-2"&gt;&lt;/a&gt;perl: warning: Please check that your locale settings:
-&lt;a name="rest_code_387ca5641e414788a18da62e53935f2b-3"&gt;&lt;/a&gt;    [...]
-&lt;a name="rest_code_387ca5641e414788a18da62e53935f2b-4"&gt;&lt;/a&gt;    are supported and installed on your system.
-&lt;a name="rest_code_387ca5641e414788a18da62e53935f2b-5"&gt;&lt;/a&gt;perl: warning: Falling back to the standard locale ("C").
-&lt;/pre&gt;&lt;p class="lead"&gt;All those errors have the same root cause: incorrect locale configuration.
-To fix them all, you need to generate the missing locales and set them.&lt;/p&gt;
-&lt;div class="section" id="check-currently-used-locale"&gt;
-&lt;h2&gt;Check currently used locale&lt;/h2&gt;
-&lt;p&gt;The &lt;tt class="docutils literal"&gt;locale&lt;/tt&gt; command (without arguments) should tell you which locales you’re
-currently using.  (The list might be shorter on your end)&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_667d43329e834e05a6a870b1748ce4b9-1"&gt;&lt;/a&gt;$ locale
-&lt;a name="rest_code_667d43329e834e05a6a870b1748ce4b9-2"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LANG&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_667d43329e834e05a6a870b1748ce4b9-3"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_CTYPE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_667d43329e834e05a6a870b1748ce4b9-4"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_NUMERIC&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_667d43329e834e05a6a870b1748ce4b9-5"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_TIME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_667d43329e834e05a6a870b1748ce4b9-6"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_COLLATE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_667d43329e834e05a6a870b1748ce4b9-7"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_MONETARY&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_667d43329e834e05a6a870b1748ce4b9-8"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_MESSAGES&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_667d43329e834e05a6a870b1748ce4b9-9"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_PAPER&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_667d43329e834e05a6a870b1748ce4b9-10"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_NAME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_667d43329e834e05a6a870b1748ce4b9-11"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_ADDRESS&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_667d43329e834e05a6a870b1748ce4b9-12"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_TELEPHONE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_667d43329e834e05a6a870b1748ce4b9-13"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_MEASUREMENT&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_667d43329e834e05a6a870b1748ce4b9-14"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_IDENTIFICATION&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_667d43329e834e05a6a870b1748ce4b9-15"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_ALL&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;
-&lt;/pre&gt;&lt;p&gt;If any of those is set to &lt;tt class="docutils literal"&gt;C&lt;/tt&gt; or &lt;tt class="docutils literal"&gt;POSIX&lt;/tt&gt;, has a different encoding than
-&lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;UTF-8&lt;/span&gt;&lt;/tt&gt; (sometimes spelled &lt;tt class="docutils literal"&gt;utf8&lt;/tt&gt;) is empty (with the exception of
-&lt;tt class="docutils literal"&gt;LC_ALL&lt;/tt&gt;), or if you see any errors, you need to reconfigure your locale.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="section" id="check-locale-availability-and-install-missing-locales"&gt;
-&lt;h2&gt;Check locale availability and install missing locales&lt;/h2&gt;
-&lt;p&gt;The first thing you need to do is check locale availability. To do this, run
-&lt;tt class="docutils literal"&gt;locale &lt;span class="pre"&gt;-a&lt;/span&gt;&lt;/tt&gt;. This will produce a list of all installed locales.  You can use
-&lt;tt class="docutils literal"&gt;grep&lt;/tt&gt; to get a more reasonable list.&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_7328abf50d3649f5a5bf0842b8cc764d-1"&gt;&lt;/a&gt;$ locale -a | grep -i utf
-&lt;a name="rest_code_7328abf50d3649f5a5bf0842b8cc764d-2"&gt;&lt;/a&gt;&amp;lt;lists all UTF-8 locales&amp;gt;
-&lt;a name="rest_code_7328abf50d3649f5a5bf0842b8cc764d-3"&gt;&lt;/a&gt;$ locale -a | grep -i utf | grep -i en_US
-&lt;a name="rest_code_7328abf50d3649f5a5bf0842b8cc764d-4"&gt;&lt;/a&gt;en_US.UTF-8
-&lt;/pre&gt;&lt;p&gt;The best locale to use is the one for your language, with the UTF-8 encoding.
-The locale will be used by some console apps for output. I’m going to use
-&lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;en_US.UTF-8&lt;/span&gt;&lt;/tt&gt; in this guide.&lt;/p&gt;
-&lt;p&gt;If you can’t see any UTF-8 locales, or no appropriate locale setting for your
-language of choice, you might need to generate those. The required actions
-depend on your distro/OS.&lt;/p&gt;
-&lt;ul class="simple"&gt;
-&lt;li&gt;Debian, Ubuntu, and derivatives: install &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;language-pack-en-base&lt;/span&gt;&lt;/tt&gt;, run &lt;tt class="docutils literal"&gt;sudo &lt;span class="pre"&gt;dpkg-reconfigure&lt;/span&gt; locales&lt;/tt&gt;&lt;/li&gt;
-&lt;li&gt;RHEL, CentOS, Fedora: install &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;glibc-langpack-en&lt;/span&gt;&lt;/tt&gt;&lt;/li&gt;
-&lt;li&gt;Arch Linux: uncomment relevant entries in &lt;tt class="docutils literal"&gt;/etc/locale.gen&lt;/tt&gt; and run &lt;tt class="docutils literal"&gt;sudo &lt;span class="pre"&gt;locale-gen&lt;/span&gt;&lt;/tt&gt; &lt;a class="reference external" href="https://wiki.archlinux.org/index.php/Locale"&gt;(wiki)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;For other OSes, refer to the documentation.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;You need a UTF-8 locale to ensure compatibility with software. Avoid the &lt;tt class="docutils literal"&gt;C&lt;/tt&gt;
-and &lt;tt class="docutils literal"&gt;POSIX&lt;/tt&gt; locales (it’s ASCII) and locales with other encodings (those
-aren’t used by ~anyone these days)&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="section" id="configure-system-wide"&gt;
-&lt;h2&gt;Configure system-wide&lt;/h2&gt;
-&lt;p&gt;On some systems, you may be able to configure locale system-wide.  Check your
-system documentation for details. If your system has systemd, run&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_96656600e7d6457c9e7eeda69452a82d-1"&gt;&lt;/a&gt;sudo localectl set-locale LANG=en_US.UTF-8
-&lt;/pre&gt;&lt;/div&gt;
-&lt;div class="section" id="configure-for-a-single-user"&gt;
-&lt;h2&gt;Configure for a single user&lt;/h2&gt;
-&lt;p&gt;If your environment does not allow system-wide locale configuration (macOS,
-shared server with generated but unconfigured locales), or if you want to
-ensure it’s always configured independently of system settings.&lt;/p&gt;
-&lt;p&gt;To do this, you need to edit the configuration file for your shell. If you’re
-using bash, it’s &lt;tt class="docutils literal"&gt;.bashrc&lt;/tt&gt; (or &lt;tt class="docutils literal"&gt;.bash_profile&lt;/tt&gt; on macOS). For zsh users,
-&lt;tt class="docutils literal"&gt;.zshrc&lt;/tt&gt;.  Add this line (or equivalent in your shell):&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_e76fc0bb52b24fc1bd260724a16e8bf9-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;export&lt;/span&gt; &lt;span class="nv"&gt;LANG&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;en_US.UTF-8 &lt;span class="nv"&gt;LC_ALL&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;en_US.UTF-8
-&lt;/pre&gt;&lt;p&gt;That should be enough. Note that those settings don’t apply to programs
-not launched through a shell.&lt;/p&gt;
-&lt;hr class="docutils"&gt;
-&lt;p&gt;&lt;strong&gt;Python/Windows corner:&lt;/strong&gt; Python 3.7 will fix this on Unix by assuming UTF-8
-if it encounters the C locale.  On Windows, Python 3.6 is using UTF-8
-interactively, but not when using shell redirections to files or pipes.&lt;/p&gt;
-&lt;p&gt;&lt;em&gt;This post was brought to you by ą — U+0105 LATIN SMALL LETTER A WITH OGONEK.&lt;/em&gt;&lt;/p&gt;
-&lt;/div&gt;&lt;/div&gt;</description><category>guide</category><category>locale</category><category>Python</category><category>Unicode</category><category>Unix</category><guid>https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/</guid><pubDate>Sun, 18 Jun 2017 18:40:00 GMT</pubDate></item></channel></rss>
+&lt;/table&gt;&lt;/div&gt;</description><category>app</category><category>Apple</category><category>display</category><category>programming</category><category>projects</category><category>Swift</category><guid>https://chriswarrick.com/blog/2017/06/24/apple-broke-the-display-menu-so-i-wrote-my-own/</guid><pubDate>Sat, 24 Jun 2017 19:02:47 GMT</pubDate></item></channel></rss>

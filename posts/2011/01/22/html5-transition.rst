@@ -1,7 +1,7 @@
 .. title: HTML5 Transition
 .. slug: html5-transition
 .. date: 2011-01-22 00:00:00
-.. tags: webmastering, html5, blog
+.. tags: webmastering, HTML5, blog
 .. description: A word or two about the transition to HTML5.
 
 .. raw:: html
