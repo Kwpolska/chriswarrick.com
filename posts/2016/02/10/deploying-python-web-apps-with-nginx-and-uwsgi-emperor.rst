@@ -10,13 +10,13 @@
 .. guide_platform: Ubuntu, Debian, Fedora, CentOS, Arch Linux
 .. guide_topic: Python, web apps
 .. shortlink: pyweb
-.. updated: 2020-02-03 18:00:00+01:00
+.. updated: 2020-02-18 20:30:00+01:00
 
 You’ve just written a great Python web application. Now, you want to share it with the world. In order to do that, you need a server, and some software to do that for you.
 
 The following is a comprehensive guide on how to accomplish that, on multiple Linux-based operating systems, using nginx and uWSGI Emperor. It doesn’t force you to use any specific web framework — Flask, Django, Pyramid, Bottle will all work. Written for Ubuntu, Debian, Fedora, CentOS 7 and Arch Linux (should be helpful for other systems, too). Now with an Ansible Playbook.
 
-*Revision 6c (2020-02-03): Reorganized module name table to use more readable cards; updated support list*
+*Revision 7 (2020-02-03): Move virtual environment to separate venv folder to improve Python upgrades (venvs should be ephemeral)*
 
 .. TEASER_END
 
@@ -45,7 +45,7 @@ Your server should also run a modern Linux-based operating system. This guide wa
 * CentOS 7 (with SELinux enabled and disabled) — manual guide should also work on RHEL 7. CentOS 8 does not have uWSGI packages in EPEL as of January 2020, but they should become available soon.
 * Arch Linux
 
-Debian 8 (jessie), and Fedora 24 through 28 are not officially supported, even though they still probably work.
+Debian 8 (jessie), and Fedora 24 through 28 are not officially supported, even though they still probably work.  Ubuntu 20.04 LTS will also work when the final release goes out.
 
 Users of other Linux distributions (and perhaps other Unix flavors) can also follow this tutorial. This guide assumes ``systemd`` as your init system; if you are not using systemd, you will have to get your own daemon files somewhere else. In places where the instructions are split three-way, try coming up with your own, reading documentation and config files; the Arch Linux instructions are probably the closest to upstream (but not always).  Unfortunately, all Linux distributions have their own ideas when it comes to running and managing nginx and uWSGI.
 
@@ -125,22 +125,25 @@ The app will be installed somewhere under the ``/srv`` directory, which is a gre
 
 If you don’t use Flask, this tutorial also has instructions for other web frameworks (Django, Pyramid, Bottle) in the configuration files; it should be adjustable to any other WSGI-compliant framework/script nevertheless.
 
-We’ll start by creating a virtual environment:
+.. sidebar:: Paths and locations
+
+    This guide used to recommend creating the venv in ``/srv/myapp``. This was changed to improve in-place Python upgrades. Virtual environments should be ephemeral, so that ``rm -rf $VIRTUAL_ENV`` is recoverable in less than 10 minutes and 2 commands. The old structure made the venv hard to delete without deleting ``appdata``. The current structure has ``/srv/myapp/venv`` and ``/srv/myapp/appdata`` separate. An alternative structure would put the app in ``/srv/myapp``, but that requires including ``venv``, sockets and other deployment-specific files in ``.gitignore`` (or having dirty working directories).
+
+We’ll start by creating a virtual environment, which is very easy with Python 3:
 
 .. code:: sh
 
-   cd /srv
-   python3 -m venv myapp
+   mkdir /srv/myapp
+   python3 -m venv --prompt myapp /srv/myapp/venv
 
-(This tutorial assumes Python 3. Python 2.7 is legacy software. If you want to use legacy software, you’ll need to use virtualenv and adjust your uWSGI configuration.)
 
 Now, we need to put our app there and install requirements. An example for the tutorial demo app:
 
 .. code:: sh
 
-   cd myapp
+   cd /srv/myapp
    git clone https://github.com/Kwpolska/flask-demo-app appdata
-   bin/pip install -r appdata/requirements.txt
+   venv/bin/pip install -r appdata/requirements.txt
 
 I’m storing my application data in the ``appdata`` subdirectory so that it doesn’t clutter the virtual environment (or vice versa).  You may also install the ``uwsgi`` package in the virtual environment, but it’s optional.
 
@@ -187,8 +190,8 @@ Start with this, but read the notes below and change the values accordingly:
    chmod-socket = 775
    chdir = /srv/myapp/appdata
    master = true
-   binary-path = /srv/myapp/bin/uwsgi
-   virtualenv = /srv/myapp
+   binary-path = /srv/myapp/venv/bin/uwsgi
+   virtualenv = /srv/myapp/venv
    module = flaskapp:app
    uid = www-data
    gid = www-data
