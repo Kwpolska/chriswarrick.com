@@ -10,13 +10,13 @@
 .. guide_platform: Ubuntu, Debian, Fedora, CentOS, Arch Linux
 .. guide_topic: Python, web apps
 .. shortlink: pyweb
-.. updated: 2020-02-18 20:30:00+01:00
+.. updated: 2020-02-18 23:30:00+01:00
 
 You’ve just written a great Python web application. Now, you want to share it with the world. In order to do that, you need a server, and some software to do that for you.
 
 The following is a comprehensive guide on how to accomplish that, on multiple Linux-based operating systems, using nginx and uWSGI Emperor. It doesn’t force you to use any specific web framework — Flask, Django, Pyramid, Bottle will all work. Written for Ubuntu, Debian, Fedora, CentOS 7 and Arch Linux (should be helpful for other systems, too). Now with an Ansible Playbook.
 
-*Revision 7 (2020-02-03): Move virtual environment to separate venv folder to improve Python upgrades (venvs should be ephemeral)*
+*Revision 7a (2020-02-03): Move virtual environment to separate venv folder to improve Python upgrades (venvs should be ephemeral); add Docker section*
 
 .. TEASER_END
 
@@ -46,6 +46,8 @@ Your server should also run a modern Linux-based operating system. This guide wa
 * Arch Linux
 
 Debian 8 (jessie), and Fedora 24 through 28 are not officially supported, even though they still probably work.  Ubuntu 20.04 LTS will also work when the final release goes out.
+
+What if you’re using **Docker**? The story is a bit complicated, and this guide does not apply, but do check the `Can I use Docker?`_ at the end of this post for some hints on how to approach it.
 
 Users of other Linux distributions (and perhaps other Unix flavors) can also follow this tutorial. This guide assumes ``systemd`` as your init system; if you are not using systemd, you will have to get your own daemon files somewhere else. In places where the instructions are split three-way, try coming up with your own, reading documentation and config files; the Arch Linux instructions are probably the closest to upstream (but not always).  Unfortunately, all Linux distributions have their own ideas when it comes to running and managing nginx and uWSGI.
 
@@ -136,6 +138,7 @@ We’ll start by creating a virtual environment, which is very easy with Python 
    mkdir /srv/myapp
    python3 -m venv --prompt myapp /srv/myapp/venv
 
+(The ``--prompt`` option is not supported on some old versions of Python, but you can just skip it if that’s the case, it’s just to make the prompt after ``source bin/activate`` more informative.)
 
 Now, we need to put our app there and install requirements. An example for the tutorial demo app:
 
@@ -423,6 +426,20 @@ Hopefully, everything works. If it doesn’t:
    firewall-cmd --add-service https
 
 * If it still does not work, feel free to ask in the comments, mentioning your distribution, installation method, and what doesn’t work.
+
+
+Can I use Docker?
+=================
+
+This blog post is written for systems running standalone. But Docker is a bit special, in that it offers a limited subset of OS features this workflow expects. The main issue is with user accounts, which generally work weird in Docker, and I had issues with ``setuid``/``setgid`` as used by uWSGI. Another issue is the lack of systemd, which means that another part of the tutorial fails to apply.
+
+This tutorial uses uWSGI Emperor, which can run multiple sites at once, and offers other management features (such as seamless code restarts with ``touch /etc/uwsgi/vassals/myapp.ini``) that may not be useful or easy to use in a Docker environment. You’d probably also run uWSGI and nginx in separate containers in a typical Docker deployment.
+
+Regardless, many parts of this tutorial can be used with Docker, although with the aforementioned adjustments. I have done some work on this topic. This tutorial has an Ansible Playbook attached, and the tutorial/playbook are compatible with five Linux distros in multiple versions. How do I know that there were no unexpected bugs in an older version? I could grab a Vagrant image or set up a VM. I do that when I need specific testing, but doing it for each of the distros on each update would take at least half an hour, probably even more. Yeah, that needs automating. I decided to use GitHub Actions for the CI, which can run anything, as long as you provide a Dockerfile.
+
+The Docker images were designed to support running the Playbook and testing it. But the changes, setups and patches could be a good starting point if you wanted to make your own Docker containers that could run in production. You can take a look at `the Docker files for CI <https://github.com/Kwpolska/ansible-nginx-uwsgi/tree/master/ci>`_ The images support all 5 distros using their base images, but you could probably use Alpine images, or the ``python`` docker images; be careful not to mix Python versions in the latter case.
+
+That said, I still prefer to run without Docker, directly on the system.  Less resources wasted and less indirection.  Which is why this guide does it the traditional way.
 
 .. [#] This reflink gives you $10 in credit, which is enough to run a server for up to two months without paying a thing. I earn $15.
 .. [#] For the cheapest plan. If you’re in the EU (and thus have to pay VAT), or want DO to handle your backups, it will cost you a little more.
