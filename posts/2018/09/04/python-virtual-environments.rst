@@ -96,6 +96,18 @@ The second option is equally easy to work with, but comes with one caveat —
 you must add the venv directory to your ``.gitignore`` file, since you don’t
 want it in your repository (it’s binary bloat, and works only on your machine).
 
+And if you don’t want to install virtualenvwrapper but want to put virtualenvs
+in one global place, all you need is a short function in your shell
+configuration file:
+
+.. code:: bash
+
+    export WORKON_HOME=~/virtualenvs
+
+    function workon {
+        source "$WORKON_HOME/$1/bin/activate"
+    }
+
 Use
 ===
 
