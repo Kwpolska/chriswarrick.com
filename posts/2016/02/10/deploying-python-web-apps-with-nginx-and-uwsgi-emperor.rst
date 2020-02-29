@@ -33,9 +33,9 @@ For easy linking, I set up some aliases: https://go.chriswarrick.com/pyweb and h
 Prerequisites
 ~~~~~~~~~~~~~
 
-In order to deploy your web application, you need a server that gives you root and ssh access — in other words, a VPS (or a dedicated server, or a datacenter lease…). If you’re looking for a great VPS service for a low price, I recommend `DigitalOcean`_ (reflink [#]_), which offers a $5/mo service [#]_. If you want to play along at home, without buying a VPS, you can create a virtual machine on your own, or use Vagrant with a Vagrant box for Fedora 31 (``fedora/31-cloud-base``).
+In order to deploy your web application, you need a server that gives you root and ssh access — in other words, a VPS (or a dedicated server, or a datacenter lease…). If you’re looking for a great VPS service for a low price, I recommend `Hetzner Cloud`_, which offers a pretty good entry-level VPS for €2.49 + VAT / month (with higher plans available for equally good prices). If you want to play along at home, without buying a VPS, you can create a virtual machine on your own, or use Vagrant with a Vagrant box for Fedora 31 (``fedora/31-cloud-base``).
 
-.. _DigitalOcean: https://www.digitalocean.com/?refcode=7983689b2ecc
+.. _Hetzner Cloud: https://www.hetzner.com/cloud
 
 Your server should also run a modern Linux-based operating system. This guide was written and tested on:
 
@@ -119,7 +119,7 @@ Start by installing Python 3 (with venv), nginx and uWSGI. I recommend using you
 Preparing your application
 ==========================
 
-This tutorial will work for any web framework. I will use `a really basic Flask app`_ that has just one route (``/``) [#]_, a static ``hello.png`` file and a ``favicon.ico`` for demonstration purposes. Note that the app does not use ``app.run()``. While you could add it, it would be used for local development and debugging only, and would have to be prepended by ``if __name__ == '__main__':`` (if it wasn’t, that server would run instead of uWSGI, which is bad)
+This tutorial will work for any web framework. I will use `a really basic Flask app`_ that has just one route (``/``), a static ``hello.png`` file and a ``favicon.ico`` for demonstration purposes. The app is pretty basic, but all the usual advanced features (templates, user logins, database access, etc.) would work without any other web server-related config. Note that the app does not use ``app.run()``. While you could add it, it would be used for local development and debugging only, and would have to be prepended by ``if __name__ == '__main__':`` (if it wasn’t, that server would run instead of uWSGI, which is bad)
 
 .. _a really basic Flask app: https://github.com/Kwpolska/flask-demo-app
 
@@ -440,10 +440,6 @@ Regardless, many parts of this tutorial can be used with Docker, although with t
 The Docker images were designed to support running the Playbook and testing it. But the changes, setups and patches could be a good starting point if you wanted to make your own Docker containers that could run in production. You can take a look at `the Docker files for CI <https://github.com/Kwpolska/ansible-nginx-uwsgi/tree/master/ci>`_ The images support all 5 distros using their base images, but you could probably use Alpine images, or the ``python`` docker images; be careful not to mix Python versions in the latter case.
 
 That said, I still prefer to run without Docker, directly on the system.  Less resources wasted and less indirection.  Which is why this guide does it the traditional way.
-
-.. [#] This reflink gives you $10 in credit, which is enough to run a server for up to two months without paying a thing. I earn $15.
-.. [#] For the cheapest plan. If you’re in the EU (and thus have to pay VAT), or want DO to handle your backups, it will cost you a little more.
-.. [#] This app does not use templates, but you should in any real project. This app is meant to be as simple as possible.
 
 .. role:: raw-role(raw)
    :format: html
