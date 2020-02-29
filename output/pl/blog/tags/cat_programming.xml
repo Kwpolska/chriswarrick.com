@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chris Warrick (Posty o Programming)</title><link>https://chriswarrick.com/</link><description></description><atom:link href="https://chriswarrick.com/pl/blog/tags/cat_programming.xml" rel="self" type="application/rss+xml"></atom:link><language>pl</language><lastBuildDate>Sun, 17 Feb 2019 17:31:39 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Spawning subprocesses smartly and securely</title><link>https://chriswarrick.com/pl/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;As part of your code, you may be inclined to call a command to do
+<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chris Warrick (Posty o Programming)</title><link>https://chriswarrick.com/</link><description></description><atom:link href="https://chriswarrick.com/pl/blog/tags/cat_programming.xml" rel="self" type="application/rss+xml"></atom:link><language>pl</language><lastBuildDate>Fri, 28 Feb 2020 17:41:23 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Spawning subprocesses smartly and securely</title><link>https://chriswarrick.com/pl/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;As part of your code, you may be inclined to call a command to do
 something. But is it always a good idea? How to do it safely? What happens
 behind the scenes?&lt;/p&gt;
 &lt;!-- TEASER_END --&gt;
@@ -75,49 +75,49 @@ arguments passed to the process, or&lt;/p&gt;
 manpage for &lt;tt class="docutils literal"&gt;system(3)&lt;/tt&gt; puts it,&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;The &lt;tt class="docutils literal"&gt;system()&lt;/tt&gt; library function uses &lt;tt class="docutils literal"&gt;fork(2)&lt;/tt&gt; to create a child process that executes the shell command specified in command using &lt;tt class="docutils literal"&gt;execl(3)&lt;/tt&gt; as follows:&lt;/p&gt;
-&lt;pre class="code c"&gt;&lt;a name="rest_code_a443c87b3bf546919de789c976f9d52a-1"&gt;&lt;/a&gt;&lt;span class="n"&gt;execl&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"/bin/sh"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"sh"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"-c"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;command&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;pre class="code c"&gt;&lt;a name="rest_code_7d8f1f67c4264c03b5936401ea169ec9-1"&gt;&lt;/a&gt;&lt;span class="n"&gt;execl&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"/bin/sh"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"sh"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"-c"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;command&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 &lt;/pre&gt;&lt;/blockquote&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;If you go through the shell, you pass one string argument, whereas &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;exec*()&lt;/span&gt;&lt;/tt&gt; demands you to specify arguments separately. Let’s write a sample program to print all the arguments it receives. I’ll do it in Python to get a more readable output.&lt;/p&gt;
-&lt;pre class="code python"&gt;&lt;a name="rest_code_0b132ead9ead4ef1958440abbe1fd2f9-1"&gt;&lt;/a&gt;&lt;span class="ch"&gt;#!/usr/bin/env python3&lt;/span&gt;
-&lt;a name="rest_code_0b132ead9ead4ef1958440abbe1fd2f9-2"&gt;&lt;/a&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;sys&lt;/span&gt;
-&lt;a name="rest_code_0b132ead9ead4ef1958440abbe1fd2f9-3"&gt;&lt;/a&gt;&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_b5a4ed3b44824fca9a60ebfc0a7aeea1-1"&gt;&lt;/a&gt;&lt;span class="ch"&gt;#!/usr/bin/env python3&lt;/span&gt;
+&lt;a name="rest_code_b5a4ed3b44824fca9a60ebfc0a7aeea1-2"&gt;&lt;/a&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;sys&lt;/span&gt;
+&lt;a name="rest_code_b5a4ed3b44824fca9a60ebfc0a7aeea1-3"&gt;&lt;/a&gt;&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;Let’s see what appears:&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_1854e1a2c31048baa55b6bd8d049a41d-1"&gt;&lt;/a&gt;$ ./argv.py foo bar
-&lt;a name="rest_code_1854e1a2c31048baa55b6bd8d049a41d-2"&gt;&lt;/a&gt;['./argv.py', 'foo', 'bar']
-&lt;a name="rest_code_1854e1a2c31048baa55b6bd8d049a41d-3"&gt;&lt;/a&gt;$ ./argv.py 'foo bar'
-&lt;a name="rest_code_1854e1a2c31048baa55b6bd8d049a41d-4"&gt;&lt;/a&gt;['./argv.py', 'foo bar']
-&lt;a name="rest_code_1854e1a2c31048baa55b6bd8d049a41d-5"&gt;&lt;/a&gt;$ ./argv.py foo\ bar baz
-&lt;a name="rest_code_1854e1a2c31048baa55b6bd8d049a41d-6"&gt;&lt;/a&gt;['./argv.py', 'foo bar', 'baz']
-&lt;a name="rest_code_1854e1a2c31048baa55b6bd8d049a41d-7"&gt;&lt;/a&gt;
-&lt;a name="rest_code_1854e1a2c31048baa55b6bd8d049a41d-8"&gt;&lt;/a&gt;$ ./argv.py $(date)
-&lt;a name="rest_code_1854e1a2c31048baa55b6bd8d049a41d-9"&gt;&lt;/a&gt;['./argv.py', 'Sat', 'Sep', '2', '16:54:52', 'CEST', '2017']
-&lt;a name="rest_code_1854e1a2c31048baa55b6bd8d049a41d-10"&gt;&lt;/a&gt;$ ./argv.py "$(date)"
-&lt;a name="rest_code_1854e1a2c31048baa55b6bd8d049a41d-11"&gt;&lt;/a&gt;['./argv.py', 'Sat Sep  2 16:54:52 CEST 2017']
-&lt;a name="rest_code_1854e1a2c31048baa55b6bd8d049a41d-12"&gt;&lt;/a&gt;
-&lt;a name="rest_code_1854e1a2c31048baa55b6bd8d049a41d-13"&gt;&lt;/a&gt;$ ./argv.py /usr/*
-&lt;a name="rest_code_1854e1a2c31048baa55b6bd8d049a41d-14"&gt;&lt;/a&gt;['./argv.py', '/usr/X11', '/usr/X11R6', '/usr/bin', '/usr/include', '/usr/lib', '/usr/libexec', '/usr/local', '/usr/sbin', '/usr/share', '/usr/standalone']
-&lt;a name="rest_code_1854e1a2c31048baa55b6bd8d049a41d-15"&gt;&lt;/a&gt;$ ./argv.py "/usr/*"
-&lt;a name="rest_code_1854e1a2c31048baa55b6bd8d049a41d-16"&gt;&lt;/a&gt;['./argv.py', '/usr/*']
-&lt;a name="rest_code_1854e1a2c31048baa55b6bd8d049a41d-17"&gt;&lt;/a&gt;
-&lt;a name="rest_code_1854e1a2c31048baa55b6bd8d049a41d-18"&gt;&lt;/a&gt;$ ./argv.py $EDITOR
-&lt;a name="rest_code_1854e1a2c31048baa55b6bd8d049a41d-19"&gt;&lt;/a&gt;['./argv.py', 'nvim']
-&lt;a name="rest_code_1854e1a2c31048baa55b6bd8d049a41d-20"&gt;&lt;/a&gt;
-&lt;a name="rest_code_1854e1a2c31048baa55b6bd8d049a41d-21"&gt;&lt;/a&gt;$ $PWD/argv.py foo bar
-&lt;a name="rest_code_1854e1a2c31048baa55b6bd8d049a41d-22"&gt;&lt;/a&gt;['/Users/kwpolska/Desktop/blog/subprocess/argv.py', 'foo', 'bar']
-&lt;a name="rest_code_1854e1a2c31048baa55b6bd8d049a41d-23"&gt;&lt;/a&gt;$ ./argv.py a{b,c}d
-&lt;a name="rest_code_1854e1a2c31048baa55b6bd8d049a41d-24"&gt;&lt;/a&gt;['./argv.py', 'abd', 'acd']
-&lt;a name="rest_code_1854e1a2c31048baa55b6bd8d049a41d-25"&gt;&lt;/a&gt;
-&lt;a name="rest_code_1854e1a2c31048baa55b6bd8d049a41d-26"&gt;&lt;/a&gt;$ python argv.py foo bar | cat
-&lt;a name="rest_code_1854e1a2c31048baa55b6bd8d049a41d-27"&gt;&lt;/a&gt;['argv.py', 'foo', 'bar']
-&lt;a name="rest_code_1854e1a2c31048baa55b6bd8d049a41d-28"&gt;&lt;/a&gt;$ python argv.py foo bar &amp;gt; foo.txt
-&lt;a name="rest_code_1854e1a2c31048baa55b6bd8d049a41d-29"&gt;&lt;/a&gt;$ cat foo.txt
-&lt;a name="rest_code_1854e1a2c31048baa55b6bd8d049a41d-30"&gt;&lt;/a&gt;['argv.py', 'foo', 'bar']
-&lt;a name="rest_code_1854e1a2c31048baa55b6bd8d049a41d-31"&gt;&lt;/a&gt;
-&lt;a name="rest_code_1854e1a2c31048baa55b6bd8d049a41d-32"&gt;&lt;/a&gt;$ ./argv.py foo; ls /usr
-&lt;a name="rest_code_1854e1a2c31048baa55b6bd8d049a41d-33"&gt;&lt;/a&gt;['./argv.py', 'foo']
-&lt;a name="rest_code_1854e1a2c31048baa55b6bd8d049a41d-34"&gt;&lt;/a&gt;X11@        X11R6@      bin/        include/    lib/        libexec/    local/      sbin/       share/      standalone/
+&lt;pre class="code text"&gt;&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-1"&gt;&lt;/a&gt;$ ./argv.py foo bar
+&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-2"&gt;&lt;/a&gt;['./argv.py', 'foo', 'bar']
+&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-3"&gt;&lt;/a&gt;$ ./argv.py 'foo bar'
+&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-4"&gt;&lt;/a&gt;['./argv.py', 'foo bar']
+&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-5"&gt;&lt;/a&gt;$ ./argv.py foo\ bar baz
+&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-6"&gt;&lt;/a&gt;['./argv.py', 'foo bar', 'baz']
+&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-7"&gt;&lt;/a&gt;
+&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-8"&gt;&lt;/a&gt;$ ./argv.py $(date)
+&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-9"&gt;&lt;/a&gt;['./argv.py', 'Sat', 'Sep', '2', '16:54:52', 'CEST', '2017']
+&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-10"&gt;&lt;/a&gt;$ ./argv.py "$(date)"
+&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-11"&gt;&lt;/a&gt;['./argv.py', 'Sat Sep  2 16:54:52 CEST 2017']
+&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-12"&gt;&lt;/a&gt;
+&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-13"&gt;&lt;/a&gt;$ ./argv.py /usr/*
+&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-14"&gt;&lt;/a&gt;['./argv.py', '/usr/X11', '/usr/X11R6', '/usr/bin', '/usr/include', '/usr/lib', '/usr/libexec', '/usr/local', '/usr/sbin', '/usr/share', '/usr/standalone']
+&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-15"&gt;&lt;/a&gt;$ ./argv.py "/usr/*"
+&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-16"&gt;&lt;/a&gt;['./argv.py', '/usr/*']
+&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-17"&gt;&lt;/a&gt;
+&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-18"&gt;&lt;/a&gt;$ ./argv.py $EDITOR
+&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-19"&gt;&lt;/a&gt;['./argv.py', 'nvim']
+&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-20"&gt;&lt;/a&gt;
+&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-21"&gt;&lt;/a&gt;$ $PWD/argv.py foo bar
+&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-22"&gt;&lt;/a&gt;['/Users/kwpolska/Desktop/blog/subprocess/argv.py', 'foo', 'bar']
+&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-23"&gt;&lt;/a&gt;$ ./argv.py a{b,c}d
+&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-24"&gt;&lt;/a&gt;['./argv.py', 'abd', 'acd']
+&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-25"&gt;&lt;/a&gt;
+&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-26"&gt;&lt;/a&gt;$ python argv.py foo bar | cat
+&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-27"&gt;&lt;/a&gt;['argv.py', 'foo', 'bar']
+&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-28"&gt;&lt;/a&gt;$ python argv.py foo bar &amp;gt; foo.txt
+&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-29"&gt;&lt;/a&gt;$ cat foo.txt
+&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-30"&gt;&lt;/a&gt;['argv.py', 'foo', 'bar']
+&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-31"&gt;&lt;/a&gt;
+&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-32"&gt;&lt;/a&gt;$ ./argv.py foo; ls /usr
+&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-33"&gt;&lt;/a&gt;['./argv.py', 'foo']
+&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-34"&gt;&lt;/a&gt;X11@        X11R6@      bin/        include/    lib/        libexec/    local/      sbin/       share/      standalone/
 &lt;/pre&gt;&lt;p&gt;As you can see, the following things are handled by the shell (the process is unaware of this occurring):&lt;/p&gt;
 &lt;ul class="simple"&gt;
 &lt;li&gt;quotes and escapes&lt;/li&gt;
@@ -222,40 +222,40 @@ to ASCII. Programs might just crash at random. Those are often simple to fix —
 all you need is correct locale configuration.&lt;/p&gt;
 &lt;!-- TEASER_END --&gt;
 &lt;p class="lead"&gt;Has this ever happened to you?&lt;/p&gt;
-&lt;pre class="code pytb"&gt;&lt;a name="rest_code_8d6fcd3f4c0f4652a9d965e0efdc8e35-1"&gt;&lt;/a&gt;&lt;span class="gt"&gt;Traceback (most recent call last):&lt;/span&gt;
-&lt;a name="rest_code_8d6fcd3f4c0f4652a9d965e0efdc8e35-2"&gt;&lt;/a&gt;  File &lt;span class="nb"&gt;"aogonek.py"&lt;/span&gt;, line &lt;span class="m"&gt;1&lt;/span&gt;, in &lt;span class="n"&gt;&amp;lt;module&amp;gt;&lt;/span&gt;
-&lt;a name="rest_code_8d6fcd3f4c0f4652a9d965e0efdc8e35-3"&gt;&lt;/a&gt;    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;u&lt;/span&gt;&lt;span class="s1"&gt;'&lt;/span&gt;&lt;span class="se"&gt;\u0105&lt;/span&gt;&lt;span class="s1"&gt;'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_8d6fcd3f4c0f4652a9d965e0efdc8e35-4"&gt;&lt;/a&gt;&lt;span class="gr"&gt;UnicodeEncodeError&lt;/span&gt;: &lt;span class="n"&gt;'ascii' codec can't encode character '\u0105' in position 0: ordinal not in range(128)&lt;/span&gt;
-&lt;/pre&gt;&lt;pre class="code text"&gt;&lt;a name="rest_code_788f970c06c24772896caf6c849e108b-1"&gt;&lt;/a&gt;Nikola: Could not guess locale for language en, using locale C
-&lt;/pre&gt;&lt;pre class="code text"&gt;&lt;a name="rest_code_60dd0fd51d70492a9aec6e85853faa20-1"&gt;&lt;/a&gt;Input: ą
-&lt;a name="rest_code_60dd0fd51d70492a9aec6e85853faa20-2"&gt;&lt;/a&gt;Desired ascii(): '\u0105'
-&lt;a name="rest_code_60dd0fd51d70492a9aec6e85853faa20-3"&gt;&lt;/a&gt;Real ascii(): '\udcc4\udc85'
-&lt;/pre&gt;&lt;pre class="code text"&gt;&lt;a name="rest_code_387ca5641e414788a18da62e53935f2b-1"&gt;&lt;/a&gt;perl: warning: Setting locale failed.
-&lt;a name="rest_code_387ca5641e414788a18da62e53935f2b-2"&gt;&lt;/a&gt;perl: warning: Please check that your locale settings:
-&lt;a name="rest_code_387ca5641e414788a18da62e53935f2b-3"&gt;&lt;/a&gt;    [...]
-&lt;a name="rest_code_387ca5641e414788a18da62e53935f2b-4"&gt;&lt;/a&gt;    are supported and installed on your system.
-&lt;a name="rest_code_387ca5641e414788a18da62e53935f2b-5"&gt;&lt;/a&gt;perl: warning: Falling back to the standard locale ("C").
+&lt;pre class="code pytb"&gt;&lt;a name="rest_code_a3e85446e1cf449aa3ff3114df06e511-1"&gt;&lt;/a&gt;&lt;span class="gt"&gt;Traceback (most recent call last):&lt;/span&gt;
+&lt;a name="rest_code_a3e85446e1cf449aa3ff3114df06e511-2"&gt;&lt;/a&gt;  File &lt;span class="nb"&gt;"aogonek.py"&lt;/span&gt;, line &lt;span class="m"&gt;1&lt;/span&gt;, in &lt;span class="n"&gt;&amp;lt;module&amp;gt;&lt;/span&gt;
+&lt;a name="rest_code_a3e85446e1cf449aa3ff3114df06e511-3"&gt;&lt;/a&gt;    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;u&lt;/span&gt;&lt;span class="s1"&gt;'&lt;/span&gt;&lt;span class="se"&gt;\u0105&lt;/span&gt;&lt;span class="s1"&gt;'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_a3e85446e1cf449aa3ff3114df06e511-4"&gt;&lt;/a&gt;&lt;span class="gr"&gt;UnicodeEncodeError&lt;/span&gt;: &lt;span class="n"&gt;'ascii' codec can't encode character '\u0105' in position 0: ordinal not in range(128)&lt;/span&gt;
+&lt;/pre&gt;&lt;pre class="code text"&gt;&lt;a name="rest_code_ceabb5c079ea4bbc813bd0b6ec00e067-1"&gt;&lt;/a&gt;Nikola: Could not guess locale for language en, using locale C
+&lt;/pre&gt;&lt;pre class="code text"&gt;&lt;a name="rest_code_b506c13ddc64423c89930e9845d5f6f4-1"&gt;&lt;/a&gt;Input: ą
+&lt;a name="rest_code_b506c13ddc64423c89930e9845d5f6f4-2"&gt;&lt;/a&gt;Desired ascii(): '\u0105'
+&lt;a name="rest_code_b506c13ddc64423c89930e9845d5f6f4-3"&gt;&lt;/a&gt;Real ascii(): '\udcc4\udc85'
+&lt;/pre&gt;&lt;pre class="code text"&gt;&lt;a name="rest_code_db4293eba946495687a98107125d8e4f-1"&gt;&lt;/a&gt;perl: warning: Setting locale failed.
+&lt;a name="rest_code_db4293eba946495687a98107125d8e4f-2"&gt;&lt;/a&gt;perl: warning: Please check that your locale settings:
+&lt;a name="rest_code_db4293eba946495687a98107125d8e4f-3"&gt;&lt;/a&gt;    [...]
+&lt;a name="rest_code_db4293eba946495687a98107125d8e4f-4"&gt;&lt;/a&gt;    are supported and installed on your system.
+&lt;a name="rest_code_db4293eba946495687a98107125d8e4f-5"&gt;&lt;/a&gt;perl: warning: Falling back to the standard locale ("C").
 &lt;/pre&gt;&lt;p class="lead"&gt;All those errors have the same root cause: incorrect locale configuration.
 To fix them all, you need to generate the missing locales and set them.&lt;/p&gt;
 &lt;div class="section" id="check-currently-used-locale"&gt;
 &lt;h2&gt;Check currently used locale&lt;/h2&gt;
 &lt;p&gt;The &lt;tt class="docutils literal"&gt;locale&lt;/tt&gt; command (without arguments) should tell you which locales you’re
 currently using.  (The list might be shorter on your end)&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_667d43329e834e05a6a870b1748ce4b9-1"&gt;&lt;/a&gt;$ locale
-&lt;a name="rest_code_667d43329e834e05a6a870b1748ce4b9-2"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LANG&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_667d43329e834e05a6a870b1748ce4b9-3"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_CTYPE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_667d43329e834e05a6a870b1748ce4b9-4"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_NUMERIC&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_667d43329e834e05a6a870b1748ce4b9-5"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_TIME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_667d43329e834e05a6a870b1748ce4b9-6"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_COLLATE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_667d43329e834e05a6a870b1748ce4b9-7"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_MONETARY&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_667d43329e834e05a6a870b1748ce4b9-8"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_MESSAGES&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_667d43329e834e05a6a870b1748ce4b9-9"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_PAPER&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_667d43329e834e05a6a870b1748ce4b9-10"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_NAME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_667d43329e834e05a6a870b1748ce4b9-11"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_ADDRESS&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_667d43329e834e05a6a870b1748ce4b9-12"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_TELEPHONE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_667d43329e834e05a6a870b1748ce4b9-13"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_MEASUREMENT&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_667d43329e834e05a6a870b1748ce4b9-14"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_IDENTIFICATION&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_667d43329e834e05a6a870b1748ce4b9-15"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_ALL&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_3f41fe67eeac449fa403e9a20488a828-1"&gt;&lt;/a&gt;$ locale
+&lt;a name="rest_code_3f41fe67eeac449fa403e9a20488a828-2"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LANG&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_3f41fe67eeac449fa403e9a20488a828-3"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_CTYPE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_3f41fe67eeac449fa403e9a20488a828-4"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_NUMERIC&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_3f41fe67eeac449fa403e9a20488a828-5"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_TIME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_3f41fe67eeac449fa403e9a20488a828-6"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_COLLATE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_3f41fe67eeac449fa403e9a20488a828-7"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_MONETARY&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_3f41fe67eeac449fa403e9a20488a828-8"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_MESSAGES&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_3f41fe67eeac449fa403e9a20488a828-9"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_PAPER&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_3f41fe67eeac449fa403e9a20488a828-10"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_NAME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_3f41fe67eeac449fa403e9a20488a828-11"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_ADDRESS&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_3f41fe67eeac449fa403e9a20488a828-12"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_TELEPHONE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_3f41fe67eeac449fa403e9a20488a828-13"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_MEASUREMENT&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_3f41fe67eeac449fa403e9a20488a828-14"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_IDENTIFICATION&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_3f41fe67eeac449fa403e9a20488a828-15"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_ALL&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;If any of those is set to &lt;tt class="docutils literal"&gt;C&lt;/tt&gt; or &lt;tt class="docutils literal"&gt;POSIX&lt;/tt&gt;, has a different encoding than
 &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;UTF-8&lt;/span&gt;&lt;/tt&gt; (sometimes spelled &lt;tt class="docutils literal"&gt;utf8&lt;/tt&gt;) is empty (with the exception of
 &lt;tt class="docutils literal"&gt;LC_ALL&lt;/tt&gt;), or if you see any errors, you need to reconfigure your locale.&lt;/p&gt;
@@ -265,10 +265,10 @@ currently using.  (The list might be shorter on your end)&lt;/p&gt;
 &lt;p&gt;The first thing you need to do is check locale availability. To do this, run
 &lt;tt class="docutils literal"&gt;locale &lt;span class="pre"&gt;-a&lt;/span&gt;&lt;/tt&gt;. This will produce a list of all installed locales.  You can use
 &lt;tt class="docutils literal"&gt;grep&lt;/tt&gt; to get a more reasonable list.&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_7328abf50d3649f5a5bf0842b8cc764d-1"&gt;&lt;/a&gt;$ locale -a | grep -i utf
-&lt;a name="rest_code_7328abf50d3649f5a5bf0842b8cc764d-2"&gt;&lt;/a&gt;&amp;lt;lists all UTF-8 locales&amp;gt;
-&lt;a name="rest_code_7328abf50d3649f5a5bf0842b8cc764d-3"&gt;&lt;/a&gt;$ locale -a | grep -i utf | grep -i en_US
-&lt;a name="rest_code_7328abf50d3649f5a5bf0842b8cc764d-4"&gt;&lt;/a&gt;en_US.UTF-8
+&lt;pre class="code text"&gt;&lt;a name="rest_code_3bf7ac5113624a028385036abe4b5d44-1"&gt;&lt;/a&gt;$ locale -a | grep -i utf
+&lt;a name="rest_code_3bf7ac5113624a028385036abe4b5d44-2"&gt;&lt;/a&gt;&amp;lt;lists all UTF-8 locales&amp;gt;
+&lt;a name="rest_code_3bf7ac5113624a028385036abe4b5d44-3"&gt;&lt;/a&gt;$ locale -a | grep -i utf | grep -i en_US
+&lt;a name="rest_code_3bf7ac5113624a028385036abe4b5d44-4"&gt;&lt;/a&gt;en_US.UTF-8
 &lt;/pre&gt;&lt;p&gt;The best locale to use is the one for your language, with the UTF-8 encoding.
 The locale will be used by some console apps for output. I’m going to use
 &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;en_US.UTF-8&lt;/span&gt;&lt;/tt&gt; in this guide.&lt;/p&gt;
@@ -289,7 +289,7 @@ aren’t used by ~anyone these days)&lt;/p&gt;
 &lt;h2&gt;Configure system-wide&lt;/h2&gt;
 &lt;p&gt;On some systems, you may be able to configure locale system-wide.  Check your
 system documentation for details. If your system has systemd, run&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_96656600e7d6457c9e7eeda69452a82d-1"&gt;&lt;/a&gt;sudo localectl set-locale LANG=en_US.UTF-8
+&lt;pre class="code text"&gt;&lt;a name="rest_code_d4b51aa23bbd437290c81f5d7031709b-1"&gt;&lt;/a&gt;sudo localectl set-locale LANG=en_US.UTF-8
 &lt;/pre&gt;&lt;/div&gt;
 &lt;div class="section" id="configure-for-a-single-user"&gt;
 &lt;h2&gt;Configure for a single user&lt;/h2&gt;
@@ -299,7 +299,7 @@ ensure it’s always configured independently of system settings.&lt;/p&gt;
 &lt;p&gt;To do this, you need to edit the configuration file for your shell. If you’re
 using bash, it’s &lt;tt class="docutils literal"&gt;.bashrc&lt;/tt&gt; (or &lt;tt class="docutils literal"&gt;.bash_profile&lt;/tt&gt; on macOS). For zsh users,
 &lt;tt class="docutils literal"&gt;.zshrc&lt;/tt&gt;.  Add this line (or equivalent in your shell):&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_e76fc0bb52b24fc1bd260724a16e8bf9-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;export&lt;/span&gt; &lt;span class="nv"&gt;LANG&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;en_US.UTF-8 &lt;span class="nv"&gt;LC_ALL&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;en_US.UTF-8
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_0ec3710145494f10bf32835cae4ef181-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;export&lt;/span&gt; &lt;span class="nv"&gt;LANG&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;en_US.UTF-8 &lt;span class="nv"&gt;LC_ALL&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;en_US.UTF-8
 &lt;/pre&gt;&lt;p&gt;That should be enough. Note that those settings don’t apply to programs
 not launched through a shell.&lt;/p&gt;
 &lt;hr class="docutils"&gt;
@@ -468,20 +468,20 @@ trainwreck, though). One of the things I used in that project was a DataGrid
 bound to a list of custom objects (a DataGrid is a table, basically). And in
 order to use it, you need to use the &lt;tt class="docutils literal"&gt;INotifyPropertyChanged&lt;/tt&gt; interface &lt;a class="reference external" href="https://msdn.microsoft.com/en-us/library/ms229614(v=vs.100).aspx"&gt;(MSDN)&lt;/a&gt;.
 It involves doing something like this:&lt;/p&gt;
-&lt;pre class="code csharp"&gt;&lt;a name="rest_code_e5520029f0064250bf4d4abd37910586-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;private&lt;/span&gt; &lt;span class="kt"&gt;string&lt;/span&gt; &lt;span class="n"&gt;name_&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="k"&gt;get&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="k"&gt;set&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="p"&gt;};&lt;/span&gt; &lt;span class="c1"&gt;// can also be a field&lt;/span&gt;
-&lt;a name="rest_code_e5520029f0064250bf4d4abd37910586-2"&gt;&lt;/a&gt;
-&lt;a name="rest_code_e5520029f0064250bf4d4abd37910586-3"&gt;&lt;/a&gt;&lt;span class="na"&gt;[JsonProperty]&lt;/span&gt;
-&lt;a name="rest_code_e5520029f0064250bf4d4abd37910586-4"&gt;&lt;/a&gt;&lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;string&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;a name="rest_code_e5520029f0064250bf4d4abd37910586-5"&gt;&lt;/a&gt;    &lt;span class="k"&gt;get&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;a name="rest_code_e5520029f0064250bf4d4abd37910586-6"&gt;&lt;/a&gt;        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;name_&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;a name="rest_code_e5520029f0064250bf4d4abd37910586-7"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;a name="rest_code_e5520029f0064250bf4d4abd37910586-8"&gt;&lt;/a&gt;    &lt;span class="k"&gt;set&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;a name="rest_code_e5520029f0064250bf4d4abd37910586-9"&gt;&lt;/a&gt;        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;value&lt;/span&gt; &lt;span class="p"&gt;!=&lt;/span&gt; &lt;span class="n"&gt;name_&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;a name="rest_code_e5520029f0064250bf4d4abd37910586-10"&gt;&lt;/a&gt;            &lt;span class="n"&gt;name_&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="k"&gt;value&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;a name="rest_code_e5520029f0064250bf4d4abd37910586-11"&gt;&lt;/a&gt;            &lt;span class="n"&gt;NotifyPropertyChanged&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"name"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;a name="rest_code_e5520029f0064250bf4d4abd37910586-12"&gt;&lt;/a&gt;        &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;a name="rest_code_e5520029f0064250bf4d4abd37910586-13"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;a name="rest_code_e5520029f0064250bf4d4abd37910586-14"&gt;&lt;/a&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;pre class="code csharp"&gt;&lt;a name="rest_code_9a6af0e3be894005a68ad9e011fb1952-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;private&lt;/span&gt; &lt;span class="kt"&gt;string&lt;/span&gt; &lt;span class="n"&gt;name_&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="k"&gt;get&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="k"&gt;set&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="p"&gt;};&lt;/span&gt; &lt;span class="c1"&gt;// can also be a field&lt;/span&gt;
+&lt;a name="rest_code_9a6af0e3be894005a68ad9e011fb1952-2"&gt;&lt;/a&gt;
+&lt;a name="rest_code_9a6af0e3be894005a68ad9e011fb1952-3"&gt;&lt;/a&gt;&lt;span class="na"&gt;[JsonProperty]&lt;/span&gt;
+&lt;a name="rest_code_9a6af0e3be894005a68ad9e011fb1952-4"&gt;&lt;/a&gt;&lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;string&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_9a6af0e3be894005a68ad9e011fb1952-5"&gt;&lt;/a&gt;    &lt;span class="k"&gt;get&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_9a6af0e3be894005a68ad9e011fb1952-6"&gt;&lt;/a&gt;        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;name_&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_9a6af0e3be894005a68ad9e011fb1952-7"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;a name="rest_code_9a6af0e3be894005a68ad9e011fb1952-8"&gt;&lt;/a&gt;    &lt;span class="k"&gt;set&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_9a6af0e3be894005a68ad9e011fb1952-9"&gt;&lt;/a&gt;        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;value&lt;/span&gt; &lt;span class="p"&gt;!=&lt;/span&gt; &lt;span class="n"&gt;name_&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_9a6af0e3be894005a68ad9e011fb1952-10"&gt;&lt;/a&gt;            &lt;span class="n"&gt;name_&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="k"&gt;value&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_9a6af0e3be894005a68ad9e011fb1952-11"&gt;&lt;/a&gt;            &lt;span class="n"&gt;NotifyPropertyChanged&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"name"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;a name="rest_code_9a6af0e3be894005a68ad9e011fb1952-12"&gt;&lt;/a&gt;        &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;a name="rest_code_9a6af0e3be894005a68ad9e011fb1952-13"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;a name="rest_code_9a6af0e3be894005a68ad9e011fb1952-14"&gt;&lt;/a&gt;&lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;That’s 12 lines of code (excluding &lt;tt class="docutils literal"&gt;[JsonProperty]&lt;/tt&gt; which comes from the
 Json.NET library) for that pattern. Oh: and I need to do that for &lt;strong&gt;every&lt;/strong&gt;
 field/property of my class, because otherwise any changes to them would not be
@@ -494,44 +494,44 @@ attribute (which does not appear on all properties).&lt;/p&gt;
 really simple &lt;a class="reference external" href="https://www.python.org/"&gt;Python&lt;/a&gt; script and ran it. And I ended up with all 14 fields built
 for me.&lt;/p&gt;
 &lt;p&gt;&lt;a class="reference external" href="https://chriswarrick.com/listings/code-writing-code/write_properties.py.html"&gt;code-writing-code/write_properties.py&lt;/a&gt;  &lt;a class="reference external" href="https://chriswarrick.com/listings/code-writing-code/write_properties.py"&gt;(Source)&lt;/a&gt;&lt;/p&gt;
-&lt;pre class="code python"&gt;&lt;a name="rest_code_099dda04c7a441b6ae462cc25267ed18-1"&gt;&lt;/a&gt;&lt;span class="ch"&gt;#!/usr/bin/env python3&lt;/span&gt;
-&lt;a name="rest_code_099dda04c7a441b6ae462cc25267ed18-2"&gt;&lt;/a&gt;&lt;span class="n"&gt;TEMPLATE&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;"""&lt;/span&gt;&lt;span class="se"&gt;\&lt;/span&gt;
-&lt;a name="rest_code_099dda04c7a441b6ae462cc25267ed18-3"&gt;&lt;/a&gt;&lt;span class="s2"&gt;        &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt;public &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt; &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt; {&lt;/span&gt;
-&lt;a name="rest_code_099dda04c7a441b6ae462cc25267ed18-4"&gt;&lt;/a&gt;&lt;span class="s2"&gt;            get {&lt;/span&gt;
-&lt;a name="rest_code_099dda04c7a441b6ae462cc25267ed18-5"&gt;&lt;/a&gt;&lt;span class="s2"&gt;                return &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt;_;&lt;/span&gt;
-&lt;a name="rest_code_099dda04c7a441b6ae462cc25267ed18-6"&gt;&lt;/a&gt;&lt;span class="s2"&gt;            }&lt;/span&gt;
-&lt;a name="rest_code_099dda04c7a441b6ae462cc25267ed18-7"&gt;&lt;/a&gt;&lt;span class="s2"&gt;            set {&lt;/span&gt;
-&lt;a name="rest_code_099dda04c7a441b6ae462cc25267ed18-8"&gt;&lt;/a&gt;&lt;span class="s2"&gt;                if (value != &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt;_) {&lt;/span&gt;
-&lt;a name="rest_code_099dda04c7a441b6ae462cc25267ed18-9"&gt;&lt;/a&gt;&lt;span class="s2"&gt;                    &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt;_ = value;&lt;/span&gt;
-&lt;a name="rest_code_099dda04c7a441b6ae462cc25267ed18-10"&gt;&lt;/a&gt;&lt;span class="s2"&gt;                    NotifyPropertyChanged("&lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt;");&lt;/span&gt;
-&lt;a name="rest_code_099dda04c7a441b6ae462cc25267ed18-11"&gt;&lt;/a&gt;&lt;span class="s2"&gt;                }&lt;/span&gt;
-&lt;a name="rest_code_099dda04c7a441b6ae462cc25267ed18-12"&gt;&lt;/a&gt;&lt;span class="s2"&gt;            }&lt;/span&gt;
-&lt;a name="rest_code_099dda04c7a441b6ae462cc25267ed18-13"&gt;&lt;/a&gt;&lt;span class="s2"&gt;        }&lt;/span&gt;
-&lt;a name="rest_code_099dda04c7a441b6ae462cc25267ed18-14"&gt;&lt;/a&gt;&lt;span class="s2"&gt;"""&lt;/span&gt;
-&lt;a name="rest_code_099dda04c7a441b6ae462cc25267ed18-15"&gt;&lt;/a&gt;&lt;span class="n"&gt;JSONPROPERTY_TEMPLATE&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;'[JsonProperty]&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s1"&gt;        '&lt;/span&gt;
-&lt;a name="rest_code_099dda04c7a441b6ae462cc25267ed18-16"&gt;&lt;/a&gt;
-&lt;a name="rest_code_099dda04c7a441b6ae462cc25267ed18-17"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;has_jsonproperty&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-&lt;a name="rest_code_099dda04c7a441b6ae462cc25267ed18-18"&gt;&lt;/a&gt;    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;has_jsonproperty&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-&lt;a name="rest_code_099dda04c7a441b6ae462cc25267ed18-19"&gt;&lt;/a&gt;        &lt;span class="n"&gt;jsonproperty&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;JSONPROPERTY_TEMPLATE&lt;/span&gt;
-&lt;a name="rest_code_099dda04c7a441b6ae462cc25267ed18-20"&gt;&lt;/a&gt;    &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-&lt;a name="rest_code_099dda04c7a441b6ae462cc25267ed18-21"&gt;&lt;/a&gt;        &lt;span class="n"&gt;jsonproperty&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;''&lt;/span&gt;
-&lt;a name="rest_code_099dda04c7a441b6ae462cc25267ed18-22"&gt;&lt;/a&gt;    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;TEMPLATE&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;jsonproperty&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_099dda04c7a441b6ae462cc25267ed18-23"&gt;&lt;/a&gt;
-&lt;a name="rest_code_099dda04c7a441b6ae462cc25267ed18-24"&gt;&lt;/a&gt;&lt;span class="n"&gt;properties&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;
-&lt;a name="rest_code_099dda04c7a441b6ae462cc25267ed18-25"&gt;&lt;/a&gt;    &lt;span class="s1"&gt;'1 string name'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;a name="rest_code_099dda04c7a441b6ae462cc25267ed18-26"&gt;&lt;/a&gt;    &lt;span class="s1"&gt;'0 int another'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;a name="rest_code_099dda04c7a441b6ae462cc25267ed18-27"&gt;&lt;/a&gt;    &lt;span class="c1"&gt;# 12 fields omitted for brevity&lt;/span&gt;
-&lt;a name="rest_code_099dda04c7a441b6ae462cc25267ed18-28"&gt;&lt;/a&gt;&lt;span class="p"&gt;]&lt;/span&gt;
-&lt;a name="rest_code_099dda04c7a441b6ae462cc25267ed18-29"&gt;&lt;/a&gt;&lt;span class="n"&gt;properties_split&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;split&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;p&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;properties&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
-&lt;a name="rest_code_099dda04c7a441b6ae462cc25267ed18-30"&gt;&lt;/a&gt;
-&lt;a name="rest_code_099dda04c7a441b6ae462cc25267ed18-31"&gt;&lt;/a&gt;&lt;span class="c1"&gt;# Private definitions (internal)&lt;/span&gt;
-&lt;a name="rest_code_099dda04c7a441b6ae462cc25267ed18-32"&gt;&lt;/a&gt;&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;has_jsonproperty&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;properties_split&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-&lt;a name="rest_code_099dda04c7a441b6ae462cc25267ed18-33"&gt;&lt;/a&gt;    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"        private &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt; &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt;_ { get; set; }"&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-&lt;a name="rest_code_099dda04c7a441b6ae462cc25267ed18-34"&gt;&lt;/a&gt;
-&lt;a name="rest_code_099dda04c7a441b6ae462cc25267ed18-35"&gt;&lt;/a&gt;&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;a name="rest_code_099dda04c7a441b6ae462cc25267ed18-36"&gt;&lt;/a&gt;&lt;span class="c1"&gt;# Public definitions (with notifications)&lt;/span&gt;
-&lt;a name="rest_code_099dda04c7a441b6ae462cc25267ed18-37"&gt;&lt;/a&gt;&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;has_jsonproperty&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;properties_split&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-&lt;a name="rest_code_099dda04c7a441b6ae462cc25267ed18-38"&gt;&lt;/a&gt;    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;has_jsonproperty&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s1"&gt;'1'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-1"&gt;&lt;/a&gt;&lt;span class="ch"&gt;#!/usr/bin/env python3&lt;/span&gt;
+&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-2"&gt;&lt;/a&gt;&lt;span class="n"&gt;TEMPLATE&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;"""&lt;/span&gt;&lt;span class="se"&gt;\&lt;/span&gt;
+&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-3"&gt;&lt;/a&gt;&lt;span class="s2"&gt;        &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt;public &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt; &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt; {&lt;/span&gt;
+&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-4"&gt;&lt;/a&gt;&lt;span class="s2"&gt;            get {&lt;/span&gt;
+&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-5"&gt;&lt;/a&gt;&lt;span class="s2"&gt;                return &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt;_;&lt;/span&gt;
+&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-6"&gt;&lt;/a&gt;&lt;span class="s2"&gt;            }&lt;/span&gt;
+&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-7"&gt;&lt;/a&gt;&lt;span class="s2"&gt;            set {&lt;/span&gt;
+&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-8"&gt;&lt;/a&gt;&lt;span class="s2"&gt;                if (value != &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt;_) {&lt;/span&gt;
+&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-9"&gt;&lt;/a&gt;&lt;span class="s2"&gt;                    &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt;_ = value;&lt;/span&gt;
+&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-10"&gt;&lt;/a&gt;&lt;span class="s2"&gt;                    NotifyPropertyChanged("&lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt;");&lt;/span&gt;
+&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-11"&gt;&lt;/a&gt;&lt;span class="s2"&gt;                }&lt;/span&gt;
+&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-12"&gt;&lt;/a&gt;&lt;span class="s2"&gt;            }&lt;/span&gt;
+&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-13"&gt;&lt;/a&gt;&lt;span class="s2"&gt;        }&lt;/span&gt;
+&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-14"&gt;&lt;/a&gt;&lt;span class="s2"&gt;"""&lt;/span&gt;
+&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-15"&gt;&lt;/a&gt;&lt;span class="n"&gt;JSONPROPERTY_TEMPLATE&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;'[JsonProperty]&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s1"&gt;        '&lt;/span&gt;
+&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-16"&gt;&lt;/a&gt;
+&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-17"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;has_jsonproperty&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-18"&gt;&lt;/a&gt;    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;has_jsonproperty&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-19"&gt;&lt;/a&gt;        &lt;span class="n"&gt;jsonproperty&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;JSONPROPERTY_TEMPLATE&lt;/span&gt;
+&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-20"&gt;&lt;/a&gt;    &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-21"&gt;&lt;/a&gt;        &lt;span class="n"&gt;jsonproperty&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;''&lt;/span&gt;
+&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-22"&gt;&lt;/a&gt;    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;TEMPLATE&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;jsonproperty&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-23"&gt;&lt;/a&gt;
+&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-24"&gt;&lt;/a&gt;&lt;span class="n"&gt;properties&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;
+&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-25"&gt;&lt;/a&gt;    &lt;span class="s1"&gt;'1 string name'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-26"&gt;&lt;/a&gt;    &lt;span class="s1"&gt;'0 int another'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-27"&gt;&lt;/a&gt;    &lt;span class="c1"&gt;# 12 fields omitted for brevity&lt;/span&gt;
+&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-28"&gt;&lt;/a&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-29"&gt;&lt;/a&gt;&lt;span class="n"&gt;properties_split&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;split&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;p&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;properties&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-30"&gt;&lt;/a&gt;
+&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-31"&gt;&lt;/a&gt;&lt;span class="c1"&gt;# Private definitions (internal)&lt;/span&gt;
+&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-32"&gt;&lt;/a&gt;&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;has_jsonproperty&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;properties_split&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-33"&gt;&lt;/a&gt;    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"        private &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt; &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt;_ { get; set; }"&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-34"&gt;&lt;/a&gt;
+&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-35"&gt;&lt;/a&gt;&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-36"&gt;&lt;/a&gt;&lt;span class="c1"&gt;# Public definitions (with notifications)&lt;/span&gt;
+&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-37"&gt;&lt;/a&gt;&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;has_jsonproperty&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;properties_split&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-38"&gt;&lt;/a&gt;    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;has_jsonproperty&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s1"&gt;'1'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;That script takes a list of properties and spits out a block of code, ready to
 be pasted into the code. Visual Studio has a nice &lt;em&gt;Insert File as Text&lt;/em&gt;
 feature, so redirecting the output to a file and using that option is enough.&lt;/p&gt;
@@ -546,10 +546,10 @@ looking at you, IntelliJ IDEA aka PyCharm aka Android Studio…)&lt;/p&gt;
 &lt;p&gt;And so, I was building a test suite, using &lt;a class="reference external" href="http://junit.org/"&gt;JUnit&lt;/a&gt;. It’s pretty
 straightforward, and I remember the syntax from Python’s unittest (even though
 I write tests with &lt;a class="reference external" href="http://pytest.org/"&gt;pytest&lt;/a&gt; nowadays). Or so I thought.&lt;/p&gt;
-&lt;pre class="code java"&gt;&lt;a name="rest_code_de61b9d1fcf64fad8509c1385ac56001-1"&gt;&lt;/a&gt;&lt;span class="c1"&gt;// (incorrect)&lt;/span&gt;
-&lt;a name="rest_code_de61b9d1fcf64fad8509c1385ac56001-2"&gt;&lt;/a&gt;&lt;span class="n"&gt;assertEquals&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"Basic integers (7) failed"&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;namer&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;7L&lt;/span&gt;&lt;span class="o"&gt;),&lt;/span&gt; &lt;span class="s"&gt;"seven"&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
-&lt;a name="rest_code_de61b9d1fcf64fad8509c1385ac56001-3"&gt;&lt;/a&gt;&lt;span class="c1"&gt;// (fixed)                              ^ cursor&lt;/span&gt;
-&lt;a name="rest_code_de61b9d1fcf64fad8509c1385ac56001-4"&gt;&lt;/a&gt;&lt;span class="n"&gt;assertEquals&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"Basic integers (7) failed"&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"seven"&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;namer&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;7L&lt;/span&gt;&lt;span class="o"&gt;));&lt;/span&gt;
+&lt;pre class="code java"&gt;&lt;a name="rest_code_5b6906c038914668b86f72cba02704c3-1"&gt;&lt;/a&gt;&lt;span class="c1"&gt;// (incorrect)&lt;/span&gt;
+&lt;a name="rest_code_5b6906c038914668b86f72cba02704c3-2"&gt;&lt;/a&gt;&lt;span class="n"&gt;assertEquals&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"Basic integers (7) failed"&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;namer&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;7L&lt;/span&gt;&lt;span class="o"&gt;),&lt;/span&gt; &lt;span class="s"&gt;"seven"&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+&lt;a name="rest_code_5b6906c038914668b86f72cba02704c3-3"&gt;&lt;/a&gt;&lt;span class="c1"&gt;// (fixed)                              ^ cursor&lt;/span&gt;
+&lt;a name="rest_code_5b6906c038914668b86f72cba02704c3-4"&gt;&lt;/a&gt;&lt;span class="n"&gt;assertEquals&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"Basic integers (7) failed"&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"seven"&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;namer&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;7L&lt;/span&gt;&lt;span class="o"&gt;));&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;You see, the typical Python spelling is &lt;tt class="docutils literal"&gt;self.assertEquals(actual,
 expected)&lt;/tt&gt;. Java adds a &lt;tt class="docutils literal"&gt;String&lt;/tt&gt; message parameter and it also swaps
 &lt;tt class="docutils literal"&gt;actual&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;expected&lt;/tt&gt;. Which I didn’t notice at first, and I wrote my
