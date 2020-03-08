@@ -17,7 +17,7 @@ SITE_URL = "https://chriswarrick.com/"
 # This is the URL where nikola's output will be deployed.
 # If not set, defaults to SITE_URL
 BLOG_EMAIL = "chris@chriswarrick.com"
-BLOG_DESCRIPTION = "A blog about everything and nothing."
+BLOG_DESCRIPTION = "A rarely updated blog, mostly about programming."
 
 # Nikola is multilingual!
 #
@@ -370,7 +370,7 @@ LICENSE = """<a rel="license" href="https://creativecommons.org/licenses/by-nc-s
 # Default is ''
 CONTENT_FOOTER = {
     'en': """<p>this site uses cookies.<br>by using this site, you agree to our <a href="/privacy/">cookie and privacy policy</a>.</p><p>
-powered by <strong><a href="https://getnikola.com/">Nikola</a></strong>, <a href="http://nginx.org/">nginx</a> and <a href="https://www.digitalocean.com/?refcode=7983689b2ecc">DigitalOcean</a><br>
+powered by <strong><a href="https://getnikola.com/">Nikola</a></strong>, <a href="http://nginx.org/">nginx</a> and <a href="https://www.hetzner.com/cloud">Hetzner Cloud</a><br>
 copyright © 2009–2020 <a
 href="/contact/">Chris Warrick</a><br> <a rel="license"
 href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC
@@ -378,7 +378,7 @@ BY-NC-SA</a>, unless stated otherwise</p>""",
     'pl': """<p>ta strona używa ciasteczek.<br>
 korzystając z tej strony, akceptujesz naszą <a href="/pl/privacy/">politykę prywatności i ciasteczek</a>.
 </p><p>
-powered by <strong><a href="https://getnikola.com/">Nikola</a></strong>, <a href="http://nginx.org/">nginx</a> and <a href="https://www.digitalocean.com/?refcode=7983689b2ecc">DigitalOcean</a><br>
+powered by <strong><a href="https://getnikola.com/">Nikola</a></strong>, <a href="http://nginx.org/">nginx</a> and <a href="https://www.hetzner.com/cloud">Hetzner Cloud</a><br>
 copyright © 2009–2020 <a
 href="/pl/contact/">Chris Warrick</a><br> <a rel="license"
 href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC

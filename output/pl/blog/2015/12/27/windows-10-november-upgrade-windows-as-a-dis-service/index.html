@@ -167,20 +167,20 @@ on the second boot, talking about <em>critical structure corruption in CI.dll</e
 I rebooted, but I first took a little detour to the Arch Linux USB stick I
 prepared before to get a sane bootloader back. I’ve done this before, and
 usually requires three commands.</p>
-<pre class="code console"><a name="rest_code_197a73c4ee30421abba5a0fd95d0f881-1"></a><span class="gp">#</span> mount /dev/sda2 /mnt
-<a name="rest_code_197a73c4ee30421abba5a0fd95d0f881-2"></a><span class="go">Metadata kept in Windows cache, refused to mount.</span>
-<a name="rest_code_197a73c4ee30421abba5a0fd95d0f881-3"></a><span class="go">Failed to mount '/dev/sda2': Operation not permitted</span>
-<a name="rest_code_197a73c4ee30421abba5a0fd95d0f881-4"></a><span class="go">The NTFS partition is in an unsafe state. Please resume and shutdown</span>
-<a name="rest_code_197a73c4ee30421abba5a0fd95d0f881-5"></a><span class="go">Windows fully (no hibernation or fast restarting), or mount the volume</span>
-<a name="rest_code_197a73c4ee30421abba5a0fd95d0f881-6"></a><span class="go">read-only with the 'ro' mount option.</span>
+<pre class="code console"><a name="rest_code_f5a13d25af8446e5a3629296d838be3b-1"></a><span class="gp">#</span> mount /dev/sda2 /mnt
+<a name="rest_code_f5a13d25af8446e5a3629296d838be3b-2"></a><span class="go">Metadata kept in Windows cache, refused to mount.</span>
+<a name="rest_code_f5a13d25af8446e5a3629296d838be3b-3"></a><span class="go">Failed to mount '/dev/sda2': Operation not permitted</span>
+<a name="rest_code_f5a13d25af8446e5a3629296d838be3b-4"></a><span class="go">The NTFS partition is in an unsafe state. Please resume and shutdown</span>
+<a name="rest_code_f5a13d25af8446e5a3629296d838be3b-5"></a><span class="go">Windows fully (no hibernation or fast restarting), or mount the volume</span>
+<a name="rest_code_f5a13d25af8446e5a3629296d838be3b-6"></a><span class="go">read-only with the 'ro' mount option.</span>
 </pre>
 <p>Wait, what?! I remember my hard drive layout, and <tt class="docutils literal">/dev/sda2</tt> is my Linux
 ext4 partition! I checked <tt class="docutils literal">cfdisk</tt>, and apparently I now have a <em>Hidden NTFS WinRE</em>, with Linux moved to <tt class="docutils literal">/dev/sda3</tt> and my extended partition moved to <tt class="docutils literal">/dev/sda4</tt> (what would happen if I already had four partitions?). This is typical Windows misbehaviour: <strong>not caring about other OSes that might be installed</strong>.</p>
 <p>I accepted this defeat, mounted <tt class="docutils literal">/dev/sda3</tt>, ran <tt class="docutils literal"><span class="pre">arch-chroot</span> /mnt</tt> and
 <tt class="docutils literal"><span class="pre">syslinux-install_update</span> <span class="pre">-i</span> <span class="pre">-a</span> <span class="pre">-m</span></tt> (I’m not a fan of GRUB 2, and I have a MBR
 drive layout). I should test this out by rebooting into Linux.</p>
-<pre class="code console"><a name="rest_code_ac6caebeb13d4b65883f2dcba15fcc2e-1"></a><span class="go">Error getting authority: Error initializing authority: Could not connect: No such file or directory (g-io-error-quark, 1)</span>
-<a name="rest_code_ac6caebeb13d4b65883f2dcba15fcc2e-2"></a><span class="go">Welcome to emergency mode!</span>
+<pre class="code console"><a name="rest_code_0c41781c83384e729cf7b5a84b769af5-1"></a><span class="go">Error getting authority: Error initializing authority: Could not connect: No such file or directory (g-io-error-quark, 1)</span>
+<a name="rest_code_0c41781c83384e729cf7b5a84b769af5-2"></a><span class="go">Welcome to emergency mode!</span>
 </pre>
 <p>systemd <strong>really</strong> values <tt class="docutils literal">/etc/fstab</tt>, and you can’t boot if any entry fails
 to mount, which was the case with the Windows drive in <tt class="docutils literal">/dev/sda1</tt> and my
@@ -274,7 +274,7 @@ notices were outdated. Now, they’re in the future.</p>
 korzystając z tej strony, akceptujesz naszą <a href="/pl/privacy/">politykę prywatności i ciasteczek</a>.
 </p>
 <p>
-powered by <strong><a href="https://getnikola.com/">Nikola</a></strong>, <a href="http://nginx.org/">nginx</a> and <a href="https://www.digitalocean.com/?refcode=7983689b2ecc">DigitalOcean</a><br>
+powered by <strong><a href="https://getnikola.com/">Nikola</a></strong>, <a href="http://nginx.org/">nginx</a> and <a href="https://www.hetzner.com/cloud">Hetzner Cloud</a><br>
 copyright © 2009–2020 <a href="/pl/contact/">Chris Warrick</a><br><a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC
 BY-NC-SA</a>, unless stated otherwise</p>
             
