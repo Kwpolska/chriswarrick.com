@@ -122,23 +122,25 @@ all pretty badly.</p>
 <p>So first, some people might claim that <a class="reference external" href="http://www.ietf.org/rfc/rfc4180.txt">RFC 4180</a> is the CSV standard. Those
 people also have not read the document they’re referring to. It states:</p>
 <blockquote>
-This memo provides information for the Internet community.  It does
-not specify an Internet standard of any kind.</blockquote>
-<p>The problem with this is the fact that a <tt class="docutils literal">.csv</tt> file does not mean much. There
+<p>This memo provides information for the Internet community.  It does
+not specify an Internet standard of any kind.</p>
+</blockquote>
+<p>The problem with this is the fact that a <code class="docutils literal">.csv</code> file does not mean much. There
 are a few problems. The first question is,</p>
 <blockquote>
-What is the field separator? Is it a comma or a semicolon?</blockquote>
+<p>What is the field separator? Is it a comma or a semicolon?</p>
+</blockquote>
 <p>Hey, wait a minute, doesn’t the file format/extension stand for
 <em>comma-separated values</em>? Yes, it does. But that does not matter in the
 slightest. You see, Microsoft Excel — which most people will use to read/write
 their CSV files — makes this decision based on the user locale settings. If the
 OS is set to a locale where the comma is the <a class="reference external" href="https://en.wikipedia.org/wiki/Decimal_mark#Hindu.E2.80.93Arabic_numeral_system">decimal mark</a> (eg. most of
-Europe), the list separator is set to <tt class="docutils literal">;</tt> instead of <tt class="docutils literal">,</tt> — and Excel uses
+Europe), the list separator is set to <code class="docutils literal">;</code> instead of <code class="docutils literal">,</code> — and Excel uses
 that.</p>
 <p>Of course, there’s also the TSV data format — those are tab-separated values.
-And some people might name their TSV files <tt class="docutils literal">.csv</tt>.</p>
+And some people might name their TSV files <code class="docutils literal">.csv</code>.</p>
 <p>To read files saved in a different locale, or with a different separator, Excel
-users need to change the file extension to <tt class="docutils literal">.txt</tt>, or go to Data → Get
+users need to change the file extension to <code class="docutils literal">.txt</code>, or go to Data → Get
 External Data → From Text <a class="reference external" href="https://support.office.com/en-us/article/Text-Import-Wizard-c5b02af6-fda1-4440-899f-f78bafe41857">(documentation)</a> and use the import wizard. You
 can’t double-click on files.</p>
 <p>On a side note, Apple Numbers guesses the format — one of the few things it
@@ -147,27 +149,30 @@ default it uses tab AND comma AND semicolon for CSV files, which brings its own
 host of problems.</p>
 <p>Here’s a quick test:</p>
 <blockquote>
-What does <tt class="docutils literal">foo;bar,baz;quux</tt> mean? What about <tt class="docutils literal">foo,bar;baz,quux</tt>?</blockquote>
+<p>What does <code class="docutils literal">foo;bar,baz;quux</code> mean? What about <code class="docutils literal">foo,bar;baz,quux</code>?</p>
+</blockquote>
 <ul class="simple">
-<li>LibreOffice assumes it’s (Chinese) UTF-16 text, but after telling it the real encoding, both
-files contain <strong>4 columns</strong>.</li>
-<li>Microsoft Excel says one of the files contains <strong>3 columns</strong> and the other contains <strong>2 columns</strong>
-(which is which depends on locale)</li>
-<li>Apple Numbers says the first file contains <strong>3 columns</strong> and the other
+<li><p>LibreOffice assumes it’s (Chinese) UTF-16 text, but after telling it the real encoding, both
+files contain <strong>4 columns</strong>.</p></li>
+<li><p>Microsoft Excel says one of the files contains <strong>3 columns</strong> and the other contains <strong>2 columns</strong>
+(which is which depends on locale)</p></li>
+<li><p>Apple Numbers says the first file contains <strong>3 columns</strong> and the other
 contains <strong>2 columns</strong> if set to English, and both files contain <strong>3
-columns</strong> if set to Polish.</li>
+columns</strong> if set to Polish.</p></li>
 </ul>
 <p>But let’s get back to gotchas:</p>
 <blockquote>
-What is the decimal mark? Is it a dot or a comma?</blockquote>
+<p>What is the decimal mark? Is it a dot or a comma?</p>
+</blockquote>
 <p>That’s a direct consequence of the previous question. However, one can’t simply
-assume <tt class="docutils literal">comma/dot</tt> and <tt class="docutils literal">semicolon/comma</tt>, because users might do crazy
+assume <code class="docutils literal">comma/dot</code> and <code class="docutils literal">semicolon/comma</code>, because users might do crazy
 stuff.</p>
 <blockquote>
-What is used to escape rows containing the field separator? Quotes?
-Backslashes?  What is used to escape the escape character?</blockquote>
-<p>Excel, for example, puts some things in <tt class="docutils literal">"quotes"</tt>. If a literal quote
-character appears in the spreadsheet, it’s represented as <tt class="docutils literal">""</tt>, and
+<p>What is used to escape rows containing the field separator? Quotes?
+Backslashes?  What is used to escape the escape character?</p>
+</blockquote>
+<p>Excel, for example, puts some things in <code class="docutils literal">"quotes"</code>. If a literal quote
+character appears in the spreadsheet, it’s represented as <code class="docutils literal">""</code>, and
 the entire cell is quoted as well. But there might be programs that use
 backslashes for escapes, or even bad code that does not consider the need of
 escaping like this, with tragic results.</p>
@@ -175,7 +180,8 @@ escaping like this, with tragic results.</p>
 format effectively solves the issues I named before, both CSV and TSV suffer
 from one problem:</p>
 <blockquote>
-Which encoding to use when reading this file?</blockquote>
+<p>Which encoding to use when reading this file?</p>
+</blockquote>
 <p>I already mentioned that LibreOffice believed my sample file was UTF-16,
 containing Chinese text — in reality, this file was UTF-8 (or ASCII).</p>
 <p>What does Microsoft Excel do then? It looks like it follows <em>System locale for

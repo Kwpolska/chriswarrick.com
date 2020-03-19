@@ -130,25 +130,21 @@ og: http://ogp.me/ns#
 <div class="section" id="generators-tested">
 <h2>Generators tested<a href="#generators-tested" class="headerlink" title="Permalink to this heading">¶</a></h2>
 <ul class="simple">
-<li>
-<a class="reference external" href="https://getnikola.com/">Nikola</a> v7.6.1, by Roberto Alsina, Chris Warrick and contributors; Python; MIT license</li>
-<li>
-<a class="reference external" href="http://blog.getpelican.com/">Pelican</a> v3.6.0, by Alexis Metaireau and contributors; Python; GNU AGPL license</li>
-<li>
-<a class="reference external" href="https://hexo.io/">Hexo</a> v3.1.1, by Tommy Chen and contributors; Node.js; MIT license</li>
-<li>
-<a class="reference external" href="http://octopress.org/">Octopress</a> v2.0, by Brandon Mathis and contributors; Ruby; MIT license (based on Jekyll)</li>
+<li><p><a class="reference external" href="https://getnikola.com/">Nikola</a> v7.6.1, by Roberto Alsina, Chris Warrick and contributors; Python; MIT license</p></li>
+<li><p><a class="reference external" href="http://blog.getpelican.com/">Pelican</a> v3.6.0, by Alexis Metaireau and contributors; Python; GNU AGPL license</p></li>
+<li><p><a class="reference external" href="https://hexo.io/">Hexo</a> v3.1.1, by Tommy Chen and contributors; Node.js; MIT license</p></li>
+<li><p><a class="reference external" href="http://octopress.org/">Octopress</a> v2.0, by Brandon Mathis and contributors; Ruby; MIT license (based on Jekyll)</p></li>
 </ul>
 </div>
 </div>
 </div>
 <div class="section" id="setup">
 <h2>Setup<a href="#setup" class="headerlink" title="Permalink to this heading">¶</a></h2>
-<p>Every site generator was set up in an identical <strong>clean</strong> environment, using Ubuntu 15.04, x64, as a 512 MB DigitalOcean VM with a 20 GB SSD drive. The machine was updated, an user account with passwordless sudo was created, and <tt class="docutils literal"><span class="pre">build-essential</span></tt> was installed. Tests were run by an automated installer and timer, written in Bash and C, respectively (custom; source code is available). Pre-compiled wheels for lxml and Pillow were used for Nikola testing, because lxml cannot be compiled with less than 1.5 GB of RAM; they were built with <tt class="docutils literal">pip wheel lxml pillow</tt> outside of the testing environment (on a local VM). The machine was reimaged after every test. Lists of installed Python/Ruby/Node packages are available in the GitHub repo (see below).</p>
+<p>Every site generator was set up in an identical <strong>clean</strong> environment, using Ubuntu 15.04, x64, as a 512 MB DigitalOcean VM with a 20 GB SSD drive. The machine was updated, an user account with passwordless sudo was created, and <code class="docutils literal"><span class="pre">build-essential</span></code> was installed. Tests were run by an automated installer and timer, written in Bash and C, respectively (custom; source code is available). Pre-compiled wheels for lxml and Pillow were used for Nikola testing, because lxml cannot be compiled with less than 1.5 GB of RAM; they were built with <code class="docutils literal">pip wheel lxml pillow</code> outside of the testing environment (on a local VM). The machine was reimaged after every test. Lists of installed Python/Ruby/Node packages are available in the GitHub repo (see below).</p>
 </div>
 <div class="section" id="input">
 <h2>Input<a href="#input" class="headerlink" title="Permalink to this heading">¶</a></h2>
-<p>Every site generator was given the same set of 179 log files from #nikola on freenode. The raw logs contain 1209507 bytes (1.1 MiB) of plain text. The logs were processed into post files, which fit the format of each engine (reST or Markdown), containing mandatory metadata, an introductory paragraph and a code block (using <tt class="docutils literal">::</tt> for reST, four spaces for Markdown). One file had to be altered, because they contained the <tt class="docutils literal">{{</tt>  sequence, which was misinterpreted as internal templating by Hexo and Octopress — it was replaced by a harmless <tt class="docutils literal">~~</tt> sequence for all four generators.</p>
+<p>Every site generator was given the same set of 179 log files from #nikola on freenode. The raw logs contain 1209507 bytes (1.1 MiB) of plain text. The logs were processed into post files, which fit the format of each engine (reST or Markdown), containing mandatory metadata, an introductory paragraph and a code block (using <code class="docutils literal">::</code> for reST, four spaces for Markdown). One file had to be altered, because they contained the <code class="docutils literal">{{</code>  sequence, which was misinterpreted as internal templating by Hexo and Octopress — it was replaced by a harmless <code class="docutils literal">~~</code> sequence for all four generators.</p>
 <p>The generators used default config, with one exception: highlighting was disabled for Hexo. The highlighting would cause an unfair advantage (other generators did not automatically highlight the code boxes), and led to very high build times (see table 4 in comparison spreadsheet).</p>
 </div>
 <div class="section" id="build">
@@ -201,7 +197,7 @@ og: http://ogp.me/ns#
 </div>
 <div class="section" id="raw-results-and-configuration">
 <h3>Raw results and configuration<a href="#raw-results-and-configuration" class="headerlink" title="Permalink to this heading">¶</a></h3>
-<p>Raw results (<tt class="docutils literal">.csv</tt> files from the test runner) and configuration is available in the <a class="reference external" href="https://github.com/Kwpolska/ssg-test">GitHub repo</a>. Log files and converted posts are not available publicly; however, they can be provided to interested parties (<a class="reference external" href="https://chriswarrick.com/contact/">contact me</a> to obtain them).</p>
+<p>Raw results (<code class="docutils literal">.csv</code> files from the test runner) and configuration is available in the <a class="reference external" href="https://github.com/Kwpolska/ssg-test">GitHub repo</a>. Log files and converted posts are not available publicly; however, they can be provided to interested parties (<a class="reference external" href="https://chriswarrick.com/contact/">contact me</a> to obtain them).</p>
 </div>
 </div>
 <div class="section" id="questions-and-answers">
@@ -215,8 +211,8 @@ og: http://ogp.me/ns#
 <h3>Why not $MYFAVORITESSG?<a href="#why-not-myfavoritessg" class="headerlink" title="Permalink to this heading">¶</a></h3>
 <p>I tested only four popular generators that were easy enough to set up. I could easily extend the set if I had time and friendly enough documentation to do so. I can add a SSG, provided that:</p>
 <ul class="simple">
-<li>it’s easy to configure</li>
-<li>it has a default config that provides a working site with a feature set comparable to other SSGs tested here (see <a class="reference internal" href="/blog/2015/07/23/ssg-speed-test/#why-not-plain-jekyll">Why not plain Jekyll?</a>)</li>
+<li><p>it’s easy to configure</p></li>
+<li><p>it has a default config that provides a working site with a feature set comparable to other SSGs tested here (see <a class="reference internal" href="/blog/2015/07/23/ssg-speed-test/#why-not-plain-jekyll">Why not plain Jekyll?</a>)</p></li>
 </ul>
 </div>
 </div>

@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chris Warrick (Posts about rant)</title><link>https://chriswarrick.com/</link><description></description><atom:link href="https://chriswarrick.com/blog/tags/rant.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Fri, 28 Feb 2020 17:41:23 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Modern Web Development: where you need 500 packages to build Bootstrap</title><link>https://chriswarrick.com/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;This humble blog is written by an old-school developer who sometimes does web stuff. An attempt to customize the Bootstrap CSS theme requires 50 MB of node_modules, over 500 packages, and comes with a bit of frustration at stupid tools and terrible documentation.&lt;/p&gt;
+<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chris Warrick (Posts about rant)</title><link>https://chriswarrick.com/</link><description></description><atom:link href="https://chriswarrick.com/blog/tags/rant.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Thu, 19 Mar 2020 10:29:57 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Modern Web Development: where you need 500 packages to build Bootstrap</title><link>https://chriswarrick.com/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;This humble blog is written by an old-school developer who sometimes does web stuff. An attempt to customize the Bootstrap CSS theme requires 50 MB of node_modules, over 500 packages, and comes with a bit of frustration at stupid tools and terrible documentation.&lt;/p&gt;
 &lt;!-- TEASER_END --&gt;
 &lt;p&gt;You might notice that this website is based on Bootstrap. You might also notice it’s been heavily customized, especially if you’re browsing in the (currently default) Dark Mode. Back in Bootstrap v3 days, the task was accomplished by &lt;a class="reference external" href="https://getbootstrap.com/docs/3.4/customize/"&gt;a simple online tool&lt;/a&gt; that required no local installs. Bootstrap 4 changed the landscape: now you need to manually compile Sass. Moreover, Autoprefixer is required to make the CSS usable by web browsers.&lt;/p&gt;
 &lt;p&gt;Now, when it comes to web development, I believe the old ways were better. Back when nobody thought to make a client-side-JS-based blog or pastebin, and only apps that needed interactivity were JS-first. Gmail is a good example of that, although they &lt;em&gt;still&lt;/em&gt; offer a &lt;a class="reference external" href="https://support.google.com/mail/answer/15049?hl=en"&gt;basic HTML view&lt;/a&gt; and it works good — in fact, I suppose it might be less buggy than the JS-ladden version. (A lot of single-page apps like to randomly glitch out in my experience.)&lt;/p&gt;
-&lt;p&gt;I still remember the days when all that one had to do is &lt;tt class="docutils literal"&gt;java &lt;span class="pre"&gt;-jar&lt;/span&gt; yuicompressor.jar style.css &amp;gt; style.min.css&lt;/tt&gt;. Then Less and Sass became more popular — and that’s good. The ability to use variables and functions makes it possible to produce well-organized stylesheets. The idea of Autoprefixer is also fine, humans should not waste their time with browser-specific prefixes for experimental features, that can be neatly automated.&lt;/p&gt;
+&lt;p&gt;I still remember the days when all that one had to do is &lt;code class="docutils literal"&gt;java &lt;span class="pre"&gt;-jar&lt;/span&gt; yuicompressor.jar style.css &amp;gt; style.min.css&lt;/code&gt;. Then Less and Sass became more popular — and that’s good. The ability to use variables and functions makes it possible to produce well-organized stylesheets. The idea of Autoprefixer is also fine, humans should not waste their time with browser-specific prefixes for experimental features, that can be neatly automated.&lt;/p&gt;
 &lt;p&gt;But to use all these fancy tools, glue code is necessary. Autoprefixer is (mainly server-side) JS-only, Sass is currently Node or Dart, minifier tools are available in many languages.&lt;/p&gt;
 &lt;div class="section" id="attempt-0-no-js-stuff-no-node-modules"&gt;
 &lt;h2&gt;Attempt 0: no JS stuff, no node_modules&lt;/h2&gt;
 &lt;p&gt;I installed a Sass compiler. There are web services like cssminifier.com that can be easily used with curl in a Bash script. Autoprefixer has a webpage that lets you use the service without installing it as well. The catch is, the code runs locally in your web browser. Automating a web browser requires some effort. I decided to leave this part un-automated. Here is the Bash script I hacked together (with some messages removed):&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_659bf901c0734b778dd890f95ee16992-1"&gt;&lt;/a&gt;sass bootstrap-kw.scss &amp;gt; bootstrap.noprefix.css
-&lt;a name="rest_code_659bf901c0734b778dd890f95ee16992-2"&gt;&lt;/a&gt;sass bootstrap-kw-dark.scss &amp;gt; bootstrap-dark.noprefix.css
-&lt;a name="rest_code_659bf901c0734b778dd890f95ee16992-3"&gt;&lt;/a&gt;
-&lt;a name="rest_code_659bf901c0734b778dd890f95ee16992-4"&gt;&lt;/a&gt;&lt;span class="nb"&gt;echo&lt;/span&gt; &lt;span class="s2"&gt;"Go to https://autoprefixer.github.io/."&lt;/span&gt;
-&lt;a name="rest_code_659bf901c0734b778dd890f95ee16992-5"&gt;&lt;/a&gt;
-&lt;a name="rest_code_659bf901c0734b778dd890f95ee16992-6"&gt;&lt;/a&gt;pbcopy &amp;lt; bootstrap.noprefix.css
-&lt;a name="rest_code_659bf901c0734b778dd890f95ee16992-7"&gt;&lt;/a&gt;&lt;span class="nb"&gt;echo&lt;/span&gt; -n &lt;span class="s2"&gt;"(light) Paste the clipboard contents and copy the output, then press Enter."&lt;/span&gt;
-&lt;a name="rest_code_659bf901c0734b778dd890f95ee16992-8"&gt;&lt;/a&gt;&lt;span class="nb"&gt;read&lt;/span&gt; temp
-&lt;a name="rest_code_659bf901c0734b778dd890f95ee16992-9"&gt;&lt;/a&gt;pbpaste &amp;gt; assets/css/bootstrap.css
-&lt;a name="rest_code_659bf901c0734b778dd890f95ee16992-10"&gt;&lt;/a&gt;
-&lt;a name="rest_code_659bf901c0734b778dd890f95ee16992-11"&gt;&lt;/a&gt;sleep &lt;span class="m"&gt;1&lt;/span&gt;
-&lt;a name="rest_code_659bf901c0734b778dd890f95ee16992-12"&gt;&lt;/a&gt;
-&lt;a name="rest_code_659bf901c0734b778dd890f95ee16992-13"&gt;&lt;/a&gt;pbcopy &amp;lt; bootstrap-dark.noprefix.css
-&lt;a name="rest_code_659bf901c0734b778dd890f95ee16992-14"&gt;&lt;/a&gt;&lt;span class="nb"&gt;echo&lt;/span&gt; -n &lt;span class="s2"&gt;"( dark) Paste the clipboard contents and copy the output, then press Enter."&lt;/span&gt;
-&lt;a name="rest_code_659bf901c0734b778dd890f95ee16992-15"&gt;&lt;/a&gt;&lt;span class="nb"&gt;read&lt;/span&gt; temp
-&lt;a name="rest_code_659bf901c0734b778dd890f95ee16992-16"&gt;&lt;/a&gt;pbpaste &amp;gt; assets/css/bootstrap-dark.css
-&lt;a name="rest_code_659bf901c0734b778dd890f95ee16992-17"&gt;&lt;/a&gt;
-&lt;a name="rest_code_659bf901c0734b778dd890f95ee16992-18"&gt;&lt;/a&gt;curl -X POST -s --data-urlencode &lt;span class="s1"&gt;'input@assets/css/bootstrap.css'&lt;/span&gt; https://cssminifier.com/raw &amp;gt; assets/css/bootstrap.min.css
-&lt;a name="rest_code_659bf901c0734b778dd890f95ee16992-19"&gt;&lt;/a&gt;curl -X POST -s --data-urlencode &lt;span class="s1"&gt;'input@assets/css/bootstrap-dark.css'&lt;/span&gt; https://cssminifier.com/raw &amp;gt; assets/css/bootstrap-dark.min.css
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_c00bbc7c869a46d1abba9f35534aa523-1"&gt;&lt;/a&gt;sass bootstrap-kw.scss &amp;gt; bootstrap.noprefix.css
+&lt;a name="rest_code_c00bbc7c869a46d1abba9f35534aa523-2"&gt;&lt;/a&gt;sass bootstrap-kw-dark.scss &amp;gt; bootstrap-dark.noprefix.css
+&lt;a name="rest_code_c00bbc7c869a46d1abba9f35534aa523-3"&gt;&lt;/a&gt;
+&lt;a name="rest_code_c00bbc7c869a46d1abba9f35534aa523-4"&gt;&lt;/a&gt;&lt;span class="nb"&gt;echo&lt;/span&gt; &lt;span class="s2"&gt;"Go to https://autoprefixer.github.io/."&lt;/span&gt;
+&lt;a name="rest_code_c00bbc7c869a46d1abba9f35534aa523-5"&gt;&lt;/a&gt;
+&lt;a name="rest_code_c00bbc7c869a46d1abba9f35534aa523-6"&gt;&lt;/a&gt;pbcopy &amp;lt; bootstrap.noprefix.css
+&lt;a name="rest_code_c00bbc7c869a46d1abba9f35534aa523-7"&gt;&lt;/a&gt;&lt;span class="nb"&gt;echo&lt;/span&gt; -n &lt;span class="s2"&gt;"(light) Paste the clipboard contents and copy the output, then press Enter."&lt;/span&gt;
+&lt;a name="rest_code_c00bbc7c869a46d1abba9f35534aa523-8"&gt;&lt;/a&gt;&lt;span class="nb"&gt;read&lt;/span&gt; temp
+&lt;a name="rest_code_c00bbc7c869a46d1abba9f35534aa523-9"&gt;&lt;/a&gt;pbpaste &amp;gt; assets/css/bootstrap.css
+&lt;a name="rest_code_c00bbc7c869a46d1abba9f35534aa523-10"&gt;&lt;/a&gt;
+&lt;a name="rest_code_c00bbc7c869a46d1abba9f35534aa523-11"&gt;&lt;/a&gt;sleep &lt;span class="m"&gt;1&lt;/span&gt;
+&lt;a name="rest_code_c00bbc7c869a46d1abba9f35534aa523-12"&gt;&lt;/a&gt;
+&lt;a name="rest_code_c00bbc7c869a46d1abba9f35534aa523-13"&gt;&lt;/a&gt;pbcopy &amp;lt; bootstrap-dark.noprefix.css
+&lt;a name="rest_code_c00bbc7c869a46d1abba9f35534aa523-14"&gt;&lt;/a&gt;&lt;span class="nb"&gt;echo&lt;/span&gt; -n &lt;span class="s2"&gt;"( dark) Paste the clipboard contents and copy the output, then press Enter."&lt;/span&gt;
+&lt;a name="rest_code_c00bbc7c869a46d1abba9f35534aa523-15"&gt;&lt;/a&gt;&lt;span class="nb"&gt;read&lt;/span&gt; temp
+&lt;a name="rest_code_c00bbc7c869a46d1abba9f35534aa523-16"&gt;&lt;/a&gt;pbpaste &amp;gt; assets/css/bootstrap-dark.css
+&lt;a name="rest_code_c00bbc7c869a46d1abba9f35534aa523-17"&gt;&lt;/a&gt;
+&lt;a name="rest_code_c00bbc7c869a46d1abba9f35534aa523-18"&gt;&lt;/a&gt;curl -X POST -s --data-urlencode &lt;span class="s1"&gt;'input@assets/css/bootstrap.css'&lt;/span&gt; https://cssminifier.com/raw &amp;gt; assets/css/bootstrap.min.css
+&lt;a name="rest_code_c00bbc7c869a46d1abba9f35534aa523-19"&gt;&lt;/a&gt;curl -X POST -s --data-urlencode &lt;span class="s1"&gt;'input@assets/css/bootstrap-dark.css'&lt;/span&gt; https://cssminifier.com/raw &amp;gt; assets/css/bootstrap-dark.min.css
 &lt;/pre&gt;&lt;p&gt;The “manual copy” solution was inconvenient, but it worked.&lt;/p&gt;
 &lt;p&gt;Well, most of the time Some lags/glitches with the clipboard meant that sometimes, files had the incorrect content. So, I wanted to fix it, and build it in a more modern, JS-y way. The way Bootstrap does it is a lot of shell commands (that run various Node tools). I don’t feel like building this pipeline with Bash, it would feel fragile. Let’s do it the JS way.&lt;/p&gt;
 &lt;/div&gt;
@@ -34,11 +34,11 @@
 &lt;h2&gt;Attempt 1: webpack&lt;/h2&gt;
 &lt;p&gt;I’ve used webpack for &lt;a class="reference external" href="https://github.com/Kwpolska/django-expenses/blob/master/ts/webpack.config.js"&gt;another project of mine&lt;/a&gt;. It was okay, and it did the job (namely, compiling TypeScript into browser-usable JS).&lt;/p&gt;
 &lt;p&gt;I wanted to give it a try for this one. I googled “webpack sass”. The first result was &lt;a class="reference external" href="https://github.com/webpack-contrib/sass-loader"&gt;sass-loader&lt;/a&gt;. The pipeline for it was:&lt;/p&gt;
-&lt;pre class="code javascript"&gt;&lt;a name="rest_code_d7fadb69a84e427bb0f7767bc4f7ff4d-1"&gt;&lt;/a&gt;&lt;span class="s2"&gt;"style-loader"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="c1"&gt;// creates style nodes from JS strings&lt;/span&gt;
-&lt;a name="rest_code_d7fadb69a84e427bb0f7767bc4f7ff4d-2"&gt;&lt;/a&gt;&lt;span class="s2"&gt;"css-loader"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="c1"&gt;// translates CSS into CommonJS&lt;/span&gt;
-&lt;a name="rest_code_d7fadb69a84e427bb0f7767bc4f7ff4d-3"&gt;&lt;/a&gt;&lt;span class="s2"&gt;"sass-loader"&lt;/span&gt; &lt;span class="c1"&gt;// compiles Sass to CSS, using Node Sass by default&lt;/span&gt;
+&lt;pre class="code javascript"&gt;&lt;a name="rest_code_115c1a37bd7046e2a46dd361407b1d54-1"&gt;&lt;/a&gt;&lt;span class="s2"&gt;"style-loader"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="c1"&gt;// creates style nodes from JS strings&lt;/span&gt;
+&lt;a name="rest_code_115c1a37bd7046e2a46dd361407b1d54-2"&gt;&lt;/a&gt;&lt;span class="s2"&gt;"css-loader"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="c1"&gt;// translates CSS into CommonJS&lt;/span&gt;
+&lt;a name="rest_code_115c1a37bd7046e2a46dd361407b1d54-3"&gt;&lt;/a&gt;&lt;span class="s2"&gt;"sass-loader"&lt;/span&gt; &lt;span class="c1"&gt;// compiles Sass to CSS, using Node Sass by default&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;Let’s recap. Someone thought that the right way to do CSS is to use JS imports.&lt;/p&gt;
-&lt;p&gt;Yes. &lt;tt class="docutils literal"&gt;import &lt;span class="pre"&gt;"./style.css";&lt;/span&gt;&lt;/tt&gt; in a JS file. So that your fancy build tool knows about CSS.&lt;/p&gt;
+&lt;p&gt;Yes. &lt;code class="docutils literal"&gt;import &lt;span class="pre"&gt;"./style.css";&lt;/span&gt;&lt;/code&gt; in a JS file. So that your fancy build tool knows about CSS.&lt;/p&gt;
 &lt;p&gt;Webpack wasn’t the right tool for my project, but even if I had JS code there, &lt;strong&gt;WHY WOULD I MENTION STYLESHEETS IN MY JS CODE?!&lt;/strong&gt; Webpack’s website also lists .jpg and .png assets, are they meant to be imported in JS as well? This is absurd.&lt;/p&gt;
 &lt;p&gt;Going back to googling “webpack sass”… The next two results were Medium posts. The stupidity of Medium as a blog platform notwithstanding, one of the posts was from 2017, referring to webpack 2. The next post was a year older, a completely unreadable mess, and it was for webpack 4. That’s not helpful in any way.&lt;/p&gt;
 &lt;/div&gt;
@@ -47,197 +47,199 @@
 &lt;p&gt;Let’s try something else from the JS world: Gulp. Now, the tool is not terrible, but it still requires a lot of dependencies.&lt;/p&gt;
 &lt;p&gt;The pipeline that was required for this task sounds very simple:&lt;/p&gt;
 &lt;blockquote&gt;
-bootstrap-kw{,-dark}.sass → Sass compiler → Autoprefixer → bootstrap{,-dark}.css → minify → bootstrap{,-dark}.min.css&lt;/blockquote&gt;
+&lt;p&gt;bootstrap-kw{,-dark}.sass → Sass compiler → Autoprefixer → bootstrap{,-dark}.css → minify → bootstrap{,-dark}.min.css&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;The Gulp version is fairly simple: (I based it on examples on Gulp’s website, and pages of all my dependencies).&lt;/p&gt;
-&lt;pre class="code javascript"&gt;&lt;a name="rest_code_d5611d81c77141c0b5de4b2c9363de47-1"&gt;&lt;/a&gt;&lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="nx"&gt;src&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;dest&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;require&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'gulp'&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;a name="rest_code_d5611d81c77141c0b5de4b2c9363de47-2"&gt;&lt;/a&gt;&lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="nx"&gt;minifyCSS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;require&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'gulp-csso'&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;a name="rest_code_d5611d81c77141c0b5de4b2c9363de47-3"&gt;&lt;/a&gt;&lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="nx"&gt;sass&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;require&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'gulp-sass'&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;a name="rest_code_d5611d81c77141c0b5de4b2c9363de47-4"&gt;&lt;/a&gt;&lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="nx"&gt;postcss&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;require&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'gulp-postcss'&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;a name="rest_code_d5611d81c77141c0b5de4b2c9363de47-5"&gt;&lt;/a&gt;&lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="nx"&gt;autoprefixer&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;require&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'autoprefixer'&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;a name="rest_code_d5611d81c77141c0b5de4b2c9363de47-6"&gt;&lt;/a&gt;&lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="nx"&gt;rename&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;require&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"gulp-rename"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;a name="rest_code_d5611d81c77141c0b5de4b2c9363de47-7"&gt;&lt;/a&gt;&lt;span class="nx"&gt;sass&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;compiler&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;require&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'node-sass'&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;a name="rest_code_d5611d81c77141c0b5de4b2c9363de47-8"&gt;&lt;/a&gt;
-&lt;a name="rest_code_d5611d81c77141c0b5de4b2c9363de47-9"&gt;&lt;/a&gt;
-&lt;a name="rest_code_d5611d81c77141c0b5de4b2c9363de47-10"&gt;&lt;/a&gt;&lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="nx"&gt;css&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;a name="rest_code_d5611d81c77141c0b5de4b2c9363de47-11"&gt;&lt;/a&gt;    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nx"&gt;src&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'*.scss'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_d5611d81c77141c0b5de4b2c9363de47-12"&gt;&lt;/a&gt;        &lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;pipe&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;sass&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;sync&lt;/span&gt;&lt;span class="p"&gt;().&lt;/span&gt;&lt;span class="nx"&gt;on&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'error'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;sass&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;logError&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-&lt;a name="rest_code_d5611d81c77141c0b5de4b2c9363de47-13"&gt;&lt;/a&gt;        &lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;pipe&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;postcss&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;&lt;span class="nx"&gt;autoprefixer&lt;/span&gt;&lt;span class="p"&gt;()]))&lt;/span&gt;
-&lt;a name="rest_code_d5611d81c77141c0b5de4b2c9363de47-14"&gt;&lt;/a&gt;        &lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;pipe&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;rename&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;path&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;a name="rest_code_d5611d81c77141c0b5de4b2c9363de47-15"&gt;&lt;/a&gt;            &lt;span class="nx"&gt;path&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;basename&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;path&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;basename&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;replace&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"-kw"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;""&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_d5611d81c77141c0b5de4b2c9363de47-16"&gt;&lt;/a&gt;        &lt;span class="p"&gt;}))&lt;/span&gt;
-&lt;a name="rest_code_d5611d81c77141c0b5de4b2c9363de47-17"&gt;&lt;/a&gt;        &lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;pipe&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;dest&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'assets/css'&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-&lt;a name="rest_code_d5611d81c77141c0b5de4b2c9363de47-18"&gt;&lt;/a&gt;        &lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;pipe&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;minifyCSS&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;
-&lt;a name="rest_code_d5611d81c77141c0b5de4b2c9363de47-19"&gt;&lt;/a&gt;        &lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;pipe&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;rename&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;path&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;a name="rest_code_d5611d81c77141c0b5de4b2c9363de47-20"&gt;&lt;/a&gt;            &lt;span class="nx"&gt;path&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;basename&lt;/span&gt; &lt;span class="o"&gt;+=&lt;/span&gt; &lt;span class="s2"&gt;".min"&lt;/span&gt;
-&lt;a name="rest_code_d5611d81c77141c0b5de4b2c9363de47-21"&gt;&lt;/a&gt;        &lt;span class="p"&gt;}))&lt;/span&gt;
-&lt;a name="rest_code_d5611d81c77141c0b5de4b2c9363de47-22"&gt;&lt;/a&gt;        &lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;pipe&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;dest&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'assets/css'&lt;/span&gt;&lt;span class="p"&gt;));&lt;/span&gt;
-&lt;a name="rest_code_d5611d81c77141c0b5de4b2c9363de47-23"&gt;&lt;/a&gt;&lt;span class="p"&gt;}&lt;/span&gt;
-&lt;a name="rest_code_d5611d81c77141c0b5de4b2c9363de47-24"&gt;&lt;/a&gt;
-&lt;a name="rest_code_d5611d81c77141c0b5de4b2c9363de47-25"&gt;&lt;/a&gt;&lt;span class="nx"&gt;exports&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="k"&gt;default&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;css&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;pre class="code javascript"&gt;&lt;a name="rest_code_cb618ea52b6441f98a548d26889764e6-1"&gt;&lt;/a&gt;&lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="nx"&gt;src&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;dest&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;require&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'gulp'&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;a name="rest_code_cb618ea52b6441f98a548d26889764e6-2"&gt;&lt;/a&gt;&lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="nx"&gt;minifyCSS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;require&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'gulp-csso'&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;a name="rest_code_cb618ea52b6441f98a548d26889764e6-3"&gt;&lt;/a&gt;&lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="nx"&gt;sass&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;require&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'gulp-sass'&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;a name="rest_code_cb618ea52b6441f98a548d26889764e6-4"&gt;&lt;/a&gt;&lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="nx"&gt;postcss&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;require&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'gulp-postcss'&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;a name="rest_code_cb618ea52b6441f98a548d26889764e6-5"&gt;&lt;/a&gt;&lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="nx"&gt;autoprefixer&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;require&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'autoprefixer'&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;a name="rest_code_cb618ea52b6441f98a548d26889764e6-6"&gt;&lt;/a&gt;&lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="nx"&gt;rename&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;require&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"gulp-rename"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;a name="rest_code_cb618ea52b6441f98a548d26889764e6-7"&gt;&lt;/a&gt;&lt;span class="nx"&gt;sass&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;compiler&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;require&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'node-sass'&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;a name="rest_code_cb618ea52b6441f98a548d26889764e6-8"&gt;&lt;/a&gt;
+&lt;a name="rest_code_cb618ea52b6441f98a548d26889764e6-9"&gt;&lt;/a&gt;
+&lt;a name="rest_code_cb618ea52b6441f98a548d26889764e6-10"&gt;&lt;/a&gt;&lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="nx"&gt;css&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_cb618ea52b6441f98a548d26889764e6-11"&gt;&lt;/a&gt;    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nx"&gt;src&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'*.scss'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_cb618ea52b6441f98a548d26889764e6-12"&gt;&lt;/a&gt;        &lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;pipe&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;sass&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;sync&lt;/span&gt;&lt;span class="p"&gt;().&lt;/span&gt;&lt;span class="nx"&gt;on&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'error'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;sass&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;logError&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;a name="rest_code_cb618ea52b6441f98a548d26889764e6-13"&gt;&lt;/a&gt;        &lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;pipe&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;postcss&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;&lt;span class="nx"&gt;autoprefixer&lt;/span&gt;&lt;span class="p"&gt;()]))&lt;/span&gt;
+&lt;a name="rest_code_cb618ea52b6441f98a548d26889764e6-14"&gt;&lt;/a&gt;        &lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;pipe&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;rename&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;path&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_cb618ea52b6441f98a548d26889764e6-15"&gt;&lt;/a&gt;            &lt;span class="nx"&gt;path&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;basename&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;path&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;basename&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;replace&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"-kw"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;""&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_cb618ea52b6441f98a548d26889764e6-16"&gt;&lt;/a&gt;        &lt;span class="p"&gt;}))&lt;/span&gt;
+&lt;a name="rest_code_cb618ea52b6441f98a548d26889764e6-17"&gt;&lt;/a&gt;        &lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;pipe&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;dest&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'assets/css'&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;a name="rest_code_cb618ea52b6441f98a548d26889764e6-18"&gt;&lt;/a&gt;        &lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;pipe&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;minifyCSS&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;
+&lt;a name="rest_code_cb618ea52b6441f98a548d26889764e6-19"&gt;&lt;/a&gt;        &lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;pipe&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;rename&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;path&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_cb618ea52b6441f98a548d26889764e6-20"&gt;&lt;/a&gt;            &lt;span class="nx"&gt;path&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;basename&lt;/span&gt; &lt;span class="o"&gt;+=&lt;/span&gt; &lt;span class="s2"&gt;".min"&lt;/span&gt;
+&lt;a name="rest_code_cb618ea52b6441f98a548d26889764e6-21"&gt;&lt;/a&gt;        &lt;span class="p"&gt;}))&lt;/span&gt;
+&lt;a name="rest_code_cb618ea52b6441f98a548d26889764e6-22"&gt;&lt;/a&gt;        &lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;pipe&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;dest&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'assets/css'&lt;/span&gt;&lt;span class="p"&gt;));&lt;/span&gt;
+&lt;a name="rest_code_cb618ea52b6441f98a548d26889764e6-23"&gt;&lt;/a&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;a name="rest_code_cb618ea52b6441f98a548d26889764e6-24"&gt;&lt;/a&gt;
+&lt;a name="rest_code_cb618ea52b6441f98a548d26889764e6-25"&gt;&lt;/a&gt;&lt;span class="nx"&gt;exports&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="k"&gt;default&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;css&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;div class="section" id="a-node-modules-extravaganza"&gt;
 &lt;h2&gt;A node_modules extravaganza&lt;/h2&gt;
-&lt;p&gt;Can you see all the &lt;tt class="docutils literal"&gt;require&lt;/tt&gt; lines at the top? Every one of them is a dependency of my build script. With the exception of &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;gulp-rename&lt;/span&gt;&lt;/tt&gt;, which IMO should be a built-in part of Gulp (it’s 45 lines of code and no external dependencies), the list is sensible.&lt;/p&gt;
-&lt;p&gt;Well, I already mentioned the size of &lt;tt class="docutils literal"&gt;node_modules&lt;/tt&gt;: 51 MiB according to &lt;tt class="docutils literal"&gt;du&lt;/tt&gt; (size-on-disk measurement). How many packages are there?&lt;/p&gt;
+&lt;p&gt;Can you see all the &lt;code class="docutils literal"&gt;require&lt;/code&gt; lines at the top? Every one of them is a dependency of my build script. With the exception of &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;gulp-rename&lt;/span&gt;&lt;/code&gt;, which IMO should be a built-in part of Gulp (it’s 45 lines of code and no external dependencies), the list is sensible.&lt;/p&gt;
+&lt;p&gt;Well, I already mentioned the size of &lt;code class="docutils literal"&gt;node_modules&lt;/code&gt;: 51 MiB according to &lt;code class="docutils literal"&gt;du&lt;/code&gt; (size-on-disk measurement). How many packages are there?&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;ol class="arabic simple" start="545"&gt;
-&lt;li&gt;Five hundred and forty-five packages.&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Five hundred and forty-five packages.&lt;/p&gt;&lt;/li&gt;
 &lt;/ol&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;Whoa, when did that happen? Most of it comes from gulp/gulp-cli (384 packages), with node-sass taking the second place (177 packages). Some of those are shared between libraries, and a few more belong to the other requirements. And many of these dependencies are a disgrace to programming.&lt;/p&gt;
-&lt;p&gt;After a full install of my &lt;tt class="docutils literal"&gt;package.json&lt;/tt&gt;, npm says &lt;tt class="docutils literal"&gt;added 545 packages from 331 contributors and audited 10500 packages in 22.458s&lt;/tt&gt;.  I’ve implicitly agreed to licenses imposed by 331 random people. All to build some simple CSS files out of SASS.&lt;/p&gt;
-&lt;p&gt;Let’s go on a tour of &lt;tt class="docutils literal"&gt;node_modules&lt;/tt&gt; and see what we ended up with.&lt;/p&gt;
+&lt;p&gt;After a full install of my &lt;code class="docutils literal"&gt;package.json&lt;/code&gt;, npm says &lt;code class="docutils literal"&gt;added 545 packages from 331 contributors and audited 10500 packages in 22.458s&lt;/code&gt;.  I’ve implicitly agreed to licenses imposed by 331 random people. All to build some simple CSS files out of SASS.&lt;/p&gt;
+&lt;p&gt;Let’s go on a tour of &lt;code class="docutils literal"&gt;node_modules&lt;/code&gt; and see what we ended up with.&lt;/p&gt;
 &lt;div class="section" id="polyfills-reimplementations-oh-my"&gt;
 &lt;h3&gt;Polyfills, reimplementations, oh my!&lt;/h3&gt;
 &lt;p&gt;Everything I’ve installed is meant to be used on top of Node.js. Node runs on top of the V8 engine, coming from Chrome. They’ve had almost-full ES2015 (ES6) support since April 2016. And yet, my node_modules is full of small polyfills.&lt;/p&gt;
-&lt;p&gt;Let’s pick a random one and work back from it: &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;number-is-nan&lt;/span&gt;&lt;/tt&gt;.&lt;/p&gt;
-&lt;pre class="code javascript"&gt;&lt;a name="rest_code_d0be0d44fc6647a78a9f65be2512d1b8-1"&gt;&lt;/a&gt;&lt;span class="c1"&gt;// Copyright © Sindre Sorhus, MIT license&lt;/span&gt;
-&lt;a name="rest_code_d0be0d44fc6647a78a9f65be2512d1b8-2"&gt;&lt;/a&gt;&lt;span class="nx"&gt;module&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;exports&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;Number&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nb"&gt;isNaN&lt;/span&gt; &lt;span class="o"&gt;||&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;x&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;a name="rest_code_d0be0d44fc6647a78a9f65be2512d1b8-3"&gt;&lt;/a&gt;    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nx"&gt;x&lt;/span&gt; &lt;span class="o"&gt;!==&lt;/span&gt; &lt;span class="nx"&gt;x&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;a name="rest_code_d0be0d44fc6647a78a9f65be2512d1b8-4"&gt;&lt;/a&gt;&lt;span class="p"&gt;};&lt;/span&gt;
-&lt;/pre&gt;&lt;p&gt;That’s a one-liner that re-implements &lt;tt class="docutils literal"&gt;Number.isNaN&lt;/tt&gt; if it’s not available, which is, according to MDN, &lt;a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/isNaN"&gt;a more robust version of the original, global
+&lt;p&gt;Let’s pick a random one and work back from it: &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;number-is-nan&lt;/span&gt;&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class="code javascript"&gt;&lt;a name="rest_code_ee00671692874aa7a5c8359f48ce9b85-1"&gt;&lt;/a&gt;&lt;span class="c1"&gt;// Copyright © Sindre Sorhus, MIT license&lt;/span&gt;
+&lt;a name="rest_code_ee00671692874aa7a5c8359f48ce9b85-2"&gt;&lt;/a&gt;&lt;span class="nx"&gt;module&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;exports&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;Number&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nb"&gt;isNaN&lt;/span&gt; &lt;span class="o"&gt;||&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;x&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_ee00671692874aa7a5c8359f48ce9b85-3"&gt;&lt;/a&gt;    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nx"&gt;x&lt;/span&gt; &lt;span class="o"&gt;!==&lt;/span&gt; &lt;span class="nx"&gt;x&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_ee00671692874aa7a5c8359f48ce9b85-4"&gt;&lt;/a&gt;&lt;span class="p"&gt;};&lt;/span&gt;
+&lt;/pre&gt;&lt;p&gt;That’s a one-liner that re-implements &lt;code class="docutils literal"&gt;Number.isNaN&lt;/code&gt; if it’s not available, which is, according to MDN, &lt;a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/isNaN"&gt;a more robust version of the original, global
 isNaN()&lt;/a&gt;. The original function coerced everything to Number before testing, which apparently wasn’t enough. That’s what you get for using a language designed in a week. The function was added to all sane browsers and Node around 2013, the polyfill was created in 2015.&lt;/p&gt;
-&lt;p&gt;It was pulled in by &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;is-fullwidth-code-point&lt;/span&gt;&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;is-finite&lt;/span&gt;&lt;/tt&gt;, both by the same author. The latter one is especially interesting: it’s at version 1.0.2. Version 1.0.1improved the codebase from &lt;tt class="docutils literal"&gt;if (x) { return false; } return true&lt;/tt&gt; (via pull request), and version 1.0.2 replaced a manual &lt;tt class="docutils literal"&gt;val !== val&lt;/tt&gt; comparison with &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;number-is-nan&lt;/span&gt;&lt;/tt&gt;. &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;number-is-nan&lt;/span&gt;&lt;/tt&gt; has 7.5 million weekly downloads, &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;is-finite&lt;/span&gt;&lt;/tt&gt; has 6.7M. The build of &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;number-is-nan&lt;/span&gt;&lt;/tt&gt; &lt;a class="reference external" href="https://travis-ci.org/sindresorhus/number-is-nan/builds/363709421"&gt;is currently failing.&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;It was pulled in by &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;is-fullwidth-code-point&lt;/span&gt;&lt;/code&gt; and &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;is-finite&lt;/span&gt;&lt;/code&gt;, both by the same author. The latter one is especially interesting: it’s at version 1.0.2. Version 1.0.1improved the codebase from &lt;code class="docutils literal"&gt;if (x) { return false; } return true&lt;/code&gt; (via pull request), and version 1.0.2 replaced a manual &lt;code class="docutils literal"&gt;val !== val&lt;/code&gt; comparison with &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;number-is-nan&lt;/span&gt;&lt;/code&gt;. &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;number-is-nan&lt;/span&gt;&lt;/code&gt; has 7.5 million weekly downloads, &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;is-finite&lt;/span&gt;&lt;/code&gt; has 6.7M. The build of &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;number-is-nan&lt;/span&gt;&lt;/code&gt; &lt;a class="reference external" href="https://travis-ci.org/sindresorhus/number-is-nan/builds/363709421"&gt;is currently failing.&lt;/a&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="fifty-shades-of-terminal"&gt;
 &lt;h3&gt;Fifty shades of terminal&lt;/h3&gt;
 &lt;p&gt;Every Node-based CLI tool wants to be cool. And for that, they need colors.&lt;/p&gt;
-&lt;p&gt;How does this work in Bash? You could use &lt;tt class="docutils literal"&gt;tput setaf XX&lt;/tt&gt;, but many people would just manually &lt;tt class="docutils literal"&gt;echo '\033[XXm'&lt;/tt&gt;, the codes are available &lt;a class="reference external" href="https://en.wikipedia.org/wiki/ANSI_escape_code#3/4_bit"&gt;in Wikipedia&lt;/a&gt; or elsewhere.&lt;/p&gt;
+&lt;p&gt;How does this work in Bash? You could use &lt;code class="docutils literal"&gt;tput setaf XX&lt;/code&gt;, but many people would just manually &lt;code class="docutils literal"&gt;echo '\033[XXm'&lt;/code&gt;, the codes are available &lt;a class="reference external" href="https://en.wikipedia.org/wiki/ANSI_escape_code#3/4_bit"&gt;in Wikipedia&lt;/a&gt; or elsewhere.&lt;/p&gt;
 &lt;p&gt;How does this work in Python? There are a few libraries for this (and you can always do it manually), but the most popular one is &lt;a class="reference external" href="https://pypi.org/project/colorama/"&gt;colorama&lt;/a&gt;. That library can even handle Windows.&lt;/p&gt;
 &lt;p&gt;What is available in Node?&lt;/p&gt;
 &lt;ul class="simple"&gt;
-&lt;li&gt;&lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;color-support&lt;/span&gt;&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;supports-color&lt;/span&gt;&lt;/tt&gt; are both part of my &lt;tt class="docutils literal"&gt;node_modules&lt;/tt&gt;.&lt;/li&gt;
-&lt;li&gt;There seems to be a fairly advanced &lt;tt class="docutils literal"&gt;chalk&lt;/tt&gt; library, by the aforementioned Sindre Sorhus.&lt;/li&gt;
-&lt;li&gt;&lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;ansi-colors&lt;/span&gt;&lt;/tt&gt; seems to be another, smaller option for it, it claims to be 10-20x faster than &lt;tt class="docutils literal"&gt;chalk&lt;/tt&gt;.&lt;/li&gt;
-&lt;li&gt;There’s a package called &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;has-ansi&lt;/span&gt;&lt;/tt&gt; which checks if a string has ANSI escapes in it. It depends on &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;ansi-regex&lt;/span&gt;&lt;/tt&gt;.&lt;/li&gt;
-&lt;li&gt;Also, &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;strip-ansi&lt;/span&gt;&lt;/tt&gt; also uses &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;ansi-regex&lt;/span&gt;&lt;/tt&gt;. All three packages are basically one liners. One exports a regex, the other two do replacement/search with it.&lt;/li&gt;
-&lt;li&gt;There’s &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;wrap-ansi&lt;/span&gt;&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;ansi-wrap&lt;/span&gt;&lt;/tt&gt;. &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;wrap-ansi&lt;/span&gt;&lt;/tt&gt; intelligently wraps a string with ANSI escapes in it.  &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;ansi-wrap&lt;/span&gt;&lt;/tt&gt; takes three strings and  returns &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;'\u001b['+&lt;/span&gt; a + 'm' + msg + '\u001b[' + b + 'm'&lt;/tt&gt; (Copyright © Jon Schlinkert, MIT license)&lt;/li&gt;
-&lt;li&gt;There’s also &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;ansi-gray&lt;/span&gt;&lt;/tt&gt;, which calls &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;ansi-wrap&lt;/span&gt;&lt;/tt&gt; with a = 90, b = 39, and a user-specified message. (Copyright © Jon Schlinkert, MIT license)&lt;/li&gt;
-&lt;li&gt;&lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;ansi-red&lt;/span&gt;&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;ansi-cyan&lt;/span&gt;&lt;/tt&gt; are very similar libraries to &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;ansi-gray&lt;/span&gt;&lt;/tt&gt;. Is this a joke?!&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;color-support&lt;/span&gt;&lt;/code&gt; and &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;supports-color&lt;/span&gt;&lt;/code&gt; are both part of my &lt;code class="docutils literal"&gt;node_modules&lt;/code&gt;.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;There seems to be a fairly advanced &lt;code class="docutils literal"&gt;chalk&lt;/code&gt; library, by the aforementioned Sindre Sorhus.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;ansi-colors&lt;/span&gt;&lt;/code&gt; seems to be another, smaller option for it, it claims to be 10-20x faster than &lt;code class="docutils literal"&gt;chalk&lt;/code&gt;.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;There’s a package called &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;has-ansi&lt;/span&gt;&lt;/code&gt; which checks if a string has ANSI escapes in it. It depends on &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;ansi-regex&lt;/span&gt;&lt;/code&gt;.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Also, &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;strip-ansi&lt;/span&gt;&lt;/code&gt; also uses &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;ansi-regex&lt;/span&gt;&lt;/code&gt;. All three packages are basically one liners. One exports a regex, the other two do replacement/search with it.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;There’s &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;wrap-ansi&lt;/span&gt;&lt;/code&gt; and &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;ansi-wrap&lt;/span&gt;&lt;/code&gt;. &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;wrap-ansi&lt;/span&gt;&lt;/code&gt; intelligently wraps a string with ANSI escapes in it.  &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;ansi-wrap&lt;/span&gt;&lt;/code&gt; takes three strings and  returns &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;'\u001b['+&lt;/span&gt; a + 'm' + msg + '\u001b[' + b + 'm'&lt;/code&gt; (Copyright © Jon Schlinkert, MIT license)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;There’s also &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;ansi-gray&lt;/span&gt;&lt;/code&gt;, which calls &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;ansi-wrap&lt;/span&gt;&lt;/code&gt; with a = 90, b = 39, and a user-specified message. (Copyright © Jon Schlinkert, MIT license)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;ansi-red&lt;/span&gt;&lt;/code&gt; and &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;ansi-cyan&lt;/span&gt;&lt;/code&gt; are very similar libraries to &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;ansi-gray&lt;/span&gt;&lt;/code&gt;. Is this a joke?!&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;There are definitely other &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;ansi-$color&lt;/span&gt;&lt;/tt&gt; libraries, although they are not in my &lt;tt class="docutils literal"&gt;node_modules&lt;/tt&gt;. And probably other libraries for color support, but either they are not installed, or I haven’t managed to spot them in my &lt;tt class="docutils literal"&gt;npm list&lt;/tt&gt; output.&lt;/p&gt;
+&lt;p&gt;There are definitely other &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;ansi-$color&lt;/span&gt;&lt;/code&gt; libraries, although they are not in my &lt;code class="docutils literal"&gt;node_modules&lt;/code&gt;. And probably other libraries for color support, but either they are not installed, or I haven’t managed to spot them in my &lt;code class="docutils literal"&gt;npm list&lt;/code&gt; output.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="copyrighted-one-liners"&gt;
 &lt;h3&gt;Copyrighted one-liners&lt;/h3&gt;
-&lt;p&gt;Another famous library by Jon Schlinkert is called &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;is-even&lt;/span&gt;&lt;/tt&gt;. Here is the complete code, verbatim:&lt;/p&gt;
-&lt;pre class="code javascript"&gt;&lt;a name="rest_code_5afde2b2b10e4967aeebf35f203d49c5-1"&gt;&lt;/a&gt;&lt;span class="cm"&gt;/*!&lt;/span&gt;
-&lt;a name="rest_code_5afde2b2b10e4967aeebf35f203d49c5-2"&gt;&lt;/a&gt;&lt;span class="cm"&gt; * is-even &amp;lt;https://github.com/jonschlinkert/is-even&amp;gt;&lt;/span&gt;
-&lt;a name="rest_code_5afde2b2b10e4967aeebf35f203d49c5-3"&gt;&lt;/a&gt;&lt;span class="cm"&gt; *&lt;/span&gt;
-&lt;a name="rest_code_5afde2b2b10e4967aeebf35f203d49c5-4"&gt;&lt;/a&gt;&lt;span class="cm"&gt; * Copyright (c) 2015, 2017, Jon Schlinkert.&lt;/span&gt;
-&lt;a name="rest_code_5afde2b2b10e4967aeebf35f203d49c5-5"&gt;&lt;/a&gt;&lt;span class="cm"&gt; * Released under the MIT License.&lt;/span&gt;
-&lt;a name="rest_code_5afde2b2b10e4967aeebf35f203d49c5-6"&gt;&lt;/a&gt;&lt;span class="cm"&gt; */&lt;/span&gt;
-&lt;a name="rest_code_5afde2b2b10e4967aeebf35f203d49c5-7"&gt;&lt;/a&gt;
-&lt;a name="rest_code_5afde2b2b10e4967aeebf35f203d49c5-8"&gt;&lt;/a&gt;&lt;span class="s1"&gt;'use strict'&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;a name="rest_code_5afde2b2b10e4967aeebf35f203d49c5-9"&gt;&lt;/a&gt;
-&lt;a name="rest_code_5afde2b2b10e4967aeebf35f203d49c5-10"&gt;&lt;/a&gt;&lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;isOdd&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;require&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'is-odd'&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;a name="rest_code_5afde2b2b10e4967aeebf35f203d49c5-11"&gt;&lt;/a&gt;
-&lt;a name="rest_code_5afde2b2b10e4967aeebf35f203d49c5-12"&gt;&lt;/a&gt;&lt;span class="nx"&gt;module&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;exports&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="nx"&gt;isEven&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;i&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;a name="rest_code_5afde2b2b10e4967aeebf35f203d49c5-13"&gt;&lt;/a&gt;  &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="o"&gt;!&lt;/span&gt;&lt;span class="nx"&gt;isOdd&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;i&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;a name="rest_code_5afde2b2b10e4967aeebf35f203d49c5-14"&gt;&lt;/a&gt;&lt;span class="p"&gt;};&lt;/span&gt;
-&lt;/pre&gt;&lt;p&gt;&lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;is-odd&lt;/span&gt;&lt;/tt&gt; is slightly longer:&lt;/p&gt;
-&lt;pre class="code javascript"&gt;&lt;a name="rest_code_b47a15fe4a9944b5be0a0a0b5777f40d-1"&gt;&lt;/a&gt;&lt;span class="cm"&gt;/*!&lt;/span&gt;
-&lt;a name="rest_code_b47a15fe4a9944b5be0a0a0b5777f40d-2"&gt;&lt;/a&gt;&lt;span class="cm"&gt; * is-odd &amp;lt;https://github.com/jonschlinkert/is-odd&amp;gt;&lt;/span&gt;
-&lt;a name="rest_code_b47a15fe4a9944b5be0a0a0b5777f40d-3"&gt;&lt;/a&gt;&lt;span class="cm"&gt; *&lt;/span&gt;
-&lt;a name="rest_code_b47a15fe4a9944b5be0a0a0b5777f40d-4"&gt;&lt;/a&gt;&lt;span class="cm"&gt; * Copyright (c) 2015-2017, Jon Schlinkert.&lt;/span&gt;
-&lt;a name="rest_code_b47a15fe4a9944b5be0a0a0b5777f40d-5"&gt;&lt;/a&gt;&lt;span class="cm"&gt; * Released under the MIT License.&lt;/span&gt;
-&lt;a name="rest_code_b47a15fe4a9944b5be0a0a0b5777f40d-6"&gt;&lt;/a&gt;&lt;span class="cm"&gt; */&lt;/span&gt;
-&lt;a name="rest_code_b47a15fe4a9944b5be0a0a0b5777f40d-7"&gt;&lt;/a&gt;
-&lt;a name="rest_code_b47a15fe4a9944b5be0a0a0b5777f40d-8"&gt;&lt;/a&gt;&lt;span class="s1"&gt;'use strict'&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;a name="rest_code_b47a15fe4a9944b5be0a0a0b5777f40d-9"&gt;&lt;/a&gt;
-&lt;a name="rest_code_b47a15fe4a9944b5be0a0a0b5777f40d-10"&gt;&lt;/a&gt;&lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="nx"&gt;isNumber&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;require&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'is-number'&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;a name="rest_code_b47a15fe4a9944b5be0a0a0b5777f40d-11"&gt;&lt;/a&gt;
-&lt;a name="rest_code_b47a15fe4a9944b5be0a0a0b5777f40d-12"&gt;&lt;/a&gt;&lt;span class="nx"&gt;module&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;exports&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="nx"&gt;isOdd&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;value&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;a name="rest_code_b47a15fe4a9944b5be0a0a0b5777f40d-13"&gt;&lt;/a&gt;  &lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="nx"&gt;n&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;Math&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;abs&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;value&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;a name="rest_code_b47a15fe4a9944b5be0a0a0b5777f40d-14"&gt;&lt;/a&gt;  &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;!&lt;/span&gt;&lt;span class="nx"&gt;isNumber&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;n&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;a name="rest_code_b47a15fe4a9944b5be0a0a0b5777f40d-15"&gt;&lt;/a&gt;    &lt;span class="k"&gt;throw&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nx"&gt;TypeError&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'expected a number'&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;a name="rest_code_b47a15fe4a9944b5be0a0a0b5777f40d-16"&gt;&lt;/a&gt;  &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;a name="rest_code_b47a15fe4a9944b5be0a0a0b5777f40d-17"&gt;&lt;/a&gt;  &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;!&lt;/span&gt;&lt;span class="nb"&gt;Number&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;isInteger&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;n&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;a name="rest_code_b47a15fe4a9944b5be0a0a0b5777f40d-18"&gt;&lt;/a&gt;    &lt;span class="k"&gt;throw&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nb"&gt;Error&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'expected an integer'&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;a name="rest_code_b47a15fe4a9944b5be0a0a0b5777f40d-19"&gt;&lt;/a&gt;  &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;a name="rest_code_b47a15fe4a9944b5be0a0a0b5777f40d-20"&gt;&lt;/a&gt;  &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;!&lt;/span&gt;&lt;span class="nb"&gt;Number&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nb"&gt;isSafeInteger&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;n&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;a name="rest_code_b47a15fe4a9944b5be0a0a0b5777f40d-21"&gt;&lt;/a&gt;    &lt;span class="k"&gt;throw&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nb"&gt;Error&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'value exceeds maximum safe integer'&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;a name="rest_code_b47a15fe4a9944b5be0a0a0b5777f40d-22"&gt;&lt;/a&gt;  &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;a name="rest_code_b47a15fe4a9944b5be0a0a0b5777f40d-23"&gt;&lt;/a&gt;  &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;n&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;===&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;a name="rest_code_b47a15fe4a9944b5be0a0a0b5777f40d-24"&gt;&lt;/a&gt;&lt;span class="p"&gt;};&lt;/span&gt;
-&lt;/pre&gt;&lt;p&gt;&lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;is-number&lt;/span&gt;&lt;/tt&gt; is another fun library; it says &lt;tt class="docutils literal"&gt;true&lt;/tt&gt; for strings of numbers, and &lt;tt class="docutils literal"&gt;false&lt;/tt&gt; for NaN (&lt;tt class="docutils literal"&gt;typeof NaN === 'number'&lt;/tt&gt;). &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;is-even&lt;/span&gt;&lt;/tt&gt; is used by, for example, &lt;tt class="docutils literal"&gt;even&lt;/tt&gt;, which calls &lt;tt class="docutils literal"&gt;Array.filter&lt;/tt&gt; with &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;is-even&lt;/span&gt;&lt;/tt&gt; as the argument. There’s also &lt;tt class="docutils literal"&gt;odd&lt;/tt&gt;, and for some reason, the two packages are separate.&lt;/p&gt;
-&lt;p&gt;The checks found in &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;is-odd&lt;/span&gt;&lt;/tt&gt; make some more sense if you’re working with a dynamically-typed language where every number is a float (like JS). But you could release &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;check-odd&lt;/span&gt;&lt;/tt&gt;, which is 100x faster than &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;is-odd&lt;/span&gt;&lt;/tt&gt; (it assumes its input is correct), and exports &lt;tt class="docutils literal"&gt;function checkOdd(value) { return (value % 2) !== 0; }&lt;/tt&gt; &lt;s&gt;(Copyright © 2019, Chris Warrick. Licensed under the 4-clause BSD license.)&lt;/s&gt; &lt;i&gt;(No, not really.)&lt;/i&gt;&lt;/p&gt;
+&lt;p&gt;Another famous library by Jon Schlinkert is called &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;is-even&lt;/span&gt;&lt;/code&gt;. Here is the complete code, verbatim:&lt;/p&gt;
+&lt;pre class="code javascript"&gt;&lt;a name="rest_code_78af28968a064a0f9e7b78e380c37de2-1"&gt;&lt;/a&gt;&lt;span class="cm"&gt;/*!&lt;/span&gt;
+&lt;a name="rest_code_78af28968a064a0f9e7b78e380c37de2-2"&gt;&lt;/a&gt;&lt;span class="cm"&gt; * is-even &amp;lt;https://github.com/jonschlinkert/is-even&amp;gt;&lt;/span&gt;
+&lt;a name="rest_code_78af28968a064a0f9e7b78e380c37de2-3"&gt;&lt;/a&gt;&lt;span class="cm"&gt; *&lt;/span&gt;
+&lt;a name="rest_code_78af28968a064a0f9e7b78e380c37de2-4"&gt;&lt;/a&gt;&lt;span class="cm"&gt; * Copyright (c) 2015, 2017, Jon Schlinkert.&lt;/span&gt;
+&lt;a name="rest_code_78af28968a064a0f9e7b78e380c37de2-5"&gt;&lt;/a&gt;&lt;span class="cm"&gt; * Released under the MIT License.&lt;/span&gt;
+&lt;a name="rest_code_78af28968a064a0f9e7b78e380c37de2-6"&gt;&lt;/a&gt;&lt;span class="cm"&gt; */&lt;/span&gt;
+&lt;a name="rest_code_78af28968a064a0f9e7b78e380c37de2-7"&gt;&lt;/a&gt;
+&lt;a name="rest_code_78af28968a064a0f9e7b78e380c37de2-8"&gt;&lt;/a&gt;&lt;span class="s1"&gt;'use strict'&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_78af28968a064a0f9e7b78e380c37de2-9"&gt;&lt;/a&gt;
+&lt;a name="rest_code_78af28968a064a0f9e7b78e380c37de2-10"&gt;&lt;/a&gt;&lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;isOdd&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;require&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'is-odd'&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;a name="rest_code_78af28968a064a0f9e7b78e380c37de2-11"&gt;&lt;/a&gt;
+&lt;a name="rest_code_78af28968a064a0f9e7b78e380c37de2-12"&gt;&lt;/a&gt;&lt;span class="nx"&gt;module&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;exports&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="nx"&gt;isEven&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;i&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_78af28968a064a0f9e7b78e380c37de2-13"&gt;&lt;/a&gt;  &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="o"&gt;!&lt;/span&gt;&lt;span class="nx"&gt;isOdd&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;i&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;a name="rest_code_78af28968a064a0f9e7b78e380c37de2-14"&gt;&lt;/a&gt;&lt;span class="p"&gt;};&lt;/span&gt;
+&lt;/pre&gt;&lt;p&gt;&lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;is-odd&lt;/span&gt;&lt;/code&gt; is slightly longer:&lt;/p&gt;
+&lt;pre class="code javascript"&gt;&lt;a name="rest_code_69d407ee8fdc4a948409addb402ca663-1"&gt;&lt;/a&gt;&lt;span class="cm"&gt;/*!&lt;/span&gt;
+&lt;a name="rest_code_69d407ee8fdc4a948409addb402ca663-2"&gt;&lt;/a&gt;&lt;span class="cm"&gt; * is-odd &amp;lt;https://github.com/jonschlinkert/is-odd&amp;gt;&lt;/span&gt;
+&lt;a name="rest_code_69d407ee8fdc4a948409addb402ca663-3"&gt;&lt;/a&gt;&lt;span class="cm"&gt; *&lt;/span&gt;
+&lt;a name="rest_code_69d407ee8fdc4a948409addb402ca663-4"&gt;&lt;/a&gt;&lt;span class="cm"&gt; * Copyright (c) 2015-2017, Jon Schlinkert.&lt;/span&gt;
+&lt;a name="rest_code_69d407ee8fdc4a948409addb402ca663-5"&gt;&lt;/a&gt;&lt;span class="cm"&gt; * Released under the MIT License.&lt;/span&gt;
+&lt;a name="rest_code_69d407ee8fdc4a948409addb402ca663-6"&gt;&lt;/a&gt;&lt;span class="cm"&gt; */&lt;/span&gt;
+&lt;a name="rest_code_69d407ee8fdc4a948409addb402ca663-7"&gt;&lt;/a&gt;
+&lt;a name="rest_code_69d407ee8fdc4a948409addb402ca663-8"&gt;&lt;/a&gt;&lt;span class="s1"&gt;'use strict'&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_69d407ee8fdc4a948409addb402ca663-9"&gt;&lt;/a&gt;
+&lt;a name="rest_code_69d407ee8fdc4a948409addb402ca663-10"&gt;&lt;/a&gt;&lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="nx"&gt;isNumber&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;require&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'is-number'&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;a name="rest_code_69d407ee8fdc4a948409addb402ca663-11"&gt;&lt;/a&gt;
+&lt;a name="rest_code_69d407ee8fdc4a948409addb402ca663-12"&gt;&lt;/a&gt;&lt;span class="nx"&gt;module&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;exports&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="nx"&gt;isOdd&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;value&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_69d407ee8fdc4a948409addb402ca663-13"&gt;&lt;/a&gt;  &lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="nx"&gt;n&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;Math&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;abs&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;value&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;a name="rest_code_69d407ee8fdc4a948409addb402ca663-14"&gt;&lt;/a&gt;  &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;!&lt;/span&gt;&lt;span class="nx"&gt;isNumber&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;n&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_69d407ee8fdc4a948409addb402ca663-15"&gt;&lt;/a&gt;    &lt;span class="k"&gt;throw&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nx"&gt;TypeError&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'expected a number'&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;a name="rest_code_69d407ee8fdc4a948409addb402ca663-16"&gt;&lt;/a&gt;  &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;a name="rest_code_69d407ee8fdc4a948409addb402ca663-17"&gt;&lt;/a&gt;  &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;!&lt;/span&gt;&lt;span class="nb"&gt;Number&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;isInteger&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;n&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_69d407ee8fdc4a948409addb402ca663-18"&gt;&lt;/a&gt;    &lt;span class="k"&gt;throw&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nb"&gt;Error&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'expected an integer'&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;a name="rest_code_69d407ee8fdc4a948409addb402ca663-19"&gt;&lt;/a&gt;  &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;a name="rest_code_69d407ee8fdc4a948409addb402ca663-20"&gt;&lt;/a&gt;  &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;!&lt;/span&gt;&lt;span class="nb"&gt;Number&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nb"&gt;isSafeInteger&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;n&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_69d407ee8fdc4a948409addb402ca663-21"&gt;&lt;/a&gt;    &lt;span class="k"&gt;throw&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nb"&gt;Error&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'value exceeds maximum safe integer'&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;a name="rest_code_69d407ee8fdc4a948409addb402ca663-22"&gt;&lt;/a&gt;  &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;a name="rest_code_69d407ee8fdc4a948409addb402ca663-23"&gt;&lt;/a&gt;  &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;n&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;===&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_69d407ee8fdc4a948409addb402ca663-24"&gt;&lt;/a&gt;&lt;span class="p"&gt;};&lt;/span&gt;
+&lt;/pre&gt;&lt;p&gt;&lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;is-number&lt;/span&gt;&lt;/code&gt; is another fun library; it says &lt;code class="docutils literal"&gt;true&lt;/code&gt; for strings of numbers, and &lt;code class="docutils literal"&gt;false&lt;/code&gt; for NaN (&lt;code class="docutils literal"&gt;typeof NaN === 'number'&lt;/code&gt;). &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;is-even&lt;/span&gt;&lt;/code&gt; is used by, for example, &lt;code class="docutils literal"&gt;even&lt;/code&gt;, which calls &lt;code class="docutils literal"&gt;Array.filter&lt;/code&gt; with &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;is-even&lt;/span&gt;&lt;/code&gt; as the argument. There’s also &lt;code class="docutils literal"&gt;odd&lt;/code&gt;, and for some reason, the two packages are separate.&lt;/p&gt;
+&lt;p&gt;The checks found in &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;is-odd&lt;/span&gt;&lt;/code&gt; make some more sense if you’re working with a dynamically-typed language where every number is a float (like JS). But you could release &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;check-odd&lt;/span&gt;&lt;/code&gt;, which is 100x faster than &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;is-odd&lt;/span&gt;&lt;/code&gt; (it assumes its input is correct), and exports &lt;code class="docutils literal"&gt;function checkOdd(value) { return (value % 2) !== 0; }&lt;/code&gt; &lt;s&gt;(Copyright © 2019, Chris Warrick. Licensed under the 4-clause BSD license.)&lt;/s&gt; &lt;i&gt;(No, not really.)&lt;/i&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="this-product-includes-software-developed-by"&gt;
 &lt;h3&gt;This product includes software developed by…&lt;/h3&gt;
 &lt;p&gt;Hold on a second, 4-clause BSD? That license contains the following clause:&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_efb070fd9d764699be0c4c8fe7640a82-1"&gt;&lt;/a&gt;Redistribution and use in source and binary forms, with or without
-&lt;a name="rest_code_efb070fd9d764699be0c4c8fe7640a82-2"&gt;&lt;/a&gt;modification, are permitted provided that the following conditions are met:
-&lt;a name="rest_code_efb070fd9d764699be0c4c8fe7640a82-3"&gt;&lt;/a&gt;3. All advertising materials mentioning features or use of this software
-&lt;a name="rest_code_efb070fd9d764699be0c4c8fe7640a82-4"&gt;&lt;/a&gt;   must display the following acknowledgement:
-&lt;a name="rest_code_efb070fd9d764699be0c4c8fe7640a82-5"&gt;&lt;/a&gt;     This product includes software developed by the University of
-&lt;a name="rest_code_efb070fd9d764699be0c4c8fe7640a82-6"&gt;&lt;/a&gt;     California, Berkeley and its contributors.
-&lt;/pre&gt;&lt;p&gt;This clause was removed by UC Berkeley in 1999, but there is still old code that has clauses (with other names), and someone could create something with the old license. I actually found one such clause in my &lt;tt class="docutils literal"&gt;node_modules&lt;/tt&gt; (from &lt;tt class="docutils literal"&gt;bcrypt_pbkdf&lt;/tt&gt;). &lt;a class="reference external" href="https://www.gnu.org/licenses/bsd.html"&gt;NetBSD had 75 different clauses&lt;/a&gt; in 1997. It would be fun to see figures for the Node ecosystem… or more packages with equally problematic clauses.&lt;/p&gt;
-&lt;p&gt;Most people aren’t aware of the licenses of their node dependencies. Going back to Colorama, I can quickly verify that Colorama has no dependencies, and itself uses the 3-clause BSD license. (That version of the license lacks the advertising clause and is considered GPL-compatible.) There is a helpful &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;license-checker&lt;/span&gt;&lt;/tt&gt; package that can tell you what licenses you have (based on the details provided in &lt;tt class="docutils literal"&gt;package.json&lt;/tt&gt;)&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_a864c57159f6425ba05d75e6d1321b62-1"&gt;&lt;/a&gt;├─ MIT: 380
-&lt;a name="rest_code_a864c57159f6425ba05d75e6d1321b62-2"&gt;&lt;/a&gt;├─ ISC: 64
-&lt;a name="rest_code_a864c57159f6425ba05d75e6d1321b62-3"&gt;&lt;/a&gt;├─ Apache-2.0: 10
-&lt;a name="rest_code_a864c57159f6425ba05d75e6d1321b62-4"&gt;&lt;/a&gt;├─ BSD-3-Clause: 10
-&lt;a name="rest_code_a864c57159f6425ba05d75e6d1321b62-5"&gt;&lt;/a&gt;├─ BSD-2-Clause: 3
-&lt;a name="rest_code_a864c57159f6425ba05d75e6d1321b62-6"&gt;&lt;/a&gt;├─ CC-BY-3.0: 2
-&lt;a name="rest_code_a864c57159f6425ba05d75e6d1321b62-7"&gt;&lt;/a&gt;├─ BSD-3-Clause OR MIT: 1
-&lt;a name="rest_code_a864c57159f6425ba05d75e6d1321b62-8"&gt;&lt;/a&gt;├─ MIT*: 1
-&lt;a name="rest_code_a864c57159f6425ba05d75e6d1321b62-9"&gt;&lt;/a&gt;├─ (MIT OR Apache-2.0): 1
-&lt;a name="rest_code_a864c57159f6425ba05d75e6d1321b62-10"&gt;&lt;/a&gt;├─ CC-BY-4.0: 1
-&lt;a name="rest_code_a864c57159f6425ba05d75e6d1321b62-11"&gt;&lt;/a&gt;├─ AFLv2.1,BSD: 1
-&lt;a name="rest_code_a864c57159f6425ba05d75e6d1321b62-12"&gt;&lt;/a&gt;├─ MPL-2.0: 1
-&lt;a name="rest_code_a864c57159f6425ba05d75e6d1321b62-13"&gt;&lt;/a&gt;├─ (BSD-2-Clause OR MIT OR Apache-2.0): 1
-&lt;a name="rest_code_a864c57159f6425ba05d75e6d1321b62-14"&gt;&lt;/a&gt;├─ CC0-1.0: 1
-&lt;a name="rest_code_a864c57159f6425ba05d75e6d1321b62-15"&gt;&lt;/a&gt;└─ Unlicense: 1
+&lt;pre class="code text"&gt;&lt;a name="rest_code_73d8907487fa495e9d4b54d02ac03aff-1"&gt;&lt;/a&gt;Redistribution and use in source and binary forms, with or without
+&lt;a name="rest_code_73d8907487fa495e9d4b54d02ac03aff-2"&gt;&lt;/a&gt;modification, are permitted provided that the following conditions are met:
+&lt;a name="rest_code_73d8907487fa495e9d4b54d02ac03aff-3"&gt;&lt;/a&gt;3. All advertising materials mentioning features or use of this software
+&lt;a name="rest_code_73d8907487fa495e9d4b54d02ac03aff-4"&gt;&lt;/a&gt;   must display the following acknowledgement:
+&lt;a name="rest_code_73d8907487fa495e9d4b54d02ac03aff-5"&gt;&lt;/a&gt;     This product includes software developed by the University of
+&lt;a name="rest_code_73d8907487fa495e9d4b54d02ac03aff-6"&gt;&lt;/a&gt;     California, Berkeley and its contributors.
+&lt;/pre&gt;&lt;p&gt;This clause was removed by UC Berkeley in 1999, but there is still old code that has clauses (with other names), and someone could create something with the old license. I actually found one such clause in my &lt;code class="docutils literal"&gt;node_modules&lt;/code&gt; (from &lt;code class="docutils literal"&gt;bcrypt_pbkdf&lt;/code&gt;). &lt;a class="reference external" href="https://www.gnu.org/licenses/bsd.html"&gt;NetBSD had 75 different clauses&lt;/a&gt; in 1997. It would be fun to see figures for the Node ecosystem… or more packages with equally problematic clauses.&lt;/p&gt;
+&lt;p&gt;Most people aren’t aware of the licenses of their node dependencies. Going back to Colorama, I can quickly verify that Colorama has no dependencies, and itself uses the 3-clause BSD license. (That version of the license lacks the advertising clause and is considered GPL-compatible.) There is a helpful &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;license-checker&lt;/span&gt;&lt;/code&gt; package that can tell you what licenses you have (based on the details provided in &lt;code class="docutils literal"&gt;package.json&lt;/code&gt;)&lt;/p&gt;
+&lt;pre class="code text"&gt;&lt;a name="rest_code_0ac93ec413094e9d9618f01255cb5f8e-1"&gt;&lt;/a&gt;├─ MIT: 380
+&lt;a name="rest_code_0ac93ec413094e9d9618f01255cb5f8e-2"&gt;&lt;/a&gt;├─ ISC: 64
+&lt;a name="rest_code_0ac93ec413094e9d9618f01255cb5f8e-3"&gt;&lt;/a&gt;├─ Apache-2.0: 10
+&lt;a name="rest_code_0ac93ec413094e9d9618f01255cb5f8e-4"&gt;&lt;/a&gt;├─ BSD-3-Clause: 10
+&lt;a name="rest_code_0ac93ec413094e9d9618f01255cb5f8e-5"&gt;&lt;/a&gt;├─ BSD-2-Clause: 3
+&lt;a name="rest_code_0ac93ec413094e9d9618f01255cb5f8e-6"&gt;&lt;/a&gt;├─ CC-BY-3.0: 2
+&lt;a name="rest_code_0ac93ec413094e9d9618f01255cb5f8e-7"&gt;&lt;/a&gt;├─ BSD-3-Clause OR MIT: 1
+&lt;a name="rest_code_0ac93ec413094e9d9618f01255cb5f8e-8"&gt;&lt;/a&gt;├─ MIT*: 1
+&lt;a name="rest_code_0ac93ec413094e9d9618f01255cb5f8e-9"&gt;&lt;/a&gt;├─ (MIT OR Apache-2.0): 1
+&lt;a name="rest_code_0ac93ec413094e9d9618f01255cb5f8e-10"&gt;&lt;/a&gt;├─ CC-BY-4.0: 1
+&lt;a name="rest_code_0ac93ec413094e9d9618f01255cb5f8e-11"&gt;&lt;/a&gt;├─ AFLv2.1,BSD: 1
+&lt;a name="rest_code_0ac93ec413094e9d9618f01255cb5f8e-12"&gt;&lt;/a&gt;├─ MPL-2.0: 1
+&lt;a name="rest_code_0ac93ec413094e9d9618f01255cb5f8e-13"&gt;&lt;/a&gt;├─ (BSD-2-Clause OR MIT OR Apache-2.0): 1
+&lt;a name="rest_code_0ac93ec413094e9d9618f01255cb5f8e-14"&gt;&lt;/a&gt;├─ CC0-1.0: 1
+&lt;a name="rest_code_0ac93ec413094e9d9618f01255cb5f8e-15"&gt;&lt;/a&gt;└─ Unlicense: 1
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/div&gt;
 &lt;div class="section" id="attempt-2-back-to-bash"&gt;
 &lt;h2&gt;Attempt 2: back to Bash&lt;/h2&gt;
 &lt;p&gt;I decided to get rid of Gulp, it’s not necessary for this pipeline. I replaced
-it with Bash and &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;postcss-cli&lt;/span&gt;&lt;/tt&gt;. &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;node-sass&lt;/span&gt;&lt;/tt&gt; was replaced by &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;dart-sass&lt;/span&gt;&lt;/tt&gt;
-(a two-file binary distribution), and &lt;tt class="docutils literal"&gt;csso&lt;/tt&gt; was replaced by &lt;tt class="docutils literal"&gt;cssnano&lt;/tt&gt; (it
+it with Bash and &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;postcss-cli&lt;/span&gt;&lt;/code&gt;. &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;node-sass&lt;/span&gt;&lt;/code&gt; was replaced by &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;dart-sass&lt;/span&gt;&lt;/code&gt;
+(a two-file binary distribution), and &lt;code class="docutils literal"&gt;csso&lt;/code&gt; was replaced by &lt;code class="docutils literal"&gt;cssnano&lt;/code&gt; (it
 works with postcss). Here is the resulting Bash file:&lt;/p&gt;
-&lt;pre class="code bash"&gt;&lt;a name="rest_code_2b7c87c0a24a48a08dcd10956c528ef2-1"&gt;&lt;/a&gt;sass bootstrap-kw.scss &lt;span class="p"&gt;|&lt;/span&gt; npx postcss --no-map --use autoprefixer -o assets/css/bootstrap.css
-&lt;a name="rest_code_2b7c87c0a24a48a08dcd10956c528ef2-2"&gt;&lt;/a&gt;sass bootstrap-kw-dark.scss &lt;span class="p"&gt;|&lt;/span&gt; npx postcss --no-map --use autoprefixer -o assets/css/bootstrap-dark.css
-&lt;a name="rest_code_2b7c87c0a24a48a08dcd10956c528ef2-3"&gt;&lt;/a&gt;npx postcss --no-map --use cssnano -o assets/css/bootstrap.min.css assets/css/bootstrap.css
-&lt;a name="rest_code_2b7c87c0a24a48a08dcd10956c528ef2-4"&gt;&lt;/a&gt;npx postcss --no-map --use cssnano -o assets/css/bootstrap-dark.min.css assets/css/bootstrap-dark.css
+&lt;pre class="code bash"&gt;&lt;a name="rest_code_e3b9cf22320d4515a541d7ba38a28317-1"&gt;&lt;/a&gt;sass bootstrap-kw.scss &lt;span class="p"&gt;|&lt;/span&gt; npx postcss --no-map --use autoprefixer -o assets/css/bootstrap.css
+&lt;a name="rest_code_e3b9cf22320d4515a541d7ba38a28317-2"&gt;&lt;/a&gt;sass bootstrap-kw-dark.scss &lt;span class="p"&gt;|&lt;/span&gt; npx postcss --no-map --use autoprefixer -o assets/css/bootstrap-dark.css
+&lt;a name="rest_code_e3b9cf22320d4515a541d7ba38a28317-3"&gt;&lt;/a&gt;npx postcss --no-map --use cssnano -o assets/css/bootstrap.min.css assets/css/bootstrap.css
+&lt;a name="rest_code_e3b9cf22320d4515a541d7ba38a28317-4"&gt;&lt;/a&gt;npx postcss --no-map --use cssnano -o assets/css/bootstrap-dark.min.css assets/css/bootstrap-dark.css
 &lt;/pre&gt;&lt;p&gt;The simplified dependency list cost me 37 MiB of disk space, and I’ve got 438
 packages from 232 contributors.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="attempt-3-node-clis-are-unnecessary"&gt;
 &lt;h2&gt;Attempt 3: node CLIs are unnecessary&lt;/h2&gt;
-&lt;p&gt;Let’s try something else: replace &lt;tt class="docutils literal"&gt;npx postcss&lt;/tt&gt; with a custom tool.&lt;/p&gt;
-&lt;pre class="code javascript"&gt;&lt;a name="rest_code_b9af14e21f8b4b1d8f4e28ff08317f50-1"&gt;&lt;/a&gt;&lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="nx"&gt;fs&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;require&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'fs'&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;a name="rest_code_b9af14e21f8b4b1d8f4e28ff08317f50-2"&gt;&lt;/a&gt;&lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="nx"&gt;getStdin&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;require&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'get-stdin'&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;a name="rest_code_b9af14e21f8b4b1d8f4e28ff08317f50-3"&gt;&lt;/a&gt;
-&lt;a name="rest_code_b9af14e21f8b4b1d8f4e28ff08317f50-4"&gt;&lt;/a&gt;&lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="nx"&gt;postcss&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;require&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'postcss'&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;a name="rest_code_b9af14e21f8b4b1d8f4e28ff08317f50-5"&gt;&lt;/a&gt;&lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="nx"&gt;autoprefixer&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;require&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'autoprefixer'&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;a name="rest_code_b9af14e21f8b4b1d8f4e28ff08317f50-6"&gt;&lt;/a&gt;&lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="nx"&gt;cssnano&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;require&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'cssnano'&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;a name="rest_code_b9af14e21f8b4b1d8f4e28ff08317f50-7"&gt;&lt;/a&gt;
-&lt;a name="rest_code_b9af14e21f8b4b1d8f4e28ff08317f50-8"&gt;&lt;/a&gt;&lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="nx"&gt;name&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;process&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
-&lt;a name="rest_code_b9af14e21f8b4b1d8f4e28ff08317f50-9"&gt;&lt;/a&gt;
-&lt;a name="rest_code_b9af14e21f8b4b1d8f4e28ff08317f50-10"&gt;&lt;/a&gt;&lt;span class="nx"&gt;getStdin&lt;/span&gt;&lt;span class="p"&gt;().&lt;/span&gt;&lt;span class="nx"&gt;then&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;css&lt;/span&gt; &lt;span class="p"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;a name="rest_code_b9af14e21f8b4b1d8f4e28ff08317f50-11"&gt;&lt;/a&gt;    &lt;span class="nx"&gt;postcss&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;&lt;span class="nx"&gt;autoprefixer&lt;/span&gt;&lt;span class="p"&gt;]).&lt;/span&gt;&lt;span class="nx"&gt;process&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;css&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="nx"&gt;from&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kc"&gt;undefined&lt;/span&gt;&lt;span class="p"&gt;}).&lt;/span&gt;&lt;span class="nx"&gt;then&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;result1&lt;/span&gt; &lt;span class="p"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;a name="rest_code_b9af14e21f8b4b1d8f4e28ff08317f50-12"&gt;&lt;/a&gt;        &lt;span class="nx"&gt;fs&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;writeFileSync&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sb"&gt;`assets/css/&lt;/span&gt;&lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nx"&gt;name&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="sb"&gt;.css`&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;result1&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;css&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;a name="rest_code_b9af14e21f8b4b1d8f4e28ff08317f50-13"&gt;&lt;/a&gt;
-&lt;a name="rest_code_b9af14e21f8b4b1d8f4e28ff08317f50-14"&gt;&lt;/a&gt;        &lt;span class="nx"&gt;postcss&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;&lt;span class="nx"&gt;cssnano&lt;/span&gt;&lt;span class="p"&gt;]).&lt;/span&gt;&lt;span class="nx"&gt;process&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;result1&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;css&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="nx"&gt;from&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kc"&gt;undefined&lt;/span&gt;&lt;span class="p"&gt;}).&lt;/span&gt;&lt;span class="nx"&gt;then&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;result2&lt;/span&gt; &lt;span class="p"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;a name="rest_code_b9af14e21f8b4b1d8f4e28ff08317f50-15"&gt;&lt;/a&gt;            &lt;span class="nx"&gt;fs&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;writeFileSync&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sb"&gt;`assets/css/&lt;/span&gt;&lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nx"&gt;name&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="sb"&gt;.min.css`&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;result2&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;css&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_b9af14e21f8b4b1d8f4e28ff08317f50-16"&gt;&lt;/a&gt;        &lt;span class="p"&gt;});&lt;/span&gt;
-&lt;a name="rest_code_b9af14e21f8b4b1d8f4e28ff08317f50-17"&gt;&lt;/a&gt;    &lt;span class="p"&gt;});&lt;/span&gt;
-&lt;a name="rest_code_b9af14e21f8b4b1d8f4e28ff08317f50-18"&gt;&lt;/a&gt;&lt;span class="p"&gt;});&lt;/span&gt;
-&lt;/pre&gt;&lt;p&gt;The bash script now pipes &lt;tt class="docutils literal"&gt;sass&lt;/tt&gt; output to &lt;tt class="docutils literal"&gt;node run_postcss.js &lt;span class="pre"&gt;bootstrap(-dark)&lt;/span&gt;&lt;/tt&gt;.&lt;/p&gt;
-&lt;p&gt;Doing this… cost me a new dependency. Its name is &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;get-stdin&lt;/span&gt;&lt;/tt&gt;. We’ve already met its author, Sindre Sorhus. While the library has its deficiencies &lt;a class="reference external" href="https://github.com/sindresorhus/get-stdin/issues/21"&gt;(namely, it doesn’t support reading from TTY)&lt;/a&gt;, it’s good enough. I could do it manually or use some other tricks, but since &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;get-stdin&lt;/span&gt;&lt;/tt&gt; does not pull in any other dependencies, I’m going to accept it. After cleaning up &lt;tt class="docutils literal"&gt;packages.json&lt;/tt&gt;, we end up with:&lt;/p&gt;
-&lt;pre class="code console"&gt;&lt;a name="rest_code_28bbc6d448ca4e0cb07b7badb7cc4db9-1"&gt;&lt;/a&gt;&lt;span class="gp"&gt;$&lt;/span&gt; npm install
-&lt;a name="rest_code_28bbc6d448ca4e0cb07b7badb7cc4db9-2"&gt;&lt;/a&gt;&lt;span class="go"&gt;added 144 packages from 119 contributors and audited 637 packages in 8.127s&lt;/span&gt;
-&lt;a name="rest_code_28bbc6d448ca4e0cb07b7badb7cc4db9-3"&gt;&lt;/a&gt;&lt;span class="go"&gt;found 0 vulnerabilities&lt;/span&gt;
-&lt;a name="rest_code_28bbc6d448ca4e0cb07b7badb7cc4db9-4"&gt;&lt;/a&gt;&lt;span class="gp"&gt;$&lt;/span&gt; du -hs node_modules
-&lt;a name="rest_code_28bbc6d448ca4e0cb07b7badb7cc4db9-5"&gt;&lt;/a&gt;&lt;span class="go"&gt; 21M    node_modules&lt;/span&gt;
+&lt;p&gt;Let’s try something else: replace &lt;code class="docutils literal"&gt;npx postcss&lt;/code&gt; with a custom tool.&lt;/p&gt;
+&lt;pre class="code javascript"&gt;&lt;a name="rest_code_b07b52f0681f4e4399a51442e5e962dd-1"&gt;&lt;/a&gt;&lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="nx"&gt;fs&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;require&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'fs'&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;a name="rest_code_b07b52f0681f4e4399a51442e5e962dd-2"&gt;&lt;/a&gt;&lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="nx"&gt;getStdin&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;require&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'get-stdin'&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;a name="rest_code_b07b52f0681f4e4399a51442e5e962dd-3"&gt;&lt;/a&gt;
+&lt;a name="rest_code_b07b52f0681f4e4399a51442e5e962dd-4"&gt;&lt;/a&gt;&lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="nx"&gt;postcss&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;require&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'postcss'&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;a name="rest_code_b07b52f0681f4e4399a51442e5e962dd-5"&gt;&lt;/a&gt;&lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="nx"&gt;autoprefixer&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;require&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'autoprefixer'&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;a name="rest_code_b07b52f0681f4e4399a51442e5e962dd-6"&gt;&lt;/a&gt;&lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="nx"&gt;cssnano&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;require&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'cssnano'&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;a name="rest_code_b07b52f0681f4e4399a51442e5e962dd-7"&gt;&lt;/a&gt;
+&lt;a name="rest_code_b07b52f0681f4e4399a51442e5e962dd-8"&gt;&lt;/a&gt;&lt;span class="kr"&gt;const&lt;/span&gt; &lt;span class="nx"&gt;name&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;process&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+&lt;a name="rest_code_b07b52f0681f4e4399a51442e5e962dd-9"&gt;&lt;/a&gt;
+&lt;a name="rest_code_b07b52f0681f4e4399a51442e5e962dd-10"&gt;&lt;/a&gt;&lt;span class="nx"&gt;getStdin&lt;/span&gt;&lt;span class="p"&gt;().&lt;/span&gt;&lt;span class="nx"&gt;then&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;css&lt;/span&gt; &lt;span class="p"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_b07b52f0681f4e4399a51442e5e962dd-11"&gt;&lt;/a&gt;    &lt;span class="nx"&gt;postcss&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;&lt;span class="nx"&gt;autoprefixer&lt;/span&gt;&lt;span class="p"&gt;]).&lt;/span&gt;&lt;span class="nx"&gt;process&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;css&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="nx"&gt;from&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kc"&gt;undefined&lt;/span&gt;&lt;span class="p"&gt;}).&lt;/span&gt;&lt;span class="nx"&gt;then&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;result1&lt;/span&gt; &lt;span class="p"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_b07b52f0681f4e4399a51442e5e962dd-12"&gt;&lt;/a&gt;        &lt;span class="nx"&gt;fs&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;writeFileSync&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sb"&gt;`assets/css/&lt;/span&gt;&lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nx"&gt;name&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="sb"&gt;.css`&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;result1&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;css&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;a name="rest_code_b07b52f0681f4e4399a51442e5e962dd-13"&gt;&lt;/a&gt;
+&lt;a name="rest_code_b07b52f0681f4e4399a51442e5e962dd-14"&gt;&lt;/a&gt;        &lt;span class="nx"&gt;postcss&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;&lt;span class="nx"&gt;cssnano&lt;/span&gt;&lt;span class="p"&gt;]).&lt;/span&gt;&lt;span class="nx"&gt;process&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;result1&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;css&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="nx"&gt;from&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kc"&gt;undefined&lt;/span&gt;&lt;span class="p"&gt;}).&lt;/span&gt;&lt;span class="nx"&gt;then&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;result2&lt;/span&gt; &lt;span class="p"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_b07b52f0681f4e4399a51442e5e962dd-15"&gt;&lt;/a&gt;            &lt;span class="nx"&gt;fs&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;writeFileSync&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sb"&gt;`assets/css/&lt;/span&gt;&lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nx"&gt;name&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="sb"&gt;.min.css`&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;result2&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;css&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_b07b52f0681f4e4399a51442e5e962dd-16"&gt;&lt;/a&gt;        &lt;span class="p"&gt;});&lt;/span&gt;
+&lt;a name="rest_code_b07b52f0681f4e4399a51442e5e962dd-17"&gt;&lt;/a&gt;    &lt;span class="p"&gt;});&lt;/span&gt;
+&lt;a name="rest_code_b07b52f0681f4e4399a51442e5e962dd-18"&gt;&lt;/a&gt;&lt;span class="p"&gt;});&lt;/span&gt;
+&lt;/pre&gt;&lt;p&gt;The bash script now pipes &lt;code class="docutils literal"&gt;sass&lt;/code&gt; output to &lt;code class="docutils literal"&gt;node run_postcss.js &lt;span class="pre"&gt;bootstrap(-dark)&lt;/span&gt;&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Doing this… cost me a new dependency. Its name is &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;get-stdin&lt;/span&gt;&lt;/code&gt;. We’ve already met its author, Sindre Sorhus. While the library has its deficiencies &lt;a class="reference external" href="https://github.com/sindresorhus/get-stdin/issues/21"&gt;(namely, it doesn’t support reading from TTY)&lt;/a&gt;, it’s good enough. I could do it manually or use some other tricks, but since &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;get-stdin&lt;/span&gt;&lt;/code&gt; does not pull in any other dependencies, I’m going to accept it. After cleaning up &lt;code class="docutils literal"&gt;packages.json&lt;/code&gt;, we end up with:&lt;/p&gt;
+&lt;pre class="code console"&gt;&lt;a name="rest_code_28d7870e232142b787448e81c10cf2e7-1"&gt;&lt;/a&gt;&lt;span class="gp"&gt;$&lt;/span&gt; npm install
+&lt;a name="rest_code_28d7870e232142b787448e81c10cf2e7-2"&gt;&lt;/a&gt;&lt;span class="go"&gt;added 144 packages from 119 contributors and audited 637 packages in 8.127s&lt;/span&gt;
+&lt;a name="rest_code_28d7870e232142b787448e81c10cf2e7-3"&gt;&lt;/a&gt;&lt;span class="go"&gt;found 0 vulnerabilities&lt;/span&gt;
+&lt;a name="rest_code_28d7870e232142b787448e81c10cf2e7-4"&gt;&lt;/a&gt;&lt;span class="gp"&gt;$&lt;/span&gt; du -hs node_modules
+&lt;a name="rest_code_28d7870e232142b787448e81c10cf2e7-5"&gt;&lt;/a&gt;&lt;span class="go"&gt; 21M    node_modules&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;div class="section" id="conclusion"&gt;
 &lt;h2&gt;Conclusion&lt;/h2&gt;
-&lt;p&gt;The task at hand was very simple. So was the JS code (Gulp and custom) I had to write to implement it. But underneath, there was a mess of unknown, unaudited code, duplicated libraries, and libraries created effectively to bump people’s npm download stats. There were already incidents, like &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;left-pad&lt;/span&gt;&lt;/tt&gt; (the removal of which broke Babel), or &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;event-stream&lt;/span&gt;&lt;/tt&gt; (which was taken over and modified to steal cryptocurrencies). The modern web development ecosystem is a huge mess of dependencies and one-line packages. Some of them are necessary due to the lackluster JS standard library — but some are just useless. And some of these micro-packages would be better off as larger libraries.&lt;/p&gt;
+&lt;p&gt;The task at hand was very simple. So was the JS code (Gulp and custom) I had to write to implement it. But underneath, there was a mess of unknown, unaudited code, duplicated libraries, and libraries created effectively to bump people’s npm download stats. There were already incidents, like &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;left-pad&lt;/span&gt;&lt;/code&gt; (the removal of which broke Babel), or &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;event-stream&lt;/span&gt;&lt;/code&gt; (which was taken over and modified to steal cryptocurrencies). The modern web development ecosystem is a huge mess of dependencies and one-line packages. Some of them are necessary due to the lackluster JS standard library — but some are just useless. And some of these micro-packages would be better off as larger libraries.&lt;/p&gt;
 &lt;blockquote&gt;
-Sure, the package count went down from the original 545 to 144. But the original point still stands: too much useless stuff.&lt;/blockquote&gt;
-&lt;p&gt;PS. Five of the packages (in the “large” set) had a &lt;tt class="docutils literal"&gt;.DS_Store&lt;/tt&gt; file left over. I’m wondering if there are any other files that shouldn’t be shipped with packages, lurking in &lt;tt class="docutils literal"&gt;node_modules&lt;/tt&gt; directories all over the world…&lt;/p&gt;
+&lt;p&gt;Sure, the package count went down from the original 545 to 144. But the original point still stands: too much useless stuff.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;PS. Five of the packages (in the “large” set) had a &lt;code class="docutils literal"&gt;.DS_Store&lt;/code&gt; file left over. I’m wondering if there are any other files that shouldn’t be shipped with packages, lurking in &lt;code class="docutils literal"&gt;node_modules&lt;/code&gt; directories all over the world…&lt;/p&gt;
 &lt;p&gt;PPS. I’ve replaced Disqus with Isso, because it had too many advertisements. If you experience any issues with the comment system (after force-refreshing), e-mail me.&lt;/p&gt;
 &lt;/div&gt;&lt;/div&gt;</description><category>JavaScript</category><category>rant</category><category>web development</category><category>webmastering</category><guid>https://chriswarrick.com/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/</guid><pubDate>Fri, 15 Feb 2019 18:00:00 GMT</pubDate></item><item><title>Windows 10 November Upgrade: Windows as a (Dis-)service</title><link>https://chriswarrick.com/blog/2015/12/27/windows-10-november-upgrade-windows-as-a-dis-service/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;div class="float-md-right figure" style="width: 20%"&gt;
 &lt;a class="reference external image-reference" href="https://chriswarrick.com/images/Windows10-1511.png"&gt;&lt;img alt="/images/Windows10-1511.thumbnail.png" src="https://chriswarrick.com/images/Windows10-1511.thumbnail.png"&gt;&lt;/a&gt;
@@ -295,21 +297,21 @@ on the second boot, talking about &lt;em&gt;critical structure corruption in CI.
 I rebooted, but I first took a little detour to the Arch Linux USB stick I
 prepared before to get a sane bootloader back. I’ve done this before, and
 usually requires three commands.&lt;/p&gt;
-&lt;pre class="code console"&gt;&lt;a name="rest_code_197a73c4ee30421abba5a0fd95d0f881-1"&gt;&lt;/a&gt;&lt;span class="gp"&gt;#&lt;/span&gt; mount /dev/sda2 /mnt
-&lt;a name="rest_code_197a73c4ee30421abba5a0fd95d0f881-2"&gt;&lt;/a&gt;&lt;span class="go"&gt;Metadata kept in Windows cache, refused to mount.&lt;/span&gt;
-&lt;a name="rest_code_197a73c4ee30421abba5a0fd95d0f881-3"&gt;&lt;/a&gt;&lt;span class="go"&gt;Failed to mount '/dev/sda2': Operation not permitted&lt;/span&gt;
-&lt;a name="rest_code_197a73c4ee30421abba5a0fd95d0f881-4"&gt;&lt;/a&gt;&lt;span class="go"&gt;The NTFS partition is in an unsafe state. Please resume and shutdown&lt;/span&gt;
-&lt;a name="rest_code_197a73c4ee30421abba5a0fd95d0f881-5"&gt;&lt;/a&gt;&lt;span class="go"&gt;Windows fully (no hibernation or fast restarting), or mount the volume&lt;/span&gt;
-&lt;a name="rest_code_197a73c4ee30421abba5a0fd95d0f881-6"&gt;&lt;/a&gt;&lt;span class="go"&gt;read-only with the 'ro' mount option.&lt;/span&gt;
-&lt;/pre&gt;&lt;p&gt;Wait, what?! I remember my hard drive layout, and &lt;tt class="docutils literal"&gt;/dev/sda2&lt;/tt&gt; is my Linux
-ext4 partition! I checked &lt;tt class="docutils literal"&gt;cfdisk&lt;/tt&gt;, and apparently I now have a &lt;em&gt;Hidden NTFS WinRE&lt;/em&gt;, with Linux moved to &lt;tt class="docutils literal"&gt;/dev/sda3&lt;/tt&gt; and my extended partition moved to &lt;tt class="docutils literal"&gt;/dev/sda4&lt;/tt&gt; (what would happen if I already had four partitions?). This is typical Windows misbehaviour: &lt;strong&gt;not caring about other OSes that might be installed&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;I accepted this defeat, mounted &lt;tt class="docutils literal"&gt;/dev/sda3&lt;/tt&gt;, ran &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;arch-chroot&lt;/span&gt; /mnt&lt;/tt&gt; and
-&lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;syslinux-install_update&lt;/span&gt; &lt;span class="pre"&gt;-i&lt;/span&gt; &lt;span class="pre"&gt;-a&lt;/span&gt; &lt;span class="pre"&gt;-m&lt;/span&gt;&lt;/tt&gt; (I’m not a fan of GRUB 2, and I have a MBR
+&lt;pre class="code console"&gt;&lt;a name="rest_code_e95d15de588040548b8118b8b74aa8d4-1"&gt;&lt;/a&gt;&lt;span class="gp"&gt;#&lt;/span&gt; mount /dev/sda2 /mnt
+&lt;a name="rest_code_e95d15de588040548b8118b8b74aa8d4-2"&gt;&lt;/a&gt;&lt;span class="go"&gt;Metadata kept in Windows cache, refused to mount.&lt;/span&gt;
+&lt;a name="rest_code_e95d15de588040548b8118b8b74aa8d4-3"&gt;&lt;/a&gt;&lt;span class="go"&gt;Failed to mount '/dev/sda2': Operation not permitted&lt;/span&gt;
+&lt;a name="rest_code_e95d15de588040548b8118b8b74aa8d4-4"&gt;&lt;/a&gt;&lt;span class="go"&gt;The NTFS partition is in an unsafe state. Please resume and shutdown&lt;/span&gt;
+&lt;a name="rest_code_e95d15de588040548b8118b8b74aa8d4-5"&gt;&lt;/a&gt;&lt;span class="go"&gt;Windows fully (no hibernation or fast restarting), or mount the volume&lt;/span&gt;
+&lt;a name="rest_code_e95d15de588040548b8118b8b74aa8d4-6"&gt;&lt;/a&gt;&lt;span class="go"&gt;read-only with the 'ro' mount option.&lt;/span&gt;
+&lt;/pre&gt;&lt;p&gt;Wait, what?! I remember my hard drive layout, and &lt;code class="docutils literal"&gt;/dev/sda2&lt;/code&gt; is my Linux
+ext4 partition! I checked &lt;code class="docutils literal"&gt;cfdisk&lt;/code&gt;, and apparently I now have a &lt;em&gt;Hidden NTFS WinRE&lt;/em&gt;, with Linux moved to &lt;code class="docutils literal"&gt;/dev/sda3&lt;/code&gt; and my extended partition moved to &lt;code class="docutils literal"&gt;/dev/sda4&lt;/code&gt; (what would happen if I already had four partitions?). This is typical Windows misbehaviour: &lt;strong&gt;not caring about other OSes that might be installed&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;I accepted this defeat, mounted &lt;code class="docutils literal"&gt;/dev/sda3&lt;/code&gt;, ran &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;arch-chroot&lt;/span&gt; /mnt&lt;/code&gt; and
+&lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;syslinux-install_update&lt;/span&gt; &lt;span class="pre"&gt;-i&lt;/span&gt; &lt;span class="pre"&gt;-a&lt;/span&gt; &lt;span class="pre"&gt;-m&lt;/span&gt;&lt;/code&gt; (I’m not a fan of GRUB 2, and I have a MBR
 drive layout). I should test this out by rebooting into Linux.&lt;/p&gt;
-&lt;pre class="code console"&gt;&lt;a name="rest_code_ac6caebeb13d4b65883f2dcba15fcc2e-1"&gt;&lt;/a&gt;&lt;span class="go"&gt;Error getting authority: Error initializing authority: Could not connect: No such file or directory (g-io-error-quark, 1)&lt;/span&gt;
-&lt;a name="rest_code_ac6caebeb13d4b65883f2dcba15fcc2e-2"&gt;&lt;/a&gt;&lt;span class="go"&gt;Welcome to emergency mode!&lt;/span&gt;
-&lt;/pre&gt;&lt;p&gt;systemd &lt;strong&gt;really&lt;/strong&gt; values &lt;tt class="docutils literal"&gt;/etc/fstab&lt;/tt&gt;, and you can’t boot if any entry fails
-to mount, which was the case with the Windows drive in &lt;tt class="docutils literal"&gt;/dev/sda1&lt;/tt&gt; and my
+&lt;pre class="code console"&gt;&lt;a name="rest_code_632631d43cc1438f9f851e51e0017c61-1"&gt;&lt;/a&gt;&lt;span class="go"&gt;Error getting authority: Error initializing authority: Could not connect: No such file or directory (g-io-error-quark, 1)&lt;/span&gt;
+&lt;a name="rest_code_632631d43cc1438f9f851e51e0017c61-2"&gt;&lt;/a&gt;&lt;span class="go"&gt;Welcome to emergency mode!&lt;/span&gt;
+&lt;/pre&gt;&lt;p&gt;systemd &lt;strong&gt;really&lt;/strong&gt; values &lt;code class="docutils literal"&gt;/etc/fstab&lt;/code&gt;, and you can’t boot if any entry fails
+to mount, which was the case with the Windows drive in &lt;code class="docutils literal"&gt;/dev/sda1&lt;/code&gt; and my
 other NTFS partition (note that the error message is very unhelpful)&lt;/p&gt;
 &lt;p&gt;I guess I have to get into Windows first. I tried booting Windows again, this
 time it worked (in glorious 1080p, which was the case on the previous boot
@@ -331,7 +333,7 @@ Perhaps the testers have dedicated machines and don’t run experimental builds
 on their daily drivers. But I doubt that, because that’s a significant
 investment without any financial gain from helping out a corporation. So,
 virtual machines? I have no idea how they cope.&lt;/p&gt;
-&lt;p&gt;By the way, &lt;tt class="docutils literal"&gt;cmd.exe&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;winver.exe&lt;/tt&gt; claims it’s &lt;em&gt;Copyright © 2016&lt;/em&gt;. Previously, Windows copyright
+&lt;p&gt;By the way, &lt;code class="docutils literal"&gt;cmd.exe&lt;/code&gt; and &lt;code class="docutils literal"&gt;winver.exe&lt;/code&gt; claims it’s &lt;em&gt;Copyright © 2016&lt;/em&gt;. Previously, Windows copyright
 notices were outdated. Now, they’re in the future.&lt;/p&gt;&lt;/div&gt;</description><category>rant</category><category>review</category><category>Windows</category><guid>https://chriswarrick.com/blog/2015/12/27/windows-10-november-upgrade-windows-as-a-dis-service/</guid><pubDate>Sun, 27 Dec 2015 11:15:00 GMT</pubDate></item><item><title>Facebook Knows Too Much.</title><link>https://chriswarrick.com/blog/2014/11/07/facebook-knows-too-much/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;This post is stating the obvious.  Facebook just scared me with some data points
 it has about me.  Full story, right after the break.&lt;/p&gt;
 &lt;!-- TEASER_END --&gt;
@@ -339,7 +341,8 @@ it has about me.  Full story, right after the break.&lt;/p&gt;
 &lt;em&gt;stranger familiarization&lt;/em&gt; feature.  Fancy made-up words aside, it’s the
 notifications of the form:&lt;/p&gt;
 &lt;blockquote&gt;
-Jaime Lannister &lt;strong&gt;(friends with Cersei Lannister)&lt;/strong&gt; liked your photo.&lt;/blockquote&gt;
+&lt;p&gt;Jaime Lannister &lt;strong&gt;(friends with Cersei Lannister)&lt;/strong&gt; liked your photo.&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;Now, I hadn’t gotten to see these sort of notices too often.  The first time I
 encountered those, Facebook chose some &lt;strong&gt;bad&lt;/strong&gt; examples.  A human, given my
 friends list — complete with some basic data and descriptions — could have
@@ -348,7 +351,7 @@ easily devised a better one.&lt;/p&gt;
 should see my face back when I received another notification lately.  Facebook
 chose a mutual friend out of ten possibilities.  And boy, had they nailed it.
 Now, with my memory of the previous occurrence, I thought it was a good guess.
-A guess, as I I believed it was just good ol’ &lt;tt class="docutils literal"&gt;/dev/urandom&lt;/tt&gt; supplemented by
+A guess, as I I believed it was just good ol’ &lt;code class="docutils literal"&gt;/dev/urandom&lt;/code&gt; supplemented by
 the 10% probability resulting in this serendipitous output.&lt;/p&gt;
 &lt;p&gt;Now, this happened yet again yesterday.  Two distinct people, one identical
 suggestion.  A perfect one at that.  This would be too good.  The probability
@@ -376,18 +379,18 @@ I don’t see anyways…)  How can I fix it?  The tags are completely wrong and 
 valid for yours truly…  They should at least &lt;strong&gt;try&lt;/strong&gt; to show me valid
 advertisements.  Here is a sample of what was chosen:&lt;/p&gt;
 &lt;ul class="simple"&gt;
-&lt;li&gt;&lt;strong&gt;#Censorship.&lt;/strong&gt;  Not really.  I don’t have anything to do with censorship at
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;#Censorship.&lt;/strong&gt;  Not really.  I don’t have anything to do with censorship at
 all.  It actually comes from a page I liked, that doesn’t really do any
-anti-censorship activism.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;#[my city here].&lt;/strong&gt;  &lt;strong&gt;#[a video game].&lt;/strong&gt;  Both make sense.  I actually
+anti-censorship activism.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;#[my city here].&lt;/strong&gt;  &lt;strong&gt;#[a video game].&lt;/strong&gt;  Both make sense.  I actually
 liked pages related to both.  (Though I liked the second game of the series
-and the tag is for the first, or — at worst — all games collectively.)&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;#[a movie I HAVE NEVER SEEN]&lt;/strong&gt;.  Facebook failed at getting the reference
+and the tag is for the first, or — at worst — all games collectively.)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;#[a movie I HAVE NEVER SEEN]&lt;/strong&gt;.  Facebook failed at getting the reference
 yet again.  The title of the movie appears in the name of a page — but they
-are not related at all.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;#[a South Hemisphere company I never heard of.]&lt;/strong&gt;  I actually see the
-reference after looking at my likes and their Wikipedia page.  It’s &lt;strong&gt;very invalid&lt;/strong&gt;.&lt;/li&gt;
-&lt;li&gt;…and many more incorrect things I do not care about.&lt;/li&gt;
+are not related at all.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;#[a South Hemisphere company I never heard of.]&lt;/strong&gt;  I actually see the
+reference after looking at my likes and their Wikipedia page.  It’s &lt;strong&gt;very invalid&lt;/strong&gt;.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;…and many more incorrect things I do not care about.&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;You would have thought Facebook has developed algorithms to devise correct
 &lt;strong&gt;ads&lt;/strong&gt; — the thing their money comes from…&lt;/p&gt;
@@ -412,19 +415,19 @@ save for Linux.)&lt;/p&gt;
 &lt;p&gt;In alphabetical order,&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;ul class="simple"&gt;
-&lt;li&gt;Arch User Repository&lt;/li&gt;
-&lt;li&gt;Codecademy&lt;/li&gt;
-&lt;li&gt;Dropbox*&lt;/li&gt;
-&lt;li&gt;Facebook*&lt;/li&gt;
-&lt;li&gt;GitHub&lt;/li&gt;
-&lt;li&gt;Google*&lt;/li&gt;
-&lt;li&gt;Heroku&lt;/li&gt;
-&lt;li&gt;IFTTT&lt;/li&gt;
-&lt;li&gt;Khan Academy&lt;/li&gt;
-&lt;li&gt;MediaWiki (Wikipedia etc.)&lt;/li&gt;
-&lt;li&gt;Reddit&lt;/li&gt;
-&lt;li&gt;Remember the Milk&lt;/li&gt;
-&lt;li&gt;Twitter*&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Arch User Repository&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Codecademy&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Dropbox*&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Facebook*&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;GitHub&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Google*&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Heroku&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;IFTTT&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Khan Academy&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;MediaWiki (Wikipedia etc.)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Reddit&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Remember the Milk&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Twitter*&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;All of those make it easy to change your password.  Just go to the profile
@@ -438,62 +441,73 @@ better.&lt;/p&gt;
 &lt;h2&gt;Password Update Wall of Amnesia&lt;/h2&gt;
 &lt;p&gt;I had to simulate amnesia for those services.  I couldn’t find a Password reset
 functionality or it was broken.&lt;/p&gt;
-&lt;dl class="docutils"&gt;
+&lt;dl class="simple"&gt;
 &lt;dt&gt;DISQUS&lt;/dt&gt;
-&lt;dd&gt;DISQUS has a nice password update link.  One problem, it doesn’t work.
-After simulating amnesia, all is well.&lt;/dd&gt;
+&lt;dd&gt;&lt;p&gt;DISQUS has a nice password update link.  One problem, it doesn’t work.
+After simulating amnesia, all is well.&lt;/p&gt;
+&lt;/dd&gt;
 &lt;dt&gt;TweetDeck&lt;/dt&gt;
-&lt;dd&gt;Couldn’t find a valid option for what I needed, so I simulated amnesia and
-it worked just fine.&lt;/dd&gt;
+&lt;dd&gt;&lt;p&gt;Couldn’t find a valid option for what I needed, so I simulated amnesia and
+it worked just fine.&lt;/p&gt;
+&lt;/dd&gt;
 &lt;dt&gt;Mailman&lt;/dt&gt;
-&lt;dd&gt;Some passwords were my previous password, others were my unsafe passwords,
+&lt;dd&gt;&lt;p&gt;Some passwords were my previous password, others were my unsafe passwords,
 others weren’t my password at all.  All were changed to the unsafe
-passwords, sometimes with a need to simulate amnesia.&lt;/dd&gt;
+passwords, sometimes with a need to simulate amnesia.&lt;/p&gt;
+&lt;/dd&gt;
 &lt;/dl&gt;
 &lt;/div&gt;
 &lt;div class="section" id="password-update-wall-of-bullshit"&gt;
 &lt;h2&gt;Password Update Wall of BULLSHIT&lt;/h2&gt;
 &lt;p&gt;Those services are SHIT in terms of password reset!  I have absolutely no idea
 why I have an account with them!&lt;/p&gt;
-&lt;dl class="docutils"&gt;
+&lt;dl class="simple"&gt;
 &lt;dt&gt;AOL/AIM&lt;/dt&gt;
-&lt;dd&gt;It wanted a CAPTCHA, link click and other magic.  Moreover, passwords are
+&lt;dd&gt;&lt;p&gt;It wanted a CAPTCHA, link click and other magic.  Moreover, passwords are
 limited to 16 characters.  Enough to type half of my password, at least,
-but this is still bad!  The proper upper limit is NONE.&lt;/dd&gt;
+but this is still bad!  The proper upper limit is NONE.&lt;/p&gt;
+&lt;/dd&gt;
 &lt;dt&gt;Gadu-Gadu&lt;/dt&gt;
-&lt;dd&gt;A Polish IM.  It required amnesia, a difficult CAPTCHA, and when I typed my
+&lt;dd&gt;&lt;p&gt;A Polish IM.  It required amnesia, a difficult CAPTCHA, and when I typed my
 password, it rejected it without any meaningful error messages (an
-exclamation mark isn’t considered a valid error message.)&lt;/dd&gt;
+exclamation mark isn’t considered a valid error message.)&lt;/p&gt;
+&lt;/dd&gt;
 &lt;dt&gt;Microsoft&lt;/dt&gt;
-&lt;dd&gt;Sixteen characters, no spaces, requires fancy characters.  I did not change
+&lt;dd&gt;&lt;p&gt;Sixteen characters, no spaces, requires fancy characters.  I did not change
 my password, because it won’t let me.  Oh, and aren’t those passwords used
 for Windows 8, making it even less secure, considering that &lt;cite&gt;passwords are
 saved using a reversible encryption method if you use the fancy new
-authentication methods (PIN/Picture Password) &amp;lt;http://arstechnica.com/security/2012/10/experts-windows-8-features-make-account-passwords-easier-to-steal/&amp;gt;&lt;/cite&gt;!&lt;/dd&gt;
+authentication methods (PIN/Picture Password) &amp;lt;http://arstechnica.com/security/2012/10/experts-windows-8-features-make-account-passwords-easier-to-steal/&amp;gt;&lt;/cite&gt;!&lt;/p&gt;
+&lt;/dd&gt;
 &lt;dt&gt;PayPal&lt;/dt&gt;
-&lt;dd&gt;I trust them with my money, but they believe that my password is weak (1/3)
-and have a 20 character limit.  I took the half and added a &lt;tt class="docutils literal"&gt;!&lt;/tt&gt; so they
-would let me use it.&lt;/dd&gt;
+&lt;dd&gt;&lt;p&gt;I trust them with my money, but they believe that my password is weak (1/3)
+and have a 20 character limit.  I took the half and added a &lt;code class="docutils literal"&gt;!&lt;/code&gt; so they
+would let me use it.&lt;/p&gt;
+&lt;/dd&gt;
 &lt;dt&gt;Steam&lt;/dt&gt;
-&lt;dd&gt;You need to do it from within the desktop app.  Which crashes for me under
+&lt;dd&gt;&lt;p&gt;You need to do it from within the desktop app.  Which crashes for me under
 Linux due to a recent update.  And I need to do important work under Linux.
 So the password will get updated when I will get (a) to Windows; (b) Steam
-for Linux working.&lt;/dd&gt;
+for Linux working.&lt;/p&gt;
+&lt;/dd&gt;
 &lt;/dl&gt;
 &lt;/div&gt;
 &lt;div class="section" id="how-to-do-a-proper-password-update-process-for-web-devs"&gt;
 &lt;h2&gt;How to do a proper password update process (for web devs)&lt;/h2&gt;
-&lt;dl class="docutils"&gt;
+&lt;dl class="simple"&gt;
 &lt;dt&gt;User logged in&lt;/dt&gt;
-&lt;dd&gt;Profile/settings page should contain a field for the current password (for
-added security) and two fields for the new password and its confirmation.&lt;/dd&gt;
+&lt;dd&gt;&lt;p&gt;Profile/settings page should contain a field for the current password (for
+added security) and two fields for the new password and its confirmation.&lt;/p&gt;
+&lt;/dd&gt;
 &lt;dt&gt;User forgot their password&lt;/dt&gt;
-&lt;dd&gt;Ask for an e-mail or the username.  Then, do an e-mail confirmation and let
-the user set his password.  Ask twice for the new password.&lt;/dd&gt;
+&lt;dd&gt;&lt;p&gt;Ask for an e-mail or the username.  Then, do an e-mail confirmation and let
+the user set his password.  Ask twice for the new password.&lt;/p&gt;
+&lt;/dd&gt;
 &lt;dt&gt;Limits, requirements etc.&lt;/dt&gt;
-&lt;dd&gt;Lower limit of 8 characters should be good enough for most people, and
+&lt;dd&gt;&lt;p&gt;Lower limit of 8 characters should be good enough for most people, and
 upper limit should not exist.  A password meter like &lt;a class="reference external" href="https://tech.dropbox.com/2012/04/zxcvbn-realistic-password-strength-estimation/"&gt;zxcvbn by Dropbox&lt;/a&gt;
-would also be a great idea.&lt;/dd&gt;
+would also be a great idea.&lt;/p&gt;
+&lt;/dd&gt;
 &lt;/dl&gt;
 &lt;/div&gt;&lt;/div&gt;</description><category>Internet</category><category>password</category><category>rant</category><guid>https://chriswarrick.com/blog/2013/02/09/password-changing-101/</guid><pubDate>Sat, 09 Feb 2013 12:26:04 GMT</pubDate></item><item><title>Forty Million is Nothing!</title><link>https://chriswarrick.com/blog/2012/12/02/forty-million-is-nothing/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;I’ve been busy, but I now have time to write about it: in a bit over one month,
 Microsoft sold &lt;strong&gt;40,000,000&lt;/strong&gt; licenses of Microsoft Windows.  That is a little
@@ -558,22 +572,27 @@ I replaced marketing bullshit with the word &lt;em&gt;blah&lt;/em&gt;.  Everythi
 in &lt;em&gt;italics&lt;/em&gt;.&lt;/p&gt;
 &lt;div class="section" id="using-windows"&gt;
 &lt;h3&gt;Using Windows&lt;/h3&gt;
-&lt;dl class="docutils"&gt;
+&lt;dl class="simple"&gt;
 &lt;dt&gt;Search.&lt;/dt&gt;
-&lt;dd&gt;&lt;em&gt;blah blah blah&lt;/em&gt; Charms &lt;em&gt;blah blah blah&lt;/em&gt; apps&lt;/dd&gt;
+&lt;dd&gt;&lt;p&gt;&lt;em&gt;blah blah blah&lt;/em&gt; Charms &lt;em&gt;blah blah blah&lt;/em&gt; apps&lt;/p&gt;
+&lt;/dd&gt;
 &lt;dt&gt;Start.&lt;/dt&gt;
-&lt;dd&gt;&lt;em&gt;blah blah blah&lt;/em&gt; replaced by Start &lt;em&gt;blah&lt;/em&gt; home base &lt;em&gt;blah&lt;/em&gt; open
-apps &lt;em&gt;blah&lt;/em&gt; glance at the tiles &lt;em&gt;blah&lt;/em&gt; how to get there&lt;/dd&gt;
+&lt;dd&gt;&lt;p&gt;&lt;em&gt;blah blah blah&lt;/em&gt; replaced by Start &lt;em&gt;blah&lt;/em&gt; home base &lt;em&gt;blah&lt;/em&gt; open
+apps &lt;em&gt;blah&lt;/em&gt; glance at the tiles &lt;em&gt;blah&lt;/em&gt; how to get there&lt;/p&gt;
+&lt;/dd&gt;
 &lt;dt&gt;Desktop.&lt;/dt&gt;
-&lt;dd&gt;&lt;em&gt;blah&lt;/em&gt; Desktop tile &lt;em&gt;blah&lt;/em&gt; Win+D&lt;/dd&gt;
+&lt;dd&gt;&lt;p&gt;&lt;em&gt;blah&lt;/em&gt; Desktop tile &lt;em&gt;blah&lt;/em&gt; Win+D&lt;/p&gt;
+&lt;/dd&gt;
 &lt;dt&gt;Open Control Panel.&lt;/dt&gt;
-&lt;dd&gt;&lt;em&gt;blah&lt;/em&gt; Control Panel &lt;em&gt;blah&lt;/em&gt; PC settings &lt;em&gt;blah&lt;/em&gt; searching &lt;em&gt;blah&lt;/em&gt; Settings
-charm&lt;/dd&gt;
+&lt;dd&gt;&lt;p&gt;&lt;em&gt;blah&lt;/em&gt; Control Panel &lt;em&gt;blah&lt;/em&gt; PC settings &lt;em&gt;blah&lt;/em&gt; searching &lt;em&gt;blah&lt;/em&gt; Settings
+charm&lt;/p&gt;
+&lt;/dd&gt;
 &lt;dt&gt;Help and Support.&lt;/dt&gt;
-&lt;dd&gt;&lt;em&gt;blah&lt;/em&gt; Search &lt;em&gt;blah&lt;/em&gt; Settings→Help on Start &lt;em&gt;blah blah&lt;/em&gt; Settings→Help in apps
-or &lt;em&gt;blah blah blah&lt;/em&gt; else &lt;em&gt;blah blah&lt;/em&gt;&lt;/dd&gt;
+&lt;dd&gt;&lt;p&gt;&lt;em&gt;blah&lt;/em&gt; Search &lt;em&gt;blah&lt;/em&gt; Settings→Help on Start &lt;em&gt;blah blah&lt;/em&gt; Settings→Help in apps
+or &lt;em&gt;blah blah blah&lt;/em&gt; else &lt;em&gt;blah blah&lt;/em&gt;&lt;/p&gt;
+&lt;/dd&gt;
 &lt;dt&gt;Turn off or shut down a PC.&lt;/dt&gt;
-&lt;dd&gt;&lt;em&gt;Oh, hi.  It’s you.  So, how are you holding up, shutdown magic?  Let’s
+&lt;dd&gt;&lt;p&gt;&lt;em&gt;Oh, hi.  It’s you.  So, how are you holding up, shutdown magic?  Let’s
 read about you.&lt;/em&gt; &lt;em&gt;blah blah&lt;/em&gt; no need to shut down &lt;em&gt;blah&lt;/em&gt; sleep &lt;em&gt;blah&lt;/em&gt;
 little power, faster startup, back to where you left off*—what?  So you
 want people to put Windows to sleep now?  This capability is in Windows
@@ -587,26 +606,32 @@ reason.&amp;lt;/strong&amp;gt;  Getting to the power button of my tower is not t
 I don’t want to duck so low. *  *blah&lt;/em&gt; change default mode to sleep &lt;em&gt;why
 isn’t the it default?&lt;/em&gt; &lt;em&gt;blah blah blah blah blah blah blah blah&lt;/em&gt; airplane
 &lt;em&gt;blah&lt;/em&gt; not using &lt;em&gt;blah&lt;/em&gt; turn off &lt;em&gt;blah*close desktop apps blah save work
-*blah&lt;/em&gt; settings charm &lt;em&gt;blah&lt;/em&gt; power &lt;em&gt;blah&lt;/em&gt; shut down &lt;em&gt;blah&lt;/em&gt;.  &amp;lt;/dl&amp;gt;&lt;/dd&gt;
+*blah&lt;/em&gt; settings charm &lt;em&gt;blah&lt;/em&gt; power &lt;em&gt;blah&lt;/em&gt; shut down &lt;em&gt;blah&lt;/em&gt;.  &amp;lt;/dl&amp;gt;&lt;/p&gt;
+&lt;/dd&gt;
 &lt;/dl&gt;
 &lt;/div&gt;
 &lt;div class="section" id="using-apps"&gt;
 &lt;h3&gt;Using apps&lt;/h3&gt;
-&lt;dl class="docutils"&gt;
+&lt;dl class="simple"&gt;
 &lt;dt&gt;Print.&lt;/dt&gt;
-&lt;dd&gt;Devices charm or Ctrl+P &lt;em&gt;blah blah blah&lt;/em&gt; no support &lt;em&gt;blah&lt;/em&gt; add&lt;/dd&gt;
+&lt;dd&gt;&lt;p&gt;Devices charm or Ctrl+P &lt;em&gt;blah blah blah&lt;/em&gt; no support &lt;em&gt;blah&lt;/em&gt; add&lt;/p&gt;
+&lt;/dd&gt;
 &lt;dt&gt;See all apps (programs). &lt;em&gt;Oh, back to the “programs” word?  What for?&lt;/em&gt;&lt;/dt&gt;
-&lt;dd&gt;&lt;em&gt;blah&lt;/em&gt; All apps &lt;em&gt;blah&lt;/em&gt; keyboard search &lt;em&gt;blah&lt;/em&gt;&lt;/dd&gt;
+&lt;dd&gt;&lt;p&gt;&lt;em&gt;blah&lt;/em&gt; All apps &lt;em&gt;blah&lt;/em&gt; keyboard search &lt;em&gt;blah&lt;/em&gt;&lt;/p&gt;
+&lt;/dd&gt;
 &lt;dt&gt;Install apps.&lt;/dt&gt;
-&lt;dd&gt;&lt;em&gt;blah&lt;/em&gt; Store &lt;em&gt;blah&lt;/em&gt; media &lt;em&gt;blah&lt;/em&gt; DVD &lt;em&gt;blah&lt;/em&gt; Internet &lt;em&gt;blah blah&lt;/em&gt;&lt;/dd&gt;
+&lt;dd&gt;&lt;p&gt;&lt;em&gt;blah&lt;/em&gt; Store &lt;em&gt;blah&lt;/em&gt; media &lt;em&gt;blah&lt;/em&gt; DVD &lt;em&gt;blah&lt;/em&gt; Internet &lt;em&gt;blah blah&lt;/em&gt;&lt;/p&gt;
+&lt;/dd&gt;
 &lt;dt&gt;Microsoft account&lt;/dt&gt;
-&lt;dd&gt;Add an account to an app. &lt;em&gt;WTF?&lt;/em&gt; &lt;em&gt;blah&lt;/em&gt; create account if none &lt;em&gt;blah&lt;/em&gt; Settings→Accounts in app &lt;em&gt;blah&lt;/em&gt; Add &lt;em&gt;blah blah&lt;/em&gt; type &lt;em&gt;blah blah&lt;/em&gt; instructions.&lt;/dd&gt;
+&lt;dd&gt;&lt;p&gt;Add an account to an app. &lt;em&gt;WTF?&lt;/em&gt; &lt;em&gt;blah&lt;/em&gt; create account if none &lt;em&gt;blah&lt;/em&gt; Settings→Accounts in app &lt;em&gt;blah&lt;/em&gt; Add &lt;em&gt;blah blah&lt;/em&gt; type &lt;em&gt;blah blah&lt;/em&gt; instructions.&lt;/p&gt;
+&lt;/dd&gt;
 &lt;dt&gt;Close an app.&lt;/dt&gt;
-&lt;dd&gt;Apps &lt;em&gt;blah blah&lt;/em&gt; from the Windows Store don’t slow down your PC, so you
+&lt;dd&gt;&lt;p&gt;Apps &lt;em&gt;blah blah&lt;/em&gt; from the Windows Store don’t slow down your PC, so you
 don’t need to close them &lt;em&gt;blah blah&lt;/em&gt; close at random &lt;em&gt;blah&lt;/em&gt; close desktop
 apps before shutodwn &lt;em&gt;blah&lt;/em&gt; drag from the top of the screen to the bottom
 &lt;em&gt;BTW: why, exactly, this way? blah&lt;/em&gt; &lt;em&gt;blah&lt;/em&gt; left-side menu &lt;em&gt;blah&lt;/em&gt; drag to
-bottom with touch, right-click and Close with a mouse &lt;em&gt;blah&lt;/em&gt;&lt;/dd&gt;
+bottom with touch, right-click and Close with a mouse &lt;em&gt;blah&lt;/em&gt;&lt;/p&gt;
+&lt;/dd&gt;
 &lt;/dl&gt;
 &lt;p&gt;So we have that.  Up next, Customize Start.  Standard.  How to use apps, or:
 app commands (right-click/{↓,↑}swipe).  Those things are important, but are
@@ -748,7 +773,7 @@ absolutely no idea what they were supposed to mean.&lt;/p&gt;
 Fancy effects for text input.  Stuff is also fading in on the slides panel on the left side.  Do not like.  And I
 just passed 100 screenshots and 1100 words of the post.  And we aren’t even halfway through.  Also,
 why doesn’t this idiot save locations of opening and saving between programs?  It would really help me.
-Anyways, after saving my test presentation as &lt;tt class="docutils literal"&gt;.ppt&lt;/tt&gt;, &lt;tt class="docutils literal"&gt;.pptx&lt;/tt&gt;, &lt;tt class="docutils literal"&gt;.pdf&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;.odp&lt;/tt&gt; (I am doing it
+Anyways, after saving my test presentation as &lt;code class="docutils literal"&gt;.ppt&lt;/code&gt;, &lt;code class="docutils literal"&gt;.pptx&lt;/code&gt;, &lt;code class="docutils literal"&gt;.pdf&lt;/code&gt; and &lt;code class="docutils literal"&gt;.odp&lt;/code&gt; (I am doing it
 with every of those documents you’re seeing here), we continue with another application from the
 Office suite.&lt;/p&gt;
 &lt;figure&gt;
@@ -801,7 +826,7 @@ worth it.&lt;/p&gt;
 &lt;a href="http://kwpolska.tk/blog-content/galleries/o15gal/img/access/access008.png" title="A table." class="fancybox" rel="o15gal"&gt;&lt;img src="http://kwpolska.tk/blog-content/galleries/o15gal/img/t/access/access008.png" alt="A table." title="A table."&gt;&lt;/a&gt;
 &lt;figcaption&gt;A table.&lt;/figcaption&gt;
 &lt;/figure&gt;&lt;p&gt;Access.  The weird database manager.  The first template is &lt;em&gt;Custom web app.&lt;/em&gt;  I try, but it doesn’t seem
-to work.  So I create a new desktop database, and I learn that it now creates &lt;tt class="docutils literal"&gt;.accdb&lt;/tt&gt; files.  It does so
+to work.  So I create a new desktop database, and I learn that it now creates &lt;code class="docutils literal"&gt;.accdb&lt;/code&gt; files.  It does so
 since version 2007, but I haven’t used Access since version 2003.  The suggested filename is &lt;em&gt;My New
 App.accdb&lt;/em&gt;.
 Access has changed since the last time I was here.  The standard window with all the objects is now a
@@ -833,46 +858,46 @@ the title bar.)  It makes everything bigger so you can hit it with your finger.&
 To comply with the tradition of my reviews, ratings and galleries were made.  Another new thing are the
 examples, which are the documents used in this review.&lt;/p&gt;
 &lt;strong style="font-size: 3em;"&gt;&lt;a href="http://kwpolska.tk/o15gal/" title="Office 2013 Gallery"&gt;Office 2013 Gallery&lt;/a&gt;&lt;/strong&gt;&lt;strong style="font-size: 3em;"&gt;&lt;a href="http://sdrv.ms/NGklkc" title="Office 2013 Files"&gt;Office 2013 Files&lt;/a&gt;&lt;/strong&gt;&lt;strong style="font-size: 3em;"&gt;&lt;a href="http://www.youtube.com/playlist?list=PLB53D5EB93251C38E" title="Office 2013 Videos"&gt;Office 2013 Videos&lt;/a&gt;&lt;/strong&gt;&lt;p&gt;The files are as follows:&lt;/p&gt;
-&lt;table border="1" class="table table-striped docutils"&gt;
+&lt;table class="table table-striped"&gt;
 &lt;colgroup&gt;
-&lt;col width="18%"&gt;
-&lt;col width="18%"&gt;
-&lt;col width="63%"&gt;
+&lt;col style="width: 18%"&gt;
+&lt;col style="width: 18%"&gt;
+&lt;col style="width: 63%"&gt;
 &lt;/colgroup&gt;
-&lt;thead valign="bottom"&gt;
-&lt;tr&gt;&lt;th class="head"&gt;Filename&lt;/th&gt;
-&lt;th class="head"&gt;App&lt;/th&gt;
-&lt;th class="head"&gt;Comment&lt;/th&gt;
+&lt;thead&gt;
+&lt;tr&gt;&lt;th class="head"&gt;&lt;p&gt;Filename&lt;/p&gt;&lt;/th&gt;
+&lt;th class="head"&gt;&lt;p&gt;App&lt;/p&gt;&lt;/th&gt;
+&lt;th class="head"&gt;&lt;p&gt;Comment&lt;/p&gt;&lt;/th&gt;
 &lt;/tr&gt;
 &lt;/thead&gt;
-&lt;tbody valign="top"&gt;
-&lt;tr&gt;&lt;td&gt;word&lt;/td&gt;
-&lt;td&gt;Word&lt;/td&gt;
-&lt;td&gt;The review, formatted for Word.&lt;/td&gt;
+&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;&lt;p&gt;word&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;Word&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;The review, formatted for Word.&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;excel&lt;/td&gt;
-&lt;td&gt;Excel&lt;/td&gt;
-&lt;td&gt;Ratings table.&lt;/td&gt;
+&lt;tr&gt;&lt;td&gt;&lt;p&gt;excel&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;Excel&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;Ratings table.&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;Excel-2&lt;/td&gt;
-&lt;td&gt;Excel&lt;/td&gt;
-&lt;td&gt;Sample “games to buy” document.&lt;/td&gt;
+&lt;tr&gt;&lt;td&gt;&lt;p&gt;Excel-2&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;Excel&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;Sample “games to buy” document.&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;excel-2&lt;/td&gt;
-&lt;td&gt;PowerPoint&lt;/td&gt;
-&lt;td&gt;“Why Office 15 sucks” presentation.&lt;/td&gt;
+&lt;tr&gt;&lt;td&gt;&lt;p&gt;excel-2&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;PowerPoint&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;“Why Office 15 sucks” presentation.&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;onenote-*&lt;/td&gt;
-&lt;td&gt;OneNote&lt;/td&gt;
-&lt;td&gt;Sample notes.&lt;/td&gt;
+&lt;tr&gt;&lt;td&gt;&lt;p&gt;onenote-*&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;OneNote&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;Sample notes.&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;access&lt;/td&gt;
-&lt;td&gt;Access&lt;/td&gt;
-&lt;td&gt;Ratings.&lt;/td&gt;
+&lt;tr&gt;&lt;td&gt;&lt;p&gt;access&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;Access&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;Ratings.&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;publisher&lt;/td&gt;
-&lt;td&gt;Publisher&lt;/td&gt;
-&lt;td&gt;A sample document, showcasing Gabriola.&lt;/td&gt;
+&lt;tr&gt;&lt;td&gt;&lt;p&gt;publisher&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;Publisher&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;A sample document, showcasing Gabriola.&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
@@ -880,54 +905,54 @@ examples, which are the documents used in this review.&lt;/p&gt;
 available.&lt;/p&gt;
 &lt;div class="section" id="ratings"&gt;
 &lt;h3&gt;Ratings&lt;/h3&gt;
-&lt;table border="1" class="table table-striped docutils"&gt;
+&lt;table class="table table-striped"&gt;
 &lt;colgroup&gt;
-&lt;col width="17%"&gt;
-&lt;col width="12%"&gt;
-&lt;col width="71%"&gt;
+&lt;col style="width: 17%"&gt;
+&lt;col style="width: 12%"&gt;
+&lt;col style="width: 71%"&gt;
 &lt;/colgroup&gt;
-&lt;thead valign="bottom"&gt;
-&lt;tr&gt;&lt;th class="head"&gt;Component&lt;/th&gt;
-&lt;th class="head"&gt;Rating&lt;/th&gt;
-&lt;th class="head"&gt;Comment&lt;/th&gt;
+&lt;thead&gt;
+&lt;tr&gt;&lt;th class="head"&gt;&lt;p&gt;Component&lt;/p&gt;&lt;/th&gt;
+&lt;th class="head"&gt;&lt;p&gt;Rating&lt;/p&gt;&lt;/th&gt;
+&lt;th class="head"&gt;&lt;p&gt;Comment&lt;/p&gt;&lt;/th&gt;
 &lt;/tr&gt;
 &lt;/thead&gt;
-&lt;tbody valign="top"&gt;
-&lt;tr&gt;&lt;td&gt;Office 15&lt;/td&gt;
-&lt;td&gt;3&lt;/td&gt;
-&lt;td&gt;Metro is already bad, fake Metro is even worse.&lt;/td&gt;
+&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;&lt;p&gt;Office 15&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;3&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;Metro is already bad, fake Metro is even worse.&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;Word&lt;/td&gt;
-&lt;td&gt;7&lt;/td&gt;
-&lt;td&gt;Meh.&lt;/td&gt;
+&lt;tr&gt;&lt;td&gt;&lt;p&gt;Word&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;7&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;Meh.&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;Excel&lt;/td&gt;
-&lt;td&gt;8&lt;/td&gt;
-&lt;td&gt;The Quick Analysis mode fails sometimes.&lt;/td&gt;
+&lt;tr&gt;&lt;td&gt;&lt;p&gt;Excel&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;8&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;The Quick Analysis mode fails sometimes.&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;PowerPoint&lt;/td&gt;
-&lt;td&gt;5&lt;/td&gt;
-&lt;td&gt;Don’t like several features.&lt;/td&gt;
+&lt;tr&gt;&lt;td&gt;&lt;p&gt;PowerPoint&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;5&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;Don’t like several features.&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;OneNote&lt;/td&gt;
-&lt;td&gt;10&lt;/td&gt;
-&lt;td&gt;A brilliant app.&lt;/td&gt;
+&lt;tr&gt;&lt;td&gt;&lt;p&gt;OneNote&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;10&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;A brilliant app.&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;Outlook&lt;/td&gt;
-&lt;td&gt;6&lt;/td&gt;
-&lt;td&gt;I do not like offline mail clients.&lt;/td&gt;
+&lt;tr&gt;&lt;td&gt;&lt;p&gt;Outlook&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;6&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;I do not like offline mail clients.&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;Access&lt;/td&gt;
-&lt;td&gt;4&lt;/td&gt;
-&lt;td&gt;A lot of changes since 2003.&lt;/td&gt;
+&lt;tr&gt;&lt;td&gt;&lt;p&gt;Access&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;4&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;A lot of changes since 2003.&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;Publisher&lt;/td&gt;
-&lt;td&gt;3&lt;/td&gt;
-&lt;td&gt;Not the best app for doing such stuff.&lt;/td&gt;
+&lt;tr&gt;&lt;td&gt;&lt;p&gt;Publisher&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;3&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;Not the best app for doing such stuff.&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;Average&lt;/td&gt;
-&lt;td&gt;6.125&lt;/td&gt;
-&lt;td&gt;A fair rating.&lt;/td&gt;
+&lt;tr&gt;&lt;td&gt;&lt;p&gt;Average&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;6.125&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;A fair rating.&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
@@ -946,7 +971,7 @@ figure { width: 200px; min-height: 200px; float: right; text-align: center;}
 &lt;/style&gt;&lt;!-- TEASER_END --&gt;
 &lt;div class="section" id="deja-vu-time-setup"&gt;
 &lt;h2&gt;Déjà vu time: Setup.&lt;/h2&gt;
-&lt;p&gt;Another offer of an &lt;tt class="docutils literal"&gt;.exe&lt;/tt&gt;.  I did not accept it.  Downloaded the ISO, it was quite fast.&lt;/p&gt;
+&lt;p&gt;Another offer of an &lt;code class="docutils literal"&gt;.exe&lt;/code&gt;.  I did not accept it.  Downloaded the ISO, it was quite fast.&lt;/p&gt;
 &lt;p&gt;Anyways, I created a new VDI and ran the ISO.  I was greeted by a screen with the Windows word on it and a throbber (not depicted on the screen, shot it too fast).  Notice that the word doesn’t look quite right.  It is made for 16:9 screens: when you do use a 16:9 screen (depicted in the image gallery), it is stretched, what gets its proper look back.&lt;/p&gt;
 &lt;p&gt;The setup program hasn’t changed too much.  But in the Repair section, the fonts look a tiny bit different and CMD’s scrollbar is now Metro-ish.  And Microsoft changed the setup icon again: now it's an arrow pointing to a screen.  Or: a tablet.&lt;/p&gt;
 &lt;p&gt;On the product key screen, I discovered that the right-click menu style is from Office XP or Windows Whistler betas, released eleven years ago.  And I am dead serious.  Just look at it.  Apparently, Microsoft loves going back to the past: in terms of movement, Metro apps are even more limited than Windows 1.0.  Especially when you’re a few pixels short from the “proper” screen resolutions according to Microsoft.  And when you need more than ⅓ or ⅔ of your screen for your apps.&lt;/p&gt;
@@ -1028,7 +1053,7 @@ figure { width: 200px; min-height: 200px; float: right; text-align: center;}
 &lt;figcaption&gt;Most of the new UI elements on one screen.&lt;/figcaption&gt;
 &lt;/figure&gt;&lt;p&gt;There isn’t, unfortunately, too much to showcase in terms of apps.&lt;/p&gt;
 &lt;p&gt;But!  In terms of OS behavior, I found a few changes.  I also noticed that it takes AGES to shut the system down or to sign into the system.&lt;/p&gt;
-&lt;p&gt;First of, I wanted to play my music in the Music app.  I could’ve just clicked on something and it would play, but I wanted to have it locally forever and I wanted my playlist to work.  I wanted to play the Portal 2 OST, which is in my SkyDrive.  The only option I found was to select a file and then use &lt;em&gt;Save local&lt;/em&gt;.  I could also select more than one.  I found an easier and faster solution: downloading a &lt;tt class="docutils literal"&gt;.zip&lt;/tt&gt; from skydrive.live.com.  But later, I decided to actually try this &lt;em&gt;Save local&lt;/em&gt; thing.  It did its job right.&lt;/p&gt;
+&lt;p&gt;First of, I wanted to play my music in the Music app.  I could’ve just clicked on something and it would play, but I wanted to have it locally forever and I wanted my playlist to work.  I wanted to play the Portal 2 OST, which is in my SkyDrive.  The only option I found was to select a file and then use &lt;em&gt;Save local&lt;/em&gt;.  I could also select more than one.  I found an easier and faster solution: downloading a &lt;code class="docutils literal"&gt;.zip&lt;/code&gt; from skydrive.live.com.  But later, I decided to actually try this &lt;em&gt;Save local&lt;/em&gt; thing.  It did its job right.&lt;/p&gt;
 &lt;p&gt;The first time I tried to play a .m3u file, I got a Metro-style window asking me whether it should use Music or Windows Media Player. (screenshots depict “Open with”.)  I do not like that.  Mixing two environments went too far here.&lt;/p&gt;
 &lt;p&gt;Then, I created a .bmp file on my desktop.  It had the icon of Photos from Metro.  When it opened, I got a notification: “You have new apps that can open this type of file.”  Clicked and I got yet another window of this style.&lt;/p&gt;
 &lt;figure&gt;
@@ -1055,11 +1080,11 @@ figure { width: 200px; min-height: 200px; float: right; text-align: center;}
 &lt;p&gt;This thing is gonna have five editions.  But you can’t get exactly all of them.&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;ul class="simple"&gt;
-&lt;li&gt;&lt;strong&gt;Windows 8.&lt;/strong&gt;  The standard version.  Nothing specific.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Windows 8 Pro.&lt;/strong&gt;  With some more advanced features.  Meh.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Windows 8 Pro + Media Center.&lt;/strong&gt;  In order to play DVDs or use Media Center, you will need to pay.  And if you bought regular Windows 8, you need to upgrade to Pro+WMC to use WMC capabilities.  But if you only want the “advanced” features of Pro, you need to pay for the Media Center.  No way to skip that.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Windows 8 Enterprise.&lt;/strong&gt;  Obvious, expensive, can’t get your hands on it.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Windows RT.&lt;/strong&gt;  WHAT THE FUCK IS THIS, may you ask?  The answer is easy.  ARM version of Windows 8.  Without any desktop apps, except Office (free with your DEVICE with RT, as you &lt;em&gt;can’t buy this in stores.&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Windows 8.&lt;/strong&gt;  The standard version.  Nothing specific.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Windows 8 Pro.&lt;/strong&gt;  With some more advanced features.  Meh.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Windows 8 Pro + Media Center.&lt;/strong&gt;  In order to play DVDs or use Media Center, you will need to pay.  And if you bought regular Windows 8, you need to upgrade to Pro+WMC to use WMC capabilities.  But if you only want the “advanced” features of Pro, you need to pay for the Media Center.  No way to skip that.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Windows 8 Enterprise.&lt;/strong&gt;  Obvious, expensive, can’t get your hands on it.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Windows RT.&lt;/strong&gt;  WHAT THE FUCK IS THIS, may you ask?  The answer is easy.  ARM version of Windows 8.  Without any desktop apps, except Office (free with your DEVICE with RT, as you &lt;em&gt;can’t buy this in stores.&lt;/em&gt;&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;You can test the Pro + Media Center version now.  Sure, we’ll do that.  Entering the key provided by Microsoft, it works.  Reboot.  Adding features in logonui.  Reboot.  Long wait.  Preparing to configure Windows.  And I finally get my lock screen.  And a WMC icon appeared at the end of my Start screen.  I click on it and I am informed that I’m all done and my PC is ready to go.  Well, I should see that message AFTER THE BOOT, not when I start the Desktop app.  Very bad design.&lt;/p&gt;
@@ -1083,78 +1108,78 @@ figure { width: 200px; min-height: 200px; float: right; text-align: center;}
 &lt;p&gt;I also had a better idea: upload something to my SkyDrive.  I couldn’t create a new directory in the SkyDrive app.  Are you serious?&lt;/p&gt;
 &lt;p&gt;This concludes my review of Windows 8 Release Preview.  I suggest looking at the gallery.&lt;/p&gt;
 &lt;strong style="font-size: 3em;"&gt;&lt;a href="http://kwpolska.tk/w8rpgal/" title="Windows 8 RP Gallery"&gt;Windows 8 RP Gallery&lt;/a&gt;&lt;/strong&gt;&lt;p&gt;If you do care about weird numbers and ratings, here you go:&lt;/p&gt;
-&lt;table border="1" class="table table-striped docutils"&gt;
+&lt;table class="table table-striped"&gt;
 &lt;colgroup&gt;
-&lt;col width="33%"&gt;
-&lt;col width="7%"&gt;
-&lt;col width="60%"&gt;
+&lt;col style="width: 33%"&gt;
+&lt;col style="width: 7%"&gt;
+&lt;col style="width: 60%"&gt;
 &lt;/colgroup&gt;
-&lt;thead valign="bottom"&gt;
-&lt;tr&gt;&lt;th class="head"&gt;Component&lt;/th&gt;
-&lt;th class="head"&gt;Rating&lt;/th&gt;
-&lt;th class="head"&gt;Comment&lt;/th&gt;
+&lt;thead&gt;
+&lt;tr&gt;&lt;th class="head"&gt;&lt;p&gt;Component&lt;/p&gt;&lt;/th&gt;
+&lt;th class="head"&gt;&lt;p&gt;Rating&lt;/p&gt;&lt;/th&gt;
+&lt;th class="head"&gt;&lt;p&gt;Comment&lt;/p&gt;&lt;/th&gt;
 &lt;/tr&gt;
 &lt;/thead&gt;
-&lt;tbody valign="top"&gt;
-&lt;tr&gt;&lt;td&gt;Mail, People, Messaging, Calendar&lt;/td&gt;
-&lt;td&gt;3&lt;/td&gt;
-&lt;td&gt;Quite nice, love the integration.&lt;/td&gt;
+&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;&lt;p&gt;Mail, People, Messaging, Calendar&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;3&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;Quite nice, love the integration.&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;Photos&lt;/td&gt;
-&lt;td&gt;5&lt;/td&gt;
-&lt;td&gt;Good photo management.&lt;/td&gt;
+&lt;tr&gt;&lt;td&gt;&lt;p&gt;Photos&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;5&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;Good photo management.&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;Videos, Music, Xbox LIVE Games&lt;/td&gt;
-&lt;td&gt;8&lt;/td&gt;
-&lt;td&gt;Awesome apps for entertaining yourself.&lt;/td&gt;
+&lt;tr&gt;&lt;td&gt;&lt;p&gt;Videos, Music, Xbox LIVE Games&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;8&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;Awesome apps for entertaining yourself.&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;Internet Explorer 10 (Metro)&lt;/td&gt;
-&lt;td&gt;4&lt;/td&gt;
-&lt;td&gt;A nice browser, but Metro isn’t good for it.&lt;/td&gt;
+&lt;tr&gt;&lt;td&gt;&lt;p&gt;Internet Explorer 10 (Metro)&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;4&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;A nice browser, but Metro isn’t good for it.&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;Store&lt;/td&gt;
-&lt;td&gt;4&lt;/td&gt;
-&lt;td&gt;Doesn’t load the pages sometimes, slow overall.&lt;/td&gt;
+&lt;tr&gt;&lt;td&gt;&lt;p&gt;Store&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;4&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;Doesn’t load the pages sometimes, slow overall.&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;Maps&lt;/td&gt;
-&lt;td&gt;3&lt;/td&gt;
-&lt;td&gt;No mouse wheel zoom.  Uses Bing Maps.&lt;/td&gt;
+&lt;tr&gt;&lt;td&gt;&lt;p&gt;Maps&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;3&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;No mouse wheel zoom.  Uses Bing Maps.&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;SkyDrive&lt;/td&gt;
-&lt;td&gt;8&lt;/td&gt;
-&lt;td&gt;An awesome app.  But it doesn’t offer anything on the Desktop.&lt;/td&gt;
+&lt;tr&gt;&lt;td&gt;&lt;p&gt;SkyDrive&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;8&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;An awesome app.  But it doesn’t offer anything on the Desktop.&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;Camera&lt;/td&gt;
-&lt;td&gt;0&lt;/td&gt;
-&lt;td&gt;Doesn’t work.&lt;/td&gt;
+&lt;tr&gt;&lt;td&gt;&lt;p&gt;Camera&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;0&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;Doesn’t work.&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;News, Sports, Travel, Finance&lt;/td&gt;
-&lt;td&gt;5&lt;/td&gt;
-&lt;td&gt;Quite nice apps.  Bing-based, don’t like that.&lt;/td&gt;
+&lt;tr&gt;&lt;td&gt;&lt;p&gt;News, Sports, Travel, Finance&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;5&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;Quite nice apps.  Bing-based, don’t like that.&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;Explorer Shell&lt;/td&gt;
-&lt;td&gt;1&lt;/td&gt;
-&lt;td&gt;Ribbons don’t work.  Same goes for no Start button.&lt;/td&gt;
+&lt;tr&gt;&lt;td&gt;&lt;p&gt;Explorer Shell&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;1&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;Ribbons don’t work.  Same goes for no Start button.&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;Internet Explorer 10 (Desktop)&lt;/td&gt;
-&lt;td&gt;8&lt;/td&gt;
-&lt;td&gt;A nice browser with a good UI.  Chrome is better, though.&lt;/td&gt;
+&lt;tr&gt;&lt;td&gt;&lt;p&gt;Internet Explorer 10 (Desktop)&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;8&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;A nice browser with a good UI.  Chrome is better, though.&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;Visual Style&lt;/td&gt;
-&lt;td&gt;2&lt;/td&gt;
-&lt;td&gt;Are we in Windows Whistler?&lt;/td&gt;
+&lt;tr&gt;&lt;td&gt;&lt;p&gt;Visual Style&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;2&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;Are we in Windows Whistler?&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;Metro&lt;/td&gt;
-&lt;td&gt;4&lt;/td&gt;
-&lt;td&gt;Do not like that concept.&lt;/td&gt;
+&lt;tr&gt;&lt;td&gt;&lt;p&gt;Metro&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;4&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;Do not like that concept.&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;Desktop&lt;/td&gt;
-&lt;td&gt;3&lt;/td&gt;
-&lt;td&gt;They broke the desktop.&lt;/td&gt;
+&lt;tr&gt;&lt;td&gt;&lt;p&gt;Desktop&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;3&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;They broke the desktop.&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;Windows 8 RP overall&lt;/td&gt;
-&lt;td&gt;4.75&lt;/td&gt;
-&lt;td&gt;A fair rating, and very close to the ratings average.&lt;/td&gt;
+&lt;tr&gt;&lt;td&gt;&lt;p&gt;Windows 8 RP overall&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;4.75&lt;/p&gt;&lt;/td&gt;
+&lt;td&gt;&lt;p&gt;A fair rating, and very close to the ratings average.&lt;/p&gt;&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
@@ -1175,7 +1200,7 @@ figure { width: 200px; min-height: 200px; float: right; text-align: center;}
 &lt;figure&gt;
 &lt;a href="http://kwpolska.tk/blog-content/galleries/w8cp/img/ss001.png" title="The Setup wizard (for older Windows versions)." class="fancybox" rel="w8reviewfbox"&gt;&lt;img src="http://kwpolska.tk/blog-content/galleries/w8cp/img/t/ss001.png" alt="The Setup wizard (for older Windows versions)." title="The Setup wizard (for older Windows versions)."&gt;&lt;/a&gt;
 &lt;figcaption&gt;The Setup wizard (for older Windows versions).&lt;/figcaption&gt;
-&lt;/figure&gt;&lt;p&gt;Windows 8 was up at &lt;a class="reference external" href="http://windows.microsoft.com/en-US/windows-8/consumer-preview"&gt;Microsoft’s site&lt;/a&gt;, so I got there.  I was offered an &lt;tt class="docutils literal"&gt;.exe&lt;/tt&gt;.  I ran it and I got the Upgrade Advisor from Windows 7, only modified.  It started with a splash screen with the terrible new &lt;a class="reference external" href="http://kwpolska.tk/blog/2012/02/25/new-windows-logo-yet-another-stupid-idea/"&gt;logo&lt;/a&gt;, and then I got the Setup window.  Fun (not so) fact: it used the Windows Update icon, only without the logo.  Then, I got my product key.  It was not the end of the fun: it wished to download it on its own, followed by updates.  Normally, I’d get angry and throw it out of the window (read: kill the app and destroy the file), but I promised to do a review here and I had to keep it.  Then, I noticed I could get an ISO.  Beautiful.  Why wasn’t the link a bit more visible?  There we go, I don’t need the key I got, we can happily kill this piece of crap (and it didn't show me the progress on the taskbar button, like Chrome would do), I’ll grab the &lt;a class="reference external" href="http://windows.microsoft.com/en-US/windows-8/iso"&gt;ISO&lt;/a&gt;.&lt;/p&gt;
+&lt;/figure&gt;&lt;p&gt;Windows 8 was up at &lt;a class="reference external" href="http://windows.microsoft.com/en-US/windows-8/consumer-preview"&gt;Microsoft’s site&lt;/a&gt;, so I got there.  I was offered an &lt;code class="docutils literal"&gt;.exe&lt;/code&gt;.  I ran it and I got the Upgrade Advisor from Windows 7, only modified.  It started with a splash screen with the terrible new &lt;a class="reference external" href="http://kwpolska.tk/blog/2012/02/25/new-windows-logo-yet-another-stupid-idea/"&gt;logo&lt;/a&gt;, and then I got the Setup window.  Fun (not so) fact: it used the Windows Update icon, only without the logo.  Then, I got my product key.  It was not the end of the fun: it wished to download it on its own, followed by updates.  Normally, I’d get angry and throw it out of the window (read: kill the app and destroy the file), but I promised to do a review here and I had to keep it.  Then, I noticed I could get an ISO.  Beautiful.  Why wasn’t the link a bit more visible?  There we go, I don’t need the key I got, we can happily kill this piece of crap (and it didn't show me the progress on the taskbar button, like Chrome would do), I’ll grab the &lt;a class="reference external" href="http://windows.microsoft.com/en-US/windows-8/iso"&gt;ISO&lt;/a&gt;.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="time-to-install"&gt;
 &lt;h2&gt;Time To Install.&lt;/h2&gt;

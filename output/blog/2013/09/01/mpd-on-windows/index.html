@@ -118,13 +118,13 @@ was MPD, the <a class="reference external" href="http://musicpd.org/">Music Play
 </div></div>
 <div class="section" id="step-1-get-mpd-and-mpc">
 <h2>Step 1: get MPD and MPC<a href="#step-1-get-mpd-and-mpc" class="headerlink" title="Permalink to this heading">¶</a></h2>
-<p>Download <a class="reference external" href="http://musicpd.org/download/win32/">MPD</a> (<tt class="docutils literal"><span class="pre">mpd-x.y.z-win32.zip</span></tt>, replacing <tt class="docutils literal">x.y.z</tt> with whatever is the current available version of this file) and <a class="reference external" href="http://musicpd.org/download/mpc/">MPC</a> (<tt class="docutils literal"><span class="pre">mpc-x.y-win32-zip</span></tt>).  I suggest using
-<tt class="docutils literal"><span class="pre">C:\mpd</span></tt> as your base path.  This post assumes you actually used this
+<p>Download <a class="reference external" href="http://musicpd.org/download/win32/">MPD</a> (<code class="docutils literal"><span class="pre">mpd-x.y.z-win32.zip</span></code>, replacing <code class="docutils literal">x.y.z</code> with whatever is the current available version of this file) and <a class="reference external" href="http://musicpd.org/download/mpc/">MPC</a> (<code class="docutils literal"><span class="pre">mpc-x.y-win32-zip</span></code>).  I suggest using
+<code class="docutils literal"><span class="pre">C:\mpd</span></code> as your base path.  This post assumes you actually used this
 value.</p>
-<p>Put everything from the <tt class="docutils literal"><span class="pre">/mpd-x.y.z-win32/bin/</span></tt> directory of the
-<tt class="docutils literal"><span class="pre">mpd-x.y.z-win32.zip</span></tt> archive into your base path (<tt class="docutils literal"><span class="pre">C:\mpd</span></tt>).  From
-the <tt class="docutils literal"><span class="pre">mpc-x.y-win32.zip</span></tt> archive, take <tt class="docutils literal">mpc.exe</tt> and
-<tt class="docutils literal"><span class="pre">libmpdclient-2.dll</span></tt> and put them there.</p>
+<p>Put everything from the <code class="docutils literal"><span class="pre">/mpd-x.y.z-win32/bin/</span></code> directory of the
+<code class="docutils literal"><span class="pre">mpd-x.y.z-win32.zip</span></code> archive into your base path (<code class="docutils literal"><span class="pre">C:\mpd</span></code>).  From
+the <code class="docutils literal"><span class="pre">mpc-x.y-win32.zip</span></code> archive, take <code class="docutils literal">mpc.exe</code> and
+<code class="docutils literal"><span class="pre">libmpdclient-2.dll</span></code> and put them there.</p>
 </div>
 <div class="section" id="step-1-5-optional-but-recommended-get-gmpc">
 <h2>Step 1.5 (optional, but recommended): get GMPC<a href="#step-1-5-optional-but-recommended-get-gmpc" class="headerlink" title="Permalink to this heading">¶</a></h2>
@@ -135,44 +135,38 @@ straightforward, so I’ll leave the details out.</p>
 <div class="section" id="step-2-create-a-config-file">
 <h2>Step 2: create a config file<a href="#step-2-create-a-config-file" class="headerlink" title="Permalink to this heading">¶</a></h2>
 <p>You need to create a configuration file.  A sample one is included in
-<tt class="docutils literal"><span class="pre">/mpd-x.y.z-win32/doc/mpdconf.sample</span></tt>.  Use the <tt class="docutils literal">winmm</tt> output type.</p>
+<code class="docutils literal"><span class="pre">/mpd-x.y.z-win32/doc/mpdconf.sample</span></code>.  Use the <code class="docutils literal">winmm</code> output type.</p>
 <p><strong>Warning:</strong> Windows Notepad will not work, because it does not understand
-Unix-style line endings (<tt class="docutils literal">\n</tt> instead of <tt class="docutils literal">\r\n</tt>).</p>
-<p>For <tt class="docutils literal">db_file</tt> and <tt class="docutils literal">log_file</tt>, I recommend a file in <tt class="docutils literal"><span class="pre">C:\mpd\data\</span></tt>.
-I also recommend saving your config as <tt class="docutils literal"><span class="pre">C:\mpd\data\mpd.conf</span></tt> (in fact,
+Unix-style line endings (<code class="docutils literal">\n</code> instead of <code class="docutils literal">\r\n</code>).</p>
+<p>For <code class="docutils literal">db_file</code> and <code class="docutils literal">log_file</code>, I recommend a file in <code class="docutils literal"><span class="pre">C:\mpd\data\</span></code>.
+I also recommend saving your config as <code class="docutils literal"><span class="pre">C:\mpd\data\mpd.conf</span></code> (in fact,
 this is yet another assumption we make in this guide)</p>
 <div class="section" id="multi-boot-corner-keep-parts-of-the-config-the-same">
 <h3>Multi Boot Corner: keep parts of the config the same<a href="#multi-boot-corner-keep-parts-of-the-config-the-same" class="headerlink" title="Permalink to this heading">¶</a></h3>
 <p>Because I have a dual-boot system, there are some directions for
 multi-boot users.</p>
-<p>Your <tt class="docutils literal">music_directory</tt>, <tt class="docutils literal">playlist_directory</tt> and <tt class="docutils literal">state_file</tt> <em>must</em> be the same on all the systems in your multi-boot environment.  It is recommended to use the same <tt class="docutils literal">db_file</tt>.</p>
+<p>Your <code class="docutils literal">music_directory</code>, <code class="docutils literal">playlist_directory</code> and <code class="docutils literal">state_file</code> <em>must</em> be the same on all the systems in your multi-boot environment.  It is recommended to use the same <code class="docutils literal">db_file</code>.</p>
 <p>Your audio outputs must have the same names.</p>
 </div>
 </div>
 <div class="section" id="step-3-test-your-configuration">
 <h2>Step 3: test your configuration<a href="#step-3-test-your-configuration" class="headerlink" title="Permalink to this heading">¶</a></h2>
 <p>Open up two Command Prompt windows.  In the first one, run:</p>
-<pre class="literal-block">
-cd C:\mpd
-mpd data\mpd.conf
-</pre>
+<pre class="literal-block">cd C:\mpd
+mpd data\mpd.conf</pre>
 <p>If you see this message:</p>
-<pre class="literal-block">
-Failed to load database: Failed to open database file "&lt;name&gt;": No such file or directory
-</pre>
+<pre class="literal-block">Failed to load database: Failed to open database file "&lt;name&gt;": No such file or directory</pre>
 <p>then you can ignore it.  If you see another message, fix whatever it
-states.  You may also use <tt class="docutils literal"><span class="pre">--stdout</span></tt> or <tt class="docutils literal"><span class="pre">-v</span></tt> to get more output
+states.  You may also use <code class="docutils literal"><span class="pre">--stdout</span></code> or <code class="docutils literal"><span class="pre">-v</span></code> to get more output
 messages.</p>
 <div class="section" id="multi-boot-path">
 <h3>Multi Boot path<a href="#multi-boot-path" class="headerlink" title="Permalink to this heading">¶</a></h3>
 <p>If you followed the Multi Boot instructions correctly, you might be
 hearing music already.  If you do not, use your other Command Prompt window and
 run:</p>
-<pre class="literal-block">
-cd C:\mpd
-mpc play
-</pre>
-<p>If it outputs the name of a song, a <tt class="docutils literal">[playing]</tt> line, all is well (if you
+<pre class="literal-block">cd C:\mpd
+mpc play</pre>
+<p>If it outputs the name of a song, a <code class="docutils literal">[playing]</code> line, all is well (if you
 cannot hear music, unmute your audio).</p>
 <p>If you do not have a mpd database yet, use the <em>Single path</em>.</p>
 <p><strong>If MPD works, press Ctrl+C in the window where you ran ``mpd
@@ -181,16 +175,14 @@ datampd.conf.``</strong></p>
 <div class="section" id="single-path">
 <h3>Single path<a href="#single-path" class="headerlink" title="Permalink to this heading">¶</a></h3>
 <p>In the other Command Prompt window, run:</p>
-<pre class="literal-block">
-cd C:\mpd
+<pre class="literal-block">cd C:\mpd
 mpc update
 mpc add "FILENAME"
-mpc play
-</pre>
+mpc play</pre>
 <p>(FILENAME should be a name of a file in your music library.  Make sure to
 keep the quotes.)</p>
 <p>And now you should hear music.  If you do not, try to unmute, then read
-the output of <tt class="docutils literal">mpc</tt> and try to fix it.</p>
+the output of <code class="docutils literal">mpc</code> and try to fix it.</p>
 <p><strong>If MPD works, press Ctrl+C in the window where you ran ``mpd
 datampd.conf.``</strong></p>
 </div>
@@ -212,26 +204,21 @@ very easy to do.</p>
 Prompt</em> in the Start Menu/on the Start Screen and choose <em>Run as administrator</em>).</p>
 <p>In that window, run one very easy command (make sure to copy-paste this
 exactly!):</p>
-<pre class="literal-block">
-sc create mpd binPath= "c:\mpd\mpd.exe c:\mpd\data\mpd.conf"
-</pre>
+<pre class="literal-block">sc create mpd binPath= "c:\mpd\mpd.exe c:\mpd\data\mpd.conf"</pre>
 <p>If it said:</p>
 <ul class="simple">
-<li>
-<tt class="docutils literal">[SC] CreateService SUCCESS</tt>, congratulations — you are almost done!  Skip down to <em>Service configuration.</em>
-</li>
-<li>
-<tt class="docutils literal">[SC] OpenSCManager FAILED 5: Access is denied.</tt>, you need an
-<strong>Administrator</strong> Command Prompt.</li>
-<li>something else, check your spelling or Google the error.</li>
+<li><p><code class="docutils literal">[SC] CreateService SUCCESS</code>, congratulations — you are almost done!  Skip down to <em>Service configuration.</em></p></li>
+<li><p><code class="docutils literal">[SC] OpenSCManager FAILED 5: Access is denied.</code>, you need an
+<strong>Administrator</strong> Command Prompt.</p></li>
+<li><p>something else, check your spelling or Google the error.</p></li>
 </ul>
 <div class="section" id="service-configuration">
 <h3>Service configuration<a href="#service-configuration" class="headerlink" title="Permalink to this heading">¶</a></h3>
 <p>That is the easiest part of this guide.</p>
 <p>Start the <em>Services</em> console.  You can get to it by typing
-<tt class="docutils literal">services.msc</tt> into the Start Menu/Screen search (<em>Run</em> for XP or
+<code class="docutils literal">services.msc</code> into the Start Menu/Screen search (<em>Run</em> for XP or
 older).</p>
-<p>In the tool, find the <tt class="docutils literal">mpd</tt> service.  Go to the <em>Log On</em> tab, choose
+<p>In the tool, find the <code class="docutils literal">mpd</code> service.  Go to the <em>Log On</em> tab, choose
 <em>This account:</em> and enter your credentials there.  Hit <em>Apply</em> and go to
 the <em>General</em> tab, on which you should choose the <em>Startup type</em> to be
 <em>Automatic (Delayed Start)</em>.  Finish by pressing <em>Start</em>.  MPD should be
@@ -242,9 +229,9 @@ password in the <em>Services</em> console as well!</p>
 </div>
 <div class="section" id="just-in-case-uninstalling-the-service">
 <h3>Just in case: uninstalling the service<a href="#just-in-case-uninstalling-the-service" class="headerlink" title="Permalink to this heading">¶</a></h3>
-<p>First off, stop the service (in the Services console or through <tt class="docutils literal">sc stop
-mpd</tt> in an administrator command prompt).</p>
-<p>Then, run <tt class="docutils literal">sc delete mpd</tt>.</p>
+<p>First off, stop the service (in the Services console or through <code class="docutils literal">sc stop
+mpd</code> in an administrator command prompt).</p>
+<p>Then, run <code class="docutils literal">sc delete mpd</code>.</p>
 </div>
 </div>
 </div>

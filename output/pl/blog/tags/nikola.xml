@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chris Warrick (Posty o Nikola)</title><link>https://chriswarrick.com/</link><description></description><atom:link href="https://chriswarrick.com/pl/blog/tags/nikola.xml" rel="self" type="application/rss+xml"></atom:link><language>pl</language><lastBuildDate>Fri, 28 Feb 2020 17:41:21 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Structuring and automating a Python project with the Python Project Template</title><link>https://chriswarrick.com/pl/blog/2017/04/09/python-project-template-structure-and-automation/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;To create a project that other people can use and contribute to, you need to
+<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chris Warrick (Posty o Nikola)</title><link>https://chriswarrick.com/</link><description></description><atom:link href="https://chriswarrick.com/pl/blog/tags/nikola.xml" rel="self" type="application/rss+xml"></atom:link><language>pl</language><lastBuildDate>Thu, 19 Mar 2020 10:29:49 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Structuring and automating a Python project with the Python Project Template</title><link>https://chriswarrick.com/pl/blog/2017/04/09/python-project-template-structure-and-automation/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;To create a project that other people can use and contribute to, you need to
 follow a specific directory structure. Moreover, releasing a new version should
 be as simple and painless as possible. For my projects, I use a template that
 has the structure already in place, and comes with automation for almost every
@@ -7,25 +7,25 @@ part of a release.&lt;/p&gt;
 &lt;!-- TEASER_END --&gt;
 &lt;p&gt;The &lt;a class="reference external" href="https://github.com/Kwpolska/python-project-template"&gt;Python Project Template&lt;/a&gt; is my approach to this. It comes with a good (IMO) structure and automation.&lt;/p&gt;
 &lt;p&gt;What does it include? A whole lot of things. Documentation, Sphinx
-configuration, a simple test suite, a &lt;tt class="docutils literal"&gt;setup.py&lt;/tt&gt; file, some AUR stuff, and
-perhaps the most important part — the &lt;tt class="docutils literal"&gt;release&lt;/tt&gt; script. It can automate a lot
+configuration, a simple test suite, a &lt;code class="docutils literal"&gt;setup.py&lt;/code&gt; file, some AUR stuff, and
+perhaps the most important part — the &lt;code class="docutils literal"&gt;release&lt;/code&gt; script. It can automate a lot
 of tasks that are part of a release.&lt;/p&gt;
 &lt;p&gt;You see, releasing a package is error-prone. There are a lot of things that can go wrong:&lt;/p&gt;
 &lt;ul class="simple"&gt;
-&lt;li&gt;Version numbers. They may appear in code comments, Sphinx configuration,
+&lt;li&gt;&lt;p&gt;Version numbers. They may appear in code comments, Sphinx configuration,
 README files and documentation, and setup.py. Some people claim to have
 “solutions” for this. Most of those solutions don’t work right — either they
-import a file from the project (which may break if &lt;tt class="docutils literal"&gt;__init__.py&lt;/tt&gt; is too
+import a file from the project (which may break if &lt;code class="docutils literal"&gt;__init__.py&lt;/code&gt; is too
 magical), read a file from that place (which might not get included
 properly), or use some setuptools extension to get the version from VCS or
-whatever (which needs to be installed before the package). Using &lt;tt class="docutils literal"&gt;sed&lt;/tt&gt; to
-fix the version numbers is much simpler.&lt;/li&gt;
-&lt;li&gt;Forgetting about changelogs.&lt;/li&gt;
-&lt;li&gt;Not updating translations or other important files.&lt;/li&gt;
+whatever (which needs to be installed before the package). Using &lt;code class="docutils literal"&gt;sed&lt;/code&gt; to
+fix the version numbers is much simpler.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Forgetting about changelogs.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Not updating translations or other important files.&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;We’ve had quite a few botched releases in the &lt;a class="reference external" href="https://getnikola.com/"&gt;Nikola&lt;/a&gt; project. I wrote a
 &lt;a class="reference external" href="http://getnikola.github.io/releng/checklist.html"&gt;checklist&lt;/a&gt; to prevent things like those. You may notice that the most
-prominent step is to run a &lt;tt class="docutils literal"&gt;release&lt;/tt&gt; script. This step replaced 21 others —
+prominent step is to run a &lt;code class="docutils literal"&gt;release&lt;/code&gt; script. This step replaced 21 others —
 now the checklist only talks about writing announcements, sending e-mails,
 updating the website, and doing some GitHub stuff that is not yet automated.&lt;/p&gt;
 &lt;p&gt;The template promotes a &lt;em&gt;release early, release often&lt;/em&gt; workflow: since making a
@@ -35,37 +35,39 @@ automated, and it might as well be possible in yours.&lt;/p&gt;
 &lt;div class="section" id="the-complete-feature-list-as-of-v2-1-5"&gt;
 &lt;h2&gt;The complete feature list (as of v2.1.5)&lt;/h2&gt;
 &lt;ul class="simple"&gt;
-&lt;li&gt;pre-configured Sphinx with:&lt;ul&gt;
-&lt;li&gt;&lt;tt class="docutils literal"&gt;CONTRIBUTING.rst&lt;/tt&gt; guide (used by GitHub when sending a pull request or an issue)&lt;/li&gt;
-&lt;li&gt;&lt;tt class="docutils literal"&gt;LICENSE.rst&lt;/tt&gt;&lt;/li&gt;
-&lt;li&gt;an empty &lt;tt class="docutils literal"&gt;CHANGELOG.rst&lt;/tt&gt;&lt;/li&gt;
-&lt;li&gt;&lt;tt class="docutils literal"&gt;README.rst&lt;/tt&gt;&lt;/li&gt;
-&lt;li&gt;a bare-bones &lt;tt class="docutils literal"&gt;index.rst&lt;/tt&gt; page&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;pre-configured Sphinx with:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;code class="docutils literal"&gt;CONTRIBUTING.rst&lt;/code&gt; guide (used by GitHub when sending a pull request or an issue)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code class="docutils literal"&gt;LICENSE.rst&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;an empty &lt;code class="docutils literal"&gt;CHANGELOG.rst&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code class="docutils literal"&gt;README.rst&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;a bare-bones &lt;code class="docutils literal"&gt;index.rst&lt;/code&gt; page&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
-&lt;li&gt;The exact same files in &lt;tt class="docutils literal"&gt;/&lt;/tt&gt;, which are fragile and &lt;strong&gt;MAY NOT&lt;/strong&gt; be modified
-as they are replaced with copies in &lt;tt class="docutils literal"&gt;/docs&lt;/tt&gt; by the &lt;tt class="docutils literal"&gt;release&lt;/tt&gt; script&lt;/li&gt;
-&lt;li&gt;&lt;tt class="docutils literal"&gt;__init__.py&lt;/tt&gt;, &lt;tt class="docutils literal"&gt;__main__.py&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;template.py&lt;/tt&gt; files in the Python package directory&lt;/li&gt;
-&lt;li&gt;A &lt;tt class="docutils literal"&gt;setup.py&lt;/tt&gt; file that could be good enough for people, and that supports
-&lt;tt class="docutils literal"&gt;entry_points&lt;/tt&gt; (see &lt;a class="reference external" href="https://go.chriswarrick.com/entry_points"&gt;https://go.chriswarrick.com/entry_points&lt;/a&gt;).&lt;/li&gt;
-&lt;li&gt;&lt;tt class="docutils literal"&gt;tests/&lt;/tt&gt; containing some &lt;em&gt;Is My Python Sane?&lt;/em&gt;-style tests (using &lt;tt class="docutils literal"&gt;pytest&lt;/tt&gt;)&lt;/li&gt;
-&lt;li&gt;An automated global update script (&lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;.pypt/PYPT-UPDATE&lt;/span&gt;&lt;/tt&gt;)&lt;/li&gt;
-&lt;li&gt;Entry points configuration ready to be uncommented (and a matching
-&lt;tt class="docutils literal"&gt;__main__.py&lt;/tt&gt; file)&lt;/li&gt;
-&lt;li&gt;Add-ons for Qt users (in &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;pypt-extras/Qt&lt;/span&gt;&lt;/tt&gt;)&lt;/li&gt;
-&lt;li&gt;A sample hook for AUR updates (in &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;pypt-extras/AUR&lt;/span&gt;&lt;/tt&gt;)&lt;/li&gt;
-&lt;li&gt;PKGBUILDs for the Arch Linux User Repository (AUR)&lt;/li&gt;
-&lt;li&gt;A state-of-the-art &lt;tt class="docutils literal"&gt;release&lt;/tt&gt; script, the operations of which are:&lt;ul&gt;
-&lt;li&gt;querying the user for version number, commit message and changes&lt;/li&gt;
-&lt;li&gt;updating &lt;tt class="docutils literal"&gt;/docs/CHANGELOG.rst&lt;/tt&gt;&lt;/li&gt;
-&lt;li&gt;bumping the version number in all the files, changing dates where necessary&lt;/li&gt;
-&lt;li&gt;copying over &lt;tt class="docutils literal"&gt;/docs/README.rst&lt;/tt&gt;,  &lt;tt class="docutils literal"&gt;/docs/CHANGELOG.rst&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;/docs/CONTRIBUTING.rst&lt;/tt&gt; to &lt;tt class="docutils literal"&gt;/&lt;/tt&gt;&lt;/li&gt;
-&lt;li&gt;locale generation (via the &lt;tt class="docutils literal"&gt;.pypt/localegen&lt;/tt&gt; script)&lt;/li&gt;
-&lt;li&gt;running &lt;tt class="docutils literal"&gt;import $PROJECTLC&lt;/tt&gt; and the test suite&lt;/li&gt;
-&lt;li&gt;uploading a source distribution and a wheel to PyPI&lt;/li&gt;
-&lt;li&gt;Making a Git commit and tagging the release&lt;/li&gt;
-&lt;li&gt;creating a GitHub Releases entry&lt;/li&gt;
-&lt;li&gt;updating the AUR packages (by using hooks)&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;The exact same files in &lt;code class="docutils literal"&gt;/&lt;/code&gt;, which are fragile and &lt;strong&gt;MAY NOT&lt;/strong&gt; be modified
+as they are replaced with copies in &lt;code class="docutils literal"&gt;/docs&lt;/code&gt; by the &lt;code class="docutils literal"&gt;release&lt;/code&gt; script&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code class="docutils literal"&gt;__init__.py&lt;/code&gt;, &lt;code class="docutils literal"&gt;__main__.py&lt;/code&gt; and &lt;code class="docutils literal"&gt;template.py&lt;/code&gt; files in the Python package directory&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;A &lt;code class="docutils literal"&gt;setup.py&lt;/code&gt; file that could be good enough for people, and that supports
+&lt;code class="docutils literal"&gt;entry_points&lt;/code&gt; (see &lt;a class="reference external" href="https://go.chriswarrick.com/entry_points"&gt;https://go.chriswarrick.com/entry_points&lt;/a&gt;).&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code class="docutils literal"&gt;tests/&lt;/code&gt; containing some &lt;em&gt;Is My Python Sane?&lt;/em&gt;-style tests (using &lt;code class="docutils literal"&gt;pytest&lt;/code&gt;)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;An automated global update script (&lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;.pypt/PYPT-UPDATE&lt;/span&gt;&lt;/code&gt;)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Entry points configuration ready to be uncommented (and a matching
+&lt;code class="docutils literal"&gt;__main__.py&lt;/code&gt; file)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Add-ons for Qt users (in &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;pypt-extras/Qt&lt;/span&gt;&lt;/code&gt;)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;A sample hook for AUR updates (in &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;pypt-extras/AUR&lt;/span&gt;&lt;/code&gt;)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;PKGBUILDs for the Arch Linux User Repository (AUR)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;A state-of-the-art &lt;code class="docutils literal"&gt;release&lt;/code&gt; script, the operations of which are:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;querying the user for version number, commit message and changes&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;updating &lt;code class="docutils literal"&gt;/docs/CHANGELOG.rst&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;bumping the version number in all the files, changing dates where necessary&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;copying over &lt;code class="docutils literal"&gt;/docs/README.rst&lt;/code&gt;,  &lt;code class="docutils literal"&gt;/docs/CHANGELOG.rst&lt;/code&gt; and &lt;code class="docutils literal"&gt;/docs/CONTRIBUTING.rst&lt;/code&gt; to &lt;code class="docutils literal"&gt;/&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;locale generation (via the &lt;code class="docutils literal"&gt;.pypt/localegen&lt;/code&gt; script)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;running &lt;code class="docutils literal"&gt;import $PROJECTLC&lt;/code&gt; and the test suite&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;uploading a source distribution and a wheel to PyPI&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Making a Git commit and tagging the release&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;creating a GitHub Releases entry&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;updating the AUR packages (by using hooks)&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
@@ -83,24 +85,24 @@ all problems.&lt;/p&gt;
 near useful, I would need to spend hours.  Here’s just a few of
 them:&lt;/p&gt;
 &lt;ul class="simple"&gt;
-&lt;li&gt;357 lines of spaghetti code (295 SLOC), all in one file&lt;/li&gt;
-&lt;li&gt;No form data validation, no CSRF &lt;a class="footnote-reference" href="https://chriswarrick.com/pl/blog/2015/10/11/rewriting-a-flask-app-in-django/#id2" id="id1"&gt;[1]&lt;/a&gt; protection (it did have XSS protection
-though)&lt;/li&gt;
-&lt;li&gt;Login using Mozilla Persona, which requries JavaScript, is a bit kludgey, and
-feels desolate (and also had me store the admin e-mail list in code)&lt;/li&gt;
-&lt;li&gt;Geopolitics issues: using country flags for languages&lt;/li&gt;
-&lt;li&gt;A lot of things were implemented by hand&lt;/li&gt;
-&lt;li&gt;SQLAlchemy is very verbose&lt;/li&gt;
-&lt;li&gt;no DB migrations (makes enhancements harder)&lt;/li&gt;
-&lt;li&gt;Languages implemented as a PostgreSQL integer array&lt;/li&gt;
-&lt;li&gt;Adding a language required running a command-line script and &lt;strong&gt;restarting the
+&lt;li&gt;&lt;p&gt;357 lines of spaghetti code (295 SLOC), all in one file&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;No form data validation, no CSRF &lt;a class="footnote-reference brackets" href="https://chriswarrick.com/pl/blog/2015/10/11/rewriting-a-flask-app-in-django/#id2" id="id1"&gt;1&lt;/a&gt; protection (it did have XSS protection
+though)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Login using Mozilla Persona, which requries JavaScript, is a bit kludgey, and
+feels desolate (and also had me store the admin e-mail list in code)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Geopolitics issues: using country flags for languages&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;A lot of things were implemented by hand&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;SQLAlchemy is very verbose&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;no DB migrations (makes enhancements harder)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Languages implemented as a PostgreSQL integer array&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Adding a language required running a command-line script and &lt;strong&gt;restarting the
 app&lt;/strong&gt; (languages were cached in Python dicts with no way to reload them from
 the database; that would require talking through uWSGI anyway because there
-were multiple processes involved)&lt;/li&gt;
-&lt;li&gt;The templates were slightly hacky (the page title was set in each individual
+were multiple processes involved)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;The templates were slightly hacky (the page title was set in each individual
 template and not in the view code); menus hacked together in HTML with no
-highlighting&lt;/li&gt;
-&lt;li&gt;Python 2.7&lt;/li&gt;
+highlighting&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Python 2.7&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/div&gt;
 &lt;div class="section" id="the-rewrite"&gt;
@@ -110,64 +112,63 @@ highlighting&lt;/li&gt;
 the majority of them didn’t do much.  In other words, I didn’t have a lot of experience.  Especially with taking user input and relationships.  It took me about 8 hours to get feature parity, and more.&lt;/p&gt;
 &lt;p&gt;Getting all the features was really simple.  For example, to get a many-to-many
 relationship for languages, I had to write just one line.&lt;/p&gt;
-&lt;pre class="code python"&gt;&lt;a name="rest_code_837836cc96734965ba23b7aca9e96ff3-1"&gt;&lt;/a&gt;&lt;span class="n"&gt;languages&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ManyToManyField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Language&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_8b97bdaef39d4c72b7d9c08b6484549c-1"&gt;&lt;/a&gt;&lt;span class="n"&gt;languages&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ManyToManyField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Language&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;That’s it.  I didn’t have to run through complicated SQLAlchemy documentation,
 which provides a &lt;a class="reference external" href="http://docs.sqlalchemy.org/en/rel_1_0/orm/basic_relationships.html#many-to-many"&gt;13-line solution&lt;/a&gt; to the same problem.&lt;/p&gt;
 &lt;p&gt;Django also simplified New Relic integration, as the browser JS can be implemented
 using Django template tags.&lt;/p&gt;
 &lt;p&gt;Django is not without its problems, though.  I got a very cryptic traceback
 when I did this:&lt;/p&gt;
-&lt;pre class="code python"&gt;&lt;a name="rest_code_f1b33a03837a4d8ca630f8b9e62529bf-1"&gt;&lt;/a&gt;&lt;span class="n"&gt;publish_email&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;forms&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;BooleanField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"Publish e-mail"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;required&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;False&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_f1b33a03837a4d8ca630f8b9e62529bf-2"&gt;&lt;/a&gt;&lt;span class="ne"&gt;TypeError&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;"BooleanField() got multiple values for argument 'required'"&lt;/span&gt;
-&lt;/pre&gt;&lt;p&gt;The real problem with this code?  I forgot the &lt;tt class="docutils literal"&gt;label=&lt;/tt&gt; keyword.  The
-problem is, the model API accepts this syntax — &lt;tt class="docutils literal"&gt;verbose_name&lt;/tt&gt; is the first
+&lt;pre class="code python"&gt;&lt;a name="rest_code_438e6cc467224b4eb377279d30b44ce4-1"&gt;&lt;/a&gt;&lt;span class="n"&gt;publish_email&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;forms&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;BooleanField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"Publish e-mail"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;required&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;False&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_438e6cc467224b4eb377279d30b44ce4-2"&gt;&lt;/a&gt;&lt;span class="ne"&gt;TypeError&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;"BooleanField() got multiple values for argument 'required'"&lt;/span&gt;
+&lt;/pre&gt;&lt;p&gt;The real problem with this code?  I forgot the &lt;code class="docutils literal"&gt;label=&lt;/code&gt; keyword.  The
+problem is, the model API accepts this syntax — &lt;code class="docutils literal"&gt;verbose_name&lt;/code&gt; is the first
 argument.  (I am not actually using the labels though, I write my own form
 HTML)&lt;/p&gt;
 &lt;p&gt;Still, the Django version is much cleaner.  And the best part of all?  There
-are no magic global objects (&lt;tt class="docutils literal"&gt;g&lt;/tt&gt;, &lt;tt class="docutils literal"&gt;session&lt;/tt&gt;, &lt;tt class="docutils literal"&gt;request&lt;/tt&gt;) and
+are no magic global objects (&lt;code class="docutils literal"&gt;g&lt;/code&gt;, &lt;code class="docutils literal"&gt;session&lt;/code&gt;, &lt;code class="docutils literal"&gt;request&lt;/code&gt;) and
 decorator-based views (which are a bit of syntax abuse IMO).&lt;/p&gt;
 &lt;p&gt;In the end, I have:&lt;/p&gt;
 &lt;ul class="simple"&gt;
-&lt;li&gt;382 lines of code (297 SLOC) over 6 files — much cleaner, and with less long lines&lt;/li&gt;
-&lt;li&gt;form data validation (via Django), CSRF and XSS protection&lt;/li&gt;
-&lt;li&gt;Login using Django built-in authentication, without JavaScript&lt;/li&gt;
-&lt;li&gt;Language codes (granted, I could’ve done that really easily back in Flask)&lt;/li&gt;
-&lt;li&gt;Tried-and-true implementations of common patterns&lt;/li&gt;
-&lt;li&gt;Django models are much more readable and friendly&lt;/li&gt;
-&lt;li&gt;Django-provided DB migrations (generated automatically!)&lt;/li&gt;
-&lt;li&gt;Languages implemented using Django many-to-many relationships&lt;/li&gt;
-&lt;li&gt;Adding a language is possible from the Django built-in admin panel and is
-reflected immediately (no caching)&lt;/li&gt;
-&lt;li&gt;Titles and menus in code&lt;/li&gt;
-&lt;li&gt;Python 3&lt;/li&gt;
-&lt;li&gt;New features: featured sites; show only a specified language — were really easy to add&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;382 lines of code (297 SLOC) over 6 files — much cleaner, and with less long lines&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;form data validation (via Django), CSRF and XSS protection&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Login using Django built-in authentication, without JavaScript&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Language codes (granted, I could’ve done that really easily back in Flask)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Tried-and-true implementations of common patterns&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Django models are much more readable and friendly&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Django-provided DB migrations (generated automatically!)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Languages implemented using Django many-to-many relationships&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Adding a language is possible from the Django built-in admin panel and is
+reflected immediately (no caching)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Titles and menus in code&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Python 3&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;New features: featured sites; show only a specified language — were really easy to add&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;table class="docutils footnote" frame="void" id="id2" rules="none"&gt;
-&lt;colgroup&gt;&lt;col class="label"&gt;&lt;col&gt;&lt;/colgroup&gt;
-&lt;tbody valign="top"&gt;
-&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="https://chriswarrick.com/pl/blog/2015/10/11/rewriting-a-flask-app-in-django/#id1"&gt;[1]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;I had some &lt;tt class="docutils literal"&gt;CSRF_ENABLED&lt;/tt&gt; variable, but it did not seem to be actually
-used by anything.&lt;/td&gt;&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
+&lt;dl class="footnote brackets"&gt;
+&lt;dt class="label" id="id2"&gt;&lt;span class="brackets"&gt;&lt;a class="fn-backref" href="https://chriswarrick.com/pl/blog/2015/10/11/rewriting-a-flask-app-in-django/#id1"&gt;1&lt;/a&gt;&lt;/span&gt;&lt;/dt&gt;
+&lt;dd&gt;&lt;p&gt;I had some &lt;code class="docutils literal"&gt;CSRF_ENABLED&lt;/code&gt; variable, but it did not seem to be actually
+used by anything.&lt;/p&gt;
+&lt;/dd&gt;
+&lt;/dl&gt;
 &lt;/div&gt;&lt;/div&gt;</description><guid>https://chriswarrick.com/pl/blog/2015/10/11/rewriting-a-flask-app-in-django/</guid><pubDate>Sun, 11 Oct 2015 15:24:43 GMT</pubDate></item><item><title>Static Site Generator Speed Test (Nikola, Pelican, Hexo, Octopress)</title><link>https://chriswarrick.com/pl/blog/2015/07/23/ssg-speed-test/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;I tested the speed of four static site generators: Nikola, Pelican, Hexo and Octopress, in a clean environment.  Spoiler alert: Nikola won.&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;Disclaimer:&lt;/em&gt; author is a developer and user of Nikola.  The test environments used were the same for all four generators.&lt;/p&gt;
 &lt;div class="section" id="generators-tested"&gt;
 &lt;h2&gt;Generators tested&lt;/h2&gt;
 &lt;ul class="simple"&gt;
-&lt;li&gt;&lt;a class="reference external" href="https://getnikola.com/"&gt;Nikola&lt;/a&gt; v7.6.1, by Roberto Alsina, Chris Warrick and contributors; Python; MIT license&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference external" href="http://blog.getpelican.com/"&gt;Pelican&lt;/a&gt; v3.6.0, by Alexis Metaireau and contributors; Python; GNU AGPL license&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference external" href="https://hexo.io/"&gt;Hexo&lt;/a&gt; v3.1.1, by Tommy Chen and contributors; Node.js; MIT license&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference external" href="http://octopress.org/"&gt;Octopress&lt;/a&gt; v2.0, by Brandon Mathis and contributors; Ruby; MIT license (based on Jekyll)&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference external" href="https://getnikola.com/"&gt;Nikola&lt;/a&gt; v7.6.1, by Roberto Alsina, Chris Warrick and contributors; Python; MIT license&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference external" href="http://blog.getpelican.com/"&gt;Pelican&lt;/a&gt; v3.6.0, by Alexis Metaireau and contributors; Python; GNU AGPL license&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference external" href="https://hexo.io/"&gt;Hexo&lt;/a&gt; v3.1.1, by Tommy Chen and contributors; Node.js; MIT license&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference external" href="http://octopress.org/"&gt;Octopress&lt;/a&gt; v2.0, by Brandon Mathis and contributors; Ruby; MIT license (based on Jekyll)&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;!-- TEASER_END --&gt;
 &lt;/div&gt;
 &lt;div class="section" id="setup"&gt;
 &lt;h2&gt;Setup&lt;/h2&gt;
-&lt;p&gt;Every site generator was set up in an identical &lt;strong&gt;clean&lt;/strong&gt; environment, using Ubuntu 15.04, x64, as a 512 MB DigitalOcean VM with a 20 GB SSD drive. The machine was updated, an user account with passwordless sudo was created, and &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;build-essential&lt;/span&gt;&lt;/tt&gt; was installed. Tests were run by an automated installer and timer, written in Bash and C, respectively (custom; source code is available). Pre-compiled wheels for lxml and Pillow were used for Nikola testing, because lxml cannot be compiled with less than 1.5 GB of RAM; they were built with &lt;tt class="docutils literal"&gt;pip wheel lxml pillow&lt;/tt&gt; outside of the testing environment (on a local VM). The machine was reimaged after every test. Lists of installed Python/Ruby/Node packages are available in the GitHub repo (see below).&lt;/p&gt;
+&lt;p&gt;Every site generator was set up in an identical &lt;strong&gt;clean&lt;/strong&gt; environment, using Ubuntu 15.04, x64, as a 512 MB DigitalOcean VM with a 20 GB SSD drive. The machine was updated, an user account with passwordless sudo was created, and &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;build-essential&lt;/span&gt;&lt;/code&gt; was installed. Tests were run by an automated installer and timer, written in Bash and C, respectively (custom; source code is available). Pre-compiled wheels for lxml and Pillow were used for Nikola testing, because lxml cannot be compiled with less than 1.5 GB of RAM; they were built with &lt;code class="docutils literal"&gt;pip wheel lxml pillow&lt;/code&gt; outside of the testing environment (on a local VM). The machine was reimaged after every test. Lists of installed Python/Ruby/Node packages are available in the GitHub repo (see below).&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="input"&gt;
 &lt;h2&gt;Input&lt;/h2&gt;
-&lt;p&gt;Every site generator was given the same set of 179 log files from #nikola on freenode. The raw logs contain 1209507 bytes (1.1 MiB) of plain text. The logs were processed into post files, which fit the format of each engine (reST or Markdown), containing mandatory metadata, an introductory paragraph and a code block (using &lt;tt class="docutils literal"&gt;::&lt;/tt&gt; for reST, four spaces for Markdown). One file had to be altered, because they contained the &lt;tt class="docutils literal"&gt;{{&lt;/tt&gt;  sequence, which was misinterpreted as internal templating by Hexo and Octopress — it was replaced by a harmless &lt;tt class="docutils literal"&gt;~~&lt;/tt&gt; sequence for all four generators.&lt;/p&gt;
+&lt;p&gt;Every site generator was given the same set of 179 log files from #nikola on freenode. The raw logs contain 1209507 bytes (1.1 MiB) of plain text. The logs were processed into post files, which fit the format of each engine (reST or Markdown), containing mandatory metadata, an introductory paragraph and a code block (using &lt;code class="docutils literal"&gt;::&lt;/code&gt; for reST, four spaces for Markdown). One file had to be altered, because they contained the &lt;code class="docutils literal"&gt;{{&lt;/code&gt;  sequence, which was misinterpreted as internal templating by Hexo and Octopress — it was replaced by a harmless &lt;code class="docutils literal"&gt;~~&lt;/code&gt; sequence for all four generators.&lt;/p&gt;
 &lt;p&gt;The generators used default config, with one exception: highlighting was disabled for Hexo. The highlighting would cause an unfair advantage (other generators did not automatically highlight the code boxes), and led to very high build times (see table 4 in comparison spreadsheet).&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="build"&gt;
@@ -221,7 +222,7 @@ used by anything.&lt;/td&gt;&lt;/tr&gt;
 &lt;/div&gt;
 &lt;div class="section" id="raw-results-and-configuration"&gt;
 &lt;h3&gt;Raw results and configuration&lt;/h3&gt;
-&lt;p&gt;Raw results (&lt;tt class="docutils literal"&gt;.csv&lt;/tt&gt; files from the test runner) and configuration is available in the &lt;a class="reference external" href="https://github.com/Kwpolska/ssg-test"&gt;GitHub repo&lt;/a&gt;. Log files and converted posts are not available publicly; however, they can be provided to interested parties (&lt;a class="reference external" href="https://chriswarrick.com/contact/"&gt;contact me&lt;/a&gt; to obtain them).&lt;/p&gt;
+&lt;p&gt;Raw results (&lt;code class="docutils literal"&gt;.csv&lt;/code&gt; files from the test runner) and configuration is available in the &lt;a class="reference external" href="https://github.com/Kwpolska/ssg-test"&gt;GitHub repo&lt;/a&gt;. Log files and converted posts are not available publicly; however, they can be provided to interested parties (&lt;a class="reference external" href="https://chriswarrick.com/contact/"&gt;contact me&lt;/a&gt; to obtain them).&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class="section" id="questions-and-answers"&gt;
@@ -235,8 +236,8 @@ used by anything.&lt;/td&gt;&lt;/tr&gt;
 &lt;h3&gt;Why not $MYFAVORITESSG?&lt;/h3&gt;
 &lt;p&gt;I tested only four popular generators that were easy enough to set up. I could easily extend the set if I had time and friendly enough documentation to do so. I can add a SSG, provided that:&lt;/p&gt;
 &lt;ul class="simple"&gt;
-&lt;li&gt;it’s easy to configure&lt;/li&gt;
-&lt;li&gt;it has a default config that provides a working site with a feature set comparable to other SSGs tested here (see &lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2015/07/23/ssg-speed-test/#why-not-plain-jekyll"&gt;Why not plain Jekyll?&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;it’s easy to configure&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;it has a default config that provides a working site with a feature set comparable to other SSGs tested here (see &lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2015/07/23/ssg-speed-test/#why-not-plain-jekyll"&gt;Why not plain Jekyll?&lt;/a&gt;)&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/div&gt;
 &lt;/div&gt;&lt;/div&gt;</description><guid>https://chriswarrick.com/pl/blog/2015/07/23/ssg-speed-test/</guid><pubDate>Thu, 23 Jul 2015 15:10:00 GMT</pubDate></item><item><title>Revamping My Projects Page with Nikola</title><link>https://chriswarrick.com/pl/blog/2014/10/13/revamping-my-projects-page-with-nikola/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;A week ago, I was inspired to produce a new &lt;a class="reference external" href="https://chriswarrick.com/projects/"&gt;projects page&lt;/a&gt; for
@@ -246,7 +247,7 @@ GitHub Pages for some reason.&lt;/p&gt;
 &lt;p&gt;So, considering I’m so invested in &lt;a class="reference external" href="https://getnikola.com/"&gt;Nikola&lt;/a&gt; already,
 I produced the &lt;a class="reference external" href="http://plugins.getnikola.com/#projectpages"&gt;projectpages plugin&lt;/a&gt;
 and also made it publicly available.  The plugin produces two files,
-&lt;tt class="docutils literal"&gt;projects/index.html&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;projects/projects.json&lt;/tt&gt;, and also enforces a
+&lt;code class="docutils literal"&gt;projects/index.html&lt;/code&gt; and &lt;code class="docutils literal"&gt;projects/projects.json&lt;/code&gt;, and also enforces a
 specific framework for the stories used for the individual projects, because
 all the metadata are taken from special meta fields.&lt;/p&gt;
 &lt;p&gt;In Nikola, post metadata is completely arbitrary (in fact, that’s my fault; I
@@ -283,45 +284,51 @@ excluding merge commits) — which is quite a lot.&lt;/p&gt;
 write next year?&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;My current todo-list says it all — and I’m working on that:&lt;/p&gt;
 &lt;ul class="simple"&gt;
-&lt;li&gt;A quick app for CSV display&lt;/li&gt;
-&lt;li&gt;A GitHub Releases API client&lt;/li&gt;
-&lt;li&gt;&lt;tt class="docutils literal"&gt;nap&lt;/tt&gt; = &lt;tt class="docutils literal"&gt;sleep&lt;/tt&gt; + progressbar (&lt;a class="reference external" href="https://github.com/Kwpolska/nap"&gt;almost-done-thing on GitHub&lt;/a&gt; — C)&lt;/li&gt;
-&lt;li&gt;River of Text — Python CLI library (&lt;a class="reference external" href="https://github.com/Kwpolska/rot"&gt;skeleton on GitHub&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;A quick app for CSV display&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;A GitHub Releases API client&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code class="docutils literal"&gt;nap&lt;/code&gt; = &lt;code class="docutils literal"&gt;sleep&lt;/code&gt; + progressbar (&lt;a class="reference external" href="https://github.com/Kwpolska/nap"&gt;almost-done-thing on GitHub&lt;/a&gt; — C)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;River of Text — Python CLI library (&lt;a class="reference external" href="https://github.com/Kwpolska/rot"&gt;skeleton on GitHub&lt;/a&gt;)&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;hr class="docutils"&gt;
 &lt;p&gt;Want to do your own list?  Here’s how:&lt;/p&gt;
 &lt;ol class="arabic simple"&gt;
-&lt;li&gt;copy-paste the questions and answer to them in your blog&lt;/li&gt;
-&lt;li&gt;tweet it with the &lt;a class="reference external" href="https://twitter.com/search/realtime?q=%232014pythonmeme"&gt;#2014pythonmeme&lt;/a&gt; hashtag&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;copy-paste the questions and answer to them in your blog&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;tweet it with the &lt;a class="reference external" href="https://twitter.com/search/realtime?q=%232014pythonmeme"&gt;#2014pythonmeme&lt;/a&gt; hashtag&lt;/p&gt;&lt;/li&gt;
 &lt;/ol&gt;&lt;/div&gt;</description><guid>https://chriswarrick.com/pl/blog/2013/12/31/new-years-python-meme-2013-2014/</guid><pubDate>Tue, 31 Dec 2013 17:15:00 GMT</pubDate></item><item><title>Nikola — The Best Blog Engine Ever!</title><link>https://chriswarrick.com/pl/blog/2013/02/08/nikola-the-best-blog-engine-ever/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;I recently found out about &lt;a class="reference external" href="http://nikola.ralsina.com.ar/"&gt;Nikola&lt;/a&gt; (through &lt;a class="reference external" href="http://planet.python.org/"&gt;Planet Python&lt;/a&gt;).  It is awesome,
 even better than Hyde.  Why?  Right after the break.&lt;/p&gt;
 &lt;!-- TEASER_END --&gt;
 &lt;div class="section" id="why"&gt;
 &lt;h2&gt;Why?&lt;/h2&gt;
 &lt;ol class="arabic simple"&gt;
-&lt;li&gt;A lively community and an awesome lead developer, &lt;a class="reference external" href="http://ralsina.com.ar/"&gt;Roberto Alsina&lt;/a&gt;.&lt;/li&gt;
-&lt;li&gt;Actively developed (last commit to Hyde was &lt;strong&gt;11 months ago&lt;/strong&gt;).&lt;/li&gt;
-&lt;li&gt;Easily extensible.&lt;/li&gt;
-&lt;li&gt;Ships with the Bootstrap style, to which I planned to migrate (and I did)&lt;/li&gt;
-&lt;li&gt;reStructuredText, Markdown, Textile, … input.&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;A lively community and an awesome lead developer, &lt;a class="reference external" href="http://ralsina.com.ar/"&gt;Roberto Alsina&lt;/a&gt;.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Actively developed (last commit to Hyde was &lt;strong&gt;11 months ago&lt;/strong&gt;).&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Easily extensible.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Ships with the Bootstrap style, to which I planned to migrate (and I did)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;reStructuredText, Markdown, Textile, … input.&lt;/p&gt;&lt;/li&gt;
 &lt;/ol&gt;
 &lt;/div&gt;
 &lt;div class="section" id="how"&gt;
 &lt;h2&gt;How?&lt;/h2&gt;
 &lt;blockquote&gt;&lt;p&gt;After you have Nikola installed:&lt;/p&gt;
-&lt;dl class="docutils"&gt;
+&lt;dl class="simple"&gt;
 &lt;dt&gt;Create a site:&lt;/dt&gt;
-&lt;dd&gt;&lt;tt class="docutils literal"&gt;nikola init mysite&lt;/tt&gt;&lt;/dd&gt;
+&lt;dd&gt;&lt;p&gt;&lt;code class="docutils literal"&gt;nikola init mysite&lt;/code&gt;&lt;/p&gt;
+&lt;/dd&gt;
 &lt;dt&gt;Create a post:&lt;/dt&gt;
-&lt;dd&gt;&lt;tt class="docutils literal"&gt;nikola new_post&lt;/tt&gt;&lt;/dd&gt;
+&lt;dd&gt;&lt;p&gt;&lt;code class="docutils literal"&gt;nikola new_post&lt;/code&gt;&lt;/p&gt;
+&lt;/dd&gt;
 &lt;dt&gt;Edit the post:&lt;/dt&gt;
-&lt;dd&gt;The filename should be in the output of the previous command.&lt;/dd&gt;
+&lt;dd&gt;&lt;p&gt;The filename should be in the output of the previous command.&lt;/p&gt;
+&lt;/dd&gt;
 &lt;dt&gt;Build the site:&lt;/dt&gt;
-&lt;dd&gt;&lt;tt class="docutils literal"&gt;nikola build&lt;/tt&gt;&lt;/dd&gt;
+&lt;dd&gt;&lt;p&gt;&lt;code class="docutils literal"&gt;nikola build&lt;/code&gt;&lt;/p&gt;
+&lt;/dd&gt;
 &lt;dt&gt;Start the test server:&lt;/dt&gt;
-&lt;dd&gt;&lt;tt class="docutils literal"&gt;nikola serve&lt;/tt&gt;&lt;/dd&gt;
+&lt;dd&gt;&lt;p&gt;&lt;code class="docutils literal"&gt;nikola serve&lt;/code&gt;&lt;/p&gt;
+&lt;/dd&gt;
 &lt;dt&gt;See the site:&lt;/dt&gt;
-&lt;dd&gt;&lt;a class="reference external" href="http://127.0.0.1:8000"&gt;http://127.0.0.1:8000&lt;/a&gt;&lt;/dd&gt;
+&lt;dd&gt;&lt;p&gt;&lt;a class="reference external" href="http://127.0.0.1:8000"&gt;http://127.0.0.1:8000&lt;/a&gt;&lt;/p&gt;
+&lt;/dd&gt;
 &lt;/dl&gt;
 &lt;p&gt;That should get you going. If you want to know more, this manual will always be
 here for you.&lt;/p&gt;

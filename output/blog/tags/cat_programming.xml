@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chris Warrick (Posts about Programming)</title><link>https://chriswarrick.com/</link><description></description><atom:link href="https://chriswarrick.com/blog/tags/cat_programming.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Fri, 28 Feb 2020 17:41:23 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Spawning subprocesses smartly and securely</title><link>https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;As part of your code, you may be inclined to call a command to do
+<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chris Warrick (Posts about Programming)</title><link>https://chriswarrick.com/</link><description></description><atom:link href="https://chriswarrick.com/blog/tags/cat_programming.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Thu, 19 Mar 2020 10:29:53 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Spawning subprocesses smartly and securely</title><link>https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;As part of your code, you may be inclined to call a command to do
 something. But is it always a good idea? How to do it safely? What happens
 behind the scenes?&lt;/p&gt;
 &lt;!-- TEASER_END --&gt;
@@ -7,13 +7,13 @@ behind the scenes?&lt;/p&gt;
 very slight Python bias. The problems mentioned apply to all languages in most
 environments, including Windows.&lt;/p&gt;
 &lt;div class="contents alert alert-primary float-md-right topic" id="contents"&gt;
-&lt;p class="topic-title first"&gt;Contents&lt;/p&gt;
+&lt;p class="topic-title"&gt;Contents&lt;/p&gt;
 &lt;ul class="simple"&gt;
-&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#use-the-right-tool-for-the-job" id="id9"&gt;Use the right tool for the job&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#dont-spawn-subprocesses-if-theres-an-alternative" id="id10"&gt;Don’t spawn subprocesses if there’s an alternative&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#security-considerations-shells-spaces-and-command-injection" id="id11"&gt;Security considerations: shells, spaces, and command injection&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#tl-dr-how-to-do-this-properly-in-your-language-of-choice" id="id12"&gt;TL;DR: How to do this properly in your language of choice&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#the-part-where-i-pretend-i-know-something-about-windows" id="id13"&gt;The part where I pretend I know something about Windows&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#use-the-right-tool-for-the-job" id="id9"&gt;Use the right tool for the job&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#dont-spawn-subprocesses-if-theres-an-alternative" id="id10"&gt;Don’t spawn subprocesses if there’s an alternative&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#security-considerations-shells-spaces-and-command-injection" id="id11"&gt;Security considerations: shells, spaces, and command injection&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#tl-dr-how-to-do-this-properly-in-your-language-of-choice" id="id12"&gt;TL;DR: How to do this properly in your language of choice&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#the-part-where-i-pretend-i-know-something-about-windows" id="id13"&gt;The part where I pretend I know something about Windows&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/div&gt;
 &lt;div class="section" id="use-the-right-tool-for-the-job"&gt;
@@ -22,16 +22,16 @@ environments, including Windows.&lt;/p&gt;
 That dependency isn’t controlled by your code, and your code becomes more fragile.
 The problems include:&lt;/p&gt;
 &lt;ul class="simple"&gt;
-&lt;li&gt;the program is not installed, or even available, for the user’s OS of choice&lt;/li&gt;
-&lt;li&gt;the program is not in the &lt;tt class="docutils literal"&gt;$PATH&lt;/tt&gt; your process gets&lt;/li&gt;
-&lt;li&gt;the hard-coded path is not correct on the end user’s system&lt;/li&gt;
-&lt;li&gt;the program is in a different version (eg. GNU vs. BSD, updates/patches),
-which means different option names or other behaviors&lt;/li&gt;
-&lt;li&gt;the program’s output is not what you expected due to user config (including
-locale)&lt;/li&gt;
-&lt;li&gt;error reporting is based on numeric exit codes, and the meaning of those
+&lt;li&gt;&lt;p&gt;the program is not installed, or even available, for the user’s OS of choice&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;the program is not in the &lt;code class="docutils literal"&gt;$PATH&lt;/code&gt; your process gets&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;the hard-coded path is not correct on the end user’s system&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;the program is in a different version (eg. GNU vs. BSD, updates/patches),
+which means different option names or other behaviors&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;the program’s output is not what you expected due to user config (including
+locale)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;error reporting is based on numeric exit codes, and the meaning of those
 differs between programs (&lt;em&gt;if&lt;/em&gt; they have meaning besides 0/1 in the first
-place)&lt;/li&gt;
+place)&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;On the other hand, if your code uses a lot of subprocesses, perhaps you should
 stay with Bash. You can do the harder parts with Python, Ruby, or some other
@@ -39,14 +39,14 @@ language by calling them from within your Bash script.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="dont-spawn-subprocesses-if-theres-an-alternative"&gt;
 &lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#id10"&gt;Don’t spawn subprocesses if there’s an alternative&lt;/a&gt;&lt;/h2&gt;
-&lt;p&gt;Spawning a subprocess always incurs a (minor) &lt;a class="footnote-reference" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#id5" id="id1"&gt;[1]&lt;/a&gt; performance hit minor
+&lt;p&gt;Spawning a subprocess always incurs a (minor) &lt;a class="footnote-reference brackets" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#id5" id="id1"&gt;1&lt;/a&gt; performance hit minor
 compared to the alternatives. With that in mind, and the resiliency issues
 listed above, you should always try to find an alternative for the
 external command.&lt;/p&gt;
-&lt;p&gt;The simplest ones are the basic Unix utilities. Replace &lt;tt class="docutils literal"&gt;grep&lt;/tt&gt;, &lt;tt class="docutils literal"&gt;sed&lt;/tt&gt; and
-&lt;tt class="docutils literal"&gt;awk&lt;/tt&gt; with string operations and regular expressions. Filesystem utilities
-will have equivalents — for Python, in &lt;tt class="docutils literal"&gt;os&lt;/tt&gt; or &lt;tt class="docutils literal"&gt;shutil&lt;/tt&gt;. Your language of
-choice can also handle things like networking (don’t call &lt;tt class="docutils literal"&gt;curl&lt;/tt&gt;), file
+&lt;p&gt;The simplest ones are the basic Unix utilities. Replace &lt;code class="docutils literal"&gt;grep&lt;/code&gt;, &lt;code class="docutils literal"&gt;sed&lt;/code&gt; and
+&lt;code class="docutils literal"&gt;awk&lt;/code&gt; with string operations and regular expressions. Filesystem utilities
+will have equivalents — for Python, in &lt;code class="docutils literal"&gt;os&lt;/code&gt; or &lt;code class="docutils literal"&gt;shutil&lt;/code&gt;. Your language of
+choice can also handle things like networking (don’t call &lt;code class="docutils literal"&gt;curl&lt;/code&gt;), file
 compression, working with date/time…&lt;/p&gt;
 &lt;p&gt;Similarly, you should check if there are packages available that already do
 what you want — library bindings or re-implementations. And if there isn’t,
@@ -59,74 +59,73 @@ of spawning a process, if this is feasible.&lt;/p&gt;
 &lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#id11"&gt;Security considerations: shells, spaces, and command injection&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;We come to the most important part of this article: how to spawn subprocesses
 without compromising your system. When you spawn a subprocess on a typical Unix
-system,  &lt;tt class="docutils literal"&gt;fork()&lt;/tt&gt; is called, and your process is copied. Many modern Unix
+system,  &lt;code class="docutils literal"&gt;fork()&lt;/code&gt; is called, and your process is copied. Many modern Unix
 systems have a copy-on-write implementation of that syscall, meaning that the
 operation does not result in copying all the memory of the host process over.
-Forking is (almost) immediately followed by calling &lt;tt class="docutils literal"&gt;execve()&lt;/tt&gt; (or a helper
-function from the exec family) &lt;a class="footnote-reference" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#id6" id="id2"&gt;[2]&lt;/a&gt; in the child process — that function
-&lt;em&gt;transforms the calling process into a new process&lt;/em&gt; &lt;a class="footnote-reference" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#id7" id="id3"&gt;[3]&lt;/a&gt;. This technique is
-called &lt;em&gt;fork-exec&lt;/em&gt; and is the typical way to spawn a new process on Unix. &lt;a class="footnote-reference" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#id8" id="id4"&gt;[4]&lt;/a&gt;&lt;/p&gt;
+Forking is (almost) immediately followed by calling &lt;code class="docutils literal"&gt;execve()&lt;/code&gt; (or a helper
+function from the exec family) &lt;a class="footnote-reference brackets" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#id6" id="id2"&gt;2&lt;/a&gt; in the child process — that function
+&lt;em&gt;transforms the calling process into a new process&lt;/em&gt; &lt;a class="footnote-reference brackets" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#id7" id="id3"&gt;3&lt;/a&gt;. This technique is
+called &lt;em&gt;fork-exec&lt;/em&gt; and is the typical way to spawn a new process on Unix. &lt;a class="footnote-reference brackets" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#id8" id="id4"&gt;4&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;There are two ways to access this API, from the C perspective:&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;p class="first"&gt;directly, by calling &lt;tt class="docutils literal"&gt;fork()&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;exec*()&lt;/span&gt;&lt;/tt&gt; (or &lt;tt class="docutils literal"&gt;posix_spawn()&lt;/tt&gt;), and providing an array of
-arguments passed to the process, or&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;p class="first"&gt;through the shell (&lt;tt class="docutils literal"&gt;sh&lt;/tt&gt;), usually by calling &lt;tt class="docutils literal"&gt;system()&lt;/tt&gt;. As Linux’s
-manpage for &lt;tt class="docutils literal"&gt;system(3)&lt;/tt&gt; puts it,&lt;/p&gt;
+&lt;li&gt;&lt;p&gt;directly, by calling &lt;code class="docutils literal"&gt;fork()&lt;/code&gt; and &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;exec*()&lt;/span&gt;&lt;/code&gt; (or &lt;code class="docutils literal"&gt;posix_spawn()&lt;/code&gt;), and providing an array of
+arguments passed to the process, or&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;through the shell (&lt;code class="docutils literal"&gt;sh&lt;/code&gt;), usually by calling &lt;code class="docutils literal"&gt;system()&lt;/code&gt;. As Linux’s
+manpage for &lt;code class="docutils literal"&gt;system(3)&lt;/code&gt; puts it,&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;The &lt;tt class="docutils literal"&gt;system()&lt;/tt&gt; library function uses &lt;tt class="docutils literal"&gt;fork(2)&lt;/tt&gt; to create a child process that executes the shell command specified in command using &lt;tt class="docutils literal"&gt;execl(3)&lt;/tt&gt; as follows:&lt;/p&gt;
-&lt;pre class="code c"&gt;&lt;a name="rest_code_7d8f1f67c4264c03b5936401ea169ec9-1"&gt;&lt;/a&gt;&lt;span class="n"&gt;execl&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"/bin/sh"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"sh"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"-c"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;command&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;p&gt;The &lt;code class="docutils literal"&gt;system()&lt;/code&gt; library function uses &lt;code class="docutils literal"&gt;fork(2)&lt;/code&gt; to create a child process that executes the shell command specified in command using &lt;code class="docutils literal"&gt;execl(3)&lt;/code&gt; as follows:&lt;/p&gt;
+&lt;pre class="code c"&gt;&lt;a name="rest_code_abdddf656ae342a68fdf594a39d8455a-1"&gt;&lt;/a&gt;&lt;span class="n"&gt;execl&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"/bin/sh"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"sh"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"-c"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;command&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 &lt;/pre&gt;&lt;/blockquote&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;If you go through the shell, you pass one string argument, whereas &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;exec*()&lt;/span&gt;&lt;/tt&gt; demands you to specify arguments separately. Let’s write a sample program to print all the arguments it receives. I’ll do it in Python to get a more readable output.&lt;/p&gt;
-&lt;pre class="code python"&gt;&lt;a name="rest_code_b5a4ed3b44824fca9a60ebfc0a7aeea1-1"&gt;&lt;/a&gt;&lt;span class="ch"&gt;#!/usr/bin/env python3&lt;/span&gt;
-&lt;a name="rest_code_b5a4ed3b44824fca9a60ebfc0a7aeea1-2"&gt;&lt;/a&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;sys&lt;/span&gt;
-&lt;a name="rest_code_b5a4ed3b44824fca9a60ebfc0a7aeea1-3"&gt;&lt;/a&gt;&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;p&gt;If you go through the shell, you pass one string argument, whereas &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;exec*()&lt;/span&gt;&lt;/code&gt; demands you to specify arguments separately. Let’s write a sample program to print all the arguments it receives. I’ll do it in Python to get a more readable output.&lt;/p&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_3da0a7a709e2430387d9c0133507cc2d-1"&gt;&lt;/a&gt;&lt;span class="ch"&gt;#!/usr/bin/env python3&lt;/span&gt;
+&lt;a name="rest_code_3da0a7a709e2430387d9c0133507cc2d-2"&gt;&lt;/a&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;sys&lt;/span&gt;
+&lt;a name="rest_code_3da0a7a709e2430387d9c0133507cc2d-3"&gt;&lt;/a&gt;&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;Let’s see what appears:&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-1"&gt;&lt;/a&gt;$ ./argv.py foo bar
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-2"&gt;&lt;/a&gt;['./argv.py', 'foo', 'bar']
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-3"&gt;&lt;/a&gt;$ ./argv.py 'foo bar'
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-4"&gt;&lt;/a&gt;['./argv.py', 'foo bar']
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-5"&gt;&lt;/a&gt;$ ./argv.py foo\ bar baz
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-6"&gt;&lt;/a&gt;['./argv.py', 'foo bar', 'baz']
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-7"&gt;&lt;/a&gt;
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-8"&gt;&lt;/a&gt;$ ./argv.py $(date)
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-9"&gt;&lt;/a&gt;['./argv.py', 'Sat', 'Sep', '2', '16:54:52', 'CEST', '2017']
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-10"&gt;&lt;/a&gt;$ ./argv.py "$(date)"
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-11"&gt;&lt;/a&gt;['./argv.py', 'Sat Sep  2 16:54:52 CEST 2017']
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-12"&gt;&lt;/a&gt;
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-13"&gt;&lt;/a&gt;$ ./argv.py /usr/*
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-14"&gt;&lt;/a&gt;['./argv.py', '/usr/X11', '/usr/X11R6', '/usr/bin', '/usr/include', '/usr/lib', '/usr/libexec', '/usr/local', '/usr/sbin', '/usr/share', '/usr/standalone']
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-15"&gt;&lt;/a&gt;$ ./argv.py "/usr/*"
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-16"&gt;&lt;/a&gt;['./argv.py', '/usr/*']
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-17"&gt;&lt;/a&gt;
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-18"&gt;&lt;/a&gt;$ ./argv.py $EDITOR
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-19"&gt;&lt;/a&gt;['./argv.py', 'nvim']
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-20"&gt;&lt;/a&gt;
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-21"&gt;&lt;/a&gt;$ $PWD/argv.py foo bar
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-22"&gt;&lt;/a&gt;['/Users/kwpolska/Desktop/blog/subprocess/argv.py', 'foo', 'bar']
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-23"&gt;&lt;/a&gt;$ ./argv.py a{b,c}d
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-24"&gt;&lt;/a&gt;['./argv.py', 'abd', 'acd']
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-25"&gt;&lt;/a&gt;
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-26"&gt;&lt;/a&gt;$ python argv.py foo bar | cat
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-27"&gt;&lt;/a&gt;['argv.py', 'foo', 'bar']
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-28"&gt;&lt;/a&gt;$ python argv.py foo bar &amp;gt; foo.txt
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-29"&gt;&lt;/a&gt;$ cat foo.txt
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-30"&gt;&lt;/a&gt;['argv.py', 'foo', 'bar']
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-31"&gt;&lt;/a&gt;
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-32"&gt;&lt;/a&gt;$ ./argv.py foo; ls /usr
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-33"&gt;&lt;/a&gt;['./argv.py', 'foo']
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-34"&gt;&lt;/a&gt;X11@        X11R6@      bin/        include/    lib/        libexec/    local/      sbin/       share/      standalone/
+&lt;pre class="code text"&gt;&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-1"&gt;&lt;/a&gt;$ ./argv.py foo bar
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-2"&gt;&lt;/a&gt;['./argv.py', 'foo', 'bar']
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-3"&gt;&lt;/a&gt;$ ./argv.py 'foo bar'
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-4"&gt;&lt;/a&gt;['./argv.py', 'foo bar']
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-5"&gt;&lt;/a&gt;$ ./argv.py foo\ bar baz
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-6"&gt;&lt;/a&gt;['./argv.py', 'foo bar', 'baz']
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-7"&gt;&lt;/a&gt;
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-8"&gt;&lt;/a&gt;$ ./argv.py $(date)
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-9"&gt;&lt;/a&gt;['./argv.py', 'Sat', 'Sep', '2', '16:54:52', 'CEST', '2017']
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-10"&gt;&lt;/a&gt;$ ./argv.py "$(date)"
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-11"&gt;&lt;/a&gt;['./argv.py', 'Sat Sep  2 16:54:52 CEST 2017']
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-12"&gt;&lt;/a&gt;
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-13"&gt;&lt;/a&gt;$ ./argv.py /usr/*
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-14"&gt;&lt;/a&gt;['./argv.py', '/usr/X11', '/usr/X11R6', '/usr/bin', '/usr/include', '/usr/lib', '/usr/libexec', '/usr/local', '/usr/sbin', '/usr/share', '/usr/standalone']
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-15"&gt;&lt;/a&gt;$ ./argv.py "/usr/*"
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-16"&gt;&lt;/a&gt;['./argv.py', '/usr/*']
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-17"&gt;&lt;/a&gt;
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-18"&gt;&lt;/a&gt;$ ./argv.py $EDITOR
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-19"&gt;&lt;/a&gt;['./argv.py', 'nvim']
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-20"&gt;&lt;/a&gt;
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-21"&gt;&lt;/a&gt;$ $PWD/argv.py foo bar
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-22"&gt;&lt;/a&gt;['/Users/kwpolska/Desktop/blog/subprocess/argv.py', 'foo', 'bar']
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-23"&gt;&lt;/a&gt;$ ./argv.py a{b,c}d
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-24"&gt;&lt;/a&gt;['./argv.py', 'abd', 'acd']
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-25"&gt;&lt;/a&gt;
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-26"&gt;&lt;/a&gt;$ python argv.py foo bar | cat
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-27"&gt;&lt;/a&gt;['argv.py', 'foo', 'bar']
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-28"&gt;&lt;/a&gt;$ python argv.py foo bar &amp;gt; foo.txt
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-29"&gt;&lt;/a&gt;$ cat foo.txt
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-30"&gt;&lt;/a&gt;['argv.py', 'foo', 'bar']
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-31"&gt;&lt;/a&gt;
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-32"&gt;&lt;/a&gt;$ ./argv.py foo; ls /usr
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-33"&gt;&lt;/a&gt;['./argv.py', 'foo']
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-34"&gt;&lt;/a&gt;X11@        X11R6@      bin/        include/    lib/        libexec/    local/      sbin/       share/      standalone/
 &lt;/pre&gt;&lt;p&gt;As you can see, the following things are handled by the shell (the process is unaware of this occurring):&lt;/p&gt;
 &lt;ul class="simple"&gt;
-&lt;li&gt;quotes and escapes&lt;/li&gt;
-&lt;li&gt;expanding expressions in braces&lt;/li&gt;
-&lt;li&gt;expanding variables&lt;/li&gt;
-&lt;li&gt;wildcards (glob, &lt;tt class="docutils literal"&gt;*&lt;/tt&gt;)&lt;/li&gt;
-&lt;li&gt;redirections and pipes (&lt;tt class="docutils literal"&gt;&amp;gt; &amp;gt;&amp;gt; |&lt;/tt&gt;)&lt;/li&gt;
-&lt;li&gt;command substitution (backticks or &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;$(…)&lt;/span&gt;&lt;/tt&gt;)&lt;/li&gt;
-&lt;li&gt;running multiple commands on the same line (&lt;tt class="docutils literal"&gt;; &amp;amp;&amp;amp; || &amp;amp;&lt;/tt&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;quotes and escapes&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;expanding expressions in braces&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;expanding variables&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;wildcards (glob, &lt;code class="docutils literal"&gt;*&lt;/code&gt;)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;redirections and pipes (&lt;code class="docutils literal"&gt;&amp;gt; &amp;gt;&amp;gt; |&lt;/code&gt;)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;command substitution (backticks or &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;$(…)&lt;/span&gt;&lt;/code&gt;)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;running multiple commands on the same line (&lt;code class="docutils literal"&gt;; &amp;amp;&amp;amp; || &amp;amp;&lt;/code&gt;)&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;The list is full of potential vulnerabilities. If end users are in control of
 the arguments passed, and you go through the shell, they can
@@ -137,26 +136,34 @@ unnecessary indirection.&lt;/p&gt;
 &lt;div class="section" id="tl-dr-how-to-do-this-properly-in-your-language-of-choice"&gt;
 &lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#id12"&gt;TL;DR: How to do this properly in your language of choice&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;To ensure spawning subprocess is done securely, &lt;strong&gt;do not use the shell in between&lt;/strong&gt;. If you need any of the operations I listed above as part of your command — wildcards, pipes, etc. — you will need to take care of them in your code; most languages have those features built-in.&lt;/p&gt;
-&lt;dl class="dl-horizontal docutils"&gt;
+&lt;dl class="dl-horizontal simple"&gt;
 &lt;dt&gt;In C (Unix)&lt;/dt&gt;
-&lt;dd&gt;Perform fork-exec by yourself, or use &lt;tt class="docutils literal"&gt;posix_spawn()&lt;/tt&gt;. This also lets you communicate with the process if you open a pipe and make it stdout of the child process. Never use &lt;tt class="docutils literal"&gt;system()&lt;/tt&gt;.&lt;/dd&gt;
+&lt;dd&gt;&lt;p&gt;Perform fork-exec by yourself, or use &lt;code class="docutils literal"&gt;posix_spawn()&lt;/code&gt;. This also lets you communicate with the process if you open a pipe and make it stdout of the child process. Never use &lt;code class="docutils literal"&gt;system()&lt;/code&gt;.&lt;/p&gt;
+&lt;/dd&gt;
 &lt;dt&gt;In Python&lt;/dt&gt;
-&lt;dd&gt;Use the subprocess module. Always pass &lt;tt class="docutils literal"&gt;shell=False&lt;/tt&gt; and give it a &lt;em&gt;list&lt;/em&gt; of arguments. With asyncio, use &lt;tt class="docutils literal"&gt;asyncio.create_subprocess_exec&lt;/tt&gt; (and not &lt;tt class="docutils literal"&gt;_shell&lt;/tt&gt;), but note it takes &lt;tt class="docutils literal"&gt;*args&lt;/tt&gt; and not a list. Never use &lt;tt class="docutils literal"&gt;os.system&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;os.popen&lt;/tt&gt;.&lt;/dd&gt;
+&lt;dd&gt;&lt;p&gt;Use the subprocess module. Always pass &lt;code class="docutils literal"&gt;shell=False&lt;/code&gt; and give it a &lt;em&gt;list&lt;/em&gt; of arguments. With asyncio, use &lt;code class="docutils literal"&gt;asyncio.create_subprocess_exec&lt;/code&gt; (and not &lt;code class="docutils literal"&gt;_shell&lt;/code&gt;), but note it takes &lt;code class="docutils literal"&gt;*args&lt;/code&gt; and not a list. Never use &lt;code class="docutils literal"&gt;os.system&lt;/code&gt; and &lt;code class="docutils literal"&gt;os.popen&lt;/code&gt;.&lt;/p&gt;
+&lt;/dd&gt;
 &lt;dt&gt;In Ruby&lt;/dt&gt;
-&lt;dd&gt;Pass arrays to &lt;tt class="docutils literal"&gt;IO.popen&lt;/tt&gt;. Pass multiple arguments to &lt;tt class="docutils literal"&gt;system()&lt;/tt&gt; (&lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;system(["ls",&lt;/span&gt; &lt;span class="pre"&gt;"ls"])&lt;/span&gt;&lt;/tt&gt; or &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;system("ls",&lt;/span&gt; &lt;span class="pre"&gt;"-l")&lt;/span&gt;&lt;/tt&gt;). Never use &lt;tt class="docutils literal"&gt;%x{command}&lt;/tt&gt; or backticks.&lt;/dd&gt;
+&lt;dd&gt;&lt;p&gt;Pass arrays to &lt;code class="docutils literal"&gt;IO.popen&lt;/code&gt;. Pass multiple arguments to &lt;code class="docutils literal"&gt;system()&lt;/code&gt; (&lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;system(["ls",&lt;/span&gt; &lt;span class="pre"&gt;"ls"])&lt;/span&gt;&lt;/code&gt; or &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;system("ls",&lt;/span&gt; &lt;span class="pre"&gt;"-l")&lt;/span&gt;&lt;/code&gt;). Never use &lt;code class="docutils literal"&gt;%x{command}&lt;/code&gt; or backticks.&lt;/p&gt;
+&lt;/dd&gt;
 &lt;dt&gt;In Java&lt;/dt&gt;
-&lt;dd&gt;Pass arrays to &lt;tt class="docutils literal"&gt;Runtime.exec&lt;/tt&gt;. Pass multiple arguments or list to &lt;tt class="docutils literal"&gt;ProcessBuilder&lt;/tt&gt;.&lt;/dd&gt;
+&lt;dd&gt;&lt;p&gt;Pass arrays to &lt;code class="docutils literal"&gt;Runtime.exec&lt;/code&gt;. Pass multiple arguments or list to &lt;code class="docutils literal"&gt;ProcessBuilder&lt;/code&gt;.&lt;/p&gt;
+&lt;/dd&gt;
 &lt;dt&gt;In PHP&lt;/dt&gt;
-&lt;dd&gt;All the standard methods go through the shell. Try &lt;tt class="docutils literal"&gt;escapeshellcmd()&lt;/tt&gt;, &lt;tt class="docutils literal"&gt;escapeshellarg()&lt;/tt&gt; — or better, switch to Python. Or anything, really.&lt;/dd&gt;
+&lt;dd&gt;&lt;p&gt;All the standard methods go through the shell. Try &lt;code class="docutils literal"&gt;escapeshellcmd()&lt;/code&gt;, &lt;code class="docutils literal"&gt;escapeshellarg()&lt;/code&gt; — or better, switch to Python. Or anything, really.&lt;/p&gt;
+&lt;/dd&gt;
 &lt;dt&gt;In Go&lt;/dt&gt;
-&lt;dd&gt;&lt;tt class="docutils literal"&gt;os/exec&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;os.StartProcess&lt;/tt&gt; are safe.&lt;/dd&gt;
+&lt;dd&gt;&lt;p&gt;&lt;code class="docutils literal"&gt;os/exec&lt;/code&gt; and &lt;code class="docutils literal"&gt;os.StartProcess&lt;/code&gt; are safe.&lt;/p&gt;
+&lt;/dd&gt;
 &lt;dt&gt;In Node.js&lt;/dt&gt;
-&lt;dd&gt;Use &lt;tt class="docutils literal"&gt;child_process.execFile&lt;/tt&gt; or &lt;tt class="docutils literal"&gt;child_process.spawn&lt;/tt&gt; with &lt;tt class="docutils literal"&gt;shell&lt;/tt&gt; set to false.&lt;/dd&gt;
+&lt;dd&gt;&lt;p&gt;Use &lt;code class="docutils literal"&gt;child_process.execFile&lt;/code&gt; or &lt;code class="docutils literal"&gt;child_process.spawn&lt;/code&gt; with &lt;code class="docutils literal"&gt;shell&lt;/code&gt; set to false.&lt;/p&gt;
+&lt;/dd&gt;
 &lt;dt&gt;Elsewhere&lt;/dt&gt;
-&lt;dd&gt;You should be able to specify multiple strings (using variadic arguments,
+&lt;dd&gt;&lt;p&gt;You should be able to specify multiple strings (using variadic arguments,
 arrays, or otherwise standard data structures of your language of choice) as
 the command line. Otherwise, you might be running into something
-shell-related.&lt;/dd&gt;
+shell-related.&lt;/p&gt;
+&lt;/dd&gt;
 &lt;/dl&gt;
 &lt;/div&gt;
 &lt;div class="section" id="the-part-where-i-pretend-i-know-something-about-windows"&gt;
@@ -167,129 +174,115 @@ work in shell mode, but globs (asterisks) are always left for the called
 process to handle.&lt;/p&gt;
 &lt;p&gt;Some useful functions are implemented as shell built-ins — in that case, you
 need to call it via the shell.&lt;/p&gt;
-&lt;p&gt;Internals: There is no &lt;tt class="docutils literal"&gt;fork()&lt;/tt&gt; on Windows. Instead, &lt;tt class="docutils literal"&gt;CreateProcess()&lt;/tt&gt;,
-&lt;tt class="docutils literal"&gt;ShellExecute()&lt;/tt&gt;, or lower-level &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;spawn*()&lt;/span&gt;&lt;/tt&gt; functions are used. &lt;tt class="docutils literal"&gt;cmd.exe
-/c&lt;/tt&gt; is called in shell calls.&lt;/p&gt;
-&lt;table class="docutils footnote" frame="void" id="id5" rules="none"&gt;
-&lt;colgroup&gt;&lt;col class="label"&gt;&lt;col&gt;&lt;/colgroup&gt;
-&lt;tbody valign="top"&gt;
-&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#id1"&gt;[1]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;Unless your operating system does not implement copy-on-write forking — in that case, you might even run out of memory if you use too much of it.&lt;/td&gt;&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;table class="docutils footnote" frame="void" id="id6" rules="none"&gt;
-&lt;colgroup&gt;&lt;col class="label"&gt;&lt;col&gt;&lt;/colgroup&gt;
-&lt;tbody valign="top"&gt;
-&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#id2"&gt;[2]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;The function that does the real work is &lt;tt class="docutils literal"&gt;execve()&lt;/tt&gt;, which takes an exact path, an array of arguments, and takes environment variables as input. Other variants can also perform a &lt;tt class="docutils literal"&gt;$PATH&lt;/tt&gt; search, take argv as variadic arguments, and inherit environment from the current process. &lt;tt class="docutils literal"&gt;execl()&lt;/tt&gt; does the last two.&lt;/td&gt;&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;table class="docutils footnote" frame="void" id="id7" rules="none"&gt;
-&lt;colgroup&gt;&lt;col class="label"&gt;&lt;col&gt;&lt;/colgroup&gt;
-&lt;tbody valign="top"&gt;
-&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#id3"&gt;[3]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;Quoted from &lt;tt class="docutils literal"&gt;execve(2)&lt;/tt&gt; &lt;a class="reference external" href="https://www.freebsd.org/cgi/man.cgi?query=execve&amp;amp;sektion=2"&gt;man page&lt;/a&gt; from FreeBSD.&lt;/td&gt;&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;table class="docutils footnote" frame="void" id="id8" rules="none"&gt;
-&lt;colgroup&gt;&lt;col class="label"&gt;&lt;col&gt;&lt;/colgroup&gt;
-&lt;tbody valign="top"&gt;
-&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#id4"&gt;[4]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;An alternative is &lt;tt class="docutils literal"&gt;posix_spawn()&lt;/tt&gt;, but it usually does fork-exec, unless your platform does not support forking.&lt;/td&gt;&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
+&lt;p&gt;Internals: There is no &lt;code class="docutils literal"&gt;fork()&lt;/code&gt; on Windows. Instead, &lt;code class="docutils literal"&gt;CreateProcess()&lt;/code&gt;,
+&lt;code class="docutils literal"&gt;ShellExecute()&lt;/code&gt;, or lower-level &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;spawn*()&lt;/span&gt;&lt;/code&gt; functions are used. &lt;code class="docutils literal"&gt;cmd.exe
+/c&lt;/code&gt; is called in shell calls.&lt;/p&gt;
+&lt;dl class="footnote brackets"&gt;
+&lt;dt class="label" id="id5"&gt;&lt;span class="brackets"&gt;&lt;a class="fn-backref" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#id1"&gt;1&lt;/a&gt;&lt;/span&gt;&lt;/dt&gt;
+&lt;dd&gt;&lt;p&gt;Unless your operating system does not implement copy-on-write forking — in that case, you might even run out of memory if you use too much of it.&lt;/p&gt;
+&lt;/dd&gt;
+&lt;dt class="label" id="id6"&gt;&lt;span class="brackets"&gt;&lt;a class="fn-backref" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#id2"&gt;2&lt;/a&gt;&lt;/span&gt;&lt;/dt&gt;
+&lt;dd&gt;&lt;p&gt;The function that does the real work is &lt;code class="docutils literal"&gt;execve()&lt;/code&gt;, which takes an exact path, an array of arguments, and takes environment variables as input. Other variants can also perform a &lt;code class="docutils literal"&gt;$PATH&lt;/code&gt; search, take argv as variadic arguments, and inherit environment from the current process. &lt;code class="docutils literal"&gt;execl()&lt;/code&gt; does the last two.&lt;/p&gt;
+&lt;/dd&gt;
+&lt;dt class="label" id="id7"&gt;&lt;span class="brackets"&gt;&lt;a class="fn-backref" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#id3"&gt;3&lt;/a&gt;&lt;/span&gt;&lt;/dt&gt;
+&lt;dd&gt;&lt;p&gt;Quoted from &lt;code class="docutils literal"&gt;execve(2)&lt;/code&gt; &lt;a class="reference external" href="https://www.freebsd.org/cgi/man.cgi?query=execve&amp;amp;sektion=2"&gt;man page&lt;/a&gt; from FreeBSD.&lt;/p&gt;
+&lt;/dd&gt;
+&lt;dt class="label" id="id8"&gt;&lt;span class="brackets"&gt;&lt;a class="fn-backref" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#id4"&gt;4&lt;/a&gt;&lt;/span&gt;&lt;/dt&gt;
+&lt;dd&gt;&lt;p&gt;An alternative is &lt;code class="docutils literal"&gt;posix_spawn()&lt;/code&gt;, but it usually does fork-exec, unless your platform does not support forking.&lt;/p&gt;
+&lt;/dd&gt;
+&lt;/dl&gt;
 &lt;/div&gt;&lt;/div&gt;</description><category>best practices</category><category>C</category><category>devel</category><category>guide</category><category>Linux</category><category>Python</category><category>security</category><category>subprocess</category><category>Unix</category><guid>https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/</guid><pubDate>Sat, 02 Sep 2017 18:40:00 GMT</pubDate></item><item><title>Apple broke the display menu, so I wrote my own</title><link>https://chriswarrick.com/blog/2017/06/24/apple-broke-the-display-menu-so-i-wrote-my-own/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;A short time ago, the macOS display menu stopped working for me. It no longer had options to change mirroring settings, only supporting AirPlay. So I wrote my own, also solving some other issues.&lt;/p&gt;
 &lt;!-- TEASER_END --&gt;
-&lt;p&gt;The first thing to consider is: what features do I really want? I’m using a MacBook Pro with an external display. I sometimes need to switch to only one display &lt;a class="footnote-reference" href="https://chriswarrick.com/blog/2017/06/24/apple-broke-the-display-menu-so-i-wrote-my-own/#id3" id="id1"&gt;[1]&lt;/a&gt; — mirroring is useful here. Although I can afford to put the dock at the bottom in dual-screen mode, it works better on the right if I’m tight on space. &lt;a class="footnote-reference" href="https://chriswarrick.com/blog/2017/06/24/apple-broke-the-display-menu-so-i-wrote-my-own/#id4" id="id2"&gt;[2]&lt;/a&gt; Also when working on the MacBook screen, I can switch to a higher resolution. So, I need:&lt;/p&gt;
+&lt;p&gt;The first thing to consider is: what features do I really want? I’m using a MacBook Pro with an external display. I sometimes need to switch to only one display &lt;a class="footnote-reference brackets" href="https://chriswarrick.com/blog/2017/06/24/apple-broke-the-display-menu-so-i-wrote-my-own/#id3" id="id1"&gt;1&lt;/a&gt; — mirroring is useful here. Although I can afford to put the dock at the bottom in dual-screen mode, it works better on the right if I’m tight on space. &lt;a class="footnote-reference brackets" href="https://chriswarrick.com/blog/2017/06/24/apple-broke-the-display-menu-so-i-wrote-my-own/#id4" id="id2"&gt;2&lt;/a&gt; Also when working on the MacBook screen, I can switch to a higher resolution. So, I need:&lt;/p&gt;
 &lt;ul class="simple"&gt;
-&lt;li&gt;mirroring&lt;/li&gt;
-&lt;li&gt;screen resolution&lt;/li&gt;
-&lt;li&gt;dock position and icon size&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;mirroring&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;screen resolution&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;dock position and icon size&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;But I don’t want to pick all those three independently — a preset, like &lt;em&gt;dual screen&lt;/em&gt; or &lt;em&gt;MacBook only, 1440×900&lt;/em&gt; works better.&lt;/p&gt;
 &lt;p&gt;So, I wrote &lt;strong&gt;Display Menu&lt;/strong&gt;. It’s a simple menu bar extra — I haven’t yet built any friendly configuration GUI for it, so all you get for now is a JSON file. It’s roughly 600 lines of Swift. The app doesn’t do much, other than displaying an icon in the menu bar, and setting display preferences when asked to. But hey, it works for me.&lt;/p&gt;
 &lt;p&gt;Also, I must admit that Swift is a pretty nifty thing. Although the function to read JSON files needs to do a ton of type casting, and some of the low-level stuff looks as ugly as in C, but other than that, Swift is a modern, friendly language.&lt;/p&gt;
 &lt;p&gt;Display Menu is open-source, licensed under the 3-clause BSD license. &lt;a class="reference external" href="https://github.com/Kwpolska/DisplayMenu"&gt;Fork it on GitHub&lt;/a&gt; or &lt;a class="reference external" href="https://github.com/Kwpolska/DisplayMenu/releases"&gt;download binary releases&lt;/a&gt;.&lt;/p&gt;
-&lt;table class="docutils footnote" frame="void" id="id3" rules="none"&gt;
-&lt;colgroup&gt;&lt;col class="label"&gt;&lt;col&gt;&lt;/colgroup&gt;
-&lt;tbody valign="top"&gt;
-&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="https://chriswarrick.com/blog/2017/06/24/apple-broke-the-display-menu-so-i-wrote-my-own/#id1"&gt;[1]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;Inkscape/Xorg don’t work well with multiple displays. I can also mirror and turn off the external screen or use it with some other device.&lt;/td&gt;&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;table class="docutils footnote" frame="void" id="id4" rules="none"&gt;
-&lt;colgroup&gt;&lt;col class="label"&gt;&lt;col&gt;&lt;/colgroup&gt;
-&lt;tbody valign="top"&gt;
-&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="https://chriswarrick.com/blog/2017/06/24/apple-broke-the-display-menu-so-i-wrote-my-own/#id2"&gt;[2]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;also, in dual-screen mode, I can have the dock on one screen only, and the dock must live on the edge of the “extended” display — so either on the left side of the MacBook screen, or on the right side of the external display.&lt;/td&gt;&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;&lt;/div&gt;</description><category>app</category><category>Apple</category><category>display</category><category>programming</category><category>projects</category><category>Swift</category><guid>https://chriswarrick.com/blog/2017/06/24/apple-broke-the-display-menu-so-i-wrote-my-own/</guid><pubDate>Sat, 24 Jun 2017 19:02:47 GMT</pubDate></item><item><title>Unix locales vs Unicode (‘ascii’ codec can’t encode character…)</title><link>https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;You might get unusual errors about Unicode and inability to convert
+&lt;dl class="footnote brackets"&gt;
+&lt;dt class="label" id="id3"&gt;&lt;span class="brackets"&gt;&lt;a class="fn-backref" href="https://chriswarrick.com/blog/2017/06/24/apple-broke-the-display-menu-so-i-wrote-my-own/#id1"&gt;1&lt;/a&gt;&lt;/span&gt;&lt;/dt&gt;
+&lt;dd&gt;&lt;p&gt;Inkscape/Xorg don’t work well with multiple displays. I can also mirror and turn off the external screen or use it with some other device.&lt;/p&gt;
+&lt;/dd&gt;
+&lt;dt class="label" id="id4"&gt;&lt;span class="brackets"&gt;&lt;a class="fn-backref" href="https://chriswarrick.com/blog/2017/06/24/apple-broke-the-display-menu-so-i-wrote-my-own/#id2"&gt;2&lt;/a&gt;&lt;/span&gt;&lt;/dt&gt;
+&lt;dd&gt;&lt;p&gt;also, in dual-screen mode, I can have the dock on one screen only, and the dock must live on the edge of the “extended” display — so either on the left side of the MacBook screen, or on the right side of the external display.&lt;/p&gt;
+&lt;/dd&gt;
+&lt;/dl&gt;&lt;/div&gt;</description><category>app</category><category>Apple</category><category>display</category><category>programming</category><category>projects</category><category>Swift</category><guid>https://chriswarrick.com/blog/2017/06/24/apple-broke-the-display-menu-so-i-wrote-my-own/</guid><pubDate>Sat, 24 Jun 2017 19:02:47 GMT</pubDate></item><item><title>Unix locales vs Unicode (‘ascii’ codec can’t encode character…)</title><link>https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;You might get unusual errors about Unicode and inability to convert
 to ASCII. Programs might just crash at random. Those are often simple to fix —
 all you need is correct locale configuration.&lt;/p&gt;
 &lt;!-- TEASER_END --&gt;
 &lt;p class="lead"&gt;Has this ever happened to you?&lt;/p&gt;
-&lt;pre class="code pytb"&gt;&lt;a name="rest_code_a3e85446e1cf449aa3ff3114df06e511-1"&gt;&lt;/a&gt;&lt;span class="gt"&gt;Traceback (most recent call last):&lt;/span&gt;
-&lt;a name="rest_code_a3e85446e1cf449aa3ff3114df06e511-2"&gt;&lt;/a&gt;  File &lt;span class="nb"&gt;"aogonek.py"&lt;/span&gt;, line &lt;span class="m"&gt;1&lt;/span&gt;, in &lt;span class="n"&gt;&amp;lt;module&amp;gt;&lt;/span&gt;
-&lt;a name="rest_code_a3e85446e1cf449aa3ff3114df06e511-3"&gt;&lt;/a&gt;    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;u&lt;/span&gt;&lt;span class="s1"&gt;'&lt;/span&gt;&lt;span class="se"&gt;\u0105&lt;/span&gt;&lt;span class="s1"&gt;'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_a3e85446e1cf449aa3ff3114df06e511-4"&gt;&lt;/a&gt;&lt;span class="gr"&gt;UnicodeEncodeError&lt;/span&gt;: &lt;span class="n"&gt;'ascii' codec can't encode character '\u0105' in position 0: ordinal not in range(128)&lt;/span&gt;
-&lt;/pre&gt;&lt;pre class="code text"&gt;&lt;a name="rest_code_ceabb5c079ea4bbc813bd0b6ec00e067-1"&gt;&lt;/a&gt;Nikola: Could not guess locale for language en, using locale C
-&lt;/pre&gt;&lt;pre class="code text"&gt;&lt;a name="rest_code_b506c13ddc64423c89930e9845d5f6f4-1"&gt;&lt;/a&gt;Input: ą
-&lt;a name="rest_code_b506c13ddc64423c89930e9845d5f6f4-2"&gt;&lt;/a&gt;Desired ascii(): '\u0105'
-&lt;a name="rest_code_b506c13ddc64423c89930e9845d5f6f4-3"&gt;&lt;/a&gt;Real ascii(): '\udcc4\udc85'
-&lt;/pre&gt;&lt;pre class="code text"&gt;&lt;a name="rest_code_db4293eba946495687a98107125d8e4f-1"&gt;&lt;/a&gt;perl: warning: Setting locale failed.
-&lt;a name="rest_code_db4293eba946495687a98107125d8e4f-2"&gt;&lt;/a&gt;perl: warning: Please check that your locale settings:
-&lt;a name="rest_code_db4293eba946495687a98107125d8e4f-3"&gt;&lt;/a&gt;    [...]
-&lt;a name="rest_code_db4293eba946495687a98107125d8e4f-4"&gt;&lt;/a&gt;    are supported and installed on your system.
-&lt;a name="rest_code_db4293eba946495687a98107125d8e4f-5"&gt;&lt;/a&gt;perl: warning: Falling back to the standard locale ("C").
+&lt;pre class="code pytb"&gt;&lt;a name="rest_code_13ae908646ef4300a05a9bfaa695b432-1"&gt;&lt;/a&gt;&lt;span class="gt"&gt;Traceback (most recent call last):&lt;/span&gt;
+&lt;a name="rest_code_13ae908646ef4300a05a9bfaa695b432-2"&gt;&lt;/a&gt;  File &lt;span class="nb"&gt;"aogonek.py"&lt;/span&gt;, line &lt;span class="m"&gt;1&lt;/span&gt;, in &lt;span class="n"&gt;&amp;lt;module&amp;gt;&lt;/span&gt;
+&lt;a name="rest_code_13ae908646ef4300a05a9bfaa695b432-3"&gt;&lt;/a&gt;    &lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;u&lt;/span&gt;&lt;span class="s1"&gt;'&lt;/span&gt;&lt;span class="se"&gt;\u0105&lt;/span&gt;&lt;span class="s1"&gt;'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_13ae908646ef4300a05a9bfaa695b432-4"&gt;&lt;/a&gt;&lt;span class="gr"&gt;UnicodeEncodeError&lt;/span&gt;: &lt;span class="n"&gt;'ascii' codec can't encode character '\u0105' in position 0: ordinal not in range(128)&lt;/span&gt;
+&lt;/pre&gt;&lt;pre class="code text"&gt;&lt;a name="rest_code_0867e5bdfd894fb784917289a1c2c17b-1"&gt;&lt;/a&gt;Nikola: Could not guess locale for language en, using locale C
+&lt;/pre&gt;&lt;pre class="code text"&gt;&lt;a name="rest_code_1f5b244930e54a20b7ea759c6c0274d5-1"&gt;&lt;/a&gt;Input: ą
+&lt;a name="rest_code_1f5b244930e54a20b7ea759c6c0274d5-2"&gt;&lt;/a&gt;Desired ascii(): '\u0105'
+&lt;a name="rest_code_1f5b244930e54a20b7ea759c6c0274d5-3"&gt;&lt;/a&gt;Real ascii(): '\udcc4\udc85'
+&lt;/pre&gt;&lt;pre class="code text"&gt;&lt;a name="rest_code_ffa5f34b5a914a6c8e5d910db66b8ebf-1"&gt;&lt;/a&gt;perl: warning: Setting locale failed.
+&lt;a name="rest_code_ffa5f34b5a914a6c8e5d910db66b8ebf-2"&gt;&lt;/a&gt;perl: warning: Please check that your locale settings:
+&lt;a name="rest_code_ffa5f34b5a914a6c8e5d910db66b8ebf-3"&gt;&lt;/a&gt;    [...]
+&lt;a name="rest_code_ffa5f34b5a914a6c8e5d910db66b8ebf-4"&gt;&lt;/a&gt;    are supported and installed on your system.
+&lt;a name="rest_code_ffa5f34b5a914a6c8e5d910db66b8ebf-5"&gt;&lt;/a&gt;perl: warning: Falling back to the standard locale ("C").
 &lt;/pre&gt;&lt;p class="lead"&gt;All those errors have the same root cause: incorrect locale configuration.
 To fix them all, you need to generate the missing locales and set them.&lt;/p&gt;
 &lt;div class="section" id="check-currently-used-locale"&gt;
 &lt;h2&gt;Check currently used locale&lt;/h2&gt;
-&lt;p&gt;The &lt;tt class="docutils literal"&gt;locale&lt;/tt&gt; command (without arguments) should tell you which locales you’re
+&lt;p&gt;The &lt;code class="docutils literal"&gt;locale&lt;/code&gt; command (without arguments) should tell you which locales you’re
 currently using.  (The list might be shorter on your end)&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_3f41fe67eeac449fa403e9a20488a828-1"&gt;&lt;/a&gt;$ locale
-&lt;a name="rest_code_3f41fe67eeac449fa403e9a20488a828-2"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LANG&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_3f41fe67eeac449fa403e9a20488a828-3"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_CTYPE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_3f41fe67eeac449fa403e9a20488a828-4"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_NUMERIC&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_3f41fe67eeac449fa403e9a20488a828-5"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_TIME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_3f41fe67eeac449fa403e9a20488a828-6"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_COLLATE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_3f41fe67eeac449fa403e9a20488a828-7"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_MONETARY&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_3f41fe67eeac449fa403e9a20488a828-8"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_MESSAGES&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_3f41fe67eeac449fa403e9a20488a828-9"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_PAPER&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_3f41fe67eeac449fa403e9a20488a828-10"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_NAME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_3f41fe67eeac449fa403e9a20488a828-11"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_ADDRESS&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_3f41fe67eeac449fa403e9a20488a828-12"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_TELEPHONE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_3f41fe67eeac449fa403e9a20488a828-13"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_MEASUREMENT&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_3f41fe67eeac449fa403e9a20488a828-14"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_IDENTIFICATION&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_3f41fe67eeac449fa403e9a20488a828-15"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_ALL&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;
-&lt;/pre&gt;&lt;p&gt;If any of those is set to &lt;tt class="docutils literal"&gt;C&lt;/tt&gt; or &lt;tt class="docutils literal"&gt;POSIX&lt;/tt&gt;, has a different encoding than
-&lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;UTF-8&lt;/span&gt;&lt;/tt&gt; (sometimes spelled &lt;tt class="docutils literal"&gt;utf8&lt;/tt&gt;) is empty (with the exception of
-&lt;tt class="docutils literal"&gt;LC_ALL&lt;/tt&gt;), or if you see any errors, you need to reconfigure your locale.&lt;/p&gt;
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_daa5f78268ea49e885854b5a2283e15a-1"&gt;&lt;/a&gt;$ locale
+&lt;a name="rest_code_daa5f78268ea49e885854b5a2283e15a-2"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LANG&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_daa5f78268ea49e885854b5a2283e15a-3"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_CTYPE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_daa5f78268ea49e885854b5a2283e15a-4"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_NUMERIC&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_daa5f78268ea49e885854b5a2283e15a-5"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_TIME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_daa5f78268ea49e885854b5a2283e15a-6"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_COLLATE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_daa5f78268ea49e885854b5a2283e15a-7"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_MONETARY&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_daa5f78268ea49e885854b5a2283e15a-8"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_MESSAGES&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_daa5f78268ea49e885854b5a2283e15a-9"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_PAPER&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_daa5f78268ea49e885854b5a2283e15a-10"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_NAME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_daa5f78268ea49e885854b5a2283e15a-11"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_ADDRESS&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_daa5f78268ea49e885854b5a2283e15a-12"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_TELEPHONE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_daa5f78268ea49e885854b5a2283e15a-13"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_MEASUREMENT&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_daa5f78268ea49e885854b5a2283e15a-14"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_IDENTIFICATION&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_daa5f78268ea49e885854b5a2283e15a-15"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_ALL&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;
+&lt;/pre&gt;&lt;p&gt;If any of those is set to &lt;code class="docutils literal"&gt;C&lt;/code&gt; or &lt;code class="docutils literal"&gt;POSIX&lt;/code&gt;, has a different encoding than
+&lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;UTF-8&lt;/span&gt;&lt;/code&gt; (sometimes spelled &lt;code class="docutils literal"&gt;utf8&lt;/code&gt;) is empty (with the exception of
+&lt;code class="docutils literal"&gt;LC_ALL&lt;/code&gt;), or if you see any errors, you need to reconfigure your locale.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="check-locale-availability-and-install-missing-locales"&gt;
 &lt;h2&gt;Check locale availability and install missing locales&lt;/h2&gt;
 &lt;p&gt;The first thing you need to do is check locale availability. To do this, run
-&lt;tt class="docutils literal"&gt;locale &lt;span class="pre"&gt;-a&lt;/span&gt;&lt;/tt&gt;. This will produce a list of all installed locales.  You can use
-&lt;tt class="docutils literal"&gt;grep&lt;/tt&gt; to get a more reasonable list.&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_3bf7ac5113624a028385036abe4b5d44-1"&gt;&lt;/a&gt;$ locale -a | grep -i utf
-&lt;a name="rest_code_3bf7ac5113624a028385036abe4b5d44-2"&gt;&lt;/a&gt;&amp;lt;lists all UTF-8 locales&amp;gt;
-&lt;a name="rest_code_3bf7ac5113624a028385036abe4b5d44-3"&gt;&lt;/a&gt;$ locale -a | grep -i utf | grep -i en_US
-&lt;a name="rest_code_3bf7ac5113624a028385036abe4b5d44-4"&gt;&lt;/a&gt;en_US.UTF-8
+&lt;code class="docutils literal"&gt;locale &lt;span class="pre"&gt;-a&lt;/span&gt;&lt;/code&gt;. This will produce a list of all installed locales.  You can use
+&lt;code class="docutils literal"&gt;grep&lt;/code&gt; to get a more reasonable list.&lt;/p&gt;
+&lt;pre class="code text"&gt;&lt;a name="rest_code_8f7baf5da99d4fa5999219d93f52acc4-1"&gt;&lt;/a&gt;$ locale -a | grep -i utf
+&lt;a name="rest_code_8f7baf5da99d4fa5999219d93f52acc4-2"&gt;&lt;/a&gt;&amp;lt;lists all UTF-8 locales&amp;gt;
+&lt;a name="rest_code_8f7baf5da99d4fa5999219d93f52acc4-3"&gt;&lt;/a&gt;$ locale -a | grep -i utf | grep -i en_US
+&lt;a name="rest_code_8f7baf5da99d4fa5999219d93f52acc4-4"&gt;&lt;/a&gt;en_US.UTF-8
 &lt;/pre&gt;&lt;p&gt;The best locale to use is the one for your language, with the UTF-8 encoding.
 The locale will be used by some console apps for output. I’m going to use
-&lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;en_US.UTF-8&lt;/span&gt;&lt;/tt&gt; in this guide.&lt;/p&gt;
+&lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;en_US.UTF-8&lt;/span&gt;&lt;/code&gt; in this guide.&lt;/p&gt;
 &lt;p&gt;If you can’t see any UTF-8 locales, or no appropriate locale setting for your
 language of choice, you might need to generate those. The required actions
 depend on your distro/OS.&lt;/p&gt;
 &lt;ul class="simple"&gt;
-&lt;li&gt;Debian, Ubuntu, and derivatives: install &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;language-pack-en-base&lt;/span&gt;&lt;/tt&gt;, run &lt;tt class="docutils literal"&gt;sudo &lt;span class="pre"&gt;dpkg-reconfigure&lt;/span&gt; locales&lt;/tt&gt;&lt;/li&gt;
-&lt;li&gt;RHEL, CentOS, Fedora: install &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;glibc-langpack-en&lt;/span&gt;&lt;/tt&gt;&lt;/li&gt;
-&lt;li&gt;Arch Linux: uncomment relevant entries in &lt;tt class="docutils literal"&gt;/etc/locale.gen&lt;/tt&gt; and run &lt;tt class="docutils literal"&gt;sudo &lt;span class="pre"&gt;locale-gen&lt;/span&gt;&lt;/tt&gt; &lt;a class="reference external" href="https://wiki.archlinux.org/index.php/Locale"&gt;(wiki)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;For other OSes, refer to the documentation.&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Debian, Ubuntu, and derivatives: install &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;language-pack-en-base&lt;/span&gt;&lt;/code&gt;, run &lt;code class="docutils literal"&gt;sudo &lt;span class="pre"&gt;dpkg-reconfigure&lt;/span&gt; locales&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;RHEL, CentOS, Fedora: install &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;glibc-langpack-en&lt;/span&gt;&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Arch Linux: uncomment relevant entries in &lt;code class="docutils literal"&gt;/etc/locale.gen&lt;/code&gt; and run &lt;code class="docutils literal"&gt;sudo &lt;span class="pre"&gt;locale-gen&lt;/span&gt;&lt;/code&gt; &lt;a class="reference external" href="https://wiki.archlinux.org/index.php/Locale"&gt;(wiki)&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;For other OSes, refer to the documentation.&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;You need a UTF-8 locale to ensure compatibility with software. Avoid the &lt;tt class="docutils literal"&gt;C&lt;/tt&gt;
-and &lt;tt class="docutils literal"&gt;POSIX&lt;/tt&gt; locales (it’s ASCII) and locales with other encodings (those
+&lt;p&gt;You need a UTF-8 locale to ensure compatibility with software. Avoid the &lt;code class="docutils literal"&gt;C&lt;/code&gt;
+and &lt;code class="docutils literal"&gt;POSIX&lt;/code&gt; locales (it’s ASCII) and locales with other encodings (those
 aren’t used by ~anyone these days)&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="configure-system-wide"&gt;
 &lt;h2&gt;Configure system-wide&lt;/h2&gt;
 &lt;p&gt;On some systems, you may be able to configure locale system-wide.  Check your
 system documentation for details. If your system has systemd, run&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_d4b51aa23bbd437290c81f5d7031709b-1"&gt;&lt;/a&gt;sudo localectl set-locale LANG=en_US.UTF-8
+&lt;pre class="code text"&gt;&lt;a name="rest_code_af1440e180054ba2a0579701f64f85b5-1"&gt;&lt;/a&gt;sudo localectl set-locale LANG=en_US.UTF-8
 &lt;/pre&gt;&lt;/div&gt;
 &lt;div class="section" id="configure-for-a-single-user"&gt;
 &lt;h2&gt;Configure for a single user&lt;/h2&gt;
@@ -297,9 +290,9 @@ system documentation for details. If your system has systemd, run&lt;/p&gt;
 shared server with generated but unconfigured locales), or if you want to
 ensure it’s always configured independently of system settings.&lt;/p&gt;
 &lt;p&gt;To do this, you need to edit the configuration file for your shell. If you’re
-using bash, it’s &lt;tt class="docutils literal"&gt;.bashrc&lt;/tt&gt; (or &lt;tt class="docutils literal"&gt;.bash_profile&lt;/tt&gt; on macOS). For zsh users,
-&lt;tt class="docutils literal"&gt;.zshrc&lt;/tt&gt;.  Add this line (or equivalent in your shell):&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_0ec3710145494f10bf32835cae4ef181-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;export&lt;/span&gt; &lt;span class="nv"&gt;LANG&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;en_US.UTF-8 &lt;span class="nv"&gt;LC_ALL&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;en_US.UTF-8
+using bash, it’s &lt;code class="docutils literal"&gt;.bashrc&lt;/code&gt; (or &lt;code class="docutils literal"&gt;.bash_profile&lt;/code&gt; on macOS). For zsh users,
+&lt;code class="docutils literal"&gt;.zshrc&lt;/code&gt;.  Add this line (or equivalent in your shell):&lt;/p&gt;
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_3d6323c64d0e4e55bcdd75ecd3d48ba6-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;export&lt;/span&gt; &lt;span class="nv"&gt;LANG&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;en_US.UTF-8 &lt;span class="nv"&gt;LC_ALL&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;en_US.UTF-8
 &lt;/pre&gt;&lt;p&gt;That should be enough. Note that those settings don’t apply to programs
 not launched through a shell.&lt;/p&gt;
 &lt;hr class="docutils"&gt;
@@ -315,25 +308,25 @@ part of a release.&lt;/p&gt;
 &lt;!-- TEASER_END --&gt;
 &lt;p&gt;The &lt;a class="reference external" href="https://github.com/Kwpolska/python-project-template"&gt;Python Project Template&lt;/a&gt; is my approach to this. It comes with a good (IMO) structure and automation.&lt;/p&gt;
 &lt;p&gt;What does it include? A whole lot of things. Documentation, Sphinx
-configuration, a simple test suite, a &lt;tt class="docutils literal"&gt;setup.py&lt;/tt&gt; file, some AUR stuff, and
-perhaps the most important part — the &lt;tt class="docutils literal"&gt;release&lt;/tt&gt; script. It can automate a lot
+configuration, a simple test suite, a &lt;code class="docutils literal"&gt;setup.py&lt;/code&gt; file, some AUR stuff, and
+perhaps the most important part — the &lt;code class="docutils literal"&gt;release&lt;/code&gt; script. It can automate a lot
 of tasks that are part of a release.&lt;/p&gt;
 &lt;p&gt;You see, releasing a package is error-prone. There are a lot of things that can go wrong:&lt;/p&gt;
 &lt;ul class="simple"&gt;
-&lt;li&gt;Version numbers. They may appear in code comments, Sphinx configuration,
+&lt;li&gt;&lt;p&gt;Version numbers. They may appear in code comments, Sphinx configuration,
 README files and documentation, and setup.py. Some people claim to have
 “solutions” for this. Most of those solutions don’t work right — either they
-import a file from the project (which may break if &lt;tt class="docutils literal"&gt;__init__.py&lt;/tt&gt; is too
+import a file from the project (which may break if &lt;code class="docutils literal"&gt;__init__.py&lt;/code&gt; is too
 magical), read a file from that place (which might not get included
 properly), or use some setuptools extension to get the version from VCS or
-whatever (which needs to be installed before the package). Using &lt;tt class="docutils literal"&gt;sed&lt;/tt&gt; to
-fix the version numbers is much simpler.&lt;/li&gt;
-&lt;li&gt;Forgetting about changelogs.&lt;/li&gt;
-&lt;li&gt;Not updating translations or other important files.&lt;/li&gt;
+whatever (which needs to be installed before the package). Using &lt;code class="docutils literal"&gt;sed&lt;/code&gt; to
+fix the version numbers is much simpler.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Forgetting about changelogs.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Not updating translations or other important files.&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;We’ve had quite a few botched releases in the &lt;a class="reference external" href="https://getnikola.com/"&gt;Nikola&lt;/a&gt; project. I wrote a
 &lt;a class="reference external" href="http://getnikola.github.io/releng/checklist.html"&gt;checklist&lt;/a&gt; to prevent things like those. You may notice that the most
-prominent step is to run a &lt;tt class="docutils literal"&gt;release&lt;/tt&gt; script. This step replaced 21 others —
+prominent step is to run a &lt;code class="docutils literal"&gt;release&lt;/code&gt; script. This step replaced 21 others —
 now the checklist only talks about writing announcements, sending e-mails,
 updating the website, and doing some GitHub stuff that is not yet automated.&lt;/p&gt;
 &lt;p&gt;The template promotes a &lt;em&gt;release early, release often&lt;/em&gt; workflow: since making a
@@ -343,37 +336,39 @@ automated, and it might as well be possible in yours.&lt;/p&gt;
 &lt;div class="section" id="the-complete-feature-list-as-of-v2-1-5"&gt;
 &lt;h2&gt;The complete feature list (as of v2.1.5)&lt;/h2&gt;
 &lt;ul class="simple"&gt;
-&lt;li&gt;pre-configured Sphinx with:&lt;ul&gt;
-&lt;li&gt;&lt;tt class="docutils literal"&gt;CONTRIBUTING.rst&lt;/tt&gt; guide (used by GitHub when sending a pull request or an issue)&lt;/li&gt;
-&lt;li&gt;&lt;tt class="docutils literal"&gt;LICENSE.rst&lt;/tt&gt;&lt;/li&gt;
-&lt;li&gt;an empty &lt;tt class="docutils literal"&gt;CHANGELOG.rst&lt;/tt&gt;&lt;/li&gt;
-&lt;li&gt;&lt;tt class="docutils literal"&gt;README.rst&lt;/tt&gt;&lt;/li&gt;
-&lt;li&gt;a bare-bones &lt;tt class="docutils literal"&gt;index.rst&lt;/tt&gt; page&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;pre-configured Sphinx with:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;code class="docutils literal"&gt;CONTRIBUTING.rst&lt;/code&gt; guide (used by GitHub when sending a pull request or an issue)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code class="docutils literal"&gt;LICENSE.rst&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;an empty &lt;code class="docutils literal"&gt;CHANGELOG.rst&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code class="docutils literal"&gt;README.rst&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;a bare-bones &lt;code class="docutils literal"&gt;index.rst&lt;/code&gt; page&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
-&lt;li&gt;The exact same files in &lt;tt class="docutils literal"&gt;/&lt;/tt&gt;, which are fragile and &lt;strong&gt;MAY NOT&lt;/strong&gt; be modified
-as they are replaced with copies in &lt;tt class="docutils literal"&gt;/docs&lt;/tt&gt; by the &lt;tt class="docutils literal"&gt;release&lt;/tt&gt; script&lt;/li&gt;
-&lt;li&gt;&lt;tt class="docutils literal"&gt;__init__.py&lt;/tt&gt;, &lt;tt class="docutils literal"&gt;__main__.py&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;template.py&lt;/tt&gt; files in the Python package directory&lt;/li&gt;
-&lt;li&gt;A &lt;tt class="docutils literal"&gt;setup.py&lt;/tt&gt; file that could be good enough for people, and that supports
-&lt;tt class="docutils literal"&gt;entry_points&lt;/tt&gt; (see &lt;a class="reference external" href="https://go.chriswarrick.com/entry_points"&gt;https://go.chriswarrick.com/entry_points&lt;/a&gt;).&lt;/li&gt;
-&lt;li&gt;&lt;tt class="docutils literal"&gt;tests/&lt;/tt&gt; containing some &lt;em&gt;Is My Python Sane?&lt;/em&gt;-style tests (using &lt;tt class="docutils literal"&gt;pytest&lt;/tt&gt;)&lt;/li&gt;
-&lt;li&gt;An automated global update script (&lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;.pypt/PYPT-UPDATE&lt;/span&gt;&lt;/tt&gt;)&lt;/li&gt;
-&lt;li&gt;Entry points configuration ready to be uncommented (and a matching
-&lt;tt class="docutils literal"&gt;__main__.py&lt;/tt&gt; file)&lt;/li&gt;
-&lt;li&gt;Add-ons for Qt users (in &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;pypt-extras/Qt&lt;/span&gt;&lt;/tt&gt;)&lt;/li&gt;
-&lt;li&gt;A sample hook for AUR updates (in &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;pypt-extras/AUR&lt;/span&gt;&lt;/tt&gt;)&lt;/li&gt;
-&lt;li&gt;PKGBUILDs for the Arch Linux User Repository (AUR)&lt;/li&gt;
-&lt;li&gt;A state-of-the-art &lt;tt class="docutils literal"&gt;release&lt;/tt&gt; script, the operations of which are:&lt;ul&gt;
-&lt;li&gt;querying the user for version number, commit message and changes&lt;/li&gt;
-&lt;li&gt;updating &lt;tt class="docutils literal"&gt;/docs/CHANGELOG.rst&lt;/tt&gt;&lt;/li&gt;
-&lt;li&gt;bumping the version number in all the files, changing dates where necessary&lt;/li&gt;
-&lt;li&gt;copying over &lt;tt class="docutils literal"&gt;/docs/README.rst&lt;/tt&gt;,  &lt;tt class="docutils literal"&gt;/docs/CHANGELOG.rst&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;/docs/CONTRIBUTING.rst&lt;/tt&gt; to &lt;tt class="docutils literal"&gt;/&lt;/tt&gt;&lt;/li&gt;
-&lt;li&gt;locale generation (via the &lt;tt class="docutils literal"&gt;.pypt/localegen&lt;/tt&gt; script)&lt;/li&gt;
-&lt;li&gt;running &lt;tt class="docutils literal"&gt;import $PROJECTLC&lt;/tt&gt; and the test suite&lt;/li&gt;
-&lt;li&gt;uploading a source distribution and a wheel to PyPI&lt;/li&gt;
-&lt;li&gt;Making a Git commit and tagging the release&lt;/li&gt;
-&lt;li&gt;creating a GitHub Releases entry&lt;/li&gt;
-&lt;li&gt;updating the AUR packages (by using hooks)&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;The exact same files in &lt;code class="docutils literal"&gt;/&lt;/code&gt;, which are fragile and &lt;strong&gt;MAY NOT&lt;/strong&gt; be modified
+as they are replaced with copies in &lt;code class="docutils literal"&gt;/docs&lt;/code&gt; by the &lt;code class="docutils literal"&gt;release&lt;/code&gt; script&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code class="docutils literal"&gt;__init__.py&lt;/code&gt;, &lt;code class="docutils literal"&gt;__main__.py&lt;/code&gt; and &lt;code class="docutils literal"&gt;template.py&lt;/code&gt; files in the Python package directory&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;A &lt;code class="docutils literal"&gt;setup.py&lt;/code&gt; file that could be good enough for people, and that supports
+&lt;code class="docutils literal"&gt;entry_points&lt;/code&gt; (see &lt;a class="reference external" href="https://go.chriswarrick.com/entry_points"&gt;https://go.chriswarrick.com/entry_points&lt;/a&gt;).&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code class="docutils literal"&gt;tests/&lt;/code&gt; containing some &lt;em&gt;Is My Python Sane?&lt;/em&gt;-style tests (using &lt;code class="docutils literal"&gt;pytest&lt;/code&gt;)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;An automated global update script (&lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;.pypt/PYPT-UPDATE&lt;/span&gt;&lt;/code&gt;)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Entry points configuration ready to be uncommented (and a matching
+&lt;code class="docutils literal"&gt;__main__.py&lt;/code&gt; file)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Add-ons for Qt users (in &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;pypt-extras/Qt&lt;/span&gt;&lt;/code&gt;)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;A sample hook for AUR updates (in &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;pypt-extras/AUR&lt;/span&gt;&lt;/code&gt;)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;PKGBUILDs for the Arch Linux User Repository (AUR)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;A state-of-the-art &lt;code class="docutils literal"&gt;release&lt;/code&gt; script, the operations of which are:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;querying the user for version number, commit message and changes&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;updating &lt;code class="docutils literal"&gt;/docs/CHANGELOG.rst&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;bumping the version number in all the files, changing dates where necessary&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;copying over &lt;code class="docutils literal"&gt;/docs/README.rst&lt;/code&gt;,  &lt;code class="docutils literal"&gt;/docs/CHANGELOG.rst&lt;/code&gt; and &lt;code class="docutils literal"&gt;/docs/CONTRIBUTING.rst&lt;/code&gt; to &lt;code class="docutils literal"&gt;/&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;locale generation (via the &lt;code class="docutils literal"&gt;.pypt/localegen&lt;/code&gt; script)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;running &lt;code class="docutils literal"&gt;import $PROJECTLC&lt;/code&gt; and the test suite&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;uploading a source distribution and a wheel to PyPI&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Making a Git commit and tagging the release&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;creating a GitHub Releases entry&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;updating the AUR packages (by using hooks)&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
@@ -387,23 +382,25 @@ all pretty badly.&lt;/p&gt;
 &lt;p&gt;So first, some people might claim that &lt;a class="reference external" href="http://www.ietf.org/rfc/rfc4180.txt"&gt;RFC 4180&lt;/a&gt; is the CSV standard. Those
 people also have not read the document they’re referring to. It states:&lt;/p&gt;
 &lt;blockquote&gt;
-This memo provides information for the Internet community.  It does
-not specify an Internet standard of any kind.&lt;/blockquote&gt;
-&lt;p&gt;The problem with this is the fact that a &lt;tt class="docutils literal"&gt;.csv&lt;/tt&gt; file does not mean much. There
+&lt;p&gt;This memo provides information for the Internet community.  It does
+not specify an Internet standard of any kind.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;The problem with this is the fact that a &lt;code class="docutils literal"&gt;.csv&lt;/code&gt; file does not mean much. There
 are a few problems. The first question is,&lt;/p&gt;
 &lt;blockquote&gt;
-What is the field separator? Is it a comma or a semicolon?&lt;/blockquote&gt;
+&lt;p&gt;What is the field separator? Is it a comma or a semicolon?&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;Hey, wait a minute, doesn’t the file format/extension stand for
 &lt;em&gt;comma-separated values&lt;/em&gt;? Yes, it does. But that does not matter in the
 slightest. You see, Microsoft Excel — which most people will use to read/write
 their CSV files — makes this decision based on the user locale settings. If the
 OS is set to a locale where the comma is the &lt;a class="reference external" href="https://en.wikipedia.org/wiki/Decimal_mark#Hindu.E2.80.93Arabic_numeral_system"&gt;decimal mark&lt;/a&gt; (eg. most of
-Europe), the list separator is set to &lt;tt class="docutils literal"&gt;;&lt;/tt&gt; instead of &lt;tt class="docutils literal"&gt;,&lt;/tt&gt; — and Excel uses
+Europe), the list separator is set to &lt;code class="docutils literal"&gt;;&lt;/code&gt; instead of &lt;code class="docutils literal"&gt;,&lt;/code&gt; — and Excel uses
 that.&lt;/p&gt;
 &lt;p&gt;Of course, there’s also the TSV data format — those are tab-separated values.
-And some people might name their TSV files &lt;tt class="docutils literal"&gt;.csv&lt;/tt&gt;.&lt;/p&gt;
+And some people might name their TSV files &lt;code class="docutils literal"&gt;.csv&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;To read files saved in a different locale, or with a different separator, Excel
-users need to change the file extension to &lt;tt class="docutils literal"&gt;.txt&lt;/tt&gt;, or go to Data → Get
+users need to change the file extension to &lt;code class="docutils literal"&gt;.txt&lt;/code&gt;, or go to Data → Get
 External Data → From Text &lt;a class="reference external" href="https://support.office.com/en-us/article/Text-Import-Wizard-c5b02af6-fda1-4440-899f-f78bafe41857"&gt;(documentation)&lt;/a&gt; and use the import wizard. You
 can’t double-click on files.&lt;/p&gt;
 &lt;p&gt;On a side note, Apple Numbers guesses the format — one of the few things it
@@ -412,27 +409,30 @@ default it uses tab AND comma AND semicolon for CSV files, which brings its own
 host of problems.&lt;/p&gt;
 &lt;p&gt;Here’s a quick test:&lt;/p&gt;
 &lt;blockquote&gt;
-What does &lt;tt class="docutils literal"&gt;foo;bar,baz;quux&lt;/tt&gt; mean? What about &lt;tt class="docutils literal"&gt;foo,bar;baz,quux&lt;/tt&gt;?&lt;/blockquote&gt;
+&lt;p&gt;What does &lt;code class="docutils literal"&gt;foo;bar,baz;quux&lt;/code&gt; mean? What about &lt;code class="docutils literal"&gt;foo,bar;baz,quux&lt;/code&gt;?&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;ul class="simple"&gt;
-&lt;li&gt;LibreOffice assumes it’s (Chinese) UTF-16 text, but after telling it the real encoding, both
-files contain &lt;strong&gt;4 columns&lt;/strong&gt;.&lt;/li&gt;
-&lt;li&gt;Microsoft Excel says one of the files contains &lt;strong&gt;3 columns&lt;/strong&gt; and the other contains &lt;strong&gt;2 columns&lt;/strong&gt;
-(which is which depends on locale)&lt;/li&gt;
-&lt;li&gt;Apple Numbers says the first file contains &lt;strong&gt;3 columns&lt;/strong&gt; and the other
+&lt;li&gt;&lt;p&gt;LibreOffice assumes it’s (Chinese) UTF-16 text, but after telling it the real encoding, both
+files contain &lt;strong&gt;4 columns&lt;/strong&gt;.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Microsoft Excel says one of the files contains &lt;strong&gt;3 columns&lt;/strong&gt; and the other contains &lt;strong&gt;2 columns&lt;/strong&gt;
+(which is which depends on locale)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Apple Numbers says the first file contains &lt;strong&gt;3 columns&lt;/strong&gt; and the other
 contains &lt;strong&gt;2 columns&lt;/strong&gt; if set to English, and both files contain &lt;strong&gt;3
-columns&lt;/strong&gt; if set to Polish.&lt;/li&gt;
+columns&lt;/strong&gt; if set to Polish.&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;But let’s get back to gotchas:&lt;/p&gt;
 &lt;blockquote&gt;
-What is the decimal mark? Is it a dot or a comma?&lt;/blockquote&gt;
+&lt;p&gt;What is the decimal mark? Is it a dot or a comma?&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;That’s a direct consequence of the previous question. However, one can’t simply
-assume &lt;tt class="docutils literal"&gt;comma/dot&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;semicolon/comma&lt;/tt&gt;, because users might do crazy
+assume &lt;code class="docutils literal"&gt;comma/dot&lt;/code&gt; and &lt;code class="docutils literal"&gt;semicolon/comma&lt;/code&gt;, because users might do crazy
 stuff.&lt;/p&gt;
 &lt;blockquote&gt;
-What is used to escape rows containing the field separator? Quotes?
-Backslashes?  What is used to escape the escape character?&lt;/blockquote&gt;
-&lt;p&gt;Excel, for example, puts some things in &lt;tt class="docutils literal"&gt;"quotes"&lt;/tt&gt;. If a literal quote
-character appears in the spreadsheet, it’s represented as &lt;tt class="docutils literal"&gt;""&lt;/tt&gt;, and
+&lt;p&gt;What is used to escape rows containing the field separator? Quotes?
+Backslashes?  What is used to escape the escape character?&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Excel, for example, puts some things in &lt;code class="docutils literal"&gt;"quotes"&lt;/code&gt;. If a literal quote
+character appears in the spreadsheet, it’s represented as &lt;code class="docutils literal"&gt;""&lt;/code&gt;, and
 the entire cell is quoted as well. But there might be programs that use
 backslashes for escapes, or even bad code that does not consider the need of
 escaping like this, with tragic results.&lt;/p&gt;
@@ -440,7 +440,8 @@ escaping like this, with tragic results.&lt;/p&gt;
 format effectively solves the issues I named before, both CSV and TSV suffer
 from one problem:&lt;/p&gt;
 &lt;blockquote&gt;
-Which encoding to use when reading this file?&lt;/blockquote&gt;
+&lt;p&gt;Which encoding to use when reading this file?&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;I already mentioned that LibreOffice believed my sample file was UTF-16,
 containing Chinese text — in reality, this file was UTF-8 (or ASCII).&lt;/p&gt;
 &lt;p&gt;What does Microsoft Excel do then? It looks like it follows &lt;em&gt;System locale for
@@ -461,77 +462,77 @@ Vim macro did it faster and better than a human would.&lt;/p&gt;
 editor like Vim. Why? Here are two examples, after the break.&lt;/p&gt;
 &lt;!-- TEASER_END --&gt;
 &lt;div class="section" id="episode-i-inotifypropertychanged-or-python-writing-c"&gt;
-&lt;h2&gt;Episode I: &lt;tt class="docutils literal"&gt;INotifyPropertyChanged&lt;/tt&gt;, or Python writing C#&lt;/h2&gt;
+&lt;h2&gt;Episode I: &lt;code class="docutils literal"&gt;INotifyPropertyChanged&lt;/code&gt;, or Python writing C#&lt;/h2&gt;
 &lt;p&gt;I was building a private C# weekend project (that turned into a weeklong
 project) — and by the way, WPF and C# are quite pleasant (Windows Forms is a
 trainwreck, though). One of the things I used in that project was a DataGrid
 bound to a list of custom objects (a DataGrid is a table, basically). And in
-order to use it, you need to use the &lt;tt class="docutils literal"&gt;INotifyPropertyChanged&lt;/tt&gt; interface &lt;a class="reference external" href="https://msdn.microsoft.com/en-us/library/ms229614(v=vs.100).aspx"&gt;(MSDN)&lt;/a&gt;.
+order to use it, you need to use the &lt;code class="docutils literal"&gt;INotifyPropertyChanged&lt;/code&gt; interface &lt;a class="reference external" href="https://msdn.microsoft.com/en-us/library/ms229614(v=vs.100).aspx"&gt;(MSDN)&lt;/a&gt;.
 It involves doing something like this:&lt;/p&gt;
-&lt;pre class="code csharp"&gt;&lt;a name="rest_code_9a6af0e3be894005a68ad9e011fb1952-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;private&lt;/span&gt; &lt;span class="kt"&gt;string&lt;/span&gt; &lt;span class="n"&gt;name_&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="k"&gt;get&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="k"&gt;set&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="p"&gt;};&lt;/span&gt; &lt;span class="c1"&gt;// can also be a field&lt;/span&gt;
-&lt;a name="rest_code_9a6af0e3be894005a68ad9e011fb1952-2"&gt;&lt;/a&gt;
-&lt;a name="rest_code_9a6af0e3be894005a68ad9e011fb1952-3"&gt;&lt;/a&gt;&lt;span class="na"&gt;[JsonProperty]&lt;/span&gt;
-&lt;a name="rest_code_9a6af0e3be894005a68ad9e011fb1952-4"&gt;&lt;/a&gt;&lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;string&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;a name="rest_code_9a6af0e3be894005a68ad9e011fb1952-5"&gt;&lt;/a&gt;    &lt;span class="k"&gt;get&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;a name="rest_code_9a6af0e3be894005a68ad9e011fb1952-6"&gt;&lt;/a&gt;        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;name_&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;a name="rest_code_9a6af0e3be894005a68ad9e011fb1952-7"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;a name="rest_code_9a6af0e3be894005a68ad9e011fb1952-8"&gt;&lt;/a&gt;    &lt;span class="k"&gt;set&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;a name="rest_code_9a6af0e3be894005a68ad9e011fb1952-9"&gt;&lt;/a&gt;        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;value&lt;/span&gt; &lt;span class="p"&gt;!=&lt;/span&gt; &lt;span class="n"&gt;name_&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;a name="rest_code_9a6af0e3be894005a68ad9e011fb1952-10"&gt;&lt;/a&gt;            &lt;span class="n"&gt;name_&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="k"&gt;value&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;a name="rest_code_9a6af0e3be894005a68ad9e011fb1952-11"&gt;&lt;/a&gt;            &lt;span class="n"&gt;NotifyPropertyChanged&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"name"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;a name="rest_code_9a6af0e3be894005a68ad9e011fb1952-12"&gt;&lt;/a&gt;        &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;a name="rest_code_9a6af0e3be894005a68ad9e011fb1952-13"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;a name="rest_code_9a6af0e3be894005a68ad9e011fb1952-14"&gt;&lt;/a&gt;&lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;&lt;p&gt;That’s 12 lines of code (excluding &lt;tt class="docutils literal"&gt;[JsonProperty]&lt;/tt&gt; which comes from the
+&lt;pre class="code csharp"&gt;&lt;a name="rest_code_25a06daf5d494e03b8c6098fc252730c-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;private&lt;/span&gt; &lt;span class="kt"&gt;string&lt;/span&gt; &lt;span class="n"&gt;name_&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="k"&gt;get&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="k"&gt;set&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="p"&gt;};&lt;/span&gt; &lt;span class="c1"&gt;// can also be a field&lt;/span&gt;
+&lt;a name="rest_code_25a06daf5d494e03b8c6098fc252730c-2"&gt;&lt;/a&gt;
+&lt;a name="rest_code_25a06daf5d494e03b8c6098fc252730c-3"&gt;&lt;/a&gt;&lt;span class="na"&gt;[JsonProperty]&lt;/span&gt;
+&lt;a name="rest_code_25a06daf5d494e03b8c6098fc252730c-4"&gt;&lt;/a&gt;&lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;string&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_25a06daf5d494e03b8c6098fc252730c-5"&gt;&lt;/a&gt;    &lt;span class="k"&gt;get&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_25a06daf5d494e03b8c6098fc252730c-6"&gt;&lt;/a&gt;        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;name_&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_25a06daf5d494e03b8c6098fc252730c-7"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;a name="rest_code_25a06daf5d494e03b8c6098fc252730c-8"&gt;&lt;/a&gt;    &lt;span class="k"&gt;set&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_25a06daf5d494e03b8c6098fc252730c-9"&gt;&lt;/a&gt;        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;value&lt;/span&gt; &lt;span class="p"&gt;!=&lt;/span&gt; &lt;span class="n"&gt;name_&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_25a06daf5d494e03b8c6098fc252730c-10"&gt;&lt;/a&gt;            &lt;span class="n"&gt;name_&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="k"&gt;value&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;a name="rest_code_25a06daf5d494e03b8c6098fc252730c-11"&gt;&lt;/a&gt;            &lt;span class="n"&gt;NotifyPropertyChanged&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"name"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;a name="rest_code_25a06daf5d494e03b8c6098fc252730c-12"&gt;&lt;/a&gt;        &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;a name="rest_code_25a06daf5d494e03b8c6098fc252730c-13"&gt;&lt;/a&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;a name="rest_code_25a06daf5d494e03b8c6098fc252730c-14"&gt;&lt;/a&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;p&gt;That’s 12 lines of code (excluding &lt;code class="docutils literal"&gt;[JsonProperty]&lt;/code&gt; which comes from the
 Json.NET library) for that pattern. Oh: and I need to do that for &lt;strong&gt;every&lt;/strong&gt;
 field/property of my class, because otherwise any changes to them would not be
 reflected in the tables (and maybe one or two fields were &lt;em&gt;not&lt;/em&gt; in the table).&lt;/p&gt;
 &lt;p&gt;Doing that by hand is really not feasible: you need to copy-paste this
 large block 14 times and take care of 5 instances of the name (3 with
-underscores, 2 without), 2 instances of the type, and the &lt;tt class="docutils literal"&gt;[JsonProperty]&lt;/tt&gt;
+underscores, 2 without), 2 instances of the type, and the &lt;code class="docutils literal"&gt;[JsonProperty]&lt;/code&gt;
 attribute (which does not appear on all properties).&lt;/p&gt;
 &lt;p&gt;So, I used one of those intelligent computer things to do it for me. I wrote a
 really simple &lt;a class="reference external" href="https://www.python.org/"&gt;Python&lt;/a&gt; script and ran it. And I ended up with all 14 fields built
 for me.&lt;/p&gt;
 &lt;p&gt;&lt;a class="reference external" href="https://chriswarrick.com/listings/code-writing-code/write_properties.py.html"&gt;code-writing-code/write_properties.py&lt;/a&gt;  &lt;a class="reference external" href="https://chriswarrick.com/listings/code-writing-code/write_properties.py"&gt;(Source)&lt;/a&gt;&lt;/p&gt;
-&lt;pre class="code python"&gt;&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-1"&gt;&lt;/a&gt;&lt;span class="ch"&gt;#!/usr/bin/env python3&lt;/span&gt;
-&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-2"&gt;&lt;/a&gt;&lt;span class="n"&gt;TEMPLATE&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;"""&lt;/span&gt;&lt;span class="se"&gt;\&lt;/span&gt;
-&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-3"&gt;&lt;/a&gt;&lt;span class="s2"&gt;        &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt;public &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt; &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt; {&lt;/span&gt;
-&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-4"&gt;&lt;/a&gt;&lt;span class="s2"&gt;            get {&lt;/span&gt;
-&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-5"&gt;&lt;/a&gt;&lt;span class="s2"&gt;                return &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt;_;&lt;/span&gt;
-&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-6"&gt;&lt;/a&gt;&lt;span class="s2"&gt;            }&lt;/span&gt;
-&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-7"&gt;&lt;/a&gt;&lt;span class="s2"&gt;            set {&lt;/span&gt;
-&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-8"&gt;&lt;/a&gt;&lt;span class="s2"&gt;                if (value != &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt;_) {&lt;/span&gt;
-&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-9"&gt;&lt;/a&gt;&lt;span class="s2"&gt;                    &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt;_ = value;&lt;/span&gt;
-&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-10"&gt;&lt;/a&gt;&lt;span class="s2"&gt;                    NotifyPropertyChanged("&lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt;");&lt;/span&gt;
-&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-11"&gt;&lt;/a&gt;&lt;span class="s2"&gt;                }&lt;/span&gt;
-&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-12"&gt;&lt;/a&gt;&lt;span class="s2"&gt;            }&lt;/span&gt;
-&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-13"&gt;&lt;/a&gt;&lt;span class="s2"&gt;        }&lt;/span&gt;
-&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-14"&gt;&lt;/a&gt;&lt;span class="s2"&gt;"""&lt;/span&gt;
-&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-15"&gt;&lt;/a&gt;&lt;span class="n"&gt;JSONPROPERTY_TEMPLATE&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;'[JsonProperty]&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s1"&gt;        '&lt;/span&gt;
-&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-16"&gt;&lt;/a&gt;
-&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-17"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;has_jsonproperty&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-18"&gt;&lt;/a&gt;    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;has_jsonproperty&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-19"&gt;&lt;/a&gt;        &lt;span class="n"&gt;jsonproperty&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;JSONPROPERTY_TEMPLATE&lt;/span&gt;
-&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-20"&gt;&lt;/a&gt;    &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-21"&gt;&lt;/a&gt;        &lt;span class="n"&gt;jsonproperty&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;''&lt;/span&gt;
-&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-22"&gt;&lt;/a&gt;    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;TEMPLATE&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;jsonproperty&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-23"&gt;&lt;/a&gt;
-&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-24"&gt;&lt;/a&gt;&lt;span class="n"&gt;properties&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;
-&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-25"&gt;&lt;/a&gt;    &lt;span class="s1"&gt;'1 string name'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-26"&gt;&lt;/a&gt;    &lt;span class="s1"&gt;'0 int another'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-27"&gt;&lt;/a&gt;    &lt;span class="c1"&gt;# 12 fields omitted for brevity&lt;/span&gt;
-&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-28"&gt;&lt;/a&gt;&lt;span class="p"&gt;]&lt;/span&gt;
-&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-29"&gt;&lt;/a&gt;&lt;span class="n"&gt;properties_split&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;split&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;p&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;properties&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
-&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-30"&gt;&lt;/a&gt;
-&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-31"&gt;&lt;/a&gt;&lt;span class="c1"&gt;# Private definitions (internal)&lt;/span&gt;
-&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-32"&gt;&lt;/a&gt;&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;has_jsonproperty&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;properties_split&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-33"&gt;&lt;/a&gt;    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"        private &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt; &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt;_ { get; set; }"&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-34"&gt;&lt;/a&gt;
-&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-35"&gt;&lt;/a&gt;&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-36"&gt;&lt;/a&gt;&lt;span class="c1"&gt;# Public definitions (with notifications)&lt;/span&gt;
-&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-37"&gt;&lt;/a&gt;&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;has_jsonproperty&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;properties_split&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-&lt;a name="rest_code_7903a3bc8b294ec5a7d9ea922613d158-38"&gt;&lt;/a&gt;    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;has_jsonproperty&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s1"&gt;'1'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_6f338f06bbe640ee9bd9d9f1c17b2d18-1"&gt;&lt;/a&gt;&lt;span class="ch"&gt;#!/usr/bin/env python3&lt;/span&gt;
+&lt;a name="rest_code_6f338f06bbe640ee9bd9d9f1c17b2d18-2"&gt;&lt;/a&gt;&lt;span class="n"&gt;TEMPLATE&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;"""&lt;/span&gt;&lt;span class="se"&gt;\&lt;/span&gt;
+&lt;a name="rest_code_6f338f06bbe640ee9bd9d9f1c17b2d18-3"&gt;&lt;/a&gt;&lt;span class="s2"&gt;        &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt;public &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt; &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt; {&lt;/span&gt;
+&lt;a name="rest_code_6f338f06bbe640ee9bd9d9f1c17b2d18-4"&gt;&lt;/a&gt;&lt;span class="s2"&gt;            get {&lt;/span&gt;
+&lt;a name="rest_code_6f338f06bbe640ee9bd9d9f1c17b2d18-5"&gt;&lt;/a&gt;&lt;span class="s2"&gt;                return &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt;_;&lt;/span&gt;
+&lt;a name="rest_code_6f338f06bbe640ee9bd9d9f1c17b2d18-6"&gt;&lt;/a&gt;&lt;span class="s2"&gt;            }&lt;/span&gt;
+&lt;a name="rest_code_6f338f06bbe640ee9bd9d9f1c17b2d18-7"&gt;&lt;/a&gt;&lt;span class="s2"&gt;            set {&lt;/span&gt;
+&lt;a name="rest_code_6f338f06bbe640ee9bd9d9f1c17b2d18-8"&gt;&lt;/a&gt;&lt;span class="s2"&gt;                if (value != &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt;_) {&lt;/span&gt;
+&lt;a name="rest_code_6f338f06bbe640ee9bd9d9f1c17b2d18-9"&gt;&lt;/a&gt;&lt;span class="s2"&gt;                    &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt;_ = value;&lt;/span&gt;
+&lt;a name="rest_code_6f338f06bbe640ee9bd9d9f1c17b2d18-10"&gt;&lt;/a&gt;&lt;span class="s2"&gt;                    NotifyPropertyChanged("&lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt;");&lt;/span&gt;
+&lt;a name="rest_code_6f338f06bbe640ee9bd9d9f1c17b2d18-11"&gt;&lt;/a&gt;&lt;span class="s2"&gt;                }&lt;/span&gt;
+&lt;a name="rest_code_6f338f06bbe640ee9bd9d9f1c17b2d18-12"&gt;&lt;/a&gt;&lt;span class="s2"&gt;            }&lt;/span&gt;
+&lt;a name="rest_code_6f338f06bbe640ee9bd9d9f1c17b2d18-13"&gt;&lt;/a&gt;&lt;span class="s2"&gt;        }&lt;/span&gt;
+&lt;a name="rest_code_6f338f06bbe640ee9bd9d9f1c17b2d18-14"&gt;&lt;/a&gt;&lt;span class="s2"&gt;"""&lt;/span&gt;
+&lt;a name="rest_code_6f338f06bbe640ee9bd9d9f1c17b2d18-15"&gt;&lt;/a&gt;&lt;span class="n"&gt;JSONPROPERTY_TEMPLATE&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;'[JsonProperty]&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s1"&gt;        '&lt;/span&gt;
+&lt;a name="rest_code_6f338f06bbe640ee9bd9d9f1c17b2d18-16"&gt;&lt;/a&gt;
+&lt;a name="rest_code_6f338f06bbe640ee9bd9d9f1c17b2d18-17"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;has_jsonproperty&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;a name="rest_code_6f338f06bbe640ee9bd9d9f1c17b2d18-18"&gt;&lt;/a&gt;    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;has_jsonproperty&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;a name="rest_code_6f338f06bbe640ee9bd9d9f1c17b2d18-19"&gt;&lt;/a&gt;        &lt;span class="n"&gt;jsonproperty&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;JSONPROPERTY_TEMPLATE&lt;/span&gt;
+&lt;a name="rest_code_6f338f06bbe640ee9bd9d9f1c17b2d18-20"&gt;&lt;/a&gt;    &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;a name="rest_code_6f338f06bbe640ee9bd9d9f1c17b2d18-21"&gt;&lt;/a&gt;        &lt;span class="n"&gt;jsonproperty&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;''&lt;/span&gt;
+&lt;a name="rest_code_6f338f06bbe640ee9bd9d9f1c17b2d18-22"&gt;&lt;/a&gt;    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;TEMPLATE&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;jsonproperty&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_6f338f06bbe640ee9bd9d9f1c17b2d18-23"&gt;&lt;/a&gt;
+&lt;a name="rest_code_6f338f06bbe640ee9bd9d9f1c17b2d18-24"&gt;&lt;/a&gt;&lt;span class="n"&gt;properties&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;
+&lt;a name="rest_code_6f338f06bbe640ee9bd9d9f1c17b2d18-25"&gt;&lt;/a&gt;    &lt;span class="s1"&gt;'1 string name'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;a name="rest_code_6f338f06bbe640ee9bd9d9f1c17b2d18-26"&gt;&lt;/a&gt;    &lt;span class="s1"&gt;'0 int another'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;a name="rest_code_6f338f06bbe640ee9bd9d9f1c17b2d18-27"&gt;&lt;/a&gt;    &lt;span class="c1"&gt;# 12 fields omitted for brevity&lt;/span&gt;
+&lt;a name="rest_code_6f338f06bbe640ee9bd9d9f1c17b2d18-28"&gt;&lt;/a&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;a name="rest_code_6f338f06bbe640ee9bd9d9f1c17b2d18-29"&gt;&lt;/a&gt;&lt;span class="n"&gt;properties_split&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;split&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;p&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;properties&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;a name="rest_code_6f338f06bbe640ee9bd9d9f1c17b2d18-30"&gt;&lt;/a&gt;
+&lt;a name="rest_code_6f338f06bbe640ee9bd9d9f1c17b2d18-31"&gt;&lt;/a&gt;&lt;span class="c1"&gt;# Private definitions (internal)&lt;/span&gt;
+&lt;a name="rest_code_6f338f06bbe640ee9bd9d9f1c17b2d18-32"&gt;&lt;/a&gt;&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;has_jsonproperty&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;properties_split&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;a name="rest_code_6f338f06bbe640ee9bd9d9f1c17b2d18-33"&gt;&lt;/a&gt;    &lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"        private &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt; &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s2"&gt;_ { get; set; }"&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;a name="rest_code_6f338f06bbe640ee9bd9d9f1c17b2d18-34"&gt;&lt;/a&gt;
+&lt;a name="rest_code_6f338f06bbe640ee9bd9d9f1c17b2d18-35"&gt;&lt;/a&gt;&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;a name="rest_code_6f338f06bbe640ee9bd9d9f1c17b2d18-36"&gt;&lt;/a&gt;&lt;span class="c1"&gt;# Public definitions (with notifications)&lt;/span&gt;
+&lt;a name="rest_code_6f338f06bbe640ee9bd9d9f1c17b2d18-37"&gt;&lt;/a&gt;&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;has_jsonproperty&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;properties_split&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;a name="rest_code_6f338f06bbe640ee9bd9d9f1c17b2d18-38"&gt;&lt;/a&gt;    &lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;has_jsonproperty&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s1"&gt;'1'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vtype&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;That script takes a list of properties and spits out a block of code, ready to
 be pasted into the code. Visual Studio has a nice &lt;em&gt;Insert File as Text&lt;/em&gt;
 feature, so redirecting the output to a file and using that option is enough.&lt;/p&gt;
@@ -546,28 +547,28 @@ looking at you, IntelliJ IDEA aka PyCharm aka Android Studio…)&lt;/p&gt;
 &lt;p&gt;And so, I was building a test suite, using &lt;a class="reference external" href="http://junit.org/"&gt;JUnit&lt;/a&gt;. It’s pretty
 straightforward, and I remember the syntax from Python’s unittest (even though
 I write tests with &lt;a class="reference external" href="http://pytest.org/"&gt;pytest&lt;/a&gt; nowadays). Or so I thought.&lt;/p&gt;
-&lt;pre class="code java"&gt;&lt;a name="rest_code_5b6906c038914668b86f72cba02704c3-1"&gt;&lt;/a&gt;&lt;span class="c1"&gt;// (incorrect)&lt;/span&gt;
-&lt;a name="rest_code_5b6906c038914668b86f72cba02704c3-2"&gt;&lt;/a&gt;&lt;span class="n"&gt;assertEquals&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"Basic integers (7) failed"&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;namer&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;7L&lt;/span&gt;&lt;span class="o"&gt;),&lt;/span&gt; &lt;span class="s"&gt;"seven"&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
-&lt;a name="rest_code_5b6906c038914668b86f72cba02704c3-3"&gt;&lt;/a&gt;&lt;span class="c1"&gt;// (fixed)                              ^ cursor&lt;/span&gt;
-&lt;a name="rest_code_5b6906c038914668b86f72cba02704c3-4"&gt;&lt;/a&gt;&lt;span class="n"&gt;assertEquals&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"Basic integers (7) failed"&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"seven"&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;namer&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;7L&lt;/span&gt;&lt;span class="o"&gt;));&lt;/span&gt;
-&lt;/pre&gt;&lt;p&gt;You see, the typical Python spelling is &lt;tt class="docutils literal"&gt;self.assertEquals(actual,
-expected)&lt;/tt&gt;. Java adds a &lt;tt class="docutils literal"&gt;String&lt;/tt&gt; message parameter and it also swaps
-&lt;tt class="docutils literal"&gt;actual&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;expected&lt;/tt&gt;. Which I didn’t notice at first, and I wrote my
+&lt;pre class="code java"&gt;&lt;a name="rest_code_f06dd7a54cec4dfe973744813a29ee3c-1"&gt;&lt;/a&gt;&lt;span class="c1"&gt;// (incorrect)&lt;/span&gt;
+&lt;a name="rest_code_f06dd7a54cec4dfe973744813a29ee3c-2"&gt;&lt;/a&gt;&lt;span class="n"&gt;assertEquals&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"Basic integers (7) failed"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;namer&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;7L&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="s"&gt;"seven"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;a name="rest_code_f06dd7a54cec4dfe973744813a29ee3c-3"&gt;&lt;/a&gt;&lt;span class="c1"&gt;// (fixed)                              ^ cursor&lt;/span&gt;
+&lt;a name="rest_code_f06dd7a54cec4dfe973744813a29ee3c-4"&gt;&lt;/a&gt;&lt;span class="n"&gt;assertEquals&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"Basic integers (7) failed"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"seven"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;namer&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;7L&lt;/span&gt;&lt;span class="p"&gt;));&lt;/span&gt;
+&lt;/pre&gt;&lt;p&gt;You see, the typical Python spelling is &lt;code class="docutils literal"&gt;self.assertEquals(actual,
+expected)&lt;/code&gt;. Java adds a &lt;code class="docutils literal"&gt;String&lt;/code&gt; message parameter and it also swaps
+&lt;code class="docutils literal"&gt;actual&lt;/code&gt; and &lt;code class="docutils literal"&gt;expected&lt;/code&gt;. Which I didn’t notice at first, and I wrote my
 assertions incorrectly. While it doesn’t &lt;em&gt;really&lt;/em&gt; matter (it will still work),
 the output looked a bit weird.&lt;/p&gt;
 &lt;p&gt;And I noticed only when I finished writing my tests (and I had a typo in my
 expected output). I wanted to fix them all — not manually, of course. So, I
 closed this file, brought up Vim, searched for the motion I need (it’s
-&lt;tt class="docutils literal"&gt;t{char}&lt;/tt&gt; — see &lt;tt class="docutils literal"&gt;:help t&lt;/tt&gt;). And I ended up with this
+&lt;code class="docutils literal"&gt;t{char}&lt;/code&gt; — see &lt;code class="docutils literal"&gt;:help t&lt;/code&gt;). And I ended up with this
 (cursor placed on the comma after the first argument):&lt;/p&gt;
 &lt;div style="text-align: center;"&gt;
 &lt;kbd style="font-size: 2em;"&gt;dt,&lt;/kbd&gt;&lt;kbd style="font-size: 2em;"&gt;t)&lt;/kbd&gt;&lt;kbd style="font-size: 2em;"&gt;p&lt;/kbd&gt;
 &lt;/div&gt;&lt;p&gt;What does this do, you may ask? It’s actually pretty self-explanatory:&lt;/p&gt;
 &lt;blockquote&gt;&lt;p&gt;
 &lt;b&gt;d&lt;/b&gt;elete &lt;b&gt;t&lt;/b&gt;ill comma, (go) &lt;b&gt;t&lt;/b&gt;ill closing parenthesis, &lt;b&gt;p&lt;/b&gt;aste.
-&lt;/p&gt;&lt;/blockquote&gt;&lt;p&gt;This fixes one line. Automatically. Make it a macro (wrap in &lt;tt class="docutils literal"&gt;qq&lt;/tt&gt; … &lt;tt class="docutils literal"&gt;q&lt;/tt&gt;,
-use with &lt;tt class="docutils literal"&gt;@q&lt;/tt&gt;) and now you can run it on all lines, either by moving manually or by
-searching for &lt;tt class="docutils literal"&gt;,&lt;/tt&gt; and pressing &lt;tt class="docutils literal"&gt;n@q&lt;/tt&gt; until you run out of lines.&lt;/p&gt;
+&lt;/p&gt;&lt;/blockquote&gt;&lt;p&gt;This fixes one line. Automatically. Make it a macro (wrap in &lt;code class="docutils literal"&gt;qq&lt;/code&gt; … &lt;code class="docutils literal"&gt;q&lt;/code&gt;,
+use with &lt;code class="docutils literal"&gt;@q&lt;/code&gt;) and now you can run it on all lines, either by moving manually or by
+searching for &lt;code class="docutils literal"&gt;,&lt;/code&gt; and pressing &lt;code class="docutils literal"&gt;n@q&lt;/code&gt; until you run out of lines.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="epilogue"&gt;
 &lt;h2&gt;Epilogue&lt;/h2&gt;
@@ -581,7 +582,7 @@ do with it.&lt;/p&gt;
 &lt;p class="lead"&gt;Go learn &lt;a class="reference external" href="https://www.python.org/"&gt;Python&lt;/a&gt; and &lt;a class="reference external" href="http://www.vim.org/"&gt;Vim&lt;/a&gt; now.&lt;/p&gt;
 &lt;p&gt;Also: don’t even bother with VsVim or IdeaVim or any other Vim emulation
 plugins, they work in unusual ways and often don’t give you everything — for
-example, VsVim has a Vim visual mode (&lt;tt class="docutils literal"&gt;v&lt;/tt&gt; key) and Visual Studio selection
+example, VsVim has a Vim visual mode (&lt;code class="docutils literal"&gt;v&lt;/code&gt; key) and Visual Studio selection
 mode (mouse), and only one allows Vim keystrokes (the other will replace
 selected text).&lt;/p&gt;
 &lt;/div&gt;&lt;/div&gt;</description><category>CSharp</category><category>Java</category><category>programming</category><category>Python</category><category>Vim</category><guid>https://chriswarrick.com/blog/2016/05/27/code-writing-code-python-and-vim/</guid><pubDate>Fri, 27 May 2016 08:46:35 GMT</pubDate></item></channel></rss>

@@ -4,6 +4,13 @@
 
 {% block content %}
 {{ ui.breadcrumbs(crumbs) }}
+
+{% if source_link %}
+    <h1>{{ title }} <a class="btn btn-primary" href="{{ source_link }}" id="sourcelink">{{ messages("Source") }}</a></h1>
+{% else %}
+    <h1>{{ title }}</h1>
+{% endif %}
+
 {% if folders or files %}
 <ul class="list-unstyled">
 {% for name in folders %}
@@ -13,10 +20,6 @@
     <li><a href="{{ name }}.html"><i class="fa fa-file"></i> {{ name }}</a>
 {% endfor %}
 </ul>
-{% endif %}
-
-{% if source_link %}
-    <p><a class="btn btn-primary" href="{{ source_link }}" id="sourcelink">{{ messages("Source") }}</a></p>
 {% endif %}
 
 {% if code %}

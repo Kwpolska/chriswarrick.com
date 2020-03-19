@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chris Warrick (Posty o subprocess)</title><link>https://chriswarrick.com/</link><description></description><atom:link href="https://chriswarrick.com/pl/blog/tags/subprocess.xml" rel="self" type="application/rss+xml"></atom:link><language>pl</language><lastBuildDate>Fri, 28 Feb 2020 17:41:20 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Spawning subprocesses smartly and securely</title><link>https://chriswarrick.com/pl/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;As part of your code, you may be inclined to call a command to do
+<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chris Warrick (Posty o subprocess)</title><link>https://chriswarrick.com/</link><description></description><atom:link href="https://chriswarrick.com/pl/blog/tags/subprocess.xml" rel="self" type="application/rss+xml"></atom:link><language>pl</language><lastBuildDate>Thu, 19 Mar 2020 10:30:05 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Spawning subprocesses smartly and securely</title><link>https://chriswarrick.com/pl/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;As part of your code, you may be inclined to call a command to do
 something. But is it always a good idea? How to do it safely? What happens
 behind the scenes?&lt;/p&gt;
 &lt;!-- TEASER_END --&gt;
@@ -7,13 +7,13 @@ behind the scenes?&lt;/p&gt;
 very slight Python bias. The problems mentioned apply to all languages in most
 environments, including Windows.&lt;/p&gt;
 &lt;div class="contents alert alert-primary float-md-right topic" id="contents"&gt;
-&lt;p class="topic-title first"&gt;Contents&lt;/p&gt;
+&lt;p class="topic-title"&gt;Contents&lt;/p&gt;
 &lt;ul class="simple"&gt;
-&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#use-the-right-tool-for-the-job" id="id9"&gt;Use the right tool for the job&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#dont-spawn-subprocesses-if-theres-an-alternative" id="id10"&gt;Don’t spawn subprocesses if there’s an alternative&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#security-considerations-shells-spaces-and-command-injection" id="id11"&gt;Security considerations: shells, spaces, and command injection&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#tl-dr-how-to-do-this-properly-in-your-language-of-choice" id="id12"&gt;TL;DR: How to do this properly in your language of choice&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#the-part-where-i-pretend-i-know-something-about-windows" id="id13"&gt;The part where I pretend I know something about Windows&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#use-the-right-tool-for-the-job" id="id9"&gt;Use the right tool for the job&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#dont-spawn-subprocesses-if-theres-an-alternative" id="id10"&gt;Don’t spawn subprocesses if there’s an alternative&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#security-considerations-shells-spaces-and-command-injection" id="id11"&gt;Security considerations: shells, spaces, and command injection&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#tl-dr-how-to-do-this-properly-in-your-language-of-choice" id="id12"&gt;TL;DR: How to do this properly in your language of choice&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#the-part-where-i-pretend-i-know-something-about-windows" id="id13"&gt;The part where I pretend I know something about Windows&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/div&gt;
 &lt;div class="section" id="use-the-right-tool-for-the-job"&gt;
@@ -22,16 +22,16 @@ environments, including Windows.&lt;/p&gt;
 That dependency isn’t controlled by your code, and your code becomes more fragile.
 The problems include:&lt;/p&gt;
 &lt;ul class="simple"&gt;
-&lt;li&gt;the program is not installed, or even available, for the user’s OS of choice&lt;/li&gt;
-&lt;li&gt;the program is not in the &lt;tt class="docutils literal"&gt;$PATH&lt;/tt&gt; your process gets&lt;/li&gt;
-&lt;li&gt;the hard-coded path is not correct on the end user’s system&lt;/li&gt;
-&lt;li&gt;the program is in a different version (eg. GNU vs. BSD, updates/patches),
-which means different option names or other behaviors&lt;/li&gt;
-&lt;li&gt;the program’s output is not what you expected due to user config (including
-locale)&lt;/li&gt;
-&lt;li&gt;error reporting is based on numeric exit codes, and the meaning of those
+&lt;li&gt;&lt;p&gt;the program is not installed, or even available, for the user’s OS of choice&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;the program is not in the &lt;code class="docutils literal"&gt;$PATH&lt;/code&gt; your process gets&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;the hard-coded path is not correct on the end user’s system&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;the program is in a different version (eg. GNU vs. BSD, updates/patches),
+which means different option names or other behaviors&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;the program’s output is not what you expected due to user config (including
+locale)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;error reporting is based on numeric exit codes, and the meaning of those
 differs between programs (&lt;em&gt;if&lt;/em&gt; they have meaning besides 0/1 in the first
-place)&lt;/li&gt;
+place)&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;On the other hand, if your code uses a lot of subprocesses, perhaps you should
 stay with Bash. You can do the harder parts with Python, Ruby, or some other
@@ -39,14 +39,14 @@ language by calling them from within your Bash script.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="dont-spawn-subprocesses-if-theres-an-alternative"&gt;
 &lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#id10"&gt;Don’t spawn subprocesses if there’s an alternative&lt;/a&gt;&lt;/h2&gt;
-&lt;p&gt;Spawning a subprocess always incurs a (minor) &lt;a class="footnote-reference" href="https://chriswarrick.com/pl/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#id5" id="id1"&gt;[1]&lt;/a&gt; performance hit minor
+&lt;p&gt;Spawning a subprocess always incurs a (minor) &lt;a class="footnote-reference brackets" href="https://chriswarrick.com/pl/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#id5" id="id1"&gt;1&lt;/a&gt; performance hit minor
 compared to the alternatives. With that in mind, and the resiliency issues
 listed above, you should always try to find an alternative for the
 external command.&lt;/p&gt;
-&lt;p&gt;The simplest ones are the basic Unix utilities. Replace &lt;tt class="docutils literal"&gt;grep&lt;/tt&gt;, &lt;tt class="docutils literal"&gt;sed&lt;/tt&gt; and
-&lt;tt class="docutils literal"&gt;awk&lt;/tt&gt; with string operations and regular expressions. Filesystem utilities
-will have equivalents — for Python, in &lt;tt class="docutils literal"&gt;os&lt;/tt&gt; or &lt;tt class="docutils literal"&gt;shutil&lt;/tt&gt;. Your language of
-choice can also handle things like networking (don’t call &lt;tt class="docutils literal"&gt;curl&lt;/tt&gt;), file
+&lt;p&gt;The simplest ones are the basic Unix utilities. Replace &lt;code class="docutils literal"&gt;grep&lt;/code&gt;, &lt;code class="docutils literal"&gt;sed&lt;/code&gt; and
+&lt;code class="docutils literal"&gt;awk&lt;/code&gt; with string operations and regular expressions. Filesystem utilities
+will have equivalents — for Python, in &lt;code class="docutils literal"&gt;os&lt;/code&gt; or &lt;code class="docutils literal"&gt;shutil&lt;/code&gt;. Your language of
+choice can also handle things like networking (don’t call &lt;code class="docutils literal"&gt;curl&lt;/code&gt;), file
 compression, working with date/time…&lt;/p&gt;
 &lt;p&gt;Similarly, you should check if there are packages available that already do
 what you want — library bindings or re-implementations. And if there isn’t,
@@ -59,74 +59,73 @@ of spawning a process, if this is feasible.&lt;/p&gt;
 &lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#id11"&gt;Security considerations: shells, spaces, and command injection&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;We come to the most important part of this article: how to spawn subprocesses
 without compromising your system. When you spawn a subprocess on a typical Unix
-system,  &lt;tt class="docutils literal"&gt;fork()&lt;/tt&gt; is called, and your process is copied. Many modern Unix
+system,  &lt;code class="docutils literal"&gt;fork()&lt;/code&gt; is called, and your process is copied. Many modern Unix
 systems have a copy-on-write implementation of that syscall, meaning that the
 operation does not result in copying all the memory of the host process over.
-Forking is (almost) immediately followed by calling &lt;tt class="docutils literal"&gt;execve()&lt;/tt&gt; (or a helper
-function from the exec family) &lt;a class="footnote-reference" href="https://chriswarrick.com/pl/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#id6" id="id2"&gt;[2]&lt;/a&gt; in the child process — that function
-&lt;em&gt;transforms the calling process into a new process&lt;/em&gt; &lt;a class="footnote-reference" href="https://chriswarrick.com/pl/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#id7" id="id3"&gt;[3]&lt;/a&gt;. This technique is
-called &lt;em&gt;fork-exec&lt;/em&gt; and is the typical way to spawn a new process on Unix. &lt;a class="footnote-reference" href="https://chriswarrick.com/pl/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#id8" id="id4"&gt;[4]&lt;/a&gt;&lt;/p&gt;
+Forking is (almost) immediately followed by calling &lt;code class="docutils literal"&gt;execve()&lt;/code&gt; (or a helper
+function from the exec family) &lt;a class="footnote-reference brackets" href="https://chriswarrick.com/pl/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#id6" id="id2"&gt;2&lt;/a&gt; in the child process — that function
+&lt;em&gt;transforms the calling process into a new process&lt;/em&gt; &lt;a class="footnote-reference brackets" href="https://chriswarrick.com/pl/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#id7" id="id3"&gt;3&lt;/a&gt;. This technique is
+called &lt;em&gt;fork-exec&lt;/em&gt; and is the typical way to spawn a new process on Unix. &lt;a class="footnote-reference brackets" href="https://chriswarrick.com/pl/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#id8" id="id4"&gt;4&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;There are two ways to access this API, from the C perspective:&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;p class="first"&gt;directly, by calling &lt;tt class="docutils literal"&gt;fork()&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;exec*()&lt;/span&gt;&lt;/tt&gt; (or &lt;tt class="docutils literal"&gt;posix_spawn()&lt;/tt&gt;), and providing an array of
-arguments passed to the process, or&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;p class="first"&gt;through the shell (&lt;tt class="docutils literal"&gt;sh&lt;/tt&gt;), usually by calling &lt;tt class="docutils literal"&gt;system()&lt;/tt&gt;. As Linux’s
-manpage for &lt;tt class="docutils literal"&gt;system(3)&lt;/tt&gt; puts it,&lt;/p&gt;
+&lt;li&gt;&lt;p&gt;directly, by calling &lt;code class="docutils literal"&gt;fork()&lt;/code&gt; and &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;exec*()&lt;/span&gt;&lt;/code&gt; (or &lt;code class="docutils literal"&gt;posix_spawn()&lt;/code&gt;), and providing an array of
+arguments passed to the process, or&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;through the shell (&lt;code class="docutils literal"&gt;sh&lt;/code&gt;), usually by calling &lt;code class="docutils literal"&gt;system()&lt;/code&gt;. As Linux’s
+manpage for &lt;code class="docutils literal"&gt;system(3)&lt;/code&gt; puts it,&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;The &lt;tt class="docutils literal"&gt;system()&lt;/tt&gt; library function uses &lt;tt class="docutils literal"&gt;fork(2)&lt;/tt&gt; to create a child process that executes the shell command specified in command using &lt;tt class="docutils literal"&gt;execl(3)&lt;/tt&gt; as follows:&lt;/p&gt;
-&lt;pre class="code c"&gt;&lt;a name="rest_code_7d8f1f67c4264c03b5936401ea169ec9-1"&gt;&lt;/a&gt;&lt;span class="n"&gt;execl&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"/bin/sh"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"sh"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"-c"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;command&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;p&gt;The &lt;code class="docutils literal"&gt;system()&lt;/code&gt; library function uses &lt;code class="docutils literal"&gt;fork(2)&lt;/code&gt; to create a child process that executes the shell command specified in command using &lt;code class="docutils literal"&gt;execl(3)&lt;/code&gt; as follows:&lt;/p&gt;
+&lt;pre class="code c"&gt;&lt;a name="rest_code_abdddf656ae342a68fdf594a39d8455a-1"&gt;&lt;/a&gt;&lt;span class="n"&gt;execl&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"/bin/sh"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"sh"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"-c"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;command&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 &lt;/pre&gt;&lt;/blockquote&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;If you go through the shell, you pass one string argument, whereas &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;exec*()&lt;/span&gt;&lt;/tt&gt; demands you to specify arguments separately. Let’s write a sample program to print all the arguments it receives. I’ll do it in Python to get a more readable output.&lt;/p&gt;
-&lt;pre class="code python"&gt;&lt;a name="rest_code_b5a4ed3b44824fca9a60ebfc0a7aeea1-1"&gt;&lt;/a&gt;&lt;span class="ch"&gt;#!/usr/bin/env python3&lt;/span&gt;
-&lt;a name="rest_code_b5a4ed3b44824fca9a60ebfc0a7aeea1-2"&gt;&lt;/a&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;sys&lt;/span&gt;
-&lt;a name="rest_code_b5a4ed3b44824fca9a60ebfc0a7aeea1-3"&gt;&lt;/a&gt;&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;p&gt;If you go through the shell, you pass one string argument, whereas &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;exec*()&lt;/span&gt;&lt;/code&gt; demands you to specify arguments separately. Let’s write a sample program to print all the arguments it receives. I’ll do it in Python to get a more readable output.&lt;/p&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_3da0a7a709e2430387d9c0133507cc2d-1"&gt;&lt;/a&gt;&lt;span class="ch"&gt;#!/usr/bin/env python3&lt;/span&gt;
+&lt;a name="rest_code_3da0a7a709e2430387d9c0133507cc2d-2"&gt;&lt;/a&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;sys&lt;/span&gt;
+&lt;a name="rest_code_3da0a7a709e2430387d9c0133507cc2d-3"&gt;&lt;/a&gt;&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;Let’s see what appears:&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-1"&gt;&lt;/a&gt;$ ./argv.py foo bar
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-2"&gt;&lt;/a&gt;['./argv.py', 'foo', 'bar']
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-3"&gt;&lt;/a&gt;$ ./argv.py 'foo bar'
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-4"&gt;&lt;/a&gt;['./argv.py', 'foo bar']
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-5"&gt;&lt;/a&gt;$ ./argv.py foo\ bar baz
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-6"&gt;&lt;/a&gt;['./argv.py', 'foo bar', 'baz']
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-7"&gt;&lt;/a&gt;
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-8"&gt;&lt;/a&gt;$ ./argv.py $(date)
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-9"&gt;&lt;/a&gt;['./argv.py', 'Sat', 'Sep', '2', '16:54:52', 'CEST', '2017']
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-10"&gt;&lt;/a&gt;$ ./argv.py "$(date)"
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-11"&gt;&lt;/a&gt;['./argv.py', 'Sat Sep  2 16:54:52 CEST 2017']
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-12"&gt;&lt;/a&gt;
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-13"&gt;&lt;/a&gt;$ ./argv.py /usr/*
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-14"&gt;&lt;/a&gt;['./argv.py', '/usr/X11', '/usr/X11R6', '/usr/bin', '/usr/include', '/usr/lib', '/usr/libexec', '/usr/local', '/usr/sbin', '/usr/share', '/usr/standalone']
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-15"&gt;&lt;/a&gt;$ ./argv.py "/usr/*"
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-16"&gt;&lt;/a&gt;['./argv.py', '/usr/*']
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-17"&gt;&lt;/a&gt;
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-18"&gt;&lt;/a&gt;$ ./argv.py $EDITOR
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-19"&gt;&lt;/a&gt;['./argv.py', 'nvim']
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-20"&gt;&lt;/a&gt;
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-21"&gt;&lt;/a&gt;$ $PWD/argv.py foo bar
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-22"&gt;&lt;/a&gt;['/Users/kwpolska/Desktop/blog/subprocess/argv.py', 'foo', 'bar']
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-23"&gt;&lt;/a&gt;$ ./argv.py a{b,c}d
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-24"&gt;&lt;/a&gt;['./argv.py', 'abd', 'acd']
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-25"&gt;&lt;/a&gt;
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-26"&gt;&lt;/a&gt;$ python argv.py foo bar | cat
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-27"&gt;&lt;/a&gt;['argv.py', 'foo', 'bar']
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-28"&gt;&lt;/a&gt;$ python argv.py foo bar &amp;gt; foo.txt
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-29"&gt;&lt;/a&gt;$ cat foo.txt
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-30"&gt;&lt;/a&gt;['argv.py', 'foo', 'bar']
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-31"&gt;&lt;/a&gt;
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-32"&gt;&lt;/a&gt;$ ./argv.py foo; ls /usr
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-33"&gt;&lt;/a&gt;['./argv.py', 'foo']
-&lt;a name="rest_code_d9a6ce38beb54d51972eb9b54633e7de-34"&gt;&lt;/a&gt;X11@        X11R6@      bin/        include/    lib/        libexec/    local/      sbin/       share/      standalone/
+&lt;pre class="code text"&gt;&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-1"&gt;&lt;/a&gt;$ ./argv.py foo bar
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-2"&gt;&lt;/a&gt;['./argv.py', 'foo', 'bar']
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-3"&gt;&lt;/a&gt;$ ./argv.py 'foo bar'
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-4"&gt;&lt;/a&gt;['./argv.py', 'foo bar']
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-5"&gt;&lt;/a&gt;$ ./argv.py foo\ bar baz
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-6"&gt;&lt;/a&gt;['./argv.py', 'foo bar', 'baz']
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-7"&gt;&lt;/a&gt;
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-8"&gt;&lt;/a&gt;$ ./argv.py $(date)
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-9"&gt;&lt;/a&gt;['./argv.py', 'Sat', 'Sep', '2', '16:54:52', 'CEST', '2017']
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-10"&gt;&lt;/a&gt;$ ./argv.py "$(date)"
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-11"&gt;&lt;/a&gt;['./argv.py', 'Sat Sep  2 16:54:52 CEST 2017']
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-12"&gt;&lt;/a&gt;
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-13"&gt;&lt;/a&gt;$ ./argv.py /usr/*
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-14"&gt;&lt;/a&gt;['./argv.py', '/usr/X11', '/usr/X11R6', '/usr/bin', '/usr/include', '/usr/lib', '/usr/libexec', '/usr/local', '/usr/sbin', '/usr/share', '/usr/standalone']
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-15"&gt;&lt;/a&gt;$ ./argv.py "/usr/*"
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-16"&gt;&lt;/a&gt;['./argv.py', '/usr/*']
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-17"&gt;&lt;/a&gt;
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-18"&gt;&lt;/a&gt;$ ./argv.py $EDITOR
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-19"&gt;&lt;/a&gt;['./argv.py', 'nvim']
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-20"&gt;&lt;/a&gt;
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-21"&gt;&lt;/a&gt;$ $PWD/argv.py foo bar
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-22"&gt;&lt;/a&gt;['/Users/kwpolska/Desktop/blog/subprocess/argv.py', 'foo', 'bar']
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-23"&gt;&lt;/a&gt;$ ./argv.py a{b,c}d
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-24"&gt;&lt;/a&gt;['./argv.py', 'abd', 'acd']
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-25"&gt;&lt;/a&gt;
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-26"&gt;&lt;/a&gt;$ python argv.py foo bar | cat
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-27"&gt;&lt;/a&gt;['argv.py', 'foo', 'bar']
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-28"&gt;&lt;/a&gt;$ python argv.py foo bar &amp;gt; foo.txt
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-29"&gt;&lt;/a&gt;$ cat foo.txt
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-30"&gt;&lt;/a&gt;['argv.py', 'foo', 'bar']
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-31"&gt;&lt;/a&gt;
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-32"&gt;&lt;/a&gt;$ ./argv.py foo; ls /usr
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-33"&gt;&lt;/a&gt;['./argv.py', 'foo']
+&lt;a name="rest_code_bbb9a42417774f829cf5300611e6556d-34"&gt;&lt;/a&gt;X11@        X11R6@      bin/        include/    lib/        libexec/    local/      sbin/       share/      standalone/
 &lt;/pre&gt;&lt;p&gt;As you can see, the following things are handled by the shell (the process is unaware of this occurring):&lt;/p&gt;
 &lt;ul class="simple"&gt;
-&lt;li&gt;quotes and escapes&lt;/li&gt;
-&lt;li&gt;expanding expressions in braces&lt;/li&gt;
-&lt;li&gt;expanding variables&lt;/li&gt;
-&lt;li&gt;wildcards (glob, &lt;tt class="docutils literal"&gt;*&lt;/tt&gt;)&lt;/li&gt;
-&lt;li&gt;redirections and pipes (&lt;tt class="docutils literal"&gt;&amp;gt; &amp;gt;&amp;gt; |&lt;/tt&gt;)&lt;/li&gt;
-&lt;li&gt;command substitution (backticks or &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;$(…)&lt;/span&gt;&lt;/tt&gt;)&lt;/li&gt;
-&lt;li&gt;running multiple commands on the same line (&lt;tt class="docutils literal"&gt;; &amp;amp;&amp;amp; || &amp;amp;&lt;/tt&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;quotes and escapes&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;expanding expressions in braces&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;expanding variables&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;wildcards (glob, &lt;code class="docutils literal"&gt;*&lt;/code&gt;)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;redirections and pipes (&lt;code class="docutils literal"&gt;&amp;gt; &amp;gt;&amp;gt; |&lt;/code&gt;)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;command substitution (backticks or &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;$(…)&lt;/span&gt;&lt;/code&gt;)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;running multiple commands on the same line (&lt;code class="docutils literal"&gt;; &amp;amp;&amp;amp; || &amp;amp;&lt;/code&gt;)&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;The list is full of potential vulnerabilities. If end users are in control of
 the arguments passed, and you go through the shell, they can
@@ -137,26 +136,34 @@ unnecessary indirection.&lt;/p&gt;
 &lt;div class="section" id="tl-dr-how-to-do-this-properly-in-your-language-of-choice"&gt;
 &lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#id12"&gt;TL;DR: How to do this properly in your language of choice&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;To ensure spawning subprocess is done securely, &lt;strong&gt;do not use the shell in between&lt;/strong&gt;. If you need any of the operations I listed above as part of your command — wildcards, pipes, etc. — you will need to take care of them in your code; most languages have those features built-in.&lt;/p&gt;
-&lt;dl class="dl-horizontal docutils"&gt;
+&lt;dl class="dl-horizontal simple"&gt;
 &lt;dt&gt;In C (Unix)&lt;/dt&gt;
-&lt;dd&gt;Perform fork-exec by yourself, or use &lt;tt class="docutils literal"&gt;posix_spawn()&lt;/tt&gt;. This also lets you communicate with the process if you open a pipe and make it stdout of the child process. Never use &lt;tt class="docutils literal"&gt;system()&lt;/tt&gt;.&lt;/dd&gt;
+&lt;dd&gt;&lt;p&gt;Perform fork-exec by yourself, or use &lt;code class="docutils literal"&gt;posix_spawn()&lt;/code&gt;. This also lets you communicate with the process if you open a pipe and make it stdout of the child process. Never use &lt;code class="docutils literal"&gt;system()&lt;/code&gt;.&lt;/p&gt;
+&lt;/dd&gt;
 &lt;dt&gt;In Python&lt;/dt&gt;
-&lt;dd&gt;Use the subprocess module. Always pass &lt;tt class="docutils literal"&gt;shell=False&lt;/tt&gt; and give it a &lt;em&gt;list&lt;/em&gt; of arguments. With asyncio, use &lt;tt class="docutils literal"&gt;asyncio.create_subprocess_exec&lt;/tt&gt; (and not &lt;tt class="docutils literal"&gt;_shell&lt;/tt&gt;), but note it takes &lt;tt class="docutils literal"&gt;*args&lt;/tt&gt; and not a list. Never use &lt;tt class="docutils literal"&gt;os.system&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;os.popen&lt;/tt&gt;.&lt;/dd&gt;
+&lt;dd&gt;&lt;p&gt;Use the subprocess module. Always pass &lt;code class="docutils literal"&gt;shell=False&lt;/code&gt; and give it a &lt;em&gt;list&lt;/em&gt; of arguments. With asyncio, use &lt;code class="docutils literal"&gt;asyncio.create_subprocess_exec&lt;/code&gt; (and not &lt;code class="docutils literal"&gt;_shell&lt;/code&gt;), but note it takes &lt;code class="docutils literal"&gt;*args&lt;/code&gt; and not a list. Never use &lt;code class="docutils literal"&gt;os.system&lt;/code&gt; and &lt;code class="docutils literal"&gt;os.popen&lt;/code&gt;.&lt;/p&gt;
+&lt;/dd&gt;
 &lt;dt&gt;In Ruby&lt;/dt&gt;
-&lt;dd&gt;Pass arrays to &lt;tt class="docutils literal"&gt;IO.popen&lt;/tt&gt;. Pass multiple arguments to &lt;tt class="docutils literal"&gt;system()&lt;/tt&gt; (&lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;system(["ls",&lt;/span&gt; &lt;span class="pre"&gt;"ls"])&lt;/span&gt;&lt;/tt&gt; or &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;system("ls",&lt;/span&gt; &lt;span class="pre"&gt;"-l")&lt;/span&gt;&lt;/tt&gt;). Never use &lt;tt class="docutils literal"&gt;%x{command}&lt;/tt&gt; or backticks.&lt;/dd&gt;
+&lt;dd&gt;&lt;p&gt;Pass arrays to &lt;code class="docutils literal"&gt;IO.popen&lt;/code&gt;. Pass multiple arguments to &lt;code class="docutils literal"&gt;system()&lt;/code&gt; (&lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;system(["ls",&lt;/span&gt; &lt;span class="pre"&gt;"ls"])&lt;/span&gt;&lt;/code&gt; or &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;system("ls",&lt;/span&gt; &lt;span class="pre"&gt;"-l")&lt;/span&gt;&lt;/code&gt;). Never use &lt;code class="docutils literal"&gt;%x{command}&lt;/code&gt; or backticks.&lt;/p&gt;
+&lt;/dd&gt;
 &lt;dt&gt;In Java&lt;/dt&gt;
-&lt;dd&gt;Pass arrays to &lt;tt class="docutils literal"&gt;Runtime.exec&lt;/tt&gt;. Pass multiple arguments or list to &lt;tt class="docutils literal"&gt;ProcessBuilder&lt;/tt&gt;.&lt;/dd&gt;
+&lt;dd&gt;&lt;p&gt;Pass arrays to &lt;code class="docutils literal"&gt;Runtime.exec&lt;/code&gt;. Pass multiple arguments or list to &lt;code class="docutils literal"&gt;ProcessBuilder&lt;/code&gt;.&lt;/p&gt;
+&lt;/dd&gt;
 &lt;dt&gt;In PHP&lt;/dt&gt;
-&lt;dd&gt;All the standard methods go through the shell. Try &lt;tt class="docutils literal"&gt;escapeshellcmd()&lt;/tt&gt;, &lt;tt class="docutils literal"&gt;escapeshellarg()&lt;/tt&gt; — or better, switch to Python. Or anything, really.&lt;/dd&gt;
+&lt;dd&gt;&lt;p&gt;All the standard methods go through the shell. Try &lt;code class="docutils literal"&gt;escapeshellcmd()&lt;/code&gt;, &lt;code class="docutils literal"&gt;escapeshellarg()&lt;/code&gt; — or better, switch to Python. Or anything, really.&lt;/p&gt;
+&lt;/dd&gt;
 &lt;dt&gt;In Go&lt;/dt&gt;
-&lt;dd&gt;&lt;tt class="docutils literal"&gt;os/exec&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;os.StartProcess&lt;/tt&gt; are safe.&lt;/dd&gt;
+&lt;dd&gt;&lt;p&gt;&lt;code class="docutils literal"&gt;os/exec&lt;/code&gt; and &lt;code class="docutils literal"&gt;os.StartProcess&lt;/code&gt; are safe.&lt;/p&gt;
+&lt;/dd&gt;
 &lt;dt&gt;In Node.js&lt;/dt&gt;
-&lt;dd&gt;Use &lt;tt class="docutils literal"&gt;child_process.execFile&lt;/tt&gt; or &lt;tt class="docutils literal"&gt;child_process.spawn&lt;/tt&gt; with &lt;tt class="docutils literal"&gt;shell&lt;/tt&gt; set to false.&lt;/dd&gt;
+&lt;dd&gt;&lt;p&gt;Use &lt;code class="docutils literal"&gt;child_process.execFile&lt;/code&gt; or &lt;code class="docutils literal"&gt;child_process.spawn&lt;/code&gt; with &lt;code class="docutils literal"&gt;shell&lt;/code&gt; set to false.&lt;/p&gt;
+&lt;/dd&gt;
 &lt;dt&gt;Elsewhere&lt;/dt&gt;
-&lt;dd&gt;You should be able to specify multiple strings (using variadic arguments,
+&lt;dd&gt;&lt;p&gt;You should be able to specify multiple strings (using variadic arguments,
 arrays, or otherwise standard data structures of your language of choice) as
 the command line. Otherwise, you might be running into something
-shell-related.&lt;/dd&gt;
+shell-related.&lt;/p&gt;
+&lt;/dd&gt;
 &lt;/dl&gt;
 &lt;/div&gt;
 &lt;div class="section" id="the-part-where-i-pretend-i-know-something-about-windows"&gt;
@@ -167,31 +174,21 @@ work in shell mode, but globs (asterisks) are always left for the called
 process to handle.&lt;/p&gt;
 &lt;p&gt;Some useful functions are implemented as shell built-ins — in that case, you
 need to call it via the shell.&lt;/p&gt;
-&lt;p&gt;Internals: There is no &lt;tt class="docutils literal"&gt;fork()&lt;/tt&gt; on Windows. Instead, &lt;tt class="docutils literal"&gt;CreateProcess()&lt;/tt&gt;,
-&lt;tt class="docutils literal"&gt;ShellExecute()&lt;/tt&gt;, or lower-level &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;spawn*()&lt;/span&gt;&lt;/tt&gt; functions are used. &lt;tt class="docutils literal"&gt;cmd.exe
-/c&lt;/tt&gt; is called in shell calls.&lt;/p&gt;
-&lt;table class="docutils footnote" frame="void" id="id5" rules="none"&gt;
-&lt;colgroup&gt;&lt;col class="label"&gt;&lt;col&gt;&lt;/colgroup&gt;
-&lt;tbody valign="top"&gt;
-&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="https://chriswarrick.com/pl/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#id1"&gt;[1]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;Unless your operating system does not implement copy-on-write forking — in that case, you might even run out of memory if you use too much of it.&lt;/td&gt;&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;table class="docutils footnote" frame="void" id="id6" rules="none"&gt;
-&lt;colgroup&gt;&lt;col class="label"&gt;&lt;col&gt;&lt;/colgroup&gt;
-&lt;tbody valign="top"&gt;
-&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="https://chriswarrick.com/pl/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#id2"&gt;[2]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;The function that does the real work is &lt;tt class="docutils literal"&gt;execve()&lt;/tt&gt;, which takes an exact path, an array of arguments, and takes environment variables as input. Other variants can also perform a &lt;tt class="docutils literal"&gt;$PATH&lt;/tt&gt; search, take argv as variadic arguments, and inherit environment from the current process. &lt;tt class="docutils literal"&gt;execl()&lt;/tt&gt; does the last two.&lt;/td&gt;&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;table class="docutils footnote" frame="void" id="id7" rules="none"&gt;
-&lt;colgroup&gt;&lt;col class="label"&gt;&lt;col&gt;&lt;/colgroup&gt;
-&lt;tbody valign="top"&gt;
-&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="https://chriswarrick.com/pl/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#id3"&gt;[3]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;Quoted from &lt;tt class="docutils literal"&gt;execve(2)&lt;/tt&gt; &lt;a class="reference external" href="https://www.freebsd.org/cgi/man.cgi?query=execve&amp;amp;sektion=2"&gt;man page&lt;/a&gt; from FreeBSD.&lt;/td&gt;&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;table class="docutils footnote" frame="void" id="id8" rules="none"&gt;
-&lt;colgroup&gt;&lt;col class="label"&gt;&lt;col&gt;&lt;/colgroup&gt;
-&lt;tbody valign="top"&gt;
-&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="https://chriswarrick.com/pl/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#id4"&gt;[4]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;An alternative is &lt;tt class="docutils literal"&gt;posix_spawn()&lt;/tt&gt;, but it usually does fork-exec, unless your platform does not support forking.&lt;/td&gt;&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
+&lt;p&gt;Internals: There is no &lt;code class="docutils literal"&gt;fork()&lt;/code&gt; on Windows. Instead, &lt;code class="docutils literal"&gt;CreateProcess()&lt;/code&gt;,
+&lt;code class="docutils literal"&gt;ShellExecute()&lt;/code&gt;, or lower-level &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;spawn*()&lt;/span&gt;&lt;/code&gt; functions are used. &lt;code class="docutils literal"&gt;cmd.exe
+/c&lt;/code&gt; is called in shell calls.&lt;/p&gt;
+&lt;dl class="footnote brackets"&gt;
+&lt;dt class="label" id="id5"&gt;&lt;span class="brackets"&gt;&lt;a class="fn-backref" href="https://chriswarrick.com/pl/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#id1"&gt;1&lt;/a&gt;&lt;/span&gt;&lt;/dt&gt;
+&lt;dd&gt;&lt;p&gt;Unless your operating system does not implement copy-on-write forking — in that case, you might even run out of memory if you use too much of it.&lt;/p&gt;
+&lt;/dd&gt;
+&lt;dt class="label" id="id6"&gt;&lt;span class="brackets"&gt;&lt;a class="fn-backref" href="https://chriswarrick.com/pl/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#id2"&gt;2&lt;/a&gt;&lt;/span&gt;&lt;/dt&gt;
+&lt;dd&gt;&lt;p&gt;The function that does the real work is &lt;code class="docutils literal"&gt;execve()&lt;/code&gt;, which takes an exact path, an array of arguments, and takes environment variables as input. Other variants can also perform a &lt;code class="docutils literal"&gt;$PATH&lt;/code&gt; search, take argv as variadic arguments, and inherit environment from the current process. &lt;code class="docutils literal"&gt;execl()&lt;/code&gt; does the last two.&lt;/p&gt;
+&lt;/dd&gt;
+&lt;dt class="label" id="id7"&gt;&lt;span class="brackets"&gt;&lt;a class="fn-backref" href="https://chriswarrick.com/pl/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#id3"&gt;3&lt;/a&gt;&lt;/span&gt;&lt;/dt&gt;
+&lt;dd&gt;&lt;p&gt;Quoted from &lt;code class="docutils literal"&gt;execve(2)&lt;/code&gt; &lt;a class="reference external" href="https://www.freebsd.org/cgi/man.cgi?query=execve&amp;amp;sektion=2"&gt;man page&lt;/a&gt; from FreeBSD.&lt;/p&gt;
+&lt;/dd&gt;
+&lt;dt class="label" id="id8"&gt;&lt;span class="brackets"&gt;&lt;a class="fn-backref" href="https://chriswarrick.com/pl/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#id4"&gt;4&lt;/a&gt;&lt;/span&gt;&lt;/dt&gt;
+&lt;dd&gt;&lt;p&gt;An alternative is &lt;code class="docutils literal"&gt;posix_spawn()&lt;/code&gt;, but it usually does fork-exec, unless your platform does not support forking.&lt;/p&gt;
+&lt;/dd&gt;
+&lt;/dl&gt;
 &lt;/div&gt;&lt;/div&gt;</description><guid>https://chriswarrick.com/pl/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/</guid><pubDate>Sat, 02 Sep 2017 18:40:00 GMT</pubDate></item></channel></rss>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chris Warrick (Posts about Python hackery)</title><link>https://chriswarrick.com/</link><description></description><atom:link href="https://chriswarrick.com/blog/tags/python-hackery.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Fri, 28 Feb 2020 17:41:23 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Python Hackery: merging signatures of two Python functions</title><link>https://chriswarrick.com/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;Today’s blog post is going to contain fairly advanced Python hackery. We’ll
+<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chris Warrick (Posts about Python hackery)</title><link>https://chriswarrick.com/</link><description></description><atom:link href="https://chriswarrick.com/blog/tags/python-hackery.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Thu, 19 Mar 2020 10:29:49 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Python Hackery: merging signatures of two Python functions</title><link>https://chriswarrick.com/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;Today’s blog post is going to contain fairly advanced Python hackery. We’ll
 take two functions — one is a wrapper for the other, but also adds some
 positional arguments.  And we’ll change the signature displayed everywhere from
-the uninformative &lt;tt class="docutils literal"&gt;f(new_arg, *args, **kwargs)&lt;/tt&gt; to something more
+the uninformative &lt;code class="docutils literal"&gt;f(new_arg, *args, **kwargs)&lt;/code&gt; to something more
 appropriate.&lt;/p&gt;
 &lt;!-- TEASER_END --&gt;
 &lt;p&gt;This blog post was inspired by F4D3C0D3 on #python (freenode IRC). I also took
@@ -10,154 +10,154 @@ some inspiration from
 Gynvael Coldwind’s classic &lt;a class="reference external" href="https://www.youtube.com/watch?v=7VJaprmuHcw"&gt;Python 101&lt;/a&gt; (April Fools) video. (Audio and some comments are in Polish, but even if you don’t speak the language, it’s still worth it to click through the time bar and see some (fairly unusual) magic happen.)&lt;/p&gt;
 &lt;div class="section" id="starting-point"&gt;
 &lt;h2&gt;Starting point&lt;/h2&gt;
-&lt;pre class="code python"&gt;&lt;a name="rest_code_aaeb554ac9154aa38745065adb44832c-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;old&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;bar&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-&lt;a name="rest_code_aaeb554ac9154aa38745065adb44832c-2"&gt;&lt;/a&gt;    &lt;span class="sd"&gt;"""This is old's docstring."""&lt;/span&gt;
-&lt;a name="rest_code_aaeb554ac9154aa38745065adb44832c-3"&gt;&lt;/a&gt;    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;bar&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_aaeb554ac9154aa38745065adb44832c-4"&gt;&lt;/a&gt;    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;foo&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;bar&lt;/span&gt;
-&lt;a name="rest_code_aaeb554ac9154aa38745065adb44832c-5"&gt;&lt;/a&gt;
-&lt;a name="rest_code_aaeb554ac9154aa38745065adb44832c-6"&gt;&lt;/a&gt;
-&lt;a name="rest_code_aaeb554ac9154aa38745065adb44832c-7"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;new&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;prefix&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;kwargs&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-&lt;a name="rest_code_aaeb554ac9154aa38745065adb44832c-8"&gt;&lt;/a&gt;    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;old&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;prefix&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;kwargs&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_2f573cb24d734fc2a7b9ff1e2eb86220-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;old&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;bar&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;a name="rest_code_2f573cb24d734fc2a7b9ff1e2eb86220-2"&gt;&lt;/a&gt;    &lt;span class="sd"&gt;"""This is old's docstring."""&lt;/span&gt;
+&lt;a name="rest_code_2f573cb24d734fc2a7b9ff1e2eb86220-3"&gt;&lt;/a&gt;    &lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;bar&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_2f573cb24d734fc2a7b9ff1e2eb86220-4"&gt;&lt;/a&gt;    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;foo&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;bar&lt;/span&gt;
+&lt;a name="rest_code_2f573cb24d734fc2a7b9ff1e2eb86220-5"&gt;&lt;/a&gt;
+&lt;a name="rest_code_2f573cb24d734fc2a7b9ff1e2eb86220-6"&gt;&lt;/a&gt;
+&lt;a name="rest_code_2f573cb24d734fc2a7b9ff1e2eb86220-7"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;new&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;prefix&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;kwargs&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;a name="rest_code_2f573cb24d734fc2a7b9ff1e2eb86220-8"&gt;&lt;/a&gt;    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;old&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;prefix&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;kwargs&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;Let’s test it.&lt;/p&gt;
-&lt;pre class="code pycon"&gt;&lt;a name="rest_code_be3f7a6fc85a477c9f175267487f17a7-1"&gt;&lt;/a&gt;&lt;span class="gp"&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class="n"&gt;o&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;old&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'a'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'b'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_be3f7a6fc85a477c9f175267487f17a7-2"&gt;&lt;/a&gt;&lt;span class="go"&gt;a b&lt;/span&gt;
-&lt;a name="rest_code_be3f7a6fc85a477c9f175267487f17a7-3"&gt;&lt;/a&gt;&lt;span class="gp"&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;new&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'!'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'a'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'b'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_be3f7a6fc85a477c9f175267487f17a7-4"&gt;&lt;/a&gt;&lt;span class="go"&gt;!a b&lt;/span&gt;
-&lt;a name="rest_code_be3f7a6fc85a477c9f175267487f17a7-5"&gt;&lt;/a&gt;&lt;span class="gp"&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;o&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;sep&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;' - '&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_be3f7a6fc85a477c9f175267487f17a7-6"&gt;&lt;/a&gt;&lt;span class="go"&gt;ab - !ab&lt;/span&gt;
-&lt;a name="rest_code_be3f7a6fc85a477c9f175267487f17a7-7"&gt;&lt;/a&gt;&lt;span class="gp"&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class="n"&gt;help&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;old&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_be3f7a6fc85a477c9f175267487f17a7-8"&gt;&lt;/a&gt;&lt;span class="go"&gt;Help on function old in module __main__:&lt;/span&gt;
-&lt;a name="rest_code_be3f7a6fc85a477c9f175267487f17a7-9"&gt;&lt;/a&gt;
-&lt;a name="rest_code_be3f7a6fc85a477c9f175267487f17a7-10"&gt;&lt;/a&gt;&lt;span class="go"&gt;old(foo, bar)&lt;/span&gt;
-&lt;a name="rest_code_be3f7a6fc85a477c9f175267487f17a7-11"&gt;&lt;/a&gt;&lt;span class="go"&gt;    This is old's docstring.&lt;/span&gt;
-&lt;a name="rest_code_be3f7a6fc85a477c9f175267487f17a7-12"&gt;&lt;/a&gt;
-&lt;a name="rest_code_be3f7a6fc85a477c9f175267487f17a7-13"&gt;&lt;/a&gt;&lt;span class="gp"&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class="n"&gt;help&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;new&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_be3f7a6fc85a477c9f175267487f17a7-14"&gt;&lt;/a&gt;&lt;span class="go"&gt;Help on function new in module __main__:&lt;/span&gt;
-&lt;a name="rest_code_be3f7a6fc85a477c9f175267487f17a7-15"&gt;&lt;/a&gt;
-&lt;a name="rest_code_be3f7a6fc85a477c9f175267487f17a7-16"&gt;&lt;/a&gt;&lt;span class="go"&gt;new(prefix, foo, *args, **kwargs)&lt;/span&gt;
+&lt;pre class="code pycon"&gt;&lt;a name="rest_code_a6eb88e39a704ae8ac704f13b0467a9a-1"&gt;&lt;/a&gt;&lt;span class="gp"&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class="n"&gt;o&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;old&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'a'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'b'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_a6eb88e39a704ae8ac704f13b0467a9a-2"&gt;&lt;/a&gt;&lt;span class="go"&gt;a b&lt;/span&gt;
+&lt;a name="rest_code_a6eb88e39a704ae8ac704f13b0467a9a-3"&gt;&lt;/a&gt;&lt;span class="gp"&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;new&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'!'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'a'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'b'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_a6eb88e39a704ae8ac704f13b0467a9a-4"&gt;&lt;/a&gt;&lt;span class="go"&gt;!a b&lt;/span&gt;
+&lt;a name="rest_code_a6eb88e39a704ae8ac704f13b0467a9a-5"&gt;&lt;/a&gt;&lt;span class="gp"&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;o&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;sep&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;' - '&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_a6eb88e39a704ae8ac704f13b0467a9a-6"&gt;&lt;/a&gt;&lt;span class="go"&gt;ab - !ab&lt;/span&gt;
+&lt;a name="rest_code_a6eb88e39a704ae8ac704f13b0467a9a-7"&gt;&lt;/a&gt;&lt;span class="gp"&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class="n"&gt;help&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;old&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_a6eb88e39a704ae8ac704f13b0467a9a-8"&gt;&lt;/a&gt;&lt;span class="go"&gt;Help on function old in module __main__:&lt;/span&gt;
+&lt;a name="rest_code_a6eb88e39a704ae8ac704f13b0467a9a-9"&gt;&lt;/a&gt;
+&lt;a name="rest_code_a6eb88e39a704ae8ac704f13b0467a9a-10"&gt;&lt;/a&gt;&lt;span class="go"&gt;old(foo, bar)&lt;/span&gt;
+&lt;a name="rest_code_a6eb88e39a704ae8ac704f13b0467a9a-11"&gt;&lt;/a&gt;&lt;span class="go"&gt;    This is old's docstring.&lt;/span&gt;
+&lt;a name="rest_code_a6eb88e39a704ae8ac704f13b0467a9a-12"&gt;&lt;/a&gt;
+&lt;a name="rest_code_a6eb88e39a704ae8ac704f13b0467a9a-13"&gt;&lt;/a&gt;&lt;span class="gp"&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class="n"&gt;help&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;new&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_a6eb88e39a704ae8ac704f13b0467a9a-14"&gt;&lt;/a&gt;&lt;span class="go"&gt;Help on function new in module __main__:&lt;/span&gt;
+&lt;a name="rest_code_a6eb88e39a704ae8ac704f13b0467a9a-15"&gt;&lt;/a&gt;
+&lt;a name="rest_code_a6eb88e39a704ae8ac704f13b0467a9a-16"&gt;&lt;/a&gt;&lt;span class="go"&gt;new(prefix, foo, *args, **kwargs)&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;The last line is not exactly informative — it doesn’t tell us that we need to
-pass &lt;tt class="docutils literal"&gt;bar&lt;/tt&gt; as an argument.  Sure, you could define &lt;tt class="docutils literal"&gt;new&lt;/tt&gt; as just &lt;tt class="docutils literal"&gt;(prefix, foo,
-bar)&lt;/tt&gt; — but that means every change to &lt;tt class="docutils literal"&gt;old&lt;/tt&gt; requires editing &lt;tt class="docutils literal"&gt;new&lt;/tt&gt; as
+pass &lt;code class="docutils literal"&gt;bar&lt;/code&gt; as an argument.  Sure, you could define &lt;code class="docutils literal"&gt;new&lt;/code&gt; as just &lt;code class="docutils literal"&gt;(prefix, foo,
+bar)&lt;/code&gt; — but that means every change to &lt;code class="docutils literal"&gt;old&lt;/code&gt; requires editing &lt;code class="docutils literal"&gt;new&lt;/code&gt; as
 well. So, not ideal. Let’s try to fix this.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="the-existing-infrastructure-functools-wraps"&gt;
 &lt;h2&gt;The existing infrastructure: functools.wraps&lt;/h2&gt;
 &lt;p&gt;First, let’s start with the basic facility Python already has.  The standard
-library already comes with &lt;tt class="docutils literal"&gt;functools.wraps&lt;/tt&gt; and
-&lt;tt class="docutils literal"&gt;functools.update_wrapper&lt;/tt&gt;.&lt;/p&gt;
+library already comes with &lt;code class="docutils literal"&gt;functools.wraps&lt;/code&gt; and
+&lt;code class="docutils literal"&gt;functools.update_wrapper&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;If you’ve never heard of those two functions, here’s a crash course:&lt;/p&gt;
-&lt;pre class="code python"&gt;&lt;a name="rest_code_ee56cbed82844acda87d1cefc0a40c86-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;decorator&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-&lt;a name="rest_code_ee56cbed82844acda87d1cefc0a40c86-2"&gt;&lt;/a&gt;    &lt;span class="nd"&gt;@functools.wraps&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_ee56cbed82844acda87d1cefc0a40c86-3"&gt;&lt;/a&gt;    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;wrapper&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;kwargs&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-&lt;a name="rest_code_ee56cbed82844acda87d1cefc0a40c86-4"&gt;&lt;/a&gt;        &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"Inside wrapper"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_ee56cbed82844acda87d1cefc0a40c86-5"&gt;&lt;/a&gt;        &lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;kwargs&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_ee56cbed82844acda87d1cefc0a40c86-6"&gt;&lt;/a&gt;    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;wrapper&lt;/span&gt;
-&lt;a name="rest_code_ee56cbed82844acda87d1cefc0a40c86-7"&gt;&lt;/a&gt;
-&lt;a name="rest_code_ee56cbed82844acda87d1cefc0a40c86-8"&gt;&lt;/a&gt;&lt;span class="nd"&gt;@decorator&lt;/span&gt;
-&lt;a name="rest_code_ee56cbed82844acda87d1cefc0a40c86-9"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;square&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;float&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="nb"&gt;float&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-&lt;a name="rest_code_ee56cbed82844acda87d1cefc0a40c86-10"&gt;&lt;/a&gt;    &lt;span class="sd"&gt;"""Square a number."""&lt;/span&gt;
-&lt;a name="rest_code_ee56cbed82844acda87d1cefc0a40c86-11"&gt;&lt;/a&gt;    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt;
-&lt;/pre&gt;&lt;p&gt;If we try to inspect the &lt;tt class="docutils literal"&gt;square&lt;/tt&gt; function, we’ll see the original name, arguments,
+&lt;pre class="code python"&gt;&lt;a name="rest_code_e34d02e1bd33485b92e23297cce2bec8-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;decorator&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;a name="rest_code_e34d02e1bd33485b92e23297cce2bec8-2"&gt;&lt;/a&gt;    &lt;span class="nd"&gt;@functools&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;wraps&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_e34d02e1bd33485b92e23297cce2bec8-3"&gt;&lt;/a&gt;    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;wrapper&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;kwargs&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;a name="rest_code_e34d02e1bd33485b92e23297cce2bec8-4"&gt;&lt;/a&gt;        &lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"Inside wrapper"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_e34d02e1bd33485b92e23297cce2bec8-5"&gt;&lt;/a&gt;        &lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;kwargs&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_e34d02e1bd33485b92e23297cce2bec8-6"&gt;&lt;/a&gt;    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;wrapper&lt;/span&gt;
+&lt;a name="rest_code_e34d02e1bd33485b92e23297cce2bec8-7"&gt;&lt;/a&gt;
+&lt;a name="rest_code_e34d02e1bd33485b92e23297cce2bec8-8"&gt;&lt;/a&gt;&lt;span class="nd"&gt;@decorator&lt;/span&gt;
+&lt;a name="rest_code_e34d02e1bd33485b92e23297cce2bec8-9"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;square&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;float&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="nb"&gt;float&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;a name="rest_code_e34d02e1bd33485b92e23297cce2bec8-10"&gt;&lt;/a&gt;    &lt;span class="sd"&gt;"""Square a number."""&lt;/span&gt;
+&lt;a name="rest_code_e34d02e1bd33485b92e23297cce2bec8-11"&gt;&lt;/a&gt;    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt;
+&lt;/pre&gt;&lt;p&gt;If we try to inspect the &lt;code class="docutils literal"&gt;square&lt;/code&gt; function, we’ll see the original name, arguments,
 annotations, and the docstring.  If we ran this code again, but with the
-&lt;tt class="docutils literal"&gt;@functools.wraps(f)&lt;/tt&gt; line commented out, we would only see &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;wrapper(*args,&lt;/span&gt;
-**kwargs)&lt;/tt&gt;.&lt;/p&gt;
+&lt;code class="docutils literal"&gt;@functools.wraps(f)&lt;/code&gt; line commented out, we would only see &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;wrapper(*args,&lt;/span&gt;
+**kwargs)&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;This approach gives us a hint of what we need to do.  However, if we apply
-&lt;tt class="docutils literal"&gt;wraps&lt;/tt&gt; (or &lt;tt class="docutils literal"&gt;update_wrapper&lt;/tt&gt;, which is what &lt;tt class="docutils literal"&gt;wraps&lt;/tt&gt; ends up calling)
-to our function, it will only have &lt;tt class="docutils literal"&gt;foo&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;bar&lt;/tt&gt; as arguments, and its
-name will be displayed as &lt;tt class="docutils literal"&gt;old&lt;/tt&gt;.&lt;/p&gt;
+&lt;code class="docutils literal"&gt;wraps&lt;/code&gt; (or &lt;code class="docutils literal"&gt;update_wrapper&lt;/code&gt;, which is what &lt;code class="docutils literal"&gt;wraps&lt;/code&gt; ends up calling)
+to our function, it will only have &lt;code class="docutils literal"&gt;foo&lt;/code&gt; and &lt;code class="docutils literal"&gt;bar&lt;/code&gt; as arguments, and its
+name will be displayed as &lt;code class="docutils literal"&gt;old&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;So, let’s take a look at &lt;a class="reference external" href="https://github.com/python/cpython/blob/4fe8dc68577f9e22aaf24db08fb6647277c42d4c/Lib/functools.py#L27-L79"&gt;functools.update_wrapper&lt;/a&gt;. What does it do? Two things:&lt;/p&gt;
 &lt;ul class="simple"&gt;
-&lt;li&gt;copy some attributes from the old function to the new one
-(&lt;tt class="docutils literal"&gt;__module__&lt;/tt&gt;, &lt;tt class="docutils literal"&gt;__name__&lt;/tt&gt;, &lt;tt class="docutils literal"&gt;__qualname__&lt;/tt&gt;, &lt;tt class="docutils literal"&gt;__doc__&lt;/tt&gt;, &lt;tt class="docutils literal"&gt;__annotations__&lt;/tt&gt;)&lt;/li&gt;
-&lt;li&gt;update &lt;tt class="docutils literal"&gt;__dict__&lt;/tt&gt; of the new function&lt;/li&gt;
-&lt;li&gt;set &lt;tt class="docutils literal"&gt;wrapper.__wrapped__&lt;/tt&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;copy some attributes from the old function to the new one
+(&lt;code class="docutils literal"&gt;__module__&lt;/code&gt;, &lt;code class="docutils literal"&gt;__name__&lt;/code&gt;, &lt;code class="docutils literal"&gt;__qualname__&lt;/code&gt;, &lt;code class="docutils literal"&gt;__doc__&lt;/code&gt;, &lt;code class="docutils literal"&gt;__annotations__&lt;/code&gt;)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;update &lt;code class="docutils literal"&gt;__dict__&lt;/code&gt; of the new function&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;set &lt;code class="docutils literal"&gt;wrapper.__wrapped__&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;If we try to experiment with it — by changing the list of things to copy, for
 example — we’ll find out that the annotations, the docstring, and the displayed name come from
-the copied attributes, but the signature itself is apparently taken from &lt;tt class="docutils literal"&gt;__wrapped__&lt;/tt&gt;.&lt;/p&gt;
-&lt;p&gt;Further investigation reveals this fact about &lt;tt class="docutils literal"&gt;inspect.signature&lt;/tt&gt;:&lt;/p&gt;
+the copied attributes, but the signature itself is apparently taken from &lt;code class="docutils literal"&gt;__wrapped__&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Further investigation reveals this fact about &lt;code class="docutils literal"&gt;inspect.signature&lt;/code&gt;:&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;&lt;tt class="docutils literal"&gt;inspect.signature(callable, *, follow_wrapped=True)&lt;/tt&gt;&lt;/p&gt;
-&lt;p&gt;&lt;em&gt;New in version 3.5:&lt;/em&gt; &lt;tt class="docutils literal"&gt;follow_wrapped&lt;/tt&gt; parameter. Pass &lt;tt class="docutils literal"&gt;False&lt;/tt&gt; to get a signature of callable specifically (&lt;tt class="docutils literal"&gt;callable.__wrapped__&lt;/tt&gt; will not be used to unwrap decorated callables.)&lt;/p&gt;
+&lt;p&gt;&lt;code class="docutils literal"&gt;inspect.signature(callable, *, follow_wrapped=True)&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;New in version 3.5:&lt;/em&gt; &lt;code class="docutils literal"&gt;follow_wrapped&lt;/code&gt; parameter. Pass &lt;code class="docutils literal"&gt;False&lt;/code&gt; to get a signature of callable specifically (&lt;code class="docutils literal"&gt;callable.__wrapped__&lt;/code&gt; will not be used to unwrap decorated callables.)&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;And so, this is our &lt;strong&gt;end goal:&lt;/strong&gt;&lt;/p&gt;
-&lt;p class="lead"&gt;Craft a function with a specific signature (that merges &lt;tt class="docutils literal"&gt;old&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;new&lt;/tt&gt;) and set it as &lt;tt class="docutils literal"&gt;new.__wrapped__&lt;/tt&gt;.&lt;/p&gt;
+&lt;p class="lead"&gt;Craft a function with a specific signature (that merges &lt;code class="docutils literal"&gt;old&lt;/code&gt; and &lt;code class="docutils literal"&gt;new&lt;/code&gt;) and set it as &lt;code class="docutils literal"&gt;new.__wrapped__&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;But first, we need to talk about parallel universes.&lt;/p&gt;
 &lt;p&gt;Or actually, code objects.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="defining-a-function-programmatically"&gt;
 &lt;h2&gt;Defining a function programmatically&lt;/h2&gt;
 &lt;p&gt;Let’s try an experiment.&lt;/p&gt;
-&lt;pre class="code pycon"&gt;&lt;a name="rest_code_c8f36cee1ed14d0fa333e420b0ac0792-1"&gt;&lt;/a&gt;&lt;span class="gp"&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;foo&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bar&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt; &lt;span class="k"&gt;pass&lt;/span&gt;
-&lt;a name="rest_code_c8f36cee1ed14d0fa333e420b0ac0792-2"&gt;&lt;/a&gt;&lt;span class="gp"&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;__wrapped__&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;lambda&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="bp"&gt;None&lt;/span&gt;
-&lt;a name="rest_code_c8f36cee1ed14d0fa333e420b0ac0792-3"&gt;&lt;/a&gt;&lt;span class="gp"&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class="n"&gt;help&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_c8f36cee1ed14d0fa333e420b0ac0792-4"&gt;&lt;/a&gt;&lt;span class="go"&gt;foo(x, y)&lt;/span&gt;
+&lt;pre class="code pycon"&gt;&lt;a name="rest_code_931086d4cc7047d286302f10ff4421c5-1"&gt;&lt;/a&gt;&lt;span class="gp"&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;foo&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bar&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt; &lt;span class="k"&gt;pass&lt;/span&gt;
+&lt;a name="rest_code_931086d4cc7047d286302f10ff4421c5-2"&gt;&lt;/a&gt;&lt;span class="gp"&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;__wrapped__&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;lambda&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="kc"&gt;None&lt;/span&gt;
+&lt;a name="rest_code_931086d4cc7047d286302f10ff4421c5-3"&gt;&lt;/a&gt;&lt;span class="gp"&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class="n"&gt;help&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_931086d4cc7047d286302f10ff4421c5-4"&gt;&lt;/a&gt;&lt;span class="go"&gt;foo(x, y)&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;So, there are two ways to do this.  The first one would be to generate a string
-with the signature and just use &lt;tt class="docutils literal"&gt;eval&lt;/tt&gt; to get a &lt;tt class="docutils literal"&gt;__wrapped__&lt;/tt&gt; function. But
+with the signature and just use &lt;code class="docutils literal"&gt;eval&lt;/code&gt; to get a &lt;code class="docutils literal"&gt;__wrapped__&lt;/code&gt; function. But
 that would be cheating, and honestly, quite boring. (The inspect module could
 help us with preparing the string.)  The second one? Create code objects
 manually.&lt;/p&gt;
 &lt;div class="section" id="code-objects"&gt;
 &lt;h3&gt;Code objects&lt;/h3&gt;
-&lt;p&gt;To create a function, we’ll need the &lt;tt class="docutils literal"&gt;types&lt;/tt&gt; module. &lt;tt class="docutils literal"&gt;types.FunctionType&lt;/tt&gt;
+&lt;p&gt;To create a function, we’ll need the &lt;code class="docutils literal"&gt;types&lt;/code&gt; module. &lt;code class="docutils literal"&gt;types.FunctionType&lt;/code&gt;
 gives us a function, but it asks us for a code object. As the &lt;a class="reference external" href="https://docs.python.org/3/reference/datamodel.html"&gt;docs&lt;/a&gt; state,
 &lt;em&gt;Code objects represent byte-compiled executable Python code, or bytecode.&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;To create one by
-hand, we’ll need &lt;tt class="docutils literal"&gt;types.CodeType&lt;/tt&gt;. Well, not exactly by hand — we’ll end up doing a three-way merge between
-&lt;tt class="docutils literal"&gt;source&lt;/tt&gt; (&lt;tt class="docutils literal"&gt;old&lt;/tt&gt;), &lt;tt class="docutils literal"&gt;dest&lt;/tt&gt; (&lt;tt class="docutils literal"&gt;new&lt;/tt&gt;) and &lt;tt class="docutils literal"&gt;def &lt;span class="pre"&gt;_blank():&lt;/span&gt; pass&lt;/tt&gt; (a function
+hand, we’ll need &lt;code class="docutils literal"&gt;types.CodeType&lt;/code&gt;. Well, not exactly by hand — we’ll end up doing a three-way merge between
+&lt;code class="docutils literal"&gt;source&lt;/code&gt; (&lt;code class="docutils literal"&gt;old&lt;/code&gt;), &lt;code class="docutils literal"&gt;dest&lt;/code&gt; (&lt;code class="docutils literal"&gt;new&lt;/code&gt;) and &lt;code class="docutils literal"&gt;def &lt;span class="pre"&gt;_blank():&lt;/span&gt; pass&lt;/code&gt; (a function
 that does nothing).&lt;/p&gt;
-&lt;p&gt;Let’s look at the docstring for &lt;tt class="docutils literal"&gt;CodeType&lt;/tt&gt;:&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_22d6ddbeffda47ada8c2581c65f90e4b-1"&gt;&lt;/a&gt;code(argcount, kwonlyargcount, nlocals, stacksize, flags, codestring,
-&lt;a name="rest_code_22d6ddbeffda47ada8c2581c65f90e4b-2"&gt;&lt;/a&gt;    constants, names, varnames, filename, name, firstlineno,
-&lt;a name="rest_code_22d6ddbeffda47ada8c2581c65f90e4b-3"&gt;&lt;/a&gt;    lnotab[, freevars[, cellvars]])
-&lt;a name="rest_code_22d6ddbeffda47ada8c2581c65f90e4b-4"&gt;&lt;/a&gt;
-&lt;a name="rest_code_22d6ddbeffda47ada8c2581c65f90e4b-5"&gt;&lt;/a&gt;Create a code object.  Not for the faint of heart.
+&lt;p&gt;Let’s look at the docstring for &lt;code class="docutils literal"&gt;CodeType&lt;/code&gt;:&lt;/p&gt;
+&lt;pre class="code text"&gt;&lt;a name="rest_code_1ff34e8a3bde4168b7051c40cf777abe-1"&gt;&lt;/a&gt;code(argcount, kwonlyargcount, nlocals, stacksize, flags, codestring,
+&lt;a name="rest_code_1ff34e8a3bde4168b7051c40cf777abe-2"&gt;&lt;/a&gt;    constants, names, varnames, filename, name, firstlineno,
+&lt;a name="rest_code_1ff34e8a3bde4168b7051c40cf777abe-3"&gt;&lt;/a&gt;    lnotab[, freevars[, cellvars]])
+&lt;a name="rest_code_1ff34e8a3bde4168b7051c40cf777abe-4"&gt;&lt;/a&gt;
+&lt;a name="rest_code_1ff34e8a3bde4168b7051c40cf777abe-5"&gt;&lt;/a&gt;Create a code object.  Not for the faint of heart.
 &lt;/pre&gt;&lt;p&gt;All of the arguments end up being fields of a code objects (name starts with
-&lt;tt class="docutils literal"&gt;co_&lt;/tt&gt;).  For each
-function &lt;tt class="docutils literal"&gt;f&lt;/tt&gt;, its code object is &lt;tt class="docutils literal"&gt;f.__code__&lt;/tt&gt;. You can find the filename in
-&lt;tt class="docutils literal"&gt;f.__code__.co_filename&lt;/tt&gt;, for example. The meaning of all fields can be
+&lt;code class="docutils literal"&gt;co_&lt;/code&gt;).  For each
+function &lt;code class="docutils literal"&gt;f&lt;/code&gt;, its code object is &lt;code class="docutils literal"&gt;f.__code__&lt;/code&gt;. You can find the filename in
+&lt;code class="docutils literal"&gt;f.__code__.co_filename&lt;/code&gt;, for example. The meaning of all fields can be
 found in docs for the &lt;a class="reference external" href="https://docs.python.org/3/library/inspect.html#types-and-members"&gt;inspect module&lt;/a&gt;. We’ll be
 interested in the following three fields:&lt;/p&gt;
 &lt;ul class="simple"&gt;
-&lt;li&gt;&lt;tt class="docutils literal"&gt;argcount&lt;/tt&gt; — number of arguments (not including keyword only arguments, * or ** args)&lt;/li&gt;
-&lt;li&gt;&lt;tt class="docutils literal"&gt;kwonlyargcount&lt;/tt&gt; — number of keyword only arguments (not including ** arg)&lt;/li&gt;
-&lt;li&gt;&lt;tt class="docutils literal"&gt;varnames&lt;/tt&gt; — tuple of names of arguments and local variables&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code class="docutils literal"&gt;argcount&lt;/code&gt; — number of arguments (not including keyword only arguments, * or ** args)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code class="docutils literal"&gt;kwonlyargcount&lt;/code&gt; — number of keyword only arguments (not including ** arg)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code class="docutils literal"&gt;varnames&lt;/code&gt; — tuple of names of arguments and local variables&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;For all the other fields, we’ll copy them from the appropriate function (one of
 the three).  We don’t expect anyone to call the wrapped function directly; as
-long as &lt;tt class="docutils literal"&gt;help&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;inspect&lt;/tt&gt; members don’t crash when they look into it,
+long as &lt;code class="docutils literal"&gt;help&lt;/code&gt; and &lt;code class="docutils literal"&gt;inspect&lt;/code&gt; members don’t crash when they look into it,
 we’re fine.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="everything-you-need-to-know-about-function-arguments"&gt;
 &lt;h3&gt;Everything you need to know about function arguments&lt;/h3&gt;
-&lt;pre class="code pycon"&gt;&lt;a name="rest_code_0085e5bd36974c33b30bfffe7d93022e-1"&gt;&lt;/a&gt;&lt;span class="gp"&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;f&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;d&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt; &lt;span class="k"&gt;pass&lt;/span&gt;
-&lt;a name="rest_code_0085e5bd36974c33b30bfffe7d93022e-2"&gt;&lt;/a&gt;&lt;span class="gp"&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class="n"&gt;inspect&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getfullargspec&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_0085e5bd36974c33b30bfffe7d93022e-3"&gt;&lt;/a&gt;&lt;span class="go"&gt;FullArgSpec(args=['a', 'b', 'c'], varargs=None, varkw=None, defaults=(1, 2), kwonlyargs=['d'], kwonlydefaults={'d': 3}, annotations={})&lt;/span&gt;
+&lt;pre class="code pycon"&gt;&lt;a name="rest_code_1e1d9d0527544ca481624b38052701b1-1"&gt;&lt;/a&gt;&lt;span class="gp"&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;f&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;d&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt; &lt;span class="k"&gt;pass&lt;/span&gt;
+&lt;a name="rest_code_1e1d9d0527544ca481624b38052701b1-2"&gt;&lt;/a&gt;&lt;span class="gp"&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class="n"&gt;inspect&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getfullargspec&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_1e1d9d0527544ca481624b38052701b1-3"&gt;&lt;/a&gt;&lt;span class="go"&gt;FullArgSpec(args=['a', 'b', 'c'], varargs=None, varkw=None, defaults=(1, 2), kwonlyargs=['d'], kwonlydefaults={'d': 3}, annotations={})&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;A function signature has the following syntax:&lt;/p&gt;
 &lt;ol class="arabic simple"&gt;
-&lt;li&gt;Any positional (non-optional) arguments&lt;/li&gt;
-&lt;li&gt;Variable positional arguments (&lt;tt class="docutils literal"&gt;*x&lt;/tt&gt;, name stored in &lt;tt class="docutils literal"&gt;varargs&lt;/tt&gt;)&lt;/li&gt;
-&lt;li&gt;Arguments with defaults (keyword-maybe arguments); their value is stored in &lt;tt class="docutils literal"&gt;__defaults__&lt;/tt&gt; left-to-right&lt;/li&gt;
-&lt;li&gt;Keyword-only arguments (after an asterisk); their values are stored in a dictionary.  Cannot be used if &lt;tt class="docutils literal"&gt;varargs&lt;/tt&gt; are defined.&lt;/li&gt;
-&lt;li&gt;Variable keyword arguments (&lt;tt class="docutils literal"&gt;**y&lt;/tt&gt;, name stored in &lt;tt class="docutils literal"&gt;varkw&lt;/tt&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Any positional (non-optional) arguments&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Variable positional arguments (&lt;code class="docutils literal"&gt;*x&lt;/code&gt;, name stored in &lt;code class="docutils literal"&gt;varargs&lt;/code&gt;)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Arguments with defaults (keyword-maybe arguments); their value is stored in &lt;code class="docutils literal"&gt;__defaults__&lt;/code&gt; left-to-right&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Keyword-only arguments (after an asterisk); their values are stored in a dictionary.  Cannot be used if &lt;code class="docutils literal"&gt;varargs&lt;/code&gt; are defined.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Variable keyword arguments (&lt;code class="docutils literal"&gt;**y&lt;/code&gt;, name stored in &lt;code class="docutils literal"&gt;varkw&lt;/code&gt;)&lt;/p&gt;&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;We’re going to make one assumption: we aren’t going to support a &lt;tt class="docutils literal"&gt;source&lt;/tt&gt;
+&lt;p&gt;We’re going to make one assumption: we aren’t going to support a &lt;code class="docutils literal"&gt;source&lt;/code&gt;
 function that uses variable arguments of any kind.  So, our final signature
 will be composed like this:&lt;/p&gt;
 &lt;ol class="arabic simple"&gt;
-&lt;li&gt;&lt;tt class="docutils literal"&gt;dest&lt;/tt&gt; positional arguments&lt;/li&gt;
-&lt;li&gt;&lt;tt class="docutils literal"&gt;source&lt;/tt&gt; positional arguments&lt;/li&gt;
-&lt;li&gt;&lt;tt class="docutils literal"&gt;dest&lt;/tt&gt; keyword-maybe arguments&lt;/li&gt;
-&lt;li&gt;&lt;tt class="docutils literal"&gt;source&lt;/tt&gt; keyword-maybe arguments&lt;/li&gt;
-&lt;li&gt;&lt;tt class="docutils literal"&gt;dest&lt;/tt&gt; keyword-only arguments&lt;/li&gt;
-&lt;li&gt;&lt;tt class="docutils literal"&gt;source&lt;/tt&gt; keyword-only arguments&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code class="docutils literal"&gt;dest&lt;/code&gt; positional arguments&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code class="docutils literal"&gt;source&lt;/code&gt; positional arguments&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code class="docutils literal"&gt;dest&lt;/code&gt; keyword-maybe arguments&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code class="docutils literal"&gt;source&lt;/code&gt; keyword-maybe arguments&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code class="docutils literal"&gt;dest&lt;/code&gt; keyword-only arguments&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code class="docutils literal"&gt;source&lt;/code&gt; keyword-only arguments&lt;/p&gt;&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;That will be saved into &lt;tt class="docutils literal"&gt;co_names&lt;/tt&gt;.  The first two arguments are counts —
-the first one is &lt;tt class="docutils literal"&gt;len(1+2+3+4)&lt;/tt&gt; and the other is &lt;tt class="docutils literal"&gt;len(5+6)&lt;/tt&gt;. The remaining
-arguments to &lt;tt class="docutils literal"&gt;CodeType&lt;/tt&gt; will be either safe minimal defaults, or things taken from
+&lt;p&gt;That will be saved into &lt;code class="docutils literal"&gt;co_names&lt;/code&gt;.  The first two arguments are counts —
+the first one is &lt;code class="docutils literal"&gt;len(1+2+3+4)&lt;/code&gt; and the other is &lt;code class="docutils literal"&gt;len(5+6)&lt;/code&gt;. The remaining
+arguments to &lt;code class="docutils literal"&gt;CodeType&lt;/code&gt; will be either safe minimal defaults, or things taken from
 one of the three functions.&lt;/p&gt;
-&lt;p&gt;We’ll also need to do one more thing: we must ensure &lt;tt class="docutils literal"&gt;__defaults__&lt;/tt&gt;,
-&lt;tt class="docutils literal"&gt;__kwdefaults__&lt;/tt&gt;, and &lt;tt class="docutils literal"&gt;__annotations__&lt;/tt&gt; are all in the right places.
+&lt;p&gt;We’ll also need to do one more thing: we must ensure &lt;code class="docutils literal"&gt;__defaults__&lt;/code&gt;,
+&lt;code class="docutils literal"&gt;__kwdefaults__&lt;/code&gt;, and &lt;code class="docutils literal"&gt;__annotations__&lt;/code&gt; are all in the right places.
 That’s also a fairly simple thing to do (it requires more tuple/dict merging).
 And with that, we’re done.&lt;/p&gt;
 &lt;/div&gt;
@@ -165,259 +165,259 @@ And with that, we’re done.&lt;/p&gt;
 &lt;div class="section" id="final-results"&gt;
 &lt;h2&gt;Final results&lt;/h2&gt;
 &lt;p&gt;Before I show you the code, let’s test it out:&lt;/p&gt;
-&lt;pre class="code python"&gt;&lt;a name="rest_code_4740047c57ab48a88c99f428ce335067-1"&gt;&lt;/a&gt;&lt;span class="c1"&gt;# old defined as before&lt;/span&gt;
-&lt;a name="rest_code_4740047c57ab48a88c99f428ce335067-2"&gt;&lt;/a&gt;&lt;span class="nd"&gt;@merge_args&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;old&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_4740047c57ab48a88c99f428ce335067-3"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;new&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;prefix&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;kwargs&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-&lt;a name="rest_code_4740047c57ab48a88c99f428ce335067-4"&gt;&lt;/a&gt;    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;old&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;prefix&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;kwargs&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;p&gt;And the end result — &lt;tt class="docutils literal"&gt;help(new)&lt;/tt&gt; says:&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_e093d6205bec4888884a89d1ca8dd0f0-1"&gt;&lt;/a&gt;new(prefix, foo, bar)
-&lt;a name="rest_code_e093d6205bec4888884a89d1ca8dd0f0-2"&gt;&lt;/a&gt;    This is old's docstring.
+&lt;pre class="code python"&gt;&lt;a name="rest_code_9f93186f643c4619b646682adbc8b5b6-1"&gt;&lt;/a&gt;&lt;span class="c1"&gt;# old defined as before&lt;/span&gt;
+&lt;a name="rest_code_9f93186f643c4619b646682adbc8b5b6-2"&gt;&lt;/a&gt;&lt;span class="nd"&gt;@merge_args&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;old&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_9f93186f643c4619b646682adbc8b5b6-3"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;new&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;prefix&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;kwargs&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;a name="rest_code_9f93186f643c4619b646682adbc8b5b6-4"&gt;&lt;/a&gt;    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;old&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;prefix&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;kwargs&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;p&gt;And the end result — &lt;code class="docutils literal"&gt;help(new)&lt;/code&gt; says:&lt;/p&gt;
+&lt;pre class="code text"&gt;&lt;a name="rest_code_dedd9e0c006e42c69f449703bde130c5-1"&gt;&lt;/a&gt;new(prefix, foo, bar)
+&lt;a name="rest_code_dedd9e0c006e42c69f449703bde130c5-2"&gt;&lt;/a&gt;    This is old's docstring.
 &lt;/pre&gt;&lt;p&gt;We did it!&lt;/p&gt;
-&lt;p class="lead"&gt;The code is available on &lt;a class="reference external" href="https://github.com/Kwpolska/merge_args"&gt;GitHub&lt;/a&gt; and on &lt;a class="reference external" href="https://pypi.org/project/merge-args/"&gt;PyPI&lt;/a&gt; (&lt;tt class="docutils literal"&gt;pip install merge_args&lt;/tt&gt;).
+&lt;p class="lead"&gt;The code is available on &lt;a class="reference external" href="https://github.com/Kwpolska/merge_args"&gt;GitHub&lt;/a&gt; and on &lt;a class="reference external" href="https://pypi.org/project/merge-args/"&gt;PyPI&lt;/a&gt; (&lt;code class="docutils literal"&gt;pip install merge_args&lt;/code&gt;).
 There’s also an extensive test suite.&lt;/p&gt;
 &lt;p&gt;PS. you might be interested in another related post of mine, in which I
 reverse-engineer the compilation of a function: &lt;a class="reference external" href="https://chriswarrick.com/blog/2017/08/03/gynvaels-mission-11-en-python-bytecode-reverse-engineering/"&gt;Gynvael’s Mission 11 (en): Python bytecode reverse-engineering&lt;/a&gt;&lt;/p&gt;
 &lt;/div&gt;&lt;/div&gt;</description><category>hacking</category><category>Python</category><category>Python hackery</category><category>Python internals</category><guid>https://chriswarrick.com/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/</guid><pubDate>Thu, 20 Sep 2018 13:52:20 GMT</pubDate></item><item><title>Gynvael’s Mission 11 (en): Python bytecode reverse-engineering</title><link>https://chriswarrick.com/blog/2017/08/03/gynvaels-mission-11-en-python-bytecode-reverse-engineering/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;Gynvael Coldwind is a security researcher at Google, who hosts weekly livestreams about security and programming in &lt;a class="reference external" href="https://gaming.youtube.com/user/GynvaelColdwind/live"&gt;Polish&lt;/a&gt; and &lt;a class="reference external" href="https://gaming.youtube.com/user/GynvaelEN/live"&gt;English&lt;/a&gt;). As part of the streams, he gives out missions — basically, CTF-style reverse engineering tasks. Yesterday’s mission was about Elvish — I mean Paint — I mean Python programming and bytecode.&lt;/p&gt;
 &lt;!-- TEASER_END --&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_7a9d021876c84824aa7325af53859abb-1"&gt;&lt;/a&gt;MISSION 011               goo.gl/13Bia9             DIFFICULTY: ██████░░░░ [6╱10]
-&lt;a name="rest_code_7a9d021876c84824aa7325af53859abb-2"&gt;&lt;/a&gt;┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅
-&lt;a name="rest_code_7a9d021876c84824aa7325af53859abb-3"&gt;&lt;/a&gt;
-&lt;a name="rest_code_7a9d021876c84824aa7325af53859abb-4"&gt;&lt;/a&gt;Finally some real work!
-&lt;a name="rest_code_7a9d021876c84824aa7325af53859abb-5"&gt;&lt;/a&gt;
-&lt;a name="rest_code_7a9d021876c84824aa7325af53859abb-6"&gt;&lt;/a&gt;One of our field agents managed to infiltrate suspects hideout and steal a
-&lt;a name="rest_code_7a9d021876c84824aa7325af53859abb-7"&gt;&lt;/a&gt;pendrive possibly containing important information. However, the pendrive
-&lt;a name="rest_code_7a9d021876c84824aa7325af53859abb-8"&gt;&lt;/a&gt;actually requires one to authenticate themselves before accessing the stored
-&lt;a name="rest_code_7a9d021876c84824aa7325af53859abb-9"&gt;&lt;/a&gt;files.
-&lt;a name="rest_code_7a9d021876c84824aa7325af53859abb-10"&gt;&lt;/a&gt;
-&lt;a name="rest_code_7a9d021876c84824aa7325af53859abb-11"&gt;&lt;/a&gt;We gave the pendrive to our laboratory and they managed to dump the firmware. We
-&lt;a name="rest_code_7a9d021876c84824aa7325af53859abb-12"&gt;&lt;/a&gt;looked at the deadlisting they sent and for our best knowledge it's some form of
-&lt;a name="rest_code_7a9d021876c84824aa7325af53859abb-13"&gt;&lt;/a&gt;Elvish. We can't read it.
-&lt;a name="rest_code_7a9d021876c84824aa7325af53859abb-14"&gt;&lt;/a&gt;
-&lt;a name="rest_code_7a9d021876c84824aa7325af53859abb-15"&gt;&lt;/a&gt;Here is the firmware: goo.gl/axsAHt
-&lt;a name="rest_code_7a9d021876c84824aa7325af53859abb-16"&gt;&lt;/a&gt;
-&lt;a name="rest_code_7a9d021876c84824aa7325af53859abb-17"&gt;&lt;/a&gt;And off you go. Bring us back the password.
-&lt;a name="rest_code_7a9d021876c84824aa7325af53859abb-18"&gt;&lt;/a&gt;
-&lt;a name="rest_code_7a9d021876c84824aa7325af53859abb-19"&gt;&lt;/a&gt;Good luck!
-&lt;a name="rest_code_7a9d021876c84824aa7325af53859abb-20"&gt;&lt;/a&gt;
-&lt;a name="rest_code_7a9d021876c84824aa7325af53859abb-21"&gt;&lt;/a&gt;---------------------------------------------------------------------------------
-&lt;a name="rest_code_7a9d021876c84824aa7325af53859abb-22"&gt;&lt;/a&gt;
-&lt;a name="rest_code_7a9d021876c84824aa7325af53859abb-23"&gt;&lt;/a&gt;If you decode the answer, put it in the comments under this video! If you write
-&lt;a name="rest_code_7a9d021876c84824aa7325af53859abb-24"&gt;&lt;/a&gt;a blogpost / post your solution online, please add a link in the comments too!
-&lt;a name="rest_code_7a9d021876c84824aa7325af53859abb-25"&gt;&lt;/a&gt;
-&lt;a name="rest_code_7a9d021876c84824aa7325af53859abb-26"&gt;&lt;/a&gt;P.S. I'll show/explain the solution on the stream in ~two weeks.
-&lt;a name="rest_code_7a9d021876c84824aa7325af53859abb-27"&gt;&lt;/a&gt;P.S.2. Bonus points for recreating the original high-level code.
+&lt;pre class="code text"&gt;&lt;a name="rest_code_0514decc0e20455384c0f3f47ab2cf76-1"&gt;&lt;/a&gt;MISSION 011               goo.gl/13Bia9             DIFFICULTY: ██████░░░░ [6╱10]
+&lt;a name="rest_code_0514decc0e20455384c0f3f47ab2cf76-2"&gt;&lt;/a&gt;┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅
+&lt;a name="rest_code_0514decc0e20455384c0f3f47ab2cf76-3"&gt;&lt;/a&gt;
+&lt;a name="rest_code_0514decc0e20455384c0f3f47ab2cf76-4"&gt;&lt;/a&gt;Finally some real work!
+&lt;a name="rest_code_0514decc0e20455384c0f3f47ab2cf76-5"&gt;&lt;/a&gt;
+&lt;a name="rest_code_0514decc0e20455384c0f3f47ab2cf76-6"&gt;&lt;/a&gt;One of our field agents managed to infiltrate suspects hideout and steal a
+&lt;a name="rest_code_0514decc0e20455384c0f3f47ab2cf76-7"&gt;&lt;/a&gt;pendrive possibly containing important information. However, the pendrive
+&lt;a name="rest_code_0514decc0e20455384c0f3f47ab2cf76-8"&gt;&lt;/a&gt;actually requires one to authenticate themselves before accessing the stored
+&lt;a name="rest_code_0514decc0e20455384c0f3f47ab2cf76-9"&gt;&lt;/a&gt;files.
+&lt;a name="rest_code_0514decc0e20455384c0f3f47ab2cf76-10"&gt;&lt;/a&gt;
+&lt;a name="rest_code_0514decc0e20455384c0f3f47ab2cf76-11"&gt;&lt;/a&gt;We gave the pendrive to our laboratory and they managed to dump the firmware. We
+&lt;a name="rest_code_0514decc0e20455384c0f3f47ab2cf76-12"&gt;&lt;/a&gt;looked at the deadlisting they sent and for our best knowledge it's some form of
+&lt;a name="rest_code_0514decc0e20455384c0f3f47ab2cf76-13"&gt;&lt;/a&gt;Elvish. We can't read it.
+&lt;a name="rest_code_0514decc0e20455384c0f3f47ab2cf76-14"&gt;&lt;/a&gt;
+&lt;a name="rest_code_0514decc0e20455384c0f3f47ab2cf76-15"&gt;&lt;/a&gt;Here is the firmware: goo.gl/axsAHt
+&lt;a name="rest_code_0514decc0e20455384c0f3f47ab2cf76-16"&gt;&lt;/a&gt;
+&lt;a name="rest_code_0514decc0e20455384c0f3f47ab2cf76-17"&gt;&lt;/a&gt;And off you go. Bring us back the password.
+&lt;a name="rest_code_0514decc0e20455384c0f3f47ab2cf76-18"&gt;&lt;/a&gt;
+&lt;a name="rest_code_0514decc0e20455384c0f3f47ab2cf76-19"&gt;&lt;/a&gt;Good luck!
+&lt;a name="rest_code_0514decc0e20455384c0f3f47ab2cf76-20"&gt;&lt;/a&gt;
+&lt;a name="rest_code_0514decc0e20455384c0f3f47ab2cf76-21"&gt;&lt;/a&gt;---------------------------------------------------------------------------------
+&lt;a name="rest_code_0514decc0e20455384c0f3f47ab2cf76-22"&gt;&lt;/a&gt;
+&lt;a name="rest_code_0514decc0e20455384c0f3f47ab2cf76-23"&gt;&lt;/a&gt;If you decode the answer, put it in the comments under this video! If you write
+&lt;a name="rest_code_0514decc0e20455384c0f3f47ab2cf76-24"&gt;&lt;/a&gt;a blogpost / post your solution online, please add a link in the comments too!
+&lt;a name="rest_code_0514decc0e20455384c0f3f47ab2cf76-25"&gt;&lt;/a&gt;
+&lt;a name="rest_code_0514decc0e20455384c0f3f47ab2cf76-26"&gt;&lt;/a&gt;P.S. I'll show/explain the solution on the stream in ~two weeks.
+&lt;a name="rest_code_0514decc0e20455384c0f3f47ab2cf76-27"&gt;&lt;/a&gt;P.S.2. Bonus points for recreating the original high-level code.
 &lt;/pre&gt;&lt;p&gt;Here’s the firmware:&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_962351661b5146debbd3d498ebee9fe3-1"&gt;&lt;/a&gt;co_argcount 1
-&lt;a name="rest_code_962351661b5146debbd3d498ebee9fe3-2"&gt;&lt;/a&gt;co_consts (None, '4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89', 'hex', 89, 255, 115, 50)
-&lt;a name="rest_code_962351661b5146debbd3d498ebee9fe3-3"&gt;&lt;/a&gt;co_flags 67
-&lt;a name="rest_code_962351661b5146debbd3d498ebee9fe3-4"&gt;&lt;/a&gt;co_name check_password
-&lt;a name="rest_code_962351661b5146debbd3d498ebee9fe3-5"&gt;&lt;/a&gt;co_names ('decode', 'len', 'False', 'all', 'zip', 'ord')
-&lt;a name="rest_code_962351661b5146debbd3d498ebee9fe3-6"&gt;&lt;/a&gt;co_nlocals 4
-&lt;a name="rest_code_962351661b5146debbd3d498ebee9fe3-7"&gt;&lt;/a&gt;co_stacksize 6
-&lt;a name="rest_code_962351661b5146debbd3d498ebee9fe3-8"&gt;&lt;/a&gt;co_varnames ('s', 'good', 'cs', 'cg')
-&lt;a name="rest_code_962351661b5146debbd3d498ebee9fe3-9"&gt;&lt;/a&gt;              0 LOAD_CONST               1
-&lt;a name="rest_code_962351661b5146debbd3d498ebee9fe3-10"&gt;&lt;/a&gt;              3 LOAD_ATTR                0
-&lt;a name="rest_code_962351661b5146debbd3d498ebee9fe3-11"&gt;&lt;/a&gt;              6 LOAD_CONST               2
-&lt;a name="rest_code_962351661b5146debbd3d498ebee9fe3-12"&gt;&lt;/a&gt;              9 CALL_FUNCTION            1
-&lt;a name="rest_code_962351661b5146debbd3d498ebee9fe3-13"&gt;&lt;/a&gt;             12 STORE_FAST               1
-&lt;a name="rest_code_962351661b5146debbd3d498ebee9fe3-14"&gt;&lt;/a&gt;             15 LOAD_GLOBAL              1
-&lt;a name="rest_code_962351661b5146debbd3d498ebee9fe3-15"&gt;&lt;/a&gt;             18 LOAD_FAST                0
-&lt;a name="rest_code_962351661b5146debbd3d498ebee9fe3-16"&gt;&lt;/a&gt;             21 CALL_FUNCTION            1
-&lt;a name="rest_code_962351661b5146debbd3d498ebee9fe3-17"&gt;&lt;/a&gt;             24 LOAD_GLOBAL              1
-&lt;a name="rest_code_962351661b5146debbd3d498ebee9fe3-18"&gt;&lt;/a&gt;             27 LOAD_FAST                1
-&lt;a name="rest_code_962351661b5146debbd3d498ebee9fe3-19"&gt;&lt;/a&gt;             30 CALL_FUNCTION            1
-&lt;a name="rest_code_962351661b5146debbd3d498ebee9fe3-20"&gt;&lt;/a&gt;             33 COMPARE_OP               3 (!=)
-&lt;a name="rest_code_962351661b5146debbd3d498ebee9fe3-21"&gt;&lt;/a&gt;             36 POP_JUMP_IF_FALSE       43
-&lt;a name="rest_code_962351661b5146debbd3d498ebee9fe3-22"&gt;&lt;/a&gt;             39 LOAD_GLOBAL              2
-&lt;a name="rest_code_962351661b5146debbd3d498ebee9fe3-23"&gt;&lt;/a&gt;             42 RETURN_VALUE
-&lt;a name="rest_code_962351661b5146debbd3d498ebee9fe3-24"&gt;&lt;/a&gt;        &amp;gt;&amp;gt;   43 LOAD_GLOBAL              3
-&lt;a name="rest_code_962351661b5146debbd3d498ebee9fe3-25"&gt;&lt;/a&gt;             46 BUILD_LIST               0
-&lt;a name="rest_code_962351661b5146debbd3d498ebee9fe3-26"&gt;&lt;/a&gt;             49 LOAD_GLOBAL              4
-&lt;a name="rest_code_962351661b5146debbd3d498ebee9fe3-27"&gt;&lt;/a&gt;             52 LOAD_FAST                0
-&lt;a name="rest_code_962351661b5146debbd3d498ebee9fe3-28"&gt;&lt;/a&gt;             55 LOAD_FAST                1
-&lt;a name="rest_code_962351661b5146debbd3d498ebee9fe3-29"&gt;&lt;/a&gt;             58 CALL_FUNCTION            2
-&lt;a name="rest_code_962351661b5146debbd3d498ebee9fe3-30"&gt;&lt;/a&gt;             61 GET_ITER
-&lt;a name="rest_code_962351661b5146debbd3d498ebee9fe3-31"&gt;&lt;/a&gt;        &amp;gt;&amp;gt;   62 FOR_ITER                52 (to 117)
-&lt;a name="rest_code_962351661b5146debbd3d498ebee9fe3-32"&gt;&lt;/a&gt;             65 UNPACK_SEQUENCE          2
-&lt;a name="rest_code_962351661b5146debbd3d498ebee9fe3-33"&gt;&lt;/a&gt;             68 STORE_FAST               2
-&lt;a name="rest_code_962351661b5146debbd3d498ebee9fe3-34"&gt;&lt;/a&gt;             71 STORE_FAST               3
-&lt;a name="rest_code_962351661b5146debbd3d498ebee9fe3-35"&gt;&lt;/a&gt;             74 LOAD_GLOBAL              5
-&lt;a name="rest_code_962351661b5146debbd3d498ebee9fe3-36"&gt;&lt;/a&gt;             77 LOAD_FAST                2
-&lt;a name="rest_code_962351661b5146debbd3d498ebee9fe3-37"&gt;&lt;/a&gt;             80 CALL_FUNCTION            1
-&lt;a name="rest_code_962351661b5146debbd3d498ebee9fe3-38"&gt;&lt;/a&gt;             83 LOAD_CONST               3
-&lt;a name="rest_code_962351661b5146debbd3d498ebee9fe3-39"&gt;&lt;/a&gt;             86 BINARY_SUBTRACT
-&lt;a name="rest_code_962351661b5146debbd3d498ebee9fe3-40"&gt;&lt;/a&gt;             87 LOAD_CONST               4
-&lt;a name="rest_code_962351661b5146debbd3d498ebee9fe3-41"&gt;&lt;/a&gt;             90 BINARY_AND
-&lt;a name="rest_code_962351661b5146debbd3d498ebee9fe3-42"&gt;&lt;/a&gt;             91 LOAD_CONST               5
-&lt;a name="rest_code_962351661b5146debbd3d498ebee9fe3-43"&gt;&lt;/a&gt;             94 BINARY_XOR
-&lt;a name="rest_code_962351661b5146debbd3d498ebee9fe3-44"&gt;&lt;/a&gt;             95 LOAD_CONST               6
-&lt;a name="rest_code_962351661b5146debbd3d498ebee9fe3-45"&gt;&lt;/a&gt;             98 BINARY_XOR
-&lt;a name="rest_code_962351661b5146debbd3d498ebee9fe3-46"&gt;&lt;/a&gt;             99 LOAD_GLOBAL              5
-&lt;a name="rest_code_962351661b5146debbd3d498ebee9fe3-47"&gt;&lt;/a&gt;            102 LOAD_FAST                3
-&lt;a name="rest_code_962351661b5146debbd3d498ebee9fe3-48"&gt;&lt;/a&gt;            105 CALL_FUNCTION            1
-&lt;a name="rest_code_962351661b5146debbd3d498ebee9fe3-49"&gt;&lt;/a&gt;            108 COMPARE_OP               2 (==)
-&lt;a name="rest_code_962351661b5146debbd3d498ebee9fe3-50"&gt;&lt;/a&gt;            111 LIST_APPEND              2
-&lt;a name="rest_code_962351661b5146debbd3d498ebee9fe3-51"&gt;&lt;/a&gt;            114 JUMP_ABSOLUTE           62
-&lt;a name="rest_code_962351661b5146debbd3d498ebee9fe3-52"&gt;&lt;/a&gt;        &amp;gt;&amp;gt;  117 CALL_FUNCTION            1
-&lt;a name="rest_code_962351661b5146debbd3d498ebee9fe3-53"&gt;&lt;/a&gt;            120 RETURN_VALUE
+&lt;pre class="code text"&gt;&lt;a name="rest_code_8e5f07b5ce22443682aabe52f441c822-1"&gt;&lt;/a&gt;co_argcount 1
+&lt;a name="rest_code_8e5f07b5ce22443682aabe52f441c822-2"&gt;&lt;/a&gt;co_consts (None, '4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89', 'hex', 89, 255, 115, 50)
+&lt;a name="rest_code_8e5f07b5ce22443682aabe52f441c822-3"&gt;&lt;/a&gt;co_flags 67
+&lt;a name="rest_code_8e5f07b5ce22443682aabe52f441c822-4"&gt;&lt;/a&gt;co_name check_password
+&lt;a name="rest_code_8e5f07b5ce22443682aabe52f441c822-5"&gt;&lt;/a&gt;co_names ('decode', 'len', 'False', 'all', 'zip', 'ord')
+&lt;a name="rest_code_8e5f07b5ce22443682aabe52f441c822-6"&gt;&lt;/a&gt;co_nlocals 4
+&lt;a name="rest_code_8e5f07b5ce22443682aabe52f441c822-7"&gt;&lt;/a&gt;co_stacksize 6
+&lt;a name="rest_code_8e5f07b5ce22443682aabe52f441c822-8"&gt;&lt;/a&gt;co_varnames ('s', 'good', 'cs', 'cg')
+&lt;a name="rest_code_8e5f07b5ce22443682aabe52f441c822-9"&gt;&lt;/a&gt;              0 LOAD_CONST               1
+&lt;a name="rest_code_8e5f07b5ce22443682aabe52f441c822-10"&gt;&lt;/a&gt;              3 LOAD_ATTR                0
+&lt;a name="rest_code_8e5f07b5ce22443682aabe52f441c822-11"&gt;&lt;/a&gt;              6 LOAD_CONST               2
+&lt;a name="rest_code_8e5f07b5ce22443682aabe52f441c822-12"&gt;&lt;/a&gt;              9 CALL_FUNCTION            1
+&lt;a name="rest_code_8e5f07b5ce22443682aabe52f441c822-13"&gt;&lt;/a&gt;             12 STORE_FAST               1
+&lt;a name="rest_code_8e5f07b5ce22443682aabe52f441c822-14"&gt;&lt;/a&gt;             15 LOAD_GLOBAL              1
+&lt;a name="rest_code_8e5f07b5ce22443682aabe52f441c822-15"&gt;&lt;/a&gt;             18 LOAD_FAST                0
+&lt;a name="rest_code_8e5f07b5ce22443682aabe52f441c822-16"&gt;&lt;/a&gt;             21 CALL_FUNCTION            1
+&lt;a name="rest_code_8e5f07b5ce22443682aabe52f441c822-17"&gt;&lt;/a&gt;             24 LOAD_GLOBAL              1
+&lt;a name="rest_code_8e5f07b5ce22443682aabe52f441c822-18"&gt;&lt;/a&gt;             27 LOAD_FAST                1
+&lt;a name="rest_code_8e5f07b5ce22443682aabe52f441c822-19"&gt;&lt;/a&gt;             30 CALL_FUNCTION            1
+&lt;a name="rest_code_8e5f07b5ce22443682aabe52f441c822-20"&gt;&lt;/a&gt;             33 COMPARE_OP               3 (!=)
+&lt;a name="rest_code_8e5f07b5ce22443682aabe52f441c822-21"&gt;&lt;/a&gt;             36 POP_JUMP_IF_FALSE       43
+&lt;a name="rest_code_8e5f07b5ce22443682aabe52f441c822-22"&gt;&lt;/a&gt;             39 LOAD_GLOBAL              2
+&lt;a name="rest_code_8e5f07b5ce22443682aabe52f441c822-23"&gt;&lt;/a&gt;             42 RETURN_VALUE
+&lt;a name="rest_code_8e5f07b5ce22443682aabe52f441c822-24"&gt;&lt;/a&gt;        &amp;gt;&amp;gt;   43 LOAD_GLOBAL              3
+&lt;a name="rest_code_8e5f07b5ce22443682aabe52f441c822-25"&gt;&lt;/a&gt;             46 BUILD_LIST               0
+&lt;a name="rest_code_8e5f07b5ce22443682aabe52f441c822-26"&gt;&lt;/a&gt;             49 LOAD_GLOBAL              4
+&lt;a name="rest_code_8e5f07b5ce22443682aabe52f441c822-27"&gt;&lt;/a&gt;             52 LOAD_FAST                0
+&lt;a name="rest_code_8e5f07b5ce22443682aabe52f441c822-28"&gt;&lt;/a&gt;             55 LOAD_FAST                1
+&lt;a name="rest_code_8e5f07b5ce22443682aabe52f441c822-29"&gt;&lt;/a&gt;             58 CALL_FUNCTION            2
+&lt;a name="rest_code_8e5f07b5ce22443682aabe52f441c822-30"&gt;&lt;/a&gt;             61 GET_ITER
+&lt;a name="rest_code_8e5f07b5ce22443682aabe52f441c822-31"&gt;&lt;/a&gt;        &amp;gt;&amp;gt;   62 FOR_ITER                52 (to 117)
+&lt;a name="rest_code_8e5f07b5ce22443682aabe52f441c822-32"&gt;&lt;/a&gt;             65 UNPACK_SEQUENCE          2
+&lt;a name="rest_code_8e5f07b5ce22443682aabe52f441c822-33"&gt;&lt;/a&gt;             68 STORE_FAST               2
+&lt;a name="rest_code_8e5f07b5ce22443682aabe52f441c822-34"&gt;&lt;/a&gt;             71 STORE_FAST               3
+&lt;a name="rest_code_8e5f07b5ce22443682aabe52f441c822-35"&gt;&lt;/a&gt;             74 LOAD_GLOBAL              5
+&lt;a name="rest_code_8e5f07b5ce22443682aabe52f441c822-36"&gt;&lt;/a&gt;             77 LOAD_FAST                2
+&lt;a name="rest_code_8e5f07b5ce22443682aabe52f441c822-37"&gt;&lt;/a&gt;             80 CALL_FUNCTION            1
+&lt;a name="rest_code_8e5f07b5ce22443682aabe52f441c822-38"&gt;&lt;/a&gt;             83 LOAD_CONST               3
+&lt;a name="rest_code_8e5f07b5ce22443682aabe52f441c822-39"&gt;&lt;/a&gt;             86 BINARY_SUBTRACT
+&lt;a name="rest_code_8e5f07b5ce22443682aabe52f441c822-40"&gt;&lt;/a&gt;             87 LOAD_CONST               4
+&lt;a name="rest_code_8e5f07b5ce22443682aabe52f441c822-41"&gt;&lt;/a&gt;             90 BINARY_AND
+&lt;a name="rest_code_8e5f07b5ce22443682aabe52f441c822-42"&gt;&lt;/a&gt;             91 LOAD_CONST               5
+&lt;a name="rest_code_8e5f07b5ce22443682aabe52f441c822-43"&gt;&lt;/a&gt;             94 BINARY_XOR
+&lt;a name="rest_code_8e5f07b5ce22443682aabe52f441c822-44"&gt;&lt;/a&gt;             95 LOAD_CONST               6
+&lt;a name="rest_code_8e5f07b5ce22443682aabe52f441c822-45"&gt;&lt;/a&gt;             98 BINARY_XOR
+&lt;a name="rest_code_8e5f07b5ce22443682aabe52f441c822-46"&gt;&lt;/a&gt;             99 LOAD_GLOBAL              5
+&lt;a name="rest_code_8e5f07b5ce22443682aabe52f441c822-47"&gt;&lt;/a&gt;            102 LOAD_FAST                3
+&lt;a name="rest_code_8e5f07b5ce22443682aabe52f441c822-48"&gt;&lt;/a&gt;            105 CALL_FUNCTION            1
+&lt;a name="rest_code_8e5f07b5ce22443682aabe52f441c822-49"&gt;&lt;/a&gt;            108 COMPARE_OP               2 (==)
+&lt;a name="rest_code_8e5f07b5ce22443682aabe52f441c822-50"&gt;&lt;/a&gt;            111 LIST_APPEND              2
+&lt;a name="rest_code_8e5f07b5ce22443682aabe52f441c822-51"&gt;&lt;/a&gt;            114 JUMP_ABSOLUTE           62
+&lt;a name="rest_code_8e5f07b5ce22443682aabe52f441c822-52"&gt;&lt;/a&gt;        &amp;gt;&amp;gt;  117 CALL_FUNCTION            1
+&lt;a name="rest_code_8e5f07b5ce22443682aabe52f441c822-53"&gt;&lt;/a&gt;            120 RETURN_VALUE
 &lt;/pre&gt;&lt;p&gt;To the uninitiated, this might look like &lt;em&gt;Elvish&lt;/em&gt;. In reality, this is Python bytecode — the instruction set understood by Python’s (CPython 2.7) virtual machine. Python, like many other languages, uses a compiler to translate human-readable source code into something more appropriate for computers. Python code compiles to bytecode, which is then executed by CPython’s virtual machine. CPython bytecode can be ported between different hardware, while machine code cannot. However, machine code can often be faster than languages based on virtual machines and bytecode. (Java and C# work the same way as Python, C compiles directly to machine code)&lt;/p&gt;
-&lt;p&gt;This is the internal representation of a Python function. The first few lines are the member variables of the &lt;tt class="docutils literal"&gt;f.__code__&lt;/tt&gt; object of our function. We know that:&lt;/p&gt;
+&lt;p&gt;This is the internal representation of a Python function. The first few lines are the member variables of the &lt;code class="docutils literal"&gt;f.__code__&lt;/code&gt; object of our function. We know that:&lt;/p&gt;
 &lt;ul class="simple"&gt;
-&lt;li&gt;it takes 1 argument&lt;/li&gt;
-&lt;li&gt;it has 7 constants: None, a long string of hex digits, the string &lt;tt class="docutils literal"&gt;'hex'&lt;/tt&gt;, and numbers: 89, 255, 115, 50.&lt;/li&gt;
-&lt;li&gt;its &lt;a class="reference external" href="https://docs.python.org/2.7/library/inspect.html#code-objects-bit-flags"&gt;flags&lt;/a&gt; are set to 67 (CO_NOFREE, CO_NEWLOCALS, CO_OPTIMIZED). This is the “standard” value that most uncomplicated functions take.&lt;/li&gt;
-&lt;li&gt;its name is &lt;tt class="docutils literal"&gt;check_password&lt;/tt&gt;&lt;/li&gt;
-&lt;li&gt;it uses the following globals or attribute names: &lt;tt class="docutils literal"&gt;decode&lt;/tt&gt;, &lt;tt class="docutils literal"&gt;len&lt;/tt&gt;, &lt;tt class="docutils literal"&gt;False&lt;/tt&gt;, &lt;tt class="docutils literal"&gt;all&lt;/tt&gt;, &lt;tt class="docutils literal"&gt;zip&lt;/tt&gt;, &lt;tt class="docutils literal"&gt;ord&lt;/tt&gt;&lt;/li&gt;
-&lt;li&gt;it has 4 local variables&lt;/li&gt;
-&lt;li&gt;it uses a stack of size 6&lt;/li&gt;
-&lt;li&gt;its variables are named &lt;tt class="docutils literal"&gt;s&lt;/tt&gt;, &lt;tt class="docutils literal"&gt;good&lt;/tt&gt;, &lt;tt class="docutils literal"&gt;cs&lt;/tt&gt;, &lt;tt class="docutils literal"&gt;cg&lt;/tt&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;it takes 1 argument&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;it has 7 constants: None, a long string of hex digits, the string &lt;code class="docutils literal"&gt;'hex'&lt;/code&gt;, and numbers: 89, 255, 115, 50.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;its &lt;a class="reference external" href="https://docs.python.org/2.7/library/inspect.html#code-objects-bit-flags"&gt;flags&lt;/a&gt; are set to 67 (CO_NOFREE, CO_NEWLOCALS, CO_OPTIMIZED). This is the “standard” value that most uncomplicated functions take.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;its name is &lt;code class="docutils literal"&gt;check_password&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;it uses the following globals or attribute names: &lt;code class="docutils literal"&gt;decode&lt;/code&gt;, &lt;code class="docutils literal"&gt;len&lt;/code&gt;, &lt;code class="docutils literal"&gt;False&lt;/code&gt;, &lt;code class="docutils literal"&gt;all&lt;/code&gt;, &lt;code class="docutils literal"&gt;zip&lt;/code&gt;, &lt;code class="docutils literal"&gt;ord&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;it has 4 local variables&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;it uses a stack of size 6&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;its variables are named &lt;code class="docutils literal"&gt;s&lt;/code&gt;, &lt;code class="docutils literal"&gt;good&lt;/code&gt;, &lt;code class="docutils literal"&gt;cs&lt;/code&gt;, &lt;code class="docutils literal"&gt;cg&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;There are two ways to solve this task: you can re-assemble the &lt;tt class="docutils literal"&gt;dis&lt;/tt&gt; output with the help of the &lt;tt class="docutils literal"&gt;opcode&lt;/tt&gt; module, or try to re-create the function by hand, using the bytecode. I chose the latter method.&lt;/p&gt;
+&lt;p&gt;There are two ways to solve this task: you can re-assemble the &lt;code class="docutils literal"&gt;dis&lt;/code&gt; output with the help of the &lt;code class="docutils literal"&gt;opcode&lt;/code&gt; module, or try to re-create the function by hand, using the bytecode. I chose the latter method.&lt;/p&gt;
 &lt;div class="section" id="reverse-engineering-python-bytecode-re-creating-the-function-by-hand"&gt;
 &lt;h2&gt;Reverse-engineering Python bytecode: re-creating the function by hand&lt;/h2&gt;
-&lt;p&gt;I started by recreating the original firmware file. I created an empty function and wrote some code to print out &lt;tt class="docutils literal"&gt;__code__&lt;/tt&gt; contents and &lt;tt class="docutils literal"&gt;dis.dis&lt;/tt&gt; output. I also added color-coding to help me read it:&lt;/p&gt;
-&lt;pre class="code python"&gt;&lt;a name="rest_code_c6f26c7a0c6a4163a6947313b50f0873-1"&gt;&lt;/a&gt;&lt;span class="ch"&gt;#!/usr/bin/env python2&lt;/span&gt;
-&lt;a name="rest_code_c6f26c7a0c6a4163a6947313b50f0873-2"&gt;&lt;/a&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;dis&lt;/span&gt;
-&lt;a name="rest_code_c6f26c7a0c6a4163a6947313b50f0873-3"&gt;&lt;/a&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;sys&lt;/span&gt;
-&lt;a name="rest_code_c6f26c7a0c6a4163a6947313b50f0873-4"&gt;&lt;/a&gt;
-&lt;a name="rest_code_c6f26c7a0c6a4163a6947313b50f0873-5"&gt;&lt;/a&gt;&lt;span class="c1"&gt;# Write code here&lt;/span&gt;
-&lt;a name="rest_code_c6f26c7a0c6a4163a6947313b50f0873-6"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;check_password&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-&lt;a name="rest_code_c6f26c7a0c6a4163a6947313b50f0873-7"&gt;&lt;/a&gt;    &lt;span class="k"&gt;pass&lt;/span&gt;
-&lt;a name="rest_code_c6f26c7a0c6a4163a6947313b50f0873-8"&gt;&lt;/a&gt;
-&lt;a name="rest_code_c6f26c7a0c6a4163a6947313b50f0873-9"&gt;&lt;/a&gt;&lt;span class="c1"&gt;# Reverse engineering the code&lt;/span&gt;
-&lt;a name="rest_code_c6f26c7a0c6a4163a6947313b50f0873-10"&gt;&lt;/a&gt;&lt;span class="n"&gt;cnames&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'co_argcount'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'co_consts'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'co_flags'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'co_name'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'co_names'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'co_nlocals'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'co_stacksize'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'co_varnames'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_c6f26c7a0c6a4163a6947313b50f0873-11"&gt;&lt;/a&gt;&lt;span class="n"&gt;cvalues&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'hex'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;89&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;255&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;115&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;50&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="mi"&gt;67&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'check_password'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'decode'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'len'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'False'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'all'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'zip'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'ord'&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;6&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'s'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'good'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'cs'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'cg'&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-&lt;a name="rest_code_c6f26c7a0c6a4163a6947313b50f0873-12"&gt;&lt;/a&gt;
-&lt;a name="rest_code_c6f26c7a0c6a4163a6947313b50f0873-13"&gt;&lt;/a&gt;&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;ov&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;zip&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cnames&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;cvalues&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-&lt;a name="rest_code_c6f26c7a0c6a4163a6947313b50f0873-14"&gt;&lt;/a&gt;    &lt;span class="n"&gt;v&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;getattr&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;check_password&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="vm"&gt;__code__&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_c6f26c7a0c6a4163a6947313b50f0873-15"&gt;&lt;/a&gt;    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;v&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="n"&gt;ov&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-&lt;a name="rest_code_c6f26c7a0c6a4163a6947313b50f0873-16"&gt;&lt;/a&gt;        &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stderr&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'&lt;/span&gt;&lt;span class="se"&gt;\033&lt;/span&gt;&lt;span class="s1"&gt;[1;32m'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_c6f26c7a0c6a4163a6947313b50f0873-17"&gt;&lt;/a&gt;    &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-&lt;a name="rest_code_c6f26c7a0c6a4163a6947313b50f0873-18"&gt;&lt;/a&gt;        &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stderr&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'&lt;/span&gt;&lt;span class="se"&gt;\033&lt;/span&gt;&lt;span class="s1"&gt;[1;31m'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_c6f26c7a0c6a4163a6947313b50f0873-19"&gt;&lt;/a&gt;    &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stderr&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;flush&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;a name="rest_code_c6f26c7a0c6a4163a6947313b50f0873-20"&gt;&lt;/a&gt;
-&lt;a name="rest_code_c6f26c7a0c6a4163a6947313b50f0873-21"&gt;&lt;/a&gt;    &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stdout&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="s2"&gt;" "&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;v&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="s2"&gt;"&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s2"&gt;"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_c6f26c7a0c6a4163a6947313b50f0873-22"&gt;&lt;/a&gt;    &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stdout&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;flush&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;a name="rest_code_c6f26c7a0c6a4163a6947313b50f0873-23"&gt;&lt;/a&gt;
-&lt;a name="rest_code_c6f26c7a0c6a4163a6947313b50f0873-24"&gt;&lt;/a&gt;    &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stderr&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'&lt;/span&gt;&lt;span class="se"&gt;\033&lt;/span&gt;&lt;span class="s1"&gt;[0m'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_c6f26c7a0c6a4163a6947313b50f0873-25"&gt;&lt;/a&gt;    &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stderr&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;flush&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;a name="rest_code_c6f26c7a0c6a4163a6947313b50f0873-26"&gt;&lt;/a&gt;
-&lt;a name="rest_code_c6f26c7a0c6a4163a6947313b50f0873-27"&gt;&lt;/a&gt;&lt;span class="n"&gt;dis&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;dis&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;check_password&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;p&gt;I started by recreating the original firmware file. I created an empty function and wrote some code to print out &lt;code class="docutils literal"&gt;__code__&lt;/code&gt; contents and &lt;code class="docutils literal"&gt;dis.dis&lt;/code&gt; output. I also added color-coding to help me read it:&lt;/p&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_901e48f147694f0ebd9865d0918ac000-1"&gt;&lt;/a&gt;&lt;span class="ch"&gt;#!/usr/bin/env python2&lt;/span&gt;
+&lt;a name="rest_code_901e48f147694f0ebd9865d0918ac000-2"&gt;&lt;/a&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;dis&lt;/span&gt;
+&lt;a name="rest_code_901e48f147694f0ebd9865d0918ac000-3"&gt;&lt;/a&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;sys&lt;/span&gt;
+&lt;a name="rest_code_901e48f147694f0ebd9865d0918ac000-4"&gt;&lt;/a&gt;
+&lt;a name="rest_code_901e48f147694f0ebd9865d0918ac000-5"&gt;&lt;/a&gt;&lt;span class="c1"&gt;# Write code here&lt;/span&gt;
+&lt;a name="rest_code_901e48f147694f0ebd9865d0918ac000-6"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;check_password&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;a name="rest_code_901e48f147694f0ebd9865d0918ac000-7"&gt;&lt;/a&gt;    &lt;span class="k"&gt;pass&lt;/span&gt;
+&lt;a name="rest_code_901e48f147694f0ebd9865d0918ac000-8"&gt;&lt;/a&gt;
+&lt;a name="rest_code_901e48f147694f0ebd9865d0918ac000-9"&gt;&lt;/a&gt;&lt;span class="c1"&gt;# Reverse engineering the code&lt;/span&gt;
+&lt;a name="rest_code_901e48f147694f0ebd9865d0918ac000-10"&gt;&lt;/a&gt;&lt;span class="n"&gt;cnames&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'co_argcount'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'co_consts'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'co_flags'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'co_name'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'co_names'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'co_nlocals'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'co_stacksize'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'co_varnames'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_901e48f147694f0ebd9865d0918ac000-11"&gt;&lt;/a&gt;&lt;span class="n"&gt;cvalues&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kc"&gt;None&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'hex'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;89&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;255&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;115&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;50&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="mi"&gt;67&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'check_password'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'decode'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'len'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'False'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'all'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'zip'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'ord'&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;6&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'s'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'good'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'cs'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'cg'&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;a name="rest_code_901e48f147694f0ebd9865d0918ac000-12"&gt;&lt;/a&gt;
+&lt;a name="rest_code_901e48f147694f0ebd9865d0918ac000-13"&gt;&lt;/a&gt;&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;ov&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;zip&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cnames&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;cvalues&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;a name="rest_code_901e48f147694f0ebd9865d0918ac000-14"&gt;&lt;/a&gt;    &lt;span class="n"&gt;v&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;getattr&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;check_password&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="vm"&gt;__code__&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_901e48f147694f0ebd9865d0918ac000-15"&gt;&lt;/a&gt;    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;v&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="n"&gt;ov&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;a name="rest_code_901e48f147694f0ebd9865d0918ac000-16"&gt;&lt;/a&gt;        &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stderr&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'&lt;/span&gt;&lt;span class="se"&gt;\033&lt;/span&gt;&lt;span class="s1"&gt;[1;32m'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_901e48f147694f0ebd9865d0918ac000-17"&gt;&lt;/a&gt;    &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;a name="rest_code_901e48f147694f0ebd9865d0918ac000-18"&gt;&lt;/a&gt;        &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stderr&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'&lt;/span&gt;&lt;span class="se"&gt;\033&lt;/span&gt;&lt;span class="s1"&gt;[1;31m'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_901e48f147694f0ebd9865d0918ac000-19"&gt;&lt;/a&gt;    &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stderr&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;flush&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;a name="rest_code_901e48f147694f0ebd9865d0918ac000-20"&gt;&lt;/a&gt;
+&lt;a name="rest_code_901e48f147694f0ebd9865d0918ac000-21"&gt;&lt;/a&gt;    &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stdout&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="s2"&gt;" "&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;v&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="s2"&gt;"&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s2"&gt;"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_901e48f147694f0ebd9865d0918ac000-22"&gt;&lt;/a&gt;    &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stdout&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;flush&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;a name="rest_code_901e48f147694f0ebd9865d0918ac000-23"&gt;&lt;/a&gt;
+&lt;a name="rest_code_901e48f147694f0ebd9865d0918ac000-24"&gt;&lt;/a&gt;    &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stderr&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'&lt;/span&gt;&lt;span class="se"&gt;\033&lt;/span&gt;&lt;span class="s1"&gt;[0m'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_901e48f147694f0ebd9865d0918ac000-25"&gt;&lt;/a&gt;    &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stderr&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;flush&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;a name="rest_code_901e48f147694f0ebd9865d0918ac000-26"&gt;&lt;/a&gt;
+&lt;a name="rest_code_901e48f147694f0ebd9865d0918ac000-27"&gt;&lt;/a&gt;&lt;span class="n"&gt;dis&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;dis&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;check_password&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;If we run this solver, we get the following output (text in brackets added by me):&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_4eb019ad968448da8781b9c8607e7f00-1"&gt;&lt;/a&gt;co_argcount 1            [OK]
-&lt;a name="rest_code_4eb019ad968448da8781b9c8607e7f00-2"&gt;&lt;/a&gt;co_consts (None,)        [1/7 match]
-&lt;a name="rest_code_4eb019ad968448da8781b9c8607e7f00-3"&gt;&lt;/a&gt;co_flags 67              [OK]
-&lt;a name="rest_code_4eb019ad968448da8781b9c8607e7f00-4"&gt;&lt;/a&gt;co_name check_password   [OK]
-&lt;a name="rest_code_4eb019ad968448da8781b9c8607e7f00-5"&gt;&lt;/a&gt;co_names ()              [0/6 match]
-&lt;a name="rest_code_4eb019ad968448da8781b9c8607e7f00-6"&gt;&lt;/a&gt;co_nlocals 1             [should be 4]
-&lt;a name="rest_code_4eb019ad968448da8781b9c8607e7f00-7"&gt;&lt;/a&gt;co_stacksize 1           [should be 6]
-&lt;a name="rest_code_4eb019ad968448da8781b9c8607e7f00-8"&gt;&lt;/a&gt;co_varnames ('s',)       [1/4 match]
-&lt;a name="rest_code_4eb019ad968448da8781b9c8607e7f00-9"&gt;&lt;/a&gt;  7           0 LOAD_CONST               0 (None)
-&lt;a name="rest_code_4eb019ad968448da8781b9c8607e7f00-10"&gt;&lt;/a&gt;              3 RETURN_VALUE
-&lt;/pre&gt;&lt;p&gt;We can see (with the help of colors, not reproduced here), that we’ve got &lt;tt class="docutils literal"&gt;co_argcount&lt;/tt&gt;, &lt;tt class="docutils literal"&gt;co_flags&lt;/tt&gt;, &lt;tt class="docutils literal"&gt;co_name&lt;/tt&gt; correctly. We also have one constant (&lt;tt class="docutils literal"&gt;None&lt;/tt&gt;, in every function) and one variable name (&lt;tt class="docutils literal"&gt;s&lt;/tt&gt;, the argument name). We can also see &lt;tt class="docutils literal"&gt;dis.dis()&lt;/tt&gt; output. While it looks similar to the assignment, there are a few noticeable differences: there is no &lt;tt class="docutils literal"&gt;7&lt;/tt&gt; (line number) at the start, and &lt;tt class="docutils literal"&gt;LOAD_CONST&lt;/tt&gt; instructions in the original code did not have anything in parentheses (only comparisions and loops did).  This makes reading bytecode harder, but still possible. (I originally thought about using &lt;tt class="docutils literal"&gt;diff&lt;/tt&gt; for help, but it’s not hard to do it by hand. I did use &lt;tt class="docutils literal"&gt;diff&lt;/tt&gt; for the final checking after a manual “conversion”)&lt;/p&gt;
-&lt;p&gt;Let’s stop to look at the constants and names for a second. The long string is followed by &lt;tt class="docutils literal"&gt;hex&lt;/tt&gt;, and one of the constants is &lt;tt class="docutils literal"&gt;decode&lt;/tt&gt;. This means that we need to use &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;str.decode('hex')&lt;/span&gt;&lt;/tt&gt; to create a (byte)string of some information. Puzzle answers tend to be human-readable, and this string isn’t — so we need to do some more work.&lt;/p&gt;
+&lt;pre class="code text"&gt;&lt;a name="rest_code_1b5a370b8517414c89e9c08d7a0f2dc5-1"&gt;&lt;/a&gt;co_argcount 1            [OK]
+&lt;a name="rest_code_1b5a370b8517414c89e9c08d7a0f2dc5-2"&gt;&lt;/a&gt;co_consts (None,)        [1/7 match]
+&lt;a name="rest_code_1b5a370b8517414c89e9c08d7a0f2dc5-3"&gt;&lt;/a&gt;co_flags 67              [OK]
+&lt;a name="rest_code_1b5a370b8517414c89e9c08d7a0f2dc5-4"&gt;&lt;/a&gt;co_name check_password   [OK]
+&lt;a name="rest_code_1b5a370b8517414c89e9c08d7a0f2dc5-5"&gt;&lt;/a&gt;co_names ()              [0/6 match]
+&lt;a name="rest_code_1b5a370b8517414c89e9c08d7a0f2dc5-6"&gt;&lt;/a&gt;co_nlocals 1             [should be 4]
+&lt;a name="rest_code_1b5a370b8517414c89e9c08d7a0f2dc5-7"&gt;&lt;/a&gt;co_stacksize 1           [should be 6]
+&lt;a name="rest_code_1b5a370b8517414c89e9c08d7a0f2dc5-8"&gt;&lt;/a&gt;co_varnames ('s',)       [1/4 match]
+&lt;a name="rest_code_1b5a370b8517414c89e9c08d7a0f2dc5-9"&gt;&lt;/a&gt;  7           0 LOAD_CONST               0 (None)
+&lt;a name="rest_code_1b5a370b8517414c89e9c08d7a0f2dc5-10"&gt;&lt;/a&gt;              3 RETURN_VALUE
+&lt;/pre&gt;&lt;p&gt;We can see (with the help of colors, not reproduced here), that we’ve got &lt;code class="docutils literal"&gt;co_argcount&lt;/code&gt;, &lt;code class="docutils literal"&gt;co_flags&lt;/code&gt;, &lt;code class="docutils literal"&gt;co_name&lt;/code&gt; correctly. We also have one constant (&lt;code class="docutils literal"&gt;None&lt;/code&gt;, in every function) and one variable name (&lt;code class="docutils literal"&gt;s&lt;/code&gt;, the argument name). We can also see &lt;code class="docutils literal"&gt;dis.dis()&lt;/code&gt; output. While it looks similar to the assignment, there are a few noticeable differences: there is no &lt;code class="docutils literal"&gt;7&lt;/code&gt; (line number) at the start, and &lt;code class="docutils literal"&gt;LOAD_CONST&lt;/code&gt; instructions in the original code did not have anything in parentheses (only comparisions and loops did).  This makes reading bytecode harder, but still possible. (I originally thought about using &lt;code class="docutils literal"&gt;diff&lt;/code&gt; for help, but it’s not hard to do it by hand. I did use &lt;code class="docutils literal"&gt;diff&lt;/code&gt; for the final checking after a manual “conversion”)&lt;/p&gt;
+&lt;p&gt;Let’s stop to look at the constants and names for a second. The long string is followed by &lt;code class="docutils literal"&gt;hex&lt;/code&gt;, and one of the constants is &lt;code class="docutils literal"&gt;decode&lt;/code&gt;. This means that we need to use &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;str.decode('hex')&lt;/span&gt;&lt;/code&gt; to create a (byte)string of some information. Puzzle answers tend to be human-readable, and this string isn’t — so we need to do some more work.&lt;/p&gt;
 &lt;p&gt;So, let’s try reproducing the start of the original mission code using what we’ve just discussed. Python’s VM is based on a stack. In the bytecode above, you can see that instructions take 0 or 1 arguments. Some of them put things on the stack, others do actions and remove them. Most instruction names are self-explanatory, but the full list can be found in the &lt;a class="reference external" href="https://docs.python.org/2/library/dis.html#python-bytecode-instructions"&gt;dis module documentation&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;Instructions like &lt;tt class="docutils literal"&gt;LOAD&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;STORE&lt;/tt&gt; refer to indices in the constants/names/varnames tuples. To make it easier, here’s a “table” of them:&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_d332a1bf23e04a15ba802733f6e7ccc3-1"&gt;&lt;/a&gt;constants
-&lt;a name="rest_code_d332a1bf23e04a15ba802733f6e7ccc3-2"&gt;&lt;/a&gt; 0     1                                                       2      3   4    5    6
-&lt;a name="rest_code_d332a1bf23e04a15ba802733f6e7ccc3-3"&gt;&lt;/a&gt;(None, '4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89', 'hex', 89, 255, 115, 50)
-&lt;a name="rest_code_d332a1bf23e04a15ba802733f6e7ccc3-4"&gt;&lt;/a&gt;
-&lt;a name="rest_code_d332a1bf23e04a15ba802733f6e7ccc3-5"&gt;&lt;/a&gt;names (globals, attributes)
-&lt;a name="rest_code_d332a1bf23e04a15ba802733f6e7ccc3-6"&gt;&lt;/a&gt; 0         1      2        3      4      5
-&lt;a name="rest_code_d332a1bf23e04a15ba802733f6e7ccc3-7"&gt;&lt;/a&gt;('decode', 'len', 'False', 'all', 'zip', 'ord')
-&lt;a name="rest_code_d332a1bf23e04a15ba802733f6e7ccc3-8"&gt;&lt;/a&gt;
-&lt;a name="rest_code_d332a1bf23e04a15ba802733f6e7ccc3-9"&gt;&lt;/a&gt;varnames (locals, _fast)
-&lt;a name="rest_code_d332a1bf23e04a15ba802733f6e7ccc3-10"&gt;&lt;/a&gt; 0    1       2     3
-&lt;a name="rest_code_d332a1bf23e04a15ba802733f6e7ccc3-11"&gt;&lt;/a&gt;('s', 'good', 'cs', 'cg')
-&lt;/pre&gt;&lt;p&gt;In order to improve readability, I will use “new” &lt;tt class="docutils literal"&gt;dis&lt;/tt&gt; output with names in parentheses below:&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_4466df58bb054a17b8afa745d2cc925e-1"&gt;&lt;/a&gt; 0 LOAD_CONST               1 ('4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89')
-&lt;a name="rest_code_4466df58bb054a17b8afa745d2cc925e-2"&gt;&lt;/a&gt; 3 LOAD_ATTR                0 (decode)
-&lt;a name="rest_code_4466df58bb054a17b8afa745d2cc925e-3"&gt;&lt;/a&gt; 6 LOAD_CONST               2 ('hex')
-&lt;a name="rest_code_4466df58bb054a17b8afa745d2cc925e-4"&gt;&lt;/a&gt; 9 CALL_FUNCTION            1 # function takes 1 argument from stack
-&lt;a name="rest_code_4466df58bb054a17b8afa745d2cc925e-5"&gt;&lt;/a&gt;12 STORE_FAST               1 (good)
+&lt;p&gt;Instructions like &lt;code class="docutils literal"&gt;LOAD&lt;/code&gt; and &lt;code class="docutils literal"&gt;STORE&lt;/code&gt; refer to indices in the constants/names/varnames tuples. To make it easier, here’s a “table” of them:&lt;/p&gt;
+&lt;pre class="code text"&gt;&lt;a name="rest_code_b5f5e390d95b42958cb04677cef37275-1"&gt;&lt;/a&gt;constants
+&lt;a name="rest_code_b5f5e390d95b42958cb04677cef37275-2"&gt;&lt;/a&gt; 0     1                                                       2      3   4    5    6
+&lt;a name="rest_code_b5f5e390d95b42958cb04677cef37275-3"&gt;&lt;/a&gt;(None, '4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89', 'hex', 89, 255, 115, 50)
+&lt;a name="rest_code_b5f5e390d95b42958cb04677cef37275-4"&gt;&lt;/a&gt;
+&lt;a name="rest_code_b5f5e390d95b42958cb04677cef37275-5"&gt;&lt;/a&gt;names (globals, attributes)
+&lt;a name="rest_code_b5f5e390d95b42958cb04677cef37275-6"&gt;&lt;/a&gt; 0         1      2        3      4      5
+&lt;a name="rest_code_b5f5e390d95b42958cb04677cef37275-7"&gt;&lt;/a&gt;('decode', 'len', 'False', 'all', 'zip', 'ord')
+&lt;a name="rest_code_b5f5e390d95b42958cb04677cef37275-8"&gt;&lt;/a&gt;
+&lt;a name="rest_code_b5f5e390d95b42958cb04677cef37275-9"&gt;&lt;/a&gt;varnames (locals, _fast)
+&lt;a name="rest_code_b5f5e390d95b42958cb04677cef37275-10"&gt;&lt;/a&gt; 0    1       2     3
+&lt;a name="rest_code_b5f5e390d95b42958cb04677cef37275-11"&gt;&lt;/a&gt;('s', 'good', 'cs', 'cg')
+&lt;/pre&gt;&lt;p&gt;In order to improve readability, I will use “new” &lt;code class="docutils literal"&gt;dis&lt;/code&gt; output with names in parentheses below:&lt;/p&gt;
+&lt;pre class="code text"&gt;&lt;a name="rest_code_5cc96b4aa2c047009f5d97e80d240609-1"&gt;&lt;/a&gt; 0 LOAD_CONST               1 ('4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89')
+&lt;a name="rest_code_5cc96b4aa2c047009f5d97e80d240609-2"&gt;&lt;/a&gt; 3 LOAD_ATTR                0 (decode)
+&lt;a name="rest_code_5cc96b4aa2c047009f5d97e80d240609-3"&gt;&lt;/a&gt; 6 LOAD_CONST               2 ('hex')
+&lt;a name="rest_code_5cc96b4aa2c047009f5d97e80d240609-4"&gt;&lt;/a&gt; 9 CALL_FUNCTION            1 # function takes 1 argument from stack
+&lt;a name="rest_code_5cc96b4aa2c047009f5d97e80d240609-5"&gt;&lt;/a&gt;12 STORE_FAST               1 (good)
 &lt;/pre&gt;&lt;p&gt;As I guessed before, the first line of our function is as follows:&lt;/p&gt;
-&lt;pre class="code python"&gt;&lt;a name="rest_code_1fbae1c937ba4b0d93bfd1f44c64ced6-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;check_password&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-&lt;a name="rest_code_1fbae1c937ba4b0d93bfd1f44c64ced6-2"&gt;&lt;/a&gt;    &lt;span class="n"&gt;good&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;'4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89'&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;decode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'hex'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# new&lt;/span&gt;
-&lt;/pre&gt;&lt;p&gt;If we run the solver again, we’ll see that the first 12 bytes of our bytecode match the mission text. We can also see that &lt;tt class="docutils literal"&gt;varnames&lt;/tt&gt; is filled in half, we’ve added two constants, and one name.  The next few lines are as follows:&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_3255978f4432457cb3613d9ecefd5d5b-1"&gt;&lt;/a&gt;15 LOAD_GLOBAL              1
-&lt;a name="rest_code_3255978f4432457cb3613d9ecefd5d5b-2"&gt;&lt;/a&gt;18 LOAD_FAST                0
-&lt;a name="rest_code_3255978f4432457cb3613d9ecefd5d5b-3"&gt;&lt;/a&gt;21 CALL_FUNCTION            1
-&lt;a name="rest_code_3255978f4432457cb3613d9ecefd5d5b-4"&gt;&lt;/a&gt;24 LOAD_GLOBAL              1
-&lt;a name="rest_code_3255978f4432457cb3613d9ecefd5d5b-5"&gt;&lt;/a&gt;27 LOAD_FAST                1
-&lt;a name="rest_code_3255978f4432457cb3613d9ecefd5d5b-6"&gt;&lt;/a&gt;30 CALL_FUNCTION            1
-&lt;a name="rest_code_3255978f4432457cb3613d9ecefd5d5b-7"&gt;&lt;/a&gt;33 COMPARE_OP               3 (!=)
-&lt;a name="rest_code_3255978f4432457cb3613d9ecefd5d5b-8"&gt;&lt;/a&gt;36 POP_JUMP_IF_FALSE       43
-&lt;a name="rest_code_3255978f4432457cb3613d9ecefd5d5b-9"&gt;&lt;/a&gt;39 LOAD_GLOBAL              2
-&lt;a name="rest_code_3255978f4432457cb3613d9ecefd5d5b-10"&gt;&lt;/a&gt;42 RETURN_VALUE
-&lt;/pre&gt;&lt;p&gt;We can see that we’re putting a global object on stack and calling it with one argument. In both cases, the global has the index 1, that’s &lt;tt class="docutils literal"&gt;len&lt;/tt&gt;. The two arguments are &lt;tt class="docutils literal"&gt;s&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;good&lt;/tt&gt;. We put both lengths on stack, then compare them. If the comparison fails (they’re equal), we jump to the instruction starting at byte 43, otherwise we continue execution to load the second global (False) and return it.  This wall of text translates to the following simple code:&lt;/p&gt;
-&lt;pre class="code python"&gt;&lt;a name="rest_code_3050125d1d3e4ad1a8fbb42edcf0834b-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;check_password&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-&lt;a name="rest_code_3050125d1d3e4ad1a8fbb42edcf0834b-2"&gt;&lt;/a&gt;    &lt;span class="n"&gt;good&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;'4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89'&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;decode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'hex'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_3050125d1d3e4ad1a8fbb42edcf0834b-3"&gt;&lt;/a&gt;    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;!=&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;good&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;  &lt;span class="c1"&gt;# new&lt;/span&gt;
-&lt;a name="rest_code_3050125d1d3e4ad1a8fbb42edcf0834b-4"&gt;&lt;/a&gt;        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="bp"&gt;False&lt;/span&gt;         &lt;span class="c1"&gt;# new&lt;/span&gt;
-&lt;/pre&gt;&lt;p&gt;Let’s take another look at our names. We can see we’re missing &lt;tt class="docutils literal"&gt;all&lt;/tt&gt;, &lt;tt class="docutils literal"&gt;zip&lt;/tt&gt;, &lt;tt class="docutils literal"&gt;ord&lt;/tt&gt;. You can already see a common pattern here: we will iterate over both strings at once (using &lt;tt class="docutils literal"&gt;zip&lt;/tt&gt;), do some math based on the character’s codes (&lt;tt class="docutils literal"&gt;ord&lt;/tt&gt;), and then check if &lt;tt class="docutils literal"&gt;all&lt;/tt&gt; results (of a comparison, usually) are truthy.&lt;/p&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_fdbbd9570fa34316b93d90fee26dcac2-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;check_password&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;a name="rest_code_fdbbd9570fa34316b93d90fee26dcac2-2"&gt;&lt;/a&gt;    &lt;span class="n"&gt;good&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;'4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89'&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;decode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'hex'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# new&lt;/span&gt;
+&lt;/pre&gt;&lt;p&gt;If we run the solver again, we’ll see that the first 12 bytes of our bytecode match the mission text. We can also see that &lt;code class="docutils literal"&gt;varnames&lt;/code&gt; is filled in half, we’ve added two constants, and one name.  The next few lines are as follows:&lt;/p&gt;
+&lt;pre class="code text"&gt;&lt;a name="rest_code_1e756fbbc3ca44b684871dfcc09273e8-1"&gt;&lt;/a&gt;15 LOAD_GLOBAL              1
+&lt;a name="rest_code_1e756fbbc3ca44b684871dfcc09273e8-2"&gt;&lt;/a&gt;18 LOAD_FAST                0
+&lt;a name="rest_code_1e756fbbc3ca44b684871dfcc09273e8-3"&gt;&lt;/a&gt;21 CALL_FUNCTION            1
+&lt;a name="rest_code_1e756fbbc3ca44b684871dfcc09273e8-4"&gt;&lt;/a&gt;24 LOAD_GLOBAL              1
+&lt;a name="rest_code_1e756fbbc3ca44b684871dfcc09273e8-5"&gt;&lt;/a&gt;27 LOAD_FAST                1
+&lt;a name="rest_code_1e756fbbc3ca44b684871dfcc09273e8-6"&gt;&lt;/a&gt;30 CALL_FUNCTION            1
+&lt;a name="rest_code_1e756fbbc3ca44b684871dfcc09273e8-7"&gt;&lt;/a&gt;33 COMPARE_OP               3 (!=)
+&lt;a name="rest_code_1e756fbbc3ca44b684871dfcc09273e8-8"&gt;&lt;/a&gt;36 POP_JUMP_IF_FALSE       43
+&lt;a name="rest_code_1e756fbbc3ca44b684871dfcc09273e8-9"&gt;&lt;/a&gt;39 LOAD_GLOBAL              2
+&lt;a name="rest_code_1e756fbbc3ca44b684871dfcc09273e8-10"&gt;&lt;/a&gt;42 RETURN_VALUE
+&lt;/pre&gt;&lt;p&gt;We can see that we’re putting a global object on stack and calling it with one argument. In both cases, the global has the index 1, that’s &lt;code class="docutils literal"&gt;len&lt;/code&gt;. The two arguments are &lt;code class="docutils literal"&gt;s&lt;/code&gt; and &lt;code class="docutils literal"&gt;good&lt;/code&gt;. We put both lengths on stack, then compare them. If the comparison fails (they’re equal), we jump to the instruction starting at byte 43, otherwise we continue execution to load the second global (False) and return it.  This wall of text translates to the following simple code:&lt;/p&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_a56b60e8675f498db63f61d6eb051873-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;check_password&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;a name="rest_code_a56b60e8675f498db63f61d6eb051873-2"&gt;&lt;/a&gt;    &lt;span class="n"&gt;good&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;'4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89'&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;decode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'hex'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_a56b60e8675f498db63f61d6eb051873-3"&gt;&lt;/a&gt;    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;!=&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;good&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;  &lt;span class="c1"&gt;# new&lt;/span&gt;
+&lt;a name="rest_code_a56b60e8675f498db63f61d6eb051873-4"&gt;&lt;/a&gt;        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="kc"&gt;False&lt;/span&gt;         &lt;span class="c1"&gt;# new&lt;/span&gt;
+&lt;/pre&gt;&lt;p&gt;Let’s take another look at our names. We can see we’re missing &lt;code class="docutils literal"&gt;all&lt;/code&gt;, &lt;code class="docutils literal"&gt;zip&lt;/code&gt;, &lt;code class="docutils literal"&gt;ord&lt;/code&gt;. You can already see a common pattern here: we will iterate over both strings at once (using &lt;code class="docutils literal"&gt;zip&lt;/code&gt;), do some math based on the character’s codes (&lt;code class="docutils literal"&gt;ord&lt;/code&gt;), and then check if &lt;code class="docutils literal"&gt;all&lt;/code&gt; results (of a comparison, usually) are truthy.&lt;/p&gt;
 &lt;p&gt;Here’s the bytecode with value annotations and comments, which explain what happens where:&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_5805846d0d084d30ad7b98d68e0caf47-1"&gt;&lt;/a&gt;&amp;gt;&amp;gt;   43 LOAD_GLOBAL              3 (all)
-&lt;a name="rest_code_5805846d0d084d30ad7b98d68e0caf47-2"&gt;&lt;/a&gt;     46 BUILD_LIST               0
-&lt;a name="rest_code_5805846d0d084d30ad7b98d68e0caf47-3"&gt;&lt;/a&gt;     49 LOAD_GLOBAL              4 (zip)
-&lt;a name="rest_code_5805846d0d084d30ad7b98d68e0caf47-4"&gt;&lt;/a&gt;     52 LOAD_FAST                0 (s)
-&lt;a name="rest_code_5805846d0d084d30ad7b98d68e0caf47-5"&gt;&lt;/a&gt;     55 LOAD_FAST                1 (good)
-&lt;a name="rest_code_5805846d0d084d30ad7b98d68e0caf47-6"&gt;&lt;/a&gt;     58 CALL_FUNCTION            2           # zip(s, good)
-&lt;a name="rest_code_5805846d0d084d30ad7b98d68e0caf47-7"&gt;&lt;/a&gt;     61 GET_ITER                             # Start iterating: iter()
-&lt;a name="rest_code_5805846d0d084d30ad7b98d68e0caf47-8"&gt;&lt;/a&gt;&amp;gt;&amp;gt;   62 FOR_ITER                52 (to 117)  # for loop iteration start (if iterator exhausted, jump +52 bytes to position 117)
-&lt;a name="rest_code_5805846d0d084d30ad7b98d68e0caf47-9"&gt;&lt;/a&gt;     65 UNPACK_SEQUENCE          2           # unpack a sequence (a, b = sequence)
-&lt;a name="rest_code_5805846d0d084d30ad7b98d68e0caf47-10"&gt;&lt;/a&gt;     68 STORE_FAST               2 (cs)      # cs = item from s
-&lt;a name="rest_code_5805846d0d084d30ad7b98d68e0caf47-11"&gt;&lt;/a&gt;     71 STORE_FAST               3 (cg)      # cg = item from good
-&lt;a name="rest_code_5805846d0d084d30ad7b98d68e0caf47-12"&gt;&lt;/a&gt;     74 LOAD_GLOBAL              5 (ord)
-&lt;a name="rest_code_5805846d0d084d30ad7b98d68e0caf47-13"&gt;&lt;/a&gt;     77 LOAD_FAST                2 (cs)
-&lt;a name="rest_code_5805846d0d084d30ad7b98d68e0caf47-14"&gt;&lt;/a&gt;     80 CALL_FUNCTION            1           # put ord(cs) on stack
-&lt;a name="rest_code_5805846d0d084d30ad7b98d68e0caf47-15"&gt;&lt;/a&gt;     83 LOAD_CONST               3 (89)
-&lt;a name="rest_code_5805846d0d084d30ad7b98d68e0caf47-16"&gt;&lt;/a&gt;     86 BINARY_SUBTRACT                      # - 89   [subtract 89 from topmost value]
-&lt;a name="rest_code_5805846d0d084d30ad7b98d68e0caf47-17"&gt;&lt;/a&gt;     87 LOAD_CONST               4 (255)
-&lt;a name="rest_code_5805846d0d084d30ad7b98d68e0caf47-18"&gt;&lt;/a&gt;     90 BINARY_AND                           # &amp;amp; 255  [bitwise AND with topmost value]
-&lt;a name="rest_code_5805846d0d084d30ad7b98d68e0caf47-19"&gt;&lt;/a&gt;     91 LOAD_CONST               5 (115)
-&lt;a name="rest_code_5805846d0d084d30ad7b98d68e0caf47-20"&gt;&lt;/a&gt;     94 BINARY_XOR                           # ^ 115  [bitwise XOR with topmost value]
-&lt;a name="rest_code_5805846d0d084d30ad7b98d68e0caf47-21"&gt;&lt;/a&gt;     95 LOAD_CONST               6 (50)
-&lt;a name="rest_code_5805846d0d084d30ad7b98d68e0caf47-22"&gt;&lt;/a&gt;     98 BINARY_XOR                           # ^ 50   [bitwise XOR with topmost value]
-&lt;a name="rest_code_5805846d0d084d30ad7b98d68e0caf47-23"&gt;&lt;/a&gt;     99 LOAD_GLOBAL              5 (ord)
-&lt;a name="rest_code_5805846d0d084d30ad7b98d68e0caf47-24"&gt;&lt;/a&gt;    102 LOAD_FAST                3 (cg)
-&lt;a name="rest_code_5805846d0d084d30ad7b98d68e0caf47-25"&gt;&lt;/a&gt;    105 CALL_FUNCTION            1           # put ord(cs) on stack
-&lt;a name="rest_code_5805846d0d084d30ad7b98d68e0caf47-26"&gt;&lt;/a&gt;    108 COMPARE_OP               2 (==)      # compare the two values on stack
-&lt;a name="rest_code_5805846d0d084d30ad7b98d68e0caf47-27"&gt;&lt;/a&gt;    111 LIST_APPEND              2           # append topmost value to the list in topmost-1; pop topmost (append to list created in comprehension)
-&lt;a name="rest_code_5805846d0d084d30ad7b98d68e0caf47-28"&gt;&lt;/a&gt;    114 JUMP_ABSOLUTE           62           # jump back to start of loop
-&lt;a name="rest_code_5805846d0d084d30ad7b98d68e0caf47-29"&gt;&lt;/a&gt;&amp;gt;&amp;gt;  117 CALL_FUNCTION            1           # after loop: call all([list comprehension result])
-&lt;a name="rest_code_5805846d0d084d30ad7b98d68e0caf47-30"&gt;&lt;/a&gt;    120 RETURN_VALUE                         # return value returned by all()
+&lt;pre class="code text"&gt;&lt;a name="rest_code_5f8b94acf11f47cb8f8332c33c532475-1"&gt;&lt;/a&gt;&amp;gt;&amp;gt;   43 LOAD_GLOBAL              3 (all)
+&lt;a name="rest_code_5f8b94acf11f47cb8f8332c33c532475-2"&gt;&lt;/a&gt;     46 BUILD_LIST               0
+&lt;a name="rest_code_5f8b94acf11f47cb8f8332c33c532475-3"&gt;&lt;/a&gt;     49 LOAD_GLOBAL              4 (zip)
+&lt;a name="rest_code_5f8b94acf11f47cb8f8332c33c532475-4"&gt;&lt;/a&gt;     52 LOAD_FAST                0 (s)
+&lt;a name="rest_code_5f8b94acf11f47cb8f8332c33c532475-5"&gt;&lt;/a&gt;     55 LOAD_FAST                1 (good)
+&lt;a name="rest_code_5f8b94acf11f47cb8f8332c33c532475-6"&gt;&lt;/a&gt;     58 CALL_FUNCTION            2           # zip(s, good)
+&lt;a name="rest_code_5f8b94acf11f47cb8f8332c33c532475-7"&gt;&lt;/a&gt;     61 GET_ITER                             # Start iterating: iter()
+&lt;a name="rest_code_5f8b94acf11f47cb8f8332c33c532475-8"&gt;&lt;/a&gt;&amp;gt;&amp;gt;   62 FOR_ITER                52 (to 117)  # for loop iteration start (if iterator exhausted, jump +52 bytes to position 117)
+&lt;a name="rest_code_5f8b94acf11f47cb8f8332c33c532475-9"&gt;&lt;/a&gt;     65 UNPACK_SEQUENCE          2           # unpack a sequence (a, b = sequence)
+&lt;a name="rest_code_5f8b94acf11f47cb8f8332c33c532475-10"&gt;&lt;/a&gt;     68 STORE_FAST               2 (cs)      # cs = item from s
+&lt;a name="rest_code_5f8b94acf11f47cb8f8332c33c532475-11"&gt;&lt;/a&gt;     71 STORE_FAST               3 (cg)      # cg = item from good
+&lt;a name="rest_code_5f8b94acf11f47cb8f8332c33c532475-12"&gt;&lt;/a&gt;     74 LOAD_GLOBAL              5 (ord)
+&lt;a name="rest_code_5f8b94acf11f47cb8f8332c33c532475-13"&gt;&lt;/a&gt;     77 LOAD_FAST                2 (cs)
+&lt;a name="rest_code_5f8b94acf11f47cb8f8332c33c532475-14"&gt;&lt;/a&gt;     80 CALL_FUNCTION            1           # put ord(cs) on stack
+&lt;a name="rest_code_5f8b94acf11f47cb8f8332c33c532475-15"&gt;&lt;/a&gt;     83 LOAD_CONST               3 (89)
+&lt;a name="rest_code_5f8b94acf11f47cb8f8332c33c532475-16"&gt;&lt;/a&gt;     86 BINARY_SUBTRACT                      # - 89   [subtract 89 from topmost value]
+&lt;a name="rest_code_5f8b94acf11f47cb8f8332c33c532475-17"&gt;&lt;/a&gt;     87 LOAD_CONST               4 (255)
+&lt;a name="rest_code_5f8b94acf11f47cb8f8332c33c532475-18"&gt;&lt;/a&gt;     90 BINARY_AND                           # &amp;amp; 255  [bitwise AND with topmost value]
+&lt;a name="rest_code_5f8b94acf11f47cb8f8332c33c532475-19"&gt;&lt;/a&gt;     91 LOAD_CONST               5 (115)
+&lt;a name="rest_code_5f8b94acf11f47cb8f8332c33c532475-20"&gt;&lt;/a&gt;     94 BINARY_XOR                           # ^ 115  [bitwise XOR with topmost value]
+&lt;a name="rest_code_5f8b94acf11f47cb8f8332c33c532475-21"&gt;&lt;/a&gt;     95 LOAD_CONST               6 (50)
+&lt;a name="rest_code_5f8b94acf11f47cb8f8332c33c532475-22"&gt;&lt;/a&gt;     98 BINARY_XOR                           # ^ 50   [bitwise XOR with topmost value]
+&lt;a name="rest_code_5f8b94acf11f47cb8f8332c33c532475-23"&gt;&lt;/a&gt;     99 LOAD_GLOBAL              5 (ord)
+&lt;a name="rest_code_5f8b94acf11f47cb8f8332c33c532475-24"&gt;&lt;/a&gt;    102 LOAD_FAST                3 (cg)
+&lt;a name="rest_code_5f8b94acf11f47cb8f8332c33c532475-25"&gt;&lt;/a&gt;    105 CALL_FUNCTION            1           # put ord(cs) on stack
+&lt;a name="rest_code_5f8b94acf11f47cb8f8332c33c532475-26"&gt;&lt;/a&gt;    108 COMPARE_OP               2 (==)      # compare the two values on stack
+&lt;a name="rest_code_5f8b94acf11f47cb8f8332c33c532475-27"&gt;&lt;/a&gt;    111 LIST_APPEND              2           # append topmost value to the list in topmost-1; pop topmost (append to list created in comprehension)
+&lt;a name="rest_code_5f8b94acf11f47cb8f8332c33c532475-28"&gt;&lt;/a&gt;    114 JUMP_ABSOLUTE           62           # jump back to start of loop
+&lt;a name="rest_code_5f8b94acf11f47cb8f8332c33c532475-29"&gt;&lt;/a&gt;&amp;gt;&amp;gt;  117 CALL_FUNCTION            1           # after loop: call all([list comprehension result])
+&lt;a name="rest_code_5f8b94acf11f47cb8f8332c33c532475-30"&gt;&lt;/a&gt;    120 RETURN_VALUE                         # return value returned by all()
 &lt;/pre&gt;&lt;p&gt;We can now write the full answer.&lt;/p&gt;
 &lt;p&gt;&lt;a class="reference external" href="https://chriswarrick.com/listings/gynvaels-mission-11-en/mission11.py.html"&gt;listings/gynvaels-mission-11-en/mission11.py&lt;/a&gt;  &lt;a class="reference external" href="https://chriswarrick.com/listings/gynvaels-mission-11-en/mission11.py"&gt;(Source)&lt;/a&gt;&lt;/p&gt;
-&lt;pre class="code python"&gt;&lt;a name="rest_code_5e4492413d02450d987758b9d6588cb1-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;check_password&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-&lt;a name="rest_code_5e4492413d02450d987758b9d6588cb1-2"&gt;&lt;/a&gt;    &lt;span class="n"&gt;good&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;'4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89'&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;decode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'hex'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_5e4492413d02450d987758b9d6588cb1-3"&gt;&lt;/a&gt;    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;!=&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;good&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-&lt;a name="rest_code_5e4492413d02450d987758b9d6588cb1-4"&gt;&lt;/a&gt;        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="bp"&gt;False&lt;/span&gt;
-&lt;a name="rest_code_5e4492413d02450d987758b9d6588cb1-5"&gt;&lt;/a&gt;
-&lt;a name="rest_code_5e4492413d02450d987758b9d6588cb1-6"&gt;&lt;/a&gt;    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nb"&gt;all&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;&lt;span class="nb"&gt;ord&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cs&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;89&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="mi"&gt;255&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="mi"&gt;115&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="mi"&gt;50&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="nb"&gt;ord&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cg&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;cs&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;cg&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;zip&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;good&lt;/span&gt;&lt;span class="p"&gt;)])&lt;/span&gt;
-&lt;/pre&gt;&lt;p&gt;In the end, our &lt;tt class="docutils literal"&gt;dis.dis()&lt;/tt&gt; output matches the mission text (except the removed values, but their IDs do match), our &lt;tt class="docutils literal"&gt;co_*&lt;/tt&gt; variables are all green, and we can get to work on solving the puzzle itself!&lt;/p&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_5399dd8a100a4160a17fbfbc91f99f6a-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;check_password&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;a name="rest_code_5399dd8a100a4160a17fbfbc91f99f6a-2"&gt;&lt;/a&gt;    &lt;span class="n"&gt;good&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;'4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89'&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;decode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'hex'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_5399dd8a100a4160a17fbfbc91f99f6a-3"&gt;&lt;/a&gt;    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;!=&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;good&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;a name="rest_code_5399dd8a100a4160a17fbfbc91f99f6a-4"&gt;&lt;/a&gt;        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="kc"&gt;False&lt;/span&gt;
+&lt;a name="rest_code_5399dd8a100a4160a17fbfbc91f99f6a-5"&gt;&lt;/a&gt;
+&lt;a name="rest_code_5399dd8a100a4160a17fbfbc91f99f6a-6"&gt;&lt;/a&gt;    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nb"&gt;all&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;&lt;span class="nb"&gt;ord&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cs&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;89&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="mi"&gt;255&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="mi"&gt;115&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="mi"&gt;50&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="nb"&gt;ord&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cg&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;cs&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;cg&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;zip&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;good&lt;/span&gt;&lt;span class="p"&gt;)])&lt;/span&gt;
+&lt;/pre&gt;&lt;p&gt;In the end, our &lt;code class="docutils literal"&gt;dis.dis()&lt;/code&gt; output matches the mission text (except the removed values, but their IDs do match), our &lt;code class="docutils literal"&gt;co_*&lt;/code&gt; variables are all green, and we can get to work on solving the puzzle itself!&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Side note:&lt;/strong&gt; this task uses a list comprehension. You might want to optimize it, remove the brackets, and end up with a generator expression. This would make the task harder, since would require working with the internal generator code object as well:&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_a6e1c7c4a8154d938aa49bc37cffb15c-1"&gt;&lt;/a&gt;co_consts (None, '4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89', 'hex', &amp;lt;code object &amp;lt;genexpr&amp;gt; at 0x104a86c30, file "mission11-genexpr.py", line 11&amp;gt;)
-&lt;a name="rest_code_a6e1c7c4a8154d938aa49bc37cffb15c-2"&gt;&lt;/a&gt;
-&lt;a name="rest_code_a6e1c7c4a8154d938aa49bc37cffb15c-3"&gt;&lt;/a&gt;46 LOAD_CONST               3 (&amp;lt;code object &amp;lt;genexpr&amp;gt; at 0x104a86c30, file "mission11-genexpr.py", line 11&amp;gt;)
-&lt;/pre&gt;&lt;p&gt;&lt;tt class="docutils literal"&gt;BINARY_*&lt;/tt&gt; and &lt;tt class="docutils literal"&gt;ord&lt;/tt&gt; disappeared from the new listing. You can see the &lt;a class="reference external" href="https://chriswarrick.com/listings/gynvaels-mission-11-en/mission11-genexpr.py.html"&gt;modified code&lt;/a&gt; (which differs by two bytes) and &lt;a class="reference external" href="https://chriswarrick.com/listings/gynvaels-mission-11-en/mission11-genexpr.txt.html"&gt;solver output&lt;/a&gt;.&lt;/p&gt;
+&lt;pre class="code text"&gt;&lt;a name="rest_code_13e7e6b752e24bf4827f22a066556d1f-1"&gt;&lt;/a&gt;co_consts (None, '4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89', 'hex', &amp;lt;code object &amp;lt;genexpr&amp;gt; at 0x104a86c30, file "mission11-genexpr.py", line 11&amp;gt;)
+&lt;a name="rest_code_13e7e6b752e24bf4827f22a066556d1f-2"&gt;&lt;/a&gt;
+&lt;a name="rest_code_13e7e6b752e24bf4827f22a066556d1f-3"&gt;&lt;/a&gt;46 LOAD_CONST               3 (&amp;lt;code object &amp;lt;genexpr&amp;gt; at 0x104a86c30, file "mission11-genexpr.py", line 11&amp;gt;)
+&lt;/pre&gt;&lt;p&gt;&lt;code class="docutils literal"&gt;BINARY_*&lt;/code&gt; and &lt;code class="docutils literal"&gt;ord&lt;/code&gt; disappeared from the new listing. You can see the &lt;a class="reference external" href="https://chriswarrick.com/listings/gynvaels-mission-11-en/mission11-genexpr.py.html"&gt;modified code&lt;/a&gt; (which differs by two bytes) and &lt;a class="reference external" href="https://chriswarrick.com/listings/gynvaels-mission-11-en/mission11-genexpr.txt.html"&gt;solver output&lt;/a&gt;.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="solving-the-real-puzzle"&gt;
 &lt;h2&gt;Solving the real puzzle&lt;/h2&gt;
-&lt;p&gt;I solved the extra credit part of the puzzle. The &lt;em&gt;real&lt;/em&gt; aim of the puzzle was to recover the password — the text for which &lt;tt class="docutils literal"&gt;check_password()&lt;/tt&gt; will return True.&lt;/p&gt;
-&lt;p&gt;This part is pretty boring. I built a dictionary, where I mapped every byte (0…255) to the result of the calculation done in the &lt;tt class="docutils literal"&gt;check_password()&lt;/tt&gt; function’s loop. Then I used that to recover the original text.&lt;/p&gt;
-&lt;pre class="code python"&gt;&lt;a name="rest_code_c08e28499b614d91b92016b2093392e9-1"&gt;&lt;/a&gt;&lt;span class="n"&gt;pass_values&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{}&lt;/span&gt;
-&lt;a name="rest_code_c08e28499b614d91b92016b2093392e9-2"&gt;&lt;/a&gt;&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;256&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-&lt;a name="rest_code_c08e28499b614d91b92016b2093392e9-3"&gt;&lt;/a&gt;    &lt;span class="n"&gt;result&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;89&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="mi"&gt;255&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="mi"&gt;115&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="mi"&gt;50&lt;/span&gt;
-&lt;a name="rest_code_c08e28499b614d91b92016b2093392e9-4"&gt;&lt;/a&gt;    &lt;span class="n"&gt;pass_values&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;
-&lt;a name="rest_code_c08e28499b614d91b92016b2093392e9-5"&gt;&lt;/a&gt;
-&lt;a name="rest_code_c08e28499b614d91b92016b2093392e9-6"&gt;&lt;/a&gt;&lt;span class="n"&gt;good&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;'4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89'&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;decode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'hex'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_c08e28499b614d91b92016b2093392e9-7"&gt;&lt;/a&gt;&lt;span class="n"&gt;password&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;''&lt;/span&gt;
-&lt;a name="rest_code_c08e28499b614d91b92016b2093392e9-8"&gt;&lt;/a&gt;&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;good&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-&lt;a name="rest_code_c08e28499b614d91b92016b2093392e9-9"&gt;&lt;/a&gt;    &lt;span class="n"&gt;password&lt;/span&gt; &lt;span class="o"&gt;+=&lt;/span&gt; &lt;span class="nb"&gt;chr&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pass_values&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nb"&gt;ord&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;)])&lt;/span&gt;
-&lt;a name="rest_code_c08e28499b614d91b92016b2093392e9-10"&gt;&lt;/a&gt;
-&lt;a name="rest_code_c08e28499b614d91b92016b2093392e9-11"&gt;&lt;/a&gt;&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;password&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_c08e28499b614d91b92016b2093392e9-12"&gt;&lt;/a&gt;&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;check_password&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;password&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;The password is:&lt;/strong&gt; &lt;tt class="docutils literal"&gt;huh, that actually worked!&lt;/tt&gt;.&lt;/p&gt;
+&lt;p&gt;I solved the extra credit part of the puzzle. The &lt;em&gt;real&lt;/em&gt; aim of the puzzle was to recover the password — the text for which &lt;code class="docutils literal"&gt;check_password()&lt;/code&gt; will return True.&lt;/p&gt;
+&lt;p&gt;This part is pretty boring. I built a dictionary, where I mapped every byte (0…255) to the result of the calculation done in the &lt;code class="docutils literal"&gt;check_password()&lt;/code&gt; function’s loop. Then I used that to recover the original text.&lt;/p&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_351a9e5460434a67add8a0bce8ac1704-1"&gt;&lt;/a&gt;&lt;span class="n"&gt;pass_values&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{}&lt;/span&gt;
+&lt;a name="rest_code_351a9e5460434a67add8a0bce8ac1704-2"&gt;&lt;/a&gt;&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;256&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;a name="rest_code_351a9e5460434a67add8a0bce8ac1704-3"&gt;&lt;/a&gt;    &lt;span class="n"&gt;result&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;89&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="mi"&gt;255&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="mi"&gt;115&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="mi"&gt;50&lt;/span&gt;
+&lt;a name="rest_code_351a9e5460434a67add8a0bce8ac1704-4"&gt;&lt;/a&gt;    &lt;span class="n"&gt;pass_values&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;
+&lt;a name="rest_code_351a9e5460434a67add8a0bce8ac1704-5"&gt;&lt;/a&gt;
+&lt;a name="rest_code_351a9e5460434a67add8a0bce8ac1704-6"&gt;&lt;/a&gt;&lt;span class="n"&gt;good&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;'4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89'&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;decode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'hex'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_351a9e5460434a67add8a0bce8ac1704-7"&gt;&lt;/a&gt;&lt;span class="n"&gt;password&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;''&lt;/span&gt;
+&lt;a name="rest_code_351a9e5460434a67add8a0bce8ac1704-8"&gt;&lt;/a&gt;&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;good&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;a name="rest_code_351a9e5460434a67add8a0bce8ac1704-9"&gt;&lt;/a&gt;    &lt;span class="n"&gt;password&lt;/span&gt; &lt;span class="o"&gt;+=&lt;/span&gt; &lt;span class="nb"&gt;chr&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pass_values&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nb"&gt;ord&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;)])&lt;/span&gt;
+&lt;a name="rest_code_351a9e5460434a67add8a0bce8ac1704-10"&gt;&lt;/a&gt;
+&lt;a name="rest_code_351a9e5460434a67add8a0bce8ac1704-11"&gt;&lt;/a&gt;&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;password&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_351a9e5460434a67add8a0bce8ac1704-12"&gt;&lt;/a&gt;&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;check_password&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;password&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;The password is:&lt;/strong&gt; &lt;code class="docutils literal"&gt;huh, that actually worked!&lt;/code&gt;.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="what-was-that-paint-thing-about"&gt;
 &lt;h2&gt;What was that Paint thing about?&lt;/h2&gt;
@@ -426,43 +426,43 @@ reverse-engineer the compilation of a function: &lt;a class="reference external"
 &lt;img alt="/images/gynvaels-mission-11-en/gynmod-zoom.png" class="align-center" src="https://chriswarrick.com/images/gynvaels-mission-11-en/gynmod-zoom.png"&gt;
 &lt;p&gt;How was this done? There are three things that come into play:&lt;/p&gt;
 &lt;ul class="simple"&gt;
-&lt;li&gt;Python can import modules from a ZIP file (if it’s appended to sys.path). Some tools that produce &lt;tt class="docutils literal"&gt;.exe&lt;/tt&gt; files of Python code use this technique; the old &lt;tt class="docutils literal"&gt;.egg&lt;/tt&gt; file format also used ZIPs this way.&lt;/li&gt;
-&lt;li&gt;BMP files have their header at the start of a file.&lt;/li&gt;
-&lt;li&gt;ZIP files have their header at the end of a file.&lt;/li&gt;
-&lt;li&gt;Thus, one file can be a valid BMP and ZIP at the same time.&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Python can import modules from a ZIP file (if it’s appended to sys.path). Some tools that produce &lt;code class="docutils literal"&gt;.exe&lt;/code&gt; files of Python code use this technique; the old &lt;code class="docutils literal"&gt;.egg&lt;/code&gt; file format also used ZIPs this way.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;BMP files have their header at the start of a file.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;ZIP files have their header at the end of a file.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Thus, one file can be a valid BMP and ZIP at the same time.&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;I took the code of &lt;tt class="docutils literal"&gt;check_password&lt;/tt&gt; and put it in &lt;tt class="docutils literal"&gt;mission11.py&lt;/tt&gt; (which I already cited above). Then I compiled to &lt;tt class="docutils literal"&gt;.pyc&lt;/tt&gt; and created a &lt;tt class="docutils literal"&gt;.zip&lt;/tt&gt; out of it.&lt;/p&gt;
+&lt;p&gt;I took the code of &lt;code class="docutils literal"&gt;check_password&lt;/code&gt; and put it in &lt;code class="docutils literal"&gt;mission11.py&lt;/code&gt; (which I already cited above). Then I compiled to &lt;code class="docutils literal"&gt;.pyc&lt;/code&gt; and created a &lt;code class="docutils literal"&gt;.zip&lt;/code&gt; out of it.&lt;/p&gt;
 &lt;p&gt;&lt;a class="reference external" href="https://chriswarrick.com/listings/gynvaels-mission-11-en/mission11.py.html"&gt;listings/gynvaels-mission-11-en/mission11.py&lt;/a&gt;  &lt;a class="reference external" href="https://chriswarrick.com/listings/gynvaels-mission-11-en/mission11.py"&gt;(Source)&lt;/a&gt;&lt;/p&gt;
-&lt;pre class="code python"&gt;&lt;a name="rest_code_f7ae31f3dfc34c0fafc4ebb458cfe7f8-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;check_password&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-&lt;a name="rest_code_f7ae31f3dfc34c0fafc4ebb458cfe7f8-2"&gt;&lt;/a&gt;    &lt;span class="n"&gt;good&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;'4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89'&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;decode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'hex'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_f7ae31f3dfc34c0fafc4ebb458cfe7f8-3"&gt;&lt;/a&gt;    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;!=&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;good&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-&lt;a name="rest_code_f7ae31f3dfc34c0fafc4ebb458cfe7f8-4"&gt;&lt;/a&gt;        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="bp"&gt;False&lt;/span&gt;
-&lt;a name="rest_code_f7ae31f3dfc34c0fafc4ebb458cfe7f8-5"&gt;&lt;/a&gt;
-&lt;a name="rest_code_f7ae31f3dfc34c0fafc4ebb458cfe7f8-6"&gt;&lt;/a&gt;    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nb"&gt;all&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;&lt;span class="nb"&gt;ord&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cs&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;89&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="mi"&gt;255&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="mi"&gt;115&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="mi"&gt;50&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="nb"&gt;ord&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cg&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;cs&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;cg&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;zip&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;good&lt;/span&gt;&lt;span class="p"&gt;)])&lt;/span&gt;
-&lt;/pre&gt;&lt;p&gt;Since I’m not an expert in any of the formats, I booted my Windows virtual machine and blindly copied the &lt;a class="reference external" href="http://gynvael.coldwind.pl/img/secapr16_3.png"&gt;parameters used by Gynvael&lt;/a&gt; to open the ZIP file (renamed &lt;tt class="docutils literal"&gt;.raw&lt;/tt&gt;) in IrfanView and saved as &lt;tt class="docutils literal"&gt;.bmp&lt;/tt&gt;. I changed the size to 83×2, because my ZIP file was 498 bytes long (3 BPP * 83 px * 2 px = 498 bytes) — by doing that, and through sheer luck with the size, I could avoid adding comments and editing the ZIP archive. I ended up with this (PNG again; &lt;a class="reference external" href="https://chriswarrick.com/pub/gynvaels-mission-11-en/mission11.bmp"&gt;download mission11.bmp&lt;/a&gt;):&lt;/p&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_2c0e34b02b624684ad50025e1df6e560-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;check_password&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;a name="rest_code_2c0e34b02b624684ad50025e1df6e560-2"&gt;&lt;/a&gt;    &lt;span class="n"&gt;good&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;'4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89'&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;decode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'hex'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_2c0e34b02b624684ad50025e1df6e560-3"&gt;&lt;/a&gt;    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;!=&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;good&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;a name="rest_code_2c0e34b02b624684ad50025e1df6e560-4"&gt;&lt;/a&gt;        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="kc"&gt;False&lt;/span&gt;
+&lt;a name="rest_code_2c0e34b02b624684ad50025e1df6e560-5"&gt;&lt;/a&gt;
+&lt;a name="rest_code_2c0e34b02b624684ad50025e1df6e560-6"&gt;&lt;/a&gt;    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nb"&gt;all&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;&lt;span class="nb"&gt;ord&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cs&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;89&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="mi"&gt;255&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="mi"&gt;115&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="mi"&gt;50&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="nb"&gt;ord&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cg&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;cs&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;cg&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;zip&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;good&lt;/span&gt;&lt;span class="p"&gt;)])&lt;/span&gt;
+&lt;/pre&gt;&lt;p&gt;Since I’m not an expert in any of the formats, I booted my Windows virtual machine and blindly copied the &lt;a class="reference external" href="http://gynvael.coldwind.pl/img/secapr16_3.png"&gt;parameters used by Gynvael&lt;/a&gt; to open the ZIP file (renamed &lt;code class="docutils literal"&gt;.raw&lt;/code&gt;) in IrfanView and saved as &lt;code class="docutils literal"&gt;.bmp&lt;/code&gt;. I changed the size to 83×2, because my ZIP file was 498 bytes long (3 BPP * 83 px * 2 px = 498 bytes) — by doing that, and through sheer luck with the size, I could avoid adding comments and editing the ZIP archive. I ended up with this (PNG again; &lt;a class="reference external" href="https://chriswarrick.com/pub/gynvaels-mission-11-en/mission11.bmp"&gt;download mission11.bmp&lt;/a&gt;):&lt;/p&gt;
 &lt;img alt="/images/gynvaels-mission-11-en/mission11-zoom.png" class="align-center" src="https://chriswarrick.com/images/gynvaels-mission-11-en/mission11-zoom.png"&gt;
-&lt;p&gt;The &lt;tt class="docutils literal"&gt;.bmp&lt;/tt&gt; file is runnable! We can use this code:&lt;/p&gt;
+&lt;p&gt;The &lt;code class="docutils literal"&gt;.bmp&lt;/code&gt; file is runnable! We can use this code:&lt;/p&gt;
 &lt;p&gt;&lt;a class="reference external" href="https://chriswarrick.com/listings/gynvaels-mission-11-en/ziprunner.py.html"&gt;listings/gynvaels-mission-11-en/ziprunner.py&lt;/a&gt;  &lt;a class="reference external" href="https://chriswarrick.com/listings/gynvaels-mission-11-en/ziprunner.py"&gt;(Source)&lt;/a&gt;&lt;/p&gt;
-&lt;pre class="code python"&gt;&lt;a name="rest_code_f7f5fce9ebfd42e69b2abc57f6711f66-1"&gt;&lt;/a&gt;&lt;span class="ch"&gt;#!/usr/bin/env python2&lt;/span&gt;
-&lt;a name="rest_code_f7f5fce9ebfd42e69b2abc57f6711f66-2"&gt;&lt;/a&gt;
-&lt;a name="rest_code_f7f5fce9ebfd42e69b2abc57f6711f66-3"&gt;&lt;/a&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;sys&lt;/span&gt;
-&lt;a name="rest_code_f7f5fce9ebfd42e69b2abc57f6711f66-4"&gt;&lt;/a&gt;&lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;append&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"mission11.bmp"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_f7f5fce9ebfd42e69b2abc57f6711f66-5"&gt;&lt;/a&gt;
-&lt;a name="rest_code_f7f5fce9ebfd42e69b2abc57f6711f66-6"&gt;&lt;/a&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;mission11&lt;/span&gt;
-&lt;a name="rest_code_f7f5fce9ebfd42e69b2abc57f6711f66-7"&gt;&lt;/a&gt;&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s2"&gt;"Result:"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;mission11&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;check_password&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'huh, that actually worked!'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_e5adccc3f51b4a14b73689253c28bfcf-1"&gt;&lt;/a&gt;&lt;span class="ch"&gt;#!/usr/bin/env python2&lt;/span&gt;
+&lt;a name="rest_code_e5adccc3f51b4a14b73689253c28bfcf-2"&gt;&lt;/a&gt;
+&lt;a name="rest_code_e5adccc3f51b4a14b73689253c28bfcf-3"&gt;&lt;/a&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;sys&lt;/span&gt;
+&lt;a name="rest_code_e5adccc3f51b4a14b73689253c28bfcf-4"&gt;&lt;/a&gt;&lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;append&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"mission11.bmp"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_e5adccc3f51b4a14b73689253c28bfcf-5"&gt;&lt;/a&gt;
+&lt;a name="rest_code_e5adccc3f51b4a14b73689253c28bfcf-6"&gt;&lt;/a&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;mission11&lt;/span&gt;
+&lt;a name="rest_code_e5adccc3f51b4a14b73689253c28bfcf-7"&gt;&lt;/a&gt;&lt;span class="nb"&gt;print&lt;/span&gt; &lt;span class="s2"&gt;"Result:"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;mission11&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;check_password&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'huh, that actually worked!'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;And we get this:&lt;/p&gt;
 &lt;img alt="/images/gynvaels-mission-11-en/running-bmp.png" class="align-center" src="https://chriswarrick.com/images/gynvaels-mission-11-en/running-bmp.png"&gt;
 &lt;/div&gt;
 &lt;div class="section" id="resources"&gt;
 &lt;h2&gt;Resources&lt;/h2&gt;
 &lt;ul class="simple"&gt;
-&lt;li&gt;&lt;a class="reference external" href="https://chriswarrick.com/listings/gynvaels-mission-11-en/mission11-solver.py.html"&gt;mission11-solver.py (full solver code)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference external" href="https://chriswarrick.com/listings/gynvaels-mission-11-en/mission11-genexpr.py.html"&gt;mission11-genexpr.py&lt;/a&gt;, &lt;a class="reference external" href="https://chriswarrick.com/listings/gynvaels-mission-11-en/mission11-genexpr.txt.html"&gt;mission11-genexpr.txt&lt;/a&gt; (used for side note regarding generator expressions vs. list comprehensions)&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference external" href="https://chriswarrick.com/listings/gynvaels-mission-11-en/mission11.py.html"&gt;mission11.py code, used in BMP file&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference external" href="https://chriswarrick.com/listings/gynvaels-mission-11-en/ziprunner.py.html"&gt;ziprunner.py, file that runs the BMP/ZIP module&lt;/a&gt; (adapted from Gynvael’s)&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference external" href="https://chriswarrick.com/pub/gynvaels-mission-11-en/gynmod.bmp"&gt;gynmod.bmp&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference external" href="https://chriswarrick.com/pub/gynvaels-mission-11-en/mission11.bmp"&gt;mission11.bmp&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a class="reference external" href="https://docs.python.org/2/library/dis.html#python-bytecode-instructions"&gt;dis module documentation&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference external" href="https://chriswarrick.com/listings/gynvaels-mission-11-en/mission11-solver.py.html"&gt;mission11-solver.py (full solver code)&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference external" href="https://chriswarrick.com/listings/gynvaels-mission-11-en/mission11-genexpr.py.html"&gt;mission11-genexpr.py&lt;/a&gt;, &lt;a class="reference external" href="https://chriswarrick.com/listings/gynvaels-mission-11-en/mission11-genexpr.txt.html"&gt;mission11-genexpr.txt&lt;/a&gt; (used for side note regarding generator expressions vs. list comprehensions)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference external" href="https://chriswarrick.com/listings/gynvaels-mission-11-en/mission11.py.html"&gt;mission11.py code, used in BMP file&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference external" href="https://chriswarrick.com/listings/gynvaels-mission-11-en/ziprunner.py.html"&gt;ziprunner.py, file that runs the BMP/ZIP module&lt;/a&gt; (adapted from Gynvael’s)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference external" href="https://chriswarrick.com/pub/gynvaels-mission-11-en/gynmod.bmp"&gt;gynmod.bmp&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference external" href="https://chriswarrick.com/pub/gynvaels-mission-11-en/mission11.bmp"&gt;mission11.bmp&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference external" href="https://docs.python.org/2/library/dis.html#python-bytecode-instructions"&gt;dis module documentation&lt;/a&gt;.&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;Thanks for the mission (and BMP idea), Gynvael!&lt;/p&gt;
 &lt;/div&gt;&lt;/div&gt;</description><category>BMP</category><category>Gynvael Coldwind</category><category>hacking</category><category>Paint</category><category>Python</category><category>Python hackery</category><category>Python internals</category><category>reverse engineering</category><category>writeup</category><guid>https://chriswarrick.com/blog/2017/08/03/gynvaels-mission-11-en-python-bytecode-reverse-engineering/</guid><pubDate>Thu, 03 Aug 2017 10:45:40 GMT</pubDate></item></channel></rss>

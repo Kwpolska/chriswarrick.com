@@ -151,13 +151,14 @@ thing is less than 30 lines long. You can see the full `CustomTabsActivity.java
 </listings/android-chrome-custom-tabs/CustomTabsActivity.java.html>`_ file, but the relevant bits are below.
 
 .. code:: java
+   :linenos:
 
-    CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
-    // Optionally, configure appearance and buttons on toolbar.
-    CustomTabsIntent intent = builder.build();
-    // Force browser to Chrome instead of system default.
-    intent.intent.setPackage("com.android.chrome");
-    intent.launchUrl(this, Uri.parse("https://chriswarrick.com/"));
+   CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+   // Optionally, configure appearance and buttons on toolbar.
+   CustomTabsIntent intent = builder.build();
+   // Force browser to Chrome instead of system default.
+   intent.intent.setPackage("com.android.chrome");
+   intent.launchUrl(this, Uri.parse("https://chriswarrick.com/"));
 
 It seems to work well, the list is displayed, and it can be used to input
 stuff, the emoji hack works too.

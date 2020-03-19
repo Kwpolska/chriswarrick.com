@@ -85,88 +85,167 @@ og: http://ogp.me/ns#
 <li class="breadcrumb-item"><a href="/listings/">listings</a></li>
                 <li class="breadcrumb-item"><a href="/listings/code-writing-code/">code-writing-code</a></li>
                 <li class="breadcrumb-item active">write_properties.py</li>
-</ul></nav><p><a class="btn btn-primary" href="/listings/code-writing-code/write_properties.py" id="sourcelink">Source</a></p>
+</ul></nav><h1>write_properties.py <a class="btn btn-primary" href="/listings/code-writing-code/write_properties.py" id="sourcelink">Source</a>
+</h1>
 
-    <table class="codetable"><tr>
-<td class="linenos"><div class="linenodiv"><pre><a href="#listingscode-writing-codewrite_propertiespy-1"> 1</a>
-<a href="#listingscode-writing-codewrite_propertiespy-2"> 2</a>
-<a href="#listingscode-writing-codewrite_propertiespy-3"> 3</a>
-<a href="#listingscode-writing-codewrite_propertiespy-4"> 4</a>
-<a href="#listingscode-writing-codewrite_propertiespy-5"> 5</a>
-<a href="#listingscode-writing-codewrite_propertiespy-6"> 6</a>
-<a href="#listingscode-writing-codewrite_propertiespy-7"> 7</a>
-<a href="#listingscode-writing-codewrite_propertiespy-8"> 8</a>
-<a href="#listingscode-writing-codewrite_propertiespy-9"> 9</a>
-<a href="#listingscode-writing-codewrite_propertiespy-10">10</a>
-<a href="#listingscode-writing-codewrite_propertiespy-11">11</a>
-<a href="#listingscode-writing-codewrite_propertiespy-12">12</a>
-<a href="#listingscode-writing-codewrite_propertiespy-13">13</a>
-<a href="#listingscode-writing-codewrite_propertiespy-14">14</a>
-<a href="#listingscode-writing-codewrite_propertiespy-15">15</a>
-<a href="#listingscode-writing-codewrite_propertiespy-16">16</a>
-<a href="#listingscode-writing-codewrite_propertiespy-17">17</a>
-<a href="#listingscode-writing-codewrite_propertiespy-18">18</a>
-<a href="#listingscode-writing-codewrite_propertiespy-19">19</a>
-<a href="#listingscode-writing-codewrite_propertiespy-20">20</a>
-<a href="#listingscode-writing-codewrite_propertiespy-21">21</a>
-<a href="#listingscode-writing-codewrite_propertiespy-22">22</a>
-<a href="#listingscode-writing-codewrite_propertiespy-23">23</a>
-<a href="#listingscode-writing-codewrite_propertiespy-24">24</a>
-<a href="#listingscode-writing-codewrite_propertiespy-25">25</a>
-<a href="#listingscode-writing-codewrite_propertiespy-26">26</a>
-<a href="#listingscode-writing-codewrite_propertiespy-27">27</a>
-<a href="#listingscode-writing-codewrite_propertiespy-28">28</a>
-<a href="#listingscode-writing-codewrite_propertiespy-29">29</a>
-<a href="#listingscode-writing-codewrite_propertiespy-30">30</a>
-<a href="#listingscode-writing-codewrite_propertiespy-31">31</a>
-<a href="#listingscode-writing-codewrite_propertiespy-32">32</a>
-<a href="#listingscode-writing-codewrite_propertiespy-33">33</a>
-<a href="#listingscode-writing-codewrite_propertiespy-34">34</a>
-<a href="#listingscode-writing-codewrite_propertiespy-35">35</a>
-<a href="#listingscode-writing-codewrite_propertiespy-36">36</a>
-<a href="#listingscode-writing-codewrite_propertiespy-37">37</a>
-<a href="#listingscode-writing-codewrite_propertiespy-38">38</a></pre></div></td>
-<td class="code"><pre class="code literal-block"><a name="listingscode-writing-codewrite_propertiespy-1"></a><span class="ch">#!/usr/bin/env python3</span>
-<a name="listingscode-writing-codewrite_propertiespy-2"></a><span class="n">TEMPLATE</span> <span class="o">=</span> <span class="s2">"""</span><span class="se">\</span>
-<a name="listingscode-writing-codewrite_propertiespy-3"></a><span class="s2">        </span><span class="si">%s</span><span class="s2">public </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2"> {</span>
-<a name="listingscode-writing-codewrite_propertiespy-4"></a><span class="s2">            get {</span>
-<a name="listingscode-writing-codewrite_propertiespy-5"></a><span class="s2">                return </span><span class="si">%s</span><span class="s2">_;</span>
-<a name="listingscode-writing-codewrite_propertiespy-6"></a><span class="s2">            }</span>
-<a name="listingscode-writing-codewrite_propertiespy-7"></a><span class="s2">            set {</span>
-<a name="listingscode-writing-codewrite_propertiespy-8"></a><span class="s2">                if (value != </span><span class="si">%s</span><span class="s2">_) {</span>
-<a name="listingscode-writing-codewrite_propertiespy-9"></a><span class="s2">                    </span><span class="si">%s</span><span class="s2">_ = value;</span>
-<a name="listingscode-writing-codewrite_propertiespy-10"></a><span class="s2">                    NotifyPropertyChanged("</span><span class="si">%s</span><span class="s2">");</span>
-<a name="listingscode-writing-codewrite_propertiespy-11"></a><span class="s2">                }</span>
-<a name="listingscode-writing-codewrite_propertiespy-12"></a><span class="s2">            }</span>
-<a name="listingscode-writing-codewrite_propertiespy-13"></a><span class="s2">        }</span>
-<a name="listingscode-writing-codewrite_propertiespy-14"></a><span class="s2">"""</span>
-<a name="listingscode-writing-codewrite_propertiespy-15"></a><span class="n">JSONPROPERTY_TEMPLATE</span> <span class="o">=</span> <span class="s1">'[JsonProperty]</span><span class="se">\n</span><span class="s1">        '</span>
-<a name="listingscode-writing-codewrite_propertiespy-16"></a>
-<a name="listingscode-writing-codewrite_propertiespy-17"></a><span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="n">has_jsonproperty</span><span class="p">,</span> <span class="n">vtype</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-<a name="listingscode-writing-codewrite_propertiespy-18"></a>    <span class="k">if</span> <span class="n">has_jsonproperty</span><span class="p">:</span>
-<a name="listingscode-writing-codewrite_propertiespy-19"></a>        <span class="n">jsonproperty</span> <span class="o">=</span> <span class="n">JSONPROPERTY_TEMPLATE</span>
-<a name="listingscode-writing-codewrite_propertiespy-20"></a>    <span class="k">else</span><span class="p">:</span>
-<a name="listingscode-writing-codewrite_propertiespy-21"></a>        <span class="n">jsonproperty</span> <span class="o">=</span> <span class="s1">''</span>
-<a name="listingscode-writing-codewrite_propertiespy-22"></a>    <span class="k">return</span> <span class="n">TEMPLATE</span> <span class="o">%</span> <span class="p">(</span><span class="n">jsonproperty</span><span class="p">,</span> <span class="n">vtype</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
-<a name="listingscode-writing-codewrite_propertiespy-23"></a>
-<a name="listingscode-writing-codewrite_propertiespy-24"></a><span class="n">properties</span> <span class="o">=</span> <span class="p">[</span>
-<a name="listingscode-writing-codewrite_propertiespy-25"></a>    <span class="s1">'1 string name'</span><span class="p">,</span>
-<a name="listingscode-writing-codewrite_propertiespy-26"></a>    <span class="s1">'0 int another'</span><span class="p">,</span>
-<a name="listingscode-writing-codewrite_propertiespy-27"></a>    <span class="c1"># 12 fields omitted for brevity</span>
-<a name="listingscode-writing-codewrite_propertiespy-28"></a><span class="p">]</span>
-<a name="listingscode-writing-codewrite_propertiespy-29"></a><span class="n">properties_split</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">split</span><span class="p">()</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">properties</span><span class="p">]</span>
-<a name="listingscode-writing-codewrite_propertiespy-30"></a>
-<a name="listingscode-writing-codewrite_propertiespy-31"></a><span class="c1"># Private definitions (internal)</span>
-<a name="listingscode-writing-codewrite_propertiespy-32"></a><span class="k">for</span> <span class="n">has_jsonproperty</span><span class="p">,</span> <span class="n">vtype</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">properties_split</span><span class="p">:</span>
-<a name="listingscode-writing-codewrite_propertiespy-33"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">"        private </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">_ { get; set; }"</span> <span class="o">%</span> <span class="p">(</span><span class="n">vtype</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
-<a name="listingscode-writing-codewrite_propertiespy-34"></a>
-<a name="listingscode-writing-codewrite_propertiespy-35"></a><span class="nb">print</span><span class="p">()</span>
-<a name="listingscode-writing-codewrite_propertiespy-36"></a><span class="c1"># Public definitions (with notifications)</span>
-<a name="listingscode-writing-codewrite_propertiespy-37"></a><span class="k">for</span> <span class="n">has_jsonproperty</span><span class="p">,</span> <span class="n">vtype</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">properties_split</span><span class="p">:</span>
-<a name="listingscode-writing-codewrite_propertiespy-38"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">write</span><span class="p">(</span><span class="n">has_jsonproperty</span> <span class="o">==</span> <span class="s1">'1'</span><span class="p">,</span> <span class="n">vtype</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
-</pre></td>
-</tr></table>
-<!--End of body content--><nav id="footer-links"><div class="row">
+
+    <div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="#listingscode-writing-codewrite_propertiespy-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><a name="listingscode-writing-codewrite_propertiespy-1"></a><span class="ch">#!/usr/bin/env python3</span></code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="#listingscode-writing-codewrite_propertiespy-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><a name="listingscode-writing-codewrite_propertiespy-2"></a><span class="n">TEMPLATE</span> <span class="o">=</span> <span class="s2">"""</span><span class="se">\</span></code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="#listingscode-writing-codewrite_propertiespy-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><a name="listingscode-writing-codewrite_propertiespy-3"></a><span class="s2">        </span><span class="si">%s</span><span class="s2">public </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2"> {</span></code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="#listingscode-writing-codewrite_propertiespy-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><a name="listingscode-writing-codewrite_propertiespy-4"></a><span class="s2">            get {</span></code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="#listingscode-writing-codewrite_propertiespy-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code><a name="listingscode-writing-codewrite_propertiespy-5"></a><span class="s2">                return </span><span class="si">%s</span><span class="s2">_;</span></code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="#listingscode-writing-codewrite_propertiespy-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code><a name="listingscode-writing-codewrite_propertiespy-6"></a><span class="s2">            }</span></code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="#listingscode-writing-codewrite_propertiespy-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code><a name="listingscode-writing-codewrite_propertiespy-7"></a><span class="s2">            set {</span></code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="#listingscode-writing-codewrite_propertiespy-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code><a name="listingscode-writing-codewrite_propertiespy-8"></a><span class="s2">                if (value != </span><span class="si">%s</span><span class="s2">_) {</span></code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="#listingscode-writing-codewrite_propertiespy-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code><a name="listingscode-writing-codewrite_propertiespy-9"></a><span class="s2">                    </span><span class="si">%s</span><span class="s2">_ = value;</span></code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="#listingscode-writing-codewrite_propertiespy-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code><a name="listingscode-writing-codewrite_propertiespy-10"></a><span class="s2">                    NotifyPropertyChanged("</span><span class="si">%s</span><span class="s2">");</span></code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="#listingscode-writing-codewrite_propertiespy-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code><a name="listingscode-writing-codewrite_propertiespy-11"></a><span class="s2">                }</span></code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="#listingscode-writing-codewrite_propertiespy-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code><a name="listingscode-writing-codewrite_propertiespy-12"></a><span class="s2">            }</span></code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="#listingscode-writing-codewrite_propertiespy-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code><a name="listingscode-writing-codewrite_propertiespy-13"></a><span class="s2">        }</span></code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="#listingscode-writing-codewrite_propertiespy-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code><a name="listingscode-writing-codewrite_propertiespy-14"></a><span class="s2">"""</span></code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="#listingscode-writing-codewrite_propertiespy-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code><a name="listingscode-writing-codewrite_propertiespy-15"></a><span class="n">JSONPROPERTY_TEMPLATE</span> <span class="o">=</span> <span class="s1">'[JsonProperty]</span><span class="se">\n</span><span class="s1">        '</span></code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="#listingscode-writing-codewrite_propertiespy-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code><a name="listingscode-writing-codewrite_propertiespy-16"></a></code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="#listingscode-writing-codewrite_propertiespy-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code><a name="listingscode-writing-codewrite_propertiespy-17"></a><span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="n">has_jsonproperty</span><span class="p">,</span> <span class="n">vtype</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span></code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="#listingscode-writing-codewrite_propertiespy-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code><a name="listingscode-writing-codewrite_propertiespy-18"></a>    <span class="k">if</span> <span class="n">has_jsonproperty</span><span class="p">:</span></code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="#listingscode-writing-codewrite_propertiespy-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code><a name="listingscode-writing-codewrite_propertiespy-19"></a>        <span class="n">jsonproperty</span> <span class="o">=</span> <span class="n">JSONPROPERTY_TEMPLATE</span></code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="#listingscode-writing-codewrite_propertiespy-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code><a name="listingscode-writing-codewrite_propertiespy-20"></a>    <span class="k">else</span><span class="p">:</span></code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="#listingscode-writing-codewrite_propertiespy-21"><code data-line-number="21"></code></a></td>
+<td class="code"><code><a name="listingscode-writing-codewrite_propertiespy-21"></a>        <span class="n">jsonproperty</span> <span class="o">=</span> <span class="s1">''</span></code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="#listingscode-writing-codewrite_propertiespy-22"><code data-line-number="22"></code></a></td>
+<td class="code"><code><a name="listingscode-writing-codewrite_propertiespy-22"></a>    <span class="k">return</span> <span class="n">TEMPLATE</span> <span class="o">%</span> <span class="p">(</span><span class="n">jsonproperty</span><span class="p">,</span> <span class="n">vtype</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="#listingscode-writing-codewrite_propertiespy-23"><code data-line-number="23"></code></a></td>
+<td class="code"><code><a name="listingscode-writing-codewrite_propertiespy-23"></a></code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="#listingscode-writing-codewrite_propertiespy-24"><code data-line-number="24"></code></a></td>
+<td class="code"><code><a name="listingscode-writing-codewrite_propertiespy-24"></a><span class="n">properties</span> <span class="o">=</span> <span class="p">[</span></code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="#listingscode-writing-codewrite_propertiespy-25"><code data-line-number="25"></code></a></td>
+<td class="code"><code><a name="listingscode-writing-codewrite_propertiespy-25"></a>    <span class="s1">'1 string name'</span><span class="p">,</span></code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="#listingscode-writing-codewrite_propertiespy-26"><code data-line-number="26"></code></a></td>
+<td class="code"><code><a name="listingscode-writing-codewrite_propertiespy-26"></a>    <span class="s1">'0 int another'</span><span class="p">,</span></code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="#listingscode-writing-codewrite_propertiespy-27"><code data-line-number="27"></code></a></td>
+<td class="code"><code><a name="listingscode-writing-codewrite_propertiespy-27"></a>    <span class="c1"># 12 fields omitted for brevity</span></code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="#listingscode-writing-codewrite_propertiespy-28"><code data-line-number="28"></code></a></td>
+<td class="code"><code><a name="listingscode-writing-codewrite_propertiespy-28"></a><span class="p">]</span></code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="#listingscode-writing-codewrite_propertiespy-29"><code data-line-number="29"></code></a></td>
+<td class="code"><code><a name="listingscode-writing-codewrite_propertiespy-29"></a><span class="n">properties_split</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">split</span><span class="p">()</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">properties</span><span class="p">]</span></code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="#listingscode-writing-codewrite_propertiespy-30"><code data-line-number="30"></code></a></td>
+<td class="code"><code><a name="listingscode-writing-codewrite_propertiespy-30"></a></code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="#listingscode-writing-codewrite_propertiespy-31"><code data-line-number="31"></code></a></td>
+<td class="code"><code><a name="listingscode-writing-codewrite_propertiespy-31"></a><span class="c1"># Private definitions (internal)</span></code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="#listingscode-writing-codewrite_propertiespy-32"><code data-line-number="32"></code></a></td>
+<td class="code"><code><a name="listingscode-writing-codewrite_propertiespy-32"></a><span class="k">for</span> <span class="n">has_jsonproperty</span><span class="p">,</span> <span class="n">vtype</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">properties_split</span><span class="p">:</span></code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="#listingscode-writing-codewrite_propertiespy-33"><code data-line-number="33"></code></a></td>
+<td class="code"><code><a name="listingscode-writing-codewrite_propertiespy-33"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">"        private </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">_ { get; set; }"</span> <span class="o">%</span> <span class="p">(</span><span class="n">vtype</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span></code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="#listingscode-writing-codewrite_propertiespy-34"><code data-line-number="34"></code></a></td>
+<td class="code"><code><a name="listingscode-writing-codewrite_propertiespy-34"></a></code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="#listingscode-writing-codewrite_propertiespy-35"><code data-line-number="35"></code></a></td>
+<td class="code"><code><a name="listingscode-writing-codewrite_propertiespy-35"></a><span class="nb">print</span><span class="p">()</span></code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="#listingscode-writing-codewrite_propertiespy-36"><code data-line-number="36"></code></a></td>
+<td class="code"><code><a name="listingscode-writing-codewrite_propertiespy-36"></a><span class="c1"># Public definitions (with notifications)</span></code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="#listingscode-writing-codewrite_propertiespy-37"><code data-line-number="37"></code></a></td>
+<td class="code"><code><a name="listingscode-writing-codewrite_propertiespy-37"></a><span class="k">for</span> <span class="n">has_jsonproperty</span><span class="p">,</span> <span class="n">vtype</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">properties_split</span><span class="p">:</span></code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="#listingscode-writing-codewrite_propertiespy-38"><code data-line-number="38"></code></a></td>
+<td class="code"><code><a name="listingscode-writing-codewrite_propertiespy-38"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">write</span><span class="p">(</span><span class="n">has_jsonproperty</span> <span class="o">==</span> <span class="s1">'1'</span><span class="p">,</span> <span class="n">vtype</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span></code></td>
+</tr>
+</table></div>
+        <!--End of body content-->
+
+        <nav id="footer-links"><div class="row">
             <div class="col-sm-4">
                 <h6>Blog</h6>
                 <ul>
