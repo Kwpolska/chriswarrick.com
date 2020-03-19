@@ -268,6 +268,7 @@ Oto bajtkod z dopisanymi wartościami i komentarzami które tłumaczą, co się 
 Możemy teraz zapisać pełną odpowiedź.
 
 .. listing:: listings/gynvaels-mission-11-en/mission11.py python
+   :linenos:
 
 Ostatecznie, wyjście ``dis.dis()`` zgadza się z tekstem z misji (za wyjątkiem usuniętych wartości, ale ID się zgadzają), nasze zmienne ``co_*`` są zielone, i możemy rozwiązać prawdziwą zagadkę!
 
@@ -331,6 +332,7 @@ Jak to działa? Są trzy powody:
 Wziąłem kod ``check_password`` i umieściłem go w pliku ``mission11.py`` (wcześniej zacytowanym). Potem skompilowałem do ``.pyc`` i utworzyłem z niego ``.zip``.
 
 .. listing:: listings/gynvaels-mission-11-en/mission11.py python
+   :linenos:
 
 Ponieważ nie jestem ekspertem w żadnym z formatów, uruchomiłem maszynę wirtualną z Windowsem i na ślepo `przekopiowałem parametry użyte przez Gynvaela <http://gynvael.coldwind.pl/img/secapr16_3.png>`_ do otwarcia pliku ZIP (nazwanego ``.raw``) w IrfanView i zapisałem jako ``.bmp``. Zmieniłem rozmiar na 83×2, ponieważ mój ZIP miał 498 bajty (3 BPP * 83 px * 2 px = 498 bytes) — dzięki temu i odpowiedniemu rozmiarowi plików, mogłem nie dodawać komentarzy i edytowaniu ZIPa. Dostałem ten obrazek (znowu PNG; `pobierz mission11.bmp </pub/gynvaels-mission-11-en/mission11.bmp>`_):
 
@@ -340,6 +342,7 @@ Ponieważ nie jestem ekspertem w żadnym z formatów, uruchomiłem maszynę wirt
 Plik ``.bmp`` można uruchomić! Używamy tego kodu:
 
 .. listing:: listings/gynvaels-mission-11-en/ziprunner.py python
+   :linenos:
 
 I dostajemy to:
 

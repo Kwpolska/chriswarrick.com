@@ -187,6 +187,7 @@ uWSGI configuration
 Start with this, but read the notes below and change the values accordingly:
 
 .. code:: ini
+   :linenos:
 
    [uwsgi]
    socket = /srv/myapp/uwsgi.sock
@@ -278,6 +279,7 @@ Save this file as:
 * Arch Linux: add ``include /etc/nginx/conf.d/*.conf;`` to your ``http`` directive in ``/etc/nginx/nginx.conf`` and use ``/etc/nginx/conf.d/myapp.conf``
 
 .. code:: nginx
+   :linenos:
 
    server {
        # for a public HTTP server:

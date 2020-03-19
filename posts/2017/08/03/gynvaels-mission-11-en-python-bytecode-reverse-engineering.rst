@@ -267,6 +267,7 @@ Here’s the bytecode with value annotations and comments, which explain what ha
 We can now write the full answer.
 
 .. listing:: listings/gynvaels-mission-11-en/mission11.py python
+   :linenos:
 
 In the end, our ``dis.dis()`` output matches the mission text (except the removed values, but their IDs do match), our ``co_*`` variables are all green, and we can get to work on solving the puzzle itself!
 
@@ -328,6 +329,7 @@ How was this done? There are three things that come into play:
 I took the code of ``check_password`` and put it in ``mission11.py`` (which I already cited above). Then I compiled to ``.pyc`` and created a ``.zip`` out of it.
 
 .. listing:: listings/gynvaels-mission-11-en/mission11.py python
+   :linenos:
 
 Since I’m not an expert in any of the formats, I booted my Windows virtual machine and blindly copied the `parameters used by Gynvael <http://gynvael.coldwind.pl/img/secapr16_3.png>`_ to open the ZIP file (renamed ``.raw``) in IrfanView and saved as ``.bmp``. I changed the size to 83×2, because my ZIP file was 498 bytes long (3 BPP * 83 px * 2 px = 498 bytes) — by doing that, and through sheer luck with the size, I could avoid adding comments and editing the ZIP archive. I ended up with this (PNG again; `download mission11.bmp </pub/gynvaels-mission-11-en/mission11.bmp>`_):
 
@@ -337,6 +339,7 @@ Since I’m not an expert in any of the formats, I booted my Windows virtual mac
 The ``.bmp`` file is runnable! We can use this code:
 
 .. listing:: listings/gynvaels-mission-11-en/ziprunner.py python
+   :linenos:
 
 And we get this:
 

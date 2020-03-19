@@ -94,6 +94,7 @@ to run:
 
 .. listing:: entry_points_project/my_project/__main__.py python
    :start-line: 3
+   :linenos:
 
 1. The ``if __name__ == "__main__":`` idiom, as `documented here <https://docs.python.org/3/library/__main__.html>`_, is used to check whether
    this is executed as the top-level file, or if it has been imported by someone
@@ -108,6 +109,7 @@ This is the real deal: create the entry points in your ``setup.py`` file.
 
 .. listing:: entry_points_project/setup.py python
    :start-line: 2
+   :linenos:
 
 1. You must use setuptools, otherwise this won’t work.
 2. The most important piece of code is the ``entry_points`` declaration

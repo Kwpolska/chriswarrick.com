@@ -26,6 +26,7 @@ order to use it, you need to use the ``INotifyPropertyChanged`` interface `(MSDN
 It involves doing something like this:
 
 .. code:: csharp
+   :linenos:
 
     private string name_ { get; set; }; // can also be a field
 
@@ -57,6 +58,7 @@ really simple `Python`_ script and ran it. And I ended up with all 14 fields bui
 for me.
 
 .. listing:: code-writing-code/write_properties.py python
+   :linenos:
 
 That script takes a list of properties and spits out a block of code, ready to
 be pasted into the code. Visual Studio has a nice *Insert File as Text*

@@ -101,6 +101,7 @@ in one global place, all you need is a short function in your shell
 configuration file:
 
 .. code:: bash
+   :linenos:
 
     export WORKON_HOME=~/virtualenvs
 
