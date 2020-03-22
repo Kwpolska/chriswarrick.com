@@ -416,6 +416,7 @@ STRIP_INDEXES = True
 # e.g. /2012 includes only /01, /02, /03, /04, ...: don't add it to the sitemap
 # if /2012 includes any files (including index.html)... add it to the sitemap
 SITEMAP_INCLUDE_FILELESS_DIRS = True
+ROBOTS_EXCLUSIONS = ["/err/*", "/pl/err/*"]
 
 # Instead of putting files in <slug>.html, put them in
 # <slug>/index.html. Also enables STRIP_INDEXES
