@@ -10,13 +10,13 @@
 .. guide_platform: Ubuntu, Debian, Fedora, CentOS, Arch Linux
 .. guide_topic: Python, web apps
 .. shortlink: pyweb
-.. updated: 2020-02-18 23:30:00+01:00
+.. updated: 2020-04-24 15:00:00+02:00
 
 You’ve just written a great Python web application. Now, you want to share it with the world. In order to do that, you need a server, and some software to do that for you.
 
 The following is a comprehensive guide on how to accomplish that, on multiple Linux-based operating systems, using nginx and uWSGI Emperor. It doesn’t force you to use any specific web framework — Flask, Django, Pyramid, Bottle will all work. Written for Ubuntu, Debian, Fedora, CentOS 7 and Arch Linux (should be helpful for other systems, too). Now with an Ansible Playbook.
 
-*Revision 7a (2020-02-03): Move virtual environment to separate venv folder to improve Python upgrades (venvs should be ephemeral); add Docker section*
+*Revision 7b (2020-04-24): works with Ubuntu 20.04; previous Revision 7a (2020-02-03): Move virtual environment to separate venv folder to improve Python upgrades (venvs should be ephemeral); add Docker section*
 
 .. TEASER_END
 
@@ -39,13 +39,13 @@ In order to deploy your web application, you need a server that gives you root a
 
 Your server should also run a modern Linux-based operating system. This guide was written and tested on:
 
-* Ubuntu 16.04 LTS, 18.04 LTS or newer
+* Ubuntu 16.04 LTS, 18.04 LTS, 20.04 LTS or newer
 * Debian 9 (stretch), 10 (buster) or newer
 * Fedora 29 or newer (with SELinux enabled and disabled)
 * CentOS 7 (with SELinux enabled and disabled) — manual guide should also work on RHEL 7. CentOS 8 does not have uWSGI packages in EPEL as of January 2020, but they should become available soon.
 * Arch Linux
 
-Debian 8 (jessie), and Fedora 24 through 28 are not officially supported, even though they still probably work.  Ubuntu 20.04 LTS will also work when the final release goes out.
+Debian 8 (jessie), and Fedora 24 through 28 are not officially supported, even though they still probably work.
 
 What if you’re using **Docker**? The story is a bit complicated, and this guide does not apply, but do check the `Can I use Docker?`_ at the end of this post for some hints on how to approach it.
 
