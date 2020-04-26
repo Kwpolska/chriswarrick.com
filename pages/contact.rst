@@ -13,8 +13,10 @@ I am a Pythonista.  You can find some of my projects at `GitHub
 Contact me:
 ===========
 
-**READ ME FIRST:** I am not available for hire.  This blog does not accept any forms
-of advertising, guest posts, “collaboration”, or other similar nonsense.
+.. raw:: html
+
+    <p style="font-size: 2em"><strong>READ ME FIRST:</strong> Do not send me job
+    offers, sponsorship/advertising offers, guest posts, “collaboration”, or other similar nonsense.</p>
 
 * **via e-mail** — chris \[at\] chriswarrick.com
 * **on IRC** — ChrisWarrick on freenode

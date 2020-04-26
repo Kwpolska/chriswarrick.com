@@ -12,9 +12,11 @@ Jestem Pythonistą.  Możesz znaleźć niektóre z moich projektów na `GitHubie
 Skontaktuj się ze mną:
 ======================
 
-**NAJPIERW PRZECZYTAJ:** nie przyjmuję ofert pracy.  Nie umieszczam na tym blogu reklam,
-postów gościnnych, ani nie biorę udziału w „kolaboracjach” czy innych
-nonsensach.
+.. raw:: html
+
+    <p style="font-size: 2em"><strong>NAJPIERW PRZECZYTAJ:</strong> Nie wysyłaj
+    ofert pracy, ofert sponsorowania/reklam, postów gościnnych, zaproszeń do
+    udziału w „kolaboracjach” ani innych bezesnsownych rzeczy.</P>
 
 * **pocztą e-mail** — chris \[at\] chriswarrick.com
 * **na IRC-u** — ChrisWarrick w sieci freenode
