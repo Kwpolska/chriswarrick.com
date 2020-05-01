@@ -10,13 +10,13 @@
 .. guide_platform: Ubuntu, Debian, Fedora, CentOS, Arch Linux
 .. guide_topic: Python, web apps
 .. shortlink: pyweb
-.. updated: 2020-04-24 15:00:00+02:00
+.. updated: 2020-05-01 22:45:00+02:00
 
 You’ve just written a great Python web application. Now, you want to share it with the world. In order to do that, you need a server, and some software to do that for you.
 
 The following is a comprehensive guide on how to accomplish that, on multiple Linux-based operating systems, using nginx and uWSGI Emperor. It doesn’t force you to use any specific web framework — Flask, Django, Pyramid, Bottle will all work. Written for Ubuntu, Debian, Fedora, CentOS 7 and Arch Linux (should be helpful for other systems, too). Now with an Ansible Playbook.
 
-*Revision 7b (2020-04-24): works with Ubuntu 20.04; previous Revision 7a (2020-02-03): Move virtual environment to separate venv folder to improve Python upgrades (venvs should be ephemeral); add Docker section*
+*Revision 7c (2020-05-01): works with Ubuntu 20.04 and Fedora 32; previous Revision 7a (2020-02-03): Move virtual environment to separate venv folder to improve Python upgrades (venvs should be ephemeral); add Docker section*
 
 .. TEASER_END
 
@@ -33,7 +33,7 @@ For easy linking, I set up some aliases: https://go.chriswarrick.com/pyweb and h
 Prerequisites
 ~~~~~~~~~~~~~
 
-In order to deploy your web application, you need a server that gives you root and ssh access — in other words, a VPS (or a dedicated server, or a datacenter lease…). If you’re looking for a great VPS service for a low price, I recommend `Hetzner Cloud`_, which offers a pretty good entry-level VPS for €2.49 + VAT / month (with higher plans available for equally good prices). If you want to play along at home, without buying a VPS, you can create a virtual machine on your own, or use Vagrant with a Vagrant box for Fedora 31 (``fedora/31-cloud-base``).
+In order to deploy your web application, you need a server that gives you root and ssh access — in other words, a VPS (or a dedicated server, or a datacenter lease…). If you’re looking for a great VPS service for a low price, I recommend `Hetzner Cloud`_, which offers a pretty good entry-level VPS for €2.49 + VAT / month (with higher plans available for equally good prices). If you want to play along at home, without buying a VPS, you can create a virtual machine on your own, or use Vagrant with a Vagrant box for Fedora 32 (``fedora/32-cloud-base``).
 
 .. _Hetzner Cloud: https://www.hetzner.com/cloud
 
@@ -41,9 +41,17 @@ Your server should also run a modern Linux-based operating system. This guide wa
 
 * Ubuntu 16.04 LTS, 18.04 LTS, 20.04 LTS or newer
 * Debian 9 (stretch), 10 (buster) or newer
-* Fedora 29 or newer (with SELinux enabled and disabled)
-* CentOS 7 (with SELinux enabled and disabled) — manual guide should also work on RHEL 7. CentOS 8 does not have uWSGI packages in EPEL as of January 2020, but they should become available soon.
+* Fedora 29-32 or newer (with SELinux enabled and disabled)
+* CentOS 7 (with SELinux enabled and disabled) — manual guide should also work on RHEL 7. CentOS 8 does not have uWSGI packages in EPEL as of May 2020, but they should become available soon.
 * Arch Linux
+
+.. admonition:: Fedora and CentOS status (as of 2020-05-01)
+
+   On Fedora and CentOS, the uWSGI packages are temporarily buggy and the setup
+   won’t work after a reboot (and in some cases, won’t work at all). A fix from
+   Fedora is upcoming, but you can implement the fix on your system by running:
+
+   ``echo 'd /run/uwsgi 0755 uwsgi uwsgi' > /etc/tmpfiles.d/uwsgi.conf``
 
 Debian 8 (jessie), and Fedora 24 through 28 are not officially supported, even though they still probably work.
 
@@ -351,8 +359,8 @@ If you want to use SELinux, you need to do the following to allow nginx to read 
    chcon -R system_u:system_r:httpd_t:s0 /srv/myapp/appdata/static
    setenforce 1
 
-We now need to install a `SELinux policy`_ (that I created for this project) to allow nginx and uWSGI to communicate.
-Download it and run:
+We now need to install a `SELinux policy`_ (that I created for this project; updated 2020-05-01) to allow nginx and uWSGI to communicate.
+Download `nginx-uwsgi.pp`_ and run:
 
 .. code:: sh
 
@@ -361,6 +369,7 @@ Download it and run:
 Hopefully, this is enough (you can delete the file). In case it isn’t, please read SELinux documentation, check audit logs, and look into ``audit2allow``.
 
 .. _SELinux policy: https://chriswarrick.com/pub/nginx-uwsgi.pp
+.. _nginx-uwsgi.pp: https://chriswarrick.com/pub/nginx-uwsgi.pp
 
 For Ubuntu and Debian
 ---------------------

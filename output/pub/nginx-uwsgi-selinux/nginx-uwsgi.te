@@ -1,0 +1,18 @@
+
+module nginx-uwsgi 2.0;
+
+require {
+	type unconfined_service_t;
+	type var_t;
+	type httpd_t;
+	class sock_file write;
+	class unix_stream_socket connectto;
+}
+
+#============= httpd_t ==============
+
+#!!!! This avc is allowed in the current policy
+allow httpd_t unconfined_service_t:unix_stream_socket connectto;
+
+#!!!! This avc is allowed in the current policy
+allow httpd_t var_t:sock_file write;
