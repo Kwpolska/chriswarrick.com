@@ -10,7 +10,7 @@
 .. guide_platform: Ubuntu, Debian, Fedora, CentOS, Arch Linux
 .. guide_topic: Python, web apps
 .. shortlink: pyweb
-.. updated: 2020-05-01 22:45:00+02:00
+.. updated: 2020-05-02 12:30:00+02:00
 
 You’ve just written a great Python web application. Now, you want to share it with the world. In order to do that, you need a server, and some software to do that for you.
 
@@ -359,7 +359,7 @@ If you want to use SELinux, you need to do the following to allow nginx to read 
    chcon -R system_u:system_r:httpd_t:s0 /srv/myapp/appdata/static
    setenforce 1
 
-We now need to install a `SELinux policy`_ (that I created for this project; updated 2020-05-01) to allow nginx and uWSGI to communicate.
+We now need to install a `SELinux policy`_ (that I created for this project; updated 2020-05-02) to allow nginx and uWSGI to communicate.
 Download `nginx-uwsgi.pp`_ and run:
 
 .. code:: sh
