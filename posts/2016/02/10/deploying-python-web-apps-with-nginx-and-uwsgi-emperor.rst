@@ -10,7 +10,7 @@
 .. guide_platform: Ubuntu, Debian, Fedora, CentOS, Arch Linux
 .. guide_topic: Python, web apps
 .. shortlink: pyweb
-.. updated: 2020-05-02 12:30:00+02:00
+.. updated: 2020-05-14 14:00:00+02:00
 
 You’ve just written a great Python web application. Now, you want to share it with the world. In order to do that, you need a server, and some software to do that for you.
 
@@ -44,14 +44,6 @@ Your server should also run a modern Linux-based operating system. This guide wa
 * Fedora 29-32 or newer (with SELinux enabled and disabled)
 * CentOS 7 (with SELinux enabled and disabled) — manual guide should also work on RHEL 7. CentOS 8 does not have uWSGI packages in EPEL as of May 2020, but they should become available soon.
 * Arch Linux
-
-.. admonition:: Fedora and CentOS status (as of 2020-05-01)
-
-   On Fedora and CentOS, the uWSGI packages are temporarily buggy and the setup
-   won’t work after a reboot (and in some cases, won’t work at all). A fix from
-   Fedora is upcoming, but you can implement the fix on your system by running:
-
-   ``echo 'd /run/uwsgi 0755 uwsgi uwsgi' > /etc/tmpfiles.d/uwsgi.conf``
 
 Debian 8 (jessie), and Fedora 24 through 28 are not officially supported, even though they still probably work.
 
@@ -97,7 +89,7 @@ Even if you are using the Playbook, you should still read this to find out what 
 Getting started
 ===============
 
-Start by installing Python 3 (with venv), nginx and uWSGI. I recommend using your operating system packages. For uWSGI, we need the ``logfile`` and ``python3`` plugins. (Arch Linux names the ``python3`` plugin ``python``; the ``logfile`` plugin may be built-in — check with your system repositories!). I’ll also install Git to clone the tutorial app, but it’s optional if your workflow does not involve git.
+Start by installing Python 3 (with venv), nginx and uWSGI. I recommend using your operating system’s packages. Make sure you are downloading the latest versions available for your OS (update the package cache first). For uWSGI, we need the ``logfile`` and ``python3`` plugins. (Arch Linux names the ``python3`` plugin ``python``; the ``logfile`` plugin may be built-in — check with your system repositories!). I’ll also install Git to clone the tutorial app, but it’s optional if your workflow does not involve Git.
 
 **Ubuntu, Debian:**
 

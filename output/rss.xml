@@ -1,5 +1,228 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chris Warrick (Blog)</title><link>https://chriswarrick.com/</link><description>A rarely updated blog, mostly about programming.</description><atom:link href="https://chriswarrick.com/rss.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Sat, 02 May 2020 10:30:32 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>When HTML is not enough: a tale of the &lt;datalist&gt; element</title><link>https://chriswarrick.com/blog/2020/02/09/when-html-is-not-enough-a-tale-of-the-datalist-element/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;HTML 5.0 was finalized in 2014 (and its drafts were published even earlier), and with it came the &lt;code class="docutils literal"&gt;&amp;lt;datalist&amp;gt;&lt;/code&gt; element.  It’s
+<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chris Warrick (Blog)</title><link>https://chriswarrick.com/</link><description>A rarely updated blog, mostly about programming.</description><atom:link href="https://chriswarrick.com/rss.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Wed, 03 Jun 2020 21:00:20 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Reinstalling macOS: What To Try When All Else Fails</title><link>https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;Recently, I reinstalled macOS on my device. Throughout the process, many
+attempts failed miserably. But I now have some experience and assorted hints on
+what to try.&lt;/p&gt;
+&lt;!-- TEASER_END --&gt;
+&lt;p&gt;&lt;strong&gt;DISCLAIMER:&lt;/strong&gt; All information in this post is provided as-is, and some of it may
+void your warranty. Neither Chris Warrick nor Apple will be responsible for any
+damage to your devices caused as a result of using information in this post.&lt;/p&gt;
+&lt;div class="contents alert alert-primary topic" id="contents"&gt;
+&lt;p class="topic-title"&gt;Contents&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#making-install-media-with-el-capitan-with-access-only-to-recovery" id="id1"&gt;Making install media with El Capitan (with access only to Recovery)&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#manually-installing-pkg-files" id="id2"&gt;Manually installing .pkg files&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#making-install-media-out-of-partial-macos-installers-not-a-valid-os-installer-application" id="id3"&gt;Making install media out of partial macOS installers (“not a valid OS installer application”)&lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#a-from-the-el-capitan-download" id="id4"&gt;a. From the El Capitan download&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#b-installer-from-recovery-app-store-any-macos-version" id="id5"&gt;b. Installer from Recovery/App Store (any macOS version)&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#el-capitan-installer-cant-be-verified" id="id6"&gt;El Capitan installer can’t be verified&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#bonus-tidbit-1-how-the-download-works" id="id7"&gt;Bonus tidbit 1: how the download works&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#bonus-tidbit-2-using-terminal-from-setup-assistant" id="id8"&gt;Bonus tidbit 2: using Terminal from Setup Assistant&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#in-the-end" id="id9"&gt;In the end…&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class="section" id="making-install-media-with-el-capitan-with-access-only-to-recovery"&gt;
+&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#id1"&gt;Making install media with El Capitan (with access only to Recovery)&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;The best, safest, least error-prone way to do an install is with a USB stick.
+Unfortunately, making a USB stick with the macOS installer on it is a nuisance.
+The expected way to produce macOS install media is to download the installer
+from App Store/Software Update, and run the &lt;code class="docutils literal"&gt;createinstallmedia&lt;/code&gt; command-line
+program included with that installer app. All is well, as long as macOS works.
+If it doesn’t, and Recovery can’t install it for you, that can be difficult to
+solve.&lt;/p&gt;
+&lt;p&gt;Apple does not make macOS images publicly available. That’s probably to make
+Hackintoshing this little bit harder, but this also affects legitimate users.
+The only thing you can download from Apple is El Capitan. Apple offers
+&lt;a class="reference external" href="https://support.apple.com/en-us/HT206886"&gt;InstallMacOSX.dmg&lt;/a&gt; on their
+website. If you take a look at the instructions, you will see that this is
+&lt;em&gt;not&lt;/em&gt; a bootable OS X image. This image has a &lt;code class="docutils literal"&gt;.pkg&lt;/code&gt; package. This package is
+expected to install &lt;code class="docutils literal"&gt;/Applications/Install OS X El Capitan.app&lt;/code&gt;. Well, we’re
+in recovery, we can’t install stuff. So, let’s do this the manual way.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="manually-installing-pkg-files"&gt;
+&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#id2"&gt;Manually installing .pkg files&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;Turns out the &lt;code class="docutils literal"&gt;.pkg&lt;/code&gt; format is just an archives all the way down, with all
+archives being different formats (at least three).&lt;/p&gt;
+&lt;div class="float-md-right mt-md-0 sidebar"&gt;
+&lt;p class="sidebar-title"&gt;macOS flat package format&lt;/p&gt;
+&lt;p&gt;You can find more resources about the flat package format, &lt;a class="reference external" href="http://s.sudre.free.fr/Stuff/Ivanhoe/FLAT.html"&gt;one&lt;/a&gt; or &lt;a class="reference external" href="https://matthew-brett.github.io/docosx/flat_packages.html#payload_"&gt;two&lt;/a&gt;, although
+this was deduted from the &lt;code class="docutils literal"&gt;file&lt;/code&gt; command and The Unarchiver.&lt;/p&gt;
+&lt;/div&gt;
+&lt;p&gt;The first archive is the &lt;code class="docutils literal"&gt;.pkg&lt;/code&gt; file itself. Those files are in &lt;a class="reference external" href="https://en.wikipedia.org/wiki/Xar_(archiver)"&gt;XAR format&lt;/a&gt;, which was invented by the
+OpenDarwin community. You can either extract it with &lt;code class="docutils literal"&gt;pkgutil &lt;span class="pre"&gt;--expand&lt;/span&gt;
+foo.pkg foo_files&lt;/code&gt; (the last argument is the destination directory, can be
+anything, will be created by &lt;code class="docutils literal"&gt;pkgutil&lt;/code&gt;) if you have access to that command (it’s
+available in Recovery OS), or you can try the &lt;code class="docutils literal"&gt;xar&lt;/code&gt; utility as &lt;code class="docutils literal"&gt;xar &lt;span class="pre"&gt;-xf&lt;/span&gt;
+foo.pkg&lt;/code&gt;. The structure produced by both tools is a bit different, but we can
+work with both.&lt;/p&gt;
+&lt;p&gt;The second archive-in-archive is the &lt;code class="docutils literal"&gt;Payload&lt;/code&gt;. It’s a gzipped cpio archive
+that contains the files installed by this package.  If you have BSD tar
+(default on macOS, easily installable on Linux), you can just do &lt;code class="docutils literal"&gt;tar &lt;span class="pre"&gt;-xvf&lt;/span&gt; Payload&lt;/code&gt;.
+Otherwise, you can use &lt;code class="docutils literal"&gt;gunzip &lt;span class="pre"&gt;-c&lt;/span&gt; Payload | cpio &lt;span class="pre"&gt;-i&lt;/span&gt;&lt;/code&gt; (or &lt;code class="docutils literal"&gt;gzcat&lt;/code&gt;). That
+will extract all the files the package has.&lt;/p&gt;
+&lt;p&gt;Another nested archive is the &lt;code class="docutils literal"&gt;Scripts&lt;/code&gt; archive, although note that
+&lt;code class="docutils literal"&gt;pkgutil&lt;/code&gt; will extract it automatically. If it’s not extracted, it’s actually
+&lt;code class="docutils literal"&gt;.cpio.gz&lt;/code&gt; again, with the same way to extract it.&lt;/p&gt;
+&lt;p&gt;(PS.  If you have &lt;code class="docutils literal"&gt;7z&lt;/code&gt; around (on Windows/Linux as well), you can just point
+it at all the compressed files mentioned in this paragraph.)&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="making-install-media-out-of-partial-macos-installers-not-a-valid-os-installer-application"&gt;
+&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#id3"&gt;Making install media out of partial macOS installers (“not a valid OS installer application”)&lt;/a&gt;&lt;/h2&gt;
+&lt;div class="section" id="a-from-the-el-capitan-download"&gt;
+&lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#id4"&gt;a. From the El Capitan download&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;Let’s expand the El Capitan package.&lt;/p&gt;
+&lt;pre class="code console"&gt;&lt;a name="rest_code_712b90bb37e7469e9640fa7b4bb4c726-1"&gt;&lt;/a&gt;&lt;span class="gp"&gt;$&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;mount the DMG in Disk Utility, copy the .pkg to a read-write volume&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_712b90bb37e7469e9640fa7b4bb4c726-2"&gt;&lt;/a&gt;&lt;span class="gp"&gt;$&lt;/span&gt; pkgutil --expand InstallMacOSX.pkg elcapitan
+&lt;a name="rest_code_712b90bb37e7469e9640fa7b4bb4c726-3"&gt;&lt;/a&gt;&lt;span class="gp"&gt;$&lt;/span&gt; ls -F elcapitan
+&lt;a name="rest_code_712b90bb37e7469e9640fa7b4bb4c726-4"&gt;&lt;/a&gt;&lt;span class="go"&gt;Distribution*       InstallMacOSX.pkg/ Resources/&lt;/span&gt;
+&lt;a name="rest_code_712b90bb37e7469e9640fa7b4bb4c726-5"&gt;&lt;/a&gt;&lt;span class="gp"&gt;$&lt;/span&gt; &lt;span class="nb"&gt;cd&lt;/span&gt; elcapitan/InstallMacOSX.pkg/
+&lt;a name="rest_code_712b90bb37e7469e9640fa7b4bb4c726-6"&gt;&lt;/a&gt;&lt;span class="gp"&gt;$&lt;/span&gt; tar -xvf Payload
+&lt;a name="rest_code_712b90bb37e7469e9640fa7b4bb4c726-7"&gt;&lt;/a&gt;&lt;span class="go"&gt;x .&lt;/span&gt;
+&lt;a name="rest_code_712b90bb37e7469e9640fa7b4bb4c726-8"&gt;&lt;/a&gt;&lt;span class="go"&gt;x ./Install OS X El Capitan.app&lt;/span&gt;
+&lt;a name="rest_code_712b90bb37e7469e9640fa7b4bb4c726-9"&gt;&lt;/a&gt;&lt;span class="go"&gt;x ./Install OS X El Capitan.app/Contents&lt;/span&gt;
+&lt;a name="rest_code_712b90bb37e7469e9640fa7b4bb4c726-10"&gt;&lt;/a&gt;&lt;span class="go"&gt;…&lt;/span&gt;
+&lt;/pre&gt;&lt;p&gt;We’ve got the installer app, which is what we need to create an install image.
+Great, let’s try it!&lt;/p&gt;
+&lt;pre class="code console"&gt;&lt;a name="rest_code_bd46ba9b04ee495b83681b94cd0d6123-1"&gt;&lt;/a&gt;&lt;span class="gp"&gt;#&lt;/span&gt; &lt;span class="s2"&gt;"Install OS X El Capitan.app/Contents/Resources/createinstallmedia"&lt;/span&gt; --volume /Volumes/MyBlankUSBDrive --applicationpath &lt;span class="s2"&gt;"Install OS X El Capitan.app"&lt;/span&gt;
+&lt;a name="rest_code_bd46ba9b04ee495b83681b94cd0d6123-2"&gt;&lt;/a&gt;&lt;span class="go"&gt;Install OS X El Capitan.app does not appear to be a valid OS installer application.&lt;/span&gt;
+&lt;/pre&gt;&lt;p&gt;Oh, we’ve got a problem. Turns out there’s one more thing we need to take care
+of, and it’s the scripts. MacOS packages have scripts, typically shell scripts,
+that are run at various stages in the install process. We can look at the
+&lt;code class="docutils literal"&gt;PackageInfo&lt;/code&gt; file, or just look in the &lt;code class="docutils literal"&gt;Scripts&lt;/code&gt; folder, to see that
+there’s an &lt;code class="docutils literal"&gt;link_package&lt;/code&gt; script we need to run. This script creates a
+&lt;code class="docutils literal"&gt;Contents/SharedSupport&lt;/code&gt; directory inside the installer app, and
+copies/hardlinks the &lt;code class="docutils literal"&gt;InstallESD.dmg&lt;/code&gt; file (which is the install formerly-DVD
+image) to that directory. Let’s try doing this on our own:&lt;/p&gt;
+&lt;pre class="code console"&gt;&lt;a name="rest_code_048fe857dd8c496c8ef2068f70eccd66-1"&gt;&lt;/a&gt;&lt;span class="gp"&gt;$&lt;/span&gt; mkdir &lt;span class="s2"&gt;"Install OS X El Capitan.app/Contents/SharedSupport"&lt;/span&gt;
+&lt;a name="rest_code_048fe857dd8c496c8ef2068f70eccd66-2"&gt;&lt;/a&gt;&lt;span class="gp"&gt;$&lt;/span&gt; mv InstallESD.dmg &lt;span class="s2"&gt;"Install OS X El Capitan.app/Contents/SharedSupport"&lt;/span&gt;
+&lt;a name="rest_code_048fe857dd8c496c8ef2068f70eccd66-3"&gt;&lt;/a&gt;&lt;span class="gp"&gt;#&lt;/span&gt; &lt;span class="s2"&gt;"Install OS X El Capitan.app/Contents/Resources/createinstallmedia"&lt;/span&gt; --volume /Volumes/MyBlankUSBDrive --applicationpath &lt;span class="s2"&gt;"Install OS X El Capitan.app"&lt;/span&gt;
+&lt;a name="rest_code_048fe857dd8c496c8ef2068f70eccd66-4"&gt;&lt;/a&gt;&lt;span class="go"&gt;Ready to start.&lt;/span&gt;
+&lt;a name="rest_code_048fe857dd8c496c8ef2068f70eccd66-5"&gt;&lt;/a&gt;&lt;span class="go"&gt;To continue we need to erase the disk at /Volumes/MyBlankUSBDrive.&lt;/span&gt;
+&lt;a name="rest_code_048fe857dd8c496c8ef2068f70eccd66-6"&gt;&lt;/a&gt;&lt;span class="go"&gt;If you wish to continue type (Y) then press return:&lt;/span&gt;
+&lt;/pre&gt;&lt;p&gt;And it works! &lt;code class="docutils literal"&gt;createinstallmedia&lt;/code&gt; will now produce valid install media.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="b-installer-from-recovery-app-store-any-macos-version"&gt;
+&lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#id5"&gt;b. Installer from Recovery/App Store (any macOS version)&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;If you are in Recovery, you can find an Install app on the filesystem. If you
+try to run it, you will get the same error as in the previous paragraph:&lt;/p&gt;
+&lt;pre class="code text"&gt;&lt;a name="rest_code_c6e9db6dca9d4a149e52312092999a71-1"&gt;&lt;/a&gt;Install macOS Catalina.app does not appear to be a valid OS installer application.
+&lt;/pre&gt;&lt;p&gt;This also happens with some older macOS versions, where you get a small
+&lt;code class="docutils literal"&gt;.app&lt;/code&gt; from the App Store, and that app does the actual download.&lt;/p&gt;
+&lt;p&gt;Whatever the issue was, we need to download the install files with the
+installer. Open the installer and let it run until the download finishes. If
+the app asks you to reboot, quit it at this point. If it never asks, you can
+still find a way to get files out (after a failed install, they should not be
+removed).&lt;/p&gt;
+&lt;p&gt;The install files can be found in &lt;code class="docutils literal"&gt;/macOS Install Data&lt;/code&gt; on the destination
+volume. For older versions, you will just have &lt;code class="docutils literal"&gt;InstallESD.dmg&lt;/code&gt;, newer
+versions add more and more files, some of which are hardware-specific (and
+Catalina has &lt;code class="docutils literal"&gt;InstallESDDmg.pkg&lt;/code&gt;, because Apple loves nesting archives for no
+reason!). However many files you find, you can just:&lt;/p&gt;
+&lt;ol class="arabic simple"&gt;
+&lt;li&gt;&lt;p&gt;Copy &lt;code class="docutils literal"&gt;Install macOS Catalina.app&lt;/code&gt; to a read-write volume.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Copy the contents of &lt;code class="docutils literal"&gt;/Volumes/TARGET/macOS Install Data&lt;/code&gt; to &lt;code class="docutils literal"&gt;Install
+macOS Catalina.app/Content/SharedSupport&lt;/code&gt;. Make sure you account for hidden
+files, if any (copy the entire directory). If you did this correctly,
+&lt;code class="docutils literal"&gt;InstallESDDmg.pkg&lt;/code&gt; (or &lt;code class="docutils literal"&gt;InstallESD.dmg&lt;/code&gt; on older verisons) is in the &lt;code class="docutils literal"&gt;SharedSupport&lt;/code&gt;
+directory (not in a subdirectory).&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Run &lt;code class="docutils literal"&gt;createinstallmedia&lt;/code&gt;. It should now consider the installer valid. The
+available options differ slightly depending on the OS version.&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="el-capitan-installer-cant-be-verified"&gt;
+&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#id6"&gt;El Capitan installer can’t be verified&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;If you get this error, it might be because Apple’s signing keys expired, or
+because of other date/time weirdness. Regardless, you can force an install if
+you are sure the installer is not damaged with this command &lt;a class="reference external" href="https://apple.stackexchange.com/questions/216730/this-copy-of-the-install-os-x-el-capitan-application-cant-be-verified-it-may-h"&gt;(source)&lt;/a&gt;:&lt;/p&gt;
+&lt;pre class="code console"&gt;&lt;a name="rest_code_f93cabea6288435586b7b3f9c2f9845e-1"&gt;&lt;/a&gt;&lt;span class="gp"&gt;#&lt;/span&gt; installer -pkg  /Volumes/Mac&lt;span class="se"&gt;\ &lt;/span&gt;OS&lt;span class="se"&gt;\ &lt;/span&gt;X&lt;span class="se"&gt;\ &lt;/span&gt;Install&lt;span class="se"&gt;\ &lt;/span&gt;DVD/Packages/OSInstall.mpkg -target /Volumes/&lt;span class="s2"&gt;"XXX"&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;div class="section" id="bonus-tidbit-1-how-the-download-works"&gt;
+&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#id7"&gt;Bonus tidbit 1: how the download works&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;While messing with all the installer stuff, I found out a few
+interesting/worrying things about the download process.&lt;/p&gt;
+&lt;p&gt;The first one is that the macOS installer uses plain HTTP without encryption to
+download files. That opens you to all the standard issues — an attacker can
+replace files you download, and the protocol doesn’t do anything to detect
+errors (the installer will verify files, but where do the checksums come
+from?).&lt;/p&gt;
+&lt;p&gt;The second one is how the download happens. You might have noticed it to be a
+bit slower than usual traffic. The download happens in 10 MB chunks, using the
+&lt;code class="docutils literal"&gt;Range&lt;/code&gt; HTTP header. The installer asks for 10 MB, gets it, saves, asks for
+another chunk. Repeat that over 800 times, and the overhead of the entire HTTP
+dance becomes noticeable. (I haven’t checked, but I hope the installer at least
+uses Keep-Alive. I wouldn’t be particularly surprised if it didn’t, though.)&lt;/p&gt;
+&lt;p&gt;But this raises another question. The servers clearly support partial downloads.
+And yet, if your network disconnects during the download, your download
+progress for that file is reset, and in Catalina, you can go from 8 GB back to
+500 MB if you’re particularly unlucky. The question is, why? This
+infrastructure should make it trivial to continue the download, perhaps
+discarding the most recent chunk if you’re concerned about that download of it
+being unsuccessful.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="bonus-tidbit-2-using-terminal-from-setup-assistant"&gt;
+&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#id8"&gt;Bonus tidbit 2: using Terminal from Setup Assistant&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;The first time you boot a Mac after a clean install, it starts the Setup
+Assistant. This app asks for basic OS settings (locale, date/time, user
+accounts), and also lets you restore user data from backups.&lt;/p&gt;
+&lt;p&gt;Sometimes, you might want to access the Terminal or Console from that screen.
+You can do that with Ctrl + Opt + Cmd + T and Ctrl + Opt + Cmd + C respectively &lt;a class="reference external" href="https://chris-collins.io/2018/03/15/Using-Terminal-At-macOS-Setup-Assistant/"&gt;(source)&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;How could that come in handy? For example, if you want to check if the backup
+drive still worked and if the process isn’t stuck (I wrote a test file and also
+checked &lt;code class="docutils literal"&gt;top&lt;/code&gt;).&lt;/p&gt;
+&lt;p&gt;Also, Dear Progress Bar Designers: can you please make your progress bars
+functional? The macOS progress bar might look sleek at just 7 px (non-Retina)/6
+pt = 12 px (Retina) high, but at the same time, you’re looking at individual
+pixels if you need to know if it works or if it’s stuck. I have had to point my
+mouse cursor at the end of the filled-in part just to know if it’s working or
+not. Or sometimes, put a piece of paper in front of my screen, because there is
+no mouse cursor when macOS installs on the black screen. How to make
+that progress bar easier to use and more informative? Just add numbers on top of
+it. For long-running processes, I wouldn’t mind progress bars that said
+“12.34%”. That specific Setup/Migration Assistant window should be changed (it
+only has a remaining time estimate and transfer speed, it should also show
+moved data/total size), but wouldn’t more things benefit from a clear
+indication of the progress? Yes, perhaps it looks less sleek, perhaps it
+requires more space for the bar.&lt;/p&gt;
+&lt;p&gt;Just compare: which is easier to parse? Which is more informative?&lt;/p&gt;
+&lt;div class="mb-3"&gt;
+&lt;div class="progress" style="height: 6.5px; border-radius: 6.5px;"&gt;
+  &lt;div class="progress-bar" role="progressbar" style="width: 42.42%;" aria-valuenow="42.42" aria-valuemin="0" aria-valuemax="100"&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;div class="mb-3"&gt;
+&lt;div class="progress" style="height: 20px; border-radius: 20px;"&gt;
+  &lt;div class="progress-bar" role="progressbar" style="width: 42.42%;" aria-valuenow="42.42" aria-valuemin="0" aria-valuemax="100"&gt;42%&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;div class="mb-3"&gt;
+&lt;div class="progress" style="height: 20px; border-radius: 20px;"&gt;
+  &lt;div class="progress-bar" role="progressbar" style="width: 42.42%;" aria-valuenow="42.42" aria-valuemin="0" aria-valuemax="100"&gt;42.4%&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;div class="mb-3"&gt;
+&lt;div class="progress" style="height: 20px; border-radius: 20px;"&gt;
+  &lt;div class="progress-bar" role="progressbar" style="width: 64.64%;" aria-valuenow="64.64" aria-valuemin="0" aria-valuemax="100"&gt;&lt;/div&gt;
+  &lt;div style="position: absolute; text-align: center; left: 0; right: 0;"&gt;64.64% (6.7 GB/10 GB copied)&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;I’d honestly be happy enough with option 2, at least it can be read easily and
+you can remember the number instead of a vague position.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="in-the-end"&gt;
+&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#id9"&gt;In the end…&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;After all this, I managed to get macOS Catalina installed. After various
+failures in built-in El Capitan recovery and Catalina Internet Recovery, I first
+installed El Capitan with this hack, then jumped to Mojave because I thought
+the new Software Update would help (it didn’t, same installer, same
+failed-to-extract-package issue), then made a Catalina USB stick, and it
+finally clean-installed, but I was worried about the backup disk’s operation,
+and I used a proxy on my local network to try and speed up Catalina downloads
+without much improvement… but hey, at least it works. Apple should really make
+it easier to install their OS and to make boot media even when stuff doesn’t
+work, even from Windows. The Hackintosh folks can just find someone with a
+working Mac and ask them to download from App Store and make install media, or
+find less legitimate sources. But if your system crashes, I’d probably want to
+get working install media immediately, myself, and from Apple.&lt;/p&gt;
+&lt;/div&gt;&lt;/div&gt;</description><category>Apple</category><category>install</category><category>Mac</category><category>macOS</category><guid>https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/</guid><pubDate>Wed, 03 Jun 2020 21:00:00 GMT</pubDate></item><item><title>When HTML is not enough: a tale of the &lt;datalist&gt; element</title><link>https://chriswarrick.com/blog/2020/02/09/when-html-is-not-enough-a-tale-of-the-datalist-element/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;HTML 5.0 was finalized in 2014 (and its drafts were published even earlier), and with it came the &lt;code class="docutils literal"&gt;&amp;lt;datalist&amp;gt;&lt;/code&gt; element.  It’s
 2020, and even though it might look like a good replacement for custom
 autocomplete widgets, browser issues made me get rid of it.&lt;/p&gt;
 &lt;!-- TEASER_END --&gt;
@@ -748,13 +971,13 @@ to have a clean environment and the ability to re-create it outside of Docker
 &lt;p&gt;In this post, I will explore the problems with Pipenv. Was it really
 recommended by Python.org? Can everyone — or at least, the vast majority
 of people — benefit from it?&lt;/p&gt;
-&lt;p&gt;(This post has been updated in February 2020 to reflect the current state of
-Pipenv.)&lt;/p&gt;
+&lt;p&gt;(This post has been updated in February 2020 and May 2020 to reflect the
+current state of Pipenv.)&lt;/p&gt;
 &lt;!-- TEASER_END --&gt;
 &lt;div class="contents alert alert-primary topic" id="contents"&gt;
 &lt;p class="topic-title"&gt;Contents&lt;/p&gt;
 &lt;ul class="simple"&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#a-2020-update" id="id14"&gt;A 2020 update&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#a-2020-update-updated" id="id14"&gt;A 2020 update (updated)&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
 &lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#officially-recommended-tool-or-how-we-got-here" id="id15"&gt;“Officially recommended tool”, or how we got here&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
 &lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#what-pipenv-does" id="id16"&gt;What pipenv does&lt;/a&gt;&lt;/p&gt;
 &lt;ul&gt;
@@ -782,25 +1005,44 @@ Pipenv.)&lt;/p&gt;
 &lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#conclusion" id="id30"&gt;Conclusion&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/div&gt;
-&lt;div class="section" id="a-2020-update"&gt;
-&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id14"&gt;A 2020 update&lt;/a&gt;&lt;/h2&gt;
+&lt;div class="section" id="a-2020-update-updated"&gt;
+&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id14"&gt;A 2020 update (updated)&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;This blog post was written in 2018, and it’s still pretty accurate when it
 comes to the criticisms of Pipenv, but something else happened since then.&lt;/p&gt;
-&lt;p class="lead"&gt;As of 2020, Pipenv is dead.&lt;/p&gt;
-&lt;p&gt;The last release of Pipenv was in November 2018. No new releases were made in
-2019. There were about 683 new commits made to Pipenv since then, but this is
-fairly slow progress considering this project’s status and previous
-release cadence. The developers claimed &lt;a class="reference external" href="https://github.com/pypa/pipenv/issues/4058#issuecomment-565550646"&gt;a new release is in the works&lt;/a&gt; in
-mid December, but not much has happened in almost 2 months since that post.
-All in all, Pipenv is effectively not maintained anymore. Yes, one of the
-chapters in this post is &lt;a class="reference internal" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#the-break-neck-pace-of-pipenv"&gt;The break-neck pace of Pipenv&lt;/a&gt;, and that is a
-problem. But zero updates in over a year to a packaging tool is also worrying.
-Pip has updates every few months in a fairly stable pace (with the exception of
-emergency bugfixe releases), and Pip has years of development behind it, unlike
-the fairly new pipenv.&lt;/p&gt;
-&lt;p&gt;In February 2020, the &lt;em&gt;Alternative tools&lt;/em&gt; section was updated to remove
-mentions of Hatch, and pip-tools was added. Poetry information was updated:
-it’s kinda slow, and the documentation is lacking.&lt;/p&gt;
+&lt;p class="lead"&gt;No release was made between November 2018 and May 2020. Pipenv was effectively
+dead for 1.5 years, and the state of Pipenv maintenance is alarming.&lt;/p&gt;
+&lt;p&gt;A release of Pipenv was made in late 2018 (aptly named v2018.11.26). But then,
+there was silence. New commits were made (on the order of 600-700 by the end of
+the year). People asked for new releases, in more or less strong words, &lt;a class="reference external" href="https://github.com/pypa/pipenv/issues/3742"&gt;in May
+2019&lt;/a&gt;, then &lt;a class="reference external" href="https://github.com/pypa/pipenv/issues/3978"&gt;in October&lt;/a&gt;, and again &lt;a class="reference external" href="https://github.com/pypa/pipenv/issues/4058"&gt;in December&lt;/a&gt;. Many people — including yours
+truly, in this post — considered Pipenv dead. On 13th December 2019, the current
+maintainer claimed &lt;a class="reference external" href="https://github.com/pypa/pipenv/issues/4058#issuecomment-565550646"&gt;a new release is almost finished&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Pipenv 2019/2020 was vaporware for five months. Not much progress was made since the
+December post until March 2020, when an issue from 2018 was renamed the &lt;a class="reference external" href="https://github.com/pypa/pipenv/issues/3369"&gt;March 2020
+Release Tracking Issue&lt;/a&gt;. Some
+progress was happening, and many release dates were given, but delays stacked
+up. March became April. The first beta release was promised by 21st April, it
+was delayed until the 29th. The final release was scheduled for a week from
+that, but it didn’t happen. Finally, Beta 2 came out on 20th May 2020, and the
+final release landed as v2020.5.28.&lt;/p&gt;
+&lt;p&gt;If you read further into the post, you’ll encounter a chapter titled &lt;a class="reference internal" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#the-break-neck-pace-of-pipenv"&gt;The
+break-neck pace of Pipenv&lt;/a&gt;. Am I being a hypocrite right now? No, not at all.
+Projects that are being depended on, such as a package manager, should have
+clear policies about how they’re maintained. A new release when the maintainer
+feels like adding a feature is too often. A new release every 1.5 years is not
+often enough. And silence from maintainers, when faced with questions about
+releases, is simply unacceptable.  Pip, for example, has updates every few
+months in a fairly stable pace (with the exception of emergency bugfix
+releases), and pip has years of development behind it, unlike the fairly new
+Pipenv.&lt;/p&gt;
+&lt;p&gt;And even if the May release was successful, you can’t be sure about any future
+releases, and what will happen with Pipenv. At the same time, Pipenv isn’t a
+good tool, as this post tries to explain — those criticisms are still valid,
+since they are at the core of what Pipenv is. Instead, perhaps consider using
+&lt;strong&gt;pip-tools&lt;/strong&gt; for locking dependencies? It does one thing, and one thing well.
+It doesn’t enforce any specific structures on users, and supports any workflow
+you have. (If you don’t need to lock dependencies, &lt;strong&gt;pip + venv&lt;/strong&gt; will
+suffice.)&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="officially-recommended-tool-or-how-we-got-here"&gt;
 &lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#id15"&gt;“Officially recommended tool”, or how we got here&lt;/a&gt;&lt;/h2&gt;
@@ -927,28 +1169,28 @@ library has just reported a bug and attached a &lt;code class="docutils literal"
 reproduce the issue. I download that file to &lt;code class="docutils literal"&gt;~/Downloads&lt;/code&gt; on my filesystem.
 With plain old virtualenv, I can easily confirm the reproduction in a spare
 shell with:&lt;/p&gt;
-&lt;pre class="code shell"&gt;&lt;a name="rest_code_3bfed889da7a49528d32c82f5880b962-1"&gt;&lt;/a&gt;$ ~/virtualenvs/foobar/bin/python ~/Downloads/repro.py
+&lt;pre class="code shell"&gt;&lt;a name="rest_code_be937c28774b4cedb398236f8e4d2247-1"&gt;&lt;/a&gt;$ ~/virtualenvs/foobar/bin/python ~/Downloads/repro.py
 &lt;/pre&gt;&lt;p&gt;And then I can launch my fancy IDE to fix the bug.  I don’t have to &lt;code class="docutils literal"&gt;cd&lt;/code&gt; into
 the project. But with Pipenv, I can’t really do that.  If I put the virtualenv
 in &lt;code class="docutils literal"&gt;.venv&lt;/code&gt; with the command line option, I can type
 &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;~/git/foobar/.venv/bin/python&lt;/span&gt; ~/Downloads/repro.py&lt;/code&gt;. If I use the
 centralized directory + hashes thing, Tab completion becomes mandatory, if I
 haven’t memorized the hash.&lt;/p&gt;
-&lt;pre class="code shell"&gt;&lt;a name="rest_code_4efa116d601e429ca73777c41cc440d8-1"&gt;&lt;/a&gt;$ &lt;span class="nb"&gt;cd&lt;/span&gt; ~/git/foobar
-&lt;a name="rest_code_4efa116d601e429ca73777c41cc440d8-2"&gt;&lt;/a&gt;$ pipenv run python ~/Downloads/repro.py
+&lt;pre class="code shell"&gt;&lt;a name="rest_code_9051842804ef4020b2d567df88155579-1"&gt;&lt;/a&gt;$ &lt;span class="nb"&gt;cd&lt;/span&gt; ~/git/foobar
+&lt;a name="rest_code_9051842804ef4020b2d567df88155579-2"&gt;&lt;/a&gt;$ pipenv run python ~/Downloads/repro.py
 &lt;/pre&gt;&lt;p&gt;What if I had two &lt;code class="docutils literal"&gt;.py&lt;/code&gt; files, or &lt;code class="docutils literal"&gt;repro.py&lt;/code&gt; otherwise depended on being in
 the current working directory?&lt;/p&gt;
-&lt;pre class="code shell"&gt;&lt;a name="rest_code_74c4712ba9da4011997a60a8bd4bc97e-1"&gt;&lt;/a&gt;$ &lt;span class="nb"&gt;cd&lt;/span&gt; ~/git/foobar
-&lt;a name="rest_code_74c4712ba9da4011997a60a8bd4bc97e-2"&gt;&lt;/a&gt;$ pipenv shell
-&lt;a name="rest_code_74c4712ba9da4011997a60a8bd4bc97e-3"&gt;&lt;/a&gt;&lt;span class="o"&gt;(&lt;/span&gt;foobar-Mwd1l2m9&lt;span class="o"&gt;)&lt;/span&gt;$ &lt;span class="nb"&gt;cd&lt;/span&gt; ~/Downloads
-&lt;a name="rest_code_74c4712ba9da4011997a60a8bd4bc97e-4"&gt;&lt;/a&gt;&lt;span class="o"&gt;(&lt;/span&gt;foobar-Mwd1l2m9&lt;span class="o"&gt;)&lt;/span&gt;$ python repro.py
-&lt;a name="rest_code_74c4712ba9da4011997a60a8bd4bc97e-5"&gt;&lt;/a&gt;&lt;span class="o"&gt;(&lt;/span&gt;foobar-Mwd1l2m9&lt;span class="o"&gt;)&lt;/span&gt;$ &lt;span class="nb"&gt;exit&lt;/span&gt;  &lt;span class="c1"&gt;# (not deactivate!)&lt;/span&gt;
+&lt;pre class="code shell"&gt;&lt;a name="rest_code_a20e766a40ea4140bd40ab2593b43403-1"&gt;&lt;/a&gt;$ &lt;span class="nb"&gt;cd&lt;/span&gt; ~/git/foobar
+&lt;a name="rest_code_a20e766a40ea4140bd40ab2593b43403-2"&gt;&lt;/a&gt;$ pipenv shell
+&lt;a name="rest_code_a20e766a40ea4140bd40ab2593b43403-3"&gt;&lt;/a&gt;&lt;span class="o"&gt;(&lt;/span&gt;foobar-Mwd1l2m9&lt;span class="o"&gt;)&lt;/span&gt;$ &lt;span class="nb"&gt;cd&lt;/span&gt; ~/Downloads
+&lt;a name="rest_code_a20e766a40ea4140bd40ab2593b43403-4"&gt;&lt;/a&gt;&lt;span class="o"&gt;(&lt;/span&gt;foobar-Mwd1l2m9&lt;span class="o"&gt;)&lt;/span&gt;$ python repro.py
+&lt;a name="rest_code_a20e766a40ea4140bd40ab2593b43403-5"&gt;&lt;/a&gt;&lt;span class="o"&gt;(&lt;/span&gt;foobar-Mwd1l2m9&lt;span class="o"&gt;)&lt;/span&gt;$ &lt;span class="nb"&gt;exit&lt;/span&gt;  &lt;span class="c1"&gt;# (not deactivate!)&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;&lt;strong&gt;This is becoming ugly fairly quickly.&lt;/strong&gt; Also, with virtualenvwrapper, I can
 do this:&lt;/p&gt;
-&lt;pre class="code shell"&gt;&lt;a name="rest_code_10f90f87bc8f41e0b225766417533ab6-1"&gt;&lt;/a&gt;$ &lt;span class="nb"&gt;cd&lt;/span&gt; ~/Downloads
-&lt;a name="rest_code_10f90f87bc8f41e0b225766417533ab6-2"&gt;&lt;/a&gt;$ workon foobar
-&lt;a name="rest_code_10f90f87bc8f41e0b225766417533ab6-3"&gt;&lt;/a&gt;&lt;span class="o"&gt;(&lt;/span&gt;foobar&lt;span class="o"&gt;)&lt;/span&gt;$ python repro.py
-&lt;a name="rest_code_10f90f87bc8f41e0b225766417533ab6-4"&gt;&lt;/a&gt;&lt;span class="o"&gt;(&lt;/span&gt;foobar&lt;span class="o"&gt;)&lt;/span&gt;$ deactivate
+&lt;pre class="code shell"&gt;&lt;a name="rest_code_f3021410226a420494261951314e4d5c-1"&gt;&lt;/a&gt;$ &lt;span class="nb"&gt;cd&lt;/span&gt; ~/Downloads
+&lt;a name="rest_code_f3021410226a420494261951314e4d5c-2"&gt;&lt;/a&gt;$ workon foobar
+&lt;a name="rest_code_f3021410226a420494261951314e4d5c-3"&gt;&lt;/a&gt;&lt;span class="o"&gt;(&lt;/span&gt;foobar&lt;span class="o"&gt;)&lt;/span&gt;$ python repro.py
+&lt;a name="rest_code_f3021410226a420494261951314e4d5c-4"&gt;&lt;/a&gt;&lt;span class="o"&gt;(&lt;/span&gt;foobar&lt;span class="o"&gt;)&lt;/span&gt;$ deactivate
 &lt;/pre&gt;&lt;p&gt;And let’s not forget that Pipenv doesn’t help me to write a &lt;code class="docutils literal"&gt;setup.py&lt;/code&gt;,
 distribute code, or manage releases.  It just manages dependencies.  And it
 does it pretty badly.&lt;/p&gt;
@@ -2386,23 +2628,4 @@ issues.&lt;/p&gt;
 &lt;dd&gt;&lt;p&gt;Spelling fixes and updates to the virtualenv usage section.&lt;/p&gt;
 &lt;/dd&gt;
 &lt;/dl&gt;
-&lt;/div&gt;&lt;/div&gt;</description><category>best practices</category><category>devel</category><category>guide</category><category>Python</category><guid>https://chriswarrick.com/blog/2017/07/03/setting-up-a-python-development-environment/</guid><pubDate>Mon, 03 Jul 2017 10:40:00 GMT</pubDate></item><item><title>Apple broke the display menu, so I wrote my own</title><link>https://chriswarrick.com/blog/2017/06/24/apple-broke-the-display-menu-so-i-wrote-my-own/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;A short time ago, the macOS display menu stopped working for me. It no longer had options to change mirroring settings, only supporting AirPlay. So I wrote my own, also solving some other issues.&lt;/p&gt;
-&lt;!-- TEASER_END --&gt;
-&lt;p&gt;The first thing to consider is: what features do I really want? I’m using a MacBook Pro with an external display. I sometimes need to switch to only one display &lt;a class="footnote-reference brackets" href="https://chriswarrick.com/blog/2017/06/24/apple-broke-the-display-menu-so-i-wrote-my-own/#id3" id="id1"&gt;1&lt;/a&gt; — mirroring is useful here. Although I can afford to put the dock at the bottom in dual-screen mode, it works better on the right if I’m tight on space. &lt;a class="footnote-reference brackets" href="https://chriswarrick.com/blog/2017/06/24/apple-broke-the-display-menu-so-i-wrote-my-own/#id4" id="id2"&gt;2&lt;/a&gt; Also when working on the MacBook screen, I can switch to a higher resolution. So, I need:&lt;/p&gt;
-&lt;ul class="simple"&gt;
-&lt;li&gt;&lt;p&gt;mirroring&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;screen resolution&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;dock position and icon size&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;But I don’t want to pick all those three independently — a preset, like &lt;em&gt;dual screen&lt;/em&gt; or &lt;em&gt;MacBook only, 1440×900&lt;/em&gt; works better.&lt;/p&gt;
-&lt;p&gt;So, I wrote &lt;strong&gt;Display Menu&lt;/strong&gt;. It’s a simple menu bar extra — I haven’t yet built any friendly configuration GUI for it, so all you get for now is a JSON file. It’s roughly 600 lines of Swift. The app doesn’t do much, other than displaying an icon in the menu bar, and setting display preferences when asked to. But hey, it works for me.&lt;/p&gt;
-&lt;p&gt;Also, I must admit that Swift is a pretty nifty thing. Although the function to read JSON files needs to do a ton of type casting, and some of the low-level stuff looks as ugly as in C, but other than that, Swift is a modern, friendly language.&lt;/p&gt;
-&lt;p&gt;Display Menu is open-source, licensed under the 3-clause BSD license. &lt;a class="reference external" href="https://github.com/Kwpolska/DisplayMenu"&gt;Fork it on GitHub&lt;/a&gt; or &lt;a class="reference external" href="https://github.com/Kwpolska/DisplayMenu/releases"&gt;download binary releases&lt;/a&gt;.&lt;/p&gt;
-&lt;dl class="footnote brackets"&gt;
-&lt;dt class="label" id="id3"&gt;&lt;span class="brackets"&gt;&lt;a class="fn-backref" href="https://chriswarrick.com/blog/2017/06/24/apple-broke-the-display-menu-so-i-wrote-my-own/#id1"&gt;1&lt;/a&gt;&lt;/span&gt;&lt;/dt&gt;
-&lt;dd&gt;&lt;p&gt;Inkscape/Xorg don’t work well with multiple displays. I can also mirror and turn off the external screen or use it with some other device.&lt;/p&gt;
-&lt;/dd&gt;
-&lt;dt class="label" id="id4"&gt;&lt;span class="brackets"&gt;&lt;a class="fn-backref" href="https://chriswarrick.com/blog/2017/06/24/apple-broke-the-display-menu-so-i-wrote-my-own/#id2"&gt;2&lt;/a&gt;&lt;/span&gt;&lt;/dt&gt;
-&lt;dd&gt;&lt;p&gt;also, in dual-screen mode, I can have the dock on one screen only, and the dock must live on the edge of the “extended” display — so either on the left side of the MacBook screen, or on the right side of the external display.&lt;/p&gt;
-&lt;/dd&gt;
-&lt;/dl&gt;&lt;/div&gt;</description><category>app</category><category>Apple</category><category>display</category><category>programming</category><category>projects</category><category>Swift</category><guid>https://chriswarrick.com/blog/2017/06/24/apple-broke-the-display-menu-so-i-wrote-my-own/</guid><pubDate>Sat, 24 Jun 2017 19:02:47 GMT</pubDate></item></channel></rss>
+&lt;/div&gt;&lt;/div&gt;</description><category>best practices</category><category>devel</category><category>guide</category><category>Python</category><guid>https://chriswarrick.com/blog/2017/07/03/setting-up-a-python-development-environment/</guid><pubDate>Mon, 03 Jul 2017 10:40:00 GMT</pubDate></item></channel></rss>

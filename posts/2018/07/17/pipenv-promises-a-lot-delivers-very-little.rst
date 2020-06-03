@@ -1,7 +1,7 @@
 .. title: Pipenv: promises a lot, delivers very little
 .. slug: pipenv-promises-a-lot-delivers-very-little
 .. date: 2018-07-17 19:40:00+02:00
-.. updated: 2020-02-08 21:00:00+01:00
+.. updated: 2020-05-28 17:50:00+02:00
 .. tags: Python, Pipenv, packaging
 .. category: Python
 .. description: Pipenv is a Python packaging tool that does one thing reasonably well. It tries to promote itself as much more than it is.
@@ -14,8 +14,8 @@ In this post, I will explore the problems with Pipenv. Was it really
 recommended by Python.org? Can everyone — or at least, the vast majority
 of people — benefit from it?
 
-(This post has been updated in February 2020 to reflect the current state of
-Pipenv.)
+(This post has been updated in February 2020 and May 2020 to reflect the
+current state of Pipenv.)
 
 .. TEASER_END
 
@@ -23,32 +23,55 @@ Pipenv.)
 
 .. contents::
 
-A 2020 update
-=============
+A 2020 update (updated)
+=======================
 
 This blog post was written in 2018, and it’s still pretty accurate when it
 comes to the criticisms of Pipenv, but something else happened since then.
 
 .. class:: lead
 
-As of 2020, Pipenv is dead.
+No release was made between November 2018 and May 2020. Pipenv was effectively
+dead for 1.5 years, and the state of Pipenv maintenance is alarming.
 
-The last release of Pipenv was in November 2018. No new releases were made in
-2019. There were about 683 new commits made to Pipenv since then, but this is
-fairly slow progress considering this project’s status and previous
-release cadence. The developers claimed `a new release is in the works
-<https://github.com/pypa/pipenv/issues/4058#issuecomment-565550646>`__ in
-mid December, but not much has happened in almost 2 months since that post.
-All in all, Pipenv is effectively not maintained anymore. Yes, one of the
-chapters in this post is `The break-neck pace of Pipenv`_, and that is a
-problem. But zero updates in over a year to a packaging tool is also worrying.
-Pip has updates every few months in a fairly stable pace (with the exception of
-emergency bugfixe releases), and Pip has years of development behind it, unlike
-the fairly new pipenv.
+A release of Pipenv was made in late 2018 (aptly named v2018.11.26). But then,
+there was silence. New commits were made (on the order of 600-700 by the end of
+the year). People asked for new releases, in more or less strong words, `in May
+2019 <https://github.com/pypa/pipenv/issues/3742>`_, then `in October
+<https://github.com/pypa/pipenv/issues/3978>`_, and again `in December
+<https://github.com/pypa/pipenv/issues/4058>`_. Many people — including yours
+truly, in this post — considered Pipenv dead. On 13th December 2019, the current
+maintainer claimed `a new release is almost finished
+<https://github.com/pypa/pipenv/issues/4058#issuecomment-565550646>`__.
 
-In February 2020, the *Alternative tools* section was updated to remove
-mentions of Hatch, and pip-tools was added. Poetry information was updated:
-it’s kinda slow, and the documentation is lacking.
+Pipenv 2019/2020 was vaporware for five months. Not much progress was made since the
+December post until March 2020, when an issue from 2018 was renamed the `March 2020
+Release Tracking Issue <https://github.com/pypa/pipenv/issues/3369>`_. Some
+progress was happening, and many release dates were given, but delays stacked
+up. March became April. The first beta release was promised by 21st April, it
+was delayed until the 29th. The final release was scheduled for a week from
+that, but it didn’t happen. Finally, Beta 2 came out on 20th May 2020, and the
+final release landed as v2020.5.28.
+
+If you read further into the post, you’ll encounter a chapter titled `The
+break-neck pace of Pipenv`_. Am I being a hypocrite right now? No, not at all.
+Projects that are being depended on, such as a package manager, should have
+clear policies about how they’re maintained. A new release when the maintainer
+feels like adding a feature is too often. A new release every 1.5 years is not
+often enough. And silence from maintainers, when faced with questions about
+releases, is simply unacceptable.  Pip, for example, has updates every few
+months in a fairly stable pace (with the exception of emergency bugfix
+releases), and pip has years of development behind it, unlike the fairly new
+Pipenv.
+
+And even if the May release was successful, you can’t be sure about any future
+releases, and what will happen with Pipenv. At the same time, Pipenv isn’t a
+good tool, as this post tries to explain — those criticisms are still valid,
+since they are at the core of what Pipenv is. Instead, perhaps consider using
+**pip-tools** for locking dependencies? It does one thing, and one thing well.
+It doesn’t enforce any specific structures on users, and supports any workflow
+you have. (If you don’t need to lock dependencies, **pip + venv** will
+suffice.)
 
 “Officially recommended tool”, or how we got here
 =================================================
