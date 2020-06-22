@@ -1,5 +1,147 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chris Warrick (Posty o Apple)</title><link>https://chriswarrick.com/</link><description></description><atom:link href="https://chriswarrick.com/pl/blog/tags/apple.xml" rel="self" type="application/rss+xml"></atom:link><language>pl</language><lastBuildDate>Wed, 03 Jun 2020 21:00:18 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Reinstalling macOS: What To Try When All Else Fails</title><link>https://chriswarrick.com/pl/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;Recently, I reinstalled macOS on my device. Throughout the process, many
+<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chris Warrick (Posty o Apple)</title><link>https://chriswarrick.com/</link><description></description><atom:link href="https://chriswarrick.com/pl/blog/tags/apple.xml" rel="self" type="application/rss+xml"></atom:link><language>pl</language><lastBuildDate>Mon, 22 Jun 2020 19:06:54 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>What an ARM Mac means for developers and Windows users</title><link>https://chriswarrick.com/pl/blog/2020/06/22/what-an-arm-mac-means-for-developers-and-windows-users/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;The rumor mill was right this time, and Apple has just announced they will
+transition Macs to ARM processors. These news have some side effects for
+software developers, particularly those not working with the Apple ecosystem.
+And they also affect people who depend on both macOS and Windows.&lt;/p&gt;
+&lt;!-- TEASER_END --&gt;
+&lt;div class="contents alert alert-primary topic" id="contents"&gt;
+&lt;p class="topic-title"&gt;Contents&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2020/06/22/what-an-arm-mac-means-for-developers-and-windows-users/#how-will-it-work-out-in-apple-land" id="id1"&gt;How will it work out in Apple land?&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2020/06/22/what-an-arm-mac-means-for-developers-and-windows-users/#who-needs-non-apple-operating-systems" id="id2"&gt;Who needs non-Apple operating systems?&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2020/06/22/what-an-arm-mac-means-for-developers-and-windows-users/#is-virtualization-possible-on-arm" id="id3"&gt;Is virtualization possible on ARM?&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2020/06/22/what-an-arm-mac-means-for-developers-and-windows-users/#can-we-emulate-x86-64-and-run-x86-64-windows-10" id="id4"&gt;Can we emulate x86(_64) and run x86(_64) Windows 10?&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/pl/blog/2020/06/22/what-an-arm-mac-means-for-developers-and-windows-users/#whats-next-for-people-who-rely-on-both-macos-and-windows" id="id5"&gt;What’s next for people who rely on both macOS and Windows?&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;p&gt;In this post, I am not going to focus in the differences between x86_64 and ARM,
+RISC and CISC, and all the benchmarks. Let’s assume that Apple manages to offer
+ARM-based CPUs that can match performance of most Intel processors in Apple’s
+lineup, and let’s even assume they can make an ARM Mac Pro. (A note on naming:
+Apple Silicon is the official name, but it sounds ugly. I’ll just call it ARM.
+For Intel, I’ll use either Intel or x86(_64).)&lt;/p&gt;
+&lt;p&gt;For many users, the transition will be more-or-less transparent. Sure, they’ll
+lose some apps, just like they probably did with Catalina (which dropped
+support for 32-bit Intel apps), or some apps will not be available/will be
+buggy in the first few months of the transition (though it will be easier than
+the PowerPC transition, because Apple uses little-endian byte order on ARM).&lt;/p&gt;
+&lt;div class="section" id="how-will-it-work-out-in-apple-land"&gt;
+&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2020/06/22/what-an-arm-mac-means-for-developers-and-windows-users/#id1"&gt;How will it work out in Apple land?&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;For developers who work only on iOS apps, the transition also won’t mean much.
+Maybe a faster, more accurate Simulator. They’ll need to buy an ARM Mac sooner
+or later (within the next 5 years), because Apple requires them to use the
+latest Xcode version for App Store submissions, and Xcode supports at best the
+previous version of macOS.  But that has been Apple’s policy forever, and the
+Intel Macs will probably be within the usual deprecation range when that
+happens.&lt;/p&gt;
+&lt;p&gt;The requirements for macOS-only developers are pretty obvious, they will need
+to buy an ARM Mac on day one, so they can test their apps on the new platform.
+They will also need to work on ARM compatibility — although updating your app
+for the new OS is a yearly ritual in Apple land, so that’s also mostly
+business-as-usual (unless you do a lot of unportable low-level stuff in your
+code). There are some pro apps that tend to lag behind new Apple decrees (some
+might have been hit by Catalina), and users of those apps might prefer to stay
+with Intel for a little bit longer.&lt;/p&gt;
+&lt;p&gt;But then, we get to the requirements of developers who use Macs, but don’t work
+exclusively with the Apple platforms. This is a fairly large group, since many
+developers like Macs for the good hardware, Unix-based software, and the
+integration of both. And for some part, non-developers are affected too.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="who-needs-non-apple-operating-systems"&gt;
+&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2020/06/22/what-an-arm-mac-means-for-developers-and-windows-users/#id2"&gt;Who needs non-Apple operating systems?&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;The first group are people tied to Windows, somehow. Some of them might be
+using Boot Camp to play games. Others might be using Boot Camp or
+virtualization software (Parallels Desktop, VMware Fusion, Oracle VM
+VirtualBox) to run Windows and Windows-specific apps — perhaps they need the
+Windows version of Office, or various Windows-onlypro apps, or they need
+Windows to file their taxes, because their government does not care about
+non-Windows OSes. Or perhaps they’re web developers, and they need to test
+compatibility with the Windows versions of browsers, or the old Microsoft
+browsers (IE and pre-Chromium Edge).&lt;/p&gt;
+&lt;p&gt;The second group is software developers who need Linux. While macOS provides a
+very competent development environment, and many things can be run directly on
+macOS, some use-cases may require a Linux VM.  Perhaps the most notable case is
+Docker.&lt;/p&gt;
+&lt;p&gt;Docker is a solution for lightweight app containers, that can offer separation
+between apps, and that can simplify and standardize deployment. Docker itself
+is not a virtualization solution (at least in the traditional sense). Docker
+must run on top of Linux (there’s also Docker-on-Windows, but that’s another
+story). The Docker Desktop for Mac app runs a lightweight Linux VM, and runs
+containers in that VM. The virtualization solution &lt;a class="reference external" href="https://github.com/docker/for-mac"&gt;Docker for Mac uses&lt;/a&gt; is &lt;code class="docutils literal"&gt;Hypervisor.framework&lt;/code&gt;, which is
+part of macOS itself.&lt;/p&gt;
+&lt;p&gt;Who else needs virtualization? Android developers. The Android Emulator is also
+a virtual machine that runs the Android operating system. Android can run on
+different architectures, and so, a x86 system image is typically used for the
+Emulator.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="is-virtualization-possible-on-arm"&gt;
+&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2020/06/22/what-an-arm-mac-means-for-developers-and-windows-users/#id3"&gt;Is virtualization possible on ARM?&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;Yes, definitely. Apple has been testing it much earlier, since the
+aforementioned &lt;code class="docutils literal"&gt;Hypervisor.framework&lt;/code&gt; was found &lt;a class="reference external" href="https://twitter.com/never_released/status/1250533740557852674"&gt;on iOS in April&lt;/a&gt;.
+And Apple announced virtualization support for ARM Macs during the keynote, and
+showed an example of a Linux VM. That VM was, of course, running an ARM64
+distribution of Linux.&lt;/p&gt;
+&lt;p&gt;But what can we use this for? Turns out, it’s complicated. The easiest thing
+from the few use-cases mentioned before is Android. Google just needs to get
+the Emulator working on ARM Macs and ship that to the devs.&lt;/p&gt;
+&lt;p&gt;What about Linux in general? Many mainstream distributions
+support ARM64, so that’s not a problem in general. The support for a particular
+distro or software might be worse than on x86_64, but it’s generally not a
+problem for users.&lt;/p&gt;
+&lt;p&gt;But for Docker, there’s a problem. One of the many advantages of Docker is
+dev-prod parity. If you deploy your app with Docker to an x86_64 Linux server,
+you can also install Docker on an x86_64 Linux developer machine (or a Linux VM on an
+Intel Mac/Windows PC). Both the server and the dev machine can run &lt;strong&gt;the same&lt;/strong&gt;
+image, the same code, the same configuration. That won’t happen if they are a
+different architecture. This means that you can end up with bugs happening
+because of different environments, and it’s also possible that some images you
+depend on are not available for both architectures.&lt;/p&gt;
+&lt;p&gt;And then we get to Windows. Windows also has an ARM version, but it’s currently
+available only with a new ARM device (you can’t buy it standalone). If
+Microsoft were to sell this, we’d have an issue with the software. Windows 10
+on ARM supports 32/64-bit ARM software, and can run 32-bit Intel (x86) software
+using emulation. It cannot, however, emulate apps that require 64-bit Intel
+processors (x86_64).  This makes the software situation on that platform a bit
+better. While many developers don’t care about ARM and might not have builds
+for ARM available, most Windows software is available in both x86 and x86_64
+versions, or is exclusively 32-bit. But certain pro apps are x86_64 only, so if
+there is no ARM build of it, an ARM Windows PC currently cannot run it.&lt;/p&gt;
+&lt;p&gt;And note that Microsoft knows about the transition, but we haven’t heard
+anything about Windows during the keynote…&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="can-we-emulate-x86-64-and-run-x86-64-windows-10"&gt;
+&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2020/06/22/what-an-arm-mac-means-for-developers-and-windows-users/#id4"&gt;Can we emulate x86(_64) and run x86(_64) Windows 10?&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;Theoretically? Yes. Practically? No.&lt;/p&gt;
+&lt;p&gt;The issue with emulation is speed. There are a few x86 emulators available, and
+those emulators can be run on an ARM device just fine. You can find videos on
+YouTube (not a very reliable source of information, I know) in which people try
+to benchmark those, or try to run Windows using an emulator like that. And even
+with an ancient Windows version, the emulation is painfully slow. Windows 10
+would be basically unusable if you tried to emulate all of it.&lt;/p&gt;
+&lt;p&gt;How does the x86 emulation on Windows 10 for ARM work? You can watch &lt;a class="reference external" href="https://channel9.msdn.com/Events/Build/2017/P4171"&gt;the
+Channel 9 video about Windows 10 on ARM&lt;/a&gt; (around 6:00) for more
+details. The trick is that system DLLs are using a hybrid x86/ARM64 library
+format, which means x86 code can call those DLLs at native speeds. This means
+that many apps run at near-native speed (depending on the ratio of custom code
+to system DLL calls). This technique cannot work for emulating the entire
+operating system. If Windows 10 on ARM was made available for ARM Macs, running
+x86 Windows apps would become feasible.&lt;/p&gt;
+&lt;p&gt;Rosetta probably uses similar technique. Most apps will be translated at
+install time, not at run time. But you can’t do that with an entire OS.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="whats-next-for-people-who-rely-on-both-macos-and-windows"&gt;
+&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2020/06/22/what-an-arm-mac-means-for-developers-and-windows-users/#id5"&gt;What’s next for people who rely on both macOS and Windows?&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;For a few more years, Intel Macs will still be supported by Apple (with new
+macOS versions) and by software vendors. But after that? Well, you’re stuck
+with two machines, at least until Windows on ARM becomes viable and runnable on
+Macs. Or you can start exploring alternatives to macOS software. If you’re one
+of the macOS-as-UNIX-with-great-UX developers (hello!), perhaps you’ll have to
+switch to Linux — or perhaps Windows with Windows Subsystem for Linux? (The
+latter is becoming more usable with every Windows release, so keep an eye on
+that… I wrote this post in NeoVim in WSL2, with Windows Terminal supporting
+many advanced terminal features, and the transparent filesystem integration
+letting me access Windows files directly).&lt;/p&gt;
+&lt;/div&gt;&lt;/div&gt;</description><guid>https://chriswarrick.com/pl/blog/2020/06/22/what-an-arm-mac-means-for-developers-and-windows-users/</guid><pubDate>Mon, 22 Jun 2020 19:00:00 GMT</pubDate></item><item><title>Reinstalling macOS: What To Try When All Else Fails</title><link>https://chriswarrick.com/pl/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;Recently, I reinstalled macOS on my device. Throughout the process, many
 attempts failed miserably. But I now have some experience and assorted hints on
 what to try.&lt;/p&gt;
 &lt;!-- TEASER_END --&gt;
@@ -73,20 +215,20 @@ it at all the compressed files mentioned in this paragraph.)&lt;/p&gt;
 &lt;div class="section" id="a-from-the-el-capitan-download"&gt;
 &lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#id4"&gt;a. From the El Capitan download&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;Let’s expand the El Capitan package.&lt;/p&gt;
-&lt;pre class="code console"&gt;&lt;a name="rest_code_712b90bb37e7469e9640fa7b4bb4c726-1"&gt;&lt;/a&gt;&lt;span class="gp"&gt;$&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;mount the DMG in Disk Utility, copy the .pkg to a read-write volume&lt;span class="o"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_712b90bb37e7469e9640fa7b4bb4c726-2"&gt;&lt;/a&gt;&lt;span class="gp"&gt;$&lt;/span&gt; pkgutil --expand InstallMacOSX.pkg elcapitan
-&lt;a name="rest_code_712b90bb37e7469e9640fa7b4bb4c726-3"&gt;&lt;/a&gt;&lt;span class="gp"&gt;$&lt;/span&gt; ls -F elcapitan
-&lt;a name="rest_code_712b90bb37e7469e9640fa7b4bb4c726-4"&gt;&lt;/a&gt;&lt;span class="go"&gt;Distribution*       InstallMacOSX.pkg/ Resources/&lt;/span&gt;
-&lt;a name="rest_code_712b90bb37e7469e9640fa7b4bb4c726-5"&gt;&lt;/a&gt;&lt;span class="gp"&gt;$&lt;/span&gt; &lt;span class="nb"&gt;cd&lt;/span&gt; elcapitan/InstallMacOSX.pkg/
-&lt;a name="rest_code_712b90bb37e7469e9640fa7b4bb4c726-6"&gt;&lt;/a&gt;&lt;span class="gp"&gt;$&lt;/span&gt; tar -xvf Payload
-&lt;a name="rest_code_712b90bb37e7469e9640fa7b4bb4c726-7"&gt;&lt;/a&gt;&lt;span class="go"&gt;x .&lt;/span&gt;
-&lt;a name="rest_code_712b90bb37e7469e9640fa7b4bb4c726-8"&gt;&lt;/a&gt;&lt;span class="go"&gt;x ./Install OS X El Capitan.app&lt;/span&gt;
-&lt;a name="rest_code_712b90bb37e7469e9640fa7b4bb4c726-9"&gt;&lt;/a&gt;&lt;span class="go"&gt;x ./Install OS X El Capitan.app/Contents&lt;/span&gt;
-&lt;a name="rest_code_712b90bb37e7469e9640fa7b4bb4c726-10"&gt;&lt;/a&gt;&lt;span class="go"&gt;…&lt;/span&gt;
+&lt;pre class="code console"&gt;&lt;a name="rest_code_4465f53f902844f4a3c0e5a6d43a66db-1"&gt;&lt;/a&gt;&lt;span class="gp"&gt;$&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;mount the DMG in Disk Utility, copy the .pkg to a read-write volume&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_4465f53f902844f4a3c0e5a6d43a66db-2"&gt;&lt;/a&gt;&lt;span class="gp"&gt;$&lt;/span&gt; pkgutil --expand InstallMacOSX.pkg elcapitan
+&lt;a name="rest_code_4465f53f902844f4a3c0e5a6d43a66db-3"&gt;&lt;/a&gt;&lt;span class="gp"&gt;$&lt;/span&gt; ls -F elcapitan
+&lt;a name="rest_code_4465f53f902844f4a3c0e5a6d43a66db-4"&gt;&lt;/a&gt;&lt;span class="go"&gt;Distribution*       InstallMacOSX.pkg/ Resources/&lt;/span&gt;
+&lt;a name="rest_code_4465f53f902844f4a3c0e5a6d43a66db-5"&gt;&lt;/a&gt;&lt;span class="gp"&gt;$&lt;/span&gt; &lt;span class="nb"&gt;cd&lt;/span&gt; elcapitan/InstallMacOSX.pkg/
+&lt;a name="rest_code_4465f53f902844f4a3c0e5a6d43a66db-6"&gt;&lt;/a&gt;&lt;span class="gp"&gt;$&lt;/span&gt; tar -xvf Payload
+&lt;a name="rest_code_4465f53f902844f4a3c0e5a6d43a66db-7"&gt;&lt;/a&gt;&lt;span class="go"&gt;x .&lt;/span&gt;
+&lt;a name="rest_code_4465f53f902844f4a3c0e5a6d43a66db-8"&gt;&lt;/a&gt;&lt;span class="go"&gt;x ./Install OS X El Capitan.app&lt;/span&gt;
+&lt;a name="rest_code_4465f53f902844f4a3c0e5a6d43a66db-9"&gt;&lt;/a&gt;&lt;span class="go"&gt;x ./Install OS X El Capitan.app/Contents&lt;/span&gt;
+&lt;a name="rest_code_4465f53f902844f4a3c0e5a6d43a66db-10"&gt;&lt;/a&gt;&lt;span class="go"&gt;…&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;We’ve got the installer app, which is what we need to create an install image.
 Great, let’s try it!&lt;/p&gt;
-&lt;pre class="code console"&gt;&lt;a name="rest_code_bd46ba9b04ee495b83681b94cd0d6123-1"&gt;&lt;/a&gt;&lt;span class="gp"&gt;#&lt;/span&gt; &lt;span class="s2"&gt;"Install OS X El Capitan.app/Contents/Resources/createinstallmedia"&lt;/span&gt; --volume /Volumes/MyBlankUSBDrive --applicationpath &lt;span class="s2"&gt;"Install OS X El Capitan.app"&lt;/span&gt;
-&lt;a name="rest_code_bd46ba9b04ee495b83681b94cd0d6123-2"&gt;&lt;/a&gt;&lt;span class="go"&gt;Install OS X El Capitan.app does not appear to be a valid OS installer application.&lt;/span&gt;
+&lt;pre class="code console"&gt;&lt;a name="rest_code_fc48e3f62b724dae99895f34eddf3e92-1"&gt;&lt;/a&gt;&lt;span class="gp"&gt;#&lt;/span&gt; &lt;span class="s2"&gt;"Install OS X El Capitan.app/Contents/Resources/createinstallmedia"&lt;/span&gt; --volume /Volumes/MyBlankUSBDrive --applicationpath &lt;span class="s2"&gt;"Install OS X El Capitan.app"&lt;/span&gt;
+&lt;a name="rest_code_fc48e3f62b724dae99895f34eddf3e92-2"&gt;&lt;/a&gt;&lt;span class="go"&gt;Install OS X El Capitan.app does not appear to be a valid OS installer application.&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;Oh, we’ve got a problem. Turns out there’s one more thing we need to take care
 of, and it’s the scripts. MacOS packages have scripts, typically shell scripts,
 that are run at various stages in the install process. We can look at the
@@ -95,19 +237,19 @@ there’s an &lt;code class="docutils literal"&gt;link_package&lt;/code&gt; scri
 &lt;code class="docutils literal"&gt;Contents/SharedSupport&lt;/code&gt; directory inside the installer app, and
 copies/hardlinks the &lt;code class="docutils literal"&gt;InstallESD.dmg&lt;/code&gt; file (which is the install formerly-DVD
 image) to that directory. Let’s try doing this on our own:&lt;/p&gt;
-&lt;pre class="code console"&gt;&lt;a name="rest_code_048fe857dd8c496c8ef2068f70eccd66-1"&gt;&lt;/a&gt;&lt;span class="gp"&gt;$&lt;/span&gt; mkdir &lt;span class="s2"&gt;"Install OS X El Capitan.app/Contents/SharedSupport"&lt;/span&gt;
-&lt;a name="rest_code_048fe857dd8c496c8ef2068f70eccd66-2"&gt;&lt;/a&gt;&lt;span class="gp"&gt;$&lt;/span&gt; mv InstallESD.dmg &lt;span class="s2"&gt;"Install OS X El Capitan.app/Contents/SharedSupport"&lt;/span&gt;
-&lt;a name="rest_code_048fe857dd8c496c8ef2068f70eccd66-3"&gt;&lt;/a&gt;&lt;span class="gp"&gt;#&lt;/span&gt; &lt;span class="s2"&gt;"Install OS X El Capitan.app/Contents/Resources/createinstallmedia"&lt;/span&gt; --volume /Volumes/MyBlankUSBDrive --applicationpath &lt;span class="s2"&gt;"Install OS X El Capitan.app"&lt;/span&gt;
-&lt;a name="rest_code_048fe857dd8c496c8ef2068f70eccd66-4"&gt;&lt;/a&gt;&lt;span class="go"&gt;Ready to start.&lt;/span&gt;
-&lt;a name="rest_code_048fe857dd8c496c8ef2068f70eccd66-5"&gt;&lt;/a&gt;&lt;span class="go"&gt;To continue we need to erase the disk at /Volumes/MyBlankUSBDrive.&lt;/span&gt;
-&lt;a name="rest_code_048fe857dd8c496c8ef2068f70eccd66-6"&gt;&lt;/a&gt;&lt;span class="go"&gt;If you wish to continue type (Y) then press return:&lt;/span&gt;
+&lt;pre class="code console"&gt;&lt;a name="rest_code_a022bd7d8aa7495db1987cb120724317-1"&gt;&lt;/a&gt;&lt;span class="gp"&gt;$&lt;/span&gt; mkdir &lt;span class="s2"&gt;"Install OS X El Capitan.app/Contents/SharedSupport"&lt;/span&gt;
+&lt;a name="rest_code_a022bd7d8aa7495db1987cb120724317-2"&gt;&lt;/a&gt;&lt;span class="gp"&gt;$&lt;/span&gt; mv InstallESD.dmg &lt;span class="s2"&gt;"Install OS X El Capitan.app/Contents/SharedSupport"&lt;/span&gt;
+&lt;a name="rest_code_a022bd7d8aa7495db1987cb120724317-3"&gt;&lt;/a&gt;&lt;span class="gp"&gt;#&lt;/span&gt; &lt;span class="s2"&gt;"Install OS X El Capitan.app/Contents/Resources/createinstallmedia"&lt;/span&gt; --volume /Volumes/MyBlankUSBDrive --applicationpath &lt;span class="s2"&gt;"Install OS X El Capitan.app"&lt;/span&gt;
+&lt;a name="rest_code_a022bd7d8aa7495db1987cb120724317-4"&gt;&lt;/a&gt;&lt;span class="go"&gt;Ready to start.&lt;/span&gt;
+&lt;a name="rest_code_a022bd7d8aa7495db1987cb120724317-5"&gt;&lt;/a&gt;&lt;span class="go"&gt;To continue we need to erase the disk at /Volumes/MyBlankUSBDrive.&lt;/span&gt;
+&lt;a name="rest_code_a022bd7d8aa7495db1987cb120724317-6"&gt;&lt;/a&gt;&lt;span class="go"&gt;If you wish to continue type (Y) then press return:&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;And it works! &lt;code class="docutils literal"&gt;createinstallmedia&lt;/code&gt; will now produce valid install media.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="b-installer-from-recovery-app-store-any-macos-version"&gt;
 &lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#id5"&gt;b. Installer from Recovery/App Store (any macOS version)&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;If you are in Recovery, you can find an Install app on the filesystem. If you
 try to run it, you will get the same error as in the previous paragraph:&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_c6e9db6dca9d4a149e52312092999a71-1"&gt;&lt;/a&gt;Install macOS Catalina.app does not appear to be a valid OS installer application.
+&lt;pre class="code text"&gt;&lt;a name="rest_code_176783872fde462a87135ae5e3144846-1"&gt;&lt;/a&gt;Install macOS Catalina.app does not appear to be a valid OS installer application.
 &lt;/pre&gt;&lt;p&gt;This also happens with some older macOS versions, where you get a small
 &lt;code class="docutils literal"&gt;.app&lt;/code&gt; from the App Store, and that app does the actual download.&lt;/p&gt;
 &lt;p&gt;Whatever the issue was, we need to download the install files with the
@@ -137,7 +279,7 @@ available options differ slightly depending on the OS version.&lt;/p&gt;&lt;/li&
 &lt;p&gt;If you get this error, it might be because Apple’s signing keys expired, or
 because of other date/time weirdness. Regardless, you can force an install if
 you are sure the installer is not damaged with this command &lt;a class="reference external" href="https://apple.stackexchange.com/questions/216730/this-copy-of-the-install-os-x-el-capitan-application-cant-be-verified-it-may-h"&gt;(source)&lt;/a&gt;:&lt;/p&gt;
-&lt;pre class="code console"&gt;&lt;a name="rest_code_f93cabea6288435586b7b3f9c2f9845e-1"&gt;&lt;/a&gt;&lt;span class="gp"&gt;#&lt;/span&gt; installer -pkg  /Volumes/Mac&lt;span class="se"&gt;\ &lt;/span&gt;OS&lt;span class="se"&gt;\ &lt;/span&gt;X&lt;span class="se"&gt;\ &lt;/span&gt;Install&lt;span class="se"&gt;\ &lt;/span&gt;DVD/Packages/OSInstall.mpkg -target /Volumes/&lt;span class="s2"&gt;"XXX"&lt;/span&gt;
+&lt;pre class="code console"&gt;&lt;a name="rest_code_8e1a1eb021154eb19734a14828c31591-1"&gt;&lt;/a&gt;&lt;span class="gp"&gt;#&lt;/span&gt; installer -pkg  /Volumes/Mac&lt;span class="se"&gt;\ &lt;/span&gt;OS&lt;span class="se"&gt;\ &lt;/span&gt;X&lt;span class="se"&gt;\ &lt;/span&gt;Install&lt;span class="se"&gt;\ &lt;/span&gt;DVD/Packages/OSInstall.mpkg -target /Volumes/&lt;span class="s2"&gt;"XXX"&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;div class="section" id="bonus-tidbit-1-how-the-download-works"&gt;
 &lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/pl/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#id7"&gt;Bonus tidbit 1: how the download works&lt;/a&gt;&lt;/h2&gt;

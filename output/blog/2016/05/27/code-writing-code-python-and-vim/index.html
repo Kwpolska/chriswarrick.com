@@ -129,64 +129,37 @@ trainwreck, though). One of the things I used in that project was a DataGrid
 bound to a list of custom objects (a DataGrid is a table, basically). And in
 order to use it, you need to use the <code class="docutils literal">INotifyPropertyChanged</code> interface <a class="reference external" href="https://msdn.microsoft.com/en-us/library/ms229614(v=vs.100).aspx">(MSDN)</a>.
 It involves doing something like this:</p>
-<div class="code"><table class="codetable">
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_85e79df7a6f74856bd0ddbefd37fffd8-1"><code data-line-number=" 1"></code></a></td>
-<td class="code"><code><a name="rest_code_85e79df7a6f74856bd0ddbefd37fffd8-1"></a> <span class="k">private</span> <span class="kt">string</span> <span class="n">name_</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">};</span> <span class="c1">// can also be a field</span></code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_85e79df7a6f74856bd0ddbefd37fffd8-2"><code data-line-number=" 2"></code></a></td>
-<td class="code"><code><a name="rest_code_85e79df7a6f74856bd0ddbefd37fffd8-2"></a></code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_85e79df7a6f74856bd0ddbefd37fffd8-3"><code data-line-number=" 3"></code></a></td>
-<td class="code"><code><a name="rest_code_85e79df7a6f74856bd0ddbefd37fffd8-3"></a><span class="na"> [JsonProperty]</span></code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_85e79df7a6f74856bd0ddbefd37fffd8-4"><code data-line-number=" 4"></code></a></td>
-<td class="code"><code><a name="rest_code_85e79df7a6f74856bd0ddbefd37fffd8-4"></a> <span class="k">public</span> <span class="kt">string</span> <span class="n">name</span> <span class="p">{</span></code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_85e79df7a6f74856bd0ddbefd37fffd8-5"><code data-line-number=" 5"></code></a></td>
-<td class="code"><code><a name="rest_code_85e79df7a6f74856bd0ddbefd37fffd8-5"></a>     <span class="k">get</span> <span class="p">{</span></code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_85e79df7a6f74856bd0ddbefd37fffd8-6"><code data-line-number=" 6"></code></a></td>
-<td class="code"><code><a name="rest_code_85e79df7a6f74856bd0ddbefd37fffd8-6"></a>         <span class="k">return</span> <span class="n">name_</span><span class="p">;</span></code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_85e79df7a6f74856bd0ddbefd37fffd8-7"><code data-line-number=" 7"></code></a></td>
-<td class="code"><code><a name="rest_code_85e79df7a6f74856bd0ddbefd37fffd8-7"></a>     <span class="p">}</span></code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_85e79df7a6f74856bd0ddbefd37fffd8-8"><code data-line-number=" 8"></code></a></td>
-<td class="code"><code><a name="rest_code_85e79df7a6f74856bd0ddbefd37fffd8-8"></a>     <span class="k">set</span> <span class="p">{</span></code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_85e79df7a6f74856bd0ddbefd37fffd8-9"><code data-line-number=" 9"></code></a></td>
-<td class="code"><code><a name="rest_code_85e79df7a6f74856bd0ddbefd37fffd8-9"></a>         <span class="k">if</span> <span class="p">(</span><span class="k">value</span> <span class="p">!=</span> <span class="n">name_</span><span class="p">)</span> <span class="p">{</span></code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_85e79df7a6f74856bd0ddbefd37fffd8-10"><code data-line-number="10"></code></a></td>
-<td class="code"><code><a name="rest_code_85e79df7a6f74856bd0ddbefd37fffd8-10"></a>             <span class="n">name_</span> <span class="p">=</span> <span class="k">value</span><span class="p">;</span></code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_85e79df7a6f74856bd0ddbefd37fffd8-11"><code data-line-number="11"></code></a></td>
-<td class="code"><code><a name="rest_code_85e79df7a6f74856bd0ddbefd37fffd8-11"></a>             <span class="n">NotifyPropertyChanged</span><span class="p">(</span><span class="s">"name"</span><span class="p">);</span></code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_85e79df7a6f74856bd0ddbefd37fffd8-12"><code data-line-number="12"></code></a></td>
-<td class="code"><code><a name="rest_code_85e79df7a6f74856bd0ddbefd37fffd8-12"></a>         <span class="p">}</span></code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_85e79df7a6f74856bd0ddbefd37fffd8-13"><code data-line-number="13"></code></a></td>
-<td class="code"><code><a name="rest_code_85e79df7a6f74856bd0ddbefd37fffd8-13"></a>     <span class="p">}</span></code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_85e79df7a6f74856bd0ddbefd37fffd8-14"><code data-line-number="14"></code></a></td>
-<td class="code"><code><a name="rest_code_85e79df7a6f74856bd0ddbefd37fffd8-14"></a> <span class="p">}</span></code></td>
-</tr>
-</table></div>
+<table class="codetable"><tr>
+<td class="linenos"><div class="linenodiv"><pre><a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_9069fafb16264add8af28f4981df1c0e-1"> 1</a>
+<a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_9069fafb16264add8af28f4981df1c0e-2"> 2</a>
+<a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_9069fafb16264add8af28f4981df1c0e-3"> 3</a>
+<a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_9069fafb16264add8af28f4981df1c0e-4"> 4</a>
+<a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_9069fafb16264add8af28f4981df1c0e-5"> 5</a>
+<a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_9069fafb16264add8af28f4981df1c0e-6"> 6</a>
+<a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_9069fafb16264add8af28f4981df1c0e-7"> 7</a>
+<a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_9069fafb16264add8af28f4981df1c0e-8"> 8</a>
+<a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_9069fafb16264add8af28f4981df1c0e-9"> 9</a>
+<a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_9069fafb16264add8af28f4981df1c0e-10">10</a>
+<a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_9069fafb16264add8af28f4981df1c0e-11">11</a>
+<a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_9069fafb16264add8af28f4981df1c0e-12">12</a>
+<a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_9069fafb16264add8af28f4981df1c0e-13">13</a>
+<a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_9069fafb16264add8af28f4981df1c0e-14">14</a></pre></div></td>
+<td class="code"><pre class="code csharp"><a name="rest_code_9069fafb16264add8af28f4981df1c0e-1"></a> <span class="k">private</span> <span class="kt">string</span> <span class="n">name_</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">};</span> <span class="c1">// can also be a field</span>
+<a name="rest_code_9069fafb16264add8af28f4981df1c0e-2"></a>
+<a name="rest_code_9069fafb16264add8af28f4981df1c0e-3"></a><span class="na"> [JsonProperty]</span>
+<a name="rest_code_9069fafb16264add8af28f4981df1c0e-4"></a> <span class="k">public</span> <span class="kt">string</span> <span class="n">name</span> <span class="p">{</span>
+<a name="rest_code_9069fafb16264add8af28f4981df1c0e-5"></a>     <span class="k">get</span> <span class="p">{</span>
+<a name="rest_code_9069fafb16264add8af28f4981df1c0e-6"></a>         <span class="k">return</span> <span class="n">name_</span><span class="p">;</span>
+<a name="rest_code_9069fafb16264add8af28f4981df1c0e-7"></a>     <span class="p">}</span>
+<a name="rest_code_9069fafb16264add8af28f4981df1c0e-8"></a>     <span class="k">set</span> <span class="p">{</span>
+<a name="rest_code_9069fafb16264add8af28f4981df1c0e-9"></a>         <span class="k">if</span> <span class="p">(</span><span class="k">value</span> <span class="p">!=</span> <span class="n">name_</span><span class="p">)</span> <span class="p">{</span>
+<a name="rest_code_9069fafb16264add8af28f4981df1c0e-10"></a>             <span class="n">name_</span> <span class="p">=</span> <span class="k">value</span><span class="p">;</span>
+<a name="rest_code_9069fafb16264add8af28f4981df1c0e-11"></a>             <span class="n">NotifyPropertyChanged</span><span class="p">(</span><span class="s">"name"</span><span class="p">);</span>
+<a name="rest_code_9069fafb16264add8af28f4981df1c0e-12"></a>         <span class="p">}</span>
+<a name="rest_code_9069fafb16264add8af28f4981df1c0e-13"></a>     <span class="p">}</span>
+<a name="rest_code_9069fafb16264add8af28f4981df1c0e-14"></a> <span class="p">}</span>
+</pre></td>
+</tr></table>
 <p>That’s 12 lines of code (excluding <code class="docutils literal">[JsonProperty]</code> which comes from the
 Json.NET library) for that pattern. Oh: and I need to do that for <strong>every</strong>
 field/property of my class, because otherwise any changes to them would not be
@@ -199,160 +172,85 @@ attribute (which does not appear on all properties).</p>
 really simple <a class="reference external" href="https://www.python.org/">Python</a> script and ran it. And I ended up with all 14 fields built
 for me.</p>
 <p><a class="reference external" href="/listings/code-writing-code/write_properties.py.html">code-writing-code/write_properties.py</a>  <a class="reference external" href="/listings/code-writing-code/write_properties.py">(Source)</a></p>
-<div class="code"><table class="codetable">
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_55efbc8a77324883bc7118f1c10d3423-1"><code data-line-number=" 1"></code></a></td>
-<td class="code"><code><a name="rest_code_55efbc8a77324883bc7118f1c10d3423-1"></a><span class="ch">#!/usr/bin/env python3</span></code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_55efbc8a77324883bc7118f1c10d3423-2"><code data-line-number=" 2"></code></a></td>
-<td class="code"><code><a name="rest_code_55efbc8a77324883bc7118f1c10d3423-2"></a><span class="n">TEMPLATE</span> <span class="o">=</span> <span class="s2">"""</span><span class="se">\</span></code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_55efbc8a77324883bc7118f1c10d3423-3"><code data-line-number=" 3"></code></a></td>
-<td class="code"><code><a name="rest_code_55efbc8a77324883bc7118f1c10d3423-3"></a><span class="s2">        </span><span class="si">%s</span><span class="s2">public </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2"> {</span></code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_55efbc8a77324883bc7118f1c10d3423-4"><code data-line-number=" 4"></code></a></td>
-<td class="code"><code><a name="rest_code_55efbc8a77324883bc7118f1c10d3423-4"></a><span class="s2">            get {</span></code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_55efbc8a77324883bc7118f1c10d3423-5"><code data-line-number=" 5"></code></a></td>
-<td class="code"><code><a name="rest_code_55efbc8a77324883bc7118f1c10d3423-5"></a><span class="s2">                return </span><span class="si">%s</span><span class="s2">_;</span></code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_55efbc8a77324883bc7118f1c10d3423-6"><code data-line-number=" 6"></code></a></td>
-<td class="code"><code><a name="rest_code_55efbc8a77324883bc7118f1c10d3423-6"></a><span class="s2">            }</span></code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_55efbc8a77324883bc7118f1c10d3423-7"><code data-line-number=" 7"></code></a></td>
-<td class="code"><code><a name="rest_code_55efbc8a77324883bc7118f1c10d3423-7"></a><span class="s2">            set {</span></code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_55efbc8a77324883bc7118f1c10d3423-8"><code data-line-number=" 8"></code></a></td>
-<td class="code"><code><a name="rest_code_55efbc8a77324883bc7118f1c10d3423-8"></a><span class="s2">                if (value != </span><span class="si">%s</span><span class="s2">_) {</span></code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_55efbc8a77324883bc7118f1c10d3423-9"><code data-line-number=" 9"></code></a></td>
-<td class="code"><code><a name="rest_code_55efbc8a77324883bc7118f1c10d3423-9"></a><span class="s2">                    </span><span class="si">%s</span><span class="s2">_ = value;</span></code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_55efbc8a77324883bc7118f1c10d3423-10"><code data-line-number="10"></code></a></td>
-<td class="code"><code><a name="rest_code_55efbc8a77324883bc7118f1c10d3423-10"></a><span class="s2">                    NotifyPropertyChanged("</span><span class="si">%s</span><span class="s2">");</span></code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_55efbc8a77324883bc7118f1c10d3423-11"><code data-line-number="11"></code></a></td>
-<td class="code"><code><a name="rest_code_55efbc8a77324883bc7118f1c10d3423-11"></a><span class="s2">                }</span></code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_55efbc8a77324883bc7118f1c10d3423-12"><code data-line-number="12"></code></a></td>
-<td class="code"><code><a name="rest_code_55efbc8a77324883bc7118f1c10d3423-12"></a><span class="s2">            }</span></code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_55efbc8a77324883bc7118f1c10d3423-13"><code data-line-number="13"></code></a></td>
-<td class="code"><code><a name="rest_code_55efbc8a77324883bc7118f1c10d3423-13"></a><span class="s2">        }</span></code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_55efbc8a77324883bc7118f1c10d3423-14"><code data-line-number="14"></code></a></td>
-<td class="code"><code><a name="rest_code_55efbc8a77324883bc7118f1c10d3423-14"></a><span class="s2">"""</span></code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_55efbc8a77324883bc7118f1c10d3423-15"><code data-line-number="15"></code></a></td>
-<td class="code"><code><a name="rest_code_55efbc8a77324883bc7118f1c10d3423-15"></a><span class="n">JSONPROPERTY_TEMPLATE</span> <span class="o">=</span> <span class="s1">'[JsonProperty]</span><span class="se">\n</span><span class="s1">        '</span></code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_55efbc8a77324883bc7118f1c10d3423-16"><code data-line-number="16"></code></a></td>
-<td class="code"><code><a name="rest_code_55efbc8a77324883bc7118f1c10d3423-16"></a></code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_55efbc8a77324883bc7118f1c10d3423-17"><code data-line-number="17"></code></a></td>
-<td class="code"><code><a name="rest_code_55efbc8a77324883bc7118f1c10d3423-17"></a><span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="n">has_jsonproperty</span><span class="p">,</span> <span class="n">vtype</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span></code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_55efbc8a77324883bc7118f1c10d3423-18"><code data-line-number="18"></code></a></td>
-<td class="code"><code><a name="rest_code_55efbc8a77324883bc7118f1c10d3423-18"></a>    <span class="k">if</span> <span class="n">has_jsonproperty</span><span class="p">:</span></code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_55efbc8a77324883bc7118f1c10d3423-19"><code data-line-number="19"></code></a></td>
-<td class="code"><code><a name="rest_code_55efbc8a77324883bc7118f1c10d3423-19"></a>        <span class="n">jsonproperty</span> <span class="o">=</span> <span class="n">JSONPROPERTY_TEMPLATE</span></code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_55efbc8a77324883bc7118f1c10d3423-20"><code data-line-number="20"></code></a></td>
-<td class="code"><code><a name="rest_code_55efbc8a77324883bc7118f1c10d3423-20"></a>    <span class="k">else</span><span class="p">:</span></code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_55efbc8a77324883bc7118f1c10d3423-21"><code data-line-number="21"></code></a></td>
-<td class="code"><code><a name="rest_code_55efbc8a77324883bc7118f1c10d3423-21"></a>        <span class="n">jsonproperty</span> <span class="o">=</span> <span class="s1">''</span></code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_55efbc8a77324883bc7118f1c10d3423-22"><code data-line-number="22"></code></a></td>
-<td class="code"><code><a name="rest_code_55efbc8a77324883bc7118f1c10d3423-22"></a>    <span class="k">return</span> <span class="n">TEMPLATE</span> <span class="o">%</span> <span class="p">(</span><span class="n">jsonproperty</span><span class="p">,</span> <span class="n">vtype</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_55efbc8a77324883bc7118f1c10d3423-23"><code data-line-number="23"></code></a></td>
-<td class="code"><code><a name="rest_code_55efbc8a77324883bc7118f1c10d3423-23"></a></code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_55efbc8a77324883bc7118f1c10d3423-24"><code data-line-number="24"></code></a></td>
-<td class="code"><code><a name="rest_code_55efbc8a77324883bc7118f1c10d3423-24"></a><span class="n">properties</span> <span class="o">=</span> <span class="p">[</span></code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_55efbc8a77324883bc7118f1c10d3423-25"><code data-line-number="25"></code></a></td>
-<td class="code"><code><a name="rest_code_55efbc8a77324883bc7118f1c10d3423-25"></a>    <span class="s1">'1 string name'</span><span class="p">,</span></code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_55efbc8a77324883bc7118f1c10d3423-26"><code data-line-number="26"></code></a></td>
-<td class="code"><code><a name="rest_code_55efbc8a77324883bc7118f1c10d3423-26"></a>    <span class="s1">'0 int another'</span><span class="p">,</span></code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_55efbc8a77324883bc7118f1c10d3423-27"><code data-line-number="27"></code></a></td>
-<td class="code"><code><a name="rest_code_55efbc8a77324883bc7118f1c10d3423-27"></a>    <span class="c1"># 12 fields omitted for brevity</span></code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_55efbc8a77324883bc7118f1c10d3423-28"><code data-line-number="28"></code></a></td>
-<td class="code"><code><a name="rest_code_55efbc8a77324883bc7118f1c10d3423-28"></a><span class="p">]</span></code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_55efbc8a77324883bc7118f1c10d3423-29"><code data-line-number="29"></code></a></td>
-<td class="code"><code><a name="rest_code_55efbc8a77324883bc7118f1c10d3423-29"></a><span class="n">properties_split</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">split</span><span class="p">()</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">properties</span><span class="p">]</span></code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_55efbc8a77324883bc7118f1c10d3423-30"><code data-line-number="30"></code></a></td>
-<td class="code"><code><a name="rest_code_55efbc8a77324883bc7118f1c10d3423-30"></a></code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_55efbc8a77324883bc7118f1c10d3423-31"><code data-line-number="31"></code></a></td>
-<td class="code"><code><a name="rest_code_55efbc8a77324883bc7118f1c10d3423-31"></a><span class="c1"># Private definitions (internal)</span></code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_55efbc8a77324883bc7118f1c10d3423-32"><code data-line-number="32"></code></a></td>
-<td class="code"><code><a name="rest_code_55efbc8a77324883bc7118f1c10d3423-32"></a><span class="k">for</span> <span class="n">has_jsonproperty</span><span class="p">,</span> <span class="n">vtype</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">properties_split</span><span class="p">:</span></code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_55efbc8a77324883bc7118f1c10d3423-33"><code data-line-number="33"></code></a></td>
-<td class="code"><code><a name="rest_code_55efbc8a77324883bc7118f1c10d3423-33"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">"        private </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">_ { get; set; }"</span> <span class="o">%</span> <span class="p">(</span><span class="n">vtype</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span></code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_55efbc8a77324883bc7118f1c10d3423-34"><code data-line-number="34"></code></a></td>
-<td class="code"><code><a name="rest_code_55efbc8a77324883bc7118f1c10d3423-34"></a></code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_55efbc8a77324883bc7118f1c10d3423-35"><code data-line-number="35"></code></a></td>
-<td class="code"><code><a name="rest_code_55efbc8a77324883bc7118f1c10d3423-35"></a><span class="nb">print</span><span class="p">()</span></code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_55efbc8a77324883bc7118f1c10d3423-36"><code data-line-number="36"></code></a></td>
-<td class="code"><code><a name="rest_code_55efbc8a77324883bc7118f1c10d3423-36"></a><span class="c1"># Public definitions (with notifications)</span></code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_55efbc8a77324883bc7118f1c10d3423-37"><code data-line-number="37"></code></a></td>
-<td class="code"><code><a name="rest_code_55efbc8a77324883bc7118f1c10d3423-37"></a><span class="k">for</span> <span class="n">has_jsonproperty</span><span class="p">,</span> <span class="n">vtype</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">properties_split</span><span class="p">:</span></code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_55efbc8a77324883bc7118f1c10d3423-38"><code data-line-number="38"></code></a></td>
-<td class="code"><code><a name="rest_code_55efbc8a77324883bc7118f1c10d3423-38"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">write</span><span class="p">(</span><span class="n">has_jsonproperty</span> <span class="o">==</span> <span class="s1">'1'</span><span class="p">,</span> <span class="n">vtype</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span></code></td>
-</tr>
-</table></div>
+<table class="codetable"><tr>
+<td class="linenos"><div class="linenodiv"><pre><a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_6a0d7249ee4741a698994c342693db98-1"> 1</a>
+<a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_6a0d7249ee4741a698994c342693db98-2"> 2</a>
+<a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_6a0d7249ee4741a698994c342693db98-3"> 3</a>
+<a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_6a0d7249ee4741a698994c342693db98-4"> 4</a>
+<a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_6a0d7249ee4741a698994c342693db98-5"> 5</a>
+<a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_6a0d7249ee4741a698994c342693db98-6"> 6</a>
+<a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_6a0d7249ee4741a698994c342693db98-7"> 7</a>
+<a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_6a0d7249ee4741a698994c342693db98-8"> 8</a>
+<a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_6a0d7249ee4741a698994c342693db98-9"> 9</a>
+<a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_6a0d7249ee4741a698994c342693db98-10">10</a>
+<a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_6a0d7249ee4741a698994c342693db98-11">11</a>
+<a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_6a0d7249ee4741a698994c342693db98-12">12</a>
+<a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_6a0d7249ee4741a698994c342693db98-13">13</a>
+<a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_6a0d7249ee4741a698994c342693db98-14">14</a>
+<a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_6a0d7249ee4741a698994c342693db98-15">15</a>
+<a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_6a0d7249ee4741a698994c342693db98-16">16</a>
+<a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_6a0d7249ee4741a698994c342693db98-17">17</a>
+<a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_6a0d7249ee4741a698994c342693db98-18">18</a>
+<a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_6a0d7249ee4741a698994c342693db98-19">19</a>
+<a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_6a0d7249ee4741a698994c342693db98-20">20</a>
+<a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_6a0d7249ee4741a698994c342693db98-21">21</a>
+<a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_6a0d7249ee4741a698994c342693db98-22">22</a>
+<a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_6a0d7249ee4741a698994c342693db98-23">23</a>
+<a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_6a0d7249ee4741a698994c342693db98-24">24</a>
+<a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_6a0d7249ee4741a698994c342693db98-25">25</a>
+<a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_6a0d7249ee4741a698994c342693db98-26">26</a>
+<a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_6a0d7249ee4741a698994c342693db98-27">27</a>
+<a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_6a0d7249ee4741a698994c342693db98-28">28</a>
+<a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_6a0d7249ee4741a698994c342693db98-29">29</a>
+<a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_6a0d7249ee4741a698994c342693db98-30">30</a>
+<a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_6a0d7249ee4741a698994c342693db98-31">31</a>
+<a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_6a0d7249ee4741a698994c342693db98-32">32</a>
+<a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_6a0d7249ee4741a698994c342693db98-33">33</a>
+<a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_6a0d7249ee4741a698994c342693db98-34">34</a>
+<a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_6a0d7249ee4741a698994c342693db98-35">35</a>
+<a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_6a0d7249ee4741a698994c342693db98-36">36</a>
+<a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_6a0d7249ee4741a698994c342693db98-37">37</a>
+<a href="/blog/2016/05/27/code-writing-code-python-and-vim/#rest_code_6a0d7249ee4741a698994c342693db98-38">38</a></pre></div></td>
+<td class="code"><pre class="code python"><a name="rest_code_6a0d7249ee4741a698994c342693db98-1"></a><span class="ch">#!/usr/bin/env python3</span>
+<a name="rest_code_6a0d7249ee4741a698994c342693db98-2"></a><span class="n">TEMPLATE</span> <span class="o">=</span> <span class="s2">"""</span><span class="se">\</span>
+<a name="rest_code_6a0d7249ee4741a698994c342693db98-3"></a><span class="s2">        </span><span class="si">%s</span><span class="s2">public </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2"> {</span>
+<a name="rest_code_6a0d7249ee4741a698994c342693db98-4"></a><span class="s2">            get {</span>
+<a name="rest_code_6a0d7249ee4741a698994c342693db98-5"></a><span class="s2">                return </span><span class="si">%s</span><span class="s2">_;</span>
+<a name="rest_code_6a0d7249ee4741a698994c342693db98-6"></a><span class="s2">            }</span>
+<a name="rest_code_6a0d7249ee4741a698994c342693db98-7"></a><span class="s2">            set {</span>
+<a name="rest_code_6a0d7249ee4741a698994c342693db98-8"></a><span class="s2">                if (value != </span><span class="si">%s</span><span class="s2">_) {</span>
+<a name="rest_code_6a0d7249ee4741a698994c342693db98-9"></a><span class="s2">                    </span><span class="si">%s</span><span class="s2">_ = value;</span>
+<a name="rest_code_6a0d7249ee4741a698994c342693db98-10"></a><span class="s2">                    NotifyPropertyChanged("</span><span class="si">%s</span><span class="s2">");</span>
+<a name="rest_code_6a0d7249ee4741a698994c342693db98-11"></a><span class="s2">                }</span>
+<a name="rest_code_6a0d7249ee4741a698994c342693db98-12"></a><span class="s2">            }</span>
+<a name="rest_code_6a0d7249ee4741a698994c342693db98-13"></a><span class="s2">        }</span>
+<a name="rest_code_6a0d7249ee4741a698994c342693db98-14"></a><span class="s2">"""</span>
+<a name="rest_code_6a0d7249ee4741a698994c342693db98-15"></a><span class="n">JSONPROPERTY_TEMPLATE</span> <span class="o">=</span> <span class="s1">'[JsonProperty]</span><span class="se">\n</span><span class="s1">        '</span>
+<a name="rest_code_6a0d7249ee4741a698994c342693db98-16"></a>
+<a name="rest_code_6a0d7249ee4741a698994c342693db98-17"></a><span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="n">has_jsonproperty</span><span class="p">,</span> <span class="n">vtype</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<a name="rest_code_6a0d7249ee4741a698994c342693db98-18"></a>    <span class="k">if</span> <span class="n">has_jsonproperty</span><span class="p">:</span>
+<a name="rest_code_6a0d7249ee4741a698994c342693db98-19"></a>        <span class="n">jsonproperty</span> <span class="o">=</span> <span class="n">JSONPROPERTY_TEMPLATE</span>
+<a name="rest_code_6a0d7249ee4741a698994c342693db98-20"></a>    <span class="k">else</span><span class="p">:</span>
+<a name="rest_code_6a0d7249ee4741a698994c342693db98-21"></a>        <span class="n">jsonproperty</span> <span class="o">=</span> <span class="s1">''</span>
+<a name="rest_code_6a0d7249ee4741a698994c342693db98-22"></a>    <span class="k">return</span> <span class="n">TEMPLATE</span> <span class="o">%</span> <span class="p">(</span><span class="n">jsonproperty</span><span class="p">,</span> <span class="n">vtype</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+<a name="rest_code_6a0d7249ee4741a698994c342693db98-23"></a>
+<a name="rest_code_6a0d7249ee4741a698994c342693db98-24"></a><span class="n">properties</span> <span class="o">=</span> <span class="p">[</span>
+<a name="rest_code_6a0d7249ee4741a698994c342693db98-25"></a>    <span class="s1">'1 string name'</span><span class="p">,</span>
+<a name="rest_code_6a0d7249ee4741a698994c342693db98-26"></a>    <span class="s1">'0 int another'</span><span class="p">,</span>
+<a name="rest_code_6a0d7249ee4741a698994c342693db98-27"></a>    <span class="c1"># 12 fields omitted for brevity</span>
+<a name="rest_code_6a0d7249ee4741a698994c342693db98-28"></a><span class="p">]</span>
+<a name="rest_code_6a0d7249ee4741a698994c342693db98-29"></a><span class="n">properties_split</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">split</span><span class="p">()</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">properties</span><span class="p">]</span>
+<a name="rest_code_6a0d7249ee4741a698994c342693db98-30"></a>
+<a name="rest_code_6a0d7249ee4741a698994c342693db98-31"></a><span class="c1"># Private definitions (internal)</span>
+<a name="rest_code_6a0d7249ee4741a698994c342693db98-32"></a><span class="k">for</span> <span class="n">has_jsonproperty</span><span class="p">,</span> <span class="n">vtype</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">properties_split</span><span class="p">:</span>
+<a name="rest_code_6a0d7249ee4741a698994c342693db98-33"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">"        private </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">_ { get; set; }"</span> <span class="o">%</span> <span class="p">(</span><span class="n">vtype</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
+<a name="rest_code_6a0d7249ee4741a698994c342693db98-34"></a>
+<a name="rest_code_6a0d7249ee4741a698994c342693db98-35"></a><span class="nb">print</span><span class="p">()</span>
+<a name="rest_code_6a0d7249ee4741a698994c342693db98-36"></a><span class="c1"># Public definitions (with notifications)</span>
+<a name="rest_code_6a0d7249ee4741a698994c342693db98-37"></a><span class="k">for</span> <span class="n">has_jsonproperty</span><span class="p">,</span> <span class="n">vtype</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">properties_split</span><span class="p">:</span>
+<a name="rest_code_6a0d7249ee4741a698994c342693db98-38"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">write</span><span class="p">(</span><span class="n">has_jsonproperty</span> <span class="o">==</span> <span class="s1">'1'</span><span class="p">,</span> <span class="n">vtype</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
+</pre></td>
+</tr></table>
 <p>That script takes a list of properties and spits out a block of code, ready to
 be pasted into the code. Visual Studio has a nice <em>Insert File as Text</em>
 feature, so redirecting the output to a file and using that option is enough.</p>
@@ -367,10 +265,10 @@ looking at you, IntelliJ IDEA aka PyCharm aka Android Studio…)</p>
 <p>And so, I was building a test suite, using <a class="reference external" href="http://junit.org/">JUnit</a>. It’s pretty
 straightforward, and I remember the syntax from Python’s unittest (even though
 I write tests with <a class="reference external" href="http://pytest.org/">pytest</a> nowadays). Or so I thought.</p>
-<pre class="code java"><a name="rest_code_305f9fbf7cb04423902aa32b7e964410-1"></a><span class="c1">// (incorrect)</span>
-<a name="rest_code_305f9fbf7cb04423902aa32b7e964410-2"></a><span class="n">assertEquals</span><span class="p">(</span><span class="s">"Basic integers (7) failed"</span><span class="p">,</span> <span class="n">namer</span><span class="p">.</span><span class="na">name</span><span class="p">(</span><span class="mi">7L</span><span class="p">),</span> <span class="s">"seven"</span><span class="p">);</span>
-<a name="rest_code_305f9fbf7cb04423902aa32b7e964410-3"></a><span class="c1">// (fixed)                              ^ cursor</span>
-<a name="rest_code_305f9fbf7cb04423902aa32b7e964410-4"></a><span class="n">assertEquals</span><span class="p">(</span><span class="s">"Basic integers (7) failed"</span><span class="p">,</span> <span class="s">"seven"</span><span class="p">,</span> <span class="n">namer</span><span class="p">.</span><span class="na">name</span><span class="p">(</span><span class="mi">7L</span><span class="p">));</span>
+<pre class="code java"><a name="rest_code_7706d889c8e6416b9107086ac5a9f2f8-1"></a><span class="c1">// (incorrect)</span>
+<a name="rest_code_7706d889c8e6416b9107086ac5a9f2f8-2"></a><span class="n">assertEquals</span><span class="p">(</span><span class="s">"Basic integers (7) failed"</span><span class="p">,</span> <span class="n">namer</span><span class="p">.</span><span class="na">name</span><span class="p">(</span><span class="mi">7L</span><span class="p">),</span> <span class="s">"seven"</span><span class="p">);</span>
+<a name="rest_code_7706d889c8e6416b9107086ac5a9f2f8-3"></a><span class="c1">// (fixed)                              ^ cursor</span>
+<a name="rest_code_7706d889c8e6416b9107086ac5a9f2f8-4"></a><span class="n">assertEquals</span><span class="p">(</span><span class="s">"Basic integers (7) failed"</span><span class="p">,</span> <span class="s">"seven"</span><span class="p">,</span> <span class="n">namer</span><span class="p">.</span><span class="na">name</span><span class="p">(</span><span class="mi">7L</span><span class="p">));</span>
 </pre>
 <p>You see, the typical Python spelling is <code class="docutils literal">self.assertEquals(actual,
 expected)</code>. Java adds a <code class="docutils literal">String</code> message parameter and it also swaps

@@ -23,6 +23,7 @@ og: http://ogp.me/ns#
 <!--[if lt IE 9]><script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]--><meta name="description" itemprop="description" content="A collection of tricks to convince macOS installers to work.">
 <meta name="author" content="Chris Warrick">
 <link rel="prev" href="/blog/2020/02/09/when-html-is-not-enough-a-tale-of-the-datalist-element/" title="When HTML is not enough: a tale of the &lt;datalist&gt; element" type="text/html">
+<link rel="next" href="/blog/2020/06/22/what-an-arm-mac-means-for-developers-and-windows-users/" title="What an ARM Mac means for developers and Windows users" type="text/html">
 <meta property="og:site_name" content="Chris Warrick">
 <meta property="og:title" content="Reinstalling macOS: What To Try When All Else Fails">
 <meta property="og:url" content="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/">
@@ -187,21 +188,21 @@ it at all the compressed files mentioned in this paragraph.)</p>
 <div class="section" id="a-from-the-el-capitan-download">
 <h3><a class="toc-backref" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#id4">a. From the El Capitan download</a><a href="#a-from-the-el-capitan-download" class="headerlink" title="Permalink to this heading">¶</a></h3>
 <p>Let’s expand the El Capitan package.</p>
-<pre class="code console"><a name="rest_code_712b90bb37e7469e9640fa7b4bb4c726-1"></a><span class="gp">$</span> <span class="o">(</span>mount the DMG in Disk Utility, copy the .pkg to a read-write volume<span class="o">)</span>
-<a name="rest_code_712b90bb37e7469e9640fa7b4bb4c726-2"></a><span class="gp">$</span> pkgutil --expand InstallMacOSX.pkg elcapitan
-<a name="rest_code_712b90bb37e7469e9640fa7b4bb4c726-3"></a><span class="gp">$</span> ls -F elcapitan
-<a name="rest_code_712b90bb37e7469e9640fa7b4bb4c726-4"></a><span class="go">Distribution*       InstallMacOSX.pkg/ Resources/</span>
-<a name="rest_code_712b90bb37e7469e9640fa7b4bb4c726-5"></a><span class="gp">$</span> <span class="nb">cd</span> elcapitan/InstallMacOSX.pkg/
-<a name="rest_code_712b90bb37e7469e9640fa7b4bb4c726-6"></a><span class="gp">$</span> tar -xvf Payload
-<a name="rest_code_712b90bb37e7469e9640fa7b4bb4c726-7"></a><span class="go">x .</span>
-<a name="rest_code_712b90bb37e7469e9640fa7b4bb4c726-8"></a><span class="go">x ./Install OS X El Capitan.app</span>
-<a name="rest_code_712b90bb37e7469e9640fa7b4bb4c726-9"></a><span class="go">x ./Install OS X El Capitan.app/Contents</span>
-<a name="rest_code_712b90bb37e7469e9640fa7b4bb4c726-10"></a><span class="go">…</span>
+<pre class="code console"><a name="rest_code_4465f53f902844f4a3c0e5a6d43a66db-1"></a><span class="gp">$</span> <span class="o">(</span>mount the DMG in Disk Utility, copy the .pkg to a read-write volume<span class="o">)</span>
+<a name="rest_code_4465f53f902844f4a3c0e5a6d43a66db-2"></a><span class="gp">$</span> pkgutil --expand InstallMacOSX.pkg elcapitan
+<a name="rest_code_4465f53f902844f4a3c0e5a6d43a66db-3"></a><span class="gp">$</span> ls -F elcapitan
+<a name="rest_code_4465f53f902844f4a3c0e5a6d43a66db-4"></a><span class="go">Distribution*       InstallMacOSX.pkg/ Resources/</span>
+<a name="rest_code_4465f53f902844f4a3c0e5a6d43a66db-5"></a><span class="gp">$</span> <span class="nb">cd</span> elcapitan/InstallMacOSX.pkg/
+<a name="rest_code_4465f53f902844f4a3c0e5a6d43a66db-6"></a><span class="gp">$</span> tar -xvf Payload
+<a name="rest_code_4465f53f902844f4a3c0e5a6d43a66db-7"></a><span class="go">x .</span>
+<a name="rest_code_4465f53f902844f4a3c0e5a6d43a66db-8"></a><span class="go">x ./Install OS X El Capitan.app</span>
+<a name="rest_code_4465f53f902844f4a3c0e5a6d43a66db-9"></a><span class="go">x ./Install OS X El Capitan.app/Contents</span>
+<a name="rest_code_4465f53f902844f4a3c0e5a6d43a66db-10"></a><span class="go">…</span>
 </pre>
 <p>We’ve got the installer app, which is what we need to create an install image.
 Great, let’s try it!</p>
-<pre class="code console"><a name="rest_code_bd46ba9b04ee495b83681b94cd0d6123-1"></a><span class="gp">#</span> <span class="s2">"Install OS X El Capitan.app/Contents/Resources/createinstallmedia"</span> --volume /Volumes/MyBlankUSBDrive --applicationpath <span class="s2">"Install OS X El Capitan.app"</span>
-<a name="rest_code_bd46ba9b04ee495b83681b94cd0d6123-2"></a><span class="go">Install OS X El Capitan.app does not appear to be a valid OS installer application.</span>
+<pre class="code console"><a name="rest_code_fc48e3f62b724dae99895f34eddf3e92-1"></a><span class="gp">#</span> <span class="s2">"Install OS X El Capitan.app/Contents/Resources/createinstallmedia"</span> --volume /Volumes/MyBlankUSBDrive --applicationpath <span class="s2">"Install OS X El Capitan.app"</span>
+<a name="rest_code_fc48e3f62b724dae99895f34eddf3e92-2"></a><span class="go">Install OS X El Capitan.app does not appear to be a valid OS installer application.</span>
 </pre>
 <p>Oh, we’ve got a problem. Turns out there’s one more thing we need to take care
 of, and it’s the scripts. MacOS packages have scripts, typically shell scripts,
@@ -211,12 +212,12 @@ there’s an <code class="docutils literal">link_package</code> script we need t
 <code class="docutils literal">Contents/SharedSupport</code> directory inside the installer app, and
 copies/hardlinks the <code class="docutils literal">InstallESD.dmg</code> file (which is the install formerly-DVD
 image) to that directory. Let’s try doing this on our own:</p>
-<pre class="code console"><a name="rest_code_048fe857dd8c496c8ef2068f70eccd66-1"></a><span class="gp">$</span> mkdir <span class="s2">"Install OS X El Capitan.app/Contents/SharedSupport"</span>
-<a name="rest_code_048fe857dd8c496c8ef2068f70eccd66-2"></a><span class="gp">$</span> mv InstallESD.dmg <span class="s2">"Install OS X El Capitan.app/Contents/SharedSupport"</span>
-<a name="rest_code_048fe857dd8c496c8ef2068f70eccd66-3"></a><span class="gp">#</span> <span class="s2">"Install OS X El Capitan.app/Contents/Resources/createinstallmedia"</span> --volume /Volumes/MyBlankUSBDrive --applicationpath <span class="s2">"Install OS X El Capitan.app"</span>
-<a name="rest_code_048fe857dd8c496c8ef2068f70eccd66-4"></a><span class="go">Ready to start.</span>
-<a name="rest_code_048fe857dd8c496c8ef2068f70eccd66-5"></a><span class="go">To continue we need to erase the disk at /Volumes/MyBlankUSBDrive.</span>
-<a name="rest_code_048fe857dd8c496c8ef2068f70eccd66-6"></a><span class="go">If you wish to continue type (Y) then press return:</span>
+<pre class="code console"><a name="rest_code_a022bd7d8aa7495db1987cb120724317-1"></a><span class="gp">$</span> mkdir <span class="s2">"Install OS X El Capitan.app/Contents/SharedSupport"</span>
+<a name="rest_code_a022bd7d8aa7495db1987cb120724317-2"></a><span class="gp">$</span> mv InstallESD.dmg <span class="s2">"Install OS X El Capitan.app/Contents/SharedSupport"</span>
+<a name="rest_code_a022bd7d8aa7495db1987cb120724317-3"></a><span class="gp">#</span> <span class="s2">"Install OS X El Capitan.app/Contents/Resources/createinstallmedia"</span> --volume /Volumes/MyBlankUSBDrive --applicationpath <span class="s2">"Install OS X El Capitan.app"</span>
+<a name="rest_code_a022bd7d8aa7495db1987cb120724317-4"></a><span class="go">Ready to start.</span>
+<a name="rest_code_a022bd7d8aa7495db1987cb120724317-5"></a><span class="go">To continue we need to erase the disk at /Volumes/MyBlankUSBDrive.</span>
+<a name="rest_code_a022bd7d8aa7495db1987cb120724317-6"></a><span class="go">If you wish to continue type (Y) then press return:</span>
 </pre>
 <p>And it works! <code class="docutils literal">createinstallmedia</code> will now produce valid install media.</p>
 </div>
@@ -224,7 +225,7 @@ image) to that directory. Let’s try doing this on our own:</p>
 <h3><a class="toc-backref" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#id5">b. Installer from Recovery/App Store (any macOS version)</a><a href="#b-installer-from-recovery-app-store-any-macos-version" class="headerlink" title="Permalink to this heading">¶</a></h3>
 <p>If you are in Recovery, you can find an Install app on the filesystem. If you
 try to run it, you will get the same error as in the previous paragraph:</p>
-<pre class="code text"><a name="rest_code_c6e9db6dca9d4a149e52312092999a71-1"></a>Install macOS Catalina.app does not appear to be a valid OS installer application.
+<pre class="code text"><a name="rest_code_176783872fde462a87135ae5e3144846-1"></a>Install macOS Catalina.app does not appear to be a valid OS installer application.
 </pre>
 <p>This also happens with some older macOS versions, where you get a small
 <code class="docutils literal">.app</code> from the App Store, and that app does the actual download.</p>
@@ -255,7 +256,7 @@ available options differ slightly depending on the OS version.</p></li>
 <p>If you get this error, it might be because Apple’s signing keys expired, or
 because of other date/time weirdness. Regardless, you can force an install if
 you are sure the installer is not damaged with this command <a class="reference external" href="https://apple.stackexchange.com/questions/216730/this-copy-of-the-install-os-x-el-capitan-application-cant-be-verified-it-may-h">(source)</a>:</p>
-<pre class="code console"><a name="rest_code_f93cabea6288435586b7b3f9c2f9845e-1"></a><span class="gp">#</span> installer -pkg  /Volumes/Mac<span class="se">\ </span>OS<span class="se">\ </span>X<span class="se">\ </span>Install<span class="se">\ </span>DVD/Packages/OSInstall.mpkg -target /Volumes/<span class="s2">"XXX"</span>
+<pre class="code console"><a name="rest_code_8e1a1eb021154eb19734a14828c31591-1"></a><span class="gp">#</span> installer -pkg  /Volumes/Mac<span class="se">\ </span>OS<span class="se">\ </span>X<span class="se">\ </span>Install<span class="se">\ </span>DVD/Packages/OSInstall.mpkg -target /Volumes/<span class="s2">"XXX"</span>
 </pre>
 </div>
 <div class="section" id="bonus-tidbit-1-how-the-download-works">
@@ -352,6 +353,9 @@ get working install media immediately, myself, and from Apple.</p>
     <aside class="postpromonav"><nav><ul class="pager hidden-print">
 <li class="previous">
                 <a href="/blog/2020/02/09/when-html-is-not-enough-a-tale-of-the-datalist-element/" rel="prev" title="When HTML is not enough: a tale of the &lt;datalist&gt; element">Previous post</a>
+            </li>
+            <li class="next">
+                <a href="/blog/2020/06/22/what-an-arm-mac-means-for-developers-and-windows-users/" rel="next" title="What an ARM Mac means for developers and Windows users">Next post</a>
             </li>
         </ul></nav></aside><section class="comments"><div data-title="Reinstalling macOS: What To Try When All Else Fails" id="isso-thread"></div>
         <script src="https://isso.chriswarrick.com/js/embed.min.js" data-isso="https://isso.chriswarrick.com/" data-isso-lang="en" data-isso-require-author="true" data-isso-require-email="true" data-isso-gravatar="true" data-isso-avatar="false" data-isso-css="false" data-isso-vote="false" data-isso-reply-notifications="true"></script></section><!--End of body content--><nav id="footer-links"><div class="row">

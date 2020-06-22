@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chris Warrick (Posty o Unix)</title><link>https://chriswarrick.com/</link><description></description><atom:link href="https://chriswarrick.com/pl/blog/tags/unix.xml" rel="self" type="application/rss+xml"></atom:link><language>pl</language><lastBuildDate>Thu, 19 Mar 2020 15:45:38 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Spawning subprocesses smartly and securely</title><link>https://chriswarrick.com/pl/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;As part of your code, you may be inclined to call a command to do
+<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chris Warrick (Posty o Unix)</title><link>https://chriswarrick.com/</link><description></description><atom:link href="https://chriswarrick.com/pl/blog/tags/unix.xml" rel="self" type="application/rss+xml"></atom:link><language>pl</language><lastBuildDate>Mon, 22 Jun 2020 19:06:51 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Spawning subprocesses smartly and securely</title><link>https://chriswarrick.com/pl/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;As part of your code, you may be inclined to call a command to do
 something. But is it always a good idea? How to do it safely? What happens
 behind the scenes?&lt;/p&gt;
 &lt;!-- TEASER_END --&gt;
@@ -74,49 +74,49 @@ arguments passed to the process, or&lt;/p&gt;&lt;/li&gt;
 manpage for &lt;code class="docutils literal"&gt;system(3)&lt;/code&gt; puts it,&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;The &lt;code class="docutils literal"&gt;system()&lt;/code&gt; library function uses &lt;code class="docutils literal"&gt;fork(2)&lt;/code&gt; to create a child process that executes the shell command specified in command using &lt;code class="docutils literal"&gt;execl(3)&lt;/code&gt; as follows:&lt;/p&gt;
-&lt;pre class="code c"&gt;&lt;a name="rest_code_75b49cadacf842d786dc608d617515bb-1"&gt;&lt;/a&gt;&lt;span class="n"&gt;execl&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"/bin/sh"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"sh"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"-c"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;command&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;pre class="code c"&gt;&lt;a name="rest_code_80d535fd610c4c2587d3a783bceaf5f7-1"&gt;&lt;/a&gt;&lt;span class="n"&gt;execl&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"/bin/sh"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"sh"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"-c"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;command&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 &lt;/pre&gt;&lt;/blockquote&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;If you go through the shell, you pass one string argument, whereas &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;exec*()&lt;/span&gt;&lt;/code&gt; demands you to specify arguments separately. Let’s write a sample program to print all the arguments it receives. I’ll do it in Python to get a more readable output.&lt;/p&gt;
-&lt;pre class="code python"&gt;&lt;a name="rest_code_8dbedf8f94cc47b2a218cd3cb843b86f-1"&gt;&lt;/a&gt;&lt;span class="ch"&gt;#!/usr/bin/env python3&lt;/span&gt;
-&lt;a name="rest_code_8dbedf8f94cc47b2a218cd3cb843b86f-2"&gt;&lt;/a&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;sys&lt;/span&gt;
-&lt;a name="rest_code_8dbedf8f94cc47b2a218cd3cb843b86f-3"&gt;&lt;/a&gt;&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;pre class="code python"&gt;&lt;a name="rest_code_c759597f901740ed902b8c24d17293cc-1"&gt;&lt;/a&gt;&lt;span class="ch"&gt;#!/usr/bin/env python3&lt;/span&gt;
+&lt;a name="rest_code_c759597f901740ed902b8c24d17293cc-2"&gt;&lt;/a&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;sys&lt;/span&gt;
+&lt;a name="rest_code_c759597f901740ed902b8c24d17293cc-3"&gt;&lt;/a&gt;&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;Let’s see what appears:&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_cd70c9c23da2414e894b36d3fd7f80ba-1"&gt;&lt;/a&gt;$ ./argv.py foo bar
-&lt;a name="rest_code_cd70c9c23da2414e894b36d3fd7f80ba-2"&gt;&lt;/a&gt;['./argv.py', 'foo', 'bar']
-&lt;a name="rest_code_cd70c9c23da2414e894b36d3fd7f80ba-3"&gt;&lt;/a&gt;$ ./argv.py 'foo bar'
-&lt;a name="rest_code_cd70c9c23da2414e894b36d3fd7f80ba-4"&gt;&lt;/a&gt;['./argv.py', 'foo bar']
-&lt;a name="rest_code_cd70c9c23da2414e894b36d3fd7f80ba-5"&gt;&lt;/a&gt;$ ./argv.py foo\ bar baz
-&lt;a name="rest_code_cd70c9c23da2414e894b36d3fd7f80ba-6"&gt;&lt;/a&gt;['./argv.py', 'foo bar', 'baz']
-&lt;a name="rest_code_cd70c9c23da2414e894b36d3fd7f80ba-7"&gt;&lt;/a&gt;
-&lt;a name="rest_code_cd70c9c23da2414e894b36d3fd7f80ba-8"&gt;&lt;/a&gt;$ ./argv.py $(date)
-&lt;a name="rest_code_cd70c9c23da2414e894b36d3fd7f80ba-9"&gt;&lt;/a&gt;['./argv.py', 'Sat', 'Sep', '2', '16:54:52', 'CEST', '2017']
-&lt;a name="rest_code_cd70c9c23da2414e894b36d3fd7f80ba-10"&gt;&lt;/a&gt;$ ./argv.py "$(date)"
-&lt;a name="rest_code_cd70c9c23da2414e894b36d3fd7f80ba-11"&gt;&lt;/a&gt;['./argv.py', 'Sat Sep  2 16:54:52 CEST 2017']
-&lt;a name="rest_code_cd70c9c23da2414e894b36d3fd7f80ba-12"&gt;&lt;/a&gt;
-&lt;a name="rest_code_cd70c9c23da2414e894b36d3fd7f80ba-13"&gt;&lt;/a&gt;$ ./argv.py /usr/*
-&lt;a name="rest_code_cd70c9c23da2414e894b36d3fd7f80ba-14"&gt;&lt;/a&gt;['./argv.py', '/usr/X11', '/usr/X11R6', '/usr/bin', '/usr/include', '/usr/lib', '/usr/libexec', '/usr/local', '/usr/sbin', '/usr/share', '/usr/standalone']
-&lt;a name="rest_code_cd70c9c23da2414e894b36d3fd7f80ba-15"&gt;&lt;/a&gt;$ ./argv.py "/usr/*"
-&lt;a name="rest_code_cd70c9c23da2414e894b36d3fd7f80ba-16"&gt;&lt;/a&gt;['./argv.py', '/usr/*']
-&lt;a name="rest_code_cd70c9c23da2414e894b36d3fd7f80ba-17"&gt;&lt;/a&gt;
-&lt;a name="rest_code_cd70c9c23da2414e894b36d3fd7f80ba-18"&gt;&lt;/a&gt;$ ./argv.py $EDITOR
-&lt;a name="rest_code_cd70c9c23da2414e894b36d3fd7f80ba-19"&gt;&lt;/a&gt;['./argv.py', 'nvim']
-&lt;a name="rest_code_cd70c9c23da2414e894b36d3fd7f80ba-20"&gt;&lt;/a&gt;
-&lt;a name="rest_code_cd70c9c23da2414e894b36d3fd7f80ba-21"&gt;&lt;/a&gt;$ $PWD/argv.py foo bar
-&lt;a name="rest_code_cd70c9c23da2414e894b36d3fd7f80ba-22"&gt;&lt;/a&gt;['/Users/kwpolska/Desktop/blog/subprocess/argv.py', 'foo', 'bar']
-&lt;a name="rest_code_cd70c9c23da2414e894b36d3fd7f80ba-23"&gt;&lt;/a&gt;$ ./argv.py a{b,c}d
-&lt;a name="rest_code_cd70c9c23da2414e894b36d3fd7f80ba-24"&gt;&lt;/a&gt;['./argv.py', 'abd', 'acd']
-&lt;a name="rest_code_cd70c9c23da2414e894b36d3fd7f80ba-25"&gt;&lt;/a&gt;
-&lt;a name="rest_code_cd70c9c23da2414e894b36d3fd7f80ba-26"&gt;&lt;/a&gt;$ python argv.py foo bar | cat
-&lt;a name="rest_code_cd70c9c23da2414e894b36d3fd7f80ba-27"&gt;&lt;/a&gt;['argv.py', 'foo', 'bar']
-&lt;a name="rest_code_cd70c9c23da2414e894b36d3fd7f80ba-28"&gt;&lt;/a&gt;$ python argv.py foo bar &amp;gt; foo.txt
-&lt;a name="rest_code_cd70c9c23da2414e894b36d3fd7f80ba-29"&gt;&lt;/a&gt;$ cat foo.txt
-&lt;a name="rest_code_cd70c9c23da2414e894b36d3fd7f80ba-30"&gt;&lt;/a&gt;['argv.py', 'foo', 'bar']
-&lt;a name="rest_code_cd70c9c23da2414e894b36d3fd7f80ba-31"&gt;&lt;/a&gt;
-&lt;a name="rest_code_cd70c9c23da2414e894b36d3fd7f80ba-32"&gt;&lt;/a&gt;$ ./argv.py foo; ls /usr
-&lt;a name="rest_code_cd70c9c23da2414e894b36d3fd7f80ba-33"&gt;&lt;/a&gt;['./argv.py', 'foo']
-&lt;a name="rest_code_cd70c9c23da2414e894b36d3fd7f80ba-34"&gt;&lt;/a&gt;X11@        X11R6@      bin/        include/    lib/        libexec/    local/      sbin/       share/      standalone/
+&lt;pre class="code text"&gt;&lt;a name="rest_code_6e5057d5f3954f25965fc81f95cb935b-1"&gt;&lt;/a&gt;$ ./argv.py foo bar
+&lt;a name="rest_code_6e5057d5f3954f25965fc81f95cb935b-2"&gt;&lt;/a&gt;['./argv.py', 'foo', 'bar']
+&lt;a name="rest_code_6e5057d5f3954f25965fc81f95cb935b-3"&gt;&lt;/a&gt;$ ./argv.py 'foo bar'
+&lt;a name="rest_code_6e5057d5f3954f25965fc81f95cb935b-4"&gt;&lt;/a&gt;['./argv.py', 'foo bar']
+&lt;a name="rest_code_6e5057d5f3954f25965fc81f95cb935b-5"&gt;&lt;/a&gt;$ ./argv.py foo\ bar baz
+&lt;a name="rest_code_6e5057d5f3954f25965fc81f95cb935b-6"&gt;&lt;/a&gt;['./argv.py', 'foo bar', 'baz']
+&lt;a name="rest_code_6e5057d5f3954f25965fc81f95cb935b-7"&gt;&lt;/a&gt;
+&lt;a name="rest_code_6e5057d5f3954f25965fc81f95cb935b-8"&gt;&lt;/a&gt;$ ./argv.py $(date)
+&lt;a name="rest_code_6e5057d5f3954f25965fc81f95cb935b-9"&gt;&lt;/a&gt;['./argv.py', 'Sat', 'Sep', '2', '16:54:52', 'CEST', '2017']
+&lt;a name="rest_code_6e5057d5f3954f25965fc81f95cb935b-10"&gt;&lt;/a&gt;$ ./argv.py "$(date)"
+&lt;a name="rest_code_6e5057d5f3954f25965fc81f95cb935b-11"&gt;&lt;/a&gt;['./argv.py', 'Sat Sep  2 16:54:52 CEST 2017']
+&lt;a name="rest_code_6e5057d5f3954f25965fc81f95cb935b-12"&gt;&lt;/a&gt;
+&lt;a name="rest_code_6e5057d5f3954f25965fc81f95cb935b-13"&gt;&lt;/a&gt;$ ./argv.py /usr/*
+&lt;a name="rest_code_6e5057d5f3954f25965fc81f95cb935b-14"&gt;&lt;/a&gt;['./argv.py', '/usr/X11', '/usr/X11R6', '/usr/bin', '/usr/include', '/usr/lib', '/usr/libexec', '/usr/local', '/usr/sbin', '/usr/share', '/usr/standalone']
+&lt;a name="rest_code_6e5057d5f3954f25965fc81f95cb935b-15"&gt;&lt;/a&gt;$ ./argv.py "/usr/*"
+&lt;a name="rest_code_6e5057d5f3954f25965fc81f95cb935b-16"&gt;&lt;/a&gt;['./argv.py', '/usr/*']
+&lt;a name="rest_code_6e5057d5f3954f25965fc81f95cb935b-17"&gt;&lt;/a&gt;
+&lt;a name="rest_code_6e5057d5f3954f25965fc81f95cb935b-18"&gt;&lt;/a&gt;$ ./argv.py $EDITOR
+&lt;a name="rest_code_6e5057d5f3954f25965fc81f95cb935b-19"&gt;&lt;/a&gt;['./argv.py', 'nvim']
+&lt;a name="rest_code_6e5057d5f3954f25965fc81f95cb935b-20"&gt;&lt;/a&gt;
+&lt;a name="rest_code_6e5057d5f3954f25965fc81f95cb935b-21"&gt;&lt;/a&gt;$ $PWD/argv.py foo bar
+&lt;a name="rest_code_6e5057d5f3954f25965fc81f95cb935b-22"&gt;&lt;/a&gt;['/Users/kwpolska/Desktop/blog/subprocess/argv.py', 'foo', 'bar']
+&lt;a name="rest_code_6e5057d5f3954f25965fc81f95cb935b-23"&gt;&lt;/a&gt;$ ./argv.py a{b,c}d
+&lt;a name="rest_code_6e5057d5f3954f25965fc81f95cb935b-24"&gt;&lt;/a&gt;['./argv.py', 'abd', 'acd']
+&lt;a name="rest_code_6e5057d5f3954f25965fc81f95cb935b-25"&gt;&lt;/a&gt;
+&lt;a name="rest_code_6e5057d5f3954f25965fc81f95cb935b-26"&gt;&lt;/a&gt;$ python argv.py foo bar | cat
+&lt;a name="rest_code_6e5057d5f3954f25965fc81f95cb935b-27"&gt;&lt;/a&gt;['argv.py', 'foo', 'bar']
+&lt;a name="rest_code_6e5057d5f3954f25965fc81f95cb935b-28"&gt;&lt;/a&gt;$ python argv.py foo bar &amp;gt; foo.txt
+&lt;a name="rest_code_6e5057d5f3954f25965fc81f95cb935b-29"&gt;&lt;/a&gt;$ cat foo.txt
+&lt;a name="rest_code_6e5057d5f3954f25965fc81f95cb935b-30"&gt;&lt;/a&gt;['argv.py', 'foo', 'bar']
+&lt;a name="rest_code_6e5057d5f3954f25965fc81f95cb935b-31"&gt;&lt;/a&gt;
+&lt;a name="rest_code_6e5057d5f3954f25965fc81f95cb935b-32"&gt;&lt;/a&gt;$ ./argv.py foo; ls /usr
+&lt;a name="rest_code_6e5057d5f3954f25965fc81f95cb935b-33"&gt;&lt;/a&gt;['./argv.py', 'foo']
+&lt;a name="rest_code_6e5057d5f3954f25965fc81f95cb935b-34"&gt;&lt;/a&gt;X11@        X11R6@      bin/        include/    lib/        libexec/    local/      sbin/       share/      standalone/
 &lt;/pre&gt;&lt;p&gt;As you can see, the following things are handled by the shell (the process is unaware of this occurring):&lt;/p&gt;
 &lt;ul class="simple"&gt;
 &lt;li&gt;&lt;p&gt;quotes and escapes&lt;/p&gt;&lt;/li&gt;
@@ -196,40 +196,40 @@ to ASCII. Programs might just crash at random. Those are often simple to fix —
 all you need is correct locale configuration.&lt;/p&gt;
 &lt;!-- TEASER_END --&gt;
 &lt;p class="lead"&gt;Has this ever happened to you?&lt;/p&gt;
-&lt;pre class="code pytb"&gt;&lt;a name="rest_code_cd1dde86bf8a44aca00912a88d66e5c2-1"&gt;&lt;/a&gt;&lt;span class="gt"&gt;Traceback (most recent call last):&lt;/span&gt;
-&lt;a name="rest_code_cd1dde86bf8a44aca00912a88d66e5c2-2"&gt;&lt;/a&gt;  File &lt;span class="nb"&gt;"aogonek.py"&lt;/span&gt;, line &lt;span class="m"&gt;1&lt;/span&gt;, in &lt;span class="n"&gt;&amp;lt;module&amp;gt;&lt;/span&gt;
-&lt;a name="rest_code_cd1dde86bf8a44aca00912a88d66e5c2-3"&gt;&lt;/a&gt;    &lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;u&lt;/span&gt;&lt;span class="s1"&gt;'&lt;/span&gt;&lt;span class="se"&gt;\u0105&lt;/span&gt;&lt;span class="s1"&gt;'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_cd1dde86bf8a44aca00912a88d66e5c2-4"&gt;&lt;/a&gt;&lt;span class="gr"&gt;UnicodeEncodeError&lt;/span&gt;: &lt;span class="n"&gt;'ascii' codec can't encode character '\u0105' in position 0: ordinal not in range(128)&lt;/span&gt;
-&lt;/pre&gt;&lt;pre class="code text"&gt;&lt;a name="rest_code_db8ee4ed054f4d978c88a64dbf6cb1e6-1"&gt;&lt;/a&gt;Nikola: Could not guess locale for language en, using locale C
-&lt;/pre&gt;&lt;pre class="code text"&gt;&lt;a name="rest_code_60f1249ca2ac4eee8a6260e2fef250b1-1"&gt;&lt;/a&gt;Input: ą
-&lt;a name="rest_code_60f1249ca2ac4eee8a6260e2fef250b1-2"&gt;&lt;/a&gt;Desired ascii(): '\u0105'
-&lt;a name="rest_code_60f1249ca2ac4eee8a6260e2fef250b1-3"&gt;&lt;/a&gt;Real ascii(): '\udcc4\udc85'
-&lt;/pre&gt;&lt;pre class="code text"&gt;&lt;a name="rest_code_53f8400038404dd0a2ea030cb377d9b8-1"&gt;&lt;/a&gt;perl: warning: Setting locale failed.
-&lt;a name="rest_code_53f8400038404dd0a2ea030cb377d9b8-2"&gt;&lt;/a&gt;perl: warning: Please check that your locale settings:
-&lt;a name="rest_code_53f8400038404dd0a2ea030cb377d9b8-3"&gt;&lt;/a&gt;    [...]
-&lt;a name="rest_code_53f8400038404dd0a2ea030cb377d9b8-4"&gt;&lt;/a&gt;    are supported and installed on your system.
-&lt;a name="rest_code_53f8400038404dd0a2ea030cb377d9b8-5"&gt;&lt;/a&gt;perl: warning: Falling back to the standard locale ("C").
+&lt;pre class="code pytb"&gt;&lt;a name="rest_code_89aba0b5242b47c58adbcd4029595d2c-1"&gt;&lt;/a&gt;&lt;span class="gt"&gt;Traceback (most recent call last):&lt;/span&gt;
+&lt;a name="rest_code_89aba0b5242b47c58adbcd4029595d2c-2"&gt;&lt;/a&gt;  File &lt;span class="nb"&gt;"aogonek.py"&lt;/span&gt;, line &lt;span class="m"&gt;1&lt;/span&gt;, in &lt;span class="n"&gt;&amp;lt;module&amp;gt;&lt;/span&gt;
+&lt;a name="rest_code_89aba0b5242b47c58adbcd4029595d2c-3"&gt;&lt;/a&gt;    &lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;u&lt;/span&gt;&lt;span class="s1"&gt;'&lt;/span&gt;&lt;span class="se"&gt;\u0105&lt;/span&gt;&lt;span class="s1"&gt;'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_89aba0b5242b47c58adbcd4029595d2c-4"&gt;&lt;/a&gt;&lt;span class="gr"&gt;UnicodeEncodeError&lt;/span&gt;: &lt;span class="n"&gt;'ascii' codec can't encode character '\u0105' in position 0: ordinal not in range(128)&lt;/span&gt;
+&lt;/pre&gt;&lt;pre class="code text"&gt;&lt;a name="rest_code_3d8e34b60a114daa9c1476e2b853677f-1"&gt;&lt;/a&gt;Nikola: Could not guess locale for language en, using locale C
+&lt;/pre&gt;&lt;pre class="code text"&gt;&lt;a name="rest_code_9fd19b727f75413d9e33e3d8a80505b0-1"&gt;&lt;/a&gt;Input: ą
+&lt;a name="rest_code_9fd19b727f75413d9e33e3d8a80505b0-2"&gt;&lt;/a&gt;Desired ascii(): '\u0105'
+&lt;a name="rest_code_9fd19b727f75413d9e33e3d8a80505b0-3"&gt;&lt;/a&gt;Real ascii(): '\udcc4\udc85'
+&lt;/pre&gt;&lt;pre class="code text"&gt;&lt;a name="rest_code_3cf7f4bccb6e40719bc4f8b4617c80a0-1"&gt;&lt;/a&gt;perl: warning: Setting locale failed.
+&lt;a name="rest_code_3cf7f4bccb6e40719bc4f8b4617c80a0-2"&gt;&lt;/a&gt;perl: warning: Please check that your locale settings:
+&lt;a name="rest_code_3cf7f4bccb6e40719bc4f8b4617c80a0-3"&gt;&lt;/a&gt;    [...]
+&lt;a name="rest_code_3cf7f4bccb6e40719bc4f8b4617c80a0-4"&gt;&lt;/a&gt;    are supported and installed on your system.
+&lt;a name="rest_code_3cf7f4bccb6e40719bc4f8b4617c80a0-5"&gt;&lt;/a&gt;perl: warning: Falling back to the standard locale ("C").
 &lt;/pre&gt;&lt;p class="lead"&gt;All those errors have the same root cause: incorrect locale configuration.
 To fix them all, you need to generate the missing locales and set them.&lt;/p&gt;
 &lt;div class="section" id="check-currently-used-locale"&gt;
 &lt;h2&gt;Check currently used locale&lt;/h2&gt;
 &lt;p&gt;The &lt;code class="docutils literal"&gt;locale&lt;/code&gt; command (without arguments) should tell you which locales you’re
 currently using.  (The list might be shorter on your end)&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_ed4a8331050d463cbbc64bc61a20d32f-1"&gt;&lt;/a&gt;$ locale
-&lt;a name="rest_code_ed4a8331050d463cbbc64bc61a20d32f-2"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LANG&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_ed4a8331050d463cbbc64bc61a20d32f-3"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_CTYPE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_ed4a8331050d463cbbc64bc61a20d32f-4"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_NUMERIC&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_ed4a8331050d463cbbc64bc61a20d32f-5"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_TIME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_ed4a8331050d463cbbc64bc61a20d32f-6"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_COLLATE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_ed4a8331050d463cbbc64bc61a20d32f-7"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_MONETARY&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_ed4a8331050d463cbbc64bc61a20d32f-8"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_MESSAGES&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_ed4a8331050d463cbbc64bc61a20d32f-9"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_PAPER&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_ed4a8331050d463cbbc64bc61a20d32f-10"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_NAME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_ed4a8331050d463cbbc64bc61a20d32f-11"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_ADDRESS&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_ed4a8331050d463cbbc64bc61a20d32f-12"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_TELEPHONE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_ed4a8331050d463cbbc64bc61a20d32f-13"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_MEASUREMENT&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_ed4a8331050d463cbbc64bc61a20d32f-14"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_IDENTIFICATION&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a name="rest_code_ed4a8331050d463cbbc64bc61a20d32f-15"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_ALL&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_e98430d3409a48879246dbbe841ec7eb-1"&gt;&lt;/a&gt;$ locale
+&lt;a name="rest_code_e98430d3409a48879246dbbe841ec7eb-2"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LANG&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_e98430d3409a48879246dbbe841ec7eb-3"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_CTYPE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_e98430d3409a48879246dbbe841ec7eb-4"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_NUMERIC&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_e98430d3409a48879246dbbe841ec7eb-5"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_TIME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_e98430d3409a48879246dbbe841ec7eb-6"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_COLLATE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_e98430d3409a48879246dbbe841ec7eb-7"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_MONETARY&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_e98430d3409a48879246dbbe841ec7eb-8"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_MESSAGES&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_e98430d3409a48879246dbbe841ec7eb-9"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_PAPER&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_e98430d3409a48879246dbbe841ec7eb-10"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_NAME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_e98430d3409a48879246dbbe841ec7eb-11"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_ADDRESS&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_e98430d3409a48879246dbbe841ec7eb-12"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_TELEPHONE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_e98430d3409a48879246dbbe841ec7eb-13"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_MEASUREMENT&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_e98430d3409a48879246dbbe841ec7eb-14"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_IDENTIFICATION&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
+&lt;a name="rest_code_e98430d3409a48879246dbbe841ec7eb-15"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_ALL&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;If any of those is set to &lt;code class="docutils literal"&gt;C&lt;/code&gt; or &lt;code class="docutils literal"&gt;POSIX&lt;/code&gt;, has a different encoding than
 &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;UTF-8&lt;/span&gt;&lt;/code&gt; (sometimes spelled &lt;code class="docutils literal"&gt;utf8&lt;/code&gt;) is empty (with the exception of
 &lt;code class="docutils literal"&gt;LC_ALL&lt;/code&gt;), or if you see any errors, you need to reconfigure your locale.&lt;/p&gt;
@@ -239,10 +239,10 @@ currently using.  (The list might be shorter on your end)&lt;/p&gt;
 &lt;p&gt;The first thing you need to do is check locale availability. To do this, run
 &lt;code class="docutils literal"&gt;locale &lt;span class="pre"&gt;-a&lt;/span&gt;&lt;/code&gt;. This will produce a list of all installed locales.  You can use
 &lt;code class="docutils literal"&gt;grep&lt;/code&gt; to get a more reasonable list.&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_f8a84e5ac0ed4c7696d592f7ec6dc1b0-1"&gt;&lt;/a&gt;$ locale -a | grep -i utf
-&lt;a name="rest_code_f8a84e5ac0ed4c7696d592f7ec6dc1b0-2"&gt;&lt;/a&gt;&amp;lt;lists all UTF-8 locales&amp;gt;
-&lt;a name="rest_code_f8a84e5ac0ed4c7696d592f7ec6dc1b0-3"&gt;&lt;/a&gt;$ locale -a | grep -i utf | grep -i en_US
-&lt;a name="rest_code_f8a84e5ac0ed4c7696d592f7ec6dc1b0-4"&gt;&lt;/a&gt;en_US.UTF-8
+&lt;pre class="code text"&gt;&lt;a name="rest_code_daa75a3ddd1445139de8967ea34dec14-1"&gt;&lt;/a&gt;$ locale -a | grep -i utf
+&lt;a name="rest_code_daa75a3ddd1445139de8967ea34dec14-2"&gt;&lt;/a&gt;&amp;lt;lists all UTF-8 locales&amp;gt;
+&lt;a name="rest_code_daa75a3ddd1445139de8967ea34dec14-3"&gt;&lt;/a&gt;$ locale -a | grep -i utf | grep -i en_US
+&lt;a name="rest_code_daa75a3ddd1445139de8967ea34dec14-4"&gt;&lt;/a&gt;en_US.UTF-8
 &lt;/pre&gt;&lt;p&gt;The best locale to use is the one for your language, with the UTF-8 encoding.
 The locale will be used by some console apps for output. I’m going to use
 &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;en_US.UTF-8&lt;/span&gt;&lt;/code&gt; in this guide.&lt;/p&gt;
@@ -263,7 +263,7 @@ aren’t used by ~anyone these days)&lt;/p&gt;
 &lt;h2&gt;Configure system-wide&lt;/h2&gt;
 &lt;p&gt;On some systems, you may be able to configure locale system-wide.  Check your
 system documentation for details. If your system has systemd, run&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_5caf793c3afb4914a28a41cd6fbaf795-1"&gt;&lt;/a&gt;sudo localectl set-locale LANG=en_US.UTF-8
+&lt;pre class="code text"&gt;&lt;a name="rest_code_d4a00a76c0dc4654aa4875982e38b47d-1"&gt;&lt;/a&gt;sudo localectl set-locale LANG=en_US.UTF-8
 &lt;/pre&gt;&lt;/div&gt;
 &lt;div class="section" id="configure-for-a-single-user"&gt;
 &lt;h2&gt;Configure for a single user&lt;/h2&gt;
@@ -273,7 +273,7 @@ ensure it’s always configured independently of system settings.&lt;/p&gt;
 &lt;p&gt;To do this, you need to edit the configuration file for your shell. If you’re
 using bash, it’s &lt;code class="docutils literal"&gt;.bashrc&lt;/code&gt; (or &lt;code class="docutils literal"&gt;.bash_profile&lt;/code&gt; on macOS). For zsh users,
 &lt;code class="docutils literal"&gt;.zshrc&lt;/code&gt;.  Add this line (or equivalent in your shell):&lt;/p&gt;
-&lt;pre class="code sh"&gt;&lt;a name="rest_code_d65c1be9a0cd4dc88e6589bbfccc44eb-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;export&lt;/span&gt; &lt;span class="nv"&gt;LANG&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;en_US.UTF-8 &lt;span class="nv"&gt;LC_ALL&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;en_US.UTF-8
+&lt;pre class="code sh"&gt;&lt;a name="rest_code_277665c14e30483f8425e62704b499c8-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;export&lt;/span&gt; &lt;span class="nv"&gt;LANG&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;en_US.UTF-8 &lt;span class="nv"&gt;LC_ALL&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;en_US.UTF-8
 &lt;/pre&gt;&lt;p&gt;That should be enough. Note that those settings don’t apply to programs
 not launched through a shell.&lt;/p&gt;
 &lt;hr class="docutils"&gt;
