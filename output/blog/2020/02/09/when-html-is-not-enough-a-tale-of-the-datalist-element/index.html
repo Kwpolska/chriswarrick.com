@@ -234,21 +234,38 @@ Two, the default browser is also the provider of the Custom Tabs. Which is
 great for my web-browsing habits, but won’t solve the problem.  Fortunately,
 it’s just a one-line change to send the intent directly to Chrome. The entire
 thing is less than 30 lines long. You can see the full <a class="reference external" href="/listings/android-chrome-custom-tabs/CustomTabsActivity.java.html">CustomTabsActivity.java</a> file, but the relevant bits are below.</p>
-<table class="codetable"><tr>
-<td class="linenos"><div class="linenodiv"><pre><a href="/blog/2020/02/09/when-html-is-not-enough-a-tale-of-the-datalist-element/#rest_code_7df9314d3e0943a8a00ff7f0501508fd-1">1</a>
-<a href="/blog/2020/02/09/when-html-is-not-enough-a-tale-of-the-datalist-element/#rest_code_7df9314d3e0943a8a00ff7f0501508fd-2">2</a>
-<a href="/blog/2020/02/09/when-html-is-not-enough-a-tale-of-the-datalist-element/#rest_code_7df9314d3e0943a8a00ff7f0501508fd-3">3</a>
-<a href="/blog/2020/02/09/when-html-is-not-enough-a-tale-of-the-datalist-element/#rest_code_7df9314d3e0943a8a00ff7f0501508fd-4">4</a>
-<a href="/blog/2020/02/09/when-html-is-not-enough-a-tale-of-the-datalist-element/#rest_code_7df9314d3e0943a8a00ff7f0501508fd-5">5</a>
-<a href="/blog/2020/02/09/when-html-is-not-enough-a-tale-of-the-datalist-element/#rest_code_7df9314d3e0943a8a00ff7f0501508fd-6">6</a></pre></div></td>
-<td class="code"><pre class="code java"><a name="rest_code_7df9314d3e0943a8a00ff7f0501508fd-1"></a><span class="n">CustomTabsIntent</span><span class="p">.</span><span class="na">Builder</span> <span class="n">builder</span> <span class="o">=</span> <span class="k">new</span> <span class="n">CustomTabsIntent</span><span class="p">.</span><span class="na">Builder</span><span class="p">();</span>
-<a name="rest_code_7df9314d3e0943a8a00ff7f0501508fd-2"></a><span class="c1">// Optionally, configure appearance and buttons on toolbar.</span>
-<a name="rest_code_7df9314d3e0943a8a00ff7f0501508fd-3"></a><span class="n">CustomTabsIntent</span> <span class="n">intent</span> <span class="o">=</span> <span class="n">builder</span><span class="p">.</span><span class="na">build</span><span class="p">();</span>
-<a name="rest_code_7df9314d3e0943a8a00ff7f0501508fd-4"></a><span class="c1">// Force browser to Chrome instead of system default.</span>
-<a name="rest_code_7df9314d3e0943a8a00ff7f0501508fd-5"></a><span class="n">intent</span><span class="p">.</span><span class="na">intent</span><span class="p">.</span><span class="na">setPackage</span><span class="p">(</span><span class="s">"com.android.chrome"</span><span class="p">);</span>
-<a name="rest_code_7df9314d3e0943a8a00ff7f0501508fd-6"></a><span class="n">intent</span><span class="p">.</span><span class="na">launchUrl</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="n">Uri</span><span class="p">.</span><span class="na">parse</span><span class="p">(</span><span class="s">"https://chriswarrick.com/"</span><span class="p">));</span>
-</pre></td>
-</tr></table>
+<div class="code"><table class="codetable">
+<tr>
+<td class="linenos linenodiv"><a href="/blog/2020/02/09/when-html-is-not-enough-a-tale-of-the-datalist-element/#rest_code_5489aa55361d4c09a8bfdf9932a1c0a7-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><a name="rest_code_5489aa55361d4c09a8bfdf9932a1c0a7-1"></a><span class="n">CustomTabsIntent</span><span class="p">.</span><span class="na">Builder</span> <span class="n">builder</span> <span class="o">=</span> <span class="k">new</span> <span class="n">CustomTabsIntent</span><span class="p">.</span><span class="na">Builder</span><span class="p">();</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="/blog/2020/02/09/when-html-is-not-enough-a-tale-of-the-datalist-element/#rest_code_5489aa55361d4c09a8bfdf9932a1c0a7-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><a name="rest_code_5489aa55361d4c09a8bfdf9932a1c0a7-2"></a><span class="c1">// Optionally, configure appearance and buttons on toolbar.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="/blog/2020/02/09/when-html-is-not-enough-a-tale-of-the-datalist-element/#rest_code_5489aa55361d4c09a8bfdf9932a1c0a7-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><a name="rest_code_5489aa55361d4c09a8bfdf9932a1c0a7-3"></a><span class="n">CustomTabsIntent</span> <span class="n">intent</span> <span class="o">=</span> <span class="n">builder</span><span class="p">.</span><span class="na">build</span><span class="p">();</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="/blog/2020/02/09/when-html-is-not-enough-a-tale-of-the-datalist-element/#rest_code_5489aa55361d4c09a8bfdf9932a1c0a7-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code><a name="rest_code_5489aa55361d4c09a8bfdf9932a1c0a7-4"></a><span class="c1">// Force browser to Chrome instead of system default.</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="/blog/2020/02/09/when-html-is-not-enough-a-tale-of-the-datalist-element/#rest_code_5489aa55361d4c09a8bfdf9932a1c0a7-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code><a name="rest_code_5489aa55361d4c09a8bfdf9932a1c0a7-5"></a><span class="n">intent</span><span class="p">.</span><span class="na">intent</span><span class="p">.</span><span class="na">setPackage</span><span class="p">(</span><span class="s">"com.android.chrome"</span><span class="p">);</span>
+</code></td>
+</tr>
+<tr>
+<td class="linenos linenodiv"><a href="/blog/2020/02/09/when-html-is-not-enough-a-tale-of-the-datalist-element/#rest_code_5489aa55361d4c09a8bfdf9932a1c0a7-6"><code data-line-number="6"></code></a></td>
+<td class="code"><code><a name="rest_code_5489aa55361d4c09a8bfdf9932a1c0a7-6"></a><span class="n">intent</span><span class="p">.</span><span class="na">launchUrl</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="n">Uri</span><span class="p">.</span><span class="na">parse</span><span class="p">(</span><span class="s">"https://chriswarrick.com/"</span><span class="p">));</span>
+</code></td>
+</tr>
+</table></div>
 <p>It seems to work well, the list is displayed, and it can be used to input
 stuff, the emoji hack works too.</p>
 <p>There was one more bug with Chrome on Android. Typing a character sometimes led to

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chris Warrick (Posty o Windows)</title><link>https://chriswarrick.com/</link><description></description><atom:link href="https://chriswarrick.com/pl/blog/tags/windows.xml" rel="self" type="application/rss+xml"></atom:link><language>pl</language><lastBuildDate>Mon, 22 Jun 2020 19:06:50 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Windows 10 November Upgrade: Windows as a (Dis-)service</title><link>https://chriswarrick.com/pl/blog/2015/12/27/windows-10-november-upgrade-windows-as-a-dis-service/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;div class="float-md-right figure" style="width: 20%"&gt;
+<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chris Warrick (Posty o Windows)</title><link>https://chriswarrick.com/</link><description></description><atom:link href="https://chriswarrick.com/pl/blog/tags/windows.xml" rel="self" type="application/rss+xml"></atom:link><language>pl</language><lastBuildDate>Fri, 26 Jun 2020 22:18:24 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Windows 10 November Upgrade: Windows as a (Dis-)service</title><link>https://chriswarrick.com/pl/blog/2015/12/27/windows-10-november-upgrade-windows-as-a-dis-service/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;div class="float-md-right figure" style="width: 20%"&gt;
 &lt;a class="reference external image-reference" href="https://chriswarrick.com/images/Windows10-1511.png"&gt;&lt;img alt="/images/Windows10-1511.thumbnail.png" src="https://chriswarrick.com/images/Windows10-1511.thumbnail.png"&gt;&lt;/a&gt;
 &lt;p class="caption"&gt;The &lt;em&gt;About Windows&lt;/em&gt; screen.&lt;/p&gt;
 &lt;/div&gt;
@@ -55,19 +55,19 @@ on the second boot, talking about &lt;em&gt;critical structure corruption in CI.
 I rebooted, but I first took a little detour to the Arch Linux USB stick I
 prepared before to get a sane bootloader back. I’ve done this before, and
 usually requires three commands.&lt;/p&gt;
-&lt;pre class="code console"&gt;&lt;a name="rest_code_01b59dd829de47748c69ec62001ebd2f-1"&gt;&lt;/a&gt;&lt;span class="gp"&gt;#&lt;/span&gt; mount /dev/sda2 /mnt
-&lt;a name="rest_code_01b59dd829de47748c69ec62001ebd2f-2"&gt;&lt;/a&gt;&lt;span class="go"&gt;Metadata kept in Windows cache, refused to mount.&lt;/span&gt;
-&lt;a name="rest_code_01b59dd829de47748c69ec62001ebd2f-3"&gt;&lt;/a&gt;&lt;span class="go"&gt;Failed to mount '/dev/sda2': Operation not permitted&lt;/span&gt;
-&lt;a name="rest_code_01b59dd829de47748c69ec62001ebd2f-4"&gt;&lt;/a&gt;&lt;span class="go"&gt;The NTFS partition is in an unsafe state. Please resume and shutdown&lt;/span&gt;
-&lt;a name="rest_code_01b59dd829de47748c69ec62001ebd2f-5"&gt;&lt;/a&gt;&lt;span class="go"&gt;Windows fully (no hibernation or fast restarting), or mount the volume&lt;/span&gt;
-&lt;a name="rest_code_01b59dd829de47748c69ec62001ebd2f-6"&gt;&lt;/a&gt;&lt;span class="go"&gt;read-only with the 'ro' mount option.&lt;/span&gt;
+&lt;pre class="code console"&gt;&lt;a name="rest_code_a1083719f2984fe190819b8b5a4c839f-1"&gt;&lt;/a&gt;&lt;span class="gp"&gt;#&lt;/span&gt; mount /dev/sda2 /mnt
+&lt;a name="rest_code_a1083719f2984fe190819b8b5a4c839f-2"&gt;&lt;/a&gt;&lt;span class="go"&gt;Metadata kept in Windows cache, refused to mount.&lt;/span&gt;
+&lt;a name="rest_code_a1083719f2984fe190819b8b5a4c839f-3"&gt;&lt;/a&gt;&lt;span class="go"&gt;Failed to mount '/dev/sda2': Operation not permitted&lt;/span&gt;
+&lt;a name="rest_code_a1083719f2984fe190819b8b5a4c839f-4"&gt;&lt;/a&gt;&lt;span class="go"&gt;The NTFS partition is in an unsafe state. Please resume and shutdown&lt;/span&gt;
+&lt;a name="rest_code_a1083719f2984fe190819b8b5a4c839f-5"&gt;&lt;/a&gt;&lt;span class="go"&gt;Windows fully (no hibernation or fast restarting), or mount the volume&lt;/span&gt;
+&lt;a name="rest_code_a1083719f2984fe190819b8b5a4c839f-6"&gt;&lt;/a&gt;&lt;span class="go"&gt;read-only with the 'ro' mount option.&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;Wait, what?! I remember my hard drive layout, and &lt;code class="docutils literal"&gt;/dev/sda2&lt;/code&gt; is my Linux
 ext4 partition! I checked &lt;code class="docutils literal"&gt;cfdisk&lt;/code&gt;, and apparently I now have a &lt;em&gt;Hidden NTFS WinRE&lt;/em&gt;, with Linux moved to &lt;code class="docutils literal"&gt;/dev/sda3&lt;/code&gt; and my extended partition moved to &lt;code class="docutils literal"&gt;/dev/sda4&lt;/code&gt; (what would happen if I already had four partitions?). This is typical Windows misbehaviour: &lt;strong&gt;not caring about other OSes that might be installed&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;I accepted this defeat, mounted &lt;code class="docutils literal"&gt;/dev/sda3&lt;/code&gt;, ran &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;arch-chroot&lt;/span&gt; /mnt&lt;/code&gt; and
 &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;syslinux-install_update&lt;/span&gt; &lt;span class="pre"&gt;-i&lt;/span&gt; &lt;span class="pre"&gt;-a&lt;/span&gt; &lt;span class="pre"&gt;-m&lt;/span&gt;&lt;/code&gt; (I’m not a fan of GRUB 2, and I have a MBR
 drive layout). I should test this out by rebooting into Linux.&lt;/p&gt;
-&lt;pre class="code console"&gt;&lt;a name="rest_code_dec4eb7a0ebd4f14948e84ad12a4dbd4-1"&gt;&lt;/a&gt;&lt;span class="go"&gt;Error getting authority: Error initializing authority: Could not connect: No such file or directory (g-io-error-quark, 1)&lt;/span&gt;
-&lt;a name="rest_code_dec4eb7a0ebd4f14948e84ad12a4dbd4-2"&gt;&lt;/a&gt;&lt;span class="go"&gt;Welcome to emergency mode!&lt;/span&gt;
+&lt;pre class="code console"&gt;&lt;a name="rest_code_5a6839cd889e471cb9f8b6cc78a9498f-1"&gt;&lt;/a&gt;&lt;span class="go"&gt;Error getting authority: Error initializing authority: Could not connect: No such file or directory (g-io-error-quark, 1)&lt;/span&gt;
+&lt;a name="rest_code_5a6839cd889e471cb9f8b6cc78a9498f-2"&gt;&lt;/a&gt;&lt;span class="go"&gt;Welcome to emergency mode!&lt;/span&gt;
 &lt;/pre&gt;&lt;p&gt;systemd &lt;strong&gt;really&lt;/strong&gt; values &lt;code class="docutils literal"&gt;/etc/fstab&lt;/code&gt;, and you can’t boot if any entry fails
 to mount, which was the case with the Windows drive in &lt;code class="docutils literal"&gt;/dev/sda1&lt;/code&gt; and my
 other NTFS partition (note that the error message is very unhelpful)&lt;/p&gt;
