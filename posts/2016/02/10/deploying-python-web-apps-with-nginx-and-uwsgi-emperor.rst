@@ -33,9 +33,9 @@ For easy linking, I set up some aliases: https://go.chriswarrick.com/pyweb and h
 Prerequisites
 ~~~~~~~~~~~~~
 
-In order to deploy your web application, you need a server that gives you root and ssh access — in other words, a VPS (or a dedicated server, or a datacenter lease…). If you’re looking for a great VPS service for a low price, I recommend `Hetzner Cloud`_, which offers a pretty good entry-level VPS for €2.49 + VAT / month (with higher plans available for equally good prices). If you want to play along at home, without buying a VPS, you can create a virtual machine on your own, or use Vagrant with a Vagrant box for Fedora 32 (``fedora/32-cloud-base``).
+In order to deploy your web application, you need a server that gives you root and ssh access — in other words, a VPS (or a dedicated server, or a datacenter lease…). If you’re looking for a great VPS service for a low price, I recommend `Hetzner Cloud`_ (reflink [#]_), which offers a pretty good entry-level VPS for €2.49 + VAT / month (with higher plans available for equally good prices). If you want to play along at home, without buying a VPS, you can create a virtual machine on your own, or use Vagrant with a Vagrant box for Fedora 32 (``fedora/32-cloud-base``).
 
-.. _Hetzner Cloud: https://www.hetzner.com/cloud
+.. _Hetzner Cloud: https://hetzner.cloud/?ref=Qy1lehF8PwzP
 
 Your server should also run a modern Linux-based operating system. This guide was written and tested on:
 
@@ -443,6 +443,8 @@ Regardless, many parts of this tutorial can be used with Docker, although with t
 The Docker images were designed to support running the Playbook and testing it. But the changes, setups and patches could be a good starting point if you wanted to make your own Docker containers that could run in production. You can take a look at `the Docker files for CI <https://github.com/Kwpolska/ansible-nginx-uwsgi/tree/master/ci>`_ The images support all 5 distros using their base images, but you could probably use Alpine images, or the ``python`` docker images; be careful not to mix Python versions in the latter case.
 
 That said, I still prefer to run without Docker, directly on the system.  Less resources wasted and less indirection.  Which is why this guide does it the traditional way.
+
+.. [#] This reflink gives you €20 in credit (expires the next month). I earn €10 after you spend €10 of your own.
 
 .. role:: raw-role(raw)
    :format: html
