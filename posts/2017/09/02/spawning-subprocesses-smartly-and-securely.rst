@@ -21,7 +21,7 @@ This article is written from a general perspective, with a Unix/C bias and a
 very slight Python bias. The problems mentioned apply to all languages in most
 environments, including Windows.
 
-.. class:: alert alert-primary float-md-right
+.. class:: right-toc
 
 .. contents::
 

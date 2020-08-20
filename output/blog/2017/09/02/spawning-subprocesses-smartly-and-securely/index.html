@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="
+<html class="limited-width larger-font" prefix="
 og: http://ogp.me/ns#
 " lang="en">
 <head>
@@ -131,7 +131,7 @@ behind the scenes?</p>
 <p>This article is written from a general perspective, with a Unix/C bias and a
 very slight Python bias. The problems mentioned apply to all languages in most
 environments, including Windows.</p>
-<div class="contents alert alert-primary float-md-right topic" id="contents">
+<div class="contents right-toc topic" id="contents">
 <p class="topic-title">Contents</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#use-the-right-tool-for-the-job" id="id9">Use the right tool for the job</a></p></li>
@@ -200,51 +200,51 @@ arguments passed to the process, or</p></li>
 manpage for <code class="docutils literal">system(3)</code> puts it,</p>
 <blockquote>
 <p>The <code class="docutils literal">system()</code> library function uses <code class="docutils literal">fork(2)</code> to create a child process that executes the shell command specified in command using <code class="docutils literal">execl(3)</code> as follows:</p>
-<pre class="code c"><a name="rest_code_cf9dcad1adc449fea3a256205621f557-1"></a><span class="n">execl</span><span class="p">(</span><span class="s">"/bin/sh"</span><span class="p">,</span> <span class="s">"sh"</span><span class="p">,</span> <span class="s">"-c"</span><span class="p">,</span> <span class="n">command</span><span class="p">,</span> <span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="p">)</span> <span class="mi">0</span><span class="p">);</span>
+<pre class="code c"><a name="rest_code_dfb759f22b6b442385f6b62e8dfe27b3-1"></a><span class="n">execl</span><span class="p">(</span><span class="s">"/bin/sh"</span><span class="p">,</span> <span class="s">"sh"</span><span class="p">,</span> <span class="s">"-c"</span><span class="p">,</span> <span class="n">command</span><span class="p">,</span> <span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="p">)</span> <span class="mi">0</span><span class="p">);</span>
 </pre>
 </blockquote>
 </li>
 </ul>
 <p>If you go through the shell, you pass one string argument, whereas <code class="docutils literal"><span class="pre">exec*()</span></code> demands you to specify arguments separately. Let’s write a sample program to print all the arguments it receives. I’ll do it in Python to get a more readable output.</p>
-<pre class="code python"><a name="rest_code_45b95915a3984bd6b2fdb2902df24288-1"></a><span class="ch">#!/usr/bin/env python3</span>
-<a name="rest_code_45b95915a3984bd6b2fdb2902df24288-2"></a><span class="kn">import</span> <span class="nn">sys</span>
-<a name="rest_code_45b95915a3984bd6b2fdb2902df24288-3"></a><span class="nb">print</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span>
+<pre class="code python"><a name="rest_code_44192e56bb434ee09f9ade30f9a0da9a-1"></a><span class="ch">#!/usr/bin/env python3</span>
+<a name="rest_code_44192e56bb434ee09f9ade30f9a0da9a-2"></a><span class="kn">import</span> <span class="nn">sys</span>
+<a name="rest_code_44192e56bb434ee09f9ade30f9a0da9a-3"></a><span class="nb">print</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span>
 </pre>
 <p>Let’s see what appears:</p>
-<pre class="code text"><a name="rest_code_746cbc891ef04df7ada711916b143a88-1"></a>$ ./argv.py foo bar
-<a name="rest_code_746cbc891ef04df7ada711916b143a88-2"></a>['./argv.py', 'foo', 'bar']
-<a name="rest_code_746cbc891ef04df7ada711916b143a88-3"></a>$ ./argv.py 'foo bar'
-<a name="rest_code_746cbc891ef04df7ada711916b143a88-4"></a>['./argv.py', 'foo bar']
-<a name="rest_code_746cbc891ef04df7ada711916b143a88-5"></a>$ ./argv.py foo\ bar baz
-<a name="rest_code_746cbc891ef04df7ada711916b143a88-6"></a>['./argv.py', 'foo bar', 'baz']
-<a name="rest_code_746cbc891ef04df7ada711916b143a88-7"></a>
-<a name="rest_code_746cbc891ef04df7ada711916b143a88-8"></a>$ ./argv.py $(date)
-<a name="rest_code_746cbc891ef04df7ada711916b143a88-9"></a>['./argv.py', 'Sat', 'Sep', '2', '16:54:52', 'CEST', '2017']
-<a name="rest_code_746cbc891ef04df7ada711916b143a88-10"></a>$ ./argv.py "$(date)"
-<a name="rest_code_746cbc891ef04df7ada711916b143a88-11"></a>['./argv.py', 'Sat Sep  2 16:54:52 CEST 2017']
-<a name="rest_code_746cbc891ef04df7ada711916b143a88-12"></a>
-<a name="rest_code_746cbc891ef04df7ada711916b143a88-13"></a>$ ./argv.py /usr/*
-<a name="rest_code_746cbc891ef04df7ada711916b143a88-14"></a>['./argv.py', '/usr/X11', '/usr/X11R6', '/usr/bin', '/usr/include', '/usr/lib', '/usr/libexec', '/usr/local', '/usr/sbin', '/usr/share', '/usr/standalone']
-<a name="rest_code_746cbc891ef04df7ada711916b143a88-15"></a>$ ./argv.py "/usr/*"
-<a name="rest_code_746cbc891ef04df7ada711916b143a88-16"></a>['./argv.py', '/usr/*']
-<a name="rest_code_746cbc891ef04df7ada711916b143a88-17"></a>
-<a name="rest_code_746cbc891ef04df7ada711916b143a88-18"></a>$ ./argv.py $EDITOR
-<a name="rest_code_746cbc891ef04df7ada711916b143a88-19"></a>['./argv.py', 'nvim']
-<a name="rest_code_746cbc891ef04df7ada711916b143a88-20"></a>
-<a name="rest_code_746cbc891ef04df7ada711916b143a88-21"></a>$ $PWD/argv.py foo bar
-<a name="rest_code_746cbc891ef04df7ada711916b143a88-22"></a>['/Users/kwpolska/Desktop/blog/subprocess/argv.py', 'foo', 'bar']
-<a name="rest_code_746cbc891ef04df7ada711916b143a88-23"></a>$ ./argv.py a{b,c}d
-<a name="rest_code_746cbc891ef04df7ada711916b143a88-24"></a>['./argv.py', 'abd', 'acd']
-<a name="rest_code_746cbc891ef04df7ada711916b143a88-25"></a>
-<a name="rest_code_746cbc891ef04df7ada711916b143a88-26"></a>$ python argv.py foo bar | cat
-<a name="rest_code_746cbc891ef04df7ada711916b143a88-27"></a>['argv.py', 'foo', 'bar']
-<a name="rest_code_746cbc891ef04df7ada711916b143a88-28"></a>$ python argv.py foo bar &gt; foo.txt
-<a name="rest_code_746cbc891ef04df7ada711916b143a88-29"></a>$ cat foo.txt
-<a name="rest_code_746cbc891ef04df7ada711916b143a88-30"></a>['argv.py', 'foo', 'bar']
-<a name="rest_code_746cbc891ef04df7ada711916b143a88-31"></a>
-<a name="rest_code_746cbc891ef04df7ada711916b143a88-32"></a>$ ./argv.py foo; ls /usr
-<a name="rest_code_746cbc891ef04df7ada711916b143a88-33"></a>['./argv.py', 'foo']
-<a name="rest_code_746cbc891ef04df7ada711916b143a88-34"></a>X11@        X11R6@      bin/        include/    lib/        libexec/    local/      sbin/       share/      standalone/
+<pre class="code text"><a name="rest_code_7f4e8f1c6ede4f138b9c2969862407ad-1"></a>$ ./argv.py foo bar
+<a name="rest_code_7f4e8f1c6ede4f138b9c2969862407ad-2"></a>['./argv.py', 'foo', 'bar']
+<a name="rest_code_7f4e8f1c6ede4f138b9c2969862407ad-3"></a>$ ./argv.py 'foo bar'
+<a name="rest_code_7f4e8f1c6ede4f138b9c2969862407ad-4"></a>['./argv.py', 'foo bar']
+<a name="rest_code_7f4e8f1c6ede4f138b9c2969862407ad-5"></a>$ ./argv.py foo\ bar baz
+<a name="rest_code_7f4e8f1c6ede4f138b9c2969862407ad-6"></a>['./argv.py', 'foo bar', 'baz']
+<a name="rest_code_7f4e8f1c6ede4f138b9c2969862407ad-7"></a>
+<a name="rest_code_7f4e8f1c6ede4f138b9c2969862407ad-8"></a>$ ./argv.py $(date)
+<a name="rest_code_7f4e8f1c6ede4f138b9c2969862407ad-9"></a>['./argv.py', 'Sat', 'Sep', '2', '16:54:52', 'CEST', '2017']
+<a name="rest_code_7f4e8f1c6ede4f138b9c2969862407ad-10"></a>$ ./argv.py "$(date)"
+<a name="rest_code_7f4e8f1c6ede4f138b9c2969862407ad-11"></a>['./argv.py', 'Sat Sep  2 16:54:52 CEST 2017']
+<a name="rest_code_7f4e8f1c6ede4f138b9c2969862407ad-12"></a>
+<a name="rest_code_7f4e8f1c6ede4f138b9c2969862407ad-13"></a>$ ./argv.py /usr/*
+<a name="rest_code_7f4e8f1c6ede4f138b9c2969862407ad-14"></a>['./argv.py', '/usr/X11', '/usr/X11R6', '/usr/bin', '/usr/include', '/usr/lib', '/usr/libexec', '/usr/local', '/usr/sbin', '/usr/share', '/usr/standalone']
+<a name="rest_code_7f4e8f1c6ede4f138b9c2969862407ad-15"></a>$ ./argv.py "/usr/*"
+<a name="rest_code_7f4e8f1c6ede4f138b9c2969862407ad-16"></a>['./argv.py', '/usr/*']
+<a name="rest_code_7f4e8f1c6ede4f138b9c2969862407ad-17"></a>
+<a name="rest_code_7f4e8f1c6ede4f138b9c2969862407ad-18"></a>$ ./argv.py $EDITOR
+<a name="rest_code_7f4e8f1c6ede4f138b9c2969862407ad-19"></a>['./argv.py', 'nvim']
+<a name="rest_code_7f4e8f1c6ede4f138b9c2969862407ad-20"></a>
+<a name="rest_code_7f4e8f1c6ede4f138b9c2969862407ad-21"></a>$ $PWD/argv.py foo bar
+<a name="rest_code_7f4e8f1c6ede4f138b9c2969862407ad-22"></a>['/Users/kwpolska/Desktop/blog/subprocess/argv.py', 'foo', 'bar']
+<a name="rest_code_7f4e8f1c6ede4f138b9c2969862407ad-23"></a>$ ./argv.py a{b,c}d
+<a name="rest_code_7f4e8f1c6ede4f138b9c2969862407ad-24"></a>['./argv.py', 'abd', 'acd']
+<a name="rest_code_7f4e8f1c6ede4f138b9c2969862407ad-25"></a>
+<a name="rest_code_7f4e8f1c6ede4f138b9c2969862407ad-26"></a>$ python argv.py foo bar | cat
+<a name="rest_code_7f4e8f1c6ede4f138b9c2969862407ad-27"></a>['argv.py', 'foo', 'bar']
+<a name="rest_code_7f4e8f1c6ede4f138b9c2969862407ad-28"></a>$ python argv.py foo bar &gt; foo.txt
+<a name="rest_code_7f4e8f1c6ede4f138b9c2969862407ad-29"></a>$ cat foo.txt
+<a name="rest_code_7f4e8f1c6ede4f138b9c2969862407ad-30"></a>['argv.py', 'foo', 'bar']
+<a name="rest_code_7f4e8f1c6ede4f138b9c2969862407ad-31"></a>
+<a name="rest_code_7f4e8f1c6ede4f138b9c2969862407ad-32"></a>$ ./argv.py foo; ls /usr
+<a name="rest_code_7f4e8f1c6ede4f138b9c2969862407ad-33"></a>['./argv.py', 'foo']
+<a name="rest_code_7f4e8f1c6ede4f138b9c2969862407ad-34"></a>X11@        X11R6@      bin/        include/    lib/        libexec/    local/      sbin/       share/      standalone/
 </pre>
 <p>As you can see, the following things are handled by the shell (the process is unaware of this occurring):</p>
 <ul class="simple">

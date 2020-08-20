@@ -11,14 +11,12 @@ $font-family-serif: "Source Serif Pro", "Constantia", "Georgia", serif;
 
 $font-size-base-serif: 1rem;
 
-/*
-$blog-h1-font-size:                $font-size-base-serif * 2.5;
-$blog-h2-font-size:                $font-size-base-serif * 2;
-$blog-h3-font-size:                $font-size-base-serif * 1.75;
-$blog-h4-font-size:                $font-size-base-serif * 1.5;
-$blog-h5-font-size:                $font-size-base-serif * 1.25;
-$blog-h6-font-size:                $font-size-base-serif;
-*/
+$lf-h1-font-size:                2rem;
+$lf-h2-font-size:                1.75rem;
+$lf-h3-font-size:                1.5rem;
+$lf-h4-font-size:                1.25rem;
+$lf-h5-font-size:                1.15rem;
+$lf-h6-font-size:                1rem;
 
 $title-hover-shadow-color: darken($kwprimary, 12%);
 $title-active-shadow-color: darken($kwprimary, 6%);
@@ -27,7 +25,7 @@ $title-active-shadow-color: darken($kwprimary, 6%);
 
 /*!
  * Kw’s Custom CSS
- * Copyright © 2013–2019, Chris Warrick.
+ * Copyright © 2013–2020, Chris Warrick.
  */
 
 :root {
@@ -35,6 +33,83 @@ $title-active-shadow-color: darken($kwprimary, 6%);
   // See https://github.com/sass/sass/issues/2383#issuecomment-336349172
   --font-family-serif: #{inspect($font-family-serif)};
 }
+
+html.limited-width .container {
+    max-width: 900px;
+}
+
+html.larger-font {
+    h1, .h1 { @include font-size($lf-h1-font-size); }
+    h2, .h2 { @include font-size($lf-h2-font-size); }
+    h3, .h3 { @include font-size($lf-h3-font-size); }
+    h4, .h4 { @include font-size($lf-h4-font-size); }
+    h5, .h5 { @include font-size($lf-h5-font-size); }
+    h6, .h6 { @include font-size($lf-h6-font-size); }
+}
+
+@include media-breakpoint-up("md") {
+    html.larger-font {
+        font-size: 18px;
+
+        .page-header h1 {
+            font-size: 1.85rem;
+        }
+
+        .page-header .metadata {
+            font-size: 0.85rem;
+        }
+
+        .navbar-kw .navbar-brand {
+            font-size: 1.15rem;
+            margin-right: 0;
+            padding-right: 1rem;
+        }
+
+        .navbar-kw .nav-item {
+            font-size: 0.85rem;
+            line-height: 50px;
+        }
+
+        .lead {
+            font-size: 1.2rem;
+        }
+    }
+}
+
+.right-toc {
+    @extend .alert;
+    @extend .alert-primary;
+    @extend .float-md-right;
+}
+
+@include media-breakpoint-up("md") {
+    .right-toc {
+        width: 30%;
+    }
+}
+
+.right-toc ul {
+    padding-left: 1.25rem;
+}
+
+.right-toc > ul {
+    padding-left: 1rem;
+}
+
+@media (min-width: 1000px) {
+    div.sidebar, .right-toc {
+        width: calc(30% + 40px) !important;
+        margin-right: -40px !important;
+    }
+}
+
+@media (min-width: 1200px) {
+    div.sidebar, .right-toc {
+        width: calc(30% + 100px) !important;
+        margin-right: -100px !important;
+    }
+}
+
 
 .navbar-kw {
     background-image: linear-gradient(to bottom, $kwprimary 0%, $kwsecondary 100%);
@@ -172,7 +247,6 @@ article.postbox header h1 a,
 }
 
 .metadata > .post-bubbles {
-    margin-left: 1rem;
     display: inline;
     padding-left: 0;
     list-style: none;
@@ -207,7 +281,7 @@ span.shortlink-bubble a {
 }
 
 .tags > li a {
-    font-size: 0.8rem !important;
+    font-size: 0.75rem !important;
     font-weight: normal !important;
     color: $body-color !important;
     background-color: $gray-300 !important;
@@ -276,6 +350,10 @@ span.shortlink-bubble > a:hover {
 .entry-title a:active {
     text-decoration: none;
     text-shadow: 0 0 1rem $title-active-shadow-color;
+}
+
+.page-header .metadata a.u-published {
+    display: block;
 }
 
 .page-header .metadata a.u-published:hover,
@@ -418,10 +496,6 @@ h5:hover .headerlink, h6:hover .headerlink {
     padding: 0 0.2em;
 }
 
-.entry-content, .entry-summary {
-    text-align: justify;
-}
-
 .guide-footer {
     font-family: $font-family-sans-serif;
     font-size: 1.1rem;
@@ -458,7 +532,7 @@ h5:hover .headerlink, h6:hover .headerlink {
 }
 
 .project-card .badge {
-    font-size: 100%;
+    font-size: 1rem;
 }
 
 .project-card .table {
@@ -475,7 +549,7 @@ h5:hover .headerlink, h6:hover .headerlink {
 }
 
 pre {
-    font-size: 100% !important;
+    font-size: 1rem !important;
 }
 
 pre, .codetable {
@@ -522,7 +596,6 @@ pre, .codetable {
     margin-right: 0;
 
     .row {
-        max-width: 700px;
         margin: 0 auto;
     }
 

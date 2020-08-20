@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="
+<html class="limited-width larger-font" prefix="
 og: http://ogp.me/ns#
 " lang="en">
 <head>
@@ -134,7 +134,7 @@ og: http://ogp.me/ns#
 </div></div>
 <p>CI status for the associated Ansible Playbook: <img alt="ci-status" src="https://github.com/Kwpolska/ansible-nginx-uwsgi/workflows/CI%20in%20Docker%20for%20ansible-nginx-uwsgi%20%28pyweb%29/badge.svg"></p>
 <p>For easy linking, I set up some aliases: <a class="reference external" href="https://go.chriswarrick.com/pyweb">https://go.chriswarrick.com/pyweb</a> and <a class="reference external" href="https://go.chriswarrick.com/uwsgi-tut">https://go.chriswarrick.com/uwsgi-tut</a> (powered by a Django web application, deployed with nginx and uWSGI!).</p>
-<div class="contents alert alert-primary float-md-right topic" id="contents">
+<div class="contents right-toc topic" id="contents">
 <p class="topic-title">Contents</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#prerequisites" id="id5">Prerequisites</a></p></li>
@@ -170,9 +170,9 @@ og: http://ogp.me/ns#
 <p><a class="reference internal" href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#end-result" id="id18">End result</a></p>
 <ul>
 <li><p><a class="reference internal" href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#troubleshooting" id="id19">Troubleshooting</a></p></li>
-<li><p><a class="reference internal" href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#can-i-use-docker" id="id20">Can I use Docker?</a></p></li>
 </ul>
 </li>
+<li><p><a class="reference internal" href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#can-i-use-docker" id="id20">Can I use Docker?</a></p></li>
 </ul>
 </div>
 <div class="section" id="prerequisites">
@@ -219,17 +219,17 @@ og: http://ogp.me/ns#
 <h3><a class="toc-backref" href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id9">Getting started</a><a href="#getting-started" class="headerlink" title="Permalink to this heading">¶</a></h3>
 <p>Start by installing Python 3 (with venv), nginx and uWSGI. I recommend using your operating system’s packages. Make sure you are downloading the latest versions available for your OS (update the package cache first). For uWSGI, we need the <code class="docutils literal">logfile</code> and <code class="docutils literal">python3</code> plugins. (Arch Linux names the <code class="docutils literal">python3</code> plugin <code class="docutils literal">python</code>; the <code class="docutils literal">logfile</code> plugin may be built-in — check with your system repositories!). I’ll also install Git to clone the tutorial app, but it’s optional if your workflow does not involve Git.</p>
 <p><strong>Ubuntu, Debian:</strong></p>
-<pre class="code sh"><a name="rest_code_b2bdf2b8777645bbb5b7b9c3f4cb56f6-1"></a>apt install python3 python3-venv uwsgi uwsgi-emperor uwsgi-plugin-python3 nginx-full git
+<pre class="code sh"><a name="rest_code_c1862bf77836417ca61c230f464435d7-1"></a>apt install python3 python3-venv uwsgi uwsgi-emperor uwsgi-plugin-python3 nginx-full git
 </pre>
 <p><strong>Fedora:</strong></p>
-<pre class="code sh"><a name="rest_code_11591add46334fda8a4d0cb0aecb6a46-1"></a>dnf install python3 uwsgi uwsgi-plugin-python3 uwsgi-logger-file nginx git
+<pre class="code sh"><a name="rest_code_508c2397582f47949268d5f675a7e1ce-1"></a>dnf install python3 uwsgi uwsgi-plugin-python3 uwsgi-logger-file nginx git
 </pre>
 <p><strong>CentOS 7:</strong></p>
-<pre class="code sh"><a name="rest_code_ae3cd024d4514bbeb567cb0ee7e67e60-1"></a>yum install epel-release
-<a name="rest_code_ae3cd024d4514bbeb567cb0ee7e67e60-2"></a>yum install python36 uwsgi uwsgi-plugin-python36 uwsgi-logger-file nginx git wget
+<pre class="code sh"><a name="rest_code_f11dab06727c47c891655efddd2a98cf-1"></a>yum install epel-release
+<a name="rest_code_f11dab06727c47c891655efddd2a98cf-2"></a>yum install python36 uwsgi uwsgi-plugin-python36 uwsgi-logger-file nginx git wget
 </pre>
 <p><strong>Arch Linux:</strong></p>
-<pre class="code sh"><a name="rest_code_651359ddba514c3e89222e8f0be0b1ee-1"></a>pacman -S python uwsgi uwsgi-plugin-python nginx git
+<pre class="code sh"><a name="rest_code_691936ae812f42199bbac08ae78c87a3-1"></a>pacman -S python uwsgi uwsgi-plugin-python nginx git
 </pre>
 </div>
 <div class="section" id="preparing-your-application">
@@ -242,26 +242,26 @@ og: http://ogp.me/ns#
 <p>This guide used to recommend creating the venv in <code class="docutils literal">/srv/myapp</code>. This was changed to improve in-place Python upgrades. Virtual environments should be ephemeral, so that <code class="docutils literal">rm <span class="pre">-rf</span> $VIRTUAL_ENV</code> is recoverable in less than 10 minutes and 2 commands. The old structure made the venv hard to delete without deleting <code class="docutils literal">appdata</code>. The current structure has <code class="docutils literal">/srv/myapp/venv</code> and <code class="docutils literal">/srv/myapp/appdata</code> separate. An alternative structure would put the app in <code class="docutils literal">/srv/myapp</code>, but that requires including <code class="docutils literal">venv</code>, sockets and other deployment-specific files in <code class="docutils literal">.gitignore</code> (or having dirty working directories).</p>
 </div>
 <p>We’ll start by creating a virtual environment, which is very easy with Python 3:</p>
-<pre class="code sh"><a name="rest_code_af6f6cd77db547369b777952d0386f3a-1"></a>mkdir /srv/myapp
-<a name="rest_code_af6f6cd77db547369b777952d0386f3a-2"></a>python3 -m venv --prompt myapp /srv/myapp/venv
+<pre class="code sh"><a name="rest_code_921b976bafdb44148f8e483580e11802-1"></a>mkdir /srv/myapp
+<a name="rest_code_921b976bafdb44148f8e483580e11802-2"></a>python3 -m venv --prompt myapp /srv/myapp/venv
 </pre>
 <p>(The <code class="docutils literal"><span class="pre">--prompt</span></code> option is not supported on some old versions of Python, but you can just skip it if that’s the case, it’s just to make the prompt after <code class="docutils literal">source bin/activate</code> more informative.)</p>
 <p>Now, we need to put our app there and install requirements. An example for the tutorial demo app:</p>
-<pre class="code sh"><a name="rest_code_35e700655f30457197a69993111d59a6-1"></a><span class="nb">cd</span> /srv/myapp
-<a name="rest_code_35e700655f30457197a69993111d59a6-2"></a>git clone https://github.com/Kwpolska/flask-demo-app appdata
-<a name="rest_code_35e700655f30457197a69993111d59a6-3"></a>venv/bin/pip install -r appdata/requirements.txt
+<pre class="code sh"><a name="rest_code_d794d4eb07e44d60886f84df1c712969-1"></a><span class="nb">cd</span> /srv/myapp
+<a name="rest_code_d794d4eb07e44d60886f84df1c712969-2"></a>git clone https://github.com/Kwpolska/flask-demo-app appdata
+<a name="rest_code_d794d4eb07e44d60886f84df1c712969-3"></a>venv/bin/pip install -r appdata/requirements.txt
 </pre>
 <p>I’m storing my application data in the <code class="docutils literal">appdata</code> subdirectory so that it doesn’t clutter the virtual environment (or vice versa).  You may also install the <code class="docutils literal">uwsgi</code> package in the virtual environment, but it’s optional.</p>
 <p>What this directory should be depends on your web framework.  For example, for a Django app, you should have an <code class="docutils literal">appdata/manage.py</code> file (in other words, <code class="docutils literal">appdata</code> is where your app structure starts).  I also assumed that the <code class="docutils literal">appdata</code> folder should have a <code class="docutils literal">static</code> subdirectory with all static files, including <code class="docutils literal">favicon.ico</code> if you have one (we will add support for both in nginx).</p>
 <p>At this point, you should chown this directory to the user and group your server is going to run as.  This is especially important if uwsgi and nginx run as different users (as they do on Fedora). Run one of the following commands:</p>
 <p><strong>Ubuntu, Debian:</strong></p>
-<pre class="code sh"><a name="rest_code_c6cc45ac3148462ca253ca73529f9a4b-1"></a>chown -R www-data:www-data /srv/myapp
+<pre class="code sh"><a name="rest_code_b59daaee29514630972effa8384a6314-1"></a>chown -R www-data:www-data /srv/myapp
 </pre>
 <p><strong>Fedora, CentOS:</strong></p>
-<pre class="code sh"><a name="rest_code_2106ef4b036d4da89b30069102a792fe-1"></a>chown -R uwsgi:nginx /srv/myapp
+<pre class="code sh"><a name="rest_code_a971d79a01e1481387b745f569d86a4a-1"></a>chown -R uwsgi:nginx /srv/myapp
 </pre>
 <p><strong>Arch Linux:</strong></p>
-<pre class="code sh"><a name="rest_code_266c8ad044ee44ae8556c342d0338682-1"></a>chown -R http:http /srv/myapp
+<pre class="code sh"><a name="rest_code_3ed3412f85ab46898732472aab49f18a-1"></a>chown -R http:http /srv/myapp
 </pre>
 </div>
 <div class="section" id="configuring-uwsgi-and-nginx">
@@ -276,73 +276,73 @@ og: http://ogp.me/ns#
 <p>Start with this, but read the notes below and change the values accordingly:</p>
 <div class="code"><table class="codetable">
 <tr>
-<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_301b066caf824c5a99dabeed2bcb5c49-1"><code data-line-number=" 1"></code></a></td>
-<td class="code"><code><a name="rest_code_301b066caf824c5a99dabeed2bcb5c49-1"></a><span class="k">[uwsgi]</span>
+<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_b47ec3263e2c419ab26d747e6e6a9909-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><a name="rest_code_b47ec3263e2c419ab26d747e6e6a9909-1"></a><span class="k">[uwsgi]</span>
 </code></td>
 </tr>
 <tr>
-<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_301b066caf824c5a99dabeed2bcb5c49-2"><code data-line-number=" 2"></code></a></td>
-<td class="code"><code><a name="rest_code_301b066caf824c5a99dabeed2bcb5c49-2"></a><span class="na">socket</span> <span class="o">=</span> <span class="s">/srv/myapp/uwsgi.sock</span>
+<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_b47ec3263e2c419ab26d747e6e6a9909-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><a name="rest_code_b47ec3263e2c419ab26d747e6e6a9909-2"></a><span class="na">socket</span> <span class="o">=</span> <span class="s">/srv/myapp/uwsgi.sock</span>
 </code></td>
 </tr>
 <tr>
-<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_301b066caf824c5a99dabeed2bcb5c49-3"><code data-line-number=" 3"></code></a></td>
-<td class="code"><code><a name="rest_code_301b066caf824c5a99dabeed2bcb5c49-3"></a><span class="na">chmod-socket</span> <span class="o">=</span> <span class="s">775</span>
+<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_b47ec3263e2c419ab26d747e6e6a9909-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><a name="rest_code_b47ec3263e2c419ab26d747e6e6a9909-3"></a><span class="na">chmod-socket</span> <span class="o">=</span> <span class="s">775</span>
 </code></td>
 </tr>
 <tr>
-<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_301b066caf824c5a99dabeed2bcb5c49-4"><code data-line-number=" 4"></code></a></td>
-<td class="code"><code><a name="rest_code_301b066caf824c5a99dabeed2bcb5c49-4"></a><span class="na">chdir</span> <span class="o">=</span> <span class="s">/srv/myapp/appdata</span>
+<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_b47ec3263e2c419ab26d747e6e6a9909-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><a name="rest_code_b47ec3263e2c419ab26d747e6e6a9909-4"></a><span class="na">chdir</span> <span class="o">=</span> <span class="s">/srv/myapp/appdata</span>
 </code></td>
 </tr>
 <tr>
-<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_301b066caf824c5a99dabeed2bcb5c49-5"><code data-line-number=" 5"></code></a></td>
-<td class="code"><code><a name="rest_code_301b066caf824c5a99dabeed2bcb5c49-5"></a><span class="na">master</span> <span class="o">=</span> <span class="s">true</span>
+<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_b47ec3263e2c419ab26d747e6e6a9909-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code><a name="rest_code_b47ec3263e2c419ab26d747e6e6a9909-5"></a><span class="na">master</span> <span class="o">=</span> <span class="s">true</span>
 </code></td>
 </tr>
 <tr>
-<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_301b066caf824c5a99dabeed2bcb5c49-6"><code data-line-number=" 6"></code></a></td>
-<td class="code"><code><a name="rest_code_301b066caf824c5a99dabeed2bcb5c49-6"></a><span class="na">binary-path</span> <span class="o">=</span> <span class="s">/srv/myapp/venv/bin/uwsgi</span>
+<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_b47ec3263e2c419ab26d747e6e6a9909-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code><a name="rest_code_b47ec3263e2c419ab26d747e6e6a9909-6"></a><span class="na">binary-path</span> <span class="o">=</span> <span class="s">/srv/myapp/venv/bin/uwsgi</span>
 </code></td>
 </tr>
 <tr>
-<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_301b066caf824c5a99dabeed2bcb5c49-7"><code data-line-number=" 7"></code></a></td>
-<td class="code"><code><a name="rest_code_301b066caf824c5a99dabeed2bcb5c49-7"></a><span class="na">virtualenv</span> <span class="o">=</span> <span class="s">/srv/myapp/venv</span>
+<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_b47ec3263e2c419ab26d747e6e6a9909-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code><a name="rest_code_b47ec3263e2c419ab26d747e6e6a9909-7"></a><span class="na">virtualenv</span> <span class="o">=</span> <span class="s">/srv/myapp/venv</span>
 </code></td>
 </tr>
 <tr>
-<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_301b066caf824c5a99dabeed2bcb5c49-8"><code data-line-number=" 8"></code></a></td>
-<td class="code"><code><a name="rest_code_301b066caf824c5a99dabeed2bcb5c49-8"></a><span class="na">module</span> <span class="o">=</span> <span class="s">flaskapp:app</span>
+<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_b47ec3263e2c419ab26d747e6e6a9909-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code><a name="rest_code_b47ec3263e2c419ab26d747e6e6a9909-8"></a><span class="na">module</span> <span class="o">=</span> <span class="s">flaskapp:app</span>
 </code></td>
 </tr>
 <tr>
-<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_301b066caf824c5a99dabeed2bcb5c49-9"><code data-line-number=" 9"></code></a></td>
-<td class="code"><code><a name="rest_code_301b066caf824c5a99dabeed2bcb5c49-9"></a><span class="na">uid</span> <span class="o">=</span> <span class="s">www-data</span>
+<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_b47ec3263e2c419ab26d747e6e6a9909-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code><a name="rest_code_b47ec3263e2c419ab26d747e6e6a9909-9"></a><span class="na">uid</span> <span class="o">=</span> <span class="s">www-data</span>
 </code></td>
 </tr>
 <tr>
-<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_301b066caf824c5a99dabeed2bcb5c49-10"><code data-line-number="10"></code></a></td>
-<td class="code"><code><a name="rest_code_301b066caf824c5a99dabeed2bcb5c49-10"></a><span class="na">gid</span> <span class="o">=</span> <span class="s">www-data</span>
+<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_b47ec3263e2c419ab26d747e6e6a9909-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code><a name="rest_code_b47ec3263e2c419ab26d747e6e6a9909-10"></a><span class="na">gid</span> <span class="o">=</span> <span class="s">www-data</span>
 </code></td>
 </tr>
 <tr>
-<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_301b066caf824c5a99dabeed2bcb5c49-11"><code data-line-number="11"></code></a></td>
-<td class="code"><code><a name="rest_code_301b066caf824c5a99dabeed2bcb5c49-11"></a><span class="na">processes</span> <span class="o">=</span> <span class="s">1</span>
+<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_b47ec3263e2c419ab26d747e6e6a9909-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code><a name="rest_code_b47ec3263e2c419ab26d747e6e6a9909-11"></a><span class="na">processes</span> <span class="o">=</span> <span class="s">1</span>
 </code></td>
 </tr>
 <tr>
-<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_301b066caf824c5a99dabeed2bcb5c49-12"><code data-line-number="12"></code></a></td>
-<td class="code"><code><a name="rest_code_301b066caf824c5a99dabeed2bcb5c49-12"></a><span class="na">threads</span> <span class="o">=</span> <span class="s">1</span>
+<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_b47ec3263e2c419ab26d747e6e6a9909-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code><a name="rest_code_b47ec3263e2c419ab26d747e6e6a9909-12"></a><span class="na">threads</span> <span class="o">=</span> <span class="s">1</span>
 </code></td>
 </tr>
 <tr>
-<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_301b066caf824c5a99dabeed2bcb5c49-13"><code data-line-number="13"></code></a></td>
-<td class="code"><code><a name="rest_code_301b066caf824c5a99dabeed2bcb5c49-13"></a><span class="na">plugins</span> <span class="o">=</span> <span class="s">python3,logfile</span>
+<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_b47ec3263e2c419ab26d747e6e6a9909-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code><a name="rest_code_b47ec3263e2c419ab26d747e6e6a9909-13"></a><span class="na">plugins</span> <span class="o">=</span> <span class="s">python3,logfile</span>
 </code></td>
 </tr>
 <tr>
-<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_301b066caf824c5a99dabeed2bcb5c49-14"><code data-line-number="14"></code></a></td>
-<td class="code"><code><a name="rest_code_301b066caf824c5a99dabeed2bcb5c49-14"></a><span class="na">logger</span> <span class="o">=</span> <span class="s">file:/srv/myapp/uwsgi.log</span>
+<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_b47ec3263e2c419ab26d747e6e6a9909-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code><a name="rest_code_b47ec3263e2c419ab26d747e6e6a9909-14"></a><span class="na">logger</span> <span class="o">=</span> <span class="s">file:/srv/myapp/uwsgi.log</span>
 </code></td>
 </tr>
 </table></div>
@@ -421,103 +421,103 @@ og: http://ogp.me/ns#
 </ul>
 <div class="code"><table class="codetable">
 <tr>
-<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_46e7e07b58e443c18f43cdce01a8f570-1"><code data-line-number=" 1"></code></a></td>
-<td class="code"><code><a name="rest_code_46e7e07b58e443c18f43cdce01a8f570-1"></a><span class="k">server</span> <span class="p">{</span>
+<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_3de274333d8f44c4bf94ca8fb9afda91-1"><code data-line-number=" 1"></code></a></td>
+<td class="code"><code><a name="rest_code_3de274333d8f44c4bf94ca8fb9afda91-1"></a><span class="k">server</span> <span class="p">{</span>
 </code></td>
 </tr>
 <tr>
-<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_46e7e07b58e443c18f43cdce01a8f570-2"><code data-line-number=" 2"></code></a></td>
-<td class="code"><code><a name="rest_code_46e7e07b58e443c18f43cdce01a8f570-2"></a>    <span class="c1"># for a public HTTP server:</span>
+<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_3de274333d8f44c4bf94ca8fb9afda91-2"><code data-line-number=" 2"></code></a></td>
+<td class="code"><code><a name="rest_code_3de274333d8f44c4bf94ca8fb9afda91-2"></a>    <span class="c1"># for a public HTTP server:</span>
 </code></td>
 </tr>
 <tr>
-<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_46e7e07b58e443c18f43cdce01a8f570-3"><code data-line-number=" 3"></code></a></td>
-<td class="code"><code><a name="rest_code_46e7e07b58e443c18f43cdce01a8f570-3"></a>    <span class="kn">listen</span> <span class="mi">80</span><span class="p">;</span>
+<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_3de274333d8f44c4bf94ca8fb9afda91-3"><code data-line-number=" 3"></code></a></td>
+<td class="code"><code><a name="rest_code_3de274333d8f44c4bf94ca8fb9afda91-3"></a>    <span class="kn">listen</span> <span class="mi">80</span><span class="p">;</span>
 </code></td>
 </tr>
 <tr>
-<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_46e7e07b58e443c18f43cdce01a8f570-4"><code data-line-number=" 4"></code></a></td>
-<td class="code"><code><a name="rest_code_46e7e07b58e443c18f43cdce01a8f570-4"></a>    <span class="c1"># for a public HTTPS server:</span>
+<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_3de274333d8f44c4bf94ca8fb9afda91-4"><code data-line-number=" 4"></code></a></td>
+<td class="code"><code><a name="rest_code_3de274333d8f44c4bf94ca8fb9afda91-4"></a>    <span class="c1"># for a public HTTPS server:</span>
 </code></td>
 </tr>
 <tr>
-<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_46e7e07b58e443c18f43cdce01a8f570-5"><code data-line-number=" 5"></code></a></td>
-<td class="code"><code><a name="rest_code_46e7e07b58e443c18f43cdce01a8f570-5"></a>    <span class="c1"># listen 443 ssl;</span>
+<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_3de274333d8f44c4bf94ca8fb9afda91-5"><code data-line-number=" 5"></code></a></td>
+<td class="code"><code><a name="rest_code_3de274333d8f44c4bf94ca8fb9afda91-5"></a>    <span class="c1"># listen 443 ssl;</span>
 </code></td>
 </tr>
 <tr>
-<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_46e7e07b58e443c18f43cdce01a8f570-6"><code data-line-number=" 6"></code></a></td>
-<td class="code"><code><a name="rest_code_46e7e07b58e443c18f43cdce01a8f570-6"></a>    <span class="kn">server_name</span> <span class="s">localhost</span> <span class="s">myapp.local</span><span class="p">;</span>
+<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_3de274333d8f44c4bf94ca8fb9afda91-6"><code data-line-number=" 6"></code></a></td>
+<td class="code"><code><a name="rest_code_3de274333d8f44c4bf94ca8fb9afda91-6"></a>    <span class="kn">server_name</span> <span class="s">localhost</span> <span class="s">myapp.local</span><span class="p">;</span>
 </code></td>
 </tr>
 <tr>
-<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_46e7e07b58e443c18f43cdce01a8f570-7"><code data-line-number=" 7"></code></a></td>
-<td class="code"><code><a name="rest_code_46e7e07b58e443c18f43cdce01a8f570-7"></a>
+<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_3de274333d8f44c4bf94ca8fb9afda91-7"><code data-line-number=" 7"></code></a></td>
+<td class="code"><code><a name="rest_code_3de274333d8f44c4bf94ca8fb9afda91-7"></a>
 </code></td>
 </tr>
 <tr>
-<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_46e7e07b58e443c18f43cdce01a8f570-8"><code data-line-number=" 8"></code></a></td>
-<td class="code"><code><a name="rest_code_46e7e07b58e443c18f43cdce01a8f570-8"></a>    <span class="kn">location</span> <span class="s">/</span> <span class="p">{</span>
+<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_3de274333d8f44c4bf94ca8fb9afda91-8"><code data-line-number=" 8"></code></a></td>
+<td class="code"><code><a name="rest_code_3de274333d8f44c4bf94ca8fb9afda91-8"></a>    <span class="kn">location</span> <span class="s">/</span> <span class="p">{</span>
 </code></td>
 </tr>
 <tr>
-<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_46e7e07b58e443c18f43cdce01a8f570-9"><code data-line-number=" 9"></code></a></td>
-<td class="code"><code><a name="rest_code_46e7e07b58e443c18f43cdce01a8f570-9"></a>        <span class="kn">include</span> <span class="s">uwsgi_params</span><span class="p">;</span>
+<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_3de274333d8f44c4bf94ca8fb9afda91-9"><code data-line-number=" 9"></code></a></td>
+<td class="code"><code><a name="rest_code_3de274333d8f44c4bf94ca8fb9afda91-9"></a>        <span class="kn">include</span> <span class="s">uwsgi_params</span><span class="p">;</span>
 </code></td>
 </tr>
 <tr>
-<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_46e7e07b58e443c18f43cdce01a8f570-10"><code data-line-number="10"></code></a></td>
-<td class="code"><code><a name="rest_code_46e7e07b58e443c18f43cdce01a8f570-10"></a>        <span class="kn">uwsgi_pass</span> <span class="s">unix:/srv/myapp/uwsgi.sock</span><span class="p">;</span>
+<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_3de274333d8f44c4bf94ca8fb9afda91-10"><code data-line-number="10"></code></a></td>
+<td class="code"><code><a name="rest_code_3de274333d8f44c4bf94ca8fb9afda91-10"></a>        <span class="kn">uwsgi_pass</span> <span class="s">unix:/srv/myapp/uwsgi.sock</span><span class="p">;</span>
 </code></td>
 </tr>
 <tr>
-<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_46e7e07b58e443c18f43cdce01a8f570-11"><code data-line-number="11"></code></a></td>
-<td class="code"><code><a name="rest_code_46e7e07b58e443c18f43cdce01a8f570-11"></a>    <span class="p">}</span>
+<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_3de274333d8f44c4bf94ca8fb9afda91-11"><code data-line-number="11"></code></a></td>
+<td class="code"><code><a name="rest_code_3de274333d8f44c4bf94ca8fb9afda91-11"></a>    <span class="p">}</span>
 </code></td>
 </tr>
 <tr>
-<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_46e7e07b58e443c18f43cdce01a8f570-12"><code data-line-number="12"></code></a></td>
-<td class="code"><code><a name="rest_code_46e7e07b58e443c18f43cdce01a8f570-12"></a>
+<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_3de274333d8f44c4bf94ca8fb9afda91-12"><code data-line-number="12"></code></a></td>
+<td class="code"><code><a name="rest_code_3de274333d8f44c4bf94ca8fb9afda91-12"></a>
 </code></td>
 </tr>
 <tr>
-<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_46e7e07b58e443c18f43cdce01a8f570-13"><code data-line-number="13"></code></a></td>
-<td class="code"><code><a name="rest_code_46e7e07b58e443c18f43cdce01a8f570-13"></a>    <span class="kn">location</span> <span class="s">/static</span> <span class="p">{</span>
+<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_3de274333d8f44c4bf94ca8fb9afda91-13"><code data-line-number="13"></code></a></td>
+<td class="code"><code><a name="rest_code_3de274333d8f44c4bf94ca8fb9afda91-13"></a>    <span class="kn">location</span> <span class="s">/static</span> <span class="p">{</span>
 </code></td>
 </tr>
 <tr>
-<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_46e7e07b58e443c18f43cdce01a8f570-14"><code data-line-number="14"></code></a></td>
-<td class="code"><code><a name="rest_code_46e7e07b58e443c18f43cdce01a8f570-14"></a>        <span class="kn">alias</span> <span class="s">/srv/myapp/appdata/static</span><span class="p">;</span>
+<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_3de274333d8f44c4bf94ca8fb9afda91-14"><code data-line-number="14"></code></a></td>
+<td class="code"><code><a name="rest_code_3de274333d8f44c4bf94ca8fb9afda91-14"></a>        <span class="kn">alias</span> <span class="s">/srv/myapp/appdata/static</span><span class="p">;</span>
 </code></td>
 </tr>
 <tr>
-<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_46e7e07b58e443c18f43cdce01a8f570-15"><code data-line-number="15"></code></a></td>
-<td class="code"><code><a name="rest_code_46e7e07b58e443c18f43cdce01a8f570-15"></a>    <span class="p">}</span>
+<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_3de274333d8f44c4bf94ca8fb9afda91-15"><code data-line-number="15"></code></a></td>
+<td class="code"><code><a name="rest_code_3de274333d8f44c4bf94ca8fb9afda91-15"></a>    <span class="p">}</span>
 </code></td>
 </tr>
 <tr>
-<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_46e7e07b58e443c18f43cdce01a8f570-16"><code data-line-number="16"></code></a></td>
-<td class="code"><code><a name="rest_code_46e7e07b58e443c18f43cdce01a8f570-16"></a>
+<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_3de274333d8f44c4bf94ca8fb9afda91-16"><code data-line-number="16"></code></a></td>
+<td class="code"><code><a name="rest_code_3de274333d8f44c4bf94ca8fb9afda91-16"></a>
 </code></td>
 </tr>
 <tr>
-<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_46e7e07b58e443c18f43cdce01a8f570-17"><code data-line-number="17"></code></a></td>
-<td class="code"><code><a name="rest_code_46e7e07b58e443c18f43cdce01a8f570-17"></a>    <span class="kn">location</span> <span class="s">/favicon.ico</span> <span class="p">{</span>
+<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_3de274333d8f44c4bf94ca8fb9afda91-17"><code data-line-number="17"></code></a></td>
+<td class="code"><code><a name="rest_code_3de274333d8f44c4bf94ca8fb9afda91-17"></a>    <span class="kn">location</span> <span class="s">/favicon.ico</span> <span class="p">{</span>
 </code></td>
 </tr>
 <tr>
-<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_46e7e07b58e443c18f43cdce01a8f570-18"><code data-line-number="18"></code></a></td>
-<td class="code"><code><a name="rest_code_46e7e07b58e443c18f43cdce01a8f570-18"></a>        <span class="kn">alias</span> <span class="s">/srv/myapp/appdata/static/favicon.ico</span><span class="p">;</span>
+<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_3de274333d8f44c4bf94ca8fb9afda91-18"><code data-line-number="18"></code></a></td>
+<td class="code"><code><a name="rest_code_3de274333d8f44c4bf94ca8fb9afda91-18"></a>        <span class="kn">alias</span> <span class="s">/srv/myapp/appdata/static/favicon.ico</span><span class="p">;</span>
 </code></td>
 </tr>
 <tr>
-<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_46e7e07b58e443c18f43cdce01a8f570-19"><code data-line-number="19"></code></a></td>
-<td class="code"><code><a name="rest_code_46e7e07b58e443c18f43cdce01a8f570-19"></a>    <span class="p">}</span>
+<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_3de274333d8f44c4bf94ca8fb9afda91-19"><code data-line-number="19"></code></a></td>
+<td class="code"><code><a name="rest_code_3de274333d8f44c4bf94ca8fb9afda91-19"></a>    <span class="p">}</span>
 </code></td>
 </tr>
 <tr>
-<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_46e7e07b58e443c18f43cdce01a8f570-20"><code data-line-number="20"></code></a></td>
-<td class="code"><code><a name="rest_code_46e7e07b58e443c18f43cdce01a8f570-20"></a><span class="p">}</span>
+<td class="linenos linenodiv"><a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#rest_code_3de274333d8f44c4bf94ca8fb9afda91-20"><code data-line-number="20"></code></a></td>
+<td class="code"><code><a name="rest_code_3de274333d8f44c4bf94ca8fb9afda91-20"></a><span class="p">}</span>
 </code></td>
 </tr>
 </table></div>
@@ -536,27 +536,27 @@ og: http://ogp.me/ns#
 <div class="section" id="for-arch-linux">
 <h4><a class="toc-backref" href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id15">For Arch Linux</a><a href="#for-arch-linux" class="headerlink" title="Permalink to this heading">¶</a></h4>
 <p>All you need is:</p>
-<pre class="code sh"><a name="rest_code_fdf8e1895ab44c3f97835eafd059ab6d-1"></a>systemctl <span class="nb">enable</span> nginx emperor.uwsgi
-<a name="rest_code_fdf8e1895ab44c3f97835eafd059ab6d-2"></a>systemctl start nginx emperor.uwsgi
+<pre class="code sh"><a name="rest_code_edb9cad267e443c8b7625630f9721085-1"></a>systemctl <span class="nb">enable</span> nginx emperor.uwsgi
+<a name="rest_code_edb9cad267e443c8b7625630f9721085-2"></a>systemctl start nginx emperor.uwsgi
 </pre>
 <p>Verify the service is running with <code class="docutils literal">systemctl status emperor.uwsgi</code></p>
 </div>
 <div class="section" id="for-fedora-and-centos">
 <h4><a class="toc-backref" href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id16">For Fedora and CentOS</a><a href="#for-fedora-and-centos" class="headerlink" title="Permalink to this heading">¶</a></h4>
 <p>Make sure you followed the extra note about editing <code class="docutils literal">/etc/uwsgi.ini</code> earlier and run:</p>
-<pre class="code sh"><a name="rest_code_8c137d8f3889423e9a4709e8905086bb-1"></a>systemctl <span class="nb">enable</span> nginx uwsgi
-<a name="rest_code_8c137d8f3889423e9a4709e8905086bb-2"></a>systemctl start nginx uwsgi
+<pre class="code sh"><a name="rest_code_eef2e5a475744d62859b35e67fc5a28d-1"></a>systemctl <span class="nb">enable</span> nginx uwsgi
+<a name="rest_code_eef2e5a475744d62859b35e67fc5a28d-2"></a>systemctl start nginx uwsgi
 </pre>
 <p>Verify the service is running with <code class="docutils literal">systemctl status uwsgi</code></p>
 <p>If you disabled SELinux, this is enough to get an app working and you can skip over to the next section.</p>
 <p>If you want to use SELinux, you need to do the following to allow nginx to read static files:</p>
-<pre class="code sh"><a name="rest_code_bb6c166b2cbd4e35b8473f80973c8bde-1"></a>setenforce <span class="m">0</span>
-<a name="rest_code_bb6c166b2cbd4e35b8473f80973c8bde-2"></a>chcon -R system_u:system_r:httpd_t:s0 /srv/myapp/appdata/static
-<a name="rest_code_bb6c166b2cbd4e35b8473f80973c8bde-3"></a>setenforce <span class="m">1</span>
+<pre class="code sh"><a name="rest_code_1e0731ce75d9472cb17f0c9ba11dedcc-1"></a>setenforce <span class="m">0</span>
+<a name="rest_code_1e0731ce75d9472cb17f0c9ba11dedcc-2"></a>chcon -R system_u:system_r:httpd_t:s0 /srv/myapp/appdata/static
+<a name="rest_code_1e0731ce75d9472cb17f0c9ba11dedcc-3"></a>setenforce <span class="m">1</span>
 </pre>
 <p>We now need to install a <a class="reference external" href="https://chriswarrick.com/pub/nginx-uwsgi.pp">SELinux policy</a> (that I created for this project; updated 2020-05-02) to allow nginx and uWSGI to communicate.
 Download <a class="reference external" href="https://chriswarrick.com/pub/nginx-uwsgi.pp">nginx-uwsgi.pp</a> and run:</p>
-<pre class="code sh"><a name="rest_code_58916ff639314eb4a4013cda03b606b0-1"></a>semodule -i nginx-uwsgi.pp
+<pre class="code sh"><a name="rest_code_f79ceadb90d94029ac696caa0cff02ad-1"></a>semodule -i nginx-uwsgi.pp
 </pre>
 <p>Hopefully, this is enough (you can delete the file). In case it isn’t, please read SELinux documentation, check audit logs, and look into <code class="docutils literal">audit2allow</code>.</p>
 </div>
@@ -564,17 +564,17 @@ Download <a class="reference external" href="https://chriswarrick.com/pub/nginx-
 <h4><a class="toc-backref" href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id17">For Ubuntu and Debian</a><a href="#for-ubuntu-and-debian" class="headerlink" title="Permalink to this heading">¶</a></h4>
 <p>Ubuntu and Debian (still!) use LSB services for uWSGI. Because LSB services are awful, we’re going to set up our own systemd-based (native) service.</p>
 <p>Start by disabling the LSB service that comes with Ubuntu and Debian:</p>
-<pre class="code sh"><a name="rest_code_9d4ed66cb395452a9a794c6750d10c7a-1"></a>systemctl stop uwsgi-emperor
-<a name="rest_code_9d4ed66cb395452a9a794c6750d10c7a-2"></a>systemctl disable uwsgi-emperor
+<pre class="code sh"><a name="rest_code_1b3375111de34e698b1190759c386ac9-1"></a>systemctl stop uwsgi-emperor
+<a name="rest_code_1b3375111de34e698b1190759c386ac9-2"></a>systemctl disable uwsgi-emperor
 </pre>
 <p>Copy the <code class="docutils literal">.service</code> file from the <a class="reference external" href="https://uwsgi-docs.readthedocs.org/en/latest/Systemd.html#adding-the-emperor-to-systemd">uWSGI systemd documentation</a> to <code class="docutils literal">/etc/systemd/system/emperor.uwsgi.service</code>.  Change the ExecStart line to:</p>
-<pre class="code ini"><a name="rest_code_bfd0af7c956f4ad18abe368549353baa-1"></a><span class="na">ExecStart</span><span class="o">=</span><span class="s">/usr/bin/uwsgi --ini /etc/uwsgi-emperor/emperor.ini</span>
+<pre class="code ini"><a name="rest_code_789c2fd39a9846db943f12e2471446ff-1"></a><span class="na">ExecStart</span><span class="o">=</span><span class="s">/usr/bin/uwsgi --ini /etc/uwsgi-emperor/emperor.ini</span>
 </pre>
 <p>You can now reload systemd daemons and enable the services:</p>
-<pre class="code sh"><a name="rest_code_93d186d86b46400eb03d7e2f944a1784-1"></a>systemctl daemon-reload
-<a name="rest_code_93d186d86b46400eb03d7e2f944a1784-2"></a>systemctl <span class="nb">enable</span> nginx emperor.uwsgi
-<a name="rest_code_93d186d86b46400eb03d7e2f944a1784-3"></a>systemctl reload nginx
-<a name="rest_code_93d186d86b46400eb03d7e2f944a1784-4"></a>systemctl start emperor.uwsgi
+<pre class="code sh"><a name="rest_code_ebd8d684001c42488b0d4d9988ebd0c4-1"></a>systemctl daemon-reload
+<a name="rest_code_ebd8d684001c42488b0d4d9988ebd0c4-2"></a>systemctl <span class="nb">enable</span> nginx emperor.uwsgi
+<a name="rest_code_ebd8d684001c42488b0d4d9988ebd0c4-3"></a>systemctl reload nginx
+<a name="rest_code_ebd8d684001c42488b0d4d9988ebd0c4-4"></a>systemctl start emperor.uwsgi
 </pre>
 <p>Verify the service is running with <code class="docutils literal">systemctl status emperor.uwsgi</code>.  (Ignore
 the warning about no request plugin)</p>
@@ -586,9 +586,9 @@ the warning about no request plugin)</p>
 <p>Your web service should now be running at <a class="reference external" href="http://localhost/">http://localhost/</a> (or wherever you set up server to listen).</p>
 <p>If you used the demo application, you should see something like this (complete with the favicon and image greeting):</p>
 <img alt="/images/nginx-uwsgi-demo.png" class="centered" src="/images/nginx-uwsgi-demo.png"><p>If you want to test with cURL:</p>
-<pre class="code sh"><a name="rest_code_d7a86ef0864e4c468ff2a8fb79080298-1"></a>curl -v http://localhost/
-<a name="rest_code_d7a86ef0864e4c468ff2a8fb79080298-2"></a>curl -I http://localhost/favicon.ico
-<a name="rest_code_d7a86ef0864e4c468ff2a8fb79080298-3"></a>curl -I http://localhost/static/hello.png
+<pre class="code sh"><a name="rest_code_3ddc86b51d6c401b9a60049b0e4feb56-1"></a>curl -v http://localhost/
+<a name="rest_code_3ddc86b51d6c401b9a60049b0e4feb56-2"></a>curl -I http://localhost/favicon.ico
+<a name="rest_code_3ddc86b51d6c401b9a60049b0e4feb56-3"></a>curl -I http://localhost/static/hello.png
 </pre>
 <div class="section" id="troubleshooting">
 <h3><a class="toc-backref" href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id19">Troubleshooting</a><a href="#troubleshooting" class="headerlink" title="Permalink to this heading">¶</a></h3>
@@ -599,15 +599,16 @@ the warning about no request plugin)</p>
 <li><p>If you get a default site, disable that site in nginx config (<code class="docutils literal">/etc/nginx/nginx.conf</code> or your sites directory).</p></li>
 <li><p>If you have a firewall installed, make sure to open the ports your web server runs on (typically 80/443). For <code class="docutils literal">firewalld</code> (Fedora, CentOS):</p></li>
 </ul>
-<pre class="code sh"><a name="rest_code_961f9e4079694407afe532a0319e1410-1"></a>firewall-cmd --add-service http
-<a name="rest_code_961f9e4079694407afe532a0319e1410-2"></a>firewall-cmd --add-service https
+<pre class="code sh"><a name="rest_code_6b5c06ba39cd4099b71b7322c17bd6b6-1"></a>firewall-cmd --add-service http
+<a name="rest_code_6b5c06ba39cd4099b71b7322c17bd6b6-2"></a>firewall-cmd --add-service https
 </pre>
 <ul class="simple">
 <li><p>If it still does not work, feel free to ask in the comments, mentioning your distribution, installation method, and what doesn’t work.</p></li>
 </ul>
 </div>
+</div>
 <div class="section" id="can-i-use-docker">
-<h3><a class="toc-backref" href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id20">Can I use Docker?</a><a href="#can-i-use-docker" class="headerlink" title="Permalink to this heading">¶</a></h3>
+<h2><a class="toc-backref" href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/#id20">Can I use Docker?</a><a href="#can-i-use-docker" class="headerlink" title="Permalink to this heading">¶</a></h2>
 <p>This blog post is written for systems running standalone. But Docker is a bit special, in that it offers a limited subset of OS features this workflow expects. The main issue is with user accounts, which generally work weird in Docker, and I had issues with <code class="docutils literal">setuid</code>/<code class="docutils literal">setgid</code> as used by uWSGI. Another issue is the lack of systemd, which means that another part of the tutorial fails to apply.</p>
 <p>This tutorial uses uWSGI Emperor, which can run multiple sites at once, and offers other management features (such as seamless code restarts with <code class="docutils literal">touch /etc/uwsgi/vassals/myapp.ini</code>) that may not be useful or easy to use in a Docker environment. You’d probably also run uWSGI and nginx in separate containers in a typical Docker deployment.</p>
 <p>Regardless, many parts of this tutorial can be used with Docker, although with the aforementioned adjustments. I have done some work on this topic. This tutorial has an Ansible Playbook attached, and the tutorial/playbook are compatible with five Linux distros in multiple versions. How do I know that there were no unexpected bugs in an older version? I could grab a Vagrant image or set up a VM. I do that when I need specific testing, but doing it for each of the distros on each update would take at least half an hour, probably even more. Yeah, that needs automating. I decided to use GitHub Actions for the CI, which can run anything, as long as you provide a Dockerfile.</p>
@@ -619,7 +620,6 @@ the warning about no request plugin)</p>
 <p>This reflink gives you €20 in credit (expires the next month). I earn €10 after you spend €10 of your own.</p>
 </dd>
 </dl>
-</div>
 </div>
 </div>
     </article>

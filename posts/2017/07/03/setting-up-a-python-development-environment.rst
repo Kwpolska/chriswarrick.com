@@ -19,7 +19,7 @@ questions may stump new developers, or people wanting to use Python.
 
 Note: this guide is opinionated.
 
-.. class:: alert alert-primary float-md-right
+.. class:: right-toc
 
 .. contents::
 

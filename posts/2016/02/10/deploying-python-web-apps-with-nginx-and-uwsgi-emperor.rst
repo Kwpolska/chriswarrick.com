@@ -26,7 +26,7 @@ CI status for the associated Ansible Playbook: |ci-status|
 
 For easy linking, I set up some aliases: https://go.chriswarrick.com/pyweb and https://go.chriswarrick.com/uwsgi-tut (powered by a Django web application, deployed with nginx and uWSGI!).
 
-.. class:: alert alert-primary float-md-right
+.. class:: right-toc
 
 .. contents::
 
@@ -432,7 +432,7 @@ Hopefully, everything works. If it doesn’t:
 
 
 Can I use Docker?
-=================
+~~~~~~~~~~~~~~~~~
 
 This blog post is written for systems running standalone. But Docker is a bit special, in that it offers a limited subset of OS features this workflow expects. The main issue is with user accounts, which generally work weird in Docker, and I had issues with ``setuid``/``setgid`` as used by uWSGI. Another issue is the lack of systemd, which means that another part of the tutorial fails to apply.
 
