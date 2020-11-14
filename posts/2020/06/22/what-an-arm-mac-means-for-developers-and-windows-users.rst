@@ -1,6 +1,7 @@
 .. title: What an ARM Mac means for developers and Windows users
 .. slug: what-an-arm-mac-means-for-developers-and-windows-users
 .. date: 2020-06-22 21:00:00+02:00
+.. updated: 2020-11-14 12:40:00+01:00
 .. tags: Apple, ARM, Mac, devel
 .. category: Apple
 .. description: ARM Macs might be good for Apple, but developers should be concerned about interoperability.
@@ -124,6 +125,9 @@ better. While many developers don’t care about ARM and might not have builds
 for ARM available, most Windows software is available in both x86 and x86_64
 versions, or is exclusively 32-bit. But certain pro apps are x86_64 only, so if
 there is no ARM build of it, an ARM Windows PC currently cannot run it.
+(*Update:* Microsoft announced `x86_64 emulation on ARM
+<https://blogs.windows.com/windowsexperience/2020/09/30/now-more-essential-than-ever-the-role-of-the-windows-pc-has-changed/>`_,
+which means more software will work.)
 
 And note that Microsoft knows about the transition, but we haven’t heard
 anything about Windows during the keynote…
@@ -166,3 +170,24 @@ latter is becoming more usable with every Windows release, so keep an eye on
 that… I wrote this post in NeoVim in WSL2, with Windows Terminal supporting
 many advanced terminal features, and the transparent filesystem integration
 letting me access Windows files directly).
+
+
+Post-M1 announcement update (2020-11-14)
+----------------------------------------
+
+Parallels have confirmed `support for M1 Macs
+<https://www.parallels.com/blogs/parallels-desktop-apple-silicon-mac/>`_ and
+are offering a Technical Preview of their M1 virtualization product. This
+announcement’s mention of Windows 10 ARM supporting x86_64 apps has caused
+some tech writers to assume Parallels will support Windows 10 ARM on M1
+Macs. This is **not** what the post says. Parallels is not, and cannot
+announce support for that OS, because Windows 10 ARM is (still) available to
+ARM OEMs only to install on their devices — making an official announcement
+about this feature today would be admitting to doing something illegal/not
+allowed by the EULA. I’m pretty sure they are not working on support for
+Windows 10 ARM now and in the foreseeable future, until Microsoft opens up
+Windows 10 ARM to the public — their own legal issues aside, who would they sell
+the Windows support to?
+
+In other news, `Docker is not ready yet
+<https://github.com/docker/for-mac/issues/4733>`_.

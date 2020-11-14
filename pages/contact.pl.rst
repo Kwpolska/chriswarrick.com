@@ -15,8 +15,8 @@ Skontaktuj się ze mną:
 .. raw:: html
 
     <p style="font-size: 2em"><strong>NAJPIERW PRZECZYTAJ:</strong> Nie wysyłaj
-    ofert pracy, ofert sponsorowania/reklam, postów gościnnych, zaproszeń do
-    udziału w „kolaboracjach” ani innych bezesnsownych rzeczy.</P>
+    ofert sponsorowania/reklam, postów gościnnych, czy zaproszeń do udziału w
+    „kolaboracjach”.</p>
 
 * **pocztą e-mail** — chris \[at\] chriswarrick.com
 * **na IRC-u** — ChrisWarrick w sieci freenode

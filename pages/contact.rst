@@ -15,8 +15,8 @@ Contact me:
 
 .. raw:: html
 
-    <p style="font-size: 2em"><strong>READ ME FIRST:</strong> Do not send me job
-    offers, sponsorship/advertising offers, guest posts, “collaboration”, or other similar nonsense.</p>
+    <p style="font-size: 2em"><strong>READ ME FIRST:</strong> Do not send me
+    sponsorship/advertising offers, guest posts, or “collaboration” offers.</p>
 
 * **via e-mail** — chris \[at\] chriswarrick.com
 * **on IRC** — ChrisWarrick on freenode
