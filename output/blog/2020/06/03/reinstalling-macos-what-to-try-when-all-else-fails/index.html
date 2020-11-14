@@ -135,7 +135,8 @@ damage to your devices caused as a result of using information in this post.</p>
 <li><p><a class="reference internal" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#el-capitan-installer-cant-be-verified" id="id6">El Capitan installer can’t be verified</a></p></li>
 <li><p><a class="reference internal" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#bonus-tidbit-1-how-the-download-works" id="id7">Bonus tidbit 1: how the download works</a></p></li>
 <li><p><a class="reference internal" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#bonus-tidbit-2-using-terminal-from-setup-assistant" id="id8">Bonus tidbit 2: using Terminal from Setup Assistant</a></p></li>
-<li><p><a class="reference internal" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#in-the-end" id="id9">In the end…</a></p></li>
+<li><p><a class="reference internal" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#an-open-letter-to-progress-bar-designers" id="id9">An Open Letter to Progress Bar Designers</a></p></li>
+<li><p><a class="reference internal" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#in-the-end" id="id10">In the end…</a></p></li>
 </ul>
 </div>
 <div class="section" id="making-install-media-with-el-capitan-with-access-only-to-recovery">
@@ -152,7 +153,7 @@ Hackintoshing this little bit harder, but this also affects legitimate users.
 The only thing you can download from Apple is El Capitan. Apple offers
 <a class="reference external" href="https://support.apple.com/en-us/HT206886">InstallMacOSX.dmg</a> on their
 website. If you take a look at the instructions, you will see that this is
-<em>not</em> a bootable OS X image. This image has a <code class="docutils literal">.pkg</code> package. This package is
+<em>not</em> a bootable OS X image. This image has a <code class="docutils literal">.pkg</code> package. This package is
 expected to install <code class="docutils literal">/Applications/Install OS X El Capitan.app</code>. Well, we’re
 in recovery, we can’t install stuff. So, let’s do this the manual way.</p>
 </div>
@@ -163,7 +164,7 @@ archives being different formats (at least three).</p>
 <div class="float-md-right mt-md-0 sidebar">
 <p class="sidebar-title">macOS flat package format</p>
 <p>You can find more resources about the flat package format, <a class="reference external" href="http://s.sudre.free.fr/Stuff/Ivanhoe/FLAT.html">one</a> or <a class="reference external" href="https://matthew-brett.github.io/docosx/flat_packages.html#payload_">two</a>, although
-this was deduted from the <code class="docutils literal">file</code> command and The Unarchiver.</p>
+this was deduced from the <code class="docutils literal">file</code> command and The Unarchiver.</p>
 </div>
 <p>The first archive is the <code class="docutils literal">.pkg</code> file itself. Those files are in <a class="reference external" href="https://en.wikipedia.org/wiki/Xar_(archiver)">XAR format</a>, which was invented by the
 OpenDarwin community. You can either extract it with <code class="docutils literal">pkgutil <span class="pre">--expand</span>
@@ -188,21 +189,24 @@ it at all the compressed files mentioned in this paragraph.)</p>
 <div class="section" id="a-from-the-el-capitan-download">
 <h3><a class="toc-backref" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#id4">a. From the El Capitan download</a><a href="#a-from-the-el-capitan-download" class="headerlink" title="Permalink to this heading">¶</a></h3>
 <p>Let’s expand the El Capitan package.</p>
-<pre class="code console"><a name="rest_code_c589a9aacb6e4c53b88166935de96518-1"></a><span class="gp">$</span> <span class="o">(</span>mount the DMG in Disk Utility, copy the .pkg to a read-write volume<span class="o">)</span>
-<a name="rest_code_c589a9aacb6e4c53b88166935de96518-2"></a><span class="gp">$</span> pkgutil --expand InstallMacOSX.pkg elcapitan
-<a name="rest_code_c589a9aacb6e4c53b88166935de96518-3"></a><span class="gp">$</span> ls -F elcapitan
-<a name="rest_code_c589a9aacb6e4c53b88166935de96518-4"></a><span class="go">Distribution*       InstallMacOSX.pkg/ Resources/</span>
-<a name="rest_code_c589a9aacb6e4c53b88166935de96518-5"></a><span class="gp">$</span> <span class="nb">cd</span> elcapitan/InstallMacOSX.pkg/
-<a name="rest_code_c589a9aacb6e4c53b88166935de96518-6"></a><span class="gp">$</span> tar -xvf Payload
-<a name="rest_code_c589a9aacb6e4c53b88166935de96518-7"></a><span class="go">x .</span>
-<a name="rest_code_c589a9aacb6e4c53b88166935de96518-8"></a><span class="go">x ./Install OS X El Capitan.app</span>
-<a name="rest_code_c589a9aacb6e4c53b88166935de96518-9"></a><span class="go">x ./Install OS X El Capitan.app/Contents</span>
-<a name="rest_code_c589a9aacb6e4c53b88166935de96518-10"></a><span class="go">…</span>
+<pre class="code console"><a name="rest_code_20e2592ebf654a2782cc0044d46632e4-1"></a><span class="gp">$</span> <span class="o">(</span>mount the DMG in Disk Utility<span class="o">)</span>
+<a name="rest_code_20e2592ebf654a2782cc0044d46632e4-2"></a><span class="gp">$</span> cp /Volumes/Install<span class="se">\ </span>OS<span class="se">\ </span>X/InstallMacOSX.pkg /Volumes/Macintosh<span class="se">\ </span>HD/
+<a name="rest_code_20e2592ebf654a2782cc0044d46632e4-3"></a><span class="go">     (Or copy it to some other volume you can write to; NOT the USB stick)</span>
+<a name="rest_code_20e2592ebf654a2782cc0044d46632e4-4"></a><span class="gp">$</span> <span class="nb">cd</span> /Volumes/Macintosh<span class="se">\ </span>HD/
+<a name="rest_code_20e2592ebf654a2782cc0044d46632e4-5"></a><span class="gp">$</span> pkgutil --expand InstallMacOSX.pkg elcapitan
+<a name="rest_code_20e2592ebf654a2782cc0044d46632e4-6"></a><span class="gp">$</span> ls -F elcapitan
+<a name="rest_code_20e2592ebf654a2782cc0044d46632e4-7"></a><span class="go">Distribution*       InstallMacOSX.pkg/ Resources/</span>
+<a name="rest_code_20e2592ebf654a2782cc0044d46632e4-8"></a><span class="gp">$</span> <span class="nb">cd</span> elcapitan/InstallMacOSX.pkg/
+<a name="rest_code_20e2592ebf654a2782cc0044d46632e4-9"></a><span class="gp">$</span> tar -xvf Payload
+<a name="rest_code_20e2592ebf654a2782cc0044d46632e4-10"></a><span class="go">x .</span>
+<a name="rest_code_20e2592ebf654a2782cc0044d46632e4-11"></a><span class="go">x ./Install OS X El Capitan.app</span>
+<a name="rest_code_20e2592ebf654a2782cc0044d46632e4-12"></a><span class="go">x ./Install OS X El Capitan.app/Contents</span>
+<a name="rest_code_20e2592ebf654a2782cc0044d46632e4-13"></a><span class="go">…</span>
 </pre>
 <p>We’ve got the installer app, which is what we need to create an install image.
 Great, let’s try it!</p>
-<pre class="code console"><a name="rest_code_bdb3d8b7d9cf4814bfe83e93c08105dc-1"></a><span class="gp">#</span> <span class="s2">"Install OS X El Capitan.app/Contents/Resources/createinstallmedia"</span> --volume /Volumes/MyBlankUSBDrive --applicationpath <span class="s2">"Install OS X El Capitan.app"</span>
-<a name="rest_code_bdb3d8b7d9cf4814bfe83e93c08105dc-2"></a><span class="go">Install OS X El Capitan.app does not appear to be a valid OS installer application.</span>
+<pre class="code console"><a name="rest_code_069ca7d620bb4b6dadfbe7153838b06d-1"></a><span class="gp">#</span> <span class="s2">"Install OS X El Capitan.app/Contents/Resources/createinstallmedia"</span> --volume /Volumes/MyBlankUSBDrive --applicationpath <span class="s2">"Install OS X El Capitan.app"</span>
+<a name="rest_code_069ca7d620bb4b6dadfbe7153838b06d-2"></a><span class="go">Install OS X El Capitan.app does not appear to be a valid OS installer application.</span>
 </pre>
 <p>Oh, we’ve got a problem. Turns out there’s one more thing we need to take care
 of, and it’s the scripts. MacOS packages have scripts, typically shell scripts,
@@ -212,12 +216,12 @@ there’s an <code class="docutils literal">link_package</code> script we need t
 <code class="docutils literal">Contents/SharedSupport</code> directory inside the installer app, and
 copies/hardlinks the <code class="docutils literal">InstallESD.dmg</code> file (which is the install formerly-DVD
 image) to that directory. Let’s try doing this on our own:</p>
-<pre class="code console"><a name="rest_code_c99d927e07cb468cafaf9bba770cac4e-1"></a><span class="gp">$</span> mkdir <span class="s2">"Install OS X El Capitan.app/Contents/SharedSupport"</span>
-<a name="rest_code_c99d927e07cb468cafaf9bba770cac4e-2"></a><span class="gp">$</span> mv InstallESD.dmg <span class="s2">"Install OS X El Capitan.app/Contents/SharedSupport"</span>
-<a name="rest_code_c99d927e07cb468cafaf9bba770cac4e-3"></a><span class="gp">#</span> <span class="s2">"Install OS X El Capitan.app/Contents/Resources/createinstallmedia"</span> --volume /Volumes/MyBlankUSBDrive --applicationpath <span class="s2">"Install OS X El Capitan.app"</span>
-<a name="rest_code_c99d927e07cb468cafaf9bba770cac4e-4"></a><span class="go">Ready to start.</span>
-<a name="rest_code_c99d927e07cb468cafaf9bba770cac4e-5"></a><span class="go">To continue we need to erase the disk at /Volumes/MyBlankUSBDrive.</span>
-<a name="rest_code_c99d927e07cb468cafaf9bba770cac4e-6"></a><span class="go">If you wish to continue type (Y) then press return:</span>
+<pre class="code console"><a name="rest_code_d3fe9db4cc0c4fbeb6f0d9a5321628cd-1"></a><span class="gp">$</span> mkdir <span class="s2">"Install OS X El Capitan.app/Contents/SharedSupport"</span>
+<a name="rest_code_d3fe9db4cc0c4fbeb6f0d9a5321628cd-2"></a><span class="gp">$</span> mv InstallESD.dmg <span class="s2">"Install OS X El Capitan.app/Contents/SharedSupport"</span>
+<a name="rest_code_d3fe9db4cc0c4fbeb6f0d9a5321628cd-3"></a><span class="gp">#</span> <span class="s2">"Install OS X El Capitan.app/Contents/Resources/createinstallmedia"</span> --volume /Volumes/MyBlankUSBDrive --applicationpath <span class="s2">"Install OS X El Capitan.app"</span>
+<a name="rest_code_d3fe9db4cc0c4fbeb6f0d9a5321628cd-4"></a><span class="go">Ready to start.</span>
+<a name="rest_code_d3fe9db4cc0c4fbeb6f0d9a5321628cd-5"></a><span class="go">To continue we need to erase the disk at /Volumes/MyBlankUSBDrive.</span>
+<a name="rest_code_d3fe9db4cc0c4fbeb6f0d9a5321628cd-6"></a><span class="go">If you wish to continue type (Y) then press return:</span>
 </pre>
 <p>And it works! <code class="docutils literal">createinstallmedia</code> will now produce valid install media.</p>
 </div>
@@ -225,7 +229,7 @@ image) to that directory. Let’s try doing this on our own:</p>
 <h3><a class="toc-backref" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#id5">b. Installer from Recovery/App Store (any macOS version)</a><a href="#b-installer-from-recovery-app-store-any-macos-version" class="headerlink" title="Permalink to this heading">¶</a></h3>
 <p>If you are in Recovery, you can find an Install app on the filesystem. If you
 try to run it, you will get the same error as in the previous paragraph:</p>
-<pre class="code text"><a name="rest_code_44c5cafd95a544adaab776534fe32b3e-1"></a>Install macOS Catalina.app does not appear to be a valid OS installer application.
+<pre class="code text"><a name="rest_code_a9132f36edad4f3ca942c529a63f3855-1"></a>Install macOS Catalina.app does not appear to be a valid OS installer application.
 </pre>
 <p>This also happens with some older macOS versions, where you get a small
 <code class="docutils literal">.app</code> from the App Store, and that app does the actual download.</p>
@@ -256,7 +260,7 @@ available options differ slightly depending on the OS version.</p></li>
 <p>If you get this error, it might be because Apple’s signing keys expired, or
 because of other date/time weirdness. Regardless, you can force an install if
 you are sure the installer is not damaged with this command <a class="reference external" href="https://apple.stackexchange.com/questions/216730/this-copy-of-the-install-os-x-el-capitan-application-cant-be-verified-it-may-h">(source)</a>:</p>
-<pre class="code console"><a name="rest_code_5312b0f2122e4937b6622d165fd379e2-1"></a><span class="gp">#</span> installer -pkg  /Volumes/Mac<span class="se">\ </span>OS<span class="se">\ </span>X<span class="se">\ </span>Install<span class="se">\ </span>DVD/Packages/OSInstall.mpkg -target /Volumes/<span class="s2">"XXX"</span>
+<pre class="code console"><a name="rest_code_519e560123a744f68eba5c46c67627c4-1"></a><span class="gp">#</span> installer -pkg  /Volumes/Mac<span class="se">\ </span>OS<span class="se">\ </span>X<span class="se">\ </span>Install<span class="se">\ </span>DVD/Packages/OSInstall.mpkg -target /Volumes/<span class="s2">"XXX"</span>
 </pre>
 </div>
 <div class="section" id="bonus-tidbit-1-how-the-download-works">
@@ -292,7 +296,10 @@ You can do that with Ctrl + Opt + Cmd + T and Ctrl + Opt + Cmd + C respectively 
 <p>How could that come in handy? For example, if you want to check if the backup
 drive still worked and if the process isn’t stuck (I wrote a test file and also
 checked <code class="docutils literal">top</code>).</p>
-<p>Also, Dear Progress Bar Designers: can you please make your progress bars
+</div>
+<div class="section" id="an-open-letter-to-progress-bar-designers">
+<h2><a class="toc-backref" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#id9">An Open Letter to Progress Bar Designers</a><a href="#an-open-letter-to-progress-bar-designers" class="headerlink" title="Permalink to this heading">¶</a></h2>
+<p>Dear Progress Bar Designers: can you please make your progress bars
 functional? The macOS progress bar might look sleek at just 7 px (non-Retina)/6
 pt = 12 px (Retina) high, but at the same time, you’re looking at individual
 pixels if you need to know if it works or if it’s stuck. I have had to point my
@@ -325,14 +332,14 @@ requires more space for the bar.</p>
 <div class="mb-3">
 <div class="progress" style="height: 20px; border-radius: 20px;">
   <div class="progress-bar" role="progressbar" style="width: 64.64%;" aria-valuenow="64.64" aria-valuemin="0" aria-valuemax="100"></div>
-  <div style="position: absolute; text-align: center; left: 0; right: 0;">64.64% (6.7 GB/10 GB copied)</div>
+  <div style="position: absolute; text-align: center; left: 0; right: 0; margin-top: 10px;">64.64% (6.7 GB/10 GB copied)</div>
 </div>
 </div>
 <p>I’d honestly be happy enough with option 2, at least it can be read easily and
 you can remember the number instead of a vague position.</p>
 </div>
 <div class="section" id="in-the-end">
-<h2><a class="toc-backref" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#id9">In the end…</a><a href="#in-the-end" class="headerlink" title="Permalink to this heading">¶</a></h2>
+<h2><a class="toc-backref" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#id10">In the end…</a><a href="#in-the-end" class="headerlink" title="Permalink to this heading">¶</a></h2>
 <p>After all this, I managed to get macOS Catalina installed. After various
 failures in built-in El Capitan recovery and Catalina Internet Recovery, I first
 installed El Capitan with this hack, then jumped to Mojave because I thought
@@ -344,8 +351,9 @@ without much improvement… but hey, at least it works. Apple should really make
 it easier to install their OS and to make boot media even when stuff doesn’t
 work, even from Windows. The Hackintosh folks can just find someone with a
 working Mac and ask them to download from App Store and make install media, or
-find less legitimate sources. But if your system crashes, I’d probably want to
-get working install media immediately, myself, and from Apple.</p>
+find less legitimate sources, they probably don’t care as much. But if my own
+system crashes, I’d probably want to get working install media immediately,
+myself, and from Apple. Without all this mess.</p>
 </div>
 </div>
     </article>

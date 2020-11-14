@@ -36,7 +36,7 @@ Hackintoshing this little bit harder, but this also affects legitimate users.
 The only thing you can download from Apple is El Capitan. Apple offers
 `InstallMacOSX.dmg <https://support.apple.com/en-us/HT206886>`_ on their
 website. If you take a look at the instructions, you will see that this is
-*not* a bootable OS X image. This image has a ``.pkg`` package. This package is
+*not* a bootable OS X image. This image has a ``.pkg`` package. This package is
 expected to install ``/Applications/Install OS X El Capitan.app``. Well, we’re
 in recovery, we can’t install stuff. So, let’s do this the manual way.
 
@@ -53,7 +53,7 @@ archives being different formats (at least three).
     You can find more resources about the flat package format, `one
     <http://s.sudre.free.fr/Stuff/Ivanhoe/FLAT.html>`_ or `two
     <https://matthew-brett.github.io/docosx/flat_packages.html#payload_>`_, although
-    this was deduted from the ``file`` command and The Unarchiver.
+    this was deduced from the ``file`` command and The Unarchiver.
 
 The first archive is the ``.pkg`` file itself. Those files are in `XAR format
 <https://en.wikipedia.org/wiki/Xar_(archiver)>`_, which was invented by the
@@ -87,7 +87,10 @@ Let’s expand the El Capitan package.
 
 .. code:: console
 
-    $ (mount the DMG in Disk Utility, copy the .pkg to a read-write volume)
+    $ (mount the DMG in Disk Utility)
+    $ cp /Volumes/Install\ OS\ X/InstallMacOSX.pkg /Volumes/Macintosh\ HD/
+         (Or copy it to some other volume you can write to; NOT the USB stick)
+    $ cd /Volumes/Macintosh\ HD/
     $ pkgutil --expand InstallMacOSX.pkg elcapitan
     $ ls -F elcapitan
     Distribution*       InstallMacOSX.pkg/ Resources/
@@ -214,7 +217,10 @@ How could that come in handy? For example, if you want to check if the backup
 drive still worked and if the process isn’t stuck (I wrote a test file and also
 checked ``top``).
 
-Also, Dear Progress Bar Designers: can you please make your progress bars
+An Open Letter to Progress Bar Designers
+========================================
+
+Dear Progress Bar Designers: can you please make your progress bars
 functional? The macOS progress bar might look sleek at just 7 px (non-Retina)/6
 pt = 12 px (Retina) high, but at the same time, you’re looking at individual
 pixels if you need to know if it works or if it’s stuck. I have had to point my
@@ -248,7 +254,7 @@ Just compare: which is easier to parse? Which is more informative?
     </div><div class="mb-3">
     <div class="progress" style="height: 20px; border-radius: 20px;">
       <div class="progress-bar" role="progressbar" style="width: 64.64%;" aria-valuenow="64.64" aria-valuemin="0" aria-valuemax="100"></div>
-      <div style="position: absolute; text-align: center; left: 0; right: 0;">64.64% (6.7 GB/10 GB copied)</div>
+      <div style="position: absolute; text-align: center; left: 0; right: 0; margin-top: 10px;">64.64% (6.7 GB/10 GB copied)</div>
     </div>
     </div>
 
@@ -269,5 +275,6 @@ without much improvement… but hey, at least it works. Apple should really make
 it easier to install their OS and to make boot media even when stuff doesn’t
 work, even from Windows. The Hackintosh folks can just find someone with a
 working Mac and ask them to download from App Store and make install media, or
-find less legitimate sources. But if your system crashes, I’d probably want to
-get working install media immediately, myself, and from Apple.
+find less legitimate sources, they probably don’t care as much. But if my own
+system crashes, I’d probably want to get working install media immediately,
+myself, and from Apple. Without all this mess.
