@@ -647,26 +647,19 @@ LOGO_URL = '/assets/img/logo.png'
 from nikola.post import TEASER_REGEXP
 
 def post_lead_format(post):
-    teaser_split = TEASER_REGEXP.split(post.text())
+    ptext = post.text()
+    teaser_split = TEASER_REGEXP.split(ptext)
     try:
         lead = teaser_split[0]
         ptext = teaser_split[4]
     except IndexError:
         lead = None
-        ptext = post.text()
 
     if lead:
         return '<div class="lead">' + lead + '</div></div>' + ptext
     else:
         return ptext
 
-
-#def len_translations(translations, post):
-    #tr = 0
-    #for langname in translations.keys():
-        #if post.is_translation_available(langname):
-            #tr += 1
-    #return tr
 
 INDEXES_TITLE = "Blog"
 INDEXES_PAGES = {'en': ', page %d',
