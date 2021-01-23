@@ -1,6 +1,7 @@
 .. title: Reinstalling macOS: What To Try When All Else Fails
 .. slug: reinstalling-macos-what-to-try-when-all-else-fails
 .. date: 2020-06-03 23:00:00+02:00
+.. updated: 2021-01-24 00:45:00+01:00
 .. tags: Apple, Mac, macOS, install
 .. category: Apple
 .. description: A collection of tricks to convince macOS installers to work.
@@ -216,6 +217,97 @@ You can do that with Ctrl + Opt + Cmd + T and Ctrl + Opt + Cmd + C respectively 
 How could that come in handy? For example, if you want to check if the backup
 drive still worked and if the process isn’t stuck (I wrote a test file and also
 checked ``top``).
+
+Bonus tidbit 3: creating an image of the install media might not work
+=====================================================================
+
+A few months later, in December, I upgraded to Big Sur and then installed Windows 10
+alongside it in Boot Camp. I then did some more hacks, which led to
+two unbootable OSes.
+
+As part of the upgrade, I had prepared install media and used it to install (so
+it wouldn’t fail, as it did last time), and made a ``.dmg`` of it with Disk
+Utility. (Also, Apple won’t tell you this, but you need to give Disk Utility
+*Full Disk Access* for disk imaging to work. Otherwise, you get a cryptic
+error.) I erased the USB drive after installing, but hey, I could get it back.
+I booted into Internet Recovery and restored my image. Big Sur failed to boot
+and showed a `🚫 sign <https://support.apple.com/en-us/HT210901>`_. I tried
+restoring my Catalina image from the previous reinstall, and that didn’t work
+due to a size mismatch. I used a different USB drive than these months ago (I
+didn’t have that one with me at the moment), and apparently the one I used had
+a different size (both are marketed as 16 GB). The images could be mounted
+fine, and ``createinstallmedia`` should have worked, likely producing a
+bootable drive.
+
+Bonus tidbit 4: don’t bother restoring a Time Machine backup
+============================================================
+
+Time Machine is Apple’s magical backup solution. Time Machine saves snapshots
+of your entire disk. It’s supposed to help restore files that were deleted or
+changed in an unwanted way, or help you restore a full macOS install.
+
+Time Machine is great at file recovery, but none of my 3 system restore
+attempts were successful. Attempt #1 was a full Time Machine System Restore,
+from Recovery, back in June. It failed partway through, it couldn’t read
+everything from the disk. There might have been underlying hardware issues with
+that failure, so I had another attempt.
+
+Attempt #2 was a Migration Assistant restore, as part of the initial setup.
+This one succeeded, and things worked… except for one fairly important app.
+This app requires online activation with the vendor, and it wouldn’t reactivate
+after the install. Whatever the third-party vendor is doing didn’t like the
+reinstall. I tried to nuke all the things in ~/Library related to their
+software, and ran their nuke-everything uninstaller, but that didn’t work.
+I reinstalled from scratch and copied over my files, settings and apps from the
+Time Machine drive.
+
+Attempt #3 involved the System Restore again, this time for the December
+reinstall. The hardware issues were all fixed in the meantime, so I went for a
+Time Machine System Restore.
+
+**Issue #1:** Internet Recovery booted into Catalina. There was an issue on Apple’s
+side, `Big Sur was unavailable in Internet Recovery in December
+<https://mjtsai.com/blog/2020/12/30/no-more-big-sur-internet-recovery/>`_. TM
+Recovery will not restore a backup created with a newer version of macOS than
+you’re booted into, so I was forced to restore a slightly older Catalina
+backup. (I spent most of my time in Windows during that weekend, so other than
+the need to upgrade macOS to Big Sur again, I didn’t really lose any data due
+to this.)
+
+**Issue #2:** It wasted time computing an inaccurate size estimate. Before
+restoring a backup, macOS first checks if it will fit on your drive. When it
+does that, an indeterminate progress bar is shown. macOS won’t tell you the
+result of that computation, but you can read the final value from the full
+Installer Log (Cmd + L). On my Mac, the value was 96.2 GB. I was at the Mac
+when it was getting close to that value. 94, 95, 96, 96.1, 96.2, 96.3… hold on
+a second, 96.3 GB? Hopefully that’s just a bunch of extra things that are
+installed from the system image directly, or something like that, right? Of
+course, since the progress bar is based on the pre-computed size, it became
+indeterminate and I couldn’t tell when it would end. 98, 100, 110, 120, 121.2
+GB is where it ultimately ended. So, not only did it waste 20+ minutes
+computing a size, it was off by 25 GB.
+
+**Issue #3:** The restore didn’t work. The System Restore finished and claimed to
+have succeeded, but macOS wouldn’t boot. It showed an *Unrecoverable error*,
+*SecurityAgent was unable to create requested mechanism*. Most people who had a
+similar error had it caused by a botched TeamViewer uninstall; I didn’t have
+that installed, and it was referring to a different component. So, wipe and
+fresh reinstall it is.
+
+I copied my stuff from the TM drive, and it was acting weird. Some apps failed
+to load their settings copied into Library, others started with a “Move to
+/Applications?” prompt (even though they were in that directory). For some
+reason, those files had some hidden attribute set on it. I worked around it by
+putting files in a ``.zip`` archive with Keka, and then unzipping them;
+``xattr`` might also help. (The attribute was likely ``com.apple.quarantine``.)
+
+After I got the Mac to work, I reinstalled Windows and set up rEFInd, and it
+now works fine. (I only use rEFInd because I want virtualization in Windows,
+and that doesn’t work unless you’re warm-rebooting from macOS. I don’t need
+anything more advanced than the Option key boot menu, but Apple made me use a
+third-party bootloader.)
+
+*We now go back to the original post from June.*
 
 An Open Letter to Progress Bar Designers
 ========================================

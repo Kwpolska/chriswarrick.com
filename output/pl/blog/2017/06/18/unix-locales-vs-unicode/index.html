@@ -105,7 +105,7 @@ og: http://ogp.me/ns#
     <div class="metadata">
 <a href="/pl/blog/2017/06/18/unix-locales-vs-unicode/" rel="bookmark" class="u-published"><time class="published dt-published" datetime="2017-06-18T20:40:00+02:00" itemprop="datePublished" title="18 czerwca 2017 o 20:40">18 czerwca 2017 o 20:40</time></a>
         <ul itemprop="keywords" class="tags post-bubbles list-inline">
-<li class="category-bubble"><a href="/pl/blog/tags/cat_programming/" style="background-color: #ff5dd6">Programming</a></li>
+<li class="category-bubble"><a href="/pl/blog/tags/cat_programming/" style="background-color: #ff5dd7">Programming</a></li>
            <li><a class="tag p-category" href="/pl/blog/tags/guide/" rel="tag">guide</a></li>
            <li><a class="tag p-category" href="/pl/blog/tags/locale/" rel="tag">locale</a></li>
            <li><a class="tag p-category" href="/pl/blog/tags/python/" rel="tag">Python</a></li>
@@ -121,22 +121,22 @@ to ASCII. Programs might just crash at random. Those are often simple to fix —
 all you need is correct locale configuration.</p>
 </div></div>
 <p class="lead">Has this ever happened to you?</p>
-<pre class="code pytb"><a name="rest_code_3ad7462a353f4889a86f68c322cb5858-1"></a><span class="gt">Traceback (most recent call last):</span>
-<a name="rest_code_3ad7462a353f4889a86f68c322cb5858-2"></a>  File <span class="nb">"aogonek.py"</span>, line <span class="m">1</span>, in <span class="n">&lt;module&gt;</span>
-<a name="rest_code_3ad7462a353f4889a86f68c322cb5858-3"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">u</span><span class="s1">'</span><span class="se">\u0105</span><span class="s1">'</span><span class="p">)</span>
-<a name="rest_code_3ad7462a353f4889a86f68c322cb5858-4"></a><span class="gr">UnicodeEncodeError</span>: <span class="n">'ascii' codec can't encode character '\u0105' in position 0: ordinal not in range(128)</span>
+<pre class="code pytb"><a name="rest_code_c5168167724e42dc937ed3869d58c192-1"></a><span class="gt">Traceback (most recent call last):</span>
+<a name="rest_code_c5168167724e42dc937ed3869d58c192-2"></a>  File <span class="nb">"aogonek.py"</span>, line <span class="m">1</span>, in <span class="n">&lt;module&gt;</span>
+<a name="rest_code_c5168167724e42dc937ed3869d58c192-3"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">u</span><span class="s1">'</span><span class="se">\u0105</span><span class="s1">'</span><span class="p">)</span>
+<a name="rest_code_c5168167724e42dc937ed3869d58c192-4"></a><span class="gr">UnicodeEncodeError</span>: <span class="n">'ascii' codec can't encode character '\u0105' in position 0: ordinal not in range(128)</span>
 </pre>
-<pre class="code text"><a name="rest_code_9a9cc11d50d84d1d9d7cb3eaa1f4dd3b-1"></a>Nikola: Could not guess locale for language en, using locale C
+<pre class="code text"><a name="rest_code_195d6d84fae04c85b5fa9e9d1aa9fa8b-1"></a>Nikola: Could not guess locale for language en, using locale C
 </pre>
-<pre class="code text"><a name="rest_code_63c9c7640fa2413f81f8d52c14c16a71-1"></a>Input: ą
-<a name="rest_code_63c9c7640fa2413f81f8d52c14c16a71-2"></a>Desired ascii(): '\u0105'
-<a name="rest_code_63c9c7640fa2413f81f8d52c14c16a71-3"></a>Real ascii(): '\udcc4\udc85'
+<pre class="code text"><a name="rest_code_a8b1884c5b3e408b99a0e03a5bdeee18-1"></a>Input: ą
+<a name="rest_code_a8b1884c5b3e408b99a0e03a5bdeee18-2"></a>Desired ascii(): '\u0105'
+<a name="rest_code_a8b1884c5b3e408b99a0e03a5bdeee18-3"></a>Real ascii(): '\udcc4\udc85'
 </pre>
-<pre class="code text"><a name="rest_code_ad8d9cc7c64843b393cd9409d8e4ae6b-1"></a>perl: warning: Setting locale failed.
-<a name="rest_code_ad8d9cc7c64843b393cd9409d8e4ae6b-2"></a>perl: warning: Please check that your locale settings:
-<a name="rest_code_ad8d9cc7c64843b393cd9409d8e4ae6b-3"></a>    [...]
-<a name="rest_code_ad8d9cc7c64843b393cd9409d8e4ae6b-4"></a>    are supported and installed on your system.
-<a name="rest_code_ad8d9cc7c64843b393cd9409d8e4ae6b-5"></a>perl: warning: Falling back to the standard locale ("C").
+<pre class="code text"><a name="rest_code_1f8e4f521cd1478297ef9b240753b37c-1"></a>perl: warning: Setting locale failed.
+<a name="rest_code_1f8e4f521cd1478297ef9b240753b37c-2"></a>perl: warning: Please check that your locale settings:
+<a name="rest_code_1f8e4f521cd1478297ef9b240753b37c-3"></a>    [...]
+<a name="rest_code_1f8e4f521cd1478297ef9b240753b37c-4"></a>    are supported and installed on your system.
+<a name="rest_code_1f8e4f521cd1478297ef9b240753b37c-5"></a>perl: warning: Falling back to the standard locale ("C").
 </pre>
 <p class="lead">All those errors have the same root cause: incorrect locale configuration.
 To fix them all, you need to generate the missing locales and set them.</p>
@@ -144,21 +144,21 @@ To fix them all, you need to generate the missing locales and set them.</p>
 <h2>Check currently used locale<a href="#check-currently-used-locale" class="headerlink" title="Permalink to this heading">¶</a></h2>
 <p>The <code class="docutils literal">locale</code> command (without arguments) should tell you which locales you’re
 currently using.  (The list might be shorter on your end)</p>
-<pre class="code sh"><a name="rest_code_d82a3d907beb4e1c9cb34d05378af0a9-1"></a>$ locale
-<a name="rest_code_d82a3d907beb4e1c9cb34d05378af0a9-2"></a><span class="nv">LANG</span><span class="o">=</span><span class="s2">"en_US.UTF-8"</span>
-<a name="rest_code_d82a3d907beb4e1c9cb34d05378af0a9-3"></a><span class="nv">LC_CTYPE</span><span class="o">=</span><span class="s2">"en_US.UTF-8"</span>
-<a name="rest_code_d82a3d907beb4e1c9cb34d05378af0a9-4"></a><span class="nv">LC_NUMERIC</span><span class="o">=</span><span class="s2">"en_US.UTF-8"</span>
-<a name="rest_code_d82a3d907beb4e1c9cb34d05378af0a9-5"></a><span class="nv">LC_TIME</span><span class="o">=</span><span class="s2">"en_US.UTF-8"</span>
-<a name="rest_code_d82a3d907beb4e1c9cb34d05378af0a9-6"></a><span class="nv">LC_COLLATE</span><span class="o">=</span><span class="s2">"en_US.UTF-8"</span>
-<a name="rest_code_d82a3d907beb4e1c9cb34d05378af0a9-7"></a><span class="nv">LC_MONETARY</span><span class="o">=</span><span class="s2">"en_US.UTF-8"</span>
-<a name="rest_code_d82a3d907beb4e1c9cb34d05378af0a9-8"></a><span class="nv">LC_MESSAGES</span><span class="o">=</span><span class="s2">"en_US.UTF-8"</span>
-<a name="rest_code_d82a3d907beb4e1c9cb34d05378af0a9-9"></a><span class="nv">LC_PAPER</span><span class="o">=</span><span class="s2">"en_US.UTF-8"</span>
-<a name="rest_code_d82a3d907beb4e1c9cb34d05378af0a9-10"></a><span class="nv">LC_NAME</span><span class="o">=</span><span class="s2">"en_US.UTF-8"</span>
-<a name="rest_code_d82a3d907beb4e1c9cb34d05378af0a9-11"></a><span class="nv">LC_ADDRESS</span><span class="o">=</span><span class="s2">"en_US.UTF-8"</span>
-<a name="rest_code_d82a3d907beb4e1c9cb34d05378af0a9-12"></a><span class="nv">LC_TELEPHONE</span><span class="o">=</span><span class="s2">"en_US.UTF-8"</span>
-<a name="rest_code_d82a3d907beb4e1c9cb34d05378af0a9-13"></a><span class="nv">LC_MEASUREMENT</span><span class="o">=</span><span class="s2">"en_US.UTF-8"</span>
-<a name="rest_code_d82a3d907beb4e1c9cb34d05378af0a9-14"></a><span class="nv">LC_IDENTIFICATION</span><span class="o">=</span><span class="s2">"en_US.UTF-8"</span>
-<a name="rest_code_d82a3d907beb4e1c9cb34d05378af0a9-15"></a><span class="nv">LC_ALL</span><span class="o">=</span>
+<pre class="code sh"><a name="rest_code_008d4f3094a645ae91430186667a5e0c-1"></a>$ locale
+<a name="rest_code_008d4f3094a645ae91430186667a5e0c-2"></a><span class="nv">LANG</span><span class="o">=</span><span class="s2">"en_US.UTF-8"</span>
+<a name="rest_code_008d4f3094a645ae91430186667a5e0c-3"></a><span class="nv">LC_CTYPE</span><span class="o">=</span><span class="s2">"en_US.UTF-8"</span>
+<a name="rest_code_008d4f3094a645ae91430186667a5e0c-4"></a><span class="nv">LC_NUMERIC</span><span class="o">=</span><span class="s2">"en_US.UTF-8"</span>
+<a name="rest_code_008d4f3094a645ae91430186667a5e0c-5"></a><span class="nv">LC_TIME</span><span class="o">=</span><span class="s2">"en_US.UTF-8"</span>
+<a name="rest_code_008d4f3094a645ae91430186667a5e0c-6"></a><span class="nv">LC_COLLATE</span><span class="o">=</span><span class="s2">"en_US.UTF-8"</span>
+<a name="rest_code_008d4f3094a645ae91430186667a5e0c-7"></a><span class="nv">LC_MONETARY</span><span class="o">=</span><span class="s2">"en_US.UTF-8"</span>
+<a name="rest_code_008d4f3094a645ae91430186667a5e0c-8"></a><span class="nv">LC_MESSAGES</span><span class="o">=</span><span class="s2">"en_US.UTF-8"</span>
+<a name="rest_code_008d4f3094a645ae91430186667a5e0c-9"></a><span class="nv">LC_PAPER</span><span class="o">=</span><span class="s2">"en_US.UTF-8"</span>
+<a name="rest_code_008d4f3094a645ae91430186667a5e0c-10"></a><span class="nv">LC_NAME</span><span class="o">=</span><span class="s2">"en_US.UTF-8"</span>
+<a name="rest_code_008d4f3094a645ae91430186667a5e0c-11"></a><span class="nv">LC_ADDRESS</span><span class="o">=</span><span class="s2">"en_US.UTF-8"</span>
+<a name="rest_code_008d4f3094a645ae91430186667a5e0c-12"></a><span class="nv">LC_TELEPHONE</span><span class="o">=</span><span class="s2">"en_US.UTF-8"</span>
+<a name="rest_code_008d4f3094a645ae91430186667a5e0c-13"></a><span class="nv">LC_MEASUREMENT</span><span class="o">=</span><span class="s2">"en_US.UTF-8"</span>
+<a name="rest_code_008d4f3094a645ae91430186667a5e0c-14"></a><span class="nv">LC_IDENTIFICATION</span><span class="o">=</span><span class="s2">"en_US.UTF-8"</span>
+<a name="rest_code_008d4f3094a645ae91430186667a5e0c-15"></a><span class="nv">LC_ALL</span><span class="o">=</span>
 </pre>
 <p>If any of those is set to <code class="docutils literal">C</code> or <code class="docutils literal">POSIX</code>, has a different encoding than
 <code class="docutils literal"><span class="pre">UTF-8</span></code> (sometimes spelled <code class="docutils literal">utf8</code>) is empty (with the exception of
@@ -169,10 +169,10 @@ currently using.  (The list might be shorter on your end)</p>
 <p>The first thing you need to do is check locale availability. To do this, run
 <code class="docutils literal">locale <span class="pre">-a</span></code>. This will produce a list of all installed locales.  You can use
 <code class="docutils literal">grep</code> to get a more reasonable list.</p>
-<pre class="code text"><a name="rest_code_1fd5d3863a314a39a4fb36a1767b8828-1"></a>$ locale -a | grep -i utf
-<a name="rest_code_1fd5d3863a314a39a4fb36a1767b8828-2"></a>&lt;lists all UTF-8 locales&gt;
-<a name="rest_code_1fd5d3863a314a39a4fb36a1767b8828-3"></a>$ locale -a | grep -i utf | grep -i en_US
-<a name="rest_code_1fd5d3863a314a39a4fb36a1767b8828-4"></a>en_US.UTF-8
+<pre class="code text"><a name="rest_code_6a2f489fd6b24eea8d4b7fcddfe51f86-1"></a>$ locale -a | grep -i utf
+<a name="rest_code_6a2f489fd6b24eea8d4b7fcddfe51f86-2"></a>&lt;lists all UTF-8 locales&gt;
+<a name="rest_code_6a2f489fd6b24eea8d4b7fcddfe51f86-3"></a>$ locale -a | grep -i utf | grep -i en_US
+<a name="rest_code_6a2f489fd6b24eea8d4b7fcddfe51f86-4"></a>en_US.UTF-8
 </pre>
 <p>The best locale to use is the one for your language, with the UTF-8 encoding.
 The locale will be used by some console apps for output. I’m going to use
@@ -194,7 +194,7 @@ aren’t used by ~anyone these days)</p>
 <h2>Configure system-wide<a href="#configure-system-wide" class="headerlink" title="Permalink to this heading">¶</a></h2>
 <p>On some systems, you may be able to configure locale system-wide.  Check your
 system documentation for details. If your system has systemd, run</p>
-<pre class="code text"><a name="rest_code_64aea9232bef45c19da8a33afe18ba8b-1"></a>sudo localectl set-locale LANG=en_US.UTF-8
+<pre class="code text"><a name="rest_code_770f7a724fba46f2b9d64f1fa7925f12-1"></a>sudo localectl set-locale LANG=en_US.UTF-8
 </pre>
 </div>
 <div class="section" id="configure-for-a-single-user">
@@ -205,7 +205,7 @@ ensure it’s always configured independently of system settings.</p>
 <p>To do this, you need to edit the configuration file for your shell. If you’re
 using bash, it’s <code class="docutils literal">.bashrc</code> (or <code class="docutils literal">.bash_profile</code> on macOS). For zsh users,
 <code class="docutils literal">.zshrc</code>.  Add this line (or equivalent in your shell):</p>
-<pre class="code sh"><a name="rest_code_0d297442305846608f3bf3c58ea68fd9-1"></a><span class="nb">export</span> <span class="nv">LANG</span><span class="o">=</span>en_US.UTF-8 <span class="nv">LC_ALL</span><span class="o">=</span>en_US.UTF-8
+<pre class="code sh"><a name="rest_code_567f5534cfe546b69b7ce63f0dc1d405-1"></a><span class="nb">export</span> <span class="nv">LANG</span><span class="o">=</span>en_US.UTF-8 <span class="nv">LC_ALL</span><span class="o">=</span>en_US.UTF-8
 </pre>
 <p>That should be enough. Note that those settings don’t apply to programs
 not launched through a shell.</p>
