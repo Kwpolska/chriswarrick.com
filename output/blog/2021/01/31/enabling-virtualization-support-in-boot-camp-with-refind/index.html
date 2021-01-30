@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html class="limited-width larger-font" prefix="
+og: http://ogp.me/ns#
+" lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="Getting virtuailzation working in Boot Camp thanks to rEFInd.">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Enabling Virtualization Support in Boot Camp with rEFInd | Chris Warrick</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.css" integrity="sha256-FqCzNnnyXl5HxHMdb+RQ/RV/X7fqfPcQYy+G2gFL3Xk=" crossorigin="anonymous">
+<!--#if expr="$HTTP_COOKIE=/colorScheme\=light/" --><link href="/assets/css/all.css" rel="stylesheet" type="text/css" id="kw-all-css">
+<script type="text/javascript">var colorScheme='light';var colorSchemesEnabled=true;</script><!--#else--><link href="/assets/css/all-dark.css" rel="stylesheet" type="text/css" id="kw-all-css">
+<script type="text/javascript">var colorScheme='dark';var colorSchemesEnabled=true;</script><!--#endif--><link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,700,700i%7CSource+Serif+Pro:600&amp;display=swap&amp;subset=latin-ext" rel="stylesheet">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+<meta name="theme-color" content="#00aadd">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS (en)" href="/rss.xml">
+<link rel="alternate" type="application/rss+xml" title="RSS (pl)" href="/pl/rss.xml">
+<link rel="canonical" href="https://chriswarrick.com/blog/2021/01/31/enabling-virtualization-support-in-boot-camp-with-refind/">
+<link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="16x16 32x32 48x48 64x64 128x128 256x256">
+<link rel="icon" type="image/png" href="/assets/img/logo512.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<!--[if lt IE 9]><script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]--><meta name="description" itemprop="description" content="Getting virtuailzation working in Boot Camp thanks to rEFInd.">
+<meta name="author" content="Chris Warrick">
+<link rel="prev" href="/blog/2020/06/22/what-an-arm-mac-means-for-developers-and-windows-users/" title="What an ARM Mac means for developers and Windows users" type="text/html">
+<meta property="og:site_name" content="Chris Warrick">
+<meta property="og:title" content="Enabling Virtualization Support in Boot Camp with rEFInd">
+<meta property="og:url" content="https://chriswarrick.com/blog/2021/01/31/enabling-virtualization-support-in-boot-camp-with-refind/">
+<meta property="og:description" content="Getting virtuailzation working in Boot Camp thanks to rEFInd.">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2021-01-31T00:30:00+01:00">
+<meta property="article:tag" content="Boot Camp">
+<meta property="article:tag" content="Mac">
+<meta property="article:tag" content="rEFInd">
+<meta property="article:tag" content="Virtualization">
+<meta property="article:tag" content="Windows">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:creator" content="@Kwpolska">
+<link rel="alternate" hreflang="pl" href="/pl/blog/2021/01/31/enabling-virtualization-support-in-boot-camp-with-refind/">
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-expand-md navbar-kw bg-dark static-top mb-4"><div class="container">
+<!-- This keeps the margins nice -->
+        <a class="navbar-brand" href="/">
+            <img src="/assets/img/logo.png" srcset="/assets/img/logo2x.png 2x" alt="Chris Warrick" id="logo"><span id="blog-title">Chris Warrick</span>
+        </a>
+        <div>
+        <button class="navbar-toggler mr-2" id="color-changer-mobile" type="button" aria-label="Change color scheme">
+            <span class="color-changer"></span>
+        </button>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-navbar">
+            <ul class="navbar-nav mr-auto">
+<li class="nav-item">
+<a href="/contact/" class="nav-link">Contact</a>
+                </li>
+<li class="nav-item">
+<a href="/projects/" class="nav-link">Projects</a>
+                </li>
+<li class="nav-item">
+<a href="/guides/" class="nav-link">Guides</a>
+                </li>
+<li class="nav-item">
+<a href="/blog/" class="nav-link">Archives</a>
+                </li>
+<li class="nav-item">
+<a href="/search/" class="nav-link">Search</a>
+
+                
+            </li>
+</ul>
+<ul class="navbar-nav navbar-right">
+<li>            </li>
+<li class="nav-item"><a href="/pl/" rel="alternate" hreflang="pl" class="nav-link">Polski</a></li>
+
+                
+                <li class="nav-item" id="color-changer-menu">
+<a href="#" class="nav-link" id="color-changer-btn">
+                <div class="color-changer"></div>
+                <span id="color-changer-text"><!--#if expr="$HTTP_COOKIE=/colorScheme\=light/" -->Dark Mode<!--#else -->Light Mode<!--#endif--></span>
+                </a>
+                </li>
+            </ul>
+</div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav><!-- End of Menubar --><div class="container" id="content" role="main">
+    <div class="body-content">
+        <!--Body content-->
+        
+        <div id="cookiebox"></div>
+<article class="post-text h-entry hentry postpage postbox" itemscope="itemscope" itemtype="http://schema.org/Article"><header class="page-header"><h1 class="p-name entry-title" itemprop="headline name">
+    <a href="/blog/2021/01/31/enabling-virtualization-support-in-boot-camp-with-refind/" class="u-url">Enabling Virtualization Support in Boot Camp with rEFInd</a>
+    </h1>
+
+    <div class="metadata">
+<a href="/blog/2021/01/31/enabling-virtualization-support-in-boot-camp-with-refind/" rel="bookmark" class="u-published"><time class="published dt-published" datetime="2021-01-31T00:30:00+01:00" itemprop="datePublished" title="31 January 2021 at 00:30">31 January 2021 at 00:30</time></a>
+        <ul itemprop="keywords" class="tags post-bubbles list-inline">
+<li class="category-bubble"><a href="/blog/tags/cat_apple/" style="background-color: #00b55f">Apple</a></li>
+           <li><a class="tag p-category" href="/blog/tags/boot-camp/" rel="tag">Boot Camp</a></li>
+           <li><a class="tag p-category" href="/blog/tags/mac/" rel="tag">Mac</a></li>
+           <li><a class="tag p-category" href="/blog/tags/refind/" rel="tag">rEFInd</a></li>
+           <li><a class="tag p-category" href="/blog/tags/virtualization/" rel="tag">Virtualization</a></li>
+           <li><a class="tag p-category" href="/blog/tags/windows/" rel="tag">Windows</a></li>
+        </ul>
+<p class="guide-header">A <a href="/guides/">guide</a> about <span class="guide-topic">virtualization in Boot Camp</span> for <span class="guide-platform">Intel Macs</span></p>    </div>
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div class="lead"><div>
+<p>You installed Windows on an Intel Mac via Boot Camp, and want to use
+virtualization in it. But there’s an issue — hardware virtualization extensions
+are not available. Luckily, this can be worked around easily with the help of
+rEFInd, an alternate boot manager.</p>
+</div></div>
+<p>Many software development workflows involve virtualization. WSL, Docker for
+Windows, and the Android Emulator are some examples of common
+virtualization-based tools. Then there are general virtualization
+tools/hypervisors, such as VMware Workstation, Hyper-V or VirtualBox. All these
+tools require hardware virtualization extensions (Intel VT-x, AMD-V) or at
+least are very slow without them. Virtualization extensions are not enabled by
+default in the CPU, they must be enabled by something. On typical PCs, this is
+often a firmware-level setting (that might be disabled by default), or it might
+be unconditionally enabled by the firmware. On a Mac, however, enabling VT-x is
+done by macOS, as part of the boot process. This means that Windows running in
+Boot Camp will start without virtualization, unless you want to boot into macOS
+first and then reboot into Windows. That setup isn’t quite ergonomic (and what
+if macOS refuses to shut down, as it often does for me?).</p>
+<p>Instead, we’re going to use
+<a class="reference external" href="https://www.rodsbooks.com/refind/">rEFInd</a>, a boot manager for
+EFI-based systems that can boot into various OSes and also handle other
+parts of the boot process. But first, let’s prepare our system for this.</p>
+<p class="lead"><strong>DISCLAIMER:</strong> Those steps may make your Mac fail to boot. I don’t take any
+responsibility whatsoever if that happens. Prepare for the worst — make
+backups, perhaps have install media ready, plan some downtime.</p>
+<div class="section" id="step-1-install-windows-in-boot-camp-the-usual-way">
+<h2>Step 1. Install Windows in Boot Camp the usual way<a href="#step-1-install-windows-in-boot-camp-the-usual-way" class="headerlink" title="Permalink to this heading">¶</a></h2>
+<p>The first thing you should do is install Windows 10 in Boot Camp, with
+the help of the Boot Camp Assistant. The Assistant will take some time
+to partition your drive and do other preparations (and show barely
+informative progress bars, but <a class="reference external" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#an-open-letter-to-progress-bar-designers">I ranted about that Apple design “feature”
+already</a>).
+There are no special preparations for this, the standard process will
+work. If you already have Windows installed, you can go to the next
+step.</p>
+</div>
+<div class="section" id="step-2-ensure-the-setup-is-stable">
+<h2>Step 2. Ensure the setup is stable<a href="#step-2-ensure-the-setup-is-stable" class="headerlink" title="Permalink to this heading">¶</a></h2>
+<p>We’ll be making changes to how the machine boots, and as such, it’s
+good to have other things working correctly and in line with your
+expected configuration. Make sure that:</p>
+<ul class="simple">
+<li><p>Both macOS and Windows boot correctly</p></li>
+<li><p>You can change the OS you boot into by holding the Option key after
+pressing Power (requires disabling the firmware password <a class="footnote-reference brackets" href="/blog/2021/01/31/enabling-virtualization-support-in-boot-camp-with-refind/#id3" id="id1">1</a>)</p></li>
+<li><p>Disk encryption (FileVault, BitLocker) is enabled (if you want that, of
+course) and fully configured (initial encryption is complete)</p></li>
+<li><p>Windows setup (including Boot Camp drivers) is complete</p></li>
+<li><p>The <code class="docutils literal">OSXRESERVED</code> partition that the Boot Camp Assistant created
+has been deleted (that should have happened when booting into macOS for the
+first time after installing Windows — complete with a slowly moving
+progress bar and no other information, as is usual for this OS — but
+if that didn’t happen, use Disk Utility in macOS or Recovery OS to do
+that — pick your drive, click <em>Partition</em> and delete the partition,
+this will grow the macOS partition)</p></li>
+<li><p>System Integrity Protection is enabled (the procedure is a bit safer
+that way)</p></li>
+</ul>
+</div>
+<div class="section" id="step-3-create-a-partition-for-refind">
+<h2>Step 3. Create a partition for rEFInd<a href="#step-3-create-a-partition-for-refind" class="headerlink" title="Permalink to this heading">¶</a></h2>
+<p>First, back up your data before making changes to your hard drive
+layout. We’ll need to create a new partition for rEFInd to live on. This
+is the safest option — you could install it to the EFI System Partition (ESP),
+but macOS might want to put its own stuff there, and it’s safer not to
+use it.</p>
+<p>The rEFInd partition doesn’t need to be large (50 MB will be enough); it must use the HFS+ (Mac OS
+Extended) file system. To create it, you have three options:</p>
+<ul class="simple">
+<li><p>From macOS, by shrinking the macOS partition: open Disk Utility,
+choose your drive, select Partition, add a new partition, set its
+size and file system (in that order!). This will take a few minutes
+(10-15, or possibly more), and you won’t be able to use your Mac
+during the resize.</p></li>
+<li><p>From Recovery OS, by shrinking the macOS partition: same steps apply,
+but it might be a bit safer than doing it from within macOS.</p></li>
+<li><p>From Windows, by shrinking the Windows partition: open Disk
+Management (press the Windows key and type <em>partition</em>, or open
+Computer Management from Administrative Tools), right click your
+Windows partition, select Shrink Volume. Enter the desired size and
+click Shrink. Then, right click the unallocated space and create a
+New Simple Volume. For now, choose FAT32 or exFAT; you’ll need to
+reformat it as HFS+ from within macOS later (<em>Erase</em> in Disk Utility). This
+will take a few seconds — and even if you include the time to reboot, it’s
+faster.</p></li>
+</ul>
+<p>After you create the new partition and make sure it’s HFS+ (Mac OS
+Extended), you can proceed with the setup. Also, if you don’t want the
+partition to be visible in the Finder, run the following command (insert
+the correct volume path for your system):</p>
+<pre class="code text"><a name="rest_code_0a7734c11dba41af9e81831abf1469bd-1"></a>sudo chflags hidden /Volumes/rEFInd
+</pre>
+</div>
+<div class="section" id="step-4-configure-and-install-refind">
+<h2>Step 4. Configure and install rEFInd<a href="#step-4-configure-and-install-refind" class="headerlink" title="Permalink to this heading">¶</a></h2>
+<p>To set ue rEFInd, you’ll need to boot into macOS. <a class="reference external" href="https://www.rodsbooks.com/refind/getting.html">Download
+rEFInd</a> from the
+author’s website — you want the file named <em>A binary zip file</em>. Extract
+this archive anywhere on your system (<code class="docutils literal">~/Downloads</code> is fine).</p>
+<p>First, you’ll need to change the configuration file
+<code class="docutils literal"><span class="pre">refind/refind.conf-sample</span></code>. Locate the setting named
+<code class="docutils literal">enable_and_lock_vmx</code>, uncomment it (remove the <code class="docutils literal">#</code> at the start
+of the line), and set its value to <code class="docutils literal">true</code>. You can also make other
+configuration changes — the default <code class="docutils literal">timeout</code> of 20 seconds is
+likely to be too much for your needs.</p>
+<p>When your configuration file is ready, you can install rEFInd. You can
+use the <code class="docutils literal"><span class="pre">refind-install</span></code> tool, or perform a manual install (check
+out the <a class="reference external" href="https://www.rodsbooks.com/refind/installing.html">installation
+docs</a> for more
+details).</p>
+<p>Before installing, you’ll need to get the device name of your rEFInd
+partition. Open Disk Utility, select the partition from the left pane,
+and check the <em>Device</em> field (for example, <code class="docutils literal">disk9s9</code> — it will be
+<strong>different</strong> on your system, depending on your partition layout).</p>
+<p>Open a Terminal, <code class="docutils literal">cd</code> into the directory where rEFInd was extracted,
+and run the following command (replace <code class="docutils literal">disk9s9</code> with the device
+name on your system):</p>
+<pre class="code text"><a name="rest_code_bb60f02f29534382a1fb2ea84eec5a49-1"></a>./refind-install --ownhfs disk9s9
+</pre>
+<p>This command will produce an error if you have SIP enabled — but this
+error is not important for us, the install will work without the change
+that SIP prevented. <a class="footnote-reference brackets" href="/blog/2021/01/31/enabling-virtualization-support-in-boot-camp-with-refind/#id4" id="id2">2</a></p>
+<p>You can now shut down your Mac and use the Option key while starting up
+to choose the OS. You should see three options: Macintosh HD, EFI Boot,
+and Boot Camp. The EFI Boot option is rEFInd — pick that, boot into
+Windows (Microsoft EFI boot), <em>et voilà</em> — Windows can now run virtualization software.</p>
+<p>There are a few more things that you can do now, depending on your OS
+preferences.</p>
+<ul class="simple">
+<li><p>You can make rEFInd the default boot loader. Hold <em>Control</em> on the
+Apple boot device selection screen and click the Power icon under the
+EFI Boot drive (<a class="reference external" href="https://apple.stackexchange.com/a/73742">source for the
+tip</a>).</p></li>
+<li><p>You can use rEFInd to boot into macOS, although this might not work
+with Big Sur according to the author (it seems to work for me, but
+YMMV). You can use the standard boot method for macOS (by defaulting
+to Macintosh HD, or by choosing it from the Power+Option picker) and
+rEFInd exclusively for Windows (and set your timeout to a low value).</p></li>
+<li><p>You can modify rEFInd’s configuration — in this scenario, the config
+file is <code class="docutils literal">/Volumes/rEFInd/System/Library/CoreServices/refind.conf</code>.
+You can set a custom background image, for example (<a class="reference external" href="https://www.rodsbooks.com/refind/">rEFInd’s
+site</a> can help you figure out
+what options are available and what you can set them to).</p></li>
+</ul>
+<dl class="footnote brackets">
+<dt class="label" id="id3"><span class="brackets"><a class="fn-backref" href="/blog/2021/01/31/enabling-virtualization-support-in-boot-camp-with-refind/#id1">1</a></span></dt>
+<dd>
+<p>If the firmware password is important to you, you can restore it after
+the setup is done — this will mean using rEFInd to boot both Windows and
+macOS, although I decided to remove the firmware password and boot
+into macOS from the Power+Option boot menu.</p>
+</dd>
+<dt class="label" id="id4"><span class="brackets"><a class="fn-backref" href="/blog/2021/01/31/enabling-virtualization-support-in-boot-camp-with-refind/#id2">2</a></span></dt>
+<dd>
+<p>The failing operation is marking the rEFInd partition bootable in the Mac
+sense, using the <code class="docutils literal">bless</code> command. However, the drive is considered
+bootable as an EFI-compliant boot volume (it has <code class="docutils literal">*.efi</code> files in specific
+places), and this is the boot method we’re using here. SIP aside, the
+<code class="docutils literal">bless</code> utility is a bit buggy, and we can use rEFInd without a blessed
+partition just fine.</p>
+</dd>
+</dl>
+</div>
+</div>
+    </article>
+</div>
+    <aside class="postpromonav"><div class="card guide-footer">
+  <div class="card-header bg-primary border-primary"><h3>That’s all!</h3></div>
+  <div class="card-body">
+    Hopefully, the guide worked for you and you now can use Windows in Boot Camp with hardware virtualization support. If so, great! Otherwise, make sure you did everything as stated in this guide. If you are still stuck, ask for help in the comments.
+  </div>
+  <div class="card-footer"><a href="/guides/">Check out my other guides!</a></div>
+</div>
+    <nav><ul class="pager hidden-print">
+<li class="previous">
+                <a href="/blog/2020/06/22/what-an-arm-mac-means-for-developers-and-windows-users/" rel="prev" title="What an ARM Mac means for developers and Windows users">Previous post</a>
+            </li>
+        </ul></nav></aside><section class="comments"><div data-title="Enabling Virtualization Support in Boot Camp with rEFInd" id="isso-thread"></div>
+        <script src="https://isso.chriswarrick.com/js/embed.min.js" data-isso="https://isso.chriswarrick.com/" data-isso-lang="en" data-isso-require-author="true" data-isso-require-email="true" data-isso-gravatar="true" data-isso-avatar="false" data-isso-css="false" data-isso-vote="false" data-isso-reply-notifications="true"></script></section><!--End of body content--><nav id="footer-links"><div class="row">
+            <div class="col-sm-4">
+                <h6>Blog</h6>
+                <ul>
+<li class="nav-item">
+<a href="/blog/" class="nav-link">Archive</a>
+                        </li>
+<li class="nav-item">
+<a href="/blog/tags/" class="nav-link">Tags</a>
+                        </li>
+<li class="nav-item">
+<a href="/rss.xml" class="nav-link">RSS Feed</a>
+                        </li>
+<li class="nav-item">
+<a href="/search/" class="nav-link">Search</a>
+                </li>
+</ul>
+</div>
+            <div class="col-sm-4">
+                <h6>Projects and Work</h6>
+                <ul>
+<li class="nav-item">
+<a href="/projects/" class="nav-link">Projects</a>
+                        </li>
+<li class="nav-item">
+<a href="/guides/" class="nav-link">Guides</a>
+                        </li>
+<li class="nav-item">
+<a href="/kwbot/" class="nav-link">KwBot</a>
+                        </li>
+<li class="nav-item">
+<a href="/blog/tags/cat_python" class="nav-link">Posts about Python</a>
+                </li>
+</ul>
+</div>
+            <div class="col-sm-4">
+                <h6>Me</h6>
+                <ul>
+<li class="nav-item">
+<a href="/contact/" class="nav-link">Contact</a>
+                        </li>
+<li class="nav-item">
+<a href="/brand/" class="nav-link">Brand</a>
+                        </li>
+<li class="nav-item">
+<a href="https://twitter.com/Kwpolska" class="nav-link">Twitter</a>
+                        </li>
+<li class="nav-item">
+<a href="https://github.com/Kwpolska" class="nav-link">GitHub</a>
+                </li>
+</ul>
+</div>
+        </div></nav><footer id="footer"><p>this site uses cookies.<br>by using this site, you agree to our <a href="/privacy/">cookie and privacy policy</a>.</p>
+<p>
+powered by <strong><a href="https://getnikola.com/">Nikola</a></strong>, <a href="http://nginx.org/">nginx</a> and <a href="https://hetzner.cloud/?ref=Qy1lehF8PwzP">Hetzner Cloud</a><br>
+copyright © 2009–2021 <a href="/contact/">Chris Warrick</a><br><a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC
+BY-NC-SA</a>, unless stated otherwise</p>
+            
+        </footer>
+</div>
+
+
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script><script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.11.0/baguetteBox.min.js" integrity="sha256-yQGjQhFs3LtyiN5hhr3k9s9TWZOh/RzCkD3gwwCKlkg=" crossorigin="anonymous"></script><script src="/assets/js/all.js"></script><script>
+    baguetteBox.run('div#content', {
+        ignoreClass: 'islink',
+        captions: function(element) {
+            return element.getElementsByTagName('img')[0].alt;
+    }});
+    </script><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-11937989-1', 'chriswarrick.com');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+
+</script>
+</body>
+</html>

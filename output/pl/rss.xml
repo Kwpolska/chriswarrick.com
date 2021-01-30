@@ -1,5 +1,163 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chris Warrick (Blog)</title><link>https://chriswarrick.com/</link><description>A rarely updated blog, mostly about programming.</description><atom:link href="https://chriswarrick.com/pl/rss.xml" rel="self" type="application/rss+xml"></atom:link><language>pl</language><lastBuildDate>Sat, 23 Jan 2021 23:47:35 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>What an ARM Mac means for developers and Windows users</title><link>https://chriswarrick.com/pl/blog/2020/06/22/what-an-arm-mac-means-for-developers-and-windows-users/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;The rumor mill was right this time, and Apple has just announced they will
+<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chris Warrick (Blog)</title><link>https://chriswarrick.com/</link><description>A rarely updated blog, mostly about programming.</description><atom:link href="https://chriswarrick.com/pl/rss.xml" rel="self" type="application/rss+xml"></atom:link><language>pl</language><lastBuildDate>Sat, 30 Jan 2021 23:30:26 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Enabling Virtualization Support in Boot Camp with rEFInd</title><link>https://chriswarrick.com/pl/blog/2021/01/31/enabling-virtualization-support-in-boot-camp-with-refind/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;You installed Windows on an Intel Mac via Boot Camp, and want to use
+virtualization in it. But there’s an issue — hardware virtualization extensions
+are not available. Luckily, this can be worked around easily with the help of
+rEFInd, an alternate boot manager.&lt;/p&gt;
+&lt;!-- TEASER_END --&gt;
+&lt;p&gt;Many software development workflows involve virtualization. WSL, Docker for
+Windows, and the Android Emulator are some examples of common
+virtualization-based tools. Then there are general virtualization
+tools/hypervisors, such as VMware Workstation, Hyper-V or VirtualBox. All these
+tools require hardware virtualization extensions (Intel VT-x, AMD-V) or at
+least are very slow without them. Virtualization extensions are not enabled by
+default in the CPU, they must be enabled by something. On typical PCs, this is
+often a firmware-level setting (that might be disabled by default), or it might
+be unconditionally enabled by the firmware. On a Mac, however, enabling VT-x is
+done by macOS, as part of the boot process. This means that Windows running in
+Boot Camp will start without virtualization, unless you want to boot into macOS
+first and then reboot into Windows. That setup isn’t quite ergonomic (and what
+if macOS refuses to shut down, as it often does for me?).&lt;/p&gt;
+&lt;p&gt;Instead, we’re going to use
+&lt;a class="reference external" href="https://www.rodsbooks.com/refind/"&gt;rEFInd&lt;/a&gt;, a boot manager for
+EFI-based systems that can boot into various OSes and also handle other
+parts of the boot process. But first, let’s prepare our system for this.&lt;/p&gt;
+&lt;p class="lead"&gt;&lt;strong&gt;DISCLAIMER:&lt;/strong&gt; Those steps may make your Mac fail to boot. I don’t take any
+responsibility whatsoever if that happens. Prepare for the worst — make
+backups, perhaps have install media ready, plan some downtime.&lt;/p&gt;
+&lt;div class="section" id="step-1-install-windows-in-boot-camp-the-usual-way"&gt;
+&lt;h2&gt;Step 1. Install Windows in Boot Camp the usual way&lt;/h2&gt;
+&lt;p&gt;The first thing you should do is install Windows 10 in Boot Camp, with
+the help of the Boot Camp Assistant. The Assistant will take some time
+to partition your drive and do other preparations (and show barely
+informative progress bars, but &lt;a class="reference external" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#an-open-letter-to-progress-bar-designers"&gt;I ranted about that Apple design “feature”
+already&lt;/a&gt;).
+There are no special preparations for this, the standard process will
+work. If you already have Windows installed, you can go to the next
+step.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="step-2-ensure-the-setup-is-stable"&gt;
+&lt;h2&gt;Step 2. Ensure the setup is stable&lt;/h2&gt;
+&lt;p&gt;We’ll be making changes to how the machine boots, and as such, it’s
+good to have other things working correctly and in line with your
+expected configuration. Make sure that:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;&lt;p&gt;Both macOS and Windows boot correctly&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;You can change the OS you boot into by holding the Option key after
+pressing Power (requires disabling the firmware password &lt;a class="footnote-reference brackets" href="https://chriswarrick.com/pl/blog/2021/01/31/enabling-virtualization-support-in-boot-camp-with-refind/#id3" id="id1"&gt;1&lt;/a&gt;)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Disk encryption (FileVault, BitLocker) is enabled (if you want that, of
+course) and fully configured (initial encryption is complete)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Windows setup (including Boot Camp drivers) is complete&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;The &lt;code class="docutils literal"&gt;OSXRESERVED&lt;/code&gt; partition that the Boot Camp Assistant created
+has been deleted (that should have happened when booting into macOS for the
+first time after installing Windows — complete with a slowly moving
+progress bar and no other information, as is usual for this OS — but
+if that didn’t happen, use Disk Utility in macOS or Recovery OS to do
+that — pick your drive, click &lt;em&gt;Partition&lt;/em&gt; and delete the partition,
+this will grow the macOS partition)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;System Integrity Protection is enabled (the procedure is a bit safer
+that way)&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class="section" id="step-3-create-a-partition-for-refind"&gt;
+&lt;h2&gt;Step 3. Create a partition for rEFInd&lt;/h2&gt;
+&lt;p&gt;First, back up your data before making changes to your hard drive
+layout. We’ll need to create a new partition for rEFInd to live on. This
+is the safest option — you could install it to the EFI System Partition (ESP),
+but macOS might want to put its own stuff there, and it’s safer not to
+use it.&lt;/p&gt;
+&lt;p&gt;The rEFInd partition doesn’t need to be large (50 MB will be enough); it must use the HFS+ (Mac OS
+Extended) file system. To create it, you have three options:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;&lt;p&gt;From macOS, by shrinking the macOS partition: open Disk Utility,
+choose your drive, select Partition, add a new partition, set its
+size and file system (in that order!). This will take a few minutes
+(10-15, or possibly more), and you won’t be able to use your Mac
+during the resize.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;From Recovery OS, by shrinking the macOS partition: same steps apply,
+but it might be a bit safer than doing it from within macOS.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;From Windows, by shrinking the Windows partition: open Disk
+Management (press the Windows key and type &lt;em&gt;partition&lt;/em&gt;, or open
+Computer Management from Administrative Tools), right click your
+Windows partition, select Shrink Volume. Enter the desired size and
+click Shrink. Then, right click the unallocated space and create a
+New Simple Volume. For now, choose FAT32 or exFAT; you’ll need to
+reformat it as HFS+ from within macOS later (&lt;em&gt;Erase&lt;/em&gt; in Disk Utility). This
+will take a few seconds — and even if you include the time to reboot, it’s
+faster.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;After you create the new partition and make sure it’s HFS+ (Mac OS
+Extended), you can proceed with the setup. Also, if you don’t want the
+partition to be visible in the Finder, run the following command (insert
+the correct volume path for your system):&lt;/p&gt;
+&lt;pre class="code text"&gt;&lt;a name="rest_code_0a7734c11dba41af9e81831abf1469bd-1"&gt;&lt;/a&gt;sudo chflags hidden /Volumes/rEFInd
+&lt;/pre&gt;&lt;/div&gt;
+&lt;div class="section" id="step-4-configure-and-install-refind"&gt;
+&lt;h2&gt;Step 4. Configure and install rEFInd&lt;/h2&gt;
+&lt;p&gt;To set ue rEFInd, you’ll need to boot into macOS. &lt;a class="reference external" href="https://www.rodsbooks.com/refind/getting.html"&gt;Download
+rEFInd&lt;/a&gt; from the
+author’s website — you want the file named &lt;em&gt;A binary zip file&lt;/em&gt;. Extract
+this archive anywhere on your system (&lt;code class="docutils literal"&gt;~/Downloads&lt;/code&gt; is fine).&lt;/p&gt;
+&lt;p&gt;First, you’ll need to change the configuration file
+&lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;refind/refind.conf-sample&lt;/span&gt;&lt;/code&gt;. Locate the setting named
+&lt;code class="docutils literal"&gt;enable_and_lock_vmx&lt;/code&gt;, uncomment it (remove the &lt;code class="docutils literal"&gt;#&lt;/code&gt; at the start
+of the line), and set its value to &lt;code class="docutils literal"&gt;true&lt;/code&gt;. You can also make other
+configuration changes — the default &lt;code class="docutils literal"&gt;timeout&lt;/code&gt; of 20 seconds is
+likely to be too much for your needs.&lt;/p&gt;
+&lt;p&gt;When your configuration file is ready, you can install rEFInd. You can
+use the &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;refind-install&lt;/span&gt;&lt;/code&gt; tool, or perform a manual install (check
+out the &lt;a class="reference external" href="https://www.rodsbooks.com/refind/installing.html"&gt;installation
+docs&lt;/a&gt; for more
+details).&lt;/p&gt;
+&lt;p&gt;Before installing, you’ll need to get the device name of your rEFInd
+partition. Open Disk Utility, select the partition from the left pane,
+and check the &lt;em&gt;Device&lt;/em&gt; field (for example, &lt;code class="docutils literal"&gt;disk9s9&lt;/code&gt; — it will be
+&lt;strong&gt;different&lt;/strong&gt; on your system, depending on your partition layout).&lt;/p&gt;
+&lt;p&gt;Open a Terminal, &lt;code class="docutils literal"&gt;cd&lt;/code&gt; into the directory where rEFInd was extracted,
+and run the following command (replace &lt;code class="docutils literal"&gt;disk9s9&lt;/code&gt; with the device
+name on your system):&lt;/p&gt;
+&lt;pre class="code text"&gt;&lt;a name="rest_code_bb60f02f29534382a1fb2ea84eec5a49-1"&gt;&lt;/a&gt;./refind-install --ownhfs disk9s9
+&lt;/pre&gt;&lt;p&gt;This command will produce an error if you have SIP enabled — but this
+error is not important for us, the install will work without the change
+that SIP prevented. &lt;a class="footnote-reference brackets" href="https://chriswarrick.com/pl/blog/2021/01/31/enabling-virtualization-support-in-boot-camp-with-refind/#id4" id="id2"&gt;2&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;You can now shut down your Mac and use the Option key while starting up
+to choose the OS. You should see three options: Macintosh HD, EFI Boot,
+and Boot Camp. The EFI Boot option is rEFInd — pick that, boot into
+Windows (Microsoft EFI boot), &lt;em&gt;et voilà&lt;/em&gt; — Windows can now run virtualization software.&lt;/p&gt;
+&lt;p&gt;There are a few more things that you can do now, depending on your OS
+preferences.&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;&lt;p&gt;You can make rEFInd the default boot loader. Hold &lt;em&gt;Control&lt;/em&gt; on the
+Apple boot device selection screen and click the Power icon under the
+EFI Boot drive (&lt;a class="reference external" href="https://apple.stackexchange.com/a/73742"&gt;source for the
+tip&lt;/a&gt;).&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;You can use rEFInd to boot into macOS, although this might not work
+with Big Sur according to the author (it seems to work for me, but
+YMMV). You can use the standard boot method for macOS (by defaulting
+to Macintosh HD, or by choosing it from the Power+Option picker) and
+rEFInd exclusively for Windows (and set your timeout to a low value).&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;You can modify rEFInd’s configuration — in this scenario, the config
+file is &lt;code class="docutils literal"&gt;/Volumes/rEFInd/System/Library/CoreServices/refind.conf&lt;/code&gt;.
+You can set a custom background image, for example (&lt;a class="reference external" href="https://www.rodsbooks.com/refind/"&gt;rEFInd’s
+site&lt;/a&gt; can help you figure out
+what options are available and what you can set them to).&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;dl class="footnote brackets"&gt;
+&lt;dt class="label" id="id3"&gt;&lt;span class="brackets"&gt;&lt;a class="fn-backref" href="https://chriswarrick.com/pl/blog/2021/01/31/enabling-virtualization-support-in-boot-camp-with-refind/#id1"&gt;1&lt;/a&gt;&lt;/span&gt;&lt;/dt&gt;
+&lt;dd&gt;&lt;p&gt;If the firmware password is important to you, you can restore it after
+the setup is done — this will mean using rEFInd to boot both Windows and
+macOS, although I decided to remove the firmware password and boot
+into macOS from the Power+Option boot menu.&lt;/p&gt;
+&lt;/dd&gt;
+&lt;dt class="label" id="id4"&gt;&lt;span class="brackets"&gt;&lt;a class="fn-backref" href="https://chriswarrick.com/pl/blog/2021/01/31/enabling-virtualization-support-in-boot-camp-with-refind/#id2"&gt;2&lt;/a&gt;&lt;/span&gt;&lt;/dt&gt;
+&lt;dd&gt;&lt;p&gt;The failing operation is marking the rEFInd partition bootable in the Mac
+sense, using the &lt;code class="docutils literal"&gt;bless&lt;/code&gt; command. However, the drive is considered
+bootable as an EFI-compliant boot volume (it has &lt;code class="docutils literal"&gt;*.efi&lt;/code&gt; files in specific
+places), and this is the boot method we’re using here. SIP aside, the
+&lt;code class="docutils literal"&gt;bless&lt;/code&gt; utility is a bit buggy, and we can use rEFInd without a blessed
+partition just fine.&lt;/p&gt;
+&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/div&gt;&lt;/div&gt;</description><guid>https://chriswarrick.com/pl/blog/2021/01/31/enabling-virtualization-support-in-boot-camp-with-refind/</guid><pubDate>Sat, 30 Jan 2021 23:30:00 GMT</pubDate></item><item><title>What an ARM Mac means for developers and Windows users</title><link>https://chriswarrick.com/pl/blog/2020/06/22/what-an-arm-mac-means-for-developers-and-windows-users/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;The rumor mill was right this time, and Apple has just announced they will
 transition Macs to ARM processors. These news have some side effects for
 software developers, particularly those not working with the Apple ecosystem.
 And they also affect people who depend on both macOS and Windows.&lt;/p&gt;
@@ -2210,293 +2368,4 @@ need to call it via the shell.&lt;/p&gt;
 &lt;dd&gt;&lt;p&gt;An alternative is &lt;code class="docutils literal"&gt;posix_spawn()&lt;/code&gt;, but it usually does fork-exec, unless your platform does not support forking.&lt;/p&gt;
 &lt;/dd&gt;
 &lt;/dl&gt;
-&lt;/div&gt;&lt;/div&gt;</description><guid>https://chriswarrick.com/pl/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/</guid><pubDate>Sat, 02 Sep 2017 18:40:00 GMT</pubDate></item><item><title>Misja Gynvaela 11 (stream anglojęzyczny): reverse-engineering bajtkodu Pythona</title><link>https://chriswarrick.com/pl/blog/2017/08/03/gynvaels-mission-11-en-python-bytecode-reverse-engineering/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;div&gt;&lt;p&gt;Gynvael Coldwind jest badaczem bezpieczeństwa pracującym w Google, który organizuje cotygodniowe livestreamy na tematy bezpieczeństwa i programowania &lt;a class="reference external" href="https://gaming.youtube.com/user/GynvaelColdwind/live"&gt;po polsku&lt;/a&gt; i  &lt;a class="reference external" href="https://gaming.youtube.com/user/GynvaelEN/live"&gt;po angielsku&lt;/a&gt;). Częścią streamów są misje — w skrócie, zadania w stylu CTF-owym dotyczące inżynierii wstecznej. Wczorajsza misja była o elfickim — znaczy o Paint’cie — znaczy o programowaniu w Pythonie i jego bajtkodzie.&lt;/p&gt;
-&lt;!-- TEASER_END --&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_b69d6cd512664e61b9d83e6f73ca7f44-1"&gt;&lt;/a&gt;MISSION 011               goo.gl/13Bia9             DIFFICULTY: ██████░░░░ [6╱10]
-&lt;a name="rest_code_b69d6cd512664e61b9d83e6f73ca7f44-2"&gt;&lt;/a&gt;┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅
-&lt;a name="rest_code_b69d6cd512664e61b9d83e6f73ca7f44-3"&gt;&lt;/a&gt;
-&lt;a name="rest_code_b69d6cd512664e61b9d83e6f73ca7f44-4"&gt;&lt;/a&gt;Finally some real work!
-&lt;a name="rest_code_b69d6cd512664e61b9d83e6f73ca7f44-5"&gt;&lt;/a&gt;
-&lt;a name="rest_code_b69d6cd512664e61b9d83e6f73ca7f44-6"&gt;&lt;/a&gt;One of our field agents managed to infiltrate suspects hideout and steal a
-&lt;a name="rest_code_b69d6cd512664e61b9d83e6f73ca7f44-7"&gt;&lt;/a&gt;pendrive possibly containing important information. However, the pendrive
-&lt;a name="rest_code_b69d6cd512664e61b9d83e6f73ca7f44-8"&gt;&lt;/a&gt;actually requires one to authenticate themselves before accessing the stored
-&lt;a name="rest_code_b69d6cd512664e61b9d83e6f73ca7f44-9"&gt;&lt;/a&gt;files.
-&lt;a name="rest_code_b69d6cd512664e61b9d83e6f73ca7f44-10"&gt;&lt;/a&gt;
-&lt;a name="rest_code_b69d6cd512664e61b9d83e6f73ca7f44-11"&gt;&lt;/a&gt;We gave the pendrive to our laboratory and they managed to dump the firmware. We
-&lt;a name="rest_code_b69d6cd512664e61b9d83e6f73ca7f44-12"&gt;&lt;/a&gt;looked at the deadlisting they sent and for our best knowledge it's some form of
-&lt;a name="rest_code_b69d6cd512664e61b9d83e6f73ca7f44-13"&gt;&lt;/a&gt;Elvish. We can't read it.
-&lt;a name="rest_code_b69d6cd512664e61b9d83e6f73ca7f44-14"&gt;&lt;/a&gt;
-&lt;a name="rest_code_b69d6cd512664e61b9d83e6f73ca7f44-15"&gt;&lt;/a&gt;Here is the firmware: goo.gl/axsAHt
-&lt;a name="rest_code_b69d6cd512664e61b9d83e6f73ca7f44-16"&gt;&lt;/a&gt;
-&lt;a name="rest_code_b69d6cd512664e61b9d83e6f73ca7f44-17"&gt;&lt;/a&gt;And off you go. Bring us back the password.
-&lt;a name="rest_code_b69d6cd512664e61b9d83e6f73ca7f44-18"&gt;&lt;/a&gt;
-&lt;a name="rest_code_b69d6cd512664e61b9d83e6f73ca7f44-19"&gt;&lt;/a&gt;Good luck!
-&lt;a name="rest_code_b69d6cd512664e61b9d83e6f73ca7f44-20"&gt;&lt;/a&gt;
-&lt;a name="rest_code_b69d6cd512664e61b9d83e6f73ca7f44-21"&gt;&lt;/a&gt;---------------------------------------------------------------------------------
-&lt;a name="rest_code_b69d6cd512664e61b9d83e6f73ca7f44-22"&gt;&lt;/a&gt;
-&lt;a name="rest_code_b69d6cd512664e61b9d83e6f73ca7f44-23"&gt;&lt;/a&gt;If you decode the answer, put it in the comments under this video! If you write
-&lt;a name="rest_code_b69d6cd512664e61b9d83e6f73ca7f44-24"&gt;&lt;/a&gt;a blogpost / post your solution online, please add a link in the comments too!
-&lt;a name="rest_code_b69d6cd512664e61b9d83e6f73ca7f44-25"&gt;&lt;/a&gt;
-&lt;a name="rest_code_b69d6cd512664e61b9d83e6f73ca7f44-26"&gt;&lt;/a&gt;P.S. I'll show/explain the solution on the stream in ~two weeks.
-&lt;a name="rest_code_b69d6cd512664e61b9d83e6f73ca7f44-27"&gt;&lt;/a&gt;P.S.2. Bonus points for recreating the original high-level code.
-&lt;/pre&gt;&lt;p&gt;Kod firmware:&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_4e7af76fc33c469d8a0b8a4fb6302dd7-1"&gt;&lt;/a&gt;co_argcount 1
-&lt;a name="rest_code_4e7af76fc33c469d8a0b8a4fb6302dd7-2"&gt;&lt;/a&gt;co_consts (None, '4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89', 'hex', 89, 255, 115, 50)
-&lt;a name="rest_code_4e7af76fc33c469d8a0b8a4fb6302dd7-3"&gt;&lt;/a&gt;co_flags 67
-&lt;a name="rest_code_4e7af76fc33c469d8a0b8a4fb6302dd7-4"&gt;&lt;/a&gt;co_name check_password
-&lt;a name="rest_code_4e7af76fc33c469d8a0b8a4fb6302dd7-5"&gt;&lt;/a&gt;co_names ('decode', 'len', 'False', 'all', 'zip', 'ord')
-&lt;a name="rest_code_4e7af76fc33c469d8a0b8a4fb6302dd7-6"&gt;&lt;/a&gt;co_nlocals 4
-&lt;a name="rest_code_4e7af76fc33c469d8a0b8a4fb6302dd7-7"&gt;&lt;/a&gt;co_stacksize 6
-&lt;a name="rest_code_4e7af76fc33c469d8a0b8a4fb6302dd7-8"&gt;&lt;/a&gt;co_varnames ('s', 'good', 'cs', 'cg')
-&lt;a name="rest_code_4e7af76fc33c469d8a0b8a4fb6302dd7-9"&gt;&lt;/a&gt;              0 LOAD_CONST               1
-&lt;a name="rest_code_4e7af76fc33c469d8a0b8a4fb6302dd7-10"&gt;&lt;/a&gt;              3 LOAD_ATTR                0
-&lt;a name="rest_code_4e7af76fc33c469d8a0b8a4fb6302dd7-11"&gt;&lt;/a&gt;              6 LOAD_CONST               2
-&lt;a name="rest_code_4e7af76fc33c469d8a0b8a4fb6302dd7-12"&gt;&lt;/a&gt;              9 CALL_FUNCTION            1
-&lt;a name="rest_code_4e7af76fc33c469d8a0b8a4fb6302dd7-13"&gt;&lt;/a&gt;             12 STORE_FAST               1
-&lt;a name="rest_code_4e7af76fc33c469d8a0b8a4fb6302dd7-14"&gt;&lt;/a&gt;             15 LOAD_GLOBAL              1
-&lt;a name="rest_code_4e7af76fc33c469d8a0b8a4fb6302dd7-15"&gt;&lt;/a&gt;             18 LOAD_FAST                0
-&lt;a name="rest_code_4e7af76fc33c469d8a0b8a4fb6302dd7-16"&gt;&lt;/a&gt;             21 CALL_FUNCTION            1
-&lt;a name="rest_code_4e7af76fc33c469d8a0b8a4fb6302dd7-17"&gt;&lt;/a&gt;             24 LOAD_GLOBAL              1
-&lt;a name="rest_code_4e7af76fc33c469d8a0b8a4fb6302dd7-18"&gt;&lt;/a&gt;             27 LOAD_FAST                1
-&lt;a name="rest_code_4e7af76fc33c469d8a0b8a4fb6302dd7-19"&gt;&lt;/a&gt;             30 CALL_FUNCTION            1
-&lt;a name="rest_code_4e7af76fc33c469d8a0b8a4fb6302dd7-20"&gt;&lt;/a&gt;             33 COMPARE_OP               3 (!=)
-&lt;a name="rest_code_4e7af76fc33c469d8a0b8a4fb6302dd7-21"&gt;&lt;/a&gt;             36 POP_JUMP_IF_FALSE       43
-&lt;a name="rest_code_4e7af76fc33c469d8a0b8a4fb6302dd7-22"&gt;&lt;/a&gt;             39 LOAD_GLOBAL              2
-&lt;a name="rest_code_4e7af76fc33c469d8a0b8a4fb6302dd7-23"&gt;&lt;/a&gt;             42 RETURN_VALUE
-&lt;a name="rest_code_4e7af76fc33c469d8a0b8a4fb6302dd7-24"&gt;&lt;/a&gt;        &amp;gt;&amp;gt;   43 LOAD_GLOBAL              3
-&lt;a name="rest_code_4e7af76fc33c469d8a0b8a4fb6302dd7-25"&gt;&lt;/a&gt;             46 BUILD_LIST               0
-&lt;a name="rest_code_4e7af76fc33c469d8a0b8a4fb6302dd7-26"&gt;&lt;/a&gt;             49 LOAD_GLOBAL              4
-&lt;a name="rest_code_4e7af76fc33c469d8a0b8a4fb6302dd7-27"&gt;&lt;/a&gt;             52 LOAD_FAST                0
-&lt;a name="rest_code_4e7af76fc33c469d8a0b8a4fb6302dd7-28"&gt;&lt;/a&gt;             55 LOAD_FAST                1
-&lt;a name="rest_code_4e7af76fc33c469d8a0b8a4fb6302dd7-29"&gt;&lt;/a&gt;             58 CALL_FUNCTION            2
-&lt;a name="rest_code_4e7af76fc33c469d8a0b8a4fb6302dd7-30"&gt;&lt;/a&gt;             61 GET_ITER
-&lt;a name="rest_code_4e7af76fc33c469d8a0b8a4fb6302dd7-31"&gt;&lt;/a&gt;        &amp;gt;&amp;gt;   62 FOR_ITER                52 (to 117)
-&lt;a name="rest_code_4e7af76fc33c469d8a0b8a4fb6302dd7-32"&gt;&lt;/a&gt;             65 UNPACK_SEQUENCE          2
-&lt;a name="rest_code_4e7af76fc33c469d8a0b8a4fb6302dd7-33"&gt;&lt;/a&gt;             68 STORE_FAST               2
-&lt;a name="rest_code_4e7af76fc33c469d8a0b8a4fb6302dd7-34"&gt;&lt;/a&gt;             71 STORE_FAST               3
-&lt;a name="rest_code_4e7af76fc33c469d8a0b8a4fb6302dd7-35"&gt;&lt;/a&gt;             74 LOAD_GLOBAL              5
-&lt;a name="rest_code_4e7af76fc33c469d8a0b8a4fb6302dd7-36"&gt;&lt;/a&gt;             77 LOAD_FAST                2
-&lt;a name="rest_code_4e7af76fc33c469d8a0b8a4fb6302dd7-37"&gt;&lt;/a&gt;             80 CALL_FUNCTION            1
-&lt;a name="rest_code_4e7af76fc33c469d8a0b8a4fb6302dd7-38"&gt;&lt;/a&gt;             83 LOAD_CONST               3
-&lt;a name="rest_code_4e7af76fc33c469d8a0b8a4fb6302dd7-39"&gt;&lt;/a&gt;             86 BINARY_SUBTRACT
-&lt;a name="rest_code_4e7af76fc33c469d8a0b8a4fb6302dd7-40"&gt;&lt;/a&gt;             87 LOAD_CONST               4
-&lt;a name="rest_code_4e7af76fc33c469d8a0b8a4fb6302dd7-41"&gt;&lt;/a&gt;             90 BINARY_AND
-&lt;a name="rest_code_4e7af76fc33c469d8a0b8a4fb6302dd7-42"&gt;&lt;/a&gt;             91 LOAD_CONST               5
-&lt;a name="rest_code_4e7af76fc33c469d8a0b8a4fb6302dd7-43"&gt;&lt;/a&gt;             94 BINARY_XOR
-&lt;a name="rest_code_4e7af76fc33c469d8a0b8a4fb6302dd7-44"&gt;&lt;/a&gt;             95 LOAD_CONST               6
-&lt;a name="rest_code_4e7af76fc33c469d8a0b8a4fb6302dd7-45"&gt;&lt;/a&gt;             98 BINARY_XOR
-&lt;a name="rest_code_4e7af76fc33c469d8a0b8a4fb6302dd7-46"&gt;&lt;/a&gt;             99 LOAD_GLOBAL              5
-&lt;a name="rest_code_4e7af76fc33c469d8a0b8a4fb6302dd7-47"&gt;&lt;/a&gt;            102 LOAD_FAST                3
-&lt;a name="rest_code_4e7af76fc33c469d8a0b8a4fb6302dd7-48"&gt;&lt;/a&gt;            105 CALL_FUNCTION            1
-&lt;a name="rest_code_4e7af76fc33c469d8a0b8a4fb6302dd7-49"&gt;&lt;/a&gt;            108 COMPARE_OP               2 (==)
-&lt;a name="rest_code_4e7af76fc33c469d8a0b8a4fb6302dd7-50"&gt;&lt;/a&gt;            111 LIST_APPEND              2
-&lt;a name="rest_code_4e7af76fc33c469d8a0b8a4fb6302dd7-51"&gt;&lt;/a&gt;            114 JUMP_ABSOLUTE           62
-&lt;a name="rest_code_4e7af76fc33c469d8a0b8a4fb6302dd7-52"&gt;&lt;/a&gt;        &amp;gt;&amp;gt;  117 CALL_FUNCTION            1
-&lt;a name="rest_code_4e7af76fc33c469d8a0b8a4fb6302dd7-53"&gt;&lt;/a&gt;            120 RETURN_VALUE
-&lt;/pre&gt;&lt;p&gt;Dla niewtajemniczonych to może wyglądać na &lt;em&gt;elficki&lt;/em&gt;. W rzeczywistości jest to bajtkod Pythona — zestaw instrukcji używany przez maszynę wirtualną Pythona (CPython 2.7.) Python, podobnie jak wiele innych języków, używa kompilatora do tłumaczenia kodu źródłowego czytelnego dla ludzi na coś bardziej odpowiedniego dla komputerów. Kod Pythona tłumaczony jest na bajtkod, który jest wykonywany przez maszynę wirtualną CPythona. Bajtkod CPythona może być używany na różnym sprzęcie, podczas gdy kod maszynowy nie może. Z drugiej strony kod maszynowy jest zazwyczaj szybszy niż języki oparte na maszynach wirtualnych i bajtkodzie. (Java i C# działają tak jak Python, C jest tłumaczone prosto do kodu maszynowego)&lt;/p&gt;
-&lt;p&gt;To jest wewnętrzna reprezentacja funkcji Pythona. Pierwsze kilka linii to zmienne należące do obiektu &lt;code class="docutils literal"&gt;f.__code__&lt;/code&gt; naszej funkcji. Wiemy, że funkcja:&lt;/p&gt;
-&lt;ul class="simple"&gt;
-&lt;li&gt;&lt;p&gt;ma 1 argument&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;ma 7 stałych: None, długi ciąg cyfr hex, i liczby: 89, 255, 115 ,50.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;ma &lt;a class="reference external" href="https://docs.python.org/2.7/library/inspect.html#code-objects-bit-flags"&gt;flagi&lt;/a&gt; ustawione na 67 (CO_NOFREE, CO_NEWLOCALS, CO_OPTIMIZED). Jest to “standardowa” wartość używana przez większość nieskomplikowanych funkcji.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;nazywa się &lt;code class="docutils literal"&gt;check_password&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;używa następujących zmiennych globalnych lub nazw atrybutów: &lt;code class="docutils literal"&gt;decode&lt;/code&gt;, &lt;code class="docutils literal"&gt;len&lt;/code&gt;, &lt;code class="docutils literal"&gt;False&lt;/code&gt;, &lt;code class="docutils literal"&gt;all&lt;/code&gt;, &lt;code class="docutils literal"&gt;zip&lt;/code&gt;, &lt;code class="docutils literal"&gt;ord&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;ma 4 zmienne lokalne&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;używa stosu o rozmiarze 6&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;jej zmienne nazywają się &lt;code class="docutils literal"&gt;s&lt;/code&gt;, &lt;code class="docutils literal"&gt;good&lt;/code&gt;, &lt;code class="docutils literal"&gt;cs&lt;/code&gt;, &lt;code class="docutils literal"&gt;cg&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;Są dwa sposoby na rozwiązanie tego zadania: można spróbować zreasemblować wyjście &lt;code class="docutils literal"&gt;dis&lt;/code&gt; przy pomocy modułu &lt;code class="docutils literal"&gt;opcode&lt;/code&gt; lub odtworzyć funkcję ręcznie, używając bajtkodu. Wybrałem tę drugą opcję.&lt;/p&gt;
-&lt;div class="section" id="reverse-engineering-bajtkodu-pythona-reczne-odtwarzanie-funkcji"&gt;
-&lt;h2&gt;Reverse-engineering bajtkodu Pythona: ręczne odtwarzanie funkcji&lt;/h2&gt;
-&lt;p&gt;Zacząłem od odtworzenia oryginalnego pliku z firmware’em. Utworzyłem pustą funkcję i napisałem trochę kodu, który wypisuje zawartość &lt;code class="docutils literal"&gt;__code__&lt;/code&gt; i wyjście &lt;code class="docutils literal"&gt;dis.dis&lt;/code&gt;. Dodałem też kolorowanie wyjścia, by łatwiej się czytało:&lt;/p&gt;
-&lt;pre class="code python"&gt;&lt;a name="rest_code_d451e83575cc4a29b3e7a03c5a6445fb-1"&gt;&lt;/a&gt;&lt;span class="ch"&gt;#!/usr/bin/env python2&lt;/span&gt;
-&lt;a name="rest_code_d451e83575cc4a29b3e7a03c5a6445fb-2"&gt;&lt;/a&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;dis&lt;/span&gt;
-&lt;a name="rest_code_d451e83575cc4a29b3e7a03c5a6445fb-3"&gt;&lt;/a&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;sys&lt;/span&gt;
-&lt;a name="rest_code_d451e83575cc4a29b3e7a03c5a6445fb-4"&gt;&lt;/a&gt;
-&lt;a name="rest_code_d451e83575cc4a29b3e7a03c5a6445fb-5"&gt;&lt;/a&gt;&lt;span class="c1"&gt;# Write code here&lt;/span&gt;
-&lt;a name="rest_code_d451e83575cc4a29b3e7a03c5a6445fb-6"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;check_password&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-&lt;a name="rest_code_d451e83575cc4a29b3e7a03c5a6445fb-7"&gt;&lt;/a&gt;    &lt;span class="k"&gt;pass&lt;/span&gt;
-&lt;a name="rest_code_d451e83575cc4a29b3e7a03c5a6445fb-8"&gt;&lt;/a&gt;
-&lt;a name="rest_code_d451e83575cc4a29b3e7a03c5a6445fb-9"&gt;&lt;/a&gt;&lt;span class="c1"&gt;# Reverse engineering the code&lt;/span&gt;
-&lt;a name="rest_code_d451e83575cc4a29b3e7a03c5a6445fb-10"&gt;&lt;/a&gt;&lt;span class="n"&gt;cnames&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'co_argcount'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'co_consts'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'co_flags'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'co_name'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'co_names'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'co_nlocals'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'co_stacksize'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'co_varnames'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_d451e83575cc4a29b3e7a03c5a6445fb-11"&gt;&lt;/a&gt;&lt;span class="n"&gt;cvalues&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kc"&gt;None&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'hex'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;89&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;255&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;115&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;50&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="mi"&gt;67&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'check_password'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'decode'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'len'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'False'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'all'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'zip'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'ord'&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;6&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'s'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'good'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'cs'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'cg'&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-&lt;a name="rest_code_d451e83575cc4a29b3e7a03c5a6445fb-12"&gt;&lt;/a&gt;
-&lt;a name="rest_code_d451e83575cc4a29b3e7a03c5a6445fb-13"&gt;&lt;/a&gt;&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;ov&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;zip&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cnames&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;cvalues&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-&lt;a name="rest_code_d451e83575cc4a29b3e7a03c5a6445fb-14"&gt;&lt;/a&gt;    &lt;span class="n"&gt;v&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;getattr&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;check_password&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="vm"&gt;__code__&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_d451e83575cc4a29b3e7a03c5a6445fb-15"&gt;&lt;/a&gt;    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;v&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="n"&gt;ov&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-&lt;a name="rest_code_d451e83575cc4a29b3e7a03c5a6445fb-16"&gt;&lt;/a&gt;        &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stderr&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'&lt;/span&gt;&lt;span class="se"&gt;\033&lt;/span&gt;&lt;span class="s1"&gt;[1;32m'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_d451e83575cc4a29b3e7a03c5a6445fb-17"&gt;&lt;/a&gt;    &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-&lt;a name="rest_code_d451e83575cc4a29b3e7a03c5a6445fb-18"&gt;&lt;/a&gt;        &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stderr&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'&lt;/span&gt;&lt;span class="se"&gt;\033&lt;/span&gt;&lt;span class="s1"&gt;[1;31m'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_d451e83575cc4a29b3e7a03c5a6445fb-19"&gt;&lt;/a&gt;    &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stderr&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;flush&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;a name="rest_code_d451e83575cc4a29b3e7a03c5a6445fb-20"&gt;&lt;/a&gt;
-&lt;a name="rest_code_d451e83575cc4a29b3e7a03c5a6445fb-21"&gt;&lt;/a&gt;    &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stdout&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="s2"&gt;" "&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;v&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="s2"&gt;"&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s2"&gt;"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_d451e83575cc4a29b3e7a03c5a6445fb-22"&gt;&lt;/a&gt;    &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stdout&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;flush&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;a name="rest_code_d451e83575cc4a29b3e7a03c5a6445fb-23"&gt;&lt;/a&gt;
-&lt;a name="rest_code_d451e83575cc4a29b3e7a03c5a6445fb-24"&gt;&lt;/a&gt;    &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stderr&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'&lt;/span&gt;&lt;span class="se"&gt;\033&lt;/span&gt;&lt;span class="s1"&gt;[0m'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_d451e83575cc4a29b3e7a03c5a6445fb-25"&gt;&lt;/a&gt;    &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stderr&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;flush&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;a name="rest_code_d451e83575cc4a29b3e7a03c5a6445fb-26"&gt;&lt;/a&gt;
-&lt;a name="rest_code_d451e83575cc4a29b3e7a03c5a6445fb-27"&gt;&lt;/a&gt;&lt;span class="n"&gt;dis&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;dis&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;check_password&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;p&gt;Jeśli uruchomimy ten solver, otrzymamy następujące wyjście (tekst w nawiasach kwadratowych dopisany przeze mnie):&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_984367983de945388ada888a21d2ab33-1"&gt;&lt;/a&gt;co_argcount 1            [OK]
-&lt;a name="rest_code_984367983de945388ada888a21d2ab33-2"&gt;&lt;/a&gt;co_consts (None,)        [1/7 się zgadza]
-&lt;a name="rest_code_984367983de945388ada888a21d2ab33-3"&gt;&lt;/a&gt;co_flags 67              [OK]
-&lt;a name="rest_code_984367983de945388ada888a21d2ab33-4"&gt;&lt;/a&gt;co_name check_password   [OK]
-&lt;a name="rest_code_984367983de945388ada888a21d2ab33-5"&gt;&lt;/a&gt;co_names ()              [0/6 się zgadza]
-&lt;a name="rest_code_984367983de945388ada888a21d2ab33-6"&gt;&lt;/a&gt;co_nlocals 1             [powinno być 4]
-&lt;a name="rest_code_984367983de945388ada888a21d2ab33-7"&gt;&lt;/a&gt;co_stacksize 1           [powinno być 6]
-&lt;a name="rest_code_984367983de945388ada888a21d2ab33-8"&gt;&lt;/a&gt;co_varnames ('s',)       [1/4 się zgadza]
-&lt;a name="rest_code_984367983de945388ada888a21d2ab33-9"&gt;&lt;/a&gt;  7           0 LOAD_CONST               0 (None)
-&lt;a name="rest_code_984367983de945388ada888a21d2ab33-10"&gt;&lt;/a&gt;              3 RETURN_VALUE
-&lt;/pre&gt;&lt;p&gt;Widzimy (przy pomocy kolorów, których tu nie ma), że &lt;code class="docutils literal"&gt;co_argcount&lt;/code&gt;, &lt;code class="docutils literal"&gt;co_flags&lt;/code&gt;, &lt;code class="docutils literal"&gt;co_name&lt;/code&gt; są ustawione poprawnie. Mamy też jedną ze zmiennych (&lt;code class="docutils literal"&gt;None&lt;/code&gt;, jest w każdej funkcji) i jedną nazwę zmiennej (nazwę argumentu &lt;code class="docutils literal"&gt;s&lt;/code&gt;). Widzimy wyjście &lt;code class="docutils literal"&gt;dis.dis()&lt;/code&gt;. O ile jest podobne do tego z zadania, to jest kilka zauważalnych różnic: nie ma &lt;code class="docutils literal"&gt;7&lt;/code&gt; na początku (numer linii), a instrukcje &lt;code class="docutils literal"&gt;LOAD_CONST&lt;/code&gt; nie miały niczego w nawiasach (tylko porównania i pętle coś miały). To utrudnia czytanie bajtkodu, ale to jest wciąż możliwe. (Początkowo chciałem sobie pomóc narzędziem &lt;code class="docutils literal"&gt;diff&lt;/code&gt;, ale nie jest trudno to zrobić ręcznie. Użyłem &lt;code class="docutils literal"&gt;diff&lt;/code&gt; do ostatecznego sprawdzenia po ręcznej „konwersji”)&lt;/p&gt;
-&lt;p&gt;Zatrzymajmy się na chwilę i spójrzmy na stałe i nazwy. Po długim stringu pojawia się &lt;code class="docutils literal"&gt;hex&lt;/code&gt;, a jedną ze stałych jest &lt;code class="docutils literal"&gt;decode&lt;/code&gt;. To znaczy, że musimy użyć &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;str.decode('hex')&lt;/span&gt;&lt;/code&gt; by utworzyć (byte)string z pewną informacją. Odpowiedzi do misji są czytelne dla ludzi, a ten string nie jest — więc musimy zrobić coś więcej.&lt;/p&gt;
-&lt;p&gt;Spróbujmy odtworzyć oryginalny kod misji. VM Pythona opiera się na stosie. W bajtkodzie powyżej widzimy, że instrukcje przyjmują 0 lub 1 argument. Niektóre z nich dodają obiekty na stos, inne wykonują akcje i usuwają rzeczy ze stosu. Większość nazw instrukcji jest łatwa do zrozumienia, ale pełna lista jest dostępna w &lt;a class="reference external" href="https://docs.python.org/2/library/dis.html#python-bytecode-instructions"&gt;dokumentacji modułu dis&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;Instrukcje takie jak &lt;code class="docutils literal"&gt;LOAD&lt;/code&gt; czy &lt;code class="docutils literal"&gt;STORE&lt;/code&gt; odwołują się do indeksów w krotkach constants/names/varnames. Aby było łatwiej, oto “tabelka” tych indeksów:&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_1595955ecc714675af951a2d011c75ac-1"&gt;&lt;/a&gt;constants
-&lt;a name="rest_code_1595955ecc714675af951a2d011c75ac-2"&gt;&lt;/a&gt; 0     1                                                       2      3   4    5    6
-&lt;a name="rest_code_1595955ecc714675af951a2d011c75ac-3"&gt;&lt;/a&gt;(None, '4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89', 'hex', 89, 255, 115, 50)
-&lt;a name="rest_code_1595955ecc714675af951a2d011c75ac-4"&gt;&lt;/a&gt;
-&lt;a name="rest_code_1595955ecc714675af951a2d011c75ac-5"&gt;&lt;/a&gt;names (globals, attributes)
-&lt;a name="rest_code_1595955ecc714675af951a2d011c75ac-6"&gt;&lt;/a&gt; 0         1      2        3      4      5
-&lt;a name="rest_code_1595955ecc714675af951a2d011c75ac-7"&gt;&lt;/a&gt;('decode', 'len', 'False', 'all', 'zip', 'ord')
-&lt;a name="rest_code_1595955ecc714675af951a2d011c75ac-8"&gt;&lt;/a&gt;
-&lt;a name="rest_code_1595955ecc714675af951a2d011c75ac-9"&gt;&lt;/a&gt;varnames (locals, _fast)
-&lt;a name="rest_code_1595955ecc714675af951a2d011c75ac-10"&gt;&lt;/a&gt; 0    1       2     3
-&lt;a name="rest_code_1595955ecc714675af951a2d011c75ac-11"&gt;&lt;/a&gt;('s', 'good', 'cs', 'cg')
-&lt;/pre&gt;&lt;p&gt;W celu poprawienia czytelności, użyję “nowe” wyjście &lt;code class="docutils literal"&gt;dis&lt;/code&gt; z nazwami w nawiasach poniżej:&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_262fe01b47a84d2fbb2b3609706896ee-1"&gt;&lt;/a&gt; 0 LOAD_CONST               1 ('4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89')
-&lt;a name="rest_code_262fe01b47a84d2fbb2b3609706896ee-2"&gt;&lt;/a&gt; 3 LOAD_ATTR                0 (decode)
-&lt;a name="rest_code_262fe01b47a84d2fbb2b3609706896ee-3"&gt;&lt;/a&gt; 6 LOAD_CONST               2 ('hex')
-&lt;a name="rest_code_262fe01b47a84d2fbb2b3609706896ee-4"&gt;&lt;/a&gt; 9 CALL_FUNCTION            1 # funkcja pobiera 1 argument ze stosu
-&lt;a name="rest_code_262fe01b47a84d2fbb2b3609706896ee-5"&gt;&lt;/a&gt;12 STORE_FAST               1 (good)
-&lt;/pre&gt;&lt;p&gt;Jak wcześniej zgadywałem, pierwsza linia funkcji wygląda tak:&lt;/p&gt;
-&lt;pre class="code python"&gt;&lt;a name="rest_code_67501b1b4e3848faa9214a6067207ef0-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;check_password&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-&lt;a name="rest_code_67501b1b4e3848faa9214a6067207ef0-2"&gt;&lt;/a&gt;    &lt;span class="n"&gt;good&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;'4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89'&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;decode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'hex'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# new&lt;/span&gt;
-&lt;/pre&gt;&lt;p&gt;Jeśli jeszcze raz uruchomimy solver, zobaczymy że pierwsze 12 bajtów w bajtkodzie zgadza się z treścią misji. Widzimy też, że &lt;code class="docutils literal"&gt;varnames&lt;/code&gt; jest wypełnione w połowie, dodaliśmy dwie stałe, i jedną nazwę. Następne kilka linii wygląda tak:&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_bfa2bfdc7a0f4f508e0fe48322f81f22-1"&gt;&lt;/a&gt;15 LOAD_GLOBAL              1
-&lt;a name="rest_code_bfa2bfdc7a0f4f508e0fe48322f81f22-2"&gt;&lt;/a&gt;18 LOAD_FAST                0
-&lt;a name="rest_code_bfa2bfdc7a0f4f508e0fe48322f81f22-3"&gt;&lt;/a&gt;21 CALL_FUNCTION            1
-&lt;a name="rest_code_bfa2bfdc7a0f4f508e0fe48322f81f22-4"&gt;&lt;/a&gt;24 LOAD_GLOBAL              1
-&lt;a name="rest_code_bfa2bfdc7a0f4f508e0fe48322f81f22-5"&gt;&lt;/a&gt;27 LOAD_FAST                1
-&lt;a name="rest_code_bfa2bfdc7a0f4f508e0fe48322f81f22-6"&gt;&lt;/a&gt;30 CALL_FUNCTION            1
-&lt;a name="rest_code_bfa2bfdc7a0f4f508e0fe48322f81f22-7"&gt;&lt;/a&gt;33 COMPARE_OP               3 (!=)
-&lt;a name="rest_code_bfa2bfdc7a0f4f508e0fe48322f81f22-8"&gt;&lt;/a&gt;36 POP_JUMP_IF_FALSE       43
-&lt;a name="rest_code_bfa2bfdc7a0f4f508e0fe48322f81f22-9"&gt;&lt;/a&gt;39 LOAD_GLOBAL              2
-&lt;a name="rest_code_bfa2bfdc7a0f4f508e0fe48322f81f22-10"&gt;&lt;/a&gt;42 RETURN_VALUE
-&lt;/pre&gt;&lt;p&gt;Widzimy że umieszczamy obiekt globalny na stosie i wywołujemy go z jednym argumentem. W obu przypadkach, obiekt globalny ma indeks 1, czyli &lt;code class="docutils literal"&gt;len&lt;/code&gt;. Dwa argumenty to &lt;code class="docutils literal"&gt;s&lt;/code&gt; i &lt;code class="docutils literal"&gt;good&lt;/code&gt;. Umieszczamy obie długości na stosie i je porównujemy. Jeśli porównanie się nie uda (są równe), przeskakujemy do instrukcji zaczynającej się na bajcie 43, w przeciwnym razie kontynuujemy wykonywanie, by załadować drugi global (False) i go zwrócić. Ta ściana tekstu tłumaczy się na następujący prosty kod:&lt;/p&gt;
-&lt;pre class="code python"&gt;&lt;a name="rest_code_f3c7561284224ebc9bf821ea84820c7e-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;check_password&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-&lt;a name="rest_code_f3c7561284224ebc9bf821ea84820c7e-2"&gt;&lt;/a&gt;    &lt;span class="n"&gt;good&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;'4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89'&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;decode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'hex'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_f3c7561284224ebc9bf821ea84820c7e-3"&gt;&lt;/a&gt;    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;!=&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;good&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;  &lt;span class="c1"&gt;# new&lt;/span&gt;
-&lt;a name="rest_code_f3c7561284224ebc9bf821ea84820c7e-4"&gt;&lt;/a&gt;        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="kc"&gt;False&lt;/span&gt;         &lt;span class="c1"&gt;# newr&lt;/span&gt;
-&lt;/pre&gt;&lt;p&gt;Popatrzmy się jeszcze raz na nasze nazwy. Widzimy, że brakuje &lt;code class="docutils literal"&gt;all&lt;/code&gt;, &lt;code class="docutils literal"&gt;zip&lt;/code&gt;, &lt;code class="docutils literal"&gt;ord&lt;/code&gt;. Można zauważyć pewien znany wzorzec: iterujemy po obu stringach na raz (używając &lt;code class="docutils literal"&gt;zip&lt;/code&gt;), wykonujemy obliczenia na podstawie kodów znaków (&lt;code class="docutils literal"&gt;ord&lt;/code&gt;) i sprawdzamy czy wszystkie (&lt;code class="docutils literal"&gt;all&lt;/code&gt;) wyniki (zazwyczaj porównania) są prawdziwe.&lt;/p&gt;
-&lt;p&gt;Oto bajtkod z dopisanymi wartościami i komentarzami które tłumaczą, co się gdzie dzieje:&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_1197e35179fe4b7e8bc2bbf0155e3131-1"&gt;&lt;/a&gt;&amp;gt;&amp;gt;   43 LOAD_GLOBAL              3 (all)
-&lt;a name="rest_code_1197e35179fe4b7e8bc2bbf0155e3131-2"&gt;&lt;/a&gt;     46 BUILD_LIST               0
-&lt;a name="rest_code_1197e35179fe4b7e8bc2bbf0155e3131-3"&gt;&lt;/a&gt;     49 LOAD_GLOBAL              4 (zip)
-&lt;a name="rest_code_1197e35179fe4b7e8bc2bbf0155e3131-4"&gt;&lt;/a&gt;     52 LOAD_FAST                0 (s)
-&lt;a name="rest_code_1197e35179fe4b7e8bc2bbf0155e3131-5"&gt;&lt;/a&gt;     55 LOAD_FAST                1 (good)
-&lt;a name="rest_code_1197e35179fe4b7e8bc2bbf0155e3131-6"&gt;&lt;/a&gt;     58 CALL_FUNCTION            2           # zip(s, good)
-&lt;a name="rest_code_1197e35179fe4b7e8bc2bbf0155e3131-7"&gt;&lt;/a&gt;     61 GET_ITER                             # Początek iteracji: iter()
-&lt;a name="rest_code_1197e35179fe4b7e8bc2bbf0155e3131-8"&gt;&lt;/a&gt;&amp;gt;&amp;gt;   62 FOR_ITER                52 (to 117)  # początek iteracji pętli for (jeśli koniec iteratora, skocz +52 bajty do pozycji 117)
-&lt;a name="rest_code_1197e35179fe4b7e8bc2bbf0155e3131-9"&gt;&lt;/a&gt;     65 UNPACK_SEQUENCE          2           # rozpakuj sekwencję (a, b = sequence)
-&lt;a name="rest_code_1197e35179fe4b7e8bc2bbf0155e3131-10"&gt;&lt;/a&gt;     68 STORE_FAST               2 (cs)      # cs = wartość z s
-&lt;a name="rest_code_1197e35179fe4b7e8bc2bbf0155e3131-11"&gt;&lt;/a&gt;     71 STORE_FAST               3 (cg)      # cg = wartość z good
-&lt;a name="rest_code_1197e35179fe4b7e8bc2bbf0155e3131-12"&gt;&lt;/a&gt;     74 LOAD_GLOBAL              5 (ord)
-&lt;a name="rest_code_1197e35179fe4b7e8bc2bbf0155e3131-13"&gt;&lt;/a&gt;     77 LOAD_FAST                2 (cs)
-&lt;a name="rest_code_1197e35179fe4b7e8bc2bbf0155e3131-14"&gt;&lt;/a&gt;     80 CALL_FUNCTION            1           # umieść ord(cs) na stosie
-&lt;a name="rest_code_1197e35179fe4b7e8bc2bbf0155e3131-15"&gt;&lt;/a&gt;     83 LOAD_CONST               3 (89)
-&lt;a name="rest_code_1197e35179fe4b7e8bc2bbf0155e3131-16"&gt;&lt;/a&gt;     86 BINARY_SUBTRACT                      # - 89   [odejmij 89 od wartości na górze stosu]
-&lt;a name="rest_code_1197e35179fe4b7e8bc2bbf0155e3131-17"&gt;&lt;/a&gt;     87 LOAD_CONST               4 (255)
-&lt;a name="rest_code_1197e35179fe4b7e8bc2bbf0155e3131-18"&gt;&lt;/a&gt;     90 BINARY_AND                           # &amp;amp; 255  [bitwise AND z wartością na górze stosu]
-&lt;a name="rest_code_1197e35179fe4b7e8bc2bbf0155e3131-19"&gt;&lt;/a&gt;     91 LOAD_CONST               5 (115)
-&lt;a name="rest_code_1197e35179fe4b7e8bc2bbf0155e3131-20"&gt;&lt;/a&gt;     94 BINARY_XOR                           # ^ 115  [bitwise XOR z wartością na górze stosu]
-&lt;a name="rest_code_1197e35179fe4b7e8bc2bbf0155e3131-21"&gt;&lt;/a&gt;     95 LOAD_CONST               6 (50)
-&lt;a name="rest_code_1197e35179fe4b7e8bc2bbf0155e3131-22"&gt;&lt;/a&gt;     98 BINARY_XOR                           # ^ 50   [bitwise XOR z wartością na górze stosu]
-&lt;a name="rest_code_1197e35179fe4b7e8bc2bbf0155e3131-23"&gt;&lt;/a&gt;     99 LOAD_GLOBAL              5 (ord)
-&lt;a name="rest_code_1197e35179fe4b7e8bc2bbf0155e3131-24"&gt;&lt;/a&gt;    102 LOAD_FAST                3 (cg)
-&lt;a name="rest_code_1197e35179fe4b7e8bc2bbf0155e3131-25"&gt;&lt;/a&gt;    105 CALL_FUNCTION            1           # umieść ord(cs) na stosie
-&lt;a name="rest_code_1197e35179fe4b7e8bc2bbf0155e3131-26"&gt;&lt;/a&gt;    108 COMPARE_OP               2 (==)      # porównaj dwie wartości na stosie
-&lt;a name="rest_code_1197e35179fe4b7e8bc2bbf0155e3131-27"&gt;&lt;/a&gt;    111 LIST_APPEND              2           # dodaj wartość umieszczoną na górze sotosu do listy góra-1; usuń górę stosu (dopisz do listy tworzonej w list comprehension)
-&lt;a name="rest_code_1197e35179fe4b7e8bc2bbf0155e3131-28"&gt;&lt;/a&gt;    114 JUMP_ABSOLUTE           62           # przeskocz na początek pętli
-&lt;a name="rest_code_1197e35179fe4b7e8bc2bbf0155e3131-29"&gt;&lt;/a&gt;&amp;gt;&amp;gt;  117 CALL_FUNCTION            1           # po pętli: wywołaj all([wynik list comprehension])
-&lt;a name="rest_code_1197e35179fe4b7e8bc2bbf0155e3131-30"&gt;&lt;/a&gt;    120 RETURN_VALUE                         # zwróć wartość zwróconą przez all()
-&lt;/pre&gt;&lt;p&gt;Możemy teraz zapisać pełną odpowiedź.&lt;/p&gt;
-&lt;p&gt;&lt;a class="reference external" href="https://chriswarrick.com/listings/gynvaels-mission-11-en/mission11.py.html"&gt;listings/gynvaels-mission-11-en/mission11.py&lt;/a&gt;  &lt;a class="reference external" href="https://chriswarrick.com/listings/gynvaels-mission-11-en/mission11.py"&gt;(Źródło)&lt;/a&gt;&lt;/p&gt;
-&lt;div class="code"&gt;&lt;table class="codetable"&gt;&lt;tr&gt;&lt;td class="linenos linenodiv"&gt;&lt;a href="https://chriswarrick.com/pl/blog/2017/08/03/gynvaels-mission-11-en-python-bytecode-reverse-engineering/#rest_code_b0c131d089a149beb76878763d64e20a-1"&gt;&lt;code data-line-number="1"&gt;&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;code&gt;&lt;a name="rest_code_b0c131d089a149beb76878763d64e20a-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;check_password&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-&lt;/code&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td class="linenos linenodiv"&gt;&lt;a href="https://chriswarrick.com/pl/blog/2017/08/03/gynvaels-mission-11-en-python-bytecode-reverse-engineering/#rest_code_b0c131d089a149beb76878763d64e20a-2"&gt;&lt;code data-line-number="2"&gt;&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;code&gt;&lt;a name="rest_code_b0c131d089a149beb76878763d64e20a-2"&gt;&lt;/a&gt;    &lt;span class="n"&gt;good&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;'4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89'&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;decode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'hex'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td class="linenos linenodiv"&gt;&lt;a href="https://chriswarrick.com/pl/blog/2017/08/03/gynvaels-mission-11-en-python-bytecode-reverse-engineering/#rest_code_b0c131d089a149beb76878763d64e20a-3"&gt;&lt;code data-line-number="3"&gt;&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;code&gt;&lt;a name="rest_code_b0c131d089a149beb76878763d64e20a-3"&gt;&lt;/a&gt;    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;!=&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;good&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-&lt;/code&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td class="linenos linenodiv"&gt;&lt;a href="https://chriswarrick.com/pl/blog/2017/08/03/gynvaels-mission-11-en-python-bytecode-reverse-engineering/#rest_code_b0c131d089a149beb76878763d64e20a-4"&gt;&lt;code data-line-number="4"&gt;&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;code&gt;&lt;a name="rest_code_b0c131d089a149beb76878763d64e20a-4"&gt;&lt;/a&gt;        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="kc"&gt;False&lt;/span&gt;
-&lt;/code&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td class="linenos linenodiv"&gt;&lt;a href="https://chriswarrick.com/pl/blog/2017/08/03/gynvaels-mission-11-en-python-bytecode-reverse-engineering/#rest_code_b0c131d089a149beb76878763d64e20a-5"&gt;&lt;code data-line-number="5"&gt;&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;code&gt;&lt;a name="rest_code_b0c131d089a149beb76878763d64e20a-5"&gt;&lt;/a&gt;
-&lt;/code&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td class="linenos linenodiv"&gt;&lt;a href="https://chriswarrick.com/pl/blog/2017/08/03/gynvaels-mission-11-en-python-bytecode-reverse-engineering/#rest_code_b0c131d089a149beb76878763d64e20a-6"&gt;&lt;code data-line-number="6"&gt;&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;code&gt;&lt;a name="rest_code_b0c131d089a149beb76878763d64e20a-6"&gt;&lt;/a&gt;    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nb"&gt;all&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;&lt;span class="nb"&gt;ord&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cs&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;89&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="mi"&gt;255&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="mi"&gt;115&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="mi"&gt;50&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="nb"&gt;ord&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cg&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;cs&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;cg&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;zip&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;good&lt;/span&gt;&lt;span class="p"&gt;)])&lt;/span&gt;
-&lt;/code&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;&lt;p&gt;Ostatecznie, wyjście &lt;code class="docutils literal"&gt;dis.dis()&lt;/code&gt; zgadza się z tekstem z misji (za wyjątkiem usuniętych wartości, ale ID się zgadzają), nasze zmienne &lt;code class="docutils literal"&gt;co_*&lt;/code&gt; są zielone, i możemy rozwiązać prawdziwą zagadkę!&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Na marginesie:&lt;/strong&gt; zadanie używa list comprehension. Możesz chcieć ją zoptymalizować, usunąć nawiasy kwadratowe, i otrzymać generator expression. W ten sposób zadanie stałoby się trudniejsze, gdyż wymagałoby pracy również z wewnętrznym obiektem kodu generatora:&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_f24992dceff940f6a281e33399727f8b-1"&gt;&lt;/a&gt;co_consts (None, '4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89', 'hex', &amp;lt;code object &amp;lt;genexpr&amp;gt; at 0x104a86c30, file "mission11-genexpr.py", line 11&amp;gt;)
-&lt;a name="rest_code_f24992dceff940f6a281e33399727f8b-2"&gt;&lt;/a&gt;
-&lt;a name="rest_code_f24992dceff940f6a281e33399727f8b-3"&gt;&lt;/a&gt;46 LOAD_CONST               3 (&amp;lt;code object &amp;lt;genexpr&amp;gt; at 0x104a86c30, file "mission11-genexpr.py", line 11&amp;gt;)
-&lt;/pre&gt;&lt;p&gt;&lt;code class="docutils literal"&gt;BINARY_*&lt;/code&gt; i &lt;code class="docutils literal"&gt;ord&lt;/code&gt; zniknęły z nowego listingu. Możesz zobaczyć &lt;a class="reference external" href="https://chriswarrick.com/listings/gynvaels-mission-11-en/mission11-genexpr.py.html"&gt;zmodyfikowany kod&lt;/a&gt; (który różni się dwoma bajtami) i &lt;a class="reference external" href="https://chriswarrick.com/listings/gynvaels-mission-11-en/mission11-genexpr.txt.html"&gt;wyjście solvera&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;Na marginesie marginesu: zna ktoś jakieś dobre tłumaczenie &lt;code class="docutils literal"&gt;list comprehension&lt;/code&gt;? Polska język trudna język.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="section" id="rozwiazywanie-prawdziwej-zagadki"&gt;
-&lt;h2&gt;Rozwiązywanie prawdziwej zagadki&lt;/h2&gt;
-&lt;p&gt;Rozwiązałem dodatkową część zagadki. Jej &lt;em&gt;prawdziwym&lt;/em&gt; celem było odzyskanie hasła — tekstu, dla którego &lt;code class="docutils literal"&gt;check_password()&lt;/code&gt; zwróci True.&lt;/p&gt;
-&lt;p&gt;Ta część jest dosyć nudna. Zbudowałem słownik, w którym przypisałem każdy bajt (0…255) do wyniku obliczeń wykonywanych w pętli funkcji &lt;code class="docutils literal"&gt;check_password()&lt;/code&gt;. Potem użyłem jej do odzyskania oryginalnego tekstu.&lt;/p&gt;
-&lt;pre class="code python"&gt;&lt;a name="rest_code_2921837b9c6e42c894a7c980b962bde7-1"&gt;&lt;/a&gt;&lt;span class="n"&gt;pass_values&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{}&lt;/span&gt;
-&lt;a name="rest_code_2921837b9c6e42c894a7c980b962bde7-2"&gt;&lt;/a&gt;&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;256&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-&lt;a name="rest_code_2921837b9c6e42c894a7c980b962bde7-3"&gt;&lt;/a&gt;    &lt;span class="n"&gt;result&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;89&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="mi"&gt;255&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="mi"&gt;115&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="mi"&gt;50&lt;/span&gt;
-&lt;a name="rest_code_2921837b9c6e42c894a7c980b962bde7-4"&gt;&lt;/a&gt;    &lt;span class="n"&gt;pass_values&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;
-&lt;a name="rest_code_2921837b9c6e42c894a7c980b962bde7-5"&gt;&lt;/a&gt;
-&lt;a name="rest_code_2921837b9c6e42c894a7c980b962bde7-6"&gt;&lt;/a&gt;&lt;span class="n"&gt;good&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;'4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89'&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;decode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'hex'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_2921837b9c6e42c894a7c980b962bde7-7"&gt;&lt;/a&gt;&lt;span class="n"&gt;password&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;''&lt;/span&gt;
-&lt;a name="rest_code_2921837b9c6e42c894a7c980b962bde7-8"&gt;&lt;/a&gt;&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;good&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-&lt;a name="rest_code_2921837b9c6e42c894a7c980b962bde7-9"&gt;&lt;/a&gt;    &lt;span class="n"&gt;password&lt;/span&gt; &lt;span class="o"&gt;+=&lt;/span&gt; &lt;span class="nb"&gt;chr&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pass_values&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nb"&gt;ord&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;)])&lt;/span&gt;
-&lt;a name="rest_code_2921837b9c6e42c894a7c980b962bde7-10"&gt;&lt;/a&gt;
-&lt;a name="rest_code_2921837b9c6e42c894a7c980b962bde7-11"&gt;&lt;/a&gt;&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;password&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_2921837b9c6e42c894a7c980b962bde7-12"&gt;&lt;/a&gt;&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;check_password&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;password&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;Hasło brzmi:&lt;/strong&gt; &lt;code class="docutils literal"&gt;huh, that actually worked!&lt;/code&gt;.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="section" id="o-co-chodzilo-z-tym-paintem"&gt;
-&lt;h2&gt;O co chodziło z tym Paintem?&lt;/h2&gt;
-&lt;blockquote&gt;Wczorajsza misja była o elfickim — &lt;strong&gt;znaczy o Paint’cie&lt;/strong&gt; — znaczy o programowaniu w Pythonie i bytecode.&lt;footer&gt;niżej podpisany, w leadzie tego posta&lt;/footer&gt;&lt;/blockquote&gt;&lt;p&gt;Większość moich czytelników była zdziwiona wspomnieniem programu Paint. Stali widzowie polskich streamów Gynvaela pamiętają film Python 101, który opublikował 1 kwietnia 2016. Zobacz &lt;a class="reference external" href="https://www.youtube.com/watch?v=7VJaprmuHcw"&gt;oryginalny film&lt;/a&gt;, &lt;a class="reference external" href="http://gynvael.coldwind.pl/?id=599"&gt;wyjaśnienie&lt;/a&gt;, &lt;a class="reference external" href="https://github.com/gynvael/stream/tree/master/007-python-101"&gt;kod&lt;/a&gt; (po polsku) &lt;strong&gt;Uwaga, spoilery.&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;W tym dowcipie primaaprilisowym, Gynvael uczył podstaw Pythona. Pierwsza część dotyczyła pisania bytecodu ręcznie. Druga (ok. 12 minuty) dotyczyła rysowania swoich własnych modułów Pythona. W programie Paint. Tak, Paint, prostym programie graficznym dołączonym do Windowsa. Narysował swój własny moduł Pythona w Paint’cie i zapisał jako BMP. Wyglądało to tak (powiększony PNG poniżej; &lt;a class="reference external" href="https://chriswarrick.com/pub/gynvaels-mission-11-en/gynmod.bmp"&gt;pobierz gynmod.bmp&lt;/a&gt;):&lt;/p&gt;
-&lt;img alt="/images/gynvaels-mission-11-en/gynmod-zoom.png" class="align-center" src="https://chriswarrick.com/images/gynvaels-mission-11-en/gynmod-zoom.png"&gt;
-&lt;p&gt;Jak to działa? Są trzy powody:&lt;/p&gt;
-&lt;ul class="simple"&gt;
-&lt;li&gt;&lt;p&gt;Python może importować kod z pliku ZIP (dopisanego do sys.path). Niektóre narzędzia które tworzą pliki &lt;code class="docutils literal"&gt;.exe&lt;/code&gt; z kodu Pythona używają tej metody; stary format &lt;code class="docutils literal"&gt;.egg&lt;/code&gt; również używał ZIPów w ten sposób.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Pliki BMP mają nagłówki na początku pliku.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Pliki ZIP mają nagłówki na końcu pliku.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Więc jeden plik może być jednocześnie poprawnym plikiem BMP i poprawnym ZIPem.&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;Wziąłem kod &lt;code class="docutils literal"&gt;check_password&lt;/code&gt; i umieściłem go w pliku &lt;code class="docutils literal"&gt;mission11.py&lt;/code&gt; (wcześniej zacytowanym). Potem skompilowałem do &lt;code class="docutils literal"&gt;.pyc&lt;/code&gt; i utworzyłem z niego &lt;code class="docutils literal"&gt;.zip&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;&lt;a class="reference external" href="https://chriswarrick.com/listings/gynvaels-mission-11-en/mission11.py.html"&gt;listings/gynvaels-mission-11-en/mission11.py&lt;/a&gt;  &lt;a class="reference external" href="https://chriswarrick.com/listings/gynvaels-mission-11-en/mission11.py"&gt;(Źródło)&lt;/a&gt;&lt;/p&gt;
-&lt;div class="code"&gt;&lt;table class="codetable"&gt;&lt;tr&gt;&lt;td class="linenos linenodiv"&gt;&lt;a href="https://chriswarrick.com/pl/blog/2017/08/03/gynvaels-mission-11-en-python-bytecode-reverse-engineering/#rest_code_43fb7116bf5747d8a626c45050cbd34f-1"&gt;&lt;code data-line-number="1"&gt;&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;code&gt;&lt;a name="rest_code_43fb7116bf5747d8a626c45050cbd34f-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;check_password&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-&lt;/code&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td class="linenos linenodiv"&gt;&lt;a href="https://chriswarrick.com/pl/blog/2017/08/03/gynvaels-mission-11-en-python-bytecode-reverse-engineering/#rest_code_43fb7116bf5747d8a626c45050cbd34f-2"&gt;&lt;code data-line-number="2"&gt;&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;code&gt;&lt;a name="rest_code_43fb7116bf5747d8a626c45050cbd34f-2"&gt;&lt;/a&gt;    &lt;span class="n"&gt;good&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;'4e5d4e92865a4e495a86494b5a5d49525261865f5758534d4a89'&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;decode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'hex'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td class="linenos linenodiv"&gt;&lt;a href="https://chriswarrick.com/pl/blog/2017/08/03/gynvaels-mission-11-en-python-bytecode-reverse-engineering/#rest_code_43fb7116bf5747d8a626c45050cbd34f-3"&gt;&lt;code data-line-number="3"&gt;&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;code&gt;&lt;a name="rest_code_43fb7116bf5747d8a626c45050cbd34f-3"&gt;&lt;/a&gt;    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;!=&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;good&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-&lt;/code&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td class="linenos linenodiv"&gt;&lt;a href="https://chriswarrick.com/pl/blog/2017/08/03/gynvaels-mission-11-en-python-bytecode-reverse-engineering/#rest_code_43fb7116bf5747d8a626c45050cbd34f-4"&gt;&lt;code data-line-number="4"&gt;&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;code&gt;&lt;a name="rest_code_43fb7116bf5747d8a626c45050cbd34f-4"&gt;&lt;/a&gt;        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="kc"&gt;False&lt;/span&gt;
-&lt;/code&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td class="linenos linenodiv"&gt;&lt;a href="https://chriswarrick.com/pl/blog/2017/08/03/gynvaels-mission-11-en-python-bytecode-reverse-engineering/#rest_code_43fb7116bf5747d8a626c45050cbd34f-5"&gt;&lt;code data-line-number="5"&gt;&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;code&gt;&lt;a name="rest_code_43fb7116bf5747d8a626c45050cbd34f-5"&gt;&lt;/a&gt;
-&lt;/code&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td class="linenos linenodiv"&gt;&lt;a href="https://chriswarrick.com/pl/blog/2017/08/03/gynvaels-mission-11-en-python-bytecode-reverse-engineering/#rest_code_43fb7116bf5747d8a626c45050cbd34f-6"&gt;&lt;code data-line-number="6"&gt;&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;code&gt;&lt;a name="rest_code_43fb7116bf5747d8a626c45050cbd34f-6"&gt;&lt;/a&gt;    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nb"&gt;all&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;&lt;span class="nb"&gt;ord&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cs&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;89&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="mi"&gt;255&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="mi"&gt;115&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="mi"&gt;50&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="nb"&gt;ord&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cg&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;cs&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;cg&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;zip&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;good&lt;/span&gt;&lt;span class="p"&gt;)])&lt;/span&gt;
-&lt;/code&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;&lt;p&gt;Ponieważ nie jestem ekspertem w żadnym z formatów, uruchomiłem maszynę wirtualną z Windowsem i na ślepo &lt;a class="reference external" href="http://gynvael.coldwind.pl/img/secapr16_3.png"&gt;przekopiowałem parametry użyte przez Gynvaela&lt;/a&gt; do otwarcia pliku ZIP (nazwanego &lt;code class="docutils literal"&gt;.raw&lt;/code&gt;) w IrfanView i zapisałem jako &lt;code class="docutils literal"&gt;.bmp&lt;/code&gt;. Zmieniłem rozmiar na 83×2, ponieważ mój ZIP miał 498 bajty (3 BPP * 83 px * 2 px = 498 bytes) — dzięki temu i odpowiedniemu rozmiarowi plików, mogłem nie dodawać komentarzy i edytowaniu ZIPa. Dostałem ten obrazek (znowu PNG; &lt;a class="reference external" href="https://chriswarrick.com/pub/gynvaels-mission-11-en/mission11.bmp"&gt;pobierz mission11.bmp&lt;/a&gt;):&lt;/p&gt;
-&lt;img alt="/images/gynvaels-mission-11-en/mission11-zoom.png" class="align-center" src="https://chriswarrick.com/images/gynvaels-mission-11-en/mission11-zoom.png"&gt;
-&lt;p&gt;Plik &lt;code class="docutils literal"&gt;.bmp&lt;/code&gt; można uruchomić! Używamy tego kodu:&lt;/p&gt;
-&lt;p&gt;&lt;a class="reference external" href="https://chriswarrick.com/listings/gynvaels-mission-11-en/ziprunner.py.html"&gt;listings/gynvaels-mission-11-en/ziprunner.py&lt;/a&gt;  &lt;a class="reference external" href="https://chriswarrick.com/listings/gynvaels-mission-11-en/ziprunner.py"&gt;(Źródło)&lt;/a&gt;&lt;/p&gt;
-&lt;div class="code"&gt;&lt;table class="codetable"&gt;&lt;tr&gt;&lt;td class="linenos linenodiv"&gt;&lt;a href="https://chriswarrick.com/pl/blog/2017/08/03/gynvaels-mission-11-en-python-bytecode-reverse-engineering/#rest_code_8310a5bb9f7e4dbfb779d01875b1671f-1"&gt;&lt;code data-line-number="1"&gt;&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;code&gt;&lt;a name="rest_code_8310a5bb9f7e4dbfb779d01875b1671f-1"&gt;&lt;/a&gt;&lt;span class="ch"&gt;#!/usr/bin/env python2&lt;/span&gt;
-&lt;/code&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td class="linenos linenodiv"&gt;&lt;a href="https://chriswarrick.com/pl/blog/2017/08/03/gynvaels-mission-11-en-python-bytecode-reverse-engineering/#rest_code_8310a5bb9f7e4dbfb779d01875b1671f-2"&gt;&lt;code data-line-number="2"&gt;&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;code&gt;&lt;a name="rest_code_8310a5bb9f7e4dbfb779d01875b1671f-2"&gt;&lt;/a&gt;
-&lt;/code&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td class="linenos linenodiv"&gt;&lt;a href="https://chriswarrick.com/pl/blog/2017/08/03/gynvaels-mission-11-en-python-bytecode-reverse-engineering/#rest_code_8310a5bb9f7e4dbfb779d01875b1671f-3"&gt;&lt;code data-line-number="3"&gt;&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;code&gt;&lt;a name="rest_code_8310a5bb9f7e4dbfb779d01875b1671f-3"&gt;&lt;/a&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;sys&lt;/span&gt;
-&lt;/code&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td class="linenos linenodiv"&gt;&lt;a href="https://chriswarrick.com/pl/blog/2017/08/03/gynvaels-mission-11-en-python-bytecode-reverse-engineering/#rest_code_8310a5bb9f7e4dbfb779d01875b1671f-4"&gt;&lt;code data-line-number="4"&gt;&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;code&gt;&lt;a name="rest_code_8310a5bb9f7e4dbfb779d01875b1671f-4"&gt;&lt;/a&gt;&lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;append&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"mission11.bmp"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td class="linenos linenodiv"&gt;&lt;a href="https://chriswarrick.com/pl/blog/2017/08/03/gynvaels-mission-11-en-python-bytecode-reverse-engineering/#rest_code_8310a5bb9f7e4dbfb779d01875b1671f-5"&gt;&lt;code data-line-number="5"&gt;&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;code&gt;&lt;a name="rest_code_8310a5bb9f7e4dbfb779d01875b1671f-5"&gt;&lt;/a&gt;
-&lt;/code&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td class="linenos linenodiv"&gt;&lt;a href="https://chriswarrick.com/pl/blog/2017/08/03/gynvaels-mission-11-en-python-bytecode-reverse-engineering/#rest_code_8310a5bb9f7e4dbfb779d01875b1671f-6"&gt;&lt;code data-line-number="6"&gt;&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;code&gt;&lt;a name="rest_code_8310a5bb9f7e4dbfb779d01875b1671f-6"&gt;&lt;/a&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;mission11&lt;/span&gt;
-&lt;/code&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td class="linenos linenodiv"&gt;&lt;a href="https://chriswarrick.com/pl/blog/2017/08/03/gynvaels-mission-11-en-python-bytecode-reverse-engineering/#rest_code_8310a5bb9f7e4dbfb779d01875b1671f-7"&gt;&lt;code data-line-number="7"&gt;&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;code&gt;&lt;a name="rest_code_8310a5bb9f7e4dbfb779d01875b1671f-7"&gt;&lt;/a&gt;&lt;span class="nb"&gt;print&lt;/span&gt; &lt;span class="s2"&gt;"Result:"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;mission11&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;check_password&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'huh, that actually worked!'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;&lt;p&gt;I dostajemy to:&lt;/p&gt;
-&lt;img alt="/images/gynvaels-mission-11-en/running-bmp.png" class="align-center" src="https://chriswarrick.com/images/gynvaels-mission-11-en/running-bmp.png"&gt;
-&lt;/div&gt;
-&lt;div class="section" id="materialy"&gt;
-&lt;h2&gt;Materiały&lt;/h2&gt;
-&lt;ul class="simple"&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference external" href="https://chriswarrick.com/listings/gynvaels-mission-11-en/mission11-solver.py.html"&gt;mission11-solver.py (pełny kod solvera)&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference external" href="https://chriswarrick.com/listings/gynvaels-mission-11-en/mission11-genexpr.py.html"&gt;mission11-genexpr.py&lt;/a&gt;, &lt;a class="reference external" href="https://chriswarrick.com/listings/gynvaels-mission-11-en/mission11-genexpr.txt.html"&gt;mission11-genexpr.txt&lt;/a&gt; (używane w notatce na marginesie dot. vs list comprehensions)&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference external" href="https://chriswarrick.com/listings/gynvaels-mission-11-en/mission11.py.html"&gt;mission11.py, kod użyty w pliku BMP&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference external" href="https://chriswarrick.com/listings/gynvaels-mission-11-en/ziprunner.py.html"&gt;ziprunner.py, plik uruchamiający moduł BMP/ZIP&lt;/a&gt; (na bazie utworzonego przez Gynvaela)&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference external" href="https://chriswarrick.com/pub/gynvaels-mission-11-en/gynmod.bmp"&gt;gynmod.bmp&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference external" href="https://chriswarrick.com/pub/gynvaels-mission-11-en/mission11.bmp"&gt;mission11.bmp&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference external" href="https://docs.python.org/2/library/dis.html#python-bytecode-instructions"&gt;dokumentacja modułu dis&lt;/a&gt;.&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;Dzięki za misję (i pomysł z BMP), Gynvael!&lt;/p&gt;
-&lt;/div&gt;&lt;/div&gt;</description><category>BMP</category><category>Gynvael Coldwind</category><category>hacking</category><category>Paint</category><category>Python</category><category>Python hackery</category><category>Python internals</category><category>reverse engineering</category><category>writeup</category><guid>https://chriswarrick.com/pl/blog/2017/08/03/gynvaels-mission-11-en-python-bytecode-reverse-engineering/</guid><pubDate>Thu, 03 Aug 2017 10:45:40 GMT</pubDate></item></channel></rss>
+&lt;/div&gt;&lt;/div&gt;</description><guid>https://chriswarrick.com/pl/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/</guid><pubDate>Sat, 02 Sep 2017 18:40:00 GMT</pubDate></item></channel></rss>
