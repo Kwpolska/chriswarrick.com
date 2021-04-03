@@ -1,7 +1,7 @@
 .. title: Python Virtual Environments in Five Minutes
 .. slug: python-virtual-environments
 .. date: 2018-09-04 20:15:00+02:00
-.. updated: 2019-07-22 23:00:00+02:00
+.. updated: 2021-04-03 13:00:00+02:00
 .. description: A short yet descriptive guide on Python virtual environments.
 .. tags: Python, guide, devel, best practices, virtual environments, venv, virtualenv
 .. category: Python
@@ -28,23 +28,21 @@ Let’s get started!
 Install
 =======
 
-There are two main tools used to create virtual environments:
+The best tool that can be used to create virtual environments is the
+`venv <https://docs.python.org/3/library/venv.html>`_ module, which is part of
+the standard library since Python 3.3.
 
-* `virtualenv <https://virtualenv.pypa.io/>`_ has
-  been the de facto standard tool for many years. It can be used with both
-  Python 2 and 3, including very old versions of Python.
-* `venv <https://docs.python.org/3/library/venv.html>`_ (aka pyvenv) was added to the
-  standard library in Python 3.3, and with the addition of ``ensurepip`` in 3.4,
-  it’s an even easier way to get a virtual environment created.
+``venv`` is built into Python, and most users don’t need to install anything.
+However, Debian/Ubuntu users will need to run ``sudo apt-get install
+python3-venv`` to make it work (due to Debian not installing some components
+that ``venv`` needs by default). [1]_
 
-virtualenv can be installed with your system package manager, or ``pip
+The alternative (and original, and previously standard) virtual environment tool is `virtualenv
+<https://virtualenv.pypa.io/>`_. It works with Python 2.7, and has a couple
+extra fetures (that you generally won’t need). virtualenv can be installed with your system package manager, or ``pip
 install --user virtualenv``.
 
-venv comes built-in with Python 3, although
-Debian/Ubuntu users will need to run ``sudo apt-get install python3-venv`` to
-make it work. [1]_
-
-Which one to use? It’s up to you. Both tools achieve the same goal in similar
+Which one to use? Probably ``venv``. Both tools achieve the same goal in similar
 ways. And if one of them does not work, you can try the other and it might just
 work better.
 
@@ -55,26 +53,29 @@ before the stdlib tool was created)*
 Create
 ======
 
-To create a virtual environment named ``env``, use (depending on your tool of
-choice):
+To create a virtual environment named ``env``, you need to run the ``venv``
+tool with the Python you want to use in that environment.
+
+.. code:: text
+
+    Linux:   $ python3 -m venv env
+    Windows: > py -m venv env
+
+or, if you’re using ``virtualenv``:
 
 .. code:: text
 
     $ python3 -m virtualenv env
-
-or
-
-.. code:: text
-
-    $ python3 -m venv env
+    > py -m virtualenv env
 
 Afterwards, you will end up with a folder named ``env`` that contains folders
-named ``bin`` (``Scripts`` on Windows — contains executables, including
+named ``bin`` (``Scripts`` on Windows — contains executables and scripts
+installed by packages, including
 ``python``), ``lib`` (contains code), and ``include`` (contains C headers).
 
 Both tools install ``pip`` and ``setuptools``, but ``venv`` does not ship with
 ``wheel``. In addition, the default versions tend to be more-or-less outdated.
-Let’s upgrade them real quick (first command is Unix, second is Windows): [2]_
+Let’s upgrade them real quick: [2]_
 
 .. code:: text
 
@@ -90,15 +91,21 @@ system, it is not a desirable thing to do. There are two options:
 1. Have one global place for them, like ``~/virtualenvs``.
 2. Store them in each project’s directory, like ``~/git/foobar/.venv``.
 
-The first option comes with tools that make it easier, such as
-`virtualenvwrapper <https://virtualenvwrapper.readthedocs.io/>`_.
-The second option is equally easy to work with, but comes with one caveat —
-you must add the venv directory to your ``.gitignore`` file, since you don’t
-want it in your repository (it’s binary bloat, and works only on your machine).
+The first option can be easier to manage, there are tools that can help manage
+those (eg. ``virtualenvwrapper``, shell auto-activation scripts, or the
+``workon`` functions described below).  The second option is equally easy to
+work with, but comes with one caveat — you must add the venv directory to your
+``.gitignore`` file (or ``.git/info/exclude`` if you don’t want to commit
+changes to ``.gitignore``), since you don’t want it in your repository (it’s
+binary bloat, and works only on your machine).
 
-And if you don’t want to install virtualenvwrapper but want to put virtualenvs
-in one global place, all you need is a short function in your shell
-configuration file:
+If you pick the global virtual environment store option, you can use the following short
+function (put it in ``.bashrc`` / ``.zshrc`` / your shell configuration file)
+to get a simple way to activate an environment (by running ``workon foo``).
+``virtualenvwrapper`` also has a ``workon`` feature, although I don’t think
+``virtualenvwrapper`` is really necessary and too helpful — the ``workon``
+feature is handy though, and so here’s a way to do it without
+``virtualenvwrapper``:
 
 .. code:: bash
    :linenos:
@@ -109,6 +116,16 @@ configuration file:
         source "$WORKON_HOME/$1/bin/activate"
     }
 
+And for Windows PowerShell fans, here’s a ``workon.ps1`` script:
+
+.. code:: powershell
+   :linenos:
+
+    $WORKON_HOME = "$home\virtualenvs"
+    $venv = $args[0]
+    $cmd = "$WORKON_HOME\$venv\Scripts\activate.ps1"
+    & $cmd
+
 Use
 ===
 
@@ -117,7 +134,8 @@ shell):
 
 * activation (run ``source env/bin/activate`` on \*nix;
   ``env\Scripts\activate`` on Windows) — it simplifies work and requires less
-  typing, although it can sometimes fail to work properly.
+  typing, although it can sometimes fail to work properly. (After installing
+  scripts, ``hash -r`` may be necessary on \*nix to use them.)
 * executing ``env/bin/python`` (``env\Scripts\python``) and other scripts directly, as
   activation only changes ``$PATH`` and some helper variables — those variables
   are not mandatory for operation, running the correct ``python`` is, and that
@@ -151,6 +169,9 @@ Here are some usage examples (paths can be relative, of course):
     ## Windows, manual execution ##
     > C:\path\to\env\Scripts\pip install Django
 
+    ## Windows, updating pip/setuptools/wheel ##
+    > C:\path\to\env\Scripts\python -m pip install -U pip setuptools wheel
+
 The same principle applies to running Python itself, or any other script
 installed by a package. (With Django’s ``manage.py``, calling it as
 ``./manage.py`` requires activation, or you can run
@@ -162,8 +183,7 @@ Moving/renaming/copying environments?
 If you try to copy or rename a virtual environment, you will discover that the
 copied environment does not work. This is because a virtual environment is
 closely tied to both the Python it was created with, and the location it was
-created in. (The “relocatable” option is deprecated and generally fails to
-solve the problem.) [3]_
+created in. (The “relocatable” option of ``virtualenv`` does not work and is deprecated.) [3]_
 
 However, this is very easy to fix. Instead of moving/copying, just create a new
 environment in the new location. Then, run ``pip freeze > requirements.txt`` in
@@ -185,15 +205,20 @@ after a Python upgrade, [4]_ so it might be handy to keep an up-to-date
 ``requirements.txt`` for your virtual environments (for many projects, it makes
 sense to put that in the repository).
 
+To manage those ``requirements.txt`` files in a more orgnized yet still simple
+way, you might be interested in `pip-tools
+<https://github.com/jazzband/pip-tools>`_
+
 Frequently Asked Questions
 ==========================
 
-Do I need to install the virtualenv tool for each Python I want to use it with?
--------------------------------------------------------------------------------
+I’m using virtualenv. Do I need to install it for each Python I want to use it with?
+------------------------------------------------------------------------------------
 
 In most cases, you can use ``virtualenv -p pythonX env`` to specify a different
 Python version, but with some Python version combinations, that approach might
-be unsuccessful.
+be unsuccessful. (The ``venv`` module is tied to the Python version it’s
+installed in.)
 
 I’m the only user on my system. Do I still need virtual environments?
 ---------------------------------------------------------------------
@@ -219,10 +244,12 @@ Pipenv is a dependency management tool. It isn’t compatible with most workflow
 
 I also wrote a blog post detailing concerns with that tool, titled `Pipenv: promises a lot, delivers very little <https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/>`_.
 
+Consider using `pip-tools <https://github.com/jazzband/pip-tools>`_ instead.
+
 Footnotes
 =========
 
 .. [1] The thing you’re actually installing is ``ensurepip``. In general, Debian isn’t exactly friendly with Python packaging.
 .. [2] On Windows, you *must* run ``python -m pip`` instead of ``pip`` if you want to upgrade the package manager itself.
 .. [3] All script shebangs contain the direct path to the environment’s Python executable.  Many things in the virtual environment are symlinks that point to the original Python.
-.. [4] Definitely after a minor version (3.x → 3.y) upgrade, sometimes after a patch version upgrade (3.x.y → 3.x.z) as well.
+.. [4] Definitely after a minor version (3.x → 3.y) upgrade, sometimes (I’m looking at you Homebrew) after a patch version upgrade (3.x.y → 3.x.z) as well.
