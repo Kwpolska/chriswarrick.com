@@ -9,7 +9,7 @@
 This is a list of guides I wrote on this blog. They are setup guides for some
 technologies, or ways to implement best programming practices.
 
-*Other educational content:* `a list of factoids I use in #python on Freenode <https://go.chriswarrick.com/ircfactoids/>`_
+*Other educational content:* `a list of factoids I use in #python on Libera.Chat <https://go.chriswarrick.com/ircfactoids/>`_
 
 .. post-list::
    :reverse:
