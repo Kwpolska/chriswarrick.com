@@ -22,6 +22,6 @@ Contact me:
 * **on IRC** — ChrisWarrick on libera.chat
 * **on Twitter** — `@Kwpolska <https://twitter.com/Kwpolska>`_
 * **on GitHub** — `Kwpolska <https://github.com/Kwpolska>`_
-* GPG key: 0x5EAAEA16 (``gpg --keyserver hkp://keys.gnupg.net --recv-key 0x5EAAEA16``)
+* GPG key: 0x5EAAEA16 (``gpg --keyserver hkps://keyserver.ubuntu.com --recv-key 0x5EAAEA16``)
 
 
