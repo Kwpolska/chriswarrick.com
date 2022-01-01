@@ -1,5 +1,5 @@
 // Kw’s JS
-// Copyright © 2014-2018, Chris Warrick.
+// Copyright © 2014-2021, Chris Warrick.
 
 function updateCsText() {
     csText = csDict[colorScheme][document.querySelector('html').lang];

@@ -112,18 +112,19 @@ og: http://ogp.me/ns#
         </ul>
 </div>
     </header><div class="e-content entry-content" itemprop="articleBody text">
-    <div class="lead"><div>
+    <div class="lead">
 <p>Today’s blog post is going to contain fairly advanced Python hackery. We’ll
 take two functions — one is a wrapper for the other, but also adds some
 positional arguments.  And we’ll change the signature displayed everywhere from
 the uninformative <code class="docutils literal">f(new_arg, *args, **kwargs)</code> to something more
 appropriate.</p>
-</div></div>
+</div>
+</div>
 <p>This blog post was inspired by F4D3C0D3 on #python (freenode IRC). I also took
 some inspiration from
 Gynvael Coldwind’s classic <a class="reference external" href="https://www.youtube.com/watch?v=7VJaprmuHcw">Python 101</a> (April Fools) video. (Audio and some comments are in Polish, but even if you don’t speak the language, it’s still worth it to click through the time bar and see some (fairly unusual) magic happen.)</p>
 <div class="section" id="starting-point">
-<h2>Starting point<a href="#starting-point" class="headerlink" title="Permalink to this heading">¶</a></h2>
+<h2>Starting point</h2>
 <pre class="code python"><a name="rest_code_43cce7f28c4a47dab036495ff31dc506-1"></a><span class="k">def</span> <span class="nf">old</span><span class="p">(</span><span class="n">foo</span><span class="p">,</span> <span class="n">bar</span><span class="p">):</span>
 <a name="rest_code_43cce7f28c4a47dab036495ff31dc506-2"></a>    <span class="sd">"""This is old's docstring."""</span>
 <a name="rest_code_43cce7f28c4a47dab036495ff31dc506-3"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">foo</span><span class="p">,</span> <span class="n">bar</span><span class="p">)</span>
@@ -157,7 +158,7 @@ bar)</code> — but that means every change to <code class="docutils literal">ol
 well. So, not ideal. Let’s try to fix this.</p>
 </div>
 <div class="section" id="the-existing-infrastructure-functools-wraps">
-<h2>The existing infrastructure: functools.wraps<a href="#the-existing-infrastructure-functools-wraps" class="headerlink" title="Permalink to this heading">¶</a></h2>
+<h2>The existing infrastructure: functools.wraps</h2>
 <p>First, let’s start with the basic facility Python already has.  The standard
 library already comes with <code class="docutils literal">functools.wraps</code> and
 <code class="docutils literal">functools.update_wrapper</code>.</p>
@@ -203,7 +204,7 @@ the copied attributes, but the signature itself is apparently taken from <code c
 <p>Or actually, code objects.</p>
 </div>
 <div class="section" id="defining-a-function-programmatically">
-<h2>Defining a function programmatically<a href="#defining-a-function-programmatically" class="headerlink" title="Permalink to this heading">¶</a></h2>
+<h2>Defining a function programmatically</h2>
 <p>Let’s try an experiment.</p>
 <pre class="code pycon"><a name="rest_code_6099edd28af14127825a7f856fb9f007-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">bar</span><span class="p">):</span> <span class="k">pass</span>
 <a name="rest_code_6099edd28af14127825a7f856fb9f007-2"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">foo</span><span class="o">.</span><span class="n">__wrapped__</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="kc">None</span>
@@ -216,7 +217,7 @@ that would be cheating, and honestly, quite boring. (The inspect module could
 help us with preparing the string.)  The second one? Create code objects
 manually.</p>
 <div class="section" id="code-objects">
-<h3>Code objects<a href="#code-objects" class="headerlink" title="Permalink to this heading">¶</a></h3>
+<h3>Code objects</h3>
 <p>To create a function, we’ll need the <code class="docutils literal">types</code> module. <code class="docutils literal">types.FunctionType</code>
 gives us a function, but it asks us for a code object. As the <a class="reference external" href="https://docs.python.org/3/reference/datamodel.html">docs</a> state,
 <em>Code objects represent byte-compiled executable Python code, or bytecode.</em></p>
@@ -248,7 +249,7 @@ long as <code class="docutils literal">help</code> and <code class="docutils lit
 we’re fine.</p>
 </div>
 <div class="section" id="everything-you-need-to-know-about-function-arguments">
-<h3>Everything you need to know about function arguments<a href="#everything-you-need-to-know-about-function-arguments" class="headerlink" title="Permalink to this heading">¶</a></h3>
+<h3>Everything you need to know about function arguments</h3>
 <pre class="code pycon"><a name="rest_code_5ef79288cff14b80bb778084528bddd4-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span> <span class="k">pass</span>
 <a name="rest_code_5ef79288cff14b80bb778084528bddd4-2"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">inspect</span><span class="o">.</span><span class="n">getfullargspec</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
 <a name="rest_code_5ef79288cff14b80bb778084528bddd4-3"></a><span class="go">FullArgSpec(args=['a', 'b', 'c'], varargs=None, varkw=None, defaults=(1, 2), kwonlyargs=['d'], kwonlydefaults={'d': 3}, annotations={})</span>
@@ -283,7 +284,7 @@ And with that, we’re done.</p>
 </div>
 </div>
 <div class="section" id="final-results">
-<h2>Final results<a href="#final-results" class="headerlink" title="Permalink to this heading">¶</a></h2>
+<h2>Final results</h2>
 <p>Before I show you the code, let’s test it out:</p>
 <pre class="code python"><a name="rest_code_fe7d3e858a6246e5a16ff8d4a25b5abe-1"></a><span class="c1"># old defined as before</span>
 <a name="rest_code_fe7d3e858a6246e5a16ff8d4a25b5abe-2"></a><span class="nd">@merge_args</span><span class="p">(</span><span class="n">old</span><span class="p">)</span>
@@ -299,7 +300,6 @@ And with that, we’re done.</p>
 There’s also an extensive test suite.</p>
 <p>PS. you might be interested in another related post of mine, in which I
 reverse-engineer the compilation of a function: <a class="reference external" href="https://chriswarrick.com/blog/2017/08/03/gynvaels-mission-11-en-python-bytecode-reverse-engineering/">Gynvael’s Mission 11 (en): Python bytecode reverse-engineering</a></p>
-</div>
 </div>
     </article>
 </div>
@@ -368,7 +368,7 @@ korzystając z tej strony, akceptujesz naszą <a href="/pl/privacy/">politykę p
 </p>
 <p>
 powered by <strong><a href="https://getnikola.com/">Nikola</a></strong>, <a href="http://nginx.org/">nginx</a> and <a href="https://hetzner.cloud/?ref=Qy1lehF8PwzP">Hetzner Cloud</a><br>
-copyright © 2009–2021 <a href="/pl/contact/">Chris Warrick</a><br><a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC
+copyright © 2009–2022 <a href="/pl/contact/">Chris Warrick</a><br><a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC
 BY-NC-SA</a>, unless stated otherwise</p>
             
         </footer>

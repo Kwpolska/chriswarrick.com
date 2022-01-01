@@ -112,15 +112,16 @@ og: http://ogp.me/ns#
         </ul>
 </div>
     </header><div class="e-content entry-content" itemprop="articleBody text">
-    <div class="lead"><div>
+    <div class="lead">
 <p>This humble blog is written by an old-school developer who sometimes does web stuff. An attempt to customize the Bootstrap CSS theme requires 50 MB of node_modules, over 500 packages, and comes with a bit of frustration at stupid tools and terrible documentation.</p>
-</div></div>
+</div>
+</div>
 <p>You might notice that this website is based on Bootstrap. You might also notice it’s been heavily customized, especially if you’re browsing in the (currently default) Dark Mode. Back in Bootstrap v3 days, the task was accomplished by <a class="reference external" href="https://getbootstrap.com/docs/3.4/customize/">a simple online tool</a> that required no local installs. Bootstrap 4 changed the landscape: now you need to manually compile Sass. Moreover, Autoprefixer is required to make the CSS usable by web browsers.</p>
 <p>Now, when it comes to web development, I believe the old ways were better. Back when nobody thought to make a client-side-JS-based blog or pastebin, and only apps that needed interactivity were JS-first. Gmail is a good example of that, although they <em>still</em> offer a <a class="reference external" href="https://support.google.com/mail/answer/15049?hl=en">basic HTML view</a> and it works good — in fact, I suppose it might be less buggy than the JS-ladden version. (A lot of single-page apps like to randomly glitch out in my experience.)</p>
 <p>I still remember the days when all that one had to do is <code class="docutils literal">java <span class="pre">-jar</span> yuicompressor.jar style.css &gt; style.min.css</code>. Then Less and Sass became more popular — and that’s good. The ability to use variables and functions makes it possible to produce well-organized stylesheets. The idea of Autoprefixer is also fine, humans should not waste their time with browser-specific prefixes for experimental features, that can be neatly automated.</p>
 <p>But to use all these fancy tools, glue code is necessary. Autoprefixer is (mainly server-side) JS-only, Sass is currently Node or Dart, minifier tools are available in many languages.</p>
 <div class="section" id="attempt-0-no-js-stuff-no-node-modules">
-<h2>Attempt 0: no JS stuff, no node_modules<a href="#attempt-0-no-js-stuff-no-node-modules" class="headerlink" title="Permalink to this heading">¶</a></h2>
+<h2>Attempt 0: no JS stuff, no node_modules</h2>
 <p>I installed a Sass compiler. There are web services like cssminifier.com that can be easily used with curl in a Bash script. Autoprefixer has a webpage that lets you use the service without installing it as well. The catch is, the code runs locally in your web browser. Automating a web browser requires some effort. I decided to leave this part un-automated. Here is the Bash script I hacked together (with some messages removed):</p>
 <pre class="code sh"><a name="rest_code_b156fb3597e24355a0121f82f76e5086-1"></a>sass bootstrap-kw.scss &gt; bootstrap.noprefix.css
 <a name="rest_code_b156fb3597e24355a0121f82f76e5086-2"></a>sass bootstrap-kw-dark.scss &gt; bootstrap-dark.noprefix.css
@@ -146,7 +147,7 @@ og: http://ogp.me/ns#
 <p>Well, most of the time Some lags/glitches with the clipboard meant that sometimes, files had the incorrect content. So, I wanted to fix it, and build it in a more modern, JS-y way. The way Bootstrap does it is a lot of shell commands (that run various Node tools). I don’t feel like building this pipeline with Bash, it would feel fragile. Let’s do it the JS way.</p>
 </div>
 <div class="section" id="attempt-1-webpack">
-<h2>Attempt 1: webpack<a href="#attempt-1-webpack" class="headerlink" title="Permalink to this heading">¶</a></h2>
+<h2>Attempt 1: webpack</h2>
 <p>I’ve used webpack for <a class="reference external" href="https://github.com/Kwpolska/django-expenses/blob/master/ts/webpack.config.js">another project of mine</a>. It was okay, and it did the job (namely, compiling TypeScript into browser-usable JS).</p>
 <p>I wanted to give it a try for this one. I googled “webpack sass”. The first result was <a class="reference external" href="https://github.com/webpack-contrib/sass-loader">sass-loader</a>. The pipeline for it was:</p>
 <pre class="code javascript"><a name="rest_code_89bf8d84a24a411c948d75ebbd6a9bd7-1"></a><span class="s2">"style-loader"</span><span class="p">,</span> <span class="c1">// creates style nodes from JS strings</span>
@@ -159,7 +160,7 @@ og: http://ogp.me/ns#
 <p>Going back to googling “webpack sass”… The next two results were Medium posts. The stupidity of Medium as a blog platform notwithstanding, one of the posts was from 2017, referring to webpack 2. The next post was a year older, a completely unreadable mess, and it was for webpack 4. That’s not helpful in any way.</p>
 </div>
 <div class="section" id="attempt-2-gulp">
-<h2>Attempt 2: Gulp<a href="#attempt-2-gulp" class="headerlink" title="Permalink to this heading">¶</a></h2>
+<h2>Attempt 2: Gulp</h2>
 <p>Let’s try something else from the JS world: Gulp. Now, the tool is not terrible, but it still requires a lot of dependencies.</p>
 <p>The pipeline that was required for this task sounds very simple:</p>
 <blockquote>
@@ -194,7 +195,7 @@ og: http://ogp.me/ns#
 </pre>
 </div>
 <div class="section" id="a-node-modules-extravaganza">
-<h2>A node_modules extravaganza<a href="#a-node-modules-extravaganza" class="headerlink" title="Permalink to this heading">¶</a></h2>
+<h2>A node_modules extravaganza</h2>
 <p>Can you see all the <code class="docutils literal">require</code> lines at the top? Every one of them is a dependency of my build script. With the exception of <code class="docutils literal"><span class="pre">gulp-rename</span></code>, which IMO should be a built-in part of Gulp (it’s 45 lines of code and no external dependencies), the list is sensible.</p>
 <p>Well, I already mentioned the size of <code class="docutils literal">node_modules</code>: 51 MiB according to <code class="docutils literal">du</code> (size-on-disk measurement). How many packages are there?</p>
 <blockquote>
@@ -206,7 +207,7 @@ og: http://ogp.me/ns#
 <p>After a full install of my <code class="docutils literal">package.json</code>, npm says <code class="docutils literal">added 545 packages from 331 contributors and audited 10500 packages in 22.458s</code>.  I’ve implicitly agreed to licenses imposed by 331 random people. All to build some simple CSS files out of SASS.</p>
 <p>Let’s go on a tour of <code class="docutils literal">node_modules</code> and see what we ended up with.</p>
 <div class="section" id="polyfills-reimplementations-oh-my">
-<h3>Polyfills, reimplementations, oh my!<a href="#polyfills-reimplementations-oh-my" class="headerlink" title="Permalink to this heading">¶</a></h3>
+<h3>Polyfills, reimplementations, oh my!</h3>
 <p>Everything I’ve installed is meant to be used on top of Node.js. Node runs on top of the V8 engine, coming from Chrome. They’ve had almost-full ES2015 (ES6) support since April 2016. And yet, my node_modules is full of small polyfills.</p>
 <p>Let’s pick a random one and work back from it: <code class="docutils literal"><span class="pre">number-is-nan</span></code>.</p>
 <pre class="code javascript"><a name="rest_code_ddcff9bde20d468e81115b738a07ae1a-1"></a><span class="c1">// Copyright © Sindre Sorhus, MIT license</span>
@@ -219,7 +220,7 @@ isNaN()</a>. The original function coerced everything to Number before testing, 
 <p>It was pulled in by <code class="docutils literal"><span class="pre">is-fullwidth-code-point</span></code> and <code class="docutils literal"><span class="pre">is-finite</span></code>, both by the same author. The latter one is especially interesting: it’s at version 1.0.2. Version 1.0.1improved the codebase from <code class="docutils literal">if (x) { return false; } return true</code> (via pull request), and version 1.0.2 replaced a manual <code class="docutils literal">val !== val</code> comparison with <code class="docutils literal"><span class="pre">number-is-nan</span></code>. <code class="docutils literal"><span class="pre">number-is-nan</span></code> has 7.5 million weekly downloads, <code class="docutils literal"><span class="pre">is-finite</span></code> has 6.7M. The build of <code class="docutils literal"><span class="pre">number-is-nan</span></code> <a class="reference external" href="https://travis-ci.org/sindresorhus/number-is-nan/builds/363709421">is currently failing.</a></p>
 </div>
 <div class="section" id="fifty-shades-of-terminal">
-<h3>Fifty shades of terminal<a href="#fifty-shades-of-terminal" class="headerlink" title="Permalink to this heading">¶</a></h3>
+<h3>Fifty shades of terminal</h3>
 <p>Every Node-based CLI tool wants to be cool. And for that, they need colors.</p>
 <p>How does this work in Bash? You could use <code class="docutils literal">tput setaf XX</code>, but many people would just manually <code class="docutils literal">echo '\033[XXm'</code>, the codes are available <a class="reference external" href="https://en.wikipedia.org/wiki/ANSI_escape_code#3/4_bit">in Wikipedia</a> or elsewhere.</p>
 <p>How does this work in Python? There are a few libraries for this (and you can always do it manually), but the most popular one is <a class="reference external" href="https://pypi.org/project/colorama/">colorama</a>. That library can even handle Windows.</p>
@@ -237,7 +238,7 @@ isNaN()</a>. The original function coerced everything to Number before testing, 
 <p>There are definitely other <code class="docutils literal"><span class="pre">ansi-$color</span></code> libraries, although they are not in my <code class="docutils literal">node_modules</code>. And probably other libraries for color support, but either they are not installed, or I haven’t managed to spot them in my <code class="docutils literal">npm list</code> output.</p>
 </div>
 <div class="section" id="copyrighted-one-liners">
-<h3>Copyrighted one-liners<a href="#copyrighted-one-liners" class="headerlink" title="Permalink to this heading">¶</a></h3>
+<h3>Copyrighted one-liners</h3>
 <p>Another famous library by Jon Schlinkert is called <code class="docutils literal"><span class="pre">is-even</span></code>. Here is the complete code, verbatim:</p>
 <pre class="code javascript"><a name="rest_code_d5893286c0d74114bd239ae671df8b55-1"></a><span class="cm">/*!</span>
 <a name="rest_code_d5893286c0d74114bd239ae671df8b55-2"></a><span class="cm"> * is-even &lt;https://github.com/jonschlinkert/is-even&gt;</span>
@@ -284,7 +285,7 @@ isNaN()</a>. The original function coerced everything to Number before testing, 
 <p>The checks found in <code class="docutils literal"><span class="pre">is-odd</span></code> make some more sense if you’re working with a dynamically-typed language where every number is a float (like JS). But you could release <code class="docutils literal"><span class="pre">check-odd</span></code>, which is 100x faster than <code class="docutils literal"><span class="pre">is-odd</span></code> (it assumes its input is correct), and exports <code class="docutils literal">function checkOdd(value) { return (value % 2) !== 0; }</code> <s>(Copyright © 2019, Chris Warrick. Licensed under the 4-clause BSD license.)</s> <i>(No, not really.)</i></p>
 </div>
 <div class="section" id="this-product-includes-software-developed-by">
-<h3>This product includes software developed by…<a href="#this-product-includes-software-developed-by" class="headerlink" title="Permalink to this heading">¶</a></h3>
+<h3>This product includes software developed by…</h3>
 <p>Hold on a second, 4-clause BSD? That license contains the following clause:</p>
 <pre class="code text"><a name="rest_code_f3226ebc2e864eef8a9b98b4cb9385fd-1"></a>Redistribution and use in source and binary forms, with or without
 <a name="rest_code_f3226ebc2e864eef8a9b98b4cb9385fd-2"></a>modification, are permitted provided that the following conditions are met:
@@ -314,7 +315,7 @@ isNaN()</a>. The original function coerced everything to Number before testing, 
 </div>
 </div>
 <div class="section" id="attempt-2-back-to-bash">
-<h2>Attempt 2: back to Bash<a href="#attempt-2-back-to-bash" class="headerlink" title="Permalink to this heading">¶</a></h2>
+<h2>Attempt 2: back to Bash</h2>
 <p>I decided to get rid of Gulp, it’s not necessary for this pipeline. I replaced
 it with Bash and <code class="docutils literal"><span class="pre">postcss-cli</span></code>. <code class="docutils literal"><span class="pre">node-sass</span></code> was replaced by <code class="docutils literal"><span class="pre">dart-sass</span></code>
 (a two-file binary distribution), and <code class="docutils literal">csso</code> was replaced by <code class="docutils literal">cssnano</code> (it
@@ -328,7 +329,7 @@ works with postcss). Here is the resulting Bash file:</p>
 packages from 232 contributors.</p>
 </div>
 <div class="section" id="attempt-3-node-clis-are-unnecessary">
-<h2>Attempt 3: node CLIs are unnecessary<a href="#attempt-3-node-clis-are-unnecessary" class="headerlink" title="Permalink to this heading">¶</a></h2>
+<h2>Attempt 3: node CLIs are unnecessary</h2>
 <p>Let’s try something else: replace <code class="docutils literal">npx postcss</code> with a custom tool.</p>
 <pre class="code javascript"><a name="rest_code_765705086eec43a8963a15c886db0f72-1"></a><span class="kr">const</span> <span class="nx">fs</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'fs'</span><span class="p">);</span>
 <a name="rest_code_765705086eec43a8963a15c886db0f72-2"></a><span class="kr">const</span> <span class="nx">getStdin</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'get-stdin'</span><span class="p">);</span>
@@ -359,14 +360,13 @@ packages from 232 contributors.</p>
 </pre>
 </div>
 <div class="section" id="conclusion">
-<h2>Conclusion<a href="#conclusion" class="headerlink" title="Permalink to this heading">¶</a></h2>
+<h2>Conclusion</h2>
 <p>The task at hand was very simple. So was the JS code (Gulp and custom) I had to write to implement it. But underneath, there was a mess of unknown, unaudited code, duplicated libraries, and libraries created effectively to bump people’s npm download stats. There were already incidents, like <code class="docutils literal"><span class="pre">left-pad</span></code> (the removal of which broke Babel), or <code class="docutils literal"><span class="pre">event-stream</span></code> (which was taken over and modified to steal cryptocurrencies). The modern web development ecosystem is a huge mess of dependencies and one-line packages. Some of them are necessary due to the lackluster JS standard library — but some are just useless. And some of these micro-packages would be better off as larger libraries.</p>
 <blockquote>
 <p>Sure, the package count went down from the original 545 to 144. But the original point still stands: too much useless stuff.</p>
 </blockquote>
 <p>PS. Five of the packages (in the “large” set) had a <code class="docutils literal">.DS_Store</code> file left over. I’m wondering if there are any other files that shouldn’t be shipped with packages, lurking in <code class="docutils literal">node_modules</code> directories all over the world…</p>
 <p>PPS. I’ve replaced Disqus with Isso, because it had too many advertisements. If you experience any issues with the comment system (after force-refreshing), e-mail me.</p>
-</div>
 </div>
     </article>
 </div>
@@ -433,7 +433,7 @@ packages from 232 contributors.</p>
         </div></nav><footer id="footer"><p>this site uses cookies.<br>by using this site, you agree to our <a href="/privacy/">cookie and privacy policy</a>.</p>
 <p>
 powered by <strong><a href="https://getnikola.com/">Nikola</a></strong>, <a href="http://nginx.org/">nginx</a> and <a href="https://hetzner.cloud/?ref=Qy1lehF8PwzP">Hetzner Cloud</a><br>
-copyright © 2009–2021 <a href="/contact/">Chris Warrick</a><br><a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC
+copyright © 2009–2022 <a href="/contact/">Chris Warrick</a><br><a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC
 BY-NC-SA</a>, unless stated otherwise</p>
             
         </footer>
