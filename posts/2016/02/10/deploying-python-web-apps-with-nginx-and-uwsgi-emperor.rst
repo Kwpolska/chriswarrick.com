@@ -7,16 +7,16 @@
 .. type: text
 .. guide: yes
 .. guide_effect: your Python web app is up and running
-.. guide_platform: Ubuntu, Debian, Fedora, CentOS, Arch Linux
+.. guide_platform: Ubuntu, Debian, Fedora, CentOS, AlmaLinux, Rocky Linux, Arch Linux
 .. guide_topic: Python, web apps
 .. shortlink: pyweb
-.. updated: 2020-05-14 14:00:00+02:00
+.. updated: 2022-02-20 23:00:00+01:00
 
 You’ve just written a great Python web application. Now, you want to share it with the world. In order to do that, you need a server, and some software to do that for you.
 
-The following is a comprehensive guide on how to accomplish that, on multiple Linux-based operating systems, using nginx and uWSGI Emperor. It doesn’t force you to use any specific web framework — Flask, Django, Pyramid, Bottle will all work. Written for Ubuntu, Debian, Fedora, CentOS 7 and Arch Linux (should be helpful for other systems, too). Now with an Ansible Playbook.
+The following is a comprehensive guide on how to accomplish that, on multiple Linux-based operating systems, using nginx and uWSGI Emperor. It doesn’t force you to use any specific web framework — Flask, Django, Pyramid, Bottle will all work. Written for Ubuntu, Debian, Fedora, CentOS 7, Alma Linux, Rocky Linux and Arch Linux (should be helpful for other systems, too). Now with an Ansible Playbook.
 
-*Revision 7c (2020-05-01): works with Ubuntu 20.04 and Fedora 32; previous Revision 7a (2020-02-03): Move virtual environment to separate venv folder to improve Python upgrades (venvs should be ephemeral); add Docker section*
+*Revision 8 (2022-02-20): works with Fedora 35, AlmaLinux 8, RockyLinux 8*
 
 .. TEASER_END
 
@@ -33,19 +33,21 @@ For easy linking, I set up some aliases: https://go.chriswarrick.com/pyweb and h
 Prerequisites
 ~~~~~~~~~~~~~
 
-In order to deploy your web application, you need a server that gives you root and ssh access — in other words, a VPS (or a dedicated server, or a datacenter lease…). If you’re looking for a great VPS service for a low price, I recommend `Hetzner Cloud`_ (reflink [#]_), which offers a pretty good entry-level VPS for €2.49 + VAT / month (with higher plans available for equally good prices). If you want to play along at home, without buying a VPS, you can create a virtual machine on your own, or use Vagrant with a Vagrant box for Fedora 32 (``fedora/32-cloud-base``).
+In order to deploy your web application, you need a server that gives you root and ssh access — in other words, a VPS (or a dedicated server, or a datacenter lease…). If you’re looking for a great VPS service for a low price, I recommend `Hetzner Cloud`_ (reflink [#]_), which offers a pretty good entry-level VPS for €3.49 + VAT / month (with higher plans available for equally good prices). If you want to play along at home, without buying a VPS, you can create a virtual machine on your own, or use Vagrant with a Vagrant box for Fedora 35 (``fedora/35-cloud-base``).
 
 .. _Hetzner Cloud: https://hetzner.cloud/?ref=Qy1lehF8PwzP
 
 Your server should also run a modern Linux-based operating system. This guide was written and tested on:
 
-* Ubuntu 16.04 LTS, 18.04 LTS, 20.04 LTS or newer
-* Debian 9 (stretch), 10 (buster) or newer
-* Fedora 29-32 or newer (with SELinux enabled and disabled)
-* CentOS 7 (with SELinux enabled and disabled) — manual guide should also work on RHEL 7. CentOS 8 does not have uWSGI packages in EPEL as of May 2020, but they should become available soon.
+* Ubuntu 18.04 LTS, 20.04 LTS or newer
+* Debian 10 (buster), 11 (bullseye) or newer
+* Fedora 33 or newer (with SELinux enabled and disabled)
+* CentOS 7 (with SELinux enabled and disabled) — manual guide should also work on RHEL 7.
+* AlmaLinux 8 (with SELinux enabled and disabled) — manual guide should also work on RHEL 8. Referred to as “EL8” collectively with Rocky Linux.
+* Rocky Linux 8 (with SELinux enabled and disabled) — manual guide should also work on RHEL 8. Referred to as “EL8” collectively with AlmaLinux.
 * Arch Linux
 
-Debian 8 (jessie), and Fedora 24 through 28 are not officially supported, even though they still probably work.
+Debian 8 (jessie) 9 (stretch), Ubuntu 16.04 LTS, and Fedora 24 through 32 are not officially supported, even though they still probably work.
 
 What if you’re using **Docker**? The story is a bit complicated, and this guide does not apply, but do check the `Can I use Docker?`_ at the end of this post for some hints on how to approach it.
 
@@ -110,6 +112,14 @@ Start by installing Python 3 (with venv), nginx and uWSGI. I recommend using you
    yum install epel-release
    yum install python36 uwsgi uwsgi-plugin-python36 uwsgi-logger-file nginx git wget
 
+**EL8 (AlmaLinux 8, Rocky Linux 8):**
+
+.. code:: sh
+
+   dnf install epel-release
+   dnf install python36 uwsgi uwsgi-plugin-python3 uwsgi-logger-file nginx git wget
+
+
 **Arch Linux:**
 
 .. code:: sh
@@ -160,7 +170,7 @@ At this point, you should chown this directory to the user and group your server
 
    chown -R www-data:www-data /srv/myapp
 
-**Fedora, CentOS:**
+**Fedora, CentOS, EL8 (AlmaLinux, Rocky Linux):**
 
 .. code:: sh
 
@@ -177,7 +187,7 @@ Configuring uWSGI and nginx
 
 .. note::
 
-   Parts of the configuration depend on your operating system. I tried to provide advice for Ubuntu, Debian, Fedora, CentOS and Arch Linux. If you experience any issues, in particular with plugins, please consult the documentation.
+   Parts of the configuration depend on your operating system. I tried to provide advice for Ubuntu, Debian, Fedora, CentOS, EL8, and Arch Linux. If you experience any issues, in particular with plugins, please consult the documentation.
 
 We need to write a configuration file for uWSGI and nginx.
 
@@ -207,7 +217,7 @@ Start with this, but read the notes below and change the values accordingly:
 Save this file as:
 
 * Ubuntu, Debian: ``/etc/uwsgi-emperor/vassals/myapp.ini``
-* Fedora, CentOS: ``/etc/uwsgi.d/myapp.ini``
+* Fedora, CentOS, EL8 (AlmaLinux, Rocky Linux): ``/etc/uwsgi.d/myapp.ini``
 * Arch Linux: ``/etc/uwsgi/vassals/myapp.ini`` (create the directory first and **chown** it to http: ``mkdir -p /etc/uwsgi/vassals; chown -R http:http /etc/uwsgi/vassals``)
 
 The options are:
@@ -259,13 +269,13 @@ The options are:
 
 * ``uid`` and ``gid`` — the names of the user account to use for your server.  Use the same values as in the ``chown`` command above.
 * ``processes`` and ``threads`` — control the resources devoted to this application. Because this is a simple hello app, I used one process with one thread, but for a real app, you will probably need more (you need to see what works the best; there is no algorithm to decide). Also, remember that if you use multiple processes, they don’t share memory (you need a database to share data between them).
-* ``plugins`` — the list of uWSGI plugins to use. For Arch Linux, use ``plugins = python`` (the ``logfile`` plugin is always active).  For CentOS, use ``plugins = python36``.
+* ``plugins`` — the list of uWSGI plugins to use. For Arch Linux, use ``plugins = python`` (the ``logfile`` plugin is always active).  For CentOS 7 only (i.e. **not** for EL8), use ``plugins = python36``.
 * ``logger`` — the path to your app-specific logfile. (Other logging facilities are available, but this one is the easiest, especially for multiple applications on the same server)
 * ``env`` — environment variables to pass to your app. Useful for configuration, may be specified multiple times. Example for Django: ``env = DJANGO_SETTINGS_MODULE=project.settings``
 
 You can test your configuration by running ``uwsgi --ini /path/to/myapp.ini`` (disable the logger for stderr output or run ``tail -f /srv/myapp/uwsgi.log`` in another window).
 
-If you’re using **Fedora** or **CentOS**, there are two configuration changes you need to make globally: in ``/etc/uwsgi.ini``, disable the ``emperor-tyrant`` option (which we don’t need, as it sets uid/gid for every process based on the owner of the related ``.ini`` config file — we use one global setup) and set ``gid = nginx``.  We’ll need this so that nginx can talk to your socket.
+If you’re using **Fedora**, **CentOS**, or **EL8**, there are two configuration changes you need to make globally: in ``/etc/uwsgi.ini``, disable the ``emperor-tyrant`` option (which we don’t need, as it sets uid/gid for every process based on the owner of the related ``.ini`` config file — we use one global setup) and set ``gid = nginx``.  We’ll need this so that nginx can talk to your socket.
 
 nginx configuration
 -------------------
@@ -275,7 +285,7 @@ We need to configure our web server. Here’s a basic configuration that will ge
 Save this file as:
 
 * Ubuntu, Debian: ``/etc/nginx/sites-enabled/myapp.conf``
-* Fedora, CentOS: ``/etc/nginx/conf.d/myapp.conf``
+* Fedora, CentOS, EL8 (AlmaLinux, Rocky Linux): ``/etc/nginx/conf.d/myapp.conf``
 * Arch Linux: add ``include /etc/nginx/conf.d/*.conf;`` to your ``http`` directive in ``/etc/nginx/nginx.conf`` and use ``/etc/nginx/conf.d/myapp.conf``
 
 .. code:: nginx
@@ -329,8 +339,8 @@ All you need is:
 
 Verify the service is running with ``systemctl status emperor.uwsgi``
 
-For Fedora and CentOS
----------------------
+For Fedora, CentOS, EL8
+-----------------------
 
 Make sure you followed the extra note about editing ``/etc/uwsgi.ini`` earlier and run:
 
@@ -421,7 +431,7 @@ Hopefully, everything works. If it doesn’t:
 * Check your nginx, system (``journalctl``, ``systemctl status SERVICE``) and uwsgi (``/srv/myapp/uwsgi.log``) logs.
 * Make sure you followed all instructions.
 * If you get a default site, disable that site in nginx config (``/etc/nginx/nginx.conf`` or your sites directory).
-* If you have a firewall installed, make sure to open the ports your web server runs on (typically 80/443). For ``firewalld`` (Fedora, CentOS):
+* If you have a firewall installed, make sure to open the ports your web server runs on (typically 80/443). For ``firewalld`` (Fedora, CentOS, EL8):
 
 .. code:: sh
 
