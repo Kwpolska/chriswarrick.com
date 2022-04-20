@@ -559,13 +559,14 @@ USE_CDN_WARNING = False
 # ANALYTICS = ""
 
 BODY_END = """
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-11937989-1"></script>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-DN0Q0KJLNV"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
 
-  gtag('config', 'UA-11937989-1');
+  gtag('config', 'G-DN0Q0KJLNV');
 </script>
 """
 
