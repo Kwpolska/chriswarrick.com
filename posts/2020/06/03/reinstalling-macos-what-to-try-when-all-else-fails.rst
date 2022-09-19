@@ -1,7 +1,7 @@
 .. title: Reinstalling macOS: What To Try When All Else Fails
 .. slug: reinstalling-macos-what-to-try-when-all-else-fails
 .. date: 2020-06-03 23:00:00+02:00
-.. updated: 2021-01-24 00:45:00+01:00
+.. updated: 2022-09-16 21:20:00+02:00
 .. tags: Apple, Mac, macOS, install
 .. category: Apple
 .. description: A collection of tricks to convince macOS installers to work.
@@ -9,13 +9,19 @@
 
 Recently, I reinstalled macOS on my device. Throughout the process, many
 attempts failed miserably. But I now have some experience and assorted hints on
-what to try.
+what to try (as long as you’ve got an Intel Mac).
 
 .. TEASER_END
 
 **DISCLAIMER:** All information in this post is provided as-is, and some of it may
 void your warranty. Neither Chris Warrick nor Apple will be responsible for any
 damage to your devices caused as a result of using information in this post.
+
+**Note:** This blog post is written for Intel Macs, particularly those that can
+boot OS X El Capitan. If your Mac can’t, you’ll need to look for help
+elsewhere. If you’ve got an Apple Silicon Mac, you probably want to perform
+`a DFU restore <https://support.apple.com/guide/apple-configurator-mac/revive-or-restore-a-mac-with-apple-silicon-apdd5f3c75ad/mac>`_
+(requires another Mac and a USB-C cable.)
 
 .. class:: alert alert-primary
 
@@ -36,7 +42,8 @@ Apple does not make macOS images publicly available. That’s probably to make
 Hackintoshing this little bit harder, but this also affects legitimate users.
 The only thing you can download from Apple is El Capitan. Apple offers
 `InstallMacOSX.dmg <https://support.apple.com/en-us/HT206886>`_ on their
-website. If you take a look at the instructions, you will see that this is
+website. (There’s also a Sierra download now, but it seems to be broken as of
+September 2022.) If you take a look at the instructions, you will see that this is
 *not* a bootable OS X image. This image has a ``.pkg`` package. This package is
 expected to install ``/Applications/Install OS X El Capitan.app``. Well, we’re
 in recovery, we can’t install stuff. So, let’s do this the manual way.

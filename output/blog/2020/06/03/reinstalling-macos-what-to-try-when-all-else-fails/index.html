@@ -102,9 +102,9 @@ og: http://ogp.me/ns#
     </h1>
 
     <div class="metadata">
-<a href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/" rel="bookmark" class="u-published"><time class="published dt-published" datetime="2020-06-03T23:00:00+02:00" itemprop="datePublished" title="03 June 2020 at 23:00">03 June 2020 at 23:00</time><time class="updated dt-updated" datetime="2021-01-24T00:45:00+01:00" title="updated 24 January 2021 at 00:45"> (updated 24 January 2021 at 00:45)</time></a>
+<a href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/" rel="bookmark" class="u-published"><time class="published dt-published" datetime="2020-06-03T23:00:00+02:00" itemprop="datePublished" title="03 June 2020 at 23:00">03 June 2020 at 23:00</time><time class="updated dt-updated" datetime="2022-09-16T21:20:00+02:00" title="updated 16 September 2022 at 21:20"> (updated 16 September 2022 at 21:20)</time></a>
         <ul itemprop="keywords" class="tags post-bubbles list-inline">
-<li class="category-bubble"><a href="/blog/tags/cat_apple/" style="background-color: #00b55f">Apple</a></li>
+<li class="category-bubble"><a href="/blog/tags/cat_apple/" style="background-color: #00b55f !important">Apple</a></li>
            <li><a class="tag p-category" href="/blog/tags/apple/" rel="tag">Apple</a></li>
            <li><a class="tag p-category" href="/blog/tags/install/" rel="tag">install</a></li>
            <li><a class="tag p-category" href="/blog/tags/mac/" rel="tag">Mac</a></li>
@@ -115,35 +115,36 @@ og: http://ogp.me/ns#
     <div class="lead">
 <p>Recently, I reinstalled macOS on my device. Throughout the process, many
 attempts failed miserably. But I now have some experience and assorted hints on
-what to try.</p>
+what to try (as long as you’ve got an Intel Mac).</p>
 </div>
 </div>
 <p><strong>DISCLAIMER:</strong> All information in this post is provided as-is, and some of it may
 void your warranty. Neither Chris Warrick nor Apple will be responsible for any
 damage to your devices caused as a result of using information in this post.</p>
-<div class="contents alert alert-primary topic" id="contents">
-<p class="topic-title">Contents</p>
+<p><strong>Note:</strong> This blog post is written for Intel Macs, particularly those that can
+boot OS X El Capitan. If your Mac can’t, you’ll need to look for help
+elsewhere. If you’ve got an Apple Silicon Mac, you probably want to perform
+<a class="reference external" href="https://support.apple.com/guide/apple-configurator-mac/revive-or-restore-a-mac-with-apple-silicon-apdd5f3c75ad/mac">a DFU restore</a>
+(requires another Mac and a USB-C cable.)</p>
+<nav class="contents alert alert-primary" id="contents" role="doc-toc"><p class="topic-title">Contents</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#making-install-media-with-el-capitan-with-access-only-to-recovery" id="id1">Making install media with El Capitan (with access only to Recovery)</a></p></li>
-<li><p><a class="reference internal" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#manually-installing-pkg-files" id="id2">Manually installing .pkg files</a></p></li>
+<li><p><a class="reference internal" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#making-install-media-with-el-capitan-with-access-only-to-recovery" id="toc-entry-1">Making install media with El Capitan (with access only to Recovery)</a></p></li>
+<li><p><a class="reference internal" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#manually-installing-pkg-files" id="toc-entry-2">Manually installing .pkg files</a></p></li>
 <li>
-<p><a class="reference internal" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#making-install-media-out-of-partial-macos-installers-not-a-valid-os-installer-application" id="id3">Making install media out of partial macOS installers (“not a valid OS installer application”)</a></p>
+<p><a class="reference internal" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#making-install-media-out-of-partial-macos-installers-not-a-valid-os-installer-application" id="toc-entry-3">Making install media out of partial macOS installers (“not a valid OS installer application”)</a></p>
 <ul>
-<li><p><a class="reference internal" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#a-from-the-el-capitan-download" id="id4">a. From the El Capitan download</a></p></li>
-<li><p><a class="reference internal" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#b-installer-from-recovery-app-store-any-macos-version" id="id5">b. Installer from Recovery/App Store (any macOS version)</a></p></li>
+<li><p><a class="reference internal" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#a-from-the-el-capitan-download" id="toc-entry-4">a. From the El Capitan download</a></p></li>
+<li><p><a class="reference internal" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#b-installer-from-recovery-app-store-any-macos-version" id="toc-entry-5">b. Installer from Recovery/App Store (any macOS version)</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#el-capitan-installer-cant-be-verified" id="id6">El Capitan installer can’t be verified</a></p></li>
-<li><p><a class="reference internal" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#bonus-tidbit-1-how-the-download-works" id="id7">Bonus tidbit 1: how the download works</a></p></li>
-<li><p><a class="reference internal" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#bonus-tidbit-2-using-terminal-from-setup-assistant" id="id8">Bonus tidbit 2: using Terminal from Setup Assistant</a></p></li>
-<li><p><a class="reference internal" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#bonus-tidbit-3-creating-an-image-of-the-install-media-might-not-work" id="id9">Bonus tidbit 3: creating an image of the install media might not work</a></p></li>
-<li><p><a class="reference internal" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#bonus-tidbit-4-dont-bother-restoring-a-time-machine-backup" id="id10">Bonus tidbit 4: don’t bother restoring a Time Machine backup</a></p></li>
-<li><p><a class="reference internal" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#an-open-letter-to-progress-bar-designers" id="id11">An Open Letter to Progress Bar Designers</a></p></li>
-<li><p><a class="reference internal" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#in-the-end" id="id12">In the end…</a></p></li>
-</ul>
-</div>
-<div class="section" id="making-install-media-with-el-capitan-with-access-only-to-recovery">
-<h2><a class="toc-backref" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#id1">Making install media with El Capitan (with access only to Recovery)</a></h2>
+<li><p><a class="reference internal" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#el-capitan-installer-cant-be-verified" id="toc-entry-6">El Capitan installer can’t be verified</a></p></li>
+<li><p><a class="reference internal" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#bonus-tidbit-1-how-the-download-works" id="toc-entry-7">Bonus tidbit 1: how the download works</a></p></li>
+<li><p><a class="reference internal" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#bonus-tidbit-2-using-terminal-from-setup-assistant" id="toc-entry-8">Bonus tidbit 2: using Terminal from Setup Assistant</a></p></li>
+<li><p><a class="reference internal" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#bonus-tidbit-3-creating-an-image-of-the-install-media-might-not-work" id="toc-entry-9">Bonus tidbit 3: creating an image of the install media might not work</a></p></li>
+<li><p><a class="reference internal" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#bonus-tidbit-4-dont-bother-restoring-a-time-machine-backup" id="toc-entry-10">Bonus tidbit 4: don’t bother restoring a Time Machine backup</a></p></li>
+<li><p><a class="reference internal" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#an-open-letter-to-progress-bar-designers" id="toc-entry-11">An Open Letter to Progress Bar Designers</a></p></li>
+<li><p><a class="reference internal" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#in-the-end" id="toc-entry-12">In the end…</a></p></li>
+</ul></nav><section id="making-install-media-with-el-capitan-with-access-only-to-recovery"><h2><a class="toc-backref" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#toc-entry-1" role="doc-backlink">Making install media with El Capitan (with access only to Recovery)</a></h2>
 <p>The best, safest, least error-prone way to do an install is with a USB stick.
 Unfortunately, making a USB stick with the macOS installer on it is a nuisance.
 The expected way to produce macOS install media is to download the installer
@@ -155,21 +156,18 @@ solve.</p>
 Hackintoshing this little bit harder, but this also affects legitimate users.
 The only thing you can download from Apple is El Capitan. Apple offers
 <a class="reference external" href="https://support.apple.com/en-us/HT206886">InstallMacOSX.dmg</a> on their
-website. If you take a look at the instructions, you will see that this is
+website. (There’s also a Sierra download now, but it seems to be broken as of
+September 2022.) If you take a look at the instructions, you will see that this is
 <em>not</em> a bootable OS X image. This image has a <code class="docutils literal">.pkg</code> package. This package is
 expected to install <code class="docutils literal">/Applications/Install OS X El Capitan.app</code>. Well, we’re
 in recovery, we can’t install stuff. So, let’s do this the manual way.</p>
-</div>
-<div class="section" id="manually-installing-pkg-files">
-<h2><a class="toc-backref" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#id2">Manually installing .pkg files</a></h2>
+</section><section id="manually-installing-pkg-files"><h2><a class="toc-backref" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#toc-entry-2" role="doc-backlink">Manually installing .pkg files</a></h2>
 <p>Turns out the <code class="docutils literal">.pkg</code> format is just an archives all the way down, with all
 archives being different formats (at least three).</p>
-<div class="float-md-right mt-md-0 sidebar">
-<p class="sidebar-title">macOS flat package format</p>
+<aside class="float-md-right mt-md-0 sidebar"><p class="sidebar-title">macOS flat package format</p>
 <p>You can find more resources about the flat package format, <a class="reference external" href="http://s.sudre.free.fr/Stuff/Ivanhoe/FLAT.html">one</a> or <a class="reference external" href="https://matthew-brett.github.io/docosx/flat_packages.html#payload_">two</a>, although
 this was deduced from the <code class="docutils literal">file</code> command and The Unarchiver.</p>
-</div>
-<p>The first archive is the <code class="docutils literal">.pkg</code> file itself. Those files are in <a class="reference external" href="https://en.wikipedia.org/wiki/Xar_(archiver)">XAR format</a>, which was invented by the
+</aside><p>The first archive is the <code class="docutils literal">.pkg</code> file itself. Those files are in <a class="reference external" href="https://en.wikipedia.org/wiki/Xar_(archiver)">XAR format</a>, which was invented by the
 OpenDarwin community. You can either extract it with <code class="docutils literal">pkgutil <span class="pre">--expand</span>
 foo.pkg foo_files</code> (the last argument is the destination directory, can be
 anything, will be created by <code class="docutils literal">pkgutil</code>) if you have access to that command (it’s
@@ -186,31 +184,28 @@ will extract all the files the package has.</p>
 <code class="docutils literal">.cpio.gz</code> again, with the same way to extract it.</p>
 <p>(PS.  If you have <code class="docutils literal">7z</code> around (on Windows/Linux as well), you can just point
 it at all the compressed files mentioned in this paragraph.)</p>
-</div>
-<div class="section" id="making-install-media-out-of-partial-macos-installers-not-a-valid-os-installer-application">
-<h2><a class="toc-backref" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#id3">Making install media out of partial macOS installers (“not a valid OS installer application”)</a></h2>
-<div class="section" id="a-from-the-el-capitan-download">
-<h3><a class="toc-backref" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#id4">a. From the El Capitan download</a></h3>
+</section><section id="making-install-media-out-of-partial-macos-installers-not-a-valid-os-installer-application"><h2><a class="toc-backref" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#toc-entry-3" role="doc-backlink">Making install media out of partial macOS installers (“not a valid OS installer application”)</a></h2>
+<section id="a-from-the-el-capitan-download"><h3><a class="toc-backref" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#toc-entry-4" role="doc-backlink">a. From the El Capitan download</a></h3>
 <p>Let’s expand the El Capitan package.</p>
-<pre class="code console"><a name="rest_code_530407b228584ea99357137813bff397-1"></a><span class="gp">$</span> <span class="o">(</span>mount the DMG in Disk Utility<span class="o">)</span>
-<a name="rest_code_530407b228584ea99357137813bff397-2"></a><span class="gp">$</span> cp /Volumes/Install<span class="se">\ </span>OS<span class="se">\ </span>X/InstallMacOSX.pkg /Volumes/Macintosh<span class="se">\ </span>HD/
-<a name="rest_code_530407b228584ea99357137813bff397-3"></a><span class="go">     (Or copy it to some other volume you can write to; NOT the USB stick)</span>
-<a name="rest_code_530407b228584ea99357137813bff397-4"></a><span class="gp">$</span> <span class="nb">cd</span> /Volumes/Macintosh<span class="se">\ </span>HD/
-<a name="rest_code_530407b228584ea99357137813bff397-5"></a><span class="gp">$</span> pkgutil --expand InstallMacOSX.pkg elcapitan
-<a name="rest_code_530407b228584ea99357137813bff397-6"></a><span class="gp">$</span> ls -F elcapitan
-<a name="rest_code_530407b228584ea99357137813bff397-7"></a><span class="go">Distribution*       InstallMacOSX.pkg/ Resources/</span>
-<a name="rest_code_530407b228584ea99357137813bff397-8"></a><span class="gp">$</span> <span class="nb">cd</span> elcapitan/InstallMacOSX.pkg/
-<a name="rest_code_530407b228584ea99357137813bff397-9"></a><span class="gp">$</span> tar -xvf Payload
-<a name="rest_code_530407b228584ea99357137813bff397-10"></a><span class="go">x .</span>
-<a name="rest_code_530407b228584ea99357137813bff397-11"></a><span class="go">x ./Install OS X El Capitan.app</span>
-<a name="rest_code_530407b228584ea99357137813bff397-12"></a><span class="go">x ./Install OS X El Capitan.app/Contents</span>
-<a name="rest_code_530407b228584ea99357137813bff397-13"></a><span class="go">…</span>
-</pre>
+<div class="code"><pre class="code console"><a id="rest_code_491752bea7f74cfd94298a995686f8b6-1" name="rest_code_491752bea7f74cfd94298a995686f8b6-1" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_491752bea7f74cfd94298a995686f8b6-1"></a><span class="gp">$ </span><span class="o">(</span>mount the DMG <span class="k">in</span> Disk Utility<span class="o">)</span>
+<a id="rest_code_491752bea7f74cfd94298a995686f8b6-2" name="rest_code_491752bea7f74cfd94298a995686f8b6-2" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_491752bea7f74cfd94298a995686f8b6-2"></a><span class="gp">$ </span>cp /Volumes/Install<span class="se">\ </span>OS<span class="se">\ </span>X/InstallMacOSX.pkg /Volumes/Macintosh<span class="se">\ </span>HD/
+<a id="rest_code_491752bea7f74cfd94298a995686f8b6-3" name="rest_code_491752bea7f74cfd94298a995686f8b6-3" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_491752bea7f74cfd94298a995686f8b6-3"></a><span class="go">     (Or copy it to some other volume you can write to; NOT the USB stick)</span>
+<a id="rest_code_491752bea7f74cfd94298a995686f8b6-4" name="rest_code_491752bea7f74cfd94298a995686f8b6-4" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_491752bea7f74cfd94298a995686f8b6-4"></a><span class="gp">$ </span><span class="nb">cd</span> /Volumes/Macintosh<span class="se">\ </span>HD/
+<a id="rest_code_491752bea7f74cfd94298a995686f8b6-5" name="rest_code_491752bea7f74cfd94298a995686f8b6-5" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_491752bea7f74cfd94298a995686f8b6-5"></a><span class="gp">$ </span>pkgutil --expand InstallMacOSX.pkg elcapitan
+<a id="rest_code_491752bea7f74cfd94298a995686f8b6-6" name="rest_code_491752bea7f74cfd94298a995686f8b6-6" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_491752bea7f74cfd94298a995686f8b6-6"></a><span class="gp">$ </span>ls -F elcapitan
+<a id="rest_code_491752bea7f74cfd94298a995686f8b6-7" name="rest_code_491752bea7f74cfd94298a995686f8b6-7" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_491752bea7f74cfd94298a995686f8b6-7"></a><span class="go">Distribution*       InstallMacOSX.pkg/ Resources/</span>
+<a id="rest_code_491752bea7f74cfd94298a995686f8b6-8" name="rest_code_491752bea7f74cfd94298a995686f8b6-8" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_491752bea7f74cfd94298a995686f8b6-8"></a><span class="gp">$ </span><span class="nb">cd</span> elcapitan/InstallMacOSX.pkg/
+<a id="rest_code_491752bea7f74cfd94298a995686f8b6-9" name="rest_code_491752bea7f74cfd94298a995686f8b6-9" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_491752bea7f74cfd94298a995686f8b6-9"></a><span class="gp">$ </span>tar -xvf Payload
+<a id="rest_code_491752bea7f74cfd94298a995686f8b6-10" name="rest_code_491752bea7f74cfd94298a995686f8b6-10" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_491752bea7f74cfd94298a995686f8b6-10"></a><span class="go">x .</span>
+<a id="rest_code_491752bea7f74cfd94298a995686f8b6-11" name="rest_code_491752bea7f74cfd94298a995686f8b6-11" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_491752bea7f74cfd94298a995686f8b6-11"></a><span class="go">x ./Install OS X El Capitan.app</span>
+<a id="rest_code_491752bea7f74cfd94298a995686f8b6-12" name="rest_code_491752bea7f74cfd94298a995686f8b6-12" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_491752bea7f74cfd94298a995686f8b6-12"></a><span class="go">x ./Install OS X El Capitan.app/Contents</span>
+<a id="rest_code_491752bea7f74cfd94298a995686f8b6-13" name="rest_code_491752bea7f74cfd94298a995686f8b6-13" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_491752bea7f74cfd94298a995686f8b6-13"></a><span class="go">…</span>
+</pre></div>
 <p>We’ve got the installer app, which is what we need to create an install image.
 Great, let’s try it!</p>
-<pre class="code console"><a name="rest_code_44452312441d4d829e22b5c6f0721aac-1"></a><span class="gp">#</span> <span class="s2">"Install OS X El Capitan.app/Contents/Resources/createinstallmedia"</span> --volume /Volumes/MyBlankUSBDrive --applicationpath <span class="s2">"Install OS X El Capitan.app"</span>
-<a name="rest_code_44452312441d4d829e22b5c6f0721aac-2"></a><span class="go">Install OS X El Capitan.app does not appear to be a valid OS installer application.</span>
-</pre>
+<div class="code"><pre class="code console"><a id="rest_code_f7c15ad1730044f0a64610d31ca159d4-1" name="rest_code_f7c15ad1730044f0a64610d31ca159d4-1" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_f7c15ad1730044f0a64610d31ca159d4-1"></a><span class="gp"># </span><span class="s2">"Install OS X El Capitan.app/Contents/Resources/createinstallmedia"</span> --volume /Volumes/MyBlankUSBDrive --applicationpath <span class="s2">"Install OS X El Capitan.app"</span>
+<a id="rest_code_f7c15ad1730044f0a64610d31ca159d4-2" name="rest_code_f7c15ad1730044f0a64610d31ca159d4-2" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_f7c15ad1730044f0a64610d31ca159d4-2"></a><span class="go">Install OS X El Capitan.app does not appear to be a valid OS installer application.</span>
+</pre></div>
 <p>Oh, we’ve got a problem. Turns out there’s one more thing we need to take care
 of, and it’s the scripts. MacOS packages have scripts, typically shell scripts,
 that are run at various stages in the install process. We can look at the
@@ -219,21 +214,19 @@ there’s an <code class="docutils literal">link_package</code> script we need t
 <code class="docutils literal">Contents/SharedSupport</code> directory inside the installer app, and
 copies/hardlinks the <code class="docutils literal">InstallESD.dmg</code> file (which is the install formerly-DVD
 image) to that directory. Let’s try doing this on our own:</p>
-<pre class="code console"><a name="rest_code_880a8eba00394c1d8144877825aa0e6c-1"></a><span class="gp">$</span> mkdir <span class="s2">"Install OS X El Capitan.app/Contents/SharedSupport"</span>
-<a name="rest_code_880a8eba00394c1d8144877825aa0e6c-2"></a><span class="gp">$</span> mv InstallESD.dmg <span class="s2">"Install OS X El Capitan.app/Contents/SharedSupport"</span>
-<a name="rest_code_880a8eba00394c1d8144877825aa0e6c-3"></a><span class="gp">#</span> <span class="s2">"Install OS X El Capitan.app/Contents/Resources/createinstallmedia"</span> --volume /Volumes/MyBlankUSBDrive --applicationpath <span class="s2">"Install OS X El Capitan.app"</span>
-<a name="rest_code_880a8eba00394c1d8144877825aa0e6c-4"></a><span class="go">Ready to start.</span>
-<a name="rest_code_880a8eba00394c1d8144877825aa0e6c-5"></a><span class="go">To continue we need to erase the disk at /Volumes/MyBlankUSBDrive.</span>
-<a name="rest_code_880a8eba00394c1d8144877825aa0e6c-6"></a><span class="go">If you wish to continue type (Y) then press return:</span>
-</pre>
+<div class="code"><pre class="code console"><a id="rest_code_2394282d66ac47a1847f8f3b3ec5bf50-1" name="rest_code_2394282d66ac47a1847f8f3b3ec5bf50-1" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_2394282d66ac47a1847f8f3b3ec5bf50-1"></a><span class="gp">$ </span>mkdir <span class="s2">"Install OS X El Capitan.app/Contents/SharedSupport"</span>
+<a id="rest_code_2394282d66ac47a1847f8f3b3ec5bf50-2" name="rest_code_2394282d66ac47a1847f8f3b3ec5bf50-2" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_2394282d66ac47a1847f8f3b3ec5bf50-2"></a><span class="gp">$ </span>mv InstallESD.dmg <span class="s2">"Install OS X El Capitan.app/Contents/SharedSupport"</span>
+<a id="rest_code_2394282d66ac47a1847f8f3b3ec5bf50-3" name="rest_code_2394282d66ac47a1847f8f3b3ec5bf50-3" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_2394282d66ac47a1847f8f3b3ec5bf50-3"></a><span class="gp"># </span><span class="s2">"Install OS X El Capitan.app/Contents/Resources/createinstallmedia"</span> --volume /Volumes/MyBlankUSBDrive --applicationpath <span class="s2">"Install OS X El Capitan.app"</span>
+<a id="rest_code_2394282d66ac47a1847f8f3b3ec5bf50-4" name="rest_code_2394282d66ac47a1847f8f3b3ec5bf50-4" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_2394282d66ac47a1847f8f3b3ec5bf50-4"></a><span class="go">Ready to start.</span>
+<a id="rest_code_2394282d66ac47a1847f8f3b3ec5bf50-5" name="rest_code_2394282d66ac47a1847f8f3b3ec5bf50-5" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_2394282d66ac47a1847f8f3b3ec5bf50-5"></a><span class="go">To continue we need to erase the disk at /Volumes/MyBlankUSBDrive.</span>
+<a id="rest_code_2394282d66ac47a1847f8f3b3ec5bf50-6" name="rest_code_2394282d66ac47a1847f8f3b3ec5bf50-6" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_2394282d66ac47a1847f8f3b3ec5bf50-6"></a><span class="go">If you wish to continue type (Y) then press return:</span>
+</pre></div>
 <p>And it works! <code class="docutils literal">createinstallmedia</code> will now produce valid install media.</p>
-</div>
-<div class="section" id="b-installer-from-recovery-app-store-any-macos-version">
-<h3><a class="toc-backref" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#id5">b. Installer from Recovery/App Store (any macOS version)</a></h3>
+</section><section id="b-installer-from-recovery-app-store-any-macos-version"><h3><a class="toc-backref" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#toc-entry-5" role="doc-backlink">b. Installer from Recovery/App Store (any macOS version)</a></h3>
 <p>If you are in Recovery, you can find an Install app on the filesystem. If you
 try to run it, you will get the same error as in the previous paragraph:</p>
-<pre class="code text"><a name="rest_code_c4ec5e25805b4dd0b65af42106a613ae-1"></a>Install macOS Catalina.app does not appear to be a valid OS installer application.
-</pre>
+<div class="code"><pre class="code text"><a id="rest_code_738bfc8ce5b047d6985a2b278bd257cf-1" name="rest_code_738bfc8ce5b047d6985a2b278bd257cf-1" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_738bfc8ce5b047d6985a2b278bd257cf-1"></a>Install macOS Catalina.app does not appear to be a valid OS installer application.
+</pre></div>
 <p>This also happens with some older macOS versions, where you get a small
 <code class="docutils literal">.app</code> from the App Store, and that app does the actual download.</p>
 <p>Whatever the issue was, we need to download the install files with the
@@ -255,19 +248,13 @@ files, if any (copy the entire directory). If you did this correctly,
 directory (not in a subdirectory).</p></li>
 <li><p>Run <code class="docutils literal">createinstallmedia</code>. It should now consider the installer valid. The
 available options differ slightly depending on the OS version.</p></li>
-</ol>
-</div>
-</div>
-<div class="section" id="el-capitan-installer-cant-be-verified">
-<h2><a class="toc-backref" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#id6">El Capitan installer can’t be verified</a></h2>
+</ol></section></section><section id="el-capitan-installer-cant-be-verified"><h2><a class="toc-backref" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#toc-entry-6" role="doc-backlink">El Capitan installer can’t be verified</a></h2>
 <p>If you get this error, it might be because Apple’s signing keys expired, or
 because of other date/time weirdness. Regardless, you can force an install if
 you are sure the installer is not damaged with this command <a class="reference external" href="https://apple.stackexchange.com/questions/216730/this-copy-of-the-install-os-x-el-capitan-application-cant-be-verified-it-may-h">(source)</a>:</p>
-<pre class="code console"><a name="rest_code_d0f11e5517244fe3896b8bfe3026f0d1-1"></a><span class="gp">#</span> installer -pkg  /Volumes/Mac<span class="se">\ </span>OS<span class="se">\ </span>X<span class="se">\ </span>Install<span class="se">\ </span>DVD/Packages/OSInstall.mpkg -target /Volumes/<span class="s2">"XXX"</span>
-</pre>
-</div>
-<div class="section" id="bonus-tidbit-1-how-the-download-works">
-<h2><a class="toc-backref" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#id7">Bonus tidbit 1: how the download works</a></h2>
+<div class="code"><pre class="code console"><a id="rest_code_e3be9f6fba994f1ea1d07b830fd6db79-1" name="rest_code_e3be9f6fba994f1ea1d07b830fd6db79-1" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_e3be9f6fba994f1ea1d07b830fd6db79-1"></a><span class="gp"># </span>installer -pkg  /Volumes/Mac<span class="se">\ </span>OS<span class="se">\ </span>X<span class="se">\ </span>Install<span class="se">\ </span>DVD/Packages/OSInstall.mpkg -target /Volumes/<span class="s2">"XXX"</span>
+</pre></div>
+</section><section id="bonus-tidbit-1-how-the-download-works"><h2><a class="toc-backref" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#toc-entry-7" role="doc-backlink">Bonus tidbit 1: how the download works</a></h2>
 <p>While messing with all the installer stuff, I found out a few
 interesting/worrying things about the download process.</p>
 <p>The first one is that the macOS installer uses plain HTTP without encryption to
@@ -288,9 +275,7 @@ progress for that file is reset, and in Catalina, you can go from 8 GB back to
 infrastructure should make it trivial to continue the download, perhaps
 discarding the most recent chunk if you’re concerned about that download of it
 being unsuccessful.</p>
-</div>
-<div class="section" id="bonus-tidbit-2-using-terminal-from-setup-assistant">
-<h2><a class="toc-backref" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#id8">Bonus tidbit 2: using Terminal from Setup Assistant</a></h2>
+</section><section id="bonus-tidbit-2-using-terminal-from-setup-assistant"><h2><a class="toc-backref" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#toc-entry-8" role="doc-backlink">Bonus tidbit 2: using Terminal from Setup Assistant</a></h2>
 <p>The first time you boot a Mac after a clean install, it starts the Setup
 Assistant. This app asks for basic OS settings (locale, date/time, user
 accounts), and also lets you restore user data from backups.</p>
@@ -299,9 +284,7 @@ You can do that with Ctrl + Opt + Cmd + T and Ctrl + Opt + Cmd + C respectively 
 <p>How could that come in handy? For example, if you want to check if the backup
 drive still worked and if the process isn’t stuck (I wrote a test file and also
 checked <code class="docutils literal">top</code>).</p>
-</div>
-<div class="section" id="bonus-tidbit-3-creating-an-image-of-the-install-media-might-not-work">
-<h2><a class="toc-backref" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#id9">Bonus tidbit 3: creating an image of the install media might not work</a></h2>
+</section><section id="bonus-tidbit-3-creating-an-image-of-the-install-media-might-not-work"><h2><a class="toc-backref" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#toc-entry-9" role="doc-backlink">Bonus tidbit 3: creating an image of the install media might not work</a></h2>
 <p>A few months later, in December, I upgraded to Big Sur and then installed Windows 10
 alongside it in Boot Camp. I then did some more hacks, which led to
 two unbootable OSes.</p>
@@ -318,9 +301,7 @@ didn’t have that one with me at the moment), and apparently the one I used had
 a different size (both are marketed as 16 GB). The images could be mounted
 fine, and <code class="docutils literal">createinstallmedia</code> should have worked, likely producing a
 bootable drive.</p>
-</div>
-<div class="section" id="bonus-tidbit-4-dont-bother-restoring-a-time-machine-backup">
-<h2><a class="toc-backref" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#id10">Bonus tidbit 4: don’t bother restoring a Time Machine backup</a></h2>
+</section><section id="bonus-tidbit-4-dont-bother-restoring-a-time-machine-backup"><h2><a class="toc-backref" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#toc-entry-10" role="doc-backlink">Bonus tidbit 4: don’t bother restoring a Time Machine backup</a></h2>
 <p>Time Machine is Apple’s magical backup solution. Time Machine saves snapshots
 of your entire disk. It’s supposed to help restore files that were deleted or
 changed in an unwanted way, or help you restore a full macOS install.</p>
@@ -377,9 +358,7 @@ and that doesn’t work unless you’re warm-rebooting from macOS. I don’t nee
 anything more advanced than the Option key boot menu, but Apple made me use a
 third-party bootloader.)</p>
 <p><em>We now go back to the original post from June.</em></p>
-</div>
-<div class="section" id="an-open-letter-to-progress-bar-designers">
-<h2><a class="toc-backref" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#id11">An Open Letter to Progress Bar Designers</a></h2>
+</section><section id="an-open-letter-to-progress-bar-designers"><h2><a class="toc-backref" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#toc-entry-11" role="doc-backlink">An Open Letter to Progress Bar Designers</a></h2>
 <p>Dear Progress Bar Designers: can you please make your progress bars
 functional? The macOS progress bar might look sleek at just 7 px (non-Retina)/6
 pt = 12 px (Retina) high, but at the same time, you’re looking at individual
@@ -418,9 +397,7 @@ requires more space for the bar.</p>
 </div>
 <p>I’d honestly be happy enough with option 2, at least it can be read easily and
 you can remember the number instead of a vague position.</p>
-</div>
-<div class="section" id="in-the-end">
-<h2><a class="toc-backref" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#id12">In the end…</a></h2>
+</section><section id="in-the-end"><h2><a class="toc-backref" href="/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#toc-entry-12" role="doc-backlink">In the end…</a></h2>
 <p>After all this, I managed to get macOS Catalina installed. After various
 failures in built-in El Capitan recovery and Catalina Internet Recovery, I first
 installed El Capitan with this hack, then jumped to Mojave because I thought
@@ -435,8 +412,7 @@ working Mac and ask them to download from App Store and make install media, or
 find less legitimate sources, they probably don’t care as much. But if my own
 system crashes, I’d probably want to get working install media immediately,
 myself, and from Apple. Without all this mess.</p>
-</div>
-    </article>
+</section></article>
 </div>
     <aside class="postpromonav"><nav><ul class="pager hidden-print">
 <li class="previous">

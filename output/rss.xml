@@ -1,5 +1,237 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chris Warrick (Blog)</title><link>https://chriswarrick.com/</link><description>A rarely updated blog, mostly about programming.</description><atom:link href="https://chriswarrick.com/rss.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Sun, 20 Feb 2022 22:16:53 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Enabling Virtualization Support in Boot Camp with rEFInd</title><link>https://chriswarrick.com/blog/2021/01/31/enabling-virtualization-support-in-boot-camp-with-refind/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;p&gt;You installed Windows on an Intel Mac via Boot Camp, and want to use
+<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chris Warrick (Blog)</title><link>https://chriswarrick.com/</link><description>A rarely updated blog, mostly about programming.</description><atom:link href="https://chriswarrick.com/rss.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Mon, 19 Sep 2022 20:35:12 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Writing a Console App in C# for Fun and Profit</title><link>https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;p&gt;I recently wrote a simple console app in C#. This post tells you more about the language, the .NET ecosystem, and why you should write your next app in it.&lt;/p&gt;
+&lt;!-- TEASER_END --&gt;
+&lt;section id="what-is-the-app"&gt;
+&lt;h2&gt;What is the app?&lt;/h2&gt;
+&lt;p&gt;The app is called Gitco.NET. It’s basically a rewrite of a previous Ruby script. It shows a console menu with Git branches, allowing things like filtering and toggling the display of remote branches. Simple, but quite convenient for working with Git in a terminal. I rewrote it in C# for better Windows compatibility — but the new version works on Linux and macOS equally well, can be distributed as a single executable, and is also unit-tested.&lt;/p&gt;
+&lt;/section&gt;
+&lt;section id="what-is-c"&gt;
+&lt;h2&gt;What is C#?&lt;/h2&gt;
+&lt;p&gt;C# is a modern, high-level language designed by Microsoft in 2000, heavily inspired by (and competing with) Java.&lt;/p&gt;
+&lt;section id="the-obligatory-hello-world-program"&gt;
+&lt;h3&gt;The obligatory hello world program&lt;/h3&gt;
+&lt;div class="code"&gt;&lt;pre class="code csharp"&gt;&lt;a id="rest_code_471c102f854e4635a0befbe2ec34add6-1" name="rest_code_471c102f854e4635a0befbe2ec34add6-1" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_471c102f854e4635a0befbe2ec34add6-1"&gt;&lt;/a&gt;&lt;span class="n"&gt;Console&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;WriteLine&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"Hello, world!"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Just one line is enough. This program requires C# 10 and .NET 6, the latest versions of the language and the framework (and the implicit usings feature enabled).&lt;/p&gt;
+&lt;/section&gt;
+&lt;section id="the-slightly-less-cool-version-of-the-hello-world-program"&gt;
+&lt;h3&gt;The slightly less cool version of the hello world program&lt;/h3&gt;
+&lt;div class="code"&gt;&lt;pre class="code csharp"&gt;&lt;a id="rest_code_5baf82289af94e1a91bdd2614f0a7960-1" name="rest_code_5baf82289af94e1a91bdd2614f0a7960-1" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_5baf82289af94e1a91bdd2614f0a7960-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;using&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nn"&gt;System&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;a id="rest_code_5baf82289af94e1a91bdd2614f0a7960-2" name="rest_code_5baf82289af94e1a91bdd2614f0a7960-2" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_5baf82289af94e1a91bdd2614f0a7960-2"&gt;&lt;/a&gt;
+&lt;a id="rest_code_5baf82289af94e1a91bdd2614f0a7960-3" name="rest_code_5baf82289af94e1a91bdd2614f0a7960-3" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_5baf82289af94e1a91bdd2614f0a7960-3"&gt;&lt;/a&gt;&lt;span class="k"&gt;class&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nc"&gt;Program&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;a id="rest_code_5baf82289af94e1a91bdd2614f0a7960-4" name="rest_code_5baf82289af94e1a91bdd2614f0a7960-4" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_5baf82289af94e1a91bdd2614f0a7960-4"&gt;&lt;/a&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;a id="rest_code_5baf82289af94e1a91bdd2614f0a7960-5" name="rest_code_5baf82289af94e1a91bdd2614f0a7960-5" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_5baf82289af94e1a91bdd2614f0a7960-5"&gt;&lt;/a&gt;&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="k"&gt;static&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;void&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nf"&gt;Main&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;string&lt;/span&gt;&lt;span class="p"&gt;[]&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;a id="rest_code_5baf82289af94e1a91bdd2614f0a7960-6" name="rest_code_5baf82289af94e1a91bdd2614f0a7960-6" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_5baf82289af94e1a91bdd2614f0a7960-6"&gt;&lt;/a&gt;&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;a id="rest_code_5baf82289af94e1a91bdd2614f0a7960-7" name="rest_code_5baf82289af94e1a91bdd2614f0a7960-7" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_5baf82289af94e1a91bdd2614f0a7960-7"&gt;&lt;/a&gt;&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="n"&gt;Console&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;WriteLine&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"Hello, world!"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;a id="rest_code_5baf82289af94e1a91bdd2614f0a7960-8" name="rest_code_5baf82289af94e1a91bdd2614f0a7960-8" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_5baf82289af94e1a91bdd2614f0a7960-8"&gt;&lt;/a&gt;&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;a id="rest_code_5baf82289af94e1a91bdd2614f0a7960-9" name="rest_code_5baf82289af94e1a91bdd2614f0a7960-9" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_5baf82289af94e1a91bdd2614f0a7960-9"&gt;&lt;/a&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;We’ve got four lines of code (plus four lines of braces &lt;a class="footnote-reference brackets" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#footnote-1" id="footnote-reference-1" role="doc-noteref"&gt;&lt;span class="fn-bracket"&gt;[&lt;/span&gt;1&lt;span class="fn-bracket"&gt;]&lt;/span&gt;&lt;/a&gt; ). We can see the &lt;code class="docutils literal"&gt;using&lt;/code&gt; directive to import everything from the &lt;code class="docutils literal"&gt;System&lt;/code&gt; namespace, the definition of a &lt;code class="docutils literal"&gt;class&lt;/code&gt;, a &lt;code class="docutils literal"&gt;Main&lt;/code&gt; method, and a call to &lt;code class="docutils literal"&gt;Console.WriteLine&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;We’ll talk more about C# later, highlighting some of the cooler things seen in Gitco.NET.&lt;/p&gt;
+&lt;/section&gt;
+&lt;/section&gt;
+&lt;section id="what-is-net"&gt;
+&lt;h2&gt;What is .NET?&lt;/h2&gt;
+&lt;p&gt;The term “.NET” had quite a lot of meanings over the past two decades. Microsoft accounts were once called .NET Passport, and Windows Server 2003 was almost called “Windows Server .NET 2003”. Another thing called .NET was the .NET Framework. .NET Framework is a heavily integrated component of Windows, and it’s basically what was used to run C# (and F#, and VB.NET) — it includes the virtual machine (CLR, Core Language Runtime), a lot of libraries (Framework Class Library), and a lot of Windows-specific things (such as COM, Windows Forms, WPF).&lt;/p&gt;
+&lt;p&gt;Microsoft’s .NET Framework is proprietary and tied to Windows. An open-source, independent re-implementation of .NET is Mono. At one point, some GNOME apps were written in Mono and Gtk#. Mono was also used in Xamarin, which can be used to write Android and iOS apps in C#.&lt;/p&gt;
+&lt;p&gt;But then came out .NET Core, which is Microsoft’s open-source .NET with a new runtime (CoreCLR), new set of libraries (CoreFX), and multi-platform compatibility (Linux and macOS). After a few years, .NET Core got renamed to .NET (around the time it had pretty good feature parity with the classic .NET Framework). With the new .NET, you can build console apps, web apps (using ASP.NET Core, which is a pretty cool framework), mobile apps (soon using MAUI), and desktop apps (there are a few options).&lt;/p&gt;
+&lt;/section&gt;
+&lt;section id="gitco-net-code-tour"&gt;
+&lt;h2&gt;Gitco.NET code tour&lt;/h2&gt;
+&lt;p&gt;Let’s go on a little tour of the more interesting parts of the code.&lt;/p&gt;
+&lt;section id="snippet-1"&gt;
+&lt;h3&gt;Snippet 1&lt;/h3&gt;
+&lt;div class="code"&gt;&lt;pre class="code csharp"&gt;&lt;a id="rest_code_94e2a256774348d4907e42583a497039-1" name="rest_code_94e2a256774348d4907e42583a497039-1" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_94e2a256774348d4907e42583a497039-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;public&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;static&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;List&lt;/span&gt;&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;Branch&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;ExtractBranchListFromGitOutput&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;string&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;gitOutput&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;a id="rest_code_94e2a256774348d4907e42583a497039-2" name="rest_code_94e2a256774348d4907e42583a497039-2" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_94e2a256774348d4907e42583a497039-2"&gt;&lt;/a&gt;&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="p"&gt;=&amp;gt;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;gitOutput&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;a id="rest_code_94e2a256774348d4907e42583a497039-3" name="rest_code_94e2a256774348d4907e42583a497039-3" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_94e2a256774348d4907e42583a497039-3"&gt;&lt;/a&gt;&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;TrimEnd&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;a id="rest_code_94e2a256774348d4907e42583a497039-4" name="rest_code_94e2a256774348d4907e42583a497039-4" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_94e2a256774348d4907e42583a497039-4"&gt;&lt;/a&gt;&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ReplaceLineEndings&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"\n"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;a id="rest_code_94e2a256774348d4907e42583a497039-5" name="rest_code_94e2a256774348d4907e42583a497039-5" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_94e2a256774348d4907e42583a497039-5"&gt;&lt;/a&gt;&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Split&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sc"&gt;'\n'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;a id="rest_code_94e2a256774348d4907e42583a497039-6" name="rest_code_94e2a256774348d4907e42583a497039-6" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_94e2a256774348d4907e42583a497039-6"&gt;&lt;/a&gt;&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Select&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;branchLine&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;=&amp;gt;&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;a id="rest_code_94e2a256774348d4907e42583a497039-7" name="rest_code_94e2a256774348d4907e42583a497039-7" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_94e2a256774348d4907e42583a497039-7"&gt;&lt;/a&gt;&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;a id="rest_code_94e2a256774348d4907e42583a497039-8" name="rest_code_94e2a256774348d4907e42583a497039-8" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_94e2a256774348d4907e42583a497039-8"&gt;&lt;/a&gt;&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="kt"&gt;var&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;isCurrent&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;branchLine&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;StartsWith&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sc"&gt;'*'&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;a id="rest_code_94e2a256774348d4907e42583a497039-9" name="rest_code_94e2a256774348d4907e42583a497039-9" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_94e2a256774348d4907e42583a497039-9"&gt;&lt;/a&gt;&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="kt"&gt;var&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;branch&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;branchLine&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="m"&gt;2.&lt;/span&gt;&lt;span class="p"&gt;.];&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;a id="rest_code_94e2a256774348d4907e42583a497039-10" name="rest_code_94e2a256774348d4907e42583a497039-10" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_94e2a256774348d4907e42583a497039-10"&gt;&lt;/a&gt;&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="kt"&gt;var&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;isRemote&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;false&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;a id="rest_code_94e2a256774348d4907e42583a497039-11" name="rest_code_94e2a256774348d4907e42583a497039-11" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_94e2a256774348d4907e42583a497039-11"&gt;&lt;/a&gt;
+&lt;a id="rest_code_94e2a256774348d4907e42583a497039-12" name="rest_code_94e2a256774348d4907e42583a497039-12" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_94e2a256774348d4907e42583a497039-12"&gt;&lt;/a&gt;&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;branch&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;StartsWith&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;remotePrefix&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;a id="rest_code_94e2a256774348d4907e42583a497039-13" name="rest_code_94e2a256774348d4907e42583a497039-13" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_94e2a256774348d4907e42583a497039-13"&gt;&lt;/a&gt;&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;a id="rest_code_94e2a256774348d4907e42583a497039-14" name="rest_code_94e2a256774348d4907e42583a497039-14" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_94e2a256774348d4907e42583a497039-14"&gt;&lt;/a&gt;&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="n"&gt;isRemote&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;true&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;a id="rest_code_94e2a256774348d4907e42583a497039-15" name="rest_code_94e2a256774348d4907e42583a497039-15" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_94e2a256774348d4907e42583a497039-15"&gt;&lt;/a&gt;&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="n"&gt;branch&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;string&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Join&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;a id="rest_code_94e2a256774348d4907e42583a497039-16" name="rest_code_94e2a256774348d4907e42583a497039-16" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_94e2a256774348d4907e42583a497039-16"&gt;&lt;/a&gt;&lt;span class="w"&gt;          &lt;/span&gt;&lt;span class="sc"&gt;'/'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;a id="rest_code_94e2a256774348d4907e42583a497039-17" name="rest_code_94e2a256774348d4907e42583a497039-17" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_94e2a256774348d4907e42583a497039-17"&gt;&lt;/a&gt;&lt;span class="w"&gt;          &lt;/span&gt;&lt;span class="n"&gt;branch&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Split&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;" "&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="n"&gt;First&lt;/span&gt;&lt;span class="p"&gt;().&lt;/span&gt;&lt;span class="n"&gt;Split&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"/"&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="n"&gt;Skip&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt;&lt;span class="p"&gt;));&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;a id="rest_code_94e2a256774348d4907e42583a497039-18" name="rest_code_94e2a256774348d4907e42583a497039-18" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_94e2a256774348d4907e42583a497039-18"&gt;&lt;/a&gt;&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;a id="rest_code_94e2a256774348d4907e42583a497039-19" name="rest_code_94e2a256774348d4907e42583a497039-19" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_94e2a256774348d4907e42583a497039-19"&gt;&lt;/a&gt;
+&lt;a id="rest_code_94e2a256774348d4907e42583a497039-20" name="rest_code_94e2a256774348d4907e42583a497039-20" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_94e2a256774348d4907e42583a497039-20"&gt;&lt;/a&gt;&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="k"&gt;return&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;new&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nf"&gt;Branch&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;branch&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;isRemote&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;isCurrent&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;a id="rest_code_94e2a256774348d4907e42583a497039-21" name="rest_code_94e2a256774348d4907e42583a497039-21" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_94e2a256774348d4907e42583a497039-21"&gt;&lt;/a&gt;&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;a id="rest_code_94e2a256774348d4907e42583a497039-22" name="rest_code_94e2a256774348d4907e42583a497039-22" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_94e2a256774348d4907e42583a497039-22"&gt;&lt;/a&gt;&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;OrderBy&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;=&amp;gt;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Name&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;a id="rest_code_94e2a256774348d4907e42583a497039-23" name="rest_code_94e2a256774348d4907e42583a497039-23" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_94e2a256774348d4907e42583a497039-23"&gt;&lt;/a&gt;&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ThenBy&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;=&amp;gt;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;IsRemote&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;a id="rest_code_94e2a256774348d4907e42583a497039-24" name="rest_code_94e2a256774348d4907e42583a497039-24" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_94e2a256774348d4907e42583a497039-24"&gt;&lt;/a&gt;&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;DistinctBy&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;=&amp;gt;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Name&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;a id="rest_code_94e2a256774348d4907e42583a497039-25" name="rest_code_94e2a256774348d4907e42583a497039-25" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_94e2a256774348d4907e42583a497039-25"&gt;&lt;/a&gt;&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ToList&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This snippet defines a fairly standard pipeline that goes from &lt;code class="docutils literal"&gt;git&lt;/code&gt; output (a single string) to a list of parsed objects. This pipeline is a function (or a static method, to be more precise). This function uses expression-bodied members: since we can fit the entire pipeline in a single expression, we can skip the braces and the &lt;code class="docutils literal"&gt;return&lt;/code&gt; keyword, and instead use a more compact syntax with an arrow (&lt;code class="docutils literal"&gt;=&amp;gt;&lt;/code&gt;). After some cleanups and sanitization of the string, we split the string by the &lt;code class="docutils literal"&gt;\n&lt;/code&gt; character, and the type of our pipeline changes from &lt;code class="docutils literal"&gt;string&lt;/code&gt; to &lt;code class="docutils literal"&gt;string[]&lt;/code&gt; (an array of strings). We then use five operations from the &lt;code class="docutils literal"&gt;System.Linq&lt;/code&gt; namespace. Those operations are extension methods for enumerables (&lt;code class="docutils literal"&gt;IEnumerable&amp;lt;T&amp;gt;&lt;/code&gt;) — adding &lt;code class="docutils literal"&gt;using System.Linq;&lt;/code&gt; at the top of your program adds those methods to any enumerables (including arrays, lists, dictionaries, sets…).&lt;/p&gt;
+&lt;p&gt;The first operation is a &lt;code class="docutils literal"&gt;Select&lt;/code&gt;. LINQ methods are inspired by SQL; the more typical name for this one would be &lt;code class="docutils literal"&gt;map&lt;/code&gt;. (Similarly, &lt;code class="docutils literal"&gt;Where&lt;/code&gt; is LINQ’s name for &lt;code class="docutils literal"&gt;filter&lt;/code&gt;.) The logic inside &lt;code class="docutils literal"&gt;Select&lt;/code&gt; is written in a multi-line anonymous function (lambda), with braces (so there’s a &lt;code class="docutils literal"&gt;return&lt;/code&gt;) &lt;a class="footnote-reference brackets" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#footnote-2" id="footnote-reference-2" role="doc-noteref"&gt;&lt;span class="fn-bracket"&gt;[&lt;/span&gt;2&lt;span class="fn-bracket"&gt;]&lt;/span&gt;&lt;/a&gt;. Inside that anonymous function, there are a few niceties, such as &lt;code class="docutils literal"&gt;var&lt;/code&gt; (type inference for variables), slicing (&lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;[2..]&lt;/span&gt;&lt;/code&gt;), as well as some more LINQ in string manipulations (&lt;code class="docutils literal"&gt;.First()&lt;/code&gt; and &lt;code class="docutils literal"&gt;.Skip(2)&lt;/code&gt;, which do what they say on the tin).&lt;/p&gt;
+&lt;p&gt;The next three operations are fairly straightforward sorting, and extracting unique values. Those use single-expression lambdas, which don’t use &lt;code class="docutils literal"&gt;return&lt;/code&gt;. The pipeline ends with converting &lt;code class="docutils literal"&gt;IEnumerable&amp;lt;Branch&amp;gt;&lt;/code&gt; (which appeared at the &lt;code class="docutils literal"&gt;.Select()&lt;/code&gt; stage) into a &lt;code class="docutils literal"&gt;List&amp;lt;Branch&amp;gt;&lt;/code&gt;.&lt;/p&gt;
+&lt;/section&gt;
+&lt;section id="snippet-2"&gt;
+&lt;h3&gt;Snippet 2&lt;/h3&gt;
+&lt;div class="code"&gt;&lt;pre class="code csharp"&gt;&lt;a id="rest_code_90d9d9619ef24ca3ae92d382359b076f-1" name="rest_code_90d9d9619ef24ca3ae92d382359b076f-1" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_90d9d9619ef24ca3ae92d382359b076f-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;public&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;static&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;IEnumerable&lt;/span&gt;&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;BranchDisplay&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;FilterAndNumberBranches&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;a id="rest_code_90d9d9619ef24ca3ae92d382359b076f-2" name="rest_code_90d9d9619ef24ca3ae92d382359b076f-2" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_90d9d9619ef24ca3ae92d382359b076f-2"&gt;&lt;/a&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;List&lt;/span&gt;&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;Branch&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;branches&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;string?&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;filter&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;a id="rest_code_90d9d9619ef24ca3ae92d382359b076f-3" name="rest_code_90d9d9619ef24ca3ae92d382359b076f-3" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_90d9d9619ef24ca3ae92d382359b076f-3"&gt;&lt;/a&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;a id="rest_code_90d9d9619ef24ca3ae92d382359b076f-4" name="rest_code_90d9d9619ef24ca3ae92d382359b076f-4" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_90d9d9619ef24ca3ae92d382359b076f-4"&gt;&lt;/a&gt;&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="kt"&gt;var&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;branchWidth&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;branches&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Count&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;a id="rest_code_90d9d9619ef24ca3ae92d382359b076f-5" name="rest_code_90d9d9619ef24ca3ae92d382359b076f-5" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_90d9d9619ef24ca3ae92d382359b076f-5"&gt;&lt;/a&gt;&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ToString&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;CultureInfo&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;InvariantCulture&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="n"&gt;Length&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;a id="rest_code_90d9d9619ef24ca3ae92d382359b076f-6" name="rest_code_90d9d9619ef24ca3ae92d382359b076f-6" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_90d9d9619ef24ca3ae92d382359b076f-6"&gt;&lt;/a&gt;&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="kt"&gt;var&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;numberFormatString&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s"&gt;$"{{0,{branchWidth}}}. "&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;a id="rest_code_90d9d9619ef24ca3ae92d382359b076f-7" name="rest_code_90d9d9619ef24ca3ae92d382359b076f-7" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_90d9d9619ef24ca3ae92d382359b076f-7"&gt;&lt;/a&gt;
+&lt;a id="rest_code_90d9d9619ef24ca3ae92d382359b076f-8" name="rest_code_90d9d9619ef24ca3ae92d382359b076f-8" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_90d9d9619ef24ca3ae92d382359b076f-8"&gt;&lt;/a&gt;&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="k"&gt;return&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;branches&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Select&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;a id="rest_code_90d9d9619ef24ca3ae92d382359b076f-9" name="rest_code_90d9d9619ef24ca3ae92d382359b076f-9" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_90d9d9619ef24ca3ae92d382359b076f-9"&gt;&lt;/a&gt;&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;branch&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;=&amp;gt;&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;a id="rest_code_90d9d9619ef24ca3ae92d382359b076f-10" name="rest_code_90d9d9619ef24ca3ae92d382359b076f-10" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_90d9d9619ef24ca3ae92d382359b076f-10"&gt;&lt;/a&gt;&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="k"&gt;new&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nf"&gt;BranchDisplay&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;a id="rest_code_90d9d9619ef24ca3ae92d382359b076f-11" name="rest_code_90d9d9619ef24ca3ae92d382359b076f-11" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_90d9d9619ef24ca3ae92d382359b076f-11"&gt;&lt;/a&gt;&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="n"&gt;Number&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;string&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;numberFormatString&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;+&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;a id="rest_code_90d9d9619ef24ca3ae92d382359b076f-12" name="rest_code_90d9d9619ef24ca3ae92d382359b076f-12" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_90d9d9619ef24ca3ae92d382359b076f-12"&gt;&lt;/a&gt;&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="n"&gt;BranchName&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;branch&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;a id="rest_code_90d9d9619ef24ca3ae92d382359b076f-13" name="rest_code_90d9d9619ef24ca3ae92d382359b076f-13" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_90d9d9619ef24ca3ae92d382359b076f-13"&gt;&lt;/a&gt;&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="n"&gt;IsRemote&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;branch&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;IsRemote&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;a id="rest_code_90d9d9619ef24ca3ae92d382359b076f-14" name="rest_code_90d9d9619ef24ca3ae92d382359b076f-14" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_90d9d9619ef24ca3ae92d382359b076f-14"&gt;&lt;/a&gt;&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="n"&gt;IsCurrent&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;branch&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;IsCurrent&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;a id="rest_code_90d9d9619ef24ca3ae92d382359b076f-15" name="rest_code_90d9d9619ef24ca3ae92d382359b076f-15" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_90d9d9619ef24ca3ae92d382359b076f-15"&gt;&lt;/a&gt;&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;a id="rest_code_90d9d9619ef24ca3ae92d382359b076f-16" name="rest_code_90d9d9619ef24ca3ae92d382359b076f-16" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_90d9d9619ef24ca3ae92d382359b076f-16"&gt;&lt;/a&gt;&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="n"&gt;Where&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;branchDisplay&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;=&amp;gt;&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;a id="rest_code_90d9d9619ef24ca3ae92d382359b076f-17" name="rest_code_90d9d9619ef24ca3ae92d382359b076f-17" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_90d9d9619ef24ca3ae92d382359b076f-17"&gt;&lt;/a&gt;&lt;span class="w"&gt;      &lt;/span&gt;&lt;span class="n"&gt;filter&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;==&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;null&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;||&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;branchDisplay&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;BranchName&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Contains&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;filter&lt;/span&gt;&lt;span class="p"&gt;));&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;a id="rest_code_90d9d9619ef24ca3ae92d382359b076f-18" name="rest_code_90d9d9619ef24ca3ae92d382359b076f-18" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_90d9d9619ef24ca3ae92d382359b076f-18"&gt;&lt;/a&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This function adds numbers to the branch list, and then filters branches based on the user’s query. The first thing to notice is the second argument: &lt;code class="docutils literal"&gt;string? filter&lt;/code&gt;. C# has support for nullable types, which means the compiler warns you if you use a possibly null value somewhere it isn’t expected &lt;a class="footnote-reference brackets" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#footnote-3" id="footnote-reference-3" role="doc-noteref"&gt;&lt;span class="fn-bracket"&gt;[&lt;/span&gt;3&lt;span class="fn-bracket"&gt;]&lt;/span&gt;&lt;/a&gt;. &lt;code class="docutils literal"&gt;numberFormatString&lt;/code&gt; uses an interpolated string, in which &lt;code class="docutils literal"&gt;{branchWidth}&lt;/code&gt; will be replaced with the variable defined before. In the LINQ expression, you can see two interesting things: one is a two-argument lambda for &lt;code class="docutils literal"&gt;Select&lt;/code&gt;, and argument names, which can be optionally passed to functions and constructors for readability or to set parameters out of order.&lt;/p&gt;
+&lt;/section&gt;
+&lt;section id="snippet-3"&gt;
+&lt;h3&gt;Snippet 3&lt;/h3&gt;
+&lt;p&gt;How much boilerplate do you need to define an immutable data class with a constructor, value equality, and a string representation?&lt;/p&gt;
+&lt;p&gt;Exactly zero:&lt;/p&gt;
+&lt;div class="code"&gt;&lt;pre class="code csharp"&gt;&lt;a id="rest_code_3e87a6f3685d479f88381313244d784e-1" name="rest_code_3e87a6f3685d479f88381313244d784e-1" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_3e87a6f3685d479f88381313244d784e-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;public&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;record&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nf"&gt;Branch&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;a id="rest_code_3e87a6f3685d479f88381313244d784e-2" name="rest_code_3e87a6f3685d479f88381313244d784e-2" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_3e87a6f3685d479f88381313244d784e-2"&gt;&lt;/a&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;string&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;Name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;a id="rest_code_3e87a6f3685d479f88381313244d784e-3" name="rest_code_3e87a6f3685d479f88381313244d784e-3" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_3e87a6f3685d479f88381313244d784e-3"&gt;&lt;/a&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;bool&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;IsRemote&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;false&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;a id="rest_code_3e87a6f3685d479f88381313244d784e-4" name="rest_code_3e87a6f3685d479f88381313244d784e-4" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_3e87a6f3685d479f88381313244d784e-4"&gt;&lt;/a&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;bool&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;IsCurrent&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;false&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;a id="rest_code_3e87a6f3685d479f88381313244d784e-5" name="rest_code_3e87a6f3685d479f88381313244d784e-5" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_3e87a6f3685d479f88381313244d784e-5"&gt;&lt;/a&gt;
+&lt;a id="rest_code_3e87a6f3685d479f88381313244d784e-6" name="rest_code_3e87a6f3685d479f88381313244d784e-6" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_3e87a6f3685d479f88381313244d784e-6"&gt;&lt;/a&gt;&lt;span class="k"&gt;public&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;record&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nf"&gt;BranchDisplay&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;a id="rest_code_3e87a6f3685d479f88381313244d784e-7" name="rest_code_3e87a6f3685d479f88381313244d784e-7" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_3e87a6f3685d479f88381313244d784e-7"&gt;&lt;/a&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;string&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;Number&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;a id="rest_code_3e87a6f3685d479f88381313244d784e-8" name="rest_code_3e87a6f3685d479f88381313244d784e-8" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_3e87a6f3685d479f88381313244d784e-8"&gt;&lt;/a&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;string&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;BranchName&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;a id="rest_code_3e87a6f3685d479f88381313244d784e-9" name="rest_code_3e87a6f3685d479f88381313244d784e-9" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_3e87a6f3685d479f88381313244d784e-9"&gt;&lt;/a&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;bool&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;IsRemote&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;false&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;a id="rest_code_3e87a6f3685d479f88381313244d784e-10" name="rest_code_3e87a6f3685d479f88381313244d784e-10" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_3e87a6f3685d479f88381313244d784e-10"&gt;&lt;/a&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kt"&gt;bool&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;IsCurrent&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;false&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;(If you want things to be mutable, you do need to write some more code. Still, all you need for encapsulated properties is &lt;code class="docutils literal"&gt;int Foo { get; set; }&lt;/code&gt;, which is miles better than having to write out getters and setters by hand, as you would do in Java.)&lt;/p&gt;
+&lt;/section&gt;
+&lt;/section&gt;
+&lt;section id="dependency-management"&gt;
+&lt;h2&gt;Dependency management&lt;/h2&gt;
+&lt;p&gt;Gitco.NET is a fairly simple thing, and it doesn’t need any third-party libraries, it can do its job with just the standard library.&lt;/p&gt;
+&lt;p&gt;However, Gitco.NET has a test suite. .NET doesn’t ship with a unit testing framework. There are three popular options, I picked xUnit (which is the most popular). I created the test project with a template, and then added a reference to the main code (under test). I ended up with the following project file (&lt;code class="docutils literal"&gt;gitco.NET.Tests.csproj&lt;/code&gt;):&lt;/p&gt;
+&lt;div class="code"&gt;&lt;pre class="code xml"&gt;&lt;a id="rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-1" name="rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-1" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-1"&gt;&lt;/a&gt;&lt;span class="nt"&gt;&amp;lt;Project&lt;/span&gt; &lt;span class="na"&gt;Sdk=&lt;/span&gt;&lt;span class="s"&gt;"Microsoft.NET.Sdk"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+&lt;a id="rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-2" name="rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-2" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-2"&gt;&lt;/a&gt;
+&lt;a id="rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-3" name="rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-3" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-3"&gt;&lt;/a&gt;  &lt;span class="nt"&gt;&amp;lt;PropertyGroup&amp;gt;&lt;/span&gt;
+&lt;a id="rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-4" name="rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-4" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-4"&gt;&lt;/a&gt;    &lt;span class="nt"&gt;&amp;lt;TargetFramework&amp;gt;&lt;/span&gt;net6.0&lt;span class="nt"&gt;&amp;lt;/TargetFramework&amp;gt;&lt;/span&gt;
+&lt;a id="rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-5" name="rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-5" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-5"&gt;&lt;/a&gt;    &lt;span class="nt"&gt;&amp;lt;ImplicitUsings&amp;gt;&lt;/span&gt;enable&lt;span class="nt"&gt;&amp;lt;/ImplicitUsings&amp;gt;&lt;/span&gt;
+&lt;a id="rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-6" name="rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-6" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-6"&gt;&lt;/a&gt;    &lt;span class="nt"&gt;&amp;lt;LangVersion&amp;gt;&lt;/span&gt;10.0&lt;span class="nt"&gt;&amp;lt;/LangVersion&amp;gt;&lt;/span&gt;
+&lt;a id="rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-7" name="rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-7" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-7"&gt;&lt;/a&gt;    &lt;span class="nt"&gt;&amp;lt;Nullable&amp;gt;&lt;/span&gt;enable&lt;span class="nt"&gt;&amp;lt;/Nullable&amp;gt;&lt;/span&gt;
+&lt;a id="rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-8" name="rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-8" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-8"&gt;&lt;/a&gt;    &lt;span class="nt"&gt;&amp;lt;IsPackable&amp;gt;&lt;/span&gt;false&lt;span class="nt"&gt;&amp;lt;/IsPackable&amp;gt;&lt;/span&gt;
+&lt;a id="rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-9" name="rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-9" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-9"&gt;&lt;/a&gt;  &lt;span class="nt"&gt;&amp;lt;/PropertyGroup&amp;gt;&lt;/span&gt;
+&lt;a id="rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-10" name="rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-10" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-10"&gt;&lt;/a&gt;
+&lt;a id="rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-11" name="rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-11" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-11"&gt;&lt;/a&gt;  &lt;span class="nt"&gt;&amp;lt;ItemGroup&amp;gt;&lt;/span&gt;
+&lt;a id="rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-12" name="rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-12" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-12"&gt;&lt;/a&gt;    &lt;span class="nt"&gt;&amp;lt;PackageReference&lt;/span&gt; &lt;span class="na"&gt;Include=&lt;/span&gt;&lt;span class="s"&gt;"Microsoft.NET.Test.Sdk"&lt;/span&gt; &lt;span class="na"&gt;Version=&lt;/span&gt;&lt;span class="s"&gt;"17.1.0"&lt;/span&gt; &lt;span class="nt"&gt;/&amp;gt;&lt;/span&gt;
+&lt;a id="rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-13" name="rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-13" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-13"&gt;&lt;/a&gt;    &lt;span class="nt"&gt;&amp;lt;PackageReference&lt;/span&gt; &lt;span class="na"&gt;Include=&lt;/span&gt;&lt;span class="s"&gt;"xunit"&lt;/span&gt; &lt;span class="na"&gt;Version=&lt;/span&gt;&lt;span class="s"&gt;"2.4.1"&lt;/span&gt; &lt;span class="nt"&gt;/&amp;gt;&lt;/span&gt;
+&lt;a id="rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-14" name="rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-14" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-14"&gt;&lt;/a&gt;    &lt;span class="nt"&gt;&amp;lt;PackageReference&lt;/span&gt; &lt;span class="na"&gt;Include=&lt;/span&gt;&lt;span class="s"&gt;"xunit.runner.visualstudio"&lt;/span&gt; &lt;span class="na"&gt;Version=&lt;/span&gt;&lt;span class="s"&gt;"2.4.3"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+&lt;a id="rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-15" name="rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-15" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-15"&gt;&lt;/a&gt;      &lt;span class="nt"&gt;&amp;lt;IncludeAssets&amp;gt;&lt;/span&gt;runtime; build; native; contentfiles; analyzers; buildtransitive&lt;span class="nt"&gt;&amp;lt;/IncludeAssets&amp;gt;&lt;/span&gt;
+&lt;a id="rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-16" name="rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-16" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-16"&gt;&lt;/a&gt;      &lt;span class="nt"&gt;&amp;lt;PrivateAssets&amp;gt;&lt;/span&gt;all&lt;span class="nt"&gt;&amp;lt;/PrivateAssets&amp;gt;&lt;/span&gt;
+&lt;a id="rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-17" name="rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-17" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-17"&gt;&lt;/a&gt;    &lt;span class="nt"&gt;&amp;lt;/PackageReference&amp;gt;&lt;/span&gt;
+&lt;a id="rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-18" name="rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-18" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-18"&gt;&lt;/a&gt;    &lt;span class="nt"&gt;&amp;lt;PackageReference&lt;/span&gt; &lt;span class="na"&gt;Include=&lt;/span&gt;&lt;span class="s"&gt;"coverlet.collector"&lt;/span&gt; &lt;span class="na"&gt;Version=&lt;/span&gt;&lt;span class="s"&gt;"3.1.2"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+&lt;a id="rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-19" name="rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-19" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-19"&gt;&lt;/a&gt;      &lt;span class="nt"&gt;&amp;lt;IncludeAssets&amp;gt;&lt;/span&gt;runtime; build; native; contentfiles; analyzers; buildtransitive&lt;span class="nt"&gt;&amp;lt;/IncludeAssets&amp;gt;&lt;/span&gt;
+&lt;a id="rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-20" name="rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-20" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-20"&gt;&lt;/a&gt;      &lt;span class="nt"&gt;&amp;lt;PrivateAssets&amp;gt;&lt;/span&gt;all&lt;span class="nt"&gt;&amp;lt;/PrivateAssets&amp;gt;&lt;/span&gt;
+&lt;a id="rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-21" name="rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-21" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-21"&gt;&lt;/a&gt;    &lt;span class="nt"&gt;&amp;lt;/PackageReference&amp;gt;&lt;/span&gt;
+&lt;a id="rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-22" name="rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-22" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-22"&gt;&lt;/a&gt;  &lt;span class="nt"&gt;&amp;lt;/ItemGroup&amp;gt;&lt;/span&gt;
+&lt;a id="rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-23" name="rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-23" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-23"&gt;&lt;/a&gt;
+&lt;a id="rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-24" name="rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-24" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-24"&gt;&lt;/a&gt;  &lt;span class="nt"&gt;&amp;lt;ItemGroup&amp;gt;&lt;/span&gt;
+&lt;a id="rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-25" name="rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-25" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-25"&gt;&lt;/a&gt;    &lt;span class="nt"&gt;&amp;lt;ProjectReference&lt;/span&gt; &lt;span class="na"&gt;Include=&lt;/span&gt;&lt;span class="s"&gt;"..\gitco.NET\gitco.NET.csproj"&lt;/span&gt; &lt;span class="nt"&gt;/&amp;gt;&lt;/span&gt;
+&lt;a id="rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-26" name="rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-26" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-26"&gt;&lt;/a&gt;  &lt;span class="nt"&gt;&amp;lt;/ItemGroup&amp;gt;&lt;/span&gt;
+&lt;a id="rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-27" name="rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-27" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-27"&gt;&lt;/a&gt;
+&lt;a id="rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-28" name="rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-28" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_fe23adab3d8d4c5b84e52b7aa3f54791-28"&gt;&lt;/a&gt;&lt;span class="nt"&gt;&amp;lt;/Project&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Yeah, it’s an XML file. But it’s pretty straightforward: there’s a &lt;code class="docutils literal"&gt;&amp;lt;PropertyGroup&amp;gt;&lt;/code&gt; with some project configuration, and two &lt;code class="docutils literal"&gt;&amp;lt;ItemGroup&amp;gt;&amp;gt;&lt;/code&gt; tags. One of them has &lt;code class="docutils literal"&gt;&amp;lt;PackageReference&amp;gt;&lt;/code&gt; tags, which specify third-party dependencies to use. The other has a &lt;code class="docutils literal"&gt;&amp;lt;ProjectReference&amp;gt;&lt;/code&gt; to the main code, pointing at its &lt;code class="docutils literal"&gt;.csproj&lt;/code&gt; file. (Note that this split is arbitrary, you can have as many &lt;code class="docutils literal"&gt;&amp;lt;ItemGroup&amp;gt;&lt;/code&gt; tags as you want, you could have just one with both package and project references.)&lt;/p&gt;
+&lt;p&gt;How does this work? Quite simply, and transparently to the developer. Building the project will lead to packages being &lt;em&gt;restored&lt;/em&gt; (fetched from NuGet, or copied from the local NuGet cache). There are no “virtual environments” to manage, there aren’t 10 competing package managers. Visual Studio will also expect both projects to be part of one solution, which is something you’d likely do anyway for convenient access to both at the same time.&lt;/p&gt;
+&lt;/section&gt;
+&lt;section id="tooling"&gt;
+&lt;h2&gt;Tooling&lt;/h2&gt;
+&lt;section id="dotnet-cli"&gt;
+&lt;h3&gt;dotnet CLI&lt;/h3&gt;
+&lt;p&gt;.NET has a CLI for performing typical build and project configuration tasks. You can &lt;code class="docutils literal"&gt;dotnet build&lt;/code&gt; a project, you can &lt;code class="docutils literal"&gt;dotnet run&lt;/code&gt; it, you can &lt;code class="docutils literal"&gt;dotnet test&lt;/code&gt; things, and you can &lt;code class="docutils literal"&gt;dotnet publish&lt;/code&gt;. The CLI figures out what to do, it restores the dependencies if needed, it handles the compilation of your code. If you type &lt;code class="docutils literal"&gt;dotnet test&lt;/code&gt; in a directory with your solution file (&lt;code class="docutils literal"&gt;.sln&lt;/code&gt;), it will restore dependencies, build the code, and then find tests and run them.&lt;/p&gt;
+&lt;/section&gt;
+&lt;section id="ide"&gt;
+&lt;h3&gt;IDE&lt;/h3&gt;
+&lt;p&gt;What IDE should you use? There are a few options:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Visual Studio Code.&lt;/strong&gt; The quite advanced text editor supports pretty much any language. C# support works okay, with all the IDE features available, but in my experience, it can sometimes get confused (requiring a restart of the IDE). You will probably need to spend some more time with the &lt;code class="docutils literal"&gt;dotnet&lt;/code&gt; CLI than you would with the other options.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Visual Studio for Windows.&lt;/strong&gt; The IDE with the purple icon is an option, although VS can feel arcane to people used to other IDEs/editors, and the Vim bindings are quite bad (especially if you select things with a mouse sometimes). It’s free for personal and very-small-business use, but for anything even slightly serious, you’ll need paid licenses.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Visual Studio for Mac.&lt;/strong&gt; A completely separate product, works reasonably well, same pricing as with the Windows version.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Visual Studio for Windows + ReSharper Ultimate.&lt;/strong&gt; Adding this (paid) extension makes VS much smarter, although it can also affect performance negatively.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;JetBrains Rider.&lt;/strong&gt; This is an IDE based on the IntelliJ platform, with all the magic seen in ReSharper (as well as other JetBrains IDEs), but none of the performance issues and Visual Studio being Visual Studio (although if you do prefer VS behaviors and keyboard shortcuts, you can configure those as well). This is probably your best bet if you’re willing to invest some money (or your employer is).&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/section&gt;
+&lt;/section&gt;
+&lt;section id="why-should-i-pick-it-over-x"&gt;
+&lt;h2&gt;Why should I pick it over X?&lt;/h2&gt;
+&lt;p&gt;Well, it depends. If this post has piqued your interest, perhaps install the SDK and write some small things to get a feel for the language and to see if it’s for you. (And note this post didn’t cover the Web stuff.)&lt;/p&gt;
+&lt;p&gt;But here are a few things of note:&lt;/p&gt;
+&lt;section id="python"&gt;
+&lt;h3&gt;Python&lt;/h3&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;&lt;p&gt;C# is statically typed. Modern Python’s static typing (via things like mypy) is quite cool, but not all libraries and ecosystems have adopted it. Statically typed languages are safer, and allow IDEs to be smarter.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;C# has a better approach to functional programming. Python has ugly and single-expression lambdas (with a pointless &lt;code class="docutils literal"&gt;lambda&lt;/code&gt; keyword), C# has inline functions that can contain multiple statements.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;C# has much better package management.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;C# is trivial to compile to a single-file executable.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;C# is much faster than Python.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;~Nobody does machine learning and data science in C#, which is a plus in my book.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/section&gt;
+&lt;section id="java"&gt;
+&lt;h3&gt;Java&lt;/h3&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;&lt;p&gt;C# has a lot more developer-quality-of-life features and less boilerplate. For example, Lists and Dictionaries can be accessed using brackets, and properties are accessible via dot notation instead of having to explicitly call getter and setter methods.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;C#’s generic are more flexible, as they aren’t erased on compilation.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;C# has null safety. It also has the safe navigation &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;?.&lt;/span&gt;&lt;/code&gt; operator, and the null coalescing &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;??&lt;/span&gt;&lt;/code&gt; operator, both of which make working with nullable values easier.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;C# has easy concurrency via &lt;code class="docutils literal"&gt;async&lt;/code&gt; and &lt;code class="docutils literal"&gt;await&lt;/code&gt;.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Web stuff: Spring is painful, Spring Boot doesn’t make it much better. ASP.NET Core is much nicer.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;em&gt;Additional reading:&lt;/em&gt; Wikipedia has a very nice and detailed &lt;a class="reference external" href="https://en.wikipedia.org/wiki/Comparison_of_C_Sharp_and_Java"&gt;Comparison of C# and Java&lt;/a&gt;.&lt;/p&gt;
+&lt;/section&gt;
+&lt;section id="also"&gt;
+&lt;h3&gt;Also…&lt;/h3&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;&lt;p&gt;C# is a high-level language with automated memory management, which is very convenient in many use-cases.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;C# has exceptions.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;There are quite a lot of jobs for C# developers, although not necessarily in Silicon Valley.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/section&gt;
+&lt;section id="but-on-the-other-hand"&gt;
+&lt;h3&gt;But on the other hand…&lt;/h3&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;&lt;p&gt;C# can still sometimes feel a bit Windows-oriented.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;C# jobs tend to be enterprisey.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Python is a great language to learn as a beginner. It’s also great for one-off things, interactive work, and scripting.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;The non-Windows desktop GUI story isn’t too great, although it is getting better with MAUI (which supports macOS).&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;If you’re targeting mobile, I would probably focus on the native APIs and languages for the best user experience (Swift and Cocoa Touch for iOS; Kotlin and the Android Platform APIs for Android). That said, MAUI might be worth a go as well.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;If you’re doing very low-level stuff, C# probably won’t cut it.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;If you want real functional programming, go with F#. You might also prefer Scala or Haskell or such.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;And if you’re making web front-end stuff, TypeScript (or plain JavaScript) is still your best bet. C# has Blazor, but I’d prefer for web apps not to embed all of .NET via WebAssembly.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;But for console apps, Windows desktop, and web back-end services? &lt;strong&gt;Do give C# a try,&lt;/strong&gt; it might just win you over. It is a pretty good language, but one that was held back by the Windows association for a long time. But now it’s part of a modern, multi-platform, developer-friendly ecosystem.&lt;/p&gt;
+&lt;/section&gt;
+&lt;/section&gt;
+&lt;section id="footnotes"&gt;
+&lt;h2&gt;Footnotes&lt;/h2&gt;
+&lt;aside class="footnote-list brackets"&gt;
+&lt;aside class="footnote brackets" id="footnote-1" role="note"&gt;
+&lt;span class="label"&gt;&lt;span class="fn-bracket"&gt;[&lt;/span&gt;&lt;a role="doc-backlink" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#footnote-reference-1"&gt;1&lt;/a&gt;&lt;span class="fn-bracket"&gt;]&lt;/span&gt;&lt;/span&gt;
+&lt;p&gt;The code samples in this post are using the usual Microsoft code style with braces on separate lines, the usual Microsoft naming convention (PascalCase for ~everything, camelCase for local variable names), and 2-space indentation, which isn’t the usual Microsoft style.&lt;/p&gt;
+&lt;/aside&gt;
+&lt;aside class="footnote brackets" id="footnote-2" role="note"&gt;
+&lt;span class="label"&gt;&lt;span class="fn-bracket"&gt;[&lt;/span&gt;&lt;a role="doc-backlink" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#footnote-reference-2"&gt;2&lt;/a&gt;&lt;span class="fn-bracket"&gt;]&lt;/span&gt;&lt;/span&gt;
+&lt;p&gt;This could be moved to a separate static method. If that method was &lt;code class="docutils literal"&gt;private static Branch ParseLineAsBranch(string branchLine)&lt;/code&gt;, then the expression could be &lt;code class="docutils literal"&gt;.Select(ParseLineAsBranch)&lt;/code&gt;.&lt;/p&gt;
+&lt;/aside&gt;
+&lt;aside class="footnote brackets" id="footnote-3" role="note"&gt;
+&lt;span class="label"&gt;&lt;span class="fn-bracket"&gt;[&lt;/span&gt;&lt;a role="doc-backlink" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#footnote-reference-3"&gt;3&lt;/a&gt;&lt;span class="fn-bracket"&gt;]&lt;/span&gt;&lt;/span&gt;
+&lt;p&gt;There’s some inconsistency and mixing when working with nullables: nullable objects (such as &lt;code class="docutils literal"&gt;string?&lt;/code&gt;) are accessible directly, whereas nullable value types (such as &lt;code class="docutils literal"&gt;int?&lt;/code&gt;) need to be accessed with &lt;code class="docutils literal"&gt;.Value&lt;/code&gt;, due to historical reasons and implementation details.&lt;/p&gt;
+&lt;/aside&gt;
+&lt;/aside&gt;
+&lt;/section&gt;</description><category>.NET</category><category>CSharp</category><category>programming</category><category>web development</category><guid>https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/</guid><pubDate>Mon, 19 Sep 2022 20:35:00 GMT</pubDate></item><item><title>Enabling Virtualization Support in Boot Camp with rEFInd</title><link>https://chriswarrick.com/blog/2021/01/31/enabling-virtualization-support-in-boot-camp-with-refind/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;p&gt;You installed Windows on an Intel Mac via Boot Camp, and want to use
 virtualization in it. But there’s an issue — hardware virtualization extensions
 are not available. Luckily, this can be worked around easily with the help of
 rEFInd, an alternate boot manager.&lt;/p&gt;
@@ -320,33 +552,38 @@ the Windows support to?&lt;/p&gt;
 &lt;p&gt;In other news, &lt;a class="reference external" href="https://github.com/docker/for-mac/issues/4733"&gt;Docker is not ready yet&lt;/a&gt;.&lt;/p&gt;
 &lt;/div&gt;</description><category>Apple</category><category>ARM</category><category>devel</category><category>Mac</category><guid>https://chriswarrick.com/blog/2020/06/22/what-an-arm-mac-means-for-developers-and-windows-users/</guid><pubDate>Mon, 22 Jun 2020 19:00:00 GMT</pubDate></item><item><title>Reinstalling macOS: What To Try When All Else Fails</title><link>https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;p&gt;Recently, I reinstalled macOS on my device. Throughout the process, many
 attempts failed miserably. But I now have some experience and assorted hints on
-what to try.&lt;/p&gt;
+what to try (as long as you’ve got an Intel Mac).&lt;/p&gt;
 &lt;!-- TEASER_END --&gt;
 &lt;p&gt;&lt;strong&gt;DISCLAIMER:&lt;/strong&gt; All information in this post is provided as-is, and some of it may
 void your warranty. Neither Chris Warrick nor Apple will be responsible for any
 damage to your devices caused as a result of using information in this post.&lt;/p&gt;
-&lt;div class="contents alert alert-primary topic" id="contents"&gt;
+&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; This blog post is written for Intel Macs, particularly those that can
+boot OS X El Capitan. If your Mac can’t, you’ll need to look for help
+elsewhere. If you’ve got an Apple Silicon Mac, you probably want to perform
+&lt;a class="reference external" href="https://support.apple.com/guide/apple-configurator-mac/revive-or-restore-a-mac-with-apple-silicon-apdd5f3c75ad/mac"&gt;a DFU restore&lt;/a&gt;
+(requires another Mac and a USB-C cable.)&lt;/p&gt;
+&lt;nav class="contents alert alert-primary" id="contents" role="doc-toc"&gt;
 &lt;p class="topic-title"&gt;Contents&lt;/p&gt;
 &lt;ul class="simple"&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#making-install-media-with-el-capitan-with-access-only-to-recovery" id="id1"&gt;Making install media with El Capitan (with access only to Recovery)&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#manually-installing-pkg-files" id="id2"&gt;Manually installing .pkg files&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#making-install-media-out-of-partial-macos-installers-not-a-valid-os-installer-application" id="id3"&gt;Making install media out of partial macOS installers (“not a valid OS installer application”)&lt;/a&gt;&lt;/p&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#making-install-media-with-el-capitan-with-access-only-to-recovery" id="toc-entry-1"&gt;Making install media with El Capitan (with access only to Recovery)&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#manually-installing-pkg-files" id="toc-entry-2"&gt;Manually installing .pkg files&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#making-install-media-out-of-partial-macos-installers-not-a-valid-os-installer-application" id="toc-entry-3"&gt;Making install media out of partial macOS installers (“not a valid OS installer application”)&lt;/a&gt;&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#a-from-the-el-capitan-download" id="id4"&gt;a. From the El Capitan download&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#b-installer-from-recovery-app-store-any-macos-version" id="id5"&gt;b. Installer from Recovery/App Store (any macOS version)&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#a-from-the-el-capitan-download" id="toc-entry-4"&gt;a. From the El Capitan download&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#b-installer-from-recovery-app-store-any-macos-version" id="toc-entry-5"&gt;b. Installer from Recovery/App Store (any macOS version)&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#el-capitan-installer-cant-be-verified" id="id6"&gt;El Capitan installer can’t be verified&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#bonus-tidbit-1-how-the-download-works" id="id7"&gt;Bonus tidbit 1: how the download works&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#bonus-tidbit-2-using-terminal-from-setup-assistant" id="id8"&gt;Bonus tidbit 2: using Terminal from Setup Assistant&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#bonus-tidbit-3-creating-an-image-of-the-install-media-might-not-work" id="id9"&gt;Bonus tidbit 3: creating an image of the install media might not work&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#bonus-tidbit-4-dont-bother-restoring-a-time-machine-backup" id="id10"&gt;Bonus tidbit 4: don’t bother restoring a Time Machine backup&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#an-open-letter-to-progress-bar-designers" id="id11"&gt;An Open Letter to Progress Bar Designers&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#in-the-end" id="id12"&gt;In the end…&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#el-capitan-installer-cant-be-verified" id="toc-entry-6"&gt;El Capitan installer can’t be verified&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#bonus-tidbit-1-how-the-download-works" id="toc-entry-7"&gt;Bonus tidbit 1: how the download works&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#bonus-tidbit-2-using-terminal-from-setup-assistant" id="toc-entry-8"&gt;Bonus tidbit 2: using Terminal from Setup Assistant&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#bonus-tidbit-3-creating-an-image-of-the-install-media-might-not-work" id="toc-entry-9"&gt;Bonus tidbit 3: creating an image of the install media might not work&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#bonus-tidbit-4-dont-bother-restoring-a-time-machine-backup" id="toc-entry-10"&gt;Bonus tidbit 4: don’t bother restoring a Time Machine backup&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#an-open-letter-to-progress-bar-designers" id="toc-entry-11"&gt;An Open Letter to Progress Bar Designers&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#in-the-end" id="toc-entry-12"&gt;In the end…&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;/div&gt;
-&lt;div class="section" id="making-install-media-with-el-capitan-with-access-only-to-recovery"&gt;
-&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#id1"&gt;Making install media with El Capitan (with access only to Recovery)&lt;/a&gt;&lt;/h2&gt;
+&lt;/nav&gt;
+&lt;section id="making-install-media-with-el-capitan-with-access-only-to-recovery"&gt;
+&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#toc-entry-1" role="doc-backlink"&gt;Making install media with El Capitan (with access only to Recovery)&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;The best, safest, least error-prone way to do an install is with a USB stick.
 Unfortunately, making a USB stick with the macOS installer on it is a nuisance.
 The expected way to produce macOS install media is to download the installer
@@ -358,20 +595,21 @@ solve.&lt;/p&gt;
 Hackintoshing this little bit harder, but this also affects legitimate users.
 The only thing you can download from Apple is El Capitan. Apple offers
 &lt;a class="reference external" href="https://support.apple.com/en-us/HT206886"&gt;InstallMacOSX.dmg&lt;/a&gt; on their
-website. If you take a look at the instructions, you will see that this is
+website. (There’s also a Sierra download now, but it seems to be broken as of
+September 2022.) If you take a look at the instructions, you will see that this is
 &lt;em&gt;not&lt;/em&gt; a bootable OS X image. This image has a &lt;code class="docutils literal"&gt;.pkg&lt;/code&gt; package. This package is
 expected to install &lt;code class="docutils literal"&gt;/Applications/Install OS X El Capitan.app&lt;/code&gt;. Well, we’re
 in recovery, we can’t install stuff. So, let’s do this the manual way.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="section" id="manually-installing-pkg-files"&gt;
-&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#id2"&gt;Manually installing .pkg files&lt;/a&gt;&lt;/h2&gt;
+&lt;/section&gt;
+&lt;section id="manually-installing-pkg-files"&gt;
+&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#toc-entry-2" role="doc-backlink"&gt;Manually installing .pkg files&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;Turns out the &lt;code class="docutils literal"&gt;.pkg&lt;/code&gt; format is just an archives all the way down, with all
 archives being different formats (at least three).&lt;/p&gt;
-&lt;div class="float-md-right mt-md-0 sidebar"&gt;
+&lt;aside class="float-md-right mt-md-0 sidebar"&gt;
 &lt;p class="sidebar-title"&gt;macOS flat package format&lt;/p&gt;
 &lt;p&gt;You can find more resources about the flat package format, &lt;a class="reference external" href="http://s.sudre.free.fr/Stuff/Ivanhoe/FLAT.html"&gt;one&lt;/a&gt; or &lt;a class="reference external" href="https://matthew-brett.github.io/docosx/flat_packages.html#payload_"&gt;two&lt;/a&gt;, although
 this was deduced from the &lt;code class="docutils literal"&gt;file&lt;/code&gt; command and The Unarchiver.&lt;/p&gt;
-&lt;/div&gt;
+&lt;/aside&gt;
 &lt;p&gt;The first archive is the &lt;code class="docutils literal"&gt;.pkg&lt;/code&gt; file itself. Those files are in &lt;a class="reference external" href="https://en.wikipedia.org/wiki/Xar_(archiver)"&gt;XAR format&lt;/a&gt;, which was invented by the
 OpenDarwin community. You can either extract it with &lt;code class="docutils literal"&gt;pkgutil &lt;span class="pre"&gt;--expand&lt;/span&gt;
 foo.pkg foo_files&lt;/code&gt; (the last argument is the destination directory, can be
@@ -389,30 +627,32 @@ will extract all the files the package has.&lt;/p&gt;
 &lt;code class="docutils literal"&gt;.cpio.gz&lt;/code&gt; again, with the same way to extract it.&lt;/p&gt;
 &lt;p&gt;(PS.  If you have &lt;code class="docutils literal"&gt;7z&lt;/code&gt; around (on Windows/Linux as well), you can just point
 it at all the compressed files mentioned in this paragraph.)&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="section" id="making-install-media-out-of-partial-macos-installers-not-a-valid-os-installer-application"&gt;
-&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#id3"&gt;Making install media out of partial macOS installers (“not a valid OS installer application”)&lt;/a&gt;&lt;/h2&gt;
-&lt;div class="section" id="a-from-the-el-capitan-download"&gt;
-&lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#id4"&gt;a. From the El Capitan download&lt;/a&gt;&lt;/h3&gt;
+&lt;/section&gt;
+&lt;section id="making-install-media-out-of-partial-macos-installers-not-a-valid-os-installer-application"&gt;
+&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#toc-entry-3" role="doc-backlink"&gt;Making install media out of partial macOS installers (“not a valid OS installer application”)&lt;/a&gt;&lt;/h2&gt;
+&lt;section id="a-from-the-el-capitan-download"&gt;
+&lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#toc-entry-4" role="doc-backlink"&gt;a. From the El Capitan download&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;Let’s expand the El Capitan package.&lt;/p&gt;
-&lt;pre class="code console"&gt;&lt;a name="rest_code_530407b228584ea99357137813bff397-1"&gt;&lt;/a&gt;&lt;span class="gp"&gt;$&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;mount the DMG in Disk Utility&lt;span class="o"&gt;)&lt;/span&gt;
-&lt;a name="rest_code_530407b228584ea99357137813bff397-2"&gt;&lt;/a&gt;&lt;span class="gp"&gt;$&lt;/span&gt; cp /Volumes/Install&lt;span class="se"&gt;\ &lt;/span&gt;OS&lt;span class="se"&gt;\ &lt;/span&gt;X/InstallMacOSX.pkg /Volumes/Macintosh&lt;span class="se"&gt;\ &lt;/span&gt;HD/
-&lt;a name="rest_code_530407b228584ea99357137813bff397-3"&gt;&lt;/a&gt;&lt;span class="go"&gt;     (Or copy it to some other volume you can write to; NOT the USB stick)&lt;/span&gt;
-&lt;a name="rest_code_530407b228584ea99357137813bff397-4"&gt;&lt;/a&gt;&lt;span class="gp"&gt;$&lt;/span&gt; &lt;span class="nb"&gt;cd&lt;/span&gt; /Volumes/Macintosh&lt;span class="se"&gt;\ &lt;/span&gt;HD/
-&lt;a name="rest_code_530407b228584ea99357137813bff397-5"&gt;&lt;/a&gt;&lt;span class="gp"&gt;$&lt;/span&gt; pkgutil --expand InstallMacOSX.pkg elcapitan
-&lt;a name="rest_code_530407b228584ea99357137813bff397-6"&gt;&lt;/a&gt;&lt;span class="gp"&gt;$&lt;/span&gt; ls -F elcapitan
-&lt;a name="rest_code_530407b228584ea99357137813bff397-7"&gt;&lt;/a&gt;&lt;span class="go"&gt;Distribution*       InstallMacOSX.pkg/ Resources/&lt;/span&gt;
-&lt;a name="rest_code_530407b228584ea99357137813bff397-8"&gt;&lt;/a&gt;&lt;span class="gp"&gt;$&lt;/span&gt; &lt;span class="nb"&gt;cd&lt;/span&gt; elcapitan/InstallMacOSX.pkg/
-&lt;a name="rest_code_530407b228584ea99357137813bff397-9"&gt;&lt;/a&gt;&lt;span class="gp"&gt;$&lt;/span&gt; tar -xvf Payload
-&lt;a name="rest_code_530407b228584ea99357137813bff397-10"&gt;&lt;/a&gt;&lt;span class="go"&gt;x .&lt;/span&gt;
-&lt;a name="rest_code_530407b228584ea99357137813bff397-11"&gt;&lt;/a&gt;&lt;span class="go"&gt;x ./Install OS X El Capitan.app&lt;/span&gt;
-&lt;a name="rest_code_530407b228584ea99357137813bff397-12"&gt;&lt;/a&gt;&lt;span class="go"&gt;x ./Install OS X El Capitan.app/Contents&lt;/span&gt;
-&lt;a name="rest_code_530407b228584ea99357137813bff397-13"&gt;&lt;/a&gt;&lt;span class="go"&gt;…&lt;/span&gt;
-&lt;/pre&gt;&lt;p&gt;We’ve got the installer app, which is what we need to create an install image.
+&lt;div class="code"&gt;&lt;pre class="code console"&gt;&lt;a id="rest_code_491752bea7f74cfd94298a995686f8b6-1" name="rest_code_491752bea7f74cfd94298a995686f8b6-1" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_491752bea7f74cfd94298a995686f8b6-1"&gt;&lt;/a&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;mount the DMG &lt;span class="k"&gt;in&lt;/span&gt; Disk Utility&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;a id="rest_code_491752bea7f74cfd94298a995686f8b6-2" name="rest_code_491752bea7f74cfd94298a995686f8b6-2" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_491752bea7f74cfd94298a995686f8b6-2"&gt;&lt;/a&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;cp /Volumes/Install&lt;span class="se"&gt;\ &lt;/span&gt;OS&lt;span class="se"&gt;\ &lt;/span&gt;X/InstallMacOSX.pkg /Volumes/Macintosh&lt;span class="se"&gt;\ &lt;/span&gt;HD/
+&lt;a id="rest_code_491752bea7f74cfd94298a995686f8b6-3" name="rest_code_491752bea7f74cfd94298a995686f8b6-3" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_491752bea7f74cfd94298a995686f8b6-3"&gt;&lt;/a&gt;&lt;span class="go"&gt;     (Or copy it to some other volume you can write to; NOT the USB stick)&lt;/span&gt;
+&lt;a id="rest_code_491752bea7f74cfd94298a995686f8b6-4" name="rest_code_491752bea7f74cfd94298a995686f8b6-4" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_491752bea7f74cfd94298a995686f8b6-4"&gt;&lt;/a&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; /Volumes/Macintosh&lt;span class="se"&gt;\ &lt;/span&gt;HD/
+&lt;a id="rest_code_491752bea7f74cfd94298a995686f8b6-5" name="rest_code_491752bea7f74cfd94298a995686f8b6-5" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_491752bea7f74cfd94298a995686f8b6-5"&gt;&lt;/a&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;pkgutil --expand InstallMacOSX.pkg elcapitan
+&lt;a id="rest_code_491752bea7f74cfd94298a995686f8b6-6" name="rest_code_491752bea7f74cfd94298a995686f8b6-6" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_491752bea7f74cfd94298a995686f8b6-6"&gt;&lt;/a&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;ls -F elcapitan
+&lt;a id="rest_code_491752bea7f74cfd94298a995686f8b6-7" name="rest_code_491752bea7f74cfd94298a995686f8b6-7" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_491752bea7f74cfd94298a995686f8b6-7"&gt;&lt;/a&gt;&lt;span class="go"&gt;Distribution*       InstallMacOSX.pkg/ Resources/&lt;/span&gt;
+&lt;a id="rest_code_491752bea7f74cfd94298a995686f8b6-8" name="rest_code_491752bea7f74cfd94298a995686f8b6-8" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_491752bea7f74cfd94298a995686f8b6-8"&gt;&lt;/a&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; elcapitan/InstallMacOSX.pkg/
+&lt;a id="rest_code_491752bea7f74cfd94298a995686f8b6-9" name="rest_code_491752bea7f74cfd94298a995686f8b6-9" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_491752bea7f74cfd94298a995686f8b6-9"&gt;&lt;/a&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;tar -xvf Payload
+&lt;a id="rest_code_491752bea7f74cfd94298a995686f8b6-10" name="rest_code_491752bea7f74cfd94298a995686f8b6-10" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_491752bea7f74cfd94298a995686f8b6-10"&gt;&lt;/a&gt;&lt;span class="go"&gt;x .&lt;/span&gt;
+&lt;a id="rest_code_491752bea7f74cfd94298a995686f8b6-11" name="rest_code_491752bea7f74cfd94298a995686f8b6-11" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_491752bea7f74cfd94298a995686f8b6-11"&gt;&lt;/a&gt;&lt;span class="go"&gt;x ./Install OS X El Capitan.app&lt;/span&gt;
+&lt;a id="rest_code_491752bea7f74cfd94298a995686f8b6-12" name="rest_code_491752bea7f74cfd94298a995686f8b6-12" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_491752bea7f74cfd94298a995686f8b6-12"&gt;&lt;/a&gt;&lt;span class="go"&gt;x ./Install OS X El Capitan.app/Contents&lt;/span&gt;
+&lt;a id="rest_code_491752bea7f74cfd94298a995686f8b6-13" name="rest_code_491752bea7f74cfd94298a995686f8b6-13" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_491752bea7f74cfd94298a995686f8b6-13"&gt;&lt;/a&gt;&lt;span class="go"&gt;…&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;We’ve got the installer app, which is what we need to create an install image.
 Great, let’s try it!&lt;/p&gt;
-&lt;pre class="code console"&gt;&lt;a name="rest_code_44452312441d4d829e22b5c6f0721aac-1"&gt;&lt;/a&gt;&lt;span class="gp"&gt;#&lt;/span&gt; &lt;span class="s2"&gt;"Install OS X El Capitan.app/Contents/Resources/createinstallmedia"&lt;/span&gt; --volume /Volumes/MyBlankUSBDrive --applicationpath &lt;span class="s2"&gt;"Install OS X El Capitan.app"&lt;/span&gt;
-&lt;a name="rest_code_44452312441d4d829e22b5c6f0721aac-2"&gt;&lt;/a&gt;&lt;span class="go"&gt;Install OS X El Capitan.app does not appear to be a valid OS installer application.&lt;/span&gt;
-&lt;/pre&gt;&lt;p&gt;Oh, we’ve got a problem. Turns out there’s one more thing we need to take care
+&lt;div class="code"&gt;&lt;pre class="code console"&gt;&lt;a id="rest_code_f7c15ad1730044f0a64610d31ca159d4-1" name="rest_code_f7c15ad1730044f0a64610d31ca159d4-1" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_f7c15ad1730044f0a64610d31ca159d4-1"&gt;&lt;/a&gt;&lt;span class="gp"&gt;# &lt;/span&gt;&lt;span class="s2"&gt;"Install OS X El Capitan.app/Contents/Resources/createinstallmedia"&lt;/span&gt; --volume /Volumes/MyBlankUSBDrive --applicationpath &lt;span class="s2"&gt;"Install OS X El Capitan.app"&lt;/span&gt;
+&lt;a id="rest_code_f7c15ad1730044f0a64610d31ca159d4-2" name="rest_code_f7c15ad1730044f0a64610d31ca159d4-2" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_f7c15ad1730044f0a64610d31ca159d4-2"&gt;&lt;/a&gt;&lt;span class="go"&gt;Install OS X El Capitan.app does not appear to be a valid OS installer application.&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Oh, we’ve got a problem. Turns out there’s one more thing we need to take care
 of, and it’s the scripts. MacOS packages have scripts, typically shell scripts,
 that are run at various stages in the install process. We can look at the
 &lt;code class="docutils literal"&gt;PackageInfo&lt;/code&gt; file, or just look in the &lt;code class="docutils literal"&gt;Scripts&lt;/code&gt; folder, to see that
@@ -420,20 +660,22 @@ there’s an &lt;code class="docutils literal"&gt;link_package&lt;/code&gt; scri
 &lt;code class="docutils literal"&gt;Contents/SharedSupport&lt;/code&gt; directory inside the installer app, and
 copies/hardlinks the &lt;code class="docutils literal"&gt;InstallESD.dmg&lt;/code&gt; file (which is the install formerly-DVD
 image) to that directory. Let’s try doing this on our own:&lt;/p&gt;
-&lt;pre class="code console"&gt;&lt;a name="rest_code_880a8eba00394c1d8144877825aa0e6c-1"&gt;&lt;/a&gt;&lt;span class="gp"&gt;$&lt;/span&gt; mkdir &lt;span class="s2"&gt;"Install OS X El Capitan.app/Contents/SharedSupport"&lt;/span&gt;
-&lt;a name="rest_code_880a8eba00394c1d8144877825aa0e6c-2"&gt;&lt;/a&gt;&lt;span class="gp"&gt;$&lt;/span&gt; mv InstallESD.dmg &lt;span class="s2"&gt;"Install OS X El Capitan.app/Contents/SharedSupport"&lt;/span&gt;
-&lt;a name="rest_code_880a8eba00394c1d8144877825aa0e6c-3"&gt;&lt;/a&gt;&lt;span class="gp"&gt;#&lt;/span&gt; &lt;span class="s2"&gt;"Install OS X El Capitan.app/Contents/Resources/createinstallmedia"&lt;/span&gt; --volume /Volumes/MyBlankUSBDrive --applicationpath &lt;span class="s2"&gt;"Install OS X El Capitan.app"&lt;/span&gt;
-&lt;a name="rest_code_880a8eba00394c1d8144877825aa0e6c-4"&gt;&lt;/a&gt;&lt;span class="go"&gt;Ready to start.&lt;/span&gt;
-&lt;a name="rest_code_880a8eba00394c1d8144877825aa0e6c-5"&gt;&lt;/a&gt;&lt;span class="go"&gt;To continue we need to erase the disk at /Volumes/MyBlankUSBDrive.&lt;/span&gt;
-&lt;a name="rest_code_880a8eba00394c1d8144877825aa0e6c-6"&gt;&lt;/a&gt;&lt;span class="go"&gt;If you wish to continue type (Y) then press return:&lt;/span&gt;
-&lt;/pre&gt;&lt;p&gt;And it works! &lt;code class="docutils literal"&gt;createinstallmedia&lt;/code&gt; will now produce valid install media.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="section" id="b-installer-from-recovery-app-store-any-macos-version"&gt;
-&lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#id5"&gt;b. Installer from Recovery/App Store (any macOS version)&lt;/a&gt;&lt;/h3&gt;
+&lt;div class="code"&gt;&lt;pre class="code console"&gt;&lt;a id="rest_code_2394282d66ac47a1847f8f3b3ec5bf50-1" name="rest_code_2394282d66ac47a1847f8f3b3ec5bf50-1" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_2394282d66ac47a1847f8f3b3ec5bf50-1"&gt;&lt;/a&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;mkdir &lt;span class="s2"&gt;"Install OS X El Capitan.app/Contents/SharedSupport"&lt;/span&gt;
+&lt;a id="rest_code_2394282d66ac47a1847f8f3b3ec5bf50-2" name="rest_code_2394282d66ac47a1847f8f3b3ec5bf50-2" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_2394282d66ac47a1847f8f3b3ec5bf50-2"&gt;&lt;/a&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;mv InstallESD.dmg &lt;span class="s2"&gt;"Install OS X El Capitan.app/Contents/SharedSupport"&lt;/span&gt;
+&lt;a id="rest_code_2394282d66ac47a1847f8f3b3ec5bf50-3" name="rest_code_2394282d66ac47a1847f8f3b3ec5bf50-3" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_2394282d66ac47a1847f8f3b3ec5bf50-3"&gt;&lt;/a&gt;&lt;span class="gp"&gt;# &lt;/span&gt;&lt;span class="s2"&gt;"Install OS X El Capitan.app/Contents/Resources/createinstallmedia"&lt;/span&gt; --volume /Volumes/MyBlankUSBDrive --applicationpath &lt;span class="s2"&gt;"Install OS X El Capitan.app"&lt;/span&gt;
+&lt;a id="rest_code_2394282d66ac47a1847f8f3b3ec5bf50-4" name="rest_code_2394282d66ac47a1847f8f3b3ec5bf50-4" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_2394282d66ac47a1847f8f3b3ec5bf50-4"&gt;&lt;/a&gt;&lt;span class="go"&gt;Ready to start.&lt;/span&gt;
+&lt;a id="rest_code_2394282d66ac47a1847f8f3b3ec5bf50-5" name="rest_code_2394282d66ac47a1847f8f3b3ec5bf50-5" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_2394282d66ac47a1847f8f3b3ec5bf50-5"&gt;&lt;/a&gt;&lt;span class="go"&gt;To continue we need to erase the disk at /Volumes/MyBlankUSBDrive.&lt;/span&gt;
+&lt;a id="rest_code_2394282d66ac47a1847f8f3b3ec5bf50-6" name="rest_code_2394282d66ac47a1847f8f3b3ec5bf50-6" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_2394282d66ac47a1847f8f3b3ec5bf50-6"&gt;&lt;/a&gt;&lt;span class="go"&gt;If you wish to continue type (Y) then press return:&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;And it works! &lt;code class="docutils literal"&gt;createinstallmedia&lt;/code&gt; will now produce valid install media.&lt;/p&gt;
+&lt;/section&gt;
+&lt;section id="b-installer-from-recovery-app-store-any-macos-version"&gt;
+&lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#toc-entry-5" role="doc-backlink"&gt;b. Installer from Recovery/App Store (any macOS version)&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;If you are in Recovery, you can find an Install app on the filesystem. If you
 try to run it, you will get the same error as in the previous paragraph:&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_c4ec5e25805b4dd0b65af42106a613ae-1"&gt;&lt;/a&gt;Install macOS Catalina.app does not appear to be a valid OS installer application.
-&lt;/pre&gt;&lt;p&gt;This also happens with some older macOS versions, where you get a small
+&lt;div class="code"&gt;&lt;pre class="code text"&gt;&lt;a id="rest_code_738bfc8ce5b047d6985a2b278bd257cf-1" name="rest_code_738bfc8ce5b047d6985a2b278bd257cf-1" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_738bfc8ce5b047d6985a2b278bd257cf-1"&gt;&lt;/a&gt;Install macOS Catalina.app does not appear to be a valid OS installer application.
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This also happens with some older macOS versions, where you get a small
 &lt;code class="docutils literal"&gt;.app&lt;/code&gt; from the App Store, and that app does the actual download.&lt;/p&gt;
 &lt;p&gt;Whatever the issue was, we need to download the install files with the
 installer. Open the installer and let it run until the download finishes. If
@@ -455,17 +697,18 @@ directory (not in a subdirectory).&lt;/p&gt;&lt;/li&gt;
 &lt;li&gt;&lt;p&gt;Run &lt;code class="docutils literal"&gt;createinstallmedia&lt;/code&gt;. It should now consider the installer valid. The
 available options differ slightly depending on the OS version.&lt;/p&gt;&lt;/li&gt;
 &lt;/ol&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class="section" id="el-capitan-installer-cant-be-verified"&gt;
-&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#id6"&gt;El Capitan installer can’t be verified&lt;/a&gt;&lt;/h2&gt;
+&lt;/section&gt;
+&lt;/section&gt;
+&lt;section id="el-capitan-installer-cant-be-verified"&gt;
+&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#toc-entry-6" role="doc-backlink"&gt;El Capitan installer can’t be verified&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;If you get this error, it might be because Apple’s signing keys expired, or
 because of other date/time weirdness. Regardless, you can force an install if
 you are sure the installer is not damaged with this command &lt;a class="reference external" href="https://apple.stackexchange.com/questions/216730/this-copy-of-the-install-os-x-el-capitan-application-cant-be-verified-it-may-h"&gt;(source)&lt;/a&gt;:&lt;/p&gt;
-&lt;pre class="code console"&gt;&lt;a name="rest_code_d0f11e5517244fe3896b8bfe3026f0d1-1"&gt;&lt;/a&gt;&lt;span class="gp"&gt;#&lt;/span&gt; installer -pkg  /Volumes/Mac&lt;span class="se"&gt;\ &lt;/span&gt;OS&lt;span class="se"&gt;\ &lt;/span&gt;X&lt;span class="se"&gt;\ &lt;/span&gt;Install&lt;span class="se"&gt;\ &lt;/span&gt;DVD/Packages/OSInstall.mpkg -target /Volumes/&lt;span class="s2"&gt;"XXX"&lt;/span&gt;
+&lt;div class="code"&gt;&lt;pre class="code console"&gt;&lt;a id="rest_code_e3be9f6fba994f1ea1d07b830fd6db79-1" name="rest_code_e3be9f6fba994f1ea1d07b830fd6db79-1" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_e3be9f6fba994f1ea1d07b830fd6db79-1"&gt;&lt;/a&gt;&lt;span class="gp"&gt;# &lt;/span&gt;installer -pkg  /Volumes/Mac&lt;span class="se"&gt;\ &lt;/span&gt;OS&lt;span class="se"&gt;\ &lt;/span&gt;X&lt;span class="se"&gt;\ &lt;/span&gt;Install&lt;span class="se"&gt;\ &lt;/span&gt;DVD/Packages/OSInstall.mpkg -target /Volumes/&lt;span class="s2"&gt;"XXX"&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-&lt;div class="section" id="bonus-tidbit-1-how-the-download-works"&gt;
-&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#id7"&gt;Bonus tidbit 1: how the download works&lt;/a&gt;&lt;/h2&gt;
+&lt;/section&gt;
+&lt;section id="bonus-tidbit-1-how-the-download-works"&gt;
+&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#toc-entry-7" role="doc-backlink"&gt;Bonus tidbit 1: how the download works&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;While messing with all the installer stuff, I found out a few
 interesting/worrying things about the download process.&lt;/p&gt;
 &lt;p&gt;The first one is that the macOS installer uses plain HTTP without encryption to
@@ -486,9 +729,9 @@ progress for that file is reset, and in Catalina, you can go from 8 GB back to
 infrastructure should make it trivial to continue the download, perhaps
 discarding the most recent chunk if you’re concerned about that download of it
 being unsuccessful.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="section" id="bonus-tidbit-2-using-terminal-from-setup-assistant"&gt;
-&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#id8"&gt;Bonus tidbit 2: using Terminal from Setup Assistant&lt;/a&gt;&lt;/h2&gt;
+&lt;/section&gt;
+&lt;section id="bonus-tidbit-2-using-terminal-from-setup-assistant"&gt;
+&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#toc-entry-8" role="doc-backlink"&gt;Bonus tidbit 2: using Terminal from Setup Assistant&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;The first time you boot a Mac after a clean install, it starts the Setup
 Assistant. This app asks for basic OS settings (locale, date/time, user
 accounts), and also lets you restore user data from backups.&lt;/p&gt;
@@ -497,9 +740,9 @@ You can do that with Ctrl + Opt + Cmd + T and Ctrl + Opt + Cmd + C respectively 
 &lt;p&gt;How could that come in handy? For example, if you want to check if the backup
 drive still worked and if the process isn’t stuck (I wrote a test file and also
 checked &lt;code class="docutils literal"&gt;top&lt;/code&gt;).&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="section" id="bonus-tidbit-3-creating-an-image-of-the-install-media-might-not-work"&gt;
-&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#id9"&gt;Bonus tidbit 3: creating an image of the install media might not work&lt;/a&gt;&lt;/h2&gt;
+&lt;/section&gt;
+&lt;section id="bonus-tidbit-3-creating-an-image-of-the-install-media-might-not-work"&gt;
+&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#toc-entry-9" role="doc-backlink"&gt;Bonus tidbit 3: creating an image of the install media might not work&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;A few months later, in December, I upgraded to Big Sur and then installed Windows 10
 alongside it in Boot Camp. I then did some more hacks, which led to
 two unbootable OSes.&lt;/p&gt;
@@ -516,9 +759,9 @@ didn’t have that one with me at the moment), and apparently the one I used had
 a different size (both are marketed as 16 GB). The images could be mounted
 fine, and &lt;code class="docutils literal"&gt;createinstallmedia&lt;/code&gt; should have worked, likely producing a
 bootable drive.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="section" id="bonus-tidbit-4-dont-bother-restoring-a-time-machine-backup"&gt;
-&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#id10"&gt;Bonus tidbit 4: don’t bother restoring a Time Machine backup&lt;/a&gt;&lt;/h2&gt;
+&lt;/section&gt;
+&lt;section id="bonus-tidbit-4-dont-bother-restoring-a-time-machine-backup"&gt;
+&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#toc-entry-10" role="doc-backlink"&gt;Bonus tidbit 4: don’t bother restoring a Time Machine backup&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;Time Machine is Apple’s magical backup solution. Time Machine saves snapshots
 of your entire disk. It’s supposed to help restore files that were deleted or
 changed in an unwanted way, or help you restore a full macOS install.&lt;/p&gt;
@@ -575,9 +818,9 @@ and that doesn’t work unless you’re warm-rebooting from macOS. I don’t nee
 anything more advanced than the Option key boot menu, but Apple made me use a
 third-party bootloader.)&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;We now go back to the original post from June.&lt;/em&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="section" id="an-open-letter-to-progress-bar-designers"&gt;
-&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#id11"&gt;An Open Letter to Progress Bar Designers&lt;/a&gt;&lt;/h2&gt;
+&lt;/section&gt;
+&lt;section id="an-open-letter-to-progress-bar-designers"&gt;
+&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#toc-entry-11" role="doc-backlink"&gt;An Open Letter to Progress Bar Designers&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;Dear Progress Bar Designers: can you please make your progress bars
 functional? The macOS progress bar might look sleek at just 7 px (non-Retina)/6
 pt = 12 px (Retina) high, but at the same time, you’re looking at individual
@@ -612,9 +855,9 @@ requires more space for the bar.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;&lt;p&gt;I’d honestly be happy enough with option 2, at least it can be read easily and
 you can remember the number instead of a vague position.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="section" id="in-the-end"&gt;
-&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#id12"&gt;In the end…&lt;/a&gt;&lt;/h2&gt;
+&lt;/section&gt;
+&lt;section id="in-the-end"&gt;
+&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#toc-entry-12" role="doc-backlink"&gt;In the end…&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;After all this, I managed to get macOS Catalina installed. After various
 failures in built-in El Capitan recovery and Catalina Internet Recovery, I first
 installed El Capitan with this hack, then jumped to Mojave because I thought
@@ -629,7 +872,7 @@ working Mac and ask them to download from App Store and make install media, or
 find less legitimate sources, they probably don’t care as much. But if my own
 system crashes, I’d probably want to get working install media immediately,
 myself, and from Apple. Without all this mess.&lt;/p&gt;
-&lt;/div&gt;</description><category>Apple</category><category>install</category><category>Mac</category><category>macOS</category><guid>https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/</guid><pubDate>Wed, 03 Jun 2020 21:00:00 GMT</pubDate></item><item><title>When HTML is not enough: a tale of the &lt;datalist&gt; element</title><link>https://chriswarrick.com/blog/2020/02/09/when-html-is-not-enough-a-tale-of-the-datalist-element/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;p&gt;HTML 5.0 was finalized in 2014 (and its drafts were published even earlier), and with it came the &lt;code class="docutils literal"&gt;&amp;lt;datalist&amp;gt;&lt;/code&gt; element.  It’s
+&lt;/section&gt;</description><category>Apple</category><category>install</category><category>Mac</category><category>macOS</category><guid>https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/</guid><pubDate>Wed, 03 Jun 2020 21:00:00 GMT</pubDate></item><item><title>When HTML is not enough: a tale of the &lt;datalist&gt; element</title><link>https://chriswarrick.com/blog/2020/02/09/when-html-is-not-enough-a-tale-of-the-datalist-element/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;p&gt;HTML 5.0 was finalized in 2014 (and its drafts were published even earlier), and with it came the &lt;code class="docutils literal"&gt;&amp;lt;datalist&amp;gt;&lt;/code&gt; element.  It’s
 2020, and even though it might look like a good replacement for custom
 autocomplete widgets, browser issues made me get rid of it.&lt;/p&gt;
 &lt;!-- TEASER_END --&gt;
@@ -2197,196 +2440,4 @@ And all of them — no matter if they’re number one, the best, or else — lov
 &lt;img src="https://chriswarrick.com/images/20170922-orange-time-graph.svg" class="align-center" alt="A visual representation of the three time possibilities."&gt;&lt;p&gt;Half an hour later, when my phone claims I used over 1 GB, Network Number One tells me I used 80% of my “standard” allowance. Android and Orange seem to have a different definition of a gigabyte — at least it’s Network Number One who has the better one.&lt;/p&gt;
 &lt;p&gt;Ten hours later, Android’s meter shows 1.36 GB. Network Number One tells me that I’ve just used up 1 GB, and the speed limiter has been activated — one text message claims it’s 16 kb/s, and another says 16 kB/s. (Gotta love their double messages with different information in each. Although either limit is unusable.) Fast.com says 52 Kbps. To quote the green carrier’s ads — &lt;em&gt;Congrats, You!&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Dear orange-colored operator of the Network Number One!&lt;/strong&gt; Does activating a service so simple — primitive, even — and definitely popular, require waiting until midnight? Couldn’t you turn it on when it’s requested? And why are there three different grace periods and two speed limits in your messages?&lt;/p&gt;
-&lt;p&gt;I left the Network Number One. And I’m pretty happy — paying less for more.&lt;/p&gt;</description><category>mobile</category><category>Orange</category><category>phone</category><category>telecom</category><guid>https://chriswarrick.com/blog/2017/09/22/mobile-phone-woes-or-how-my-carrier-didnt-want-my-money/</guid><pubDate>Fri, 22 Sep 2017 14:00:00 GMT</pubDate></item><item><title>Spawning subprocesses smartly and securely</title><link>https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;p&gt;As part of your code, you may be inclined to call a command to do
-something. But is it always a good idea? How to do it safely? What happens
-behind the scenes?&lt;/p&gt;
-&lt;!-- TEASER_END --&gt;
-&lt;p&gt;This article is written from a general perspective, with a Unix/C bias and a
-very slight Python bias. The problems mentioned apply to all languages in most
-environments, including Windows.&lt;/p&gt;
-&lt;div class="contents right-toc topic" id="contents"&gt;
-&lt;p class="topic-title"&gt;Contents&lt;/p&gt;
-&lt;ul class="simple"&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#use-the-right-tool-for-the-job" id="id9"&gt;Use the right tool for the job&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#dont-spawn-subprocesses-if-theres-an-alternative" id="id10"&gt;Don’t spawn subprocesses if there’s an alternative&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#security-considerations-shells-spaces-and-command-injection" id="id11"&gt;Security considerations: shells, spaces, and command injection&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#tl-dr-how-to-do-this-properly-in-your-language-of-choice" id="id12"&gt;TL;DR: How to do this properly in your language of choice&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#the-part-where-i-pretend-i-know-something-about-windows" id="id13"&gt;The part where I pretend I know something about Windows&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/div&gt;
-&lt;div class="section" id="use-the-right-tool-for-the-job"&gt;
-&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#id9"&gt;Use the right tool for the job&lt;/a&gt;&lt;/h2&gt;
-&lt;p&gt;By calling another process, you introduce a third-party dependency.
-That dependency isn’t controlled by your code, and your code becomes more fragile.
-The problems include:&lt;/p&gt;
-&lt;ul class="simple"&gt;
-&lt;li&gt;&lt;p&gt;the program is not installed, or even available, for the user’s OS of choice&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;the program is not in the &lt;code class="docutils literal"&gt;$PATH&lt;/code&gt; your process gets&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;the hard-coded path is not correct on the end user’s system&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;the program is in a different version (eg. GNU vs. BSD, updates/patches),
-which means different option names or other behaviors&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;the program’s output is not what you expected due to user config (including
-locale)&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;error reporting is based on numeric exit codes, and the meaning of those
-differs between programs (&lt;em&gt;if&lt;/em&gt; they have meaning besides 0/1 in the first
-place)&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;On the other hand, if your code uses a lot of subprocesses, perhaps you should
-stay with Bash. You can do the harder parts with Python, Ruby, or some other
-language by calling them from within your Bash script.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="section" id="dont-spawn-subprocesses-if-theres-an-alternative"&gt;
-&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#id10"&gt;Don’t spawn subprocesses if there’s an alternative&lt;/a&gt;&lt;/h2&gt;
-&lt;p&gt;Spawning a subprocess always incurs a (minor) &lt;a class="footnote-reference brackets" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#id5" id="id1"&gt;1&lt;/a&gt; performance hit minor
-compared to the alternatives. With that in mind, and the resiliency issues
-listed above, you should always try to find an alternative for the
-external command.&lt;/p&gt;
-&lt;p&gt;The simplest ones are the basic Unix utilities. Replace &lt;code class="docutils literal"&gt;grep&lt;/code&gt;, &lt;code class="docutils literal"&gt;sed&lt;/code&gt; and
-&lt;code class="docutils literal"&gt;awk&lt;/code&gt; with string operations and regular expressions. Filesystem utilities
-will have equivalents — for Python, in &lt;code class="docutils literal"&gt;os&lt;/code&gt; or &lt;code class="docutils literal"&gt;shutil&lt;/code&gt;. Your language of
-choice can also handle things like networking (don’t call &lt;code class="docutils literal"&gt;curl&lt;/code&gt;), file
-compression, working with date/time…&lt;/p&gt;
-&lt;p&gt;Similarly, you should check if there are packages available that already do
-what you want — library bindings or re-implementations. And if there isn’t,
-perhaps you could help the world by writing one of those and sharing it?&lt;/p&gt;
-&lt;p&gt;One more important thing: if the program uses the same language as your code,
-then you should try to import the code and run it from the same process instead
-of spawning a process, if this is feasible.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="section" id="security-considerations-shells-spaces-and-command-injection"&gt;
-&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#id11"&gt;Security considerations: shells, spaces, and command injection&lt;/a&gt;&lt;/h2&gt;
-&lt;p&gt;We come to the most important part of this article: how to spawn subprocesses
-without compromising your system. When you spawn a subprocess on a typical Unix
-system,  &lt;code class="docutils literal"&gt;fork()&lt;/code&gt; is called, and your process is copied. Many modern Unix
-systems have a copy-on-write implementation of that syscall, meaning that the
-operation does not result in copying all the memory of the host process over.
-Forking is (almost) immediately followed by calling &lt;code class="docutils literal"&gt;execve()&lt;/code&gt; (or a helper
-function from the exec family) &lt;a class="footnote-reference brackets" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#id6" id="id2"&gt;2&lt;/a&gt; in the child process — that function
-&lt;em&gt;transforms the calling process into a new process&lt;/em&gt; &lt;a class="footnote-reference brackets" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#id7" id="id3"&gt;3&lt;/a&gt;. This technique is
-called &lt;em&gt;fork-exec&lt;/em&gt; and is the typical way to spawn a new process on Unix. &lt;a class="footnote-reference brackets" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#id8" id="id4"&gt;4&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;There are two ways to access this API, from the C perspective:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;directly, by calling &lt;code class="docutils literal"&gt;fork()&lt;/code&gt; and &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;exec*()&lt;/span&gt;&lt;/code&gt; (or &lt;code class="docutils literal"&gt;posix_spawn()&lt;/code&gt;), and providing an array of
-arguments passed to the process, or&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;through the shell (&lt;code class="docutils literal"&gt;sh&lt;/code&gt;), usually by calling &lt;code class="docutils literal"&gt;system()&lt;/code&gt;. As Linux’s
-manpage for &lt;code class="docutils literal"&gt;system(3)&lt;/code&gt; puts it,&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;The &lt;code class="docutils literal"&gt;system()&lt;/code&gt; library function uses &lt;code class="docutils literal"&gt;fork(2)&lt;/code&gt; to create a child process that executes the shell command specified in command using &lt;code class="docutils literal"&gt;execl(3)&lt;/code&gt; as follows:&lt;/p&gt;
-&lt;pre class="code c"&gt;&lt;a name="rest_code_24dee89c73ec490aa169882d35186803-1"&gt;&lt;/a&gt;&lt;span class="n"&gt;execl&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"/bin/sh"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"sh"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"-c"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;command&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;/pre&gt;&lt;/blockquote&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;If you go through the shell, you pass one string argument, whereas &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;exec*()&lt;/span&gt;&lt;/code&gt; demands you to specify arguments separately. Let’s write a sample program to print all the arguments it receives. I’ll do it in Python to get a more readable output.&lt;/p&gt;
-&lt;pre class="code python"&gt;&lt;a name="rest_code_3bf4035ddfba4a518489eb66b9da864a-1"&gt;&lt;/a&gt;&lt;span class="ch"&gt;#!/usr/bin/env python3&lt;/span&gt;
-&lt;a name="rest_code_3bf4035ddfba4a518489eb66b9da864a-2"&gt;&lt;/a&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;sys&lt;/span&gt;
-&lt;a name="rest_code_3bf4035ddfba4a518489eb66b9da864a-3"&gt;&lt;/a&gt;&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;p&gt;Let’s see what appears:&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_d27bb2a5629440a1bcde3de0423b87d6-1"&gt;&lt;/a&gt;$ ./argv.py foo bar
-&lt;a name="rest_code_d27bb2a5629440a1bcde3de0423b87d6-2"&gt;&lt;/a&gt;['./argv.py', 'foo', 'bar']
-&lt;a name="rest_code_d27bb2a5629440a1bcde3de0423b87d6-3"&gt;&lt;/a&gt;$ ./argv.py 'foo bar'
-&lt;a name="rest_code_d27bb2a5629440a1bcde3de0423b87d6-4"&gt;&lt;/a&gt;['./argv.py', 'foo bar']
-&lt;a name="rest_code_d27bb2a5629440a1bcde3de0423b87d6-5"&gt;&lt;/a&gt;$ ./argv.py foo\ bar baz
-&lt;a name="rest_code_d27bb2a5629440a1bcde3de0423b87d6-6"&gt;&lt;/a&gt;['./argv.py', 'foo bar', 'baz']
-&lt;a name="rest_code_d27bb2a5629440a1bcde3de0423b87d6-7"&gt;&lt;/a&gt;
-&lt;a name="rest_code_d27bb2a5629440a1bcde3de0423b87d6-8"&gt;&lt;/a&gt;$ ./argv.py $(date)
-&lt;a name="rest_code_d27bb2a5629440a1bcde3de0423b87d6-9"&gt;&lt;/a&gt;['./argv.py', 'Sat', 'Sep', '2', '16:54:52', 'CEST', '2017']
-&lt;a name="rest_code_d27bb2a5629440a1bcde3de0423b87d6-10"&gt;&lt;/a&gt;$ ./argv.py "$(date)"
-&lt;a name="rest_code_d27bb2a5629440a1bcde3de0423b87d6-11"&gt;&lt;/a&gt;['./argv.py', 'Sat Sep  2 16:54:52 CEST 2017']
-&lt;a name="rest_code_d27bb2a5629440a1bcde3de0423b87d6-12"&gt;&lt;/a&gt;
-&lt;a name="rest_code_d27bb2a5629440a1bcde3de0423b87d6-13"&gt;&lt;/a&gt;$ ./argv.py /usr/*
-&lt;a name="rest_code_d27bb2a5629440a1bcde3de0423b87d6-14"&gt;&lt;/a&gt;['./argv.py', '/usr/X11', '/usr/X11R6', '/usr/bin', '/usr/include', '/usr/lib', '/usr/libexec', '/usr/local', '/usr/sbin', '/usr/share', '/usr/standalone']
-&lt;a name="rest_code_d27bb2a5629440a1bcde3de0423b87d6-15"&gt;&lt;/a&gt;$ ./argv.py "/usr/*"
-&lt;a name="rest_code_d27bb2a5629440a1bcde3de0423b87d6-16"&gt;&lt;/a&gt;['./argv.py', '/usr/*']
-&lt;a name="rest_code_d27bb2a5629440a1bcde3de0423b87d6-17"&gt;&lt;/a&gt;
-&lt;a name="rest_code_d27bb2a5629440a1bcde3de0423b87d6-18"&gt;&lt;/a&gt;$ ./argv.py $EDITOR
-&lt;a name="rest_code_d27bb2a5629440a1bcde3de0423b87d6-19"&gt;&lt;/a&gt;['./argv.py', 'nvim']
-&lt;a name="rest_code_d27bb2a5629440a1bcde3de0423b87d6-20"&gt;&lt;/a&gt;
-&lt;a name="rest_code_d27bb2a5629440a1bcde3de0423b87d6-21"&gt;&lt;/a&gt;$ $PWD/argv.py foo bar
-&lt;a name="rest_code_d27bb2a5629440a1bcde3de0423b87d6-22"&gt;&lt;/a&gt;['/Users/kwpolska/Desktop/blog/subprocess/argv.py', 'foo', 'bar']
-&lt;a name="rest_code_d27bb2a5629440a1bcde3de0423b87d6-23"&gt;&lt;/a&gt;$ ./argv.py a{b,c}d
-&lt;a name="rest_code_d27bb2a5629440a1bcde3de0423b87d6-24"&gt;&lt;/a&gt;['./argv.py', 'abd', 'acd']
-&lt;a name="rest_code_d27bb2a5629440a1bcde3de0423b87d6-25"&gt;&lt;/a&gt;
-&lt;a name="rest_code_d27bb2a5629440a1bcde3de0423b87d6-26"&gt;&lt;/a&gt;$ python argv.py foo bar | cat
-&lt;a name="rest_code_d27bb2a5629440a1bcde3de0423b87d6-27"&gt;&lt;/a&gt;['argv.py', 'foo', 'bar']
-&lt;a name="rest_code_d27bb2a5629440a1bcde3de0423b87d6-28"&gt;&lt;/a&gt;$ python argv.py foo bar &amp;gt; foo.txt
-&lt;a name="rest_code_d27bb2a5629440a1bcde3de0423b87d6-29"&gt;&lt;/a&gt;$ cat foo.txt
-&lt;a name="rest_code_d27bb2a5629440a1bcde3de0423b87d6-30"&gt;&lt;/a&gt;['argv.py', 'foo', 'bar']
-&lt;a name="rest_code_d27bb2a5629440a1bcde3de0423b87d6-31"&gt;&lt;/a&gt;
-&lt;a name="rest_code_d27bb2a5629440a1bcde3de0423b87d6-32"&gt;&lt;/a&gt;$ ./argv.py foo; ls /usr
-&lt;a name="rest_code_d27bb2a5629440a1bcde3de0423b87d6-33"&gt;&lt;/a&gt;['./argv.py', 'foo']
-&lt;a name="rest_code_d27bb2a5629440a1bcde3de0423b87d6-34"&gt;&lt;/a&gt;X11@        X11R6@      bin/        include/    lib/        libexec/    local/      sbin/       share/      standalone/
-&lt;/pre&gt;&lt;p&gt;As you can see, the following things are handled by the shell (the process is unaware of this occurring):&lt;/p&gt;
-&lt;ul class="simple"&gt;
-&lt;li&gt;&lt;p&gt;quotes and escapes&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;expanding expressions in braces&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;expanding variables&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;wildcards (glob, &lt;code class="docutils literal"&gt;*&lt;/code&gt;)&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;redirections and pipes (&lt;code class="docutils literal"&gt;&amp;gt; &amp;gt;&amp;gt; |&lt;/code&gt;)&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;command substitution (backticks or &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;$(…)&lt;/span&gt;&lt;/code&gt;)&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;running multiple commands on the same line (&lt;code class="docutils literal"&gt;; &amp;amp;&amp;amp; || &amp;amp;&lt;/code&gt;)&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;The list is full of potential vulnerabilities. If end users are in control of
-the arguments passed, and you go through the shell, they can
-&lt;strong&gt;execute arbitrary commands&lt;/strong&gt; or even &lt;strong&gt;get full shell access&lt;/strong&gt;. Even in other
-cases, you’ll have to &lt;em&gt;depend on the shell’s parsing&lt;/em&gt;, which introduces an
-unnecessary indirection.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="section" id="tl-dr-how-to-do-this-properly-in-your-language-of-choice"&gt;
-&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#id12"&gt;TL;DR: How to do this properly in your language of choice&lt;/a&gt;&lt;/h2&gt;
-&lt;p&gt;To ensure spawning subprocess is done securely, &lt;strong&gt;do not use the shell in between&lt;/strong&gt;. If you need any of the operations I listed above as part of your command — wildcards, pipes, etc. — you will need to take care of them in your code; most languages have those features built-in.&lt;/p&gt;
-&lt;dl class="dl-horizontal simple"&gt;
-&lt;dt&gt;In C (Unix)&lt;/dt&gt;
-&lt;dd&gt;&lt;p&gt;Perform fork-exec by yourself, or use &lt;code class="docutils literal"&gt;posix_spawn()&lt;/code&gt;. This also lets you communicate with the process if you open a pipe and make it stdout of the child process. Never use &lt;code class="docutils literal"&gt;system()&lt;/code&gt;.&lt;/p&gt;
-&lt;/dd&gt;
-&lt;dt&gt;In Python&lt;/dt&gt;
-&lt;dd&gt;&lt;p&gt;Use the subprocess module. Always pass &lt;code class="docutils literal"&gt;shell=False&lt;/code&gt; and give it a &lt;em&gt;list&lt;/em&gt; of arguments. With asyncio, use &lt;code class="docutils literal"&gt;asyncio.create_subprocess_exec&lt;/code&gt; (and not &lt;code class="docutils literal"&gt;_shell&lt;/code&gt;), but note it takes &lt;code class="docutils literal"&gt;*args&lt;/code&gt; and not a list. Never use &lt;code class="docutils literal"&gt;os.system&lt;/code&gt; and &lt;code class="docutils literal"&gt;os.popen&lt;/code&gt;.&lt;/p&gt;
-&lt;/dd&gt;
-&lt;dt&gt;In Ruby&lt;/dt&gt;
-&lt;dd&gt;&lt;p&gt;Pass arrays to &lt;code class="docutils literal"&gt;IO.popen&lt;/code&gt;. Pass multiple arguments to &lt;code class="docutils literal"&gt;system()&lt;/code&gt; (&lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;system(["ls",&lt;/span&gt; &lt;span class="pre"&gt;"ls"])&lt;/span&gt;&lt;/code&gt; or &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;system("ls",&lt;/span&gt; &lt;span class="pre"&gt;"-l")&lt;/span&gt;&lt;/code&gt;). Never use &lt;code class="docutils literal"&gt;%x{command}&lt;/code&gt; or backticks.&lt;/p&gt;
-&lt;/dd&gt;
-&lt;dt&gt;In Java&lt;/dt&gt;
-&lt;dd&gt;&lt;p&gt;Pass arrays to &lt;code class="docutils literal"&gt;Runtime.exec&lt;/code&gt;. Pass multiple arguments or list to &lt;code class="docutils literal"&gt;ProcessBuilder&lt;/code&gt;.&lt;/p&gt;
-&lt;/dd&gt;
-&lt;dt&gt;In PHP&lt;/dt&gt;
-&lt;dd&gt;&lt;p&gt;All the standard methods go through the shell. Try &lt;code class="docutils literal"&gt;escapeshellcmd()&lt;/code&gt;, &lt;code class="docutils literal"&gt;escapeshellarg()&lt;/code&gt; — or better, switch to Python. Or anything, really.&lt;/p&gt;
-&lt;/dd&gt;
-&lt;dt&gt;In Go&lt;/dt&gt;
-&lt;dd&gt;&lt;p&gt;&lt;code class="docutils literal"&gt;os/exec&lt;/code&gt; and &lt;code class="docutils literal"&gt;os.StartProcess&lt;/code&gt; are safe.&lt;/p&gt;
-&lt;/dd&gt;
-&lt;dt&gt;In Node.js&lt;/dt&gt;
-&lt;dd&gt;&lt;p&gt;Use &lt;code class="docutils literal"&gt;child_process.execFile&lt;/code&gt; or &lt;code class="docutils literal"&gt;child_process.spawn&lt;/code&gt; with &lt;code class="docutils literal"&gt;shell&lt;/code&gt; set to false.&lt;/p&gt;
-&lt;/dd&gt;
-&lt;dt&gt;Elsewhere&lt;/dt&gt;
-&lt;dd&gt;&lt;p&gt;You should be able to specify multiple strings (using variadic arguments,
-arrays, or otherwise standard data structures of your language of choice) as
-the command line. Otherwise, you might be running into something
-shell-related.&lt;/p&gt;
-&lt;/dd&gt;
-&lt;/dl&gt;
-&lt;/div&gt;
-&lt;div class="section" id="the-part-where-i-pretend-i-know-something-about-windows"&gt;
-&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#id13"&gt;The part where I pretend I know something about Windows&lt;/a&gt;&lt;/h2&gt;
-&lt;p&gt;On Windows, argument lists are always passed to processes as strings (Python
-joins them semi-intelligently if it gets a list). Redirections and variables
-work in shell mode, but globs (asterisks) are always left for the called
-process to handle.&lt;/p&gt;
-&lt;p&gt;Some useful functions are implemented as shell built-ins — in that case, you
-need to call it via the shell.&lt;/p&gt;
-&lt;p&gt;Internals: There is no &lt;code class="docutils literal"&gt;fork()&lt;/code&gt; on Windows. Instead, &lt;code class="docutils literal"&gt;CreateProcess()&lt;/code&gt;,
-&lt;code class="docutils literal"&gt;ShellExecute()&lt;/code&gt;, or lower-level &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;spawn*()&lt;/span&gt;&lt;/code&gt; functions are used. &lt;code class="docutils literal"&gt;cmd.exe
-/c&lt;/code&gt; is called in shell calls.&lt;/p&gt;
-&lt;dl class="footnote brackets"&gt;
-&lt;dt class="label" id="id5"&gt;&lt;span class="brackets"&gt;&lt;a class="fn-backref" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#id1"&gt;1&lt;/a&gt;&lt;/span&gt;&lt;/dt&gt;
-&lt;dd&gt;&lt;p&gt;Unless your operating system does not implement copy-on-write forking — in that case, you might even run out of memory if you use too much of it.&lt;/p&gt;
-&lt;/dd&gt;
-&lt;dt class="label" id="id6"&gt;&lt;span class="brackets"&gt;&lt;a class="fn-backref" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#id2"&gt;2&lt;/a&gt;&lt;/span&gt;&lt;/dt&gt;
-&lt;dd&gt;&lt;p&gt;The function that does the real work is &lt;code class="docutils literal"&gt;execve()&lt;/code&gt;, which takes an exact path, an array of arguments, and takes environment variables as input. Other variants can also perform a &lt;code class="docutils literal"&gt;$PATH&lt;/code&gt; search, take argv as variadic arguments, and inherit environment from the current process. &lt;code class="docutils literal"&gt;execl()&lt;/code&gt; does the last two.&lt;/p&gt;
-&lt;/dd&gt;
-&lt;dt class="label" id="id7"&gt;&lt;span class="brackets"&gt;&lt;a class="fn-backref" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#id3"&gt;3&lt;/a&gt;&lt;/span&gt;&lt;/dt&gt;
-&lt;dd&gt;&lt;p&gt;Quoted from &lt;code class="docutils literal"&gt;execve(2)&lt;/code&gt; &lt;a class="reference external" href="https://www.freebsd.org/cgi/man.cgi?query=execve&amp;amp;sektion=2"&gt;man page&lt;/a&gt; from FreeBSD.&lt;/p&gt;
-&lt;/dd&gt;
-&lt;dt class="label" id="id8"&gt;&lt;span class="brackets"&gt;&lt;a class="fn-backref" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#id4"&gt;4&lt;/a&gt;&lt;/span&gt;&lt;/dt&gt;
-&lt;dd&gt;&lt;p&gt;An alternative is &lt;code class="docutils literal"&gt;posix_spawn()&lt;/code&gt;, but it usually does fork-exec, unless your platform does not support forking.&lt;/p&gt;
-&lt;/dd&gt;
-&lt;/dl&gt;
-&lt;/div&gt;</description><category>best practices</category><category>C</category><category>devel</category><category>guide</category><category>Linux</category><category>Python</category><category>security</category><category>subprocess</category><category>Unix</category><guid>https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/</guid><pubDate>Sat, 02 Sep 2017 18:40:00 GMT</pubDate></item></channel></rss>
+&lt;p&gt;I left the Network Number One. And I’m pretty happy — paying less for more.&lt;/p&gt;</description><category>mobile</category><category>Orange</category><category>phone</category><category>telecom</category><guid>https://chriswarrick.com/blog/2017/09/22/mobile-phone-woes-or-how-my-carrier-didnt-want-my-money/</guid><pubDate>Fri, 22 Sep 2017 14:00:00 GMT</pubDate></item></channel></rss>
