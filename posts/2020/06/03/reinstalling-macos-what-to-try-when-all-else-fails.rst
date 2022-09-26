@@ -1,7 +1,7 @@
 .. title: Reinstalling macOS: What To Try When All Else Fails
 .. slug: reinstalling-macos-what-to-try-when-all-else-fails
 .. date: 2020-06-03 23:00:00+02:00
-.. updated: 2022-09-16 21:20:00+02:00
+.. updated: 2022-09-26 19:45:00+02:00
 .. tags: Apple, Mac, macOS, install
 .. category: Apple
 .. description: A collection of tricks to convince macOS installers to work.
@@ -18,7 +18,7 @@ void your warranty. Neither Chris Warrick nor Apple will be responsible for any
 damage to your devices caused as a result of using information in this post.
 
 **Note:** This blog post is written for Intel Macs, particularly those that can
-boot OS X El Capitan. If your Mac can’t, you’ll need to look for help
+boot OS X El Capitan (or macOS Sierra, but that’s untested). If your Mac can’t, you’ll need to look for help
 elsewhere. If you’ve got an Apple Silicon Mac, you probably want to perform
 `a DFU restore <https://support.apple.com/guide/apple-configurator-mac/revive-or-restore-a-mac-with-apple-silicon-apdd5f3c75ad/mac>`_
 (requires another Mac and a USB-C cable.)
@@ -40,10 +40,21 @@ solve.
 
 Apple does not make macOS images publicly available. That’s probably to make
 Hackintoshing this little bit harder, but this also affects legitimate users.
-The only thing you can download from Apple is El Capitan. Apple offers
+The only thing you can easily download from Apple is El Capitan. Apple offers
 `InstallMacOSX.dmg <https://support.apple.com/en-us/HT206886>`_ on their
-website. (There’s also a Sierra download now, but it seems to be broken as of
-September 2022.) If you take a look at the instructions, you will see that this is
+website.
+
+There are also some other downloads available: 
+
+* there’s a Sierra download, with a broken link, although it can be fixed by changing ``updates-http`` to ``updates``: `get Sierra installer <https://updates.cdn-apple.com/2019/cert/061-39476-20191023-48f365f4-0015-4c41-9f44-39d3d2aca067/InstallOS.dmg>`_.
+* if you need something older than El Capitan, downloads are available as far
+  back as Lion, although these might not have the ``createinstallmedia`` tool
+  required for this procedure.
+
+This post assumes you’re working with El Capitan; a quick look though that file
+suggests the instructions in this post should work with Sierra as well.
+
+If you take a look at the instructions, you will see that this is
 *not* a bootable OS X image. This image has a ``.pkg`` package. This package is
 expected to install ``/Applications/Install OS X El Capitan.app``. Well, we’re
 in recovery, we can’t install stuff. So, let’s do this the manual way.
