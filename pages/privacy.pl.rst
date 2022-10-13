@@ -5,7 +5,7 @@
 Ta strona używa ciasteczek i może przechowywać pewne dane osobowe.
 
 Ta strona zarządzana jest przez osobę fizyczną i nie ma charakteru komercyjnego,
-dlatego też nie obejmuje go RODO.
+dlatego też nie obejmuje jej RODO.
 
 .. TEASER_END
 
@@ -16,8 +16,7 @@ Przechowujemy następujące informacje:
 
 * Informacje o adresach IP, przeglądarkach (User Agent) oraz o czasie żądania
   (przez 2 tygodnie)
-* Statystyki o użytkownikach w Google Analytics (przez 14 miesięcy od ostatniej
-  wizyty)
+* Statystyki o użytkownikach w Matomo (przez 6 miesięcy od ostatniej wizyty)
 * Treść komentarzy oraz dane autora. Dane te są podawane dobrowolnie. Pseudonim
   autora, adres strony internetowej oraz treść komentarza będą widoczne
   publicznie po jego zaakceptowaniu.
@@ -31,8 +30,6 @@ jest możliwość bycia zalogowanym cały czas, bez wprowadzania hasła co chwil
 
 Witryna ``chriswarrick.com`` używa następujących ciasteczek:
 
-* ciasteczka Google Analytics, używane do zbierania ogólnych statystyk o
-  odwiedzających
 * ciasteczka CloudFlare, używane do `ochrony przed DDOS
   <https://support.cloudflare.com/hc/en-us/articles/200170156-What-does-the-Cloudflare-cfduid-cookie-do->`_
 * ciasteczka i dane local storage platformy `Isso <https://posativ.org/isso/>`_, jeżeli napiszesz komentarz
@@ -44,5 +41,4 @@ Blokowanie ciasteczek
 ---------------------
 
 Ciasteczka można wyłączyć w ustawieniach przeglądarki.  Dokładne instrukcje są
-dostępne w pomocy twojej przeglądarki. Można też `zablokować Google Analytics
-<https://tools.google.com/dlpage/gaoptout>`_.
+dostępne w pomocy twojej przeglądarki.
