@@ -130,15 +130,14 @@ a very simple tool to work with.</p>
 </div>
 </div>
 <p>Let’s get started!</p>
-<div class="section" id="install">
-<h2>Install</h2>
+<section id="install"><h2>Install</h2>
 <p>The best tool that can be used to create virtual environments is the
 <a class="reference external" href="https://docs.python.org/3/library/venv.html">venv</a> module, which is part of
 the standard library since Python 3.3.</p>
 <p><code class="docutils literal">venv</code> is built into Python, and most users don’t need to install anything.
 However, Debian/Ubuntu users will need to run <code class="docutils literal">sudo <span class="pre">apt-get</span> install
 <span class="pre">python3-venv</span></code> to make it work (due to Debian not installing some components
-that <code class="docutils literal">venv</code> needs by default). <a class="footnote-reference brackets" href="/pl/blog/2018/09/04/python-virtual-environments/#id6" id="id1">1</a></p>
+that <code class="docutils literal">venv</code> needs by default). <a class="footnote-reference brackets" href="/pl/blog/2018/09/04/python-virtual-environments/#footnote-1" id="footnote-reference-1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a></p>
 <p>The alternative (and original, and previously standard) virtual environment tool is <a class="reference external" href="https://virtualenv.pypa.io/">virtualenv</a>. It works with Python 2.7, and has a couple
 extra fetures (that you generally won’t need). virtualenv can be installed with your system package manager, or <code class="docutils literal">pip
 install <span class="pre">--user</span> virtualenv</code>.</p>
@@ -148,30 +147,27 @@ work better.</p>
 <p><em>(Terminology note: most of the time, the names of both tools are used
 interchargeably, “venv” was often used as an abbreviation for “virtualenv”
 before the stdlib tool was created)</em></p>
-</div>
-<div class="section" id="create">
-<h2>Create</h2>
+</section><section id="create"><h2>Create</h2>
 <p>To create a virtual environment named <code class="docutils literal">env</code>, you need to run the <code class="docutils literal">venv</code>
 tool with the Python you want to use in that environment.</p>
-<pre class="code text"><a name="rest_code_e4cba15922424ef6955d4c7606842819-1"></a>Linux:   $ python3 -m venv env
-<a name="rest_code_e4cba15922424ef6955d4c7606842819-2"></a>Windows: &gt; py -m venv env
-</pre>
+<div class="code"><pre class="code text"><a id="rest_code_a9e779ed97644a068e9a1588bab237f8-1" name="rest_code_a9e779ed97644a068e9a1588bab237f8-1" href="/pl/blog/2018/09/04/python-virtual-environments/#rest_code_a9e779ed97644a068e9a1588bab237f8-1"></a>Linux:   $ python3 -m venv env
+<a id="rest_code_a9e779ed97644a068e9a1588bab237f8-2" name="rest_code_a9e779ed97644a068e9a1588bab237f8-2" href="/pl/blog/2018/09/04/python-virtual-environments/#rest_code_a9e779ed97644a068e9a1588bab237f8-2"></a>Windows: &gt; py -m venv env
+</pre></div>
 <p>or, if you’re using <code class="docutils literal">virtualenv</code>:</p>
-<pre class="code text"><a name="rest_code_6221caef17eb43a18bae759a9a3b79de-1"></a>$ python3 -m virtualenv env
-<a name="rest_code_6221caef17eb43a18bae759a9a3b79de-2"></a>&gt; py -m virtualenv env
-</pre>
+<div class="code"><pre class="code text"><a id="rest_code_a330ac3161ca41dd850afa202c8af6c3-1" name="rest_code_a330ac3161ca41dd850afa202c8af6c3-1" href="/pl/blog/2018/09/04/python-virtual-environments/#rest_code_a330ac3161ca41dd850afa202c8af6c3-1"></a>$ python3 -m virtualenv env
+<a id="rest_code_a330ac3161ca41dd850afa202c8af6c3-2" name="rest_code_a330ac3161ca41dd850afa202c8af6c3-2" href="/pl/blog/2018/09/04/python-virtual-environments/#rest_code_a330ac3161ca41dd850afa202c8af6c3-2"></a>&gt; py -m virtualenv env
+</pre></div>
 <p>Afterwards, you will end up with a folder named <code class="docutils literal">env</code> that contains folders
 named <code class="docutils literal">bin</code> (<code class="docutils literal">Scripts</code> on Windows — contains executables and scripts
 installed by packages, including
 <code class="docutils literal">python</code>), <code class="docutils literal">lib</code> (contains code), and <code class="docutils literal">include</code> (contains C headers).</p>
 <p>Both tools install <code class="docutils literal">pip</code> and <code class="docutils literal">setuptools</code>, but <code class="docutils literal">venv</code> does not ship with
 <code class="docutils literal">wheel</code>. In addition, the default versions tend to be more-or-less outdated.
-Let’s upgrade them real quick: <a class="footnote-reference brackets" href="/pl/blog/2018/09/04/python-virtual-environments/#id7" id="id2">2</a></p>
-<pre class="code text"><a name="rest_code_476026bc4c994c1bb0a76f4501cab823-1"></a>$ env/bin/python -m pip install --upgrade pip setuptools wheel
-<a name="rest_code_476026bc4c994c1bb0a76f4501cab823-2"></a>&gt; env\Scripts\python -m pip install --upgrade pip setuptools wheel
-</pre>
-<div class="section" id="where-to-store-virtual-environments">
-<h3>Where to store virtual environments?</h3>
+Let’s upgrade them real quick: <a class="footnote-reference brackets" href="/pl/blog/2018/09/04/python-virtual-environments/#footnote-2" id="footnote-reference-2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a></p>
+<div class="code"><pre class="code text"><a id="rest_code_18a312297bd24b709792347e1c7efa1d-1" name="rest_code_18a312297bd24b709792347e1c7efa1d-1" href="/pl/blog/2018/09/04/python-virtual-environments/#rest_code_18a312297bd24b709792347e1c7efa1d-1"></a>$ env/bin/python -m pip install --upgrade pip setuptools wheel
+<a id="rest_code_18a312297bd24b709792347e1c7efa1d-2" name="rest_code_18a312297bd24b709792347e1c7efa1d-2" href="/pl/blog/2018/09/04/python-virtual-environments/#rest_code_18a312297bd24b709792347e1c7efa1d-2"></a>&gt; env\Scripts\python -m pip install --upgrade pip setuptools wheel
+</pre></div>
+<section id="where-to-store-virtual-environments"><h3>Where to store virtual environments?</h3>
 <p>While the tools allow you to put your virtual environments anywhere in the
 system, it is not a desirable thing to do. There are two options:</p>
 <ol class="arabic simple">
@@ -194,58 +190,54 @@ feature is handy though, and so here’s a way to do it without
 <code class="docutils literal">virtualenvwrapper</code>:</p>
 <div class="code"><table class="codetable">
 <tr>
-<td class="linenos linenodiv"><a href="/pl/blog/2018/09/04/python-virtual-environments/#rest_code_cb2506fc9bbd43ebabed2f7253092b0f-1"><code data-line-number="1"></code></a></td>
-<td class="code"><code><a name="rest_code_cb2506fc9bbd43ebabed2f7253092b0f-1"></a> <span class="nb">export</span> <span class="nv">WORKON_HOME</span><span class="o">=</span>~/virtualenvs
+<td class="linenos linenodiv"><a href="/pl/blog/2018/09/04/python-virtual-environments/#rest_code_fc30a25dbeb34ea6afa95f32832a5207-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><a id="rest_code_fc30a25dbeb34ea6afa95f32832a5207-1" name="rest_code_fc30a25dbeb34ea6afa95f32832a5207-1"></a> <span class="nb">export</span> <span class="nv">WORKON_HOME</span><span class="o">=</span>~/virtualenvs
 </code></td>
 </tr>
 <tr>
-<td class="linenos linenodiv"><a href="/pl/blog/2018/09/04/python-virtual-environments/#rest_code_cb2506fc9bbd43ebabed2f7253092b0f-2"><code data-line-number="2"></code></a></td>
-<td class="code"><code><a name="rest_code_cb2506fc9bbd43ebabed2f7253092b0f-2"></a>
+<td class="linenos linenodiv"><a href="/pl/blog/2018/09/04/python-virtual-environments/#rest_code_fc30a25dbeb34ea6afa95f32832a5207-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><a id="rest_code_fc30a25dbeb34ea6afa95f32832a5207-2" name="rest_code_fc30a25dbeb34ea6afa95f32832a5207-2"></a>
 </code></td>
 </tr>
 <tr>
-<td class="linenos linenodiv"><a href="/pl/blog/2018/09/04/python-virtual-environments/#rest_code_cb2506fc9bbd43ebabed2f7253092b0f-3"><code data-line-number="3"></code></a></td>
-<td class="code"><code><a name="rest_code_cb2506fc9bbd43ebabed2f7253092b0f-3"></a> <span class="k">function</span> workon <span class="o">{</span>
+<td class="linenos linenodiv"><a href="/pl/blog/2018/09/04/python-virtual-environments/#rest_code_fc30a25dbeb34ea6afa95f32832a5207-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><a id="rest_code_fc30a25dbeb34ea6afa95f32832a5207-3" name="rest_code_fc30a25dbeb34ea6afa95f32832a5207-3"></a> <span class="k">function</span> workon <span class="o">{</span>
 </code></td>
 </tr>
 <tr>
-<td class="linenos linenodiv"><a href="/pl/blog/2018/09/04/python-virtual-environments/#rest_code_cb2506fc9bbd43ebabed2f7253092b0f-4"><code data-line-number="4"></code></a></td>
-<td class="code"><code><a name="rest_code_cb2506fc9bbd43ebabed2f7253092b0f-4"></a>     <span class="nb">source</span> <span class="s2">"</span><span class="nv">$WORKON_HOME</span><span class="s2">/</span><span class="nv">$1</span><span class="s2">/bin/activate"</span>
+<td class="linenos linenodiv"><a href="/pl/blog/2018/09/04/python-virtual-environments/#rest_code_fc30a25dbeb34ea6afa95f32832a5207-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code><a id="rest_code_fc30a25dbeb34ea6afa95f32832a5207-4" name="rest_code_fc30a25dbeb34ea6afa95f32832a5207-4"></a>     <span class="nb">source</span> <span class="s2">"</span><span class="nv">$WORKON_HOME</span><span class="s2">/</span><span class="nv">$1</span><span class="s2">/bin/activate"</span>
 </code></td>
 </tr>
 <tr>
-<td class="linenos linenodiv"><a href="/pl/blog/2018/09/04/python-virtual-environments/#rest_code_cb2506fc9bbd43ebabed2f7253092b0f-5"><code data-line-number="5"></code></a></td>
-<td class="code"><code><a name="rest_code_cb2506fc9bbd43ebabed2f7253092b0f-5"></a> <span class="o">}</span>
+<td class="linenos linenodiv"><a href="/pl/blog/2018/09/04/python-virtual-environments/#rest_code_fc30a25dbeb34ea6afa95f32832a5207-5"><code data-line-number="5"></code></a></td>
+<td class="code"><code><a id="rest_code_fc30a25dbeb34ea6afa95f32832a5207-5" name="rest_code_fc30a25dbeb34ea6afa95f32832a5207-5"></a> <span class="o">}</span>
 </code></td>
 </tr>
 </table></div>
 <p>And for Windows PowerShell fans, here’s a <code class="docutils literal">workon.ps1</code> script:</p>
 <div class="code"><table class="codetable">
 <tr>
-<td class="linenos linenodiv"><a href="/pl/blog/2018/09/04/python-virtual-environments/#rest_code_dd5457debc81401d8a01cc09da1e53c9-1"><code data-line-number="1"></code></a></td>
-<td class="code"><code><a name="rest_code_dd5457debc81401d8a01cc09da1e53c9-1"></a> <span class="nv">$WORKON_HOME</span> <span class="p">=</span> <span class="s2">"$home\virtualenvs"</span>
+<td class="linenos linenodiv"><a href="/pl/blog/2018/09/04/python-virtual-environments/#rest_code_657c08875c924925ad0d13eae8240862-1"><code data-line-number="1"></code></a></td>
+<td class="code"><code><a id="rest_code_657c08875c924925ad0d13eae8240862-1" name="rest_code_657c08875c924925ad0d13eae8240862-1"></a> <span class="nv">$WORKON_HOME</span> <span class="p">=</span> <span class="s2">"$home\virtualenvs"</span>
 </code></td>
 </tr>
 <tr>
-<td class="linenos linenodiv"><a href="/pl/blog/2018/09/04/python-virtual-environments/#rest_code_dd5457debc81401d8a01cc09da1e53c9-2"><code data-line-number="2"></code></a></td>
-<td class="code"><code><a name="rest_code_dd5457debc81401d8a01cc09da1e53c9-2"></a> <span class="nv">$venv</span> <span class="p">=</span> <span class="nv">$args</span><span class="p">[</span><span class="n">0</span><span class="p">]</span>
+<td class="linenos linenodiv"><a href="/pl/blog/2018/09/04/python-virtual-environments/#rest_code_657c08875c924925ad0d13eae8240862-2"><code data-line-number="2"></code></a></td>
+<td class="code"><code><a id="rest_code_657c08875c924925ad0d13eae8240862-2" name="rest_code_657c08875c924925ad0d13eae8240862-2"></a> <span class="nv">$venv</span> <span class="p">=</span> <span class="nv">$args</span><span class="p">[</span><span class="n">0</span><span class="p">]</span>
 </code></td>
 </tr>
 <tr>
-<td class="linenos linenodiv"><a href="/pl/blog/2018/09/04/python-virtual-environments/#rest_code_dd5457debc81401d8a01cc09da1e53c9-3"><code data-line-number="3"></code></a></td>
-<td class="code"><code><a name="rest_code_dd5457debc81401d8a01cc09da1e53c9-3"></a> <span class="nv">$cmd</span> <span class="p">=</span> <span class="s2">"$WORKON_HOME\$venv\Scripts\activate.ps1"</span>
+<td class="linenos linenodiv"><a href="/pl/blog/2018/09/04/python-virtual-environments/#rest_code_657c08875c924925ad0d13eae8240862-3"><code data-line-number="3"></code></a></td>
+<td class="code"><code><a id="rest_code_657c08875c924925ad0d13eae8240862-3" name="rest_code_657c08875c924925ad0d13eae8240862-3"></a> <span class="nv">$cmd</span> <span class="p">=</span> <span class="s2">"$WORKON_HOME\$venv\Scripts\activate.ps1"</span>
 </code></td>
 </tr>
 <tr>
-<td class="linenos linenodiv"><a href="/pl/blog/2018/09/04/python-virtual-environments/#rest_code_dd5457debc81401d8a01cc09da1e53c9-4"><code data-line-number="4"></code></a></td>
-<td class="code"><code><a name="rest_code_dd5457debc81401d8a01cc09da1e53c9-4"></a> <span class="p">&amp;</span> <span class="nv">$cmd</span>
+<td class="linenos linenodiv"><a href="/pl/blog/2018/09/04/python-virtual-environments/#rest_code_657c08875c924925ad0d13eae8240862-4"><code data-line-number="4"></code></a></td>
+<td class="code"><code><a id="rest_code_657c08875c924925ad0d13eae8240862-4" name="rest_code_657c08875c924925ad0d13eae8240862-4"></a> <span class="p">&amp;</span> <span class="nv">$cmd</span>
 </code></td>
 </tr>
-</table></div>
-</div>
-</div>
-<div class="section" id="use">
-<h2>Use</h2>
+</table></div></section></section><section id="use"><h2>Use</h2>
 <p>There are three ways of working with virtual environments interactively (in a
 shell):</p>
 <ul class="simple">
@@ -265,35 +257,34 @@ things, you will still be working with the system Python.</p>
 activation and subshells are not viable solutions. In these cases, you must
 always use the full path to Python.</p>
 <p>Here are some usage examples (paths can be relative, of course):</p>
-<pre class="code text"><a name="rest_code_63747a32ae04443abaf1cd7eee7fdd4d-1"></a>## *nix, activation ##
-<a name="rest_code_63747a32ae04443abaf1cd7eee7fdd4d-2"></a>$ source /path/to/env/bin/activate
-<a name="rest_code_63747a32ae04443abaf1cd7eee7fdd4d-3"></a>(env)$ pip install Django
-<a name="rest_code_63747a32ae04443abaf1cd7eee7fdd4d-4"></a>(env)$ deactivate
-<a name="rest_code_63747a32ae04443abaf1cd7eee7fdd4d-5"></a>
-<a name="rest_code_63747a32ae04443abaf1cd7eee7fdd4d-6"></a>## *nix, manual execution ##
-<a name="rest_code_63747a32ae04443abaf1cd7eee7fdd4d-7"></a>$ /path/to/env/bin/pip install Django
-<a name="rest_code_63747a32ae04443abaf1cd7eee7fdd4d-8"></a>
-<a name="rest_code_63747a32ae04443abaf1cd7eee7fdd4d-9"></a>## Windows, activation ##
-<a name="rest_code_63747a32ae04443abaf1cd7eee7fdd4d-10"></a>&gt; C:\path\to\env\Scripts\activate
-<a name="rest_code_63747a32ae04443abaf1cd7eee7fdd4d-11"></a>(venv)&gt; pip install Django
-<a name="rest_code_63747a32ae04443abaf1cd7eee7fdd4d-12"></a>(venv)&gt; deactivate
-<a name="rest_code_63747a32ae04443abaf1cd7eee7fdd4d-13"></a>
-<a name="rest_code_63747a32ae04443abaf1cd7eee7fdd4d-14"></a>## Windows, manual execution ##
-<a name="rest_code_63747a32ae04443abaf1cd7eee7fdd4d-15"></a>&gt; C:\path\to\env\Scripts\pip install Django
-<a name="rest_code_63747a32ae04443abaf1cd7eee7fdd4d-16"></a>
-<a name="rest_code_63747a32ae04443abaf1cd7eee7fdd4d-17"></a>## Windows, updating pip/setuptools/wheel ##
-<a name="rest_code_63747a32ae04443abaf1cd7eee7fdd4d-18"></a>&gt; C:\path\to\env\Scripts\python -m pip install -U pip setuptools wheel
-</pre>
+<div class="code"><pre class="code text"><a id="rest_code_7b6f48bf87d3413f965262b4df061c0a-1" name="rest_code_7b6f48bf87d3413f965262b4df061c0a-1" href="/pl/blog/2018/09/04/python-virtual-environments/#rest_code_7b6f48bf87d3413f965262b4df061c0a-1"></a>## *nix, activation ##
+<a id="rest_code_7b6f48bf87d3413f965262b4df061c0a-2" name="rest_code_7b6f48bf87d3413f965262b4df061c0a-2" href="/pl/blog/2018/09/04/python-virtual-environments/#rest_code_7b6f48bf87d3413f965262b4df061c0a-2"></a>$ source /path/to/env/bin/activate
+<a id="rest_code_7b6f48bf87d3413f965262b4df061c0a-3" name="rest_code_7b6f48bf87d3413f965262b4df061c0a-3" href="/pl/blog/2018/09/04/python-virtual-environments/#rest_code_7b6f48bf87d3413f965262b4df061c0a-3"></a>(env)$ pip install Django
+<a id="rest_code_7b6f48bf87d3413f965262b4df061c0a-4" name="rest_code_7b6f48bf87d3413f965262b4df061c0a-4" href="/pl/blog/2018/09/04/python-virtual-environments/#rest_code_7b6f48bf87d3413f965262b4df061c0a-4"></a>(env)$ deactivate
+<a id="rest_code_7b6f48bf87d3413f965262b4df061c0a-5" name="rest_code_7b6f48bf87d3413f965262b4df061c0a-5" href="/pl/blog/2018/09/04/python-virtual-environments/#rest_code_7b6f48bf87d3413f965262b4df061c0a-5"></a>
+<a id="rest_code_7b6f48bf87d3413f965262b4df061c0a-6" name="rest_code_7b6f48bf87d3413f965262b4df061c0a-6" href="/pl/blog/2018/09/04/python-virtual-environments/#rest_code_7b6f48bf87d3413f965262b4df061c0a-6"></a>## *nix, manual execution ##
+<a id="rest_code_7b6f48bf87d3413f965262b4df061c0a-7" name="rest_code_7b6f48bf87d3413f965262b4df061c0a-7" href="/pl/blog/2018/09/04/python-virtual-environments/#rest_code_7b6f48bf87d3413f965262b4df061c0a-7"></a>$ /path/to/env/bin/pip install Django
+<a id="rest_code_7b6f48bf87d3413f965262b4df061c0a-8" name="rest_code_7b6f48bf87d3413f965262b4df061c0a-8" href="/pl/blog/2018/09/04/python-virtual-environments/#rest_code_7b6f48bf87d3413f965262b4df061c0a-8"></a>
+<a id="rest_code_7b6f48bf87d3413f965262b4df061c0a-9" name="rest_code_7b6f48bf87d3413f965262b4df061c0a-9" href="/pl/blog/2018/09/04/python-virtual-environments/#rest_code_7b6f48bf87d3413f965262b4df061c0a-9"></a>## Windows, activation ##
+<a id="rest_code_7b6f48bf87d3413f965262b4df061c0a-10" name="rest_code_7b6f48bf87d3413f965262b4df061c0a-10" href="/pl/blog/2018/09/04/python-virtual-environments/#rest_code_7b6f48bf87d3413f965262b4df061c0a-10"></a>&gt; C:\path\to\env\Scripts\activate
+<a id="rest_code_7b6f48bf87d3413f965262b4df061c0a-11" name="rest_code_7b6f48bf87d3413f965262b4df061c0a-11" href="/pl/blog/2018/09/04/python-virtual-environments/#rest_code_7b6f48bf87d3413f965262b4df061c0a-11"></a>(venv)&gt; pip install Django
+<a id="rest_code_7b6f48bf87d3413f965262b4df061c0a-12" name="rest_code_7b6f48bf87d3413f965262b4df061c0a-12" href="/pl/blog/2018/09/04/python-virtual-environments/#rest_code_7b6f48bf87d3413f965262b4df061c0a-12"></a>(venv)&gt; deactivate
+<a id="rest_code_7b6f48bf87d3413f965262b4df061c0a-13" name="rest_code_7b6f48bf87d3413f965262b4df061c0a-13" href="/pl/blog/2018/09/04/python-virtual-environments/#rest_code_7b6f48bf87d3413f965262b4df061c0a-13"></a>
+<a id="rest_code_7b6f48bf87d3413f965262b4df061c0a-14" name="rest_code_7b6f48bf87d3413f965262b4df061c0a-14" href="/pl/blog/2018/09/04/python-virtual-environments/#rest_code_7b6f48bf87d3413f965262b4df061c0a-14"></a>## Windows, manual execution ##
+<a id="rest_code_7b6f48bf87d3413f965262b4df061c0a-15" name="rest_code_7b6f48bf87d3413f965262b4df061c0a-15" href="/pl/blog/2018/09/04/python-virtual-environments/#rest_code_7b6f48bf87d3413f965262b4df061c0a-15"></a>&gt; C:\path\to\env\Scripts\pip install Django
+<a id="rest_code_7b6f48bf87d3413f965262b4df061c0a-16" name="rest_code_7b6f48bf87d3413f965262b4df061c0a-16" href="/pl/blog/2018/09/04/python-virtual-environments/#rest_code_7b6f48bf87d3413f965262b4df061c0a-16"></a>
+<a id="rest_code_7b6f48bf87d3413f965262b4df061c0a-17" name="rest_code_7b6f48bf87d3413f965262b4df061c0a-17" href="/pl/blog/2018/09/04/python-virtual-environments/#rest_code_7b6f48bf87d3413f965262b4df061c0a-17"></a>## Windows, updating pip/setuptools/wheel ##
+<a id="rest_code_7b6f48bf87d3413f965262b4df061c0a-18" name="rest_code_7b6f48bf87d3413f965262b4df061c0a-18" href="/pl/blog/2018/09/04/python-virtual-environments/#rest_code_7b6f48bf87d3413f965262b4df061c0a-18"></a>&gt; C:\path\to\env\Scripts\python -m pip install -U pip setuptools wheel
+</pre></div>
 <p>The same principle applies to running Python itself, or any other script
 installed by a package. (With Django’s <code class="docutils literal">manage.py</code>, calling it as
 <code class="docutils literal">./manage.py</code> requires activation, or you can run
 <code class="docutils literal">venv/bin/python manage.py</code>.)</p>
-<div class="section" id="moving-renaming-copying-environments">
-<h3>Moving/renaming/copying environments?</h3>
+<section id="moving-renaming-copying-environments"><h3>Moving/renaming/copying environments?</h3>
 <p>If you try to copy or rename a virtual environment, you will discover that the
 copied environment does not work. This is because a virtual environment is
 closely tied to both the Python it was created with, and the location it was
-created in. (The “relocatable” option of <code class="docutils literal">virtualenv</code> does not work and is deprecated.) <a class="footnote-reference brackets" href="/pl/blog/2018/09/04/python-virtual-environments/#id8" id="id3">3</a></p>
+created in. (The “relocatable” option of <code class="docutils literal">virtualenv</code> does not work and is deprecated.) <a class="footnote-reference brackets" href="/pl/blog/2018/09/04/python-virtual-environments/#footnote-3" id="footnote-reference-3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a></p>
 <p>However, this is very easy to fix. Instead of moving/copying, just create a new
 environment in the new location. Then, run <code class="docutils literal">pip freeze &gt; requirements.txt</code> in
 the old environment to create a list of packages installed in it. With that,
@@ -301,72 +292,48 @@ you can just run <code class="docutils literal">pip install <span class="pre">-r
 install packages from the saved list. (Of course, you can copy <code class="docutils literal">requirements.txt</code>
 between machines. In many cases, it will just work; sometimes, you might need a few
 modifications to <code class="docutils literal">requirements.txt</code> to remove OS-specific stuff.)</p>
-<pre class="code text"><a name="rest_code_bc77a9a311b64029b8ce88e220b4af8b-1"></a>$ oldenv/bin/pip freeze &gt; requirements.txt
-<a name="rest_code_bc77a9a311b64029b8ce88e220b4af8b-2"></a>$ python3 -m venv newenv
-<a name="rest_code_bc77a9a311b64029b8ce88e220b4af8b-3"></a>$ newenv/bin/pip install -r requirements.txt
-<a name="rest_code_bc77a9a311b64029b8ce88e220b4af8b-4"></a>(You may rm -rf oldenv now if you desire)
-</pre>
+<div class="code"><pre class="code text"><a id="rest_code_8a9656608d1a49809cd8738554eef617-1" name="rest_code_8a9656608d1a49809cd8738554eef617-1" href="/pl/blog/2018/09/04/python-virtual-environments/#rest_code_8a9656608d1a49809cd8738554eef617-1"></a>$ oldenv/bin/pip freeze &gt; requirements.txt
+<a id="rest_code_8a9656608d1a49809cd8738554eef617-2" name="rest_code_8a9656608d1a49809cd8738554eef617-2" href="/pl/blog/2018/09/04/python-virtual-environments/#rest_code_8a9656608d1a49809cd8738554eef617-2"></a>$ python3 -m venv newenv
+<a id="rest_code_8a9656608d1a49809cd8738554eef617-3" name="rest_code_8a9656608d1a49809cd8738554eef617-3" href="/pl/blog/2018/09/04/python-virtual-environments/#rest_code_8a9656608d1a49809cd8738554eef617-3"></a>$ newenv/bin/pip install -r requirements.txt
+<a id="rest_code_8a9656608d1a49809cd8738554eef617-4" name="rest_code_8a9656608d1a49809cd8738554eef617-4" href="/pl/blog/2018/09/04/python-virtual-environments/#rest_code_8a9656608d1a49809cd8738554eef617-4"></a>(You may rm -rf oldenv now if you desire)
+</pre></div>
 <p>Note that it might also be necessary to re-create your virtual environment
-after a Python upgrade, <a class="footnote-reference brackets" href="/pl/blog/2018/09/04/python-virtual-environments/#id9" id="id4">4</a> so it might be handy to keep an up-to-date
+after a Python upgrade, <a class="footnote-reference brackets" href="/pl/blog/2018/09/04/python-virtual-environments/#footnote-4" id="footnote-reference-4" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a> so it might be handy to keep an up-to-date
 <code class="docutils literal">requirements.txt</code> for your virtual environments (for many projects, it makes
 sense to put that in the repository).</p>
 <p>To manage those <code class="docutils literal">requirements.txt</code> files in a more orgnized yet still simple
 way, you might be interested in <a class="reference external" href="https://github.com/jazzband/pip-tools">pip-tools</a></p>
-</div>
-</div>
-<div class="section" id="frequently-asked-questions">
-<h2>Frequently Asked Questions</h2>
-<div class="section" id="im-using-virtualenv-do-i-need-to-install-it-for-each-python-i-want-to-use-it-with">
-<h3>I’m using virtualenv. Do I need to install it for each Python I want to use it with?</h3>
+</section></section><section id="frequently-asked-questions"><h2>Frequently Asked Questions</h2>
+<section id="im-using-virtualenv-do-i-need-to-install-it-for-each-python-i-want-to-use-it-with"><h3>I’m using virtualenv. Do I need to install it for each Python I want to use it with?</h3>
 <p>In most cases, you can use <code class="docutils literal">virtualenv <span class="pre">-p</span> pythonX env</code> to specify a different
 Python version, but with some Python version combinations, that approach might
 be unsuccessful. (The <code class="docutils literal">venv</code> module is tied to the Python version it’s
 installed in.)</p>
-</div>
-<div class="section" id="im-the-only-user-on-my-system-do-i-still-need-virtual-environments">
-<h3>I’m the only user on my system. Do I still need virtual environments?</h3>
+</section><section id="im-the-only-user-on-my-system-do-i-still-need-virtual-environments"><h3>I’m the only user on my system. Do I still need virtual environments?</h3>
 <p>Yes, you do. First, you will still need separation between projects, sooner or
 later.  Moreover, if you were to install packages system-wide with pip, you
 might end up causing conflicts between packages installed by the system package
 manager and by pip. Running <code class="docutils literal">sudo pip</code> is never a good idea because of this.</p>
-</div>
-<div class="section" id="im-using-docker-do-i-still-need-virtual-environments">
-<h3>I’m using Docker. Do I still need virtual environments?</h3>
+</section><section id="im-using-docker-do-i-still-need-virtual-environments"><h3>I’m using Docker. Do I still need virtual environments?</h3>
 <p>They are still a good idea in that case. They protect you against any bad
 system-wide Python packages your OS image might have (and one popular base OS
 is famous for those). They don’t introduce any extra overhead, while allowing
 to have a clean environment and the ability to re-create it outside of Docker
 (eg. for local development without Docker)</p>
-</div>
-<div class="section" id="what-about-pipenv">
-<h3>What about Pipenv?</h3>
+</section><section id="what-about-pipenv"><h3>What about Pipenv?</h3>
 <p>Pipenv is a dependency management tool. It isn’t compatible with most workflows, and comes with many issues. In my opinion, it’s not worth using (Also, that thing about it being an officially recommended tool? Turns out it’s not true.)</p>
 <p>I also wrote a blog post detailing concerns with that tool, titled <a class="reference external" href="https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/">Pipenv: promises a lot, delivers very little</a>.</p>
 <p>Consider using <a class="reference external" href="https://github.com/jazzband/pip-tools">pip-tools</a> instead.</p>
-</div>
-</div>
-<div class="section" id="footnotes">
-<h2>Footnotes</h2>
-<dl class="footnote brackets">
-<dt class="label" id="id6"><span class="brackets"><a class="fn-backref" href="/pl/blog/2018/09/04/python-virtual-environments/#id1">1</a></span></dt>
-<dd>
+</section></section><section id="footnotes"><h2>Footnotes</h2>
+<aside class="footnote-list brackets"><aside class="footnote brackets" id="footnote-1" role="note"><span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="/pl/blog/2018/09/04/python-virtual-environments/#footnote-reference-1">1</a><span class="fn-bracket">]</span></span>
 <p>The thing you’re actually installing is <code class="docutils literal">ensurepip</code>. In general, Debian isn’t exactly friendly with Python packaging.</p>
-</dd>
-<dt class="label" id="id7"><span class="brackets"><a class="fn-backref" href="/pl/blog/2018/09/04/python-virtual-environments/#id2">2</a></span></dt>
-<dd>
+</aside><aside class="footnote brackets" id="footnote-2" role="note"><span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="/pl/blog/2018/09/04/python-virtual-environments/#footnote-reference-2">2</a><span class="fn-bracket">]</span></span>
 <p>On Windows, you <em>must</em> run <code class="docutils literal">python <span class="pre">-m</span> pip</code> instead of <code class="docutils literal">pip</code> if you want to upgrade the package manager itself.</p>
-</dd>
-<dt class="label" id="id8"><span class="brackets"><a class="fn-backref" href="/pl/blog/2018/09/04/python-virtual-environments/#id3">3</a></span></dt>
-<dd>
+</aside><aside class="footnote brackets" id="footnote-3" role="note"><span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="/pl/blog/2018/09/04/python-virtual-environments/#footnote-reference-3">3</a><span class="fn-bracket">]</span></span>
 <p>All script shebangs contain the direct path to the environment’s Python executable.  Many things in the virtual environment are symlinks that point to the original Python.</p>
-</dd>
-<dt class="label" id="id9"><span class="brackets"><a class="fn-backref" href="/pl/blog/2018/09/04/python-virtual-environments/#id4">4</a></span></dt>
-<dd>
+</aside><aside class="footnote brackets" id="footnote-4" role="note"><span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="/pl/blog/2018/09/04/python-virtual-environments/#footnote-reference-4">4</a><span class="fn-bracket">]</span></span>
 <p>Definitely after a minor version (3.x → 3.y) upgrade, sometimes (I’m looking at you Homebrew) after a patch version upgrade (3.x.y → 3.x.z) as well.</p>
-</dd>
-</dl>
-</div>
-    </article>
+</aside></aside></section></article>
 </div>
     <aside class="postpromonav"><div class="card guide-footer">
   <div class="card-header bg-primary border-primary"><h3>That’s all!</h3></div>
@@ -440,7 +407,7 @@ korzystając z tej strony, akceptujesz naszą <a href="/pl/privacy/">politykę p
 </p>
 <p>
 powered by <strong><a href="https://getnikola.com/">Nikola</a></strong>, <a href="http://nginx.org/">nginx</a> and <a href="https://hetzner.cloud/?ref=Qy1lehF8PwzP">Hetzner Cloud</a><br>
-copyright © 2009–2022 <a href="/pl/contact/">Chris Warrick</a><br><a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC
+copyright © 2009–2023 <a href="/pl/contact/">Chris Warrick</a><br><a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC
 BY-NC-SA</a>, unless stated otherwise</p>
             
         </footer>

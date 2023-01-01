@@ -141,8 +141,7 @@ parts of the boot process. But first, let’s prepare our system for this.</p>
 <p class="lead"><strong>DISCLAIMER:</strong> Those steps may make your Mac fail to boot. I don’t take any
 responsibility whatsoever if that happens. Prepare for the worst — make
 backups, perhaps have install media ready, plan some downtime.</p>
-<div class="section" id="step-1-install-windows-in-boot-camp-the-usual-way">
-<h2>Step 1. Install Windows in Boot Camp the usual way</h2>
+<section id="step-1-install-windows-in-boot-camp-the-usual-way"><h2>Step 1. Install Windows in Boot Camp the usual way</h2>
 <p>The first thing you should do is install Windows 10 in Boot Camp, with
 the help of the Boot Camp Assistant. The Assistant will take some time
 to partition your drive and do other preparations (and show barely
@@ -151,16 +150,14 @@ already</a>).
 There are no special preparations for this, the standard process will
 work. If you already have Windows installed, you can go to the next
 step.</p>
-</div>
-<div class="section" id="step-2-ensure-the-setup-is-stable">
-<h2>Step 2. Ensure the setup is stable</h2>
+</section><section id="step-2-ensure-the-setup-is-stable"><h2>Step 2. Ensure the setup is stable</h2>
 <p>We’ll be making changes to how the machine boots, and as such, it’s
 good to have other things working correctly and in line with your
 expected configuration. Make sure that:</p>
 <ul class="simple">
 <li><p>Both macOS and Windows boot correctly</p></li>
 <li><p>You can change the OS you boot into by holding the Option key after
-pressing Power (requires disabling the firmware password <a class="footnote-reference brackets" href="/blog/2021/01/31/enabling-virtualization-support-in-boot-camp-with-refind/#id3" id="id1">1</a>)</p></li>
+pressing Power (requires disabling the firmware password <a class="footnote-reference brackets" href="/blog/2021/01/31/enabling-virtualization-support-in-boot-camp-with-refind/#footnote-1" id="footnote-reference-1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>)</p></li>
 <li><p>Disk encryption (FileVault, BitLocker) is enabled (if you want that, of
 course) and fully configured (initial encryption is complete)</p></li>
 <li><p>Windows setup (including Boot Camp drivers) is complete</p></li>
@@ -173,10 +170,7 @@ that — pick your drive, click <em>Partition</em> and delete the partition,
 this will grow the macOS partition)</p></li>
 <li><p>System Integrity Protection is enabled (the procedure is a bit safer
 that way)</p></li>
-</ul>
-</div>
-<div class="section" id="step-3-create-a-partition-for-refind">
-<h2>Step 3. Create a partition for rEFInd</h2>
+</ul></section><section id="step-3-create-a-partition-for-refind"><h2>Step 3. Create a partition for rEFInd</h2>
 <p>First, back up your data before making changes to your hard drive
 layout. We’ll need to create a new partition for rEFInd to live on. This
 is the safest option — you could install it to the EFI System Partition (ESP),
@@ -206,11 +200,9 @@ faster.</p></li>
 Extended), you can proceed with the setup. Also, if you don’t want the
 partition to be visible in the Finder, run the following command (insert
 the correct volume path for your system):</p>
-<pre class="code text"><a name="rest_code_0a7734c11dba41af9e81831abf1469bd-1"></a>sudo chflags hidden /Volumes/rEFInd
-</pre>
-</div>
-<div class="section" id="step-4-configure-and-install-refind">
-<h2>Step 4. Configure and install rEFInd</h2>
+<div class="code"><pre class="code text"><a id="rest_code_733f9e1beb2747bca46a5cbc5c91dfcf-1" name="rest_code_733f9e1beb2747bca46a5cbc5c91dfcf-1" href="/blog/2021/01/31/enabling-virtualization-support-in-boot-camp-with-refind/#rest_code_733f9e1beb2747bca46a5cbc5c91dfcf-1"></a>sudo chflags hidden /Volumes/rEFInd
+</pre></div>
+</section><section id="step-4-configure-and-install-refind"><h2>Step 4. Configure and install rEFInd</h2>
 <p>To set ue rEFInd, you’ll need to boot into macOS. <a class="reference external" href="https://www.rodsbooks.com/refind/getting.html">Download
 rEFInd</a> from the
 author’s website — you want the file named <em>A binary zip file</em>. Extract
@@ -233,11 +225,11 @@ and check the <em>Device</em> field (for example, <code class="docutils literal"
 <p>Open a Terminal, <code class="docutils literal">cd</code> into the directory where rEFInd was extracted,
 and run the following command (replace <code class="docutils literal">disk9s9</code> with the device
 name on your system):</p>
-<pre class="code text"><a name="rest_code_bb60f02f29534382a1fb2ea84eec5a49-1"></a>./refind-install --ownhfs disk9s9
-</pre>
+<div class="code"><pre class="code text"><a id="rest_code_a3b87aef5eaa41c99250d5aee1fe5f4a-1" name="rest_code_a3b87aef5eaa41c99250d5aee1fe5f4a-1" href="/blog/2021/01/31/enabling-virtualization-support-in-boot-camp-with-refind/#rest_code_a3b87aef5eaa41c99250d5aee1fe5f4a-1"></a>./refind-install --ownhfs disk9s9
+</pre></div>
 <p>This command will produce an error if you have SIP enabled — but this
 error is not important for us, the install will work without the change
-that SIP prevented. <a class="footnote-reference brackets" href="/blog/2021/01/31/enabling-virtualization-support-in-boot-camp-with-refind/#id4" id="id2">2</a></p>
+that SIP prevented. <a class="footnote-reference brackets" href="/blog/2021/01/31/enabling-virtualization-support-in-boot-camp-with-refind/#footnote-2" id="footnote-reference-2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a></p>
 <p>You can now shut down your Mac and use the Option key while starting up
 to choose the OS. You should see three options: Macintosh HD, EFI Boot,
 and Boot Camp. The EFI Boot option is rEFInd — pick that, boot into
@@ -260,26 +252,19 @@ You can set a custom background image, for example (<a class="reference external
 site</a> can help you figure out
 what options are available and what you can set them to).</p></li>
 </ul>
-<dl class="footnote brackets">
-<dt class="label" id="id3"><span class="brackets"><a class="fn-backref" href="/blog/2021/01/31/enabling-virtualization-support-in-boot-camp-with-refind/#id1">1</a></span></dt>
-<dd>
+<aside class="footnote-list brackets"><aside class="footnote brackets" id="footnote-1" role="note"><span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="/blog/2021/01/31/enabling-virtualization-support-in-boot-camp-with-refind/#footnote-reference-1">1</a><span class="fn-bracket">]</span></span>
 <p>If the firmware password is important to you, you can restore it after
 the setup is done — this will mean using rEFInd to boot both Windows and
 macOS, although I decided to remove the firmware password and boot
 into macOS from the Power+Option boot menu.</p>
-</dd>
-<dt class="label" id="id4"><span class="brackets"><a class="fn-backref" href="/blog/2021/01/31/enabling-virtualization-support-in-boot-camp-with-refind/#id2">2</a></span></dt>
-<dd>
+</aside><aside class="footnote brackets" id="footnote-2" role="note"><span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="/blog/2021/01/31/enabling-virtualization-support-in-boot-camp-with-refind/#footnote-reference-2">2</a><span class="fn-bracket">]</span></span>
 <p>The failing operation is marking the rEFInd partition bootable in the Mac
 sense, using the <code class="docutils literal">bless</code> command. However, the drive is considered
 bootable as an EFI-compliant boot volume (it has <code class="docutils literal">*.efi</code> files in specific
 places), and this is the boot method we’re using here. SIP aside, the
 <code class="docutils literal">bless</code> utility is a bit buggy, and we can use rEFInd without a blessed
 partition just fine.</p>
-</dd>
-</dl>
-</div>
-    </article>
+</aside></aside></section></article>
 </div>
     <aside class="postpromonav"><div class="card guide-footer">
   <div class="card-header bg-primary border-primary"><h3>That’s all!</h3></div>
@@ -351,7 +336,7 @@ partition just fine.</p>
         </div></nav><footer id="footer"><p>this site uses cookies.<br>by using this site, you agree to our <a href="/privacy/">cookie and privacy policy</a>.</p>
 <p>
 powered by <strong><a href="https://getnikola.com/">Nikola</a></strong>, <a href="http://nginx.org/">nginx</a> and <a href="https://hetzner.cloud/?ref=Qy1lehF8PwzP">Hetzner Cloud</a><br>
-copyright © 2009–2022 <a href="/contact/">Chris Warrick</a><br><a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC
+copyright © 2009–2023 <a href="/contact/">Chris Warrick</a><br><a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC
 BY-NC-SA</a>, unless stated otherwise</p>
             
         </footer>

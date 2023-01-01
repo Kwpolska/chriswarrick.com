@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chris Warrick (Posty o Debian)</title><link>https://chriswarrick.com/</link><description></description><atom:link href="https://chriswarrick.com/pl/blog/tags/debian.xml" rel="self" type="application/rss+xml"></atom:link><language>pl</language><lastBuildDate>Fri, 31 Dec 2021 17:53:37 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>systemd is awesome.</title><link>https://chriswarrick.com/pl/blog/2015/01/30/systemd-is-awesome/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;p&gt;I recently switched distros on my server, from Debian to Fedora, to use
+<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chris Warrick (Posty o Debian)</title><link>https://chriswarrick.com/</link><description></description><atom:link href="https://chriswarrick.com/pl/blog/tags/debian.xml" rel="self" type="application/rss+xml"></atom:link><language>pl</language><lastBuildDate>Mon, 07 Nov 2022 22:28:44 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>systemd is awesome.</title><link>https://chriswarrick.com/pl/blog/2015/01/30/systemd-is-awesome/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;p&gt;I recently switched distros on my server, from Debian to Fedora, to use
 &lt;code class="docutils literal"&gt;systemd&lt;/code&gt; and keep it in line with my home &lt;a class="reference external" href="https://chriswarrick.com/blog/2011/01/06/arch-linux-the-best-distro-ever/"&gt;Arch Linux&lt;/a&gt; system (which was
 not reinstalled since 2010, by the way!)  Why is systemd so awesome?  Read
 on to find out.&lt;/p&gt;
 &lt;!-- TEASER_END --&gt;
 &lt;p&gt;&lt;em&gt;(I changed the hardware for my home system along the way.  And just copied
 everything over with ``dd``.  That’s Linux at its finest.)&lt;/em&gt;&lt;/p&gt;
-&lt;div class="section" id="user-friendly"&gt;
+&lt;section id="user-friendly"&gt;
 &lt;h2&gt;User friendly&lt;/h2&gt;
 &lt;p&gt;The most important thing in systemd is its user friendliness.  systemd offers
 the &lt;code class="docutils literal"&gt;systemctl&lt;/code&gt; tool, which can be used to control all the services.  You
 can see what exactly is going on: what is running, what failed to start,
 and you can also see why if you ask &lt;code class="docutils literal"&gt;systemctl status $SERVICE&lt;/code&gt;.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="section" id="services"&gt;
+&lt;/section&gt;
+&lt;section id="services"&gt;
 &lt;h2&gt;Services&lt;/h2&gt;
-&lt;div class="section" id="writing-services-is-fun"&gt;
+&lt;section id="writing-services-is-fun"&gt;
 &lt;h3&gt;Writing services is fun&lt;/h3&gt;
 &lt;p&gt;If you want your own services, you just need to write some simple INI files.  No
 need for bash, distro-specific frameworks and whatnot.  If I have a functioning
@@ -28,20 +28,20 @@ debian$ wc -l /etc/init.d/nginx
 101 /etc/init.d/nginx&lt;/pre&gt;
 &lt;p&gt;And you can write a bare-minimum systemd daemon in less than that – not so easy
 with &lt;code class="docutils literal"&gt;sysvinit&lt;/code&gt; (writing everything on one line doesn’t count!)&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="section" id="managing-personal-services"&gt;
+&lt;/section&gt;
+&lt;section id="managing-personal-services"&gt;
 &lt;h3&gt;Managing personal services&lt;/h3&gt;
 &lt;p&gt;systemd also features user-specific services.  You can run any service as your
 user.  I use this to run &lt;a class="reference external" href="https://chriswarrick.com/kwbot/"&gt;KwBot&lt;/a&gt;, which was previously under control of
 &lt;code class="docutils literal"&gt;supervisord&lt;/code&gt; — that’s one less dependency to care about!&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="section" id="runlevels-do-not-exist"&gt;
+&lt;/section&gt;
+&lt;section id="runlevels-do-not-exist"&gt;
 &lt;h3&gt;Runlevels do not exist&lt;/h3&gt;
 &lt;p&gt;systemd does away with the standard convention of runlevels.  They are replaced
 by human-friendly &lt;em&gt;targets&lt;/em&gt;.  Each unit defines its target: most use
 &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;multi-user.target&lt;/span&gt;&lt;/code&gt;.  It is much easier to manage.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="section" id="no-symlink-mess"&gt;
+&lt;/section&gt;
+&lt;section id="no-symlink-mess"&gt;
 &lt;h3&gt;No symlink mess&lt;/h3&gt;
 &lt;p&gt;Just like old sysvinit-esque systems, systemd uses symlinks to manage
 enabled/disabled services.  There is just one difference: you get just &lt;strong&gt;one&lt;/strong&gt;
@@ -49,24 +49,24 @@ symlink in the appropriate &lt;code class="docutils literal"&gt;.wants&lt;/code&
 all the different runlevels.  &lt;code class="docutils literal"&gt;graphical.target&lt;/code&gt; depends on
 &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;multi-user.target&lt;/span&gt;&lt;/code&gt;, which in turn depends on &lt;code class="docutils literal"&gt;basic.target&lt;/code&gt;, which depends
 on a few more targets required to get the system up and running.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="section" id="units-can-depend-on-each-other"&gt;
+&lt;/section&gt;
+&lt;section id="units-can-depend-on-each-other"&gt;
 &lt;h3&gt;Units can depend on each other&lt;/h3&gt;
 &lt;p&gt;Do you have some units that require the network to be up?  Set it to be run
 after and require &lt;code class="docutils literal"&gt;network.target&lt;/code&gt; and call it a day.&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class="section" id="the-journal"&gt;
+&lt;/section&gt;
+&lt;/section&gt;
+&lt;section id="the-journal"&gt;
 &lt;h2&gt;The Journal&lt;/h2&gt;
 &lt;p&gt;If I want to know what is going on in my system, I can just ask &lt;code class="docutils literal"&gt;journalctl&lt;/code&gt;
 to show me the most recent messages.  I don’t need to read a thousand different
 log files — most things appear in the journal.  Sure, some things aren’t there
 (yet), but what I &lt;em&gt;can&lt;/em&gt; see is very useful.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="section" id="did-i-really-change-my-distro-for-all-that"&gt;
+&lt;/section&gt;
+&lt;section id="did-i-really-change-my-distro-for-all-that"&gt;
 &lt;h2&gt;Did I really change my distro for all that?&lt;/h2&gt;
 &lt;p&gt;Yes.  I got too annoyed with Debian’s idiocy.  Also, DigitalOcean doesn’t
 &lt;em&gt;really&lt;/em&gt; support Debian testing, and I cannot survive with outdated software.
 I feel much better and, more importantly, &lt;strong&gt;safer&lt;/strong&gt; with Fedora.&lt;/p&gt;
 &lt;p&gt;(also, the “Veteran Unix Admins” of Devuan are a bunch of idiots.)&lt;/p&gt;
-&lt;/div&gt;</description><guid>https://chriswarrick.com/pl/blog/2015/01/30/systemd-is-awesome/</guid><pubDate>Fri, 30 Jan 2015 15:00:00 GMT</pubDate></item></channel></rss>
+&lt;/section&gt;</description><guid>https://chriswarrick.com/pl/blog/2015/01/30/systemd-is-awesome/</guid><pubDate>Fri, 30 Jan 2015 15:00:00 GMT</pubDate></item></channel></rss>

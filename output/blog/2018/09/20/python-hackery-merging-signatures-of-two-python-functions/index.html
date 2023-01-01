@@ -123,58 +123,55 @@ appropriate.</p>
 <p>This blog post was inspired by F4D3C0D3 on #python (freenode IRC). I also took
 some inspiration from
 Gynvael Coldwind’s classic <a class="reference external" href="https://www.youtube.com/watch?v=7VJaprmuHcw">Python 101</a> (April Fools) video. (Audio and some comments are in Polish, but even if you don’t speak the language, it’s still worth it to click through the time bar and see some (fairly unusual) magic happen.)</p>
-<div class="section" id="starting-point">
-<h2>Starting point</h2>
-<pre class="code python"><a name="rest_code_43cce7f28c4a47dab036495ff31dc506-1"></a><span class="k">def</span> <span class="nf">old</span><span class="p">(</span><span class="n">foo</span><span class="p">,</span> <span class="n">bar</span><span class="p">):</span>
-<a name="rest_code_43cce7f28c4a47dab036495ff31dc506-2"></a>    <span class="sd">"""This is old's docstring."""</span>
-<a name="rest_code_43cce7f28c4a47dab036495ff31dc506-3"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">foo</span><span class="p">,</span> <span class="n">bar</span><span class="p">)</span>
-<a name="rest_code_43cce7f28c4a47dab036495ff31dc506-4"></a>    <span class="k">return</span> <span class="n">foo</span> <span class="o">+</span> <span class="n">bar</span>
-<a name="rest_code_43cce7f28c4a47dab036495ff31dc506-5"></a>
-<a name="rest_code_43cce7f28c4a47dab036495ff31dc506-6"></a>
-<a name="rest_code_43cce7f28c4a47dab036495ff31dc506-7"></a><span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">foo</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<a name="rest_code_43cce7f28c4a47dab036495ff31dc506-8"></a>    <span class="k">return</span> <span class="n">old</span><span class="p">(</span><span class="n">prefix</span> <span class="o">+</span> <span class="n">foo</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-</pre>
+<section id="starting-point"><h2>Starting point</h2>
+<div class="code"><pre class="code python"><a id="rest_code_0284ff8a8ac643c383cc8403b1568db6-1" name="rest_code_0284ff8a8ac643c383cc8403b1568db6-1" href="/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/#rest_code_0284ff8a8ac643c383cc8403b1568db6-1"></a><span class="k">def</span> <span class="nf">old</span><span class="p">(</span><span class="n">foo</span><span class="p">,</span> <span class="n">bar</span><span class="p">):</span>
+<a id="rest_code_0284ff8a8ac643c383cc8403b1568db6-2" name="rest_code_0284ff8a8ac643c383cc8403b1568db6-2" href="/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/#rest_code_0284ff8a8ac643c383cc8403b1568db6-2"></a>    <span class="sd">"""This is old's docstring."""</span>
+<a id="rest_code_0284ff8a8ac643c383cc8403b1568db6-3" name="rest_code_0284ff8a8ac643c383cc8403b1568db6-3" href="/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/#rest_code_0284ff8a8ac643c383cc8403b1568db6-3"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">foo</span><span class="p">,</span> <span class="n">bar</span><span class="p">)</span>
+<a id="rest_code_0284ff8a8ac643c383cc8403b1568db6-4" name="rest_code_0284ff8a8ac643c383cc8403b1568db6-4" href="/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/#rest_code_0284ff8a8ac643c383cc8403b1568db6-4"></a>    <span class="k">return</span> <span class="n">foo</span> <span class="o">+</span> <span class="n">bar</span>
+<a id="rest_code_0284ff8a8ac643c383cc8403b1568db6-5" name="rest_code_0284ff8a8ac643c383cc8403b1568db6-5" href="/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/#rest_code_0284ff8a8ac643c383cc8403b1568db6-5"></a>
+<a id="rest_code_0284ff8a8ac643c383cc8403b1568db6-6" name="rest_code_0284ff8a8ac643c383cc8403b1568db6-6" href="/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/#rest_code_0284ff8a8ac643c383cc8403b1568db6-6"></a>
+<a id="rest_code_0284ff8a8ac643c383cc8403b1568db6-7" name="rest_code_0284ff8a8ac643c383cc8403b1568db6-7" href="/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/#rest_code_0284ff8a8ac643c383cc8403b1568db6-7"></a><span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">foo</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<a id="rest_code_0284ff8a8ac643c383cc8403b1568db6-8" name="rest_code_0284ff8a8ac643c383cc8403b1568db6-8" href="/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/#rest_code_0284ff8a8ac643c383cc8403b1568db6-8"></a>    <span class="k">return</span> <span class="n">old</span><span class="p">(</span><span class="n">prefix</span> <span class="o">+</span> <span class="n">foo</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</pre></div>
 <p>Let’s test it.</p>
-<pre class="code pycon"><a name="rest_code_2a53ef7fb0134b578cfc9efbc459ac7c-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">o</span> <span class="o">=</span> <span class="n">old</span><span class="p">(</span><span class="s1">'a'</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">)</span>
-<a name="rest_code_2a53ef7fb0134b578cfc9efbc459ac7c-2"></a><span class="go">a b</span>
-<a name="rest_code_2a53ef7fb0134b578cfc9efbc459ac7c-3"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">n</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="s1">'!'</span><span class="p">,</span> <span class="s1">'a'</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">)</span>
-<a name="rest_code_2a53ef7fb0134b578cfc9efbc459ac7c-4"></a><span class="go">!a b</span>
-<a name="rest_code_2a53ef7fb0134b578cfc9efbc459ac7c-5"></a><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">' - '</span><span class="p">)</span>
-<a name="rest_code_2a53ef7fb0134b578cfc9efbc459ac7c-6"></a><span class="go">ab - !ab</span>
-<a name="rest_code_2a53ef7fb0134b578cfc9efbc459ac7c-7"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">help</span><span class="p">(</span><span class="n">old</span><span class="p">)</span>
-<a name="rest_code_2a53ef7fb0134b578cfc9efbc459ac7c-8"></a><span class="go">Help on function old in module __main__:</span>
-<a name="rest_code_2a53ef7fb0134b578cfc9efbc459ac7c-9"></a>
-<a name="rest_code_2a53ef7fb0134b578cfc9efbc459ac7c-10"></a><span class="go">old(foo, bar)</span>
-<a name="rest_code_2a53ef7fb0134b578cfc9efbc459ac7c-11"></a><span class="go">    This is old's docstring.</span>
-<a name="rest_code_2a53ef7fb0134b578cfc9efbc459ac7c-12"></a>
-<a name="rest_code_2a53ef7fb0134b578cfc9efbc459ac7c-13"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">help</span><span class="p">(</span><span class="n">new</span><span class="p">)</span>
-<a name="rest_code_2a53ef7fb0134b578cfc9efbc459ac7c-14"></a><span class="go">Help on function new in module __main__:</span>
-<a name="rest_code_2a53ef7fb0134b578cfc9efbc459ac7c-15"></a>
-<a name="rest_code_2a53ef7fb0134b578cfc9efbc459ac7c-16"></a><span class="go">new(prefix, foo, *args, **kwargs)</span>
-</pre>
+<div class="code"><pre class="code pycon"><a id="rest_code_b8a9ba9aeda648da8524d34d01bb9bae-1" name="rest_code_b8a9ba9aeda648da8524d34d01bb9bae-1" href="/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/#rest_code_b8a9ba9aeda648da8524d34d01bb9bae-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">o</span> <span class="o">=</span> <span class="n">old</span><span class="p">(</span><span class="s1">'a'</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">)</span>
+<a id="rest_code_b8a9ba9aeda648da8524d34d01bb9bae-2" name="rest_code_b8a9ba9aeda648da8524d34d01bb9bae-2" href="/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/#rest_code_b8a9ba9aeda648da8524d34d01bb9bae-2"></a><span class="go">a b</span>
+<a id="rest_code_b8a9ba9aeda648da8524d34d01bb9bae-3" name="rest_code_b8a9ba9aeda648da8524d34d01bb9bae-3" href="/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/#rest_code_b8a9ba9aeda648da8524d34d01bb9bae-3"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">n</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="s1">'!'</span><span class="p">,</span> <span class="s1">'a'</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">)</span>
+<a id="rest_code_b8a9ba9aeda648da8524d34d01bb9bae-4" name="rest_code_b8a9ba9aeda648da8524d34d01bb9bae-4" href="/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/#rest_code_b8a9ba9aeda648da8524d34d01bb9bae-4"></a><span class="go">!a b</span>
+<a id="rest_code_b8a9ba9aeda648da8524d34d01bb9bae-5" name="rest_code_b8a9ba9aeda648da8524d34d01bb9bae-5" href="/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/#rest_code_b8a9ba9aeda648da8524d34d01bb9bae-5"></a><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">' - '</span><span class="p">)</span>
+<a id="rest_code_b8a9ba9aeda648da8524d34d01bb9bae-6" name="rest_code_b8a9ba9aeda648da8524d34d01bb9bae-6" href="/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/#rest_code_b8a9ba9aeda648da8524d34d01bb9bae-6"></a><span class="go">ab - !ab</span>
+<a id="rest_code_b8a9ba9aeda648da8524d34d01bb9bae-7" name="rest_code_b8a9ba9aeda648da8524d34d01bb9bae-7" href="/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/#rest_code_b8a9ba9aeda648da8524d34d01bb9bae-7"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">help</span><span class="p">(</span><span class="n">old</span><span class="p">)</span>
+<a id="rest_code_b8a9ba9aeda648da8524d34d01bb9bae-8" name="rest_code_b8a9ba9aeda648da8524d34d01bb9bae-8" href="/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/#rest_code_b8a9ba9aeda648da8524d34d01bb9bae-8"></a><span class="go">Help on function old in module __main__:</span>
+<a id="rest_code_b8a9ba9aeda648da8524d34d01bb9bae-9" name="rest_code_b8a9ba9aeda648da8524d34d01bb9bae-9" href="/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/#rest_code_b8a9ba9aeda648da8524d34d01bb9bae-9"></a>
+<a id="rest_code_b8a9ba9aeda648da8524d34d01bb9bae-10" name="rest_code_b8a9ba9aeda648da8524d34d01bb9bae-10" href="/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/#rest_code_b8a9ba9aeda648da8524d34d01bb9bae-10"></a><span class="go">old(foo, bar)</span>
+<a id="rest_code_b8a9ba9aeda648da8524d34d01bb9bae-11" name="rest_code_b8a9ba9aeda648da8524d34d01bb9bae-11" href="/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/#rest_code_b8a9ba9aeda648da8524d34d01bb9bae-11"></a><span class="go">    This is old's docstring.</span>
+<a id="rest_code_b8a9ba9aeda648da8524d34d01bb9bae-12" name="rest_code_b8a9ba9aeda648da8524d34d01bb9bae-12" href="/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/#rest_code_b8a9ba9aeda648da8524d34d01bb9bae-12"></a>
+<a id="rest_code_b8a9ba9aeda648da8524d34d01bb9bae-13" name="rest_code_b8a9ba9aeda648da8524d34d01bb9bae-13" href="/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/#rest_code_b8a9ba9aeda648da8524d34d01bb9bae-13"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">help</span><span class="p">(</span><span class="n">new</span><span class="p">)</span>
+<a id="rest_code_b8a9ba9aeda648da8524d34d01bb9bae-14" name="rest_code_b8a9ba9aeda648da8524d34d01bb9bae-14" href="/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/#rest_code_b8a9ba9aeda648da8524d34d01bb9bae-14"></a><span class="go">Help on function new in module __main__:</span>
+<a id="rest_code_b8a9ba9aeda648da8524d34d01bb9bae-15" name="rest_code_b8a9ba9aeda648da8524d34d01bb9bae-15" href="/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/#rest_code_b8a9ba9aeda648da8524d34d01bb9bae-15"></a>
+<a id="rest_code_b8a9ba9aeda648da8524d34d01bb9bae-16" name="rest_code_b8a9ba9aeda648da8524d34d01bb9bae-16" href="/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/#rest_code_b8a9ba9aeda648da8524d34d01bb9bae-16"></a><span class="go">new(prefix, foo, *args, **kwargs)</span>
+</pre></div>
 <p>The last line is not exactly informative — it doesn’t tell us that we need to
 pass <code class="docutils literal">bar</code> as an argument.  Sure, you could define <code class="docutils literal">new</code> as just <code class="docutils literal">(prefix, foo,
 bar)</code> — but that means every change to <code class="docutils literal">old</code> requires editing <code class="docutils literal">new</code> as
 well. So, not ideal. Let’s try to fix this.</p>
-</div>
-<div class="section" id="the-existing-infrastructure-functools-wraps">
-<h2>The existing infrastructure: functools.wraps</h2>
+</section><section id="the-existing-infrastructure-functools-wraps"><h2>The existing infrastructure: functools.wraps</h2>
 <p>First, let’s start with the basic facility Python already has.  The standard
 library already comes with <code class="docutils literal">functools.wraps</code> and
 <code class="docutils literal">functools.update_wrapper</code>.</p>
 <p>If you’ve never heard of those two functions, here’s a crash course:</p>
-<pre class="code python"><a name="rest_code_ef6d926e002649fabbb8216ddfe735a5-1"></a><span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
-<a name="rest_code_ef6d926e002649fabbb8216ddfe735a5-2"></a>    <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-<a name="rest_code_ef6d926e002649fabbb8216ddfe735a5-3"></a>    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<a name="rest_code_ef6d926e002649fabbb8216ddfe735a5-4"></a>        <span class="nb">print</span><span class="p">(</span><span class="s2">"Inside wrapper"</span><span class="p">)</span>
-<a name="rest_code_ef6d926e002649fabbb8216ddfe735a5-5"></a>        <span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-<a name="rest_code_ef6d926e002649fabbb8216ddfe735a5-6"></a>    <span class="k">return</span> <span class="n">wrapper</span>
-<a name="rest_code_ef6d926e002649fabbb8216ddfe735a5-7"></a>
-<a name="rest_code_ef6d926e002649fabbb8216ddfe735a5-8"></a><span class="nd">@decorator</span>
-<a name="rest_code_ef6d926e002649fabbb8216ddfe735a5-9"></a><span class="k">def</span> <span class="nf">square</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<a name="rest_code_ef6d926e002649fabbb8216ddfe735a5-10"></a>    <span class="sd">"""Square a number."""</span>
-<a name="rest_code_ef6d926e002649fabbb8216ddfe735a5-11"></a>    <span class="k">return</span> <span class="n">n</span> <span class="o">*</span> <span class="n">n</span>
-</pre>
+<div class="code"><pre class="code python"><a id="rest_code_ae98c76dcea0465a8e6c446d08780ea2-1" name="rest_code_ae98c76dcea0465a8e6c446d08780ea2-1" href="/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/#rest_code_ae98c76dcea0465a8e6c446d08780ea2-1"></a><span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+<a id="rest_code_ae98c76dcea0465a8e6c446d08780ea2-2" name="rest_code_ae98c76dcea0465a8e6c446d08780ea2-2" href="/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/#rest_code_ae98c76dcea0465a8e6c446d08780ea2-2"></a>    <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+<a id="rest_code_ae98c76dcea0465a8e6c446d08780ea2-3" name="rest_code_ae98c76dcea0465a8e6c446d08780ea2-3" href="/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/#rest_code_ae98c76dcea0465a8e6c446d08780ea2-3"></a>    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<a id="rest_code_ae98c76dcea0465a8e6c446d08780ea2-4" name="rest_code_ae98c76dcea0465a8e6c446d08780ea2-4" href="/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/#rest_code_ae98c76dcea0465a8e6c446d08780ea2-4"></a>        <span class="nb">print</span><span class="p">(</span><span class="s2">"Inside wrapper"</span><span class="p">)</span>
+<a id="rest_code_ae98c76dcea0465a8e6c446d08780ea2-5" name="rest_code_ae98c76dcea0465a8e6c446d08780ea2-5" href="/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/#rest_code_ae98c76dcea0465a8e6c446d08780ea2-5"></a>        <span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<a id="rest_code_ae98c76dcea0465a8e6c446d08780ea2-6" name="rest_code_ae98c76dcea0465a8e6c446d08780ea2-6" href="/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/#rest_code_ae98c76dcea0465a8e6c446d08780ea2-6"></a>    <span class="k">return</span> <span class="n">wrapper</span>
+<a id="rest_code_ae98c76dcea0465a8e6c446d08780ea2-7" name="rest_code_ae98c76dcea0465a8e6c446d08780ea2-7" href="/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/#rest_code_ae98c76dcea0465a8e6c446d08780ea2-7"></a>
+<a id="rest_code_ae98c76dcea0465a8e6c446d08780ea2-8" name="rest_code_ae98c76dcea0465a8e6c446d08780ea2-8" href="/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/#rest_code_ae98c76dcea0465a8e6c446d08780ea2-8"></a><span class="nd">@decorator</span>
+<a id="rest_code_ae98c76dcea0465a8e6c446d08780ea2-9" name="rest_code_ae98c76dcea0465a8e6c446d08780ea2-9" href="/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/#rest_code_ae98c76dcea0465a8e6c446d08780ea2-9"></a><span class="k">def</span> <span class="nf">square</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<a id="rest_code_ae98c76dcea0465a8e6c446d08780ea2-10" name="rest_code_ae98c76dcea0465a8e6c446d08780ea2-10" href="/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/#rest_code_ae98c76dcea0465a8e6c446d08780ea2-10"></a>    <span class="sd">"""Square a number."""</span>
+<a id="rest_code_ae98c76dcea0465a8e6c446d08780ea2-11" name="rest_code_ae98c76dcea0465a8e6c446d08780ea2-11" href="/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/#rest_code_ae98c76dcea0465a8e6c446d08780ea2-11"></a>    <span class="k">return</span> <span class="n">n</span> <span class="o">*</span> <span class="n">n</span>
+</pre></div>
 <p>If we try to inspect the <code class="docutils literal">square</code> function, we’ll see the original name, arguments,
 annotations, and the docstring.  If we ran this code again, but with the
 <code class="docutils literal">@functools.wraps(f)</code> line commented out, we would only see <code class="docutils literal"><span class="pre">wrapper(*args,</span>
@@ -202,22 +199,19 @@ the copied attributes, but the signature itself is apparently taken from <code c
 <p class="lead">Craft a function with a specific signature (that merges <code class="docutils literal">old</code> and <code class="docutils literal">new</code>) and set it as <code class="docutils literal">new.__wrapped__</code>.</p>
 <p>But first, we need to talk about parallel universes.</p>
 <p>Or actually, code objects.</p>
-</div>
-<div class="section" id="defining-a-function-programmatically">
-<h2>Defining a function programmatically</h2>
+</section><section id="defining-a-function-programmatically"><h2>Defining a function programmatically</h2>
 <p>Let’s try an experiment.</p>
-<pre class="code pycon"><a name="rest_code_6099edd28af14127825a7f856fb9f007-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">bar</span><span class="p">):</span> <span class="k">pass</span>
-<a name="rest_code_6099edd28af14127825a7f856fb9f007-2"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">foo</span><span class="o">.</span><span class="n">__wrapped__</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="kc">None</span>
-<a name="rest_code_6099edd28af14127825a7f856fb9f007-3"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">help</span><span class="p">(</span><span class="n">foo</span><span class="p">)</span>
-<a name="rest_code_6099edd28af14127825a7f856fb9f007-4"></a><span class="go">foo(x, y)</span>
-</pre>
+<div class="code"><pre class="code pycon"><a id="rest_code_adc8668f3ae84f0eba5ead1730c9e0cd-1" name="rest_code_adc8668f3ae84f0eba5ead1730c9e0cd-1" href="/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/#rest_code_adc8668f3ae84f0eba5ead1730c9e0cd-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">bar</span><span class="p">):</span> <span class="k">pass</span>
+<a id="rest_code_adc8668f3ae84f0eba5ead1730c9e0cd-2" name="rest_code_adc8668f3ae84f0eba5ead1730c9e0cd-2" href="/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/#rest_code_adc8668f3ae84f0eba5ead1730c9e0cd-2"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">foo</span><span class="o">.</span><span class="n">__wrapped__</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="kc">None</span>
+<a id="rest_code_adc8668f3ae84f0eba5ead1730c9e0cd-3" name="rest_code_adc8668f3ae84f0eba5ead1730c9e0cd-3" href="/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/#rest_code_adc8668f3ae84f0eba5ead1730c9e0cd-3"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">help</span><span class="p">(</span><span class="n">foo</span><span class="p">)</span>
+<a id="rest_code_adc8668f3ae84f0eba5ead1730c9e0cd-4" name="rest_code_adc8668f3ae84f0eba5ead1730c9e0cd-4" href="/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/#rest_code_adc8668f3ae84f0eba5ead1730c9e0cd-4"></a><span class="go">foo(x, y)</span>
+</pre></div>
 <p>So, there are two ways to do this.  The first one would be to generate a string
 with the signature and just use <code class="docutils literal">eval</code> to get a <code class="docutils literal">__wrapped__</code> function. But
 that would be cheating, and honestly, quite boring. (The inspect module could
 help us with preparing the string.)  The second one? Create code objects
 manually.</p>
-<div class="section" id="code-objects">
-<h3>Code objects</h3>
+<section id="code-objects"><h3>Code objects</h3>
 <p>To create a function, we’ll need the <code class="docutils literal">types</code> module. <code class="docutils literal">types.FunctionType</code>
 gives us a function, but it asks us for a code object. As the <a class="reference external" href="https://docs.python.org/3/reference/datamodel.html">docs</a> state,
 <em>Code objects represent byte-compiled executable Python code, or bytecode.</em></p>
@@ -226,12 +220,12 @@ hand, we’ll need <code class="docutils literal">types.CodeType</code>. Well, n
 <code class="docutils literal">source</code> (<code class="docutils literal">old</code>), <code class="docutils literal">dest</code> (<code class="docutils literal">new</code>) and <code class="docutils literal">def <span class="pre">_blank():</span> pass</code> (a function
 that does nothing).</p>
 <p>Let’s look at the docstring for <code class="docutils literal">CodeType</code>:</p>
-<pre class="code text"><a name="rest_code_bda5abd0f13b49daa4b5b15cae80e234-1"></a>code(argcount, kwonlyargcount, nlocals, stacksize, flags, codestring,
-<a name="rest_code_bda5abd0f13b49daa4b5b15cae80e234-2"></a>    constants, names, varnames, filename, name, firstlineno,
-<a name="rest_code_bda5abd0f13b49daa4b5b15cae80e234-3"></a>    lnotab[, freevars[, cellvars]])
-<a name="rest_code_bda5abd0f13b49daa4b5b15cae80e234-4"></a>
-<a name="rest_code_bda5abd0f13b49daa4b5b15cae80e234-5"></a>Create a code object.  Not for the faint of heart.
-</pre>
+<div class="code"><pre class="code text"><a id="rest_code_337a301e294143e69b28f128ae4af0ae-1" name="rest_code_337a301e294143e69b28f128ae4af0ae-1" href="/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/#rest_code_337a301e294143e69b28f128ae4af0ae-1"></a>code(argcount, kwonlyargcount, nlocals, stacksize, flags, codestring,
+<a id="rest_code_337a301e294143e69b28f128ae4af0ae-2" name="rest_code_337a301e294143e69b28f128ae4af0ae-2" href="/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/#rest_code_337a301e294143e69b28f128ae4af0ae-2"></a>    constants, names, varnames, filename, name, firstlineno,
+<a id="rest_code_337a301e294143e69b28f128ae4af0ae-3" name="rest_code_337a301e294143e69b28f128ae4af0ae-3" href="/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/#rest_code_337a301e294143e69b28f128ae4af0ae-3"></a>    lnotab[, freevars[, cellvars]])
+<a id="rest_code_337a301e294143e69b28f128ae4af0ae-4" name="rest_code_337a301e294143e69b28f128ae4af0ae-4" href="/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/#rest_code_337a301e294143e69b28f128ae4af0ae-4"></a>
+<a id="rest_code_337a301e294143e69b28f128ae4af0ae-5" name="rest_code_337a301e294143e69b28f128ae4af0ae-5" href="/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/#rest_code_337a301e294143e69b28f128ae4af0ae-5"></a>Create a code object.  Not for the faint of heart.
+</pre></div>
 <p>All of the arguments end up being fields of a code objects (name starts with
 <code class="docutils literal">co_</code>).  For each
 function <code class="docutils literal">f</code>, its code object is <code class="docutils literal">f.__code__</code>. You can find the filename in
@@ -247,13 +241,11 @@ interested in the following three fields:</p>
 the three).  We don’t expect anyone to call the wrapped function directly; as
 long as <code class="docutils literal">help</code> and <code class="docutils literal">inspect</code> members don’t crash when they look into it,
 we’re fine.</p>
-</div>
-<div class="section" id="everything-you-need-to-know-about-function-arguments">
-<h3>Everything you need to know about function arguments</h3>
-<pre class="code pycon"><a name="rest_code_5ef79288cff14b80bb778084528bddd4-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span> <span class="k">pass</span>
-<a name="rest_code_5ef79288cff14b80bb778084528bddd4-2"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">inspect</span><span class="o">.</span><span class="n">getfullargspec</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-<a name="rest_code_5ef79288cff14b80bb778084528bddd4-3"></a><span class="go">FullArgSpec(args=['a', 'b', 'c'], varargs=None, varkw=None, defaults=(1, 2), kwonlyargs=['d'], kwonlydefaults={'d': 3}, annotations={})</span>
-</pre>
+</section><section id="everything-you-need-to-know-about-function-arguments"><h3>Everything you need to know about function arguments</h3>
+<div class="code"><pre class="code pycon"><a id="rest_code_761d3ab6998c44179c08b4f307aa1930-1" name="rest_code_761d3ab6998c44179c08b4f307aa1930-1" href="/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/#rest_code_761d3ab6998c44179c08b4f307aa1930-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span> <span class="k">pass</span>
+<a id="rest_code_761d3ab6998c44179c08b4f307aa1930-2" name="rest_code_761d3ab6998c44179c08b4f307aa1930-2" href="/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/#rest_code_761d3ab6998c44179c08b4f307aa1930-2"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">inspect</span><span class="o">.</span><span class="n">getfullargspec</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+<a id="rest_code_761d3ab6998c44179c08b4f307aa1930-3" name="rest_code_761d3ab6998c44179c08b4f307aa1930-3" href="/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/#rest_code_761d3ab6998c44179c08b4f307aa1930-3"></a><span class="go">FullArgSpec(args=['a', 'b', 'c'], varargs=None, varkw=None, defaults=(1, 2), kwonlyargs=['d'], kwonlydefaults={'d': 3}, annotations={})</span>
+</pre></div>
 <p>A function signature has the following syntax:</p>
 <ol class="arabic simple">
 <li><p>Any positional (non-optional) arguments</p></li>
@@ -281,27 +273,23 @@ one of the three functions.</p>
 <code class="docutils literal">__kwdefaults__</code>, and <code class="docutils literal">__annotations__</code> are all in the right places.
 That’s also a fairly simple thing to do (it requires more tuple/dict merging).
 And with that, we’re done.</p>
-</div>
-</div>
-<div class="section" id="final-results">
-<h2>Final results</h2>
+</section></section><section id="final-results"><h2>Final results</h2>
 <p>Before I show you the code, let’s test it out:</p>
-<pre class="code python"><a name="rest_code_fe7d3e858a6246e5a16ff8d4a25b5abe-1"></a><span class="c1"># old defined as before</span>
-<a name="rest_code_fe7d3e858a6246e5a16ff8d4a25b5abe-2"></a><span class="nd">@merge_args</span><span class="p">(</span><span class="n">old</span><span class="p">)</span>
-<a name="rest_code_fe7d3e858a6246e5a16ff8d4a25b5abe-3"></a><span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">foo</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<a name="rest_code_fe7d3e858a6246e5a16ff8d4a25b5abe-4"></a>    <span class="k">return</span> <span class="n">old</span><span class="p">(</span><span class="n">prefix</span> <span class="o">+</span> <span class="n">foo</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-</pre>
+<div class="code"><pre class="code python"><a id="rest_code_3dd66fad600a422bbb47e63534909ff7-1" name="rest_code_3dd66fad600a422bbb47e63534909ff7-1" href="/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/#rest_code_3dd66fad600a422bbb47e63534909ff7-1"></a><span class="c1"># old defined as before</span>
+<a id="rest_code_3dd66fad600a422bbb47e63534909ff7-2" name="rest_code_3dd66fad600a422bbb47e63534909ff7-2" href="/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/#rest_code_3dd66fad600a422bbb47e63534909ff7-2"></a><span class="nd">@merge_args</span><span class="p">(</span><span class="n">old</span><span class="p">)</span>
+<a id="rest_code_3dd66fad600a422bbb47e63534909ff7-3" name="rest_code_3dd66fad600a422bbb47e63534909ff7-3" href="/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/#rest_code_3dd66fad600a422bbb47e63534909ff7-3"></a><span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">foo</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<a id="rest_code_3dd66fad600a422bbb47e63534909ff7-4" name="rest_code_3dd66fad600a422bbb47e63534909ff7-4" href="/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/#rest_code_3dd66fad600a422bbb47e63534909ff7-4"></a>    <span class="k">return</span> <span class="n">old</span><span class="p">(</span><span class="n">prefix</span> <span class="o">+</span> <span class="n">foo</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</pre></div>
 <p>And the end result — <code class="docutils literal">help(new)</code> says:</p>
-<pre class="code text"><a name="rest_code_092ef841130543a0af7f0ee788b1e874-1"></a>new(prefix, foo, bar)
-<a name="rest_code_092ef841130543a0af7f0ee788b1e874-2"></a>    This is old's docstring.
-</pre>
+<div class="code"><pre class="code text"><a id="rest_code_f5e4ec7fe3c94549bf3bbaddad384163-1" name="rest_code_f5e4ec7fe3c94549bf3bbaddad384163-1" href="/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/#rest_code_f5e4ec7fe3c94549bf3bbaddad384163-1"></a>new(prefix, foo, bar)
+<a id="rest_code_f5e4ec7fe3c94549bf3bbaddad384163-2" name="rest_code_f5e4ec7fe3c94549bf3bbaddad384163-2" href="/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/#rest_code_f5e4ec7fe3c94549bf3bbaddad384163-2"></a>    This is old's docstring.
+</pre></div>
 <p>We did it!</p>
 <p class="lead">The code is available on <a class="reference external" href="https://github.com/Kwpolska/merge_args">GitHub</a> and on <a class="reference external" href="https://pypi.org/project/merge-args/">PyPI</a> (<code class="docutils literal">pip install merge_args</code>).
 There’s also an extensive test suite.</p>
 <p>PS. you might be interested in another related post of mine, in which I
 reverse-engineer the compilation of a function: <a class="reference external" href="https://chriswarrick.com/blog/2017/08/03/gynvaels-mission-11-en-python-bytecode-reverse-engineering/">Gynvael’s Mission 11 (en): Python bytecode reverse-engineering</a></p>
-</div>
-    </article>
+</section></article>
 </div>
     <aside class="postpromonav"><nav><ul class="pager hidden-print">
 <li class="previous">
@@ -366,7 +354,7 @@ reverse-engineer the compilation of a function: <a class="reference external" hr
         </div></nav><footer id="footer"><p>this site uses cookies.<br>by using this site, you agree to our <a href="/privacy/">cookie and privacy policy</a>.</p>
 <p>
 powered by <strong><a href="https://getnikola.com/">Nikola</a></strong>, <a href="http://nginx.org/">nginx</a> and <a href="https://hetzner.cloud/?ref=Qy1lehF8PwzP">Hetzner Cloud</a><br>
-copyright © 2009–2022 <a href="/contact/">Chris Warrick</a><br><a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC
+copyright © 2009–2023 <a href="/contact/">Chris Warrick</a><br><a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC
 BY-NC-SA</a>, unless stated otherwise</p>
             
         </footer>

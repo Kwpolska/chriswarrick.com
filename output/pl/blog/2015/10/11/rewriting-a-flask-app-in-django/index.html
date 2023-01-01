@@ -122,14 +122,13 @@ Eight hours later, I had a fully functional Django app that did more and fixed
 all problems.</p>
 </div>
 </div>
-<div class="section" id="original-flask-app">
-<h2>Original Flask app</h2>
+<section id="original-flask-app"><h2>Original Flask app</h2>
 <p>The original Flask app had a ton of problems.  In order to make it anywhere
 near useful, I would need to spend hours.  Here’s just a few of
 them:</p>
 <ul class="simple">
 <li><p>357 lines of spaghetti code (295 SLOC), all in one file</p></li>
-<li><p>No form data validation, no CSRF <a class="footnote-reference brackets" href="/pl/blog/2015/10/11/rewriting-a-flask-app-in-django/#id2" id="id1">1</a> protection (it did have XSS protection
+<li><p>No form data validation, no CSRF <a class="footnote-reference brackets" href="/pl/blog/2015/10/11/rewriting-a-flask-app-in-django/#footnote-1" id="footnote-reference-1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> protection (it did have XSS protection
 though)</p></li>
 <li><p>Login using Mozilla Persona, which requries JavaScript, is a bit kludgey, and
 feels desolate (and also had me store the admin e-mail list in code)</p></li>
@@ -146,26 +145,23 @@ were multiple processes involved)</p></li>
 template and not in the view code); menus hacked together in HTML with no
 highlighting</p></li>
 <li><p>Python 2.7</p></li>
-</ul>
-</div>
-<div class="section" id="the-rewrite">
-<h2>The rewrite</h2>
+</ul></section><section id="the-rewrite"><h2>The rewrite</h2>
 <p>I started the process by opening <a class="reference external" href="https://docs.djangoproject.com/en/">Django documentation</a>, with its wonderful
 <a class="reference external" href="https://docs.djangoproject.com/en/1.8/intro/tutorial01/">tutorial</a>.  Now, I have written a couple basic Django apps before, but
 the majority of them didn’t do much.  In other words, I didn’t have a lot of experience.  Especially with taking user input and relationships.  It took me about 8 hours to get feature parity, and more.</p>
 <p>Getting all the features was really simple.  For example, to get a many-to-many
 relationship for languages, I had to write just one line.</p>
-<pre class="code python"><a name="rest_code_7319d4b6d2d04fbf97bb98de56126a2f-1"></a><span class="n">languages</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="n">Language</span><span class="p">)</span>
-</pre>
+<div class="code"><pre class="code python"><a id="rest_code_dac2bee590ba48eda7a9d3efcd5fe378-1" name="rest_code_dac2bee590ba48eda7a9d3efcd5fe378-1" href="/pl/blog/2015/10/11/rewriting-a-flask-app-in-django/#rest_code_dac2bee590ba48eda7a9d3efcd5fe378-1"></a><span class="n">languages</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="n">Language</span><span class="p">)</span>
+</pre></div>
 <p>That’s it.  I didn’t have to run through complicated SQLAlchemy documentation,
 which provides a <a class="reference external" href="http://docs.sqlalchemy.org/en/rel_1_0/orm/basic_relationships.html#many-to-many">13-line solution</a> to the same problem.</p>
 <p>Django also simplified New Relic integration, as the browser JS can be implemented
 using Django template tags.</p>
 <p>Django is not without its problems, though.  I got a very cryptic traceback
 when I did this:</p>
-<pre class="code python"><a name="rest_code_305b9d89dc4e44df8a4c310b1c64f6bf-1"></a><span class="n">publish_email</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="s2">"Publish e-mail"</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<a name="rest_code_305b9d89dc4e44df8a4c310b1c64f6bf-2"></a><span class="ne">TypeError</span><span class="p">:</span> <span class="s2">"BooleanField() got multiple values for argument 'required'"</span>
-</pre>
+<div class="code"><pre class="code python"><a id="rest_code_849bd23f3e0a43b8a72198d028bdc89b-1" name="rest_code_849bd23f3e0a43b8a72198d028bdc89b-1" href="/pl/blog/2015/10/11/rewriting-a-flask-app-in-django/#rest_code_849bd23f3e0a43b8a72198d028bdc89b-1"></a><span class="n">publish_email</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="s2">"Publish e-mail"</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<a id="rest_code_849bd23f3e0a43b8a72198d028bdc89b-2" name="rest_code_849bd23f3e0a43b8a72198d028bdc89b-2" href="/pl/blog/2015/10/11/rewriting-a-flask-app-in-django/#rest_code_849bd23f3e0a43b8a72198d028bdc89b-2"></a><span class="ne">TypeError</span><span class="p">:</span> <span class="s2">"BooleanField() got multiple values for argument 'required'"</span>
+</pre></div>
 <p>The real problem with this code?  I forgot the <code class="docutils literal">label=</code> keyword.  The
 problem is, the model API accepts this syntax — <code class="docutils literal">verbose_name</code> is the first
 argument.  (I am not actually using the labels though, I write my own form
@@ -189,15 +185,10 @@ reflected immediately (no caching)</p></li>
 <li><p>Python 3</p></li>
 <li><p>New features: featured sites; show only a specified language — were really easy to add</p></li>
 </ul>
-<dl class="footnote brackets">
-<dt class="label" id="id2"><span class="brackets"><a class="fn-backref" href="/pl/blog/2015/10/11/rewriting-a-flask-app-in-django/#id1">1</a></span></dt>
-<dd>
+<aside class="footnote-list brackets"><aside class="footnote brackets" id="footnote-1" role="note"><span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="/pl/blog/2015/10/11/rewriting-a-flask-app-in-django/#footnote-reference-1">1</a><span class="fn-bracket">]</span></span>
 <p>I had some <code class="docutils literal">CSRF_ENABLED</code> variable, but it did not seem to be actually
 used by anything.</p>
-</dd>
-</dl>
-</div>
-    </article>
+</aside></aside></section></article>
 </div>
     <aside class="postpromonav"><nav><ul class="pager hidden-print">
 <li class="previous">
@@ -264,7 +255,7 @@ korzystając z tej strony, akceptujesz naszą <a href="/pl/privacy/">politykę p
 </p>
 <p>
 powered by <strong><a href="https://getnikola.com/">Nikola</a></strong>, <a href="http://nginx.org/">nginx</a> and <a href="https://hetzner.cloud/?ref=Qy1lehF8PwzP">Hetzner Cloud</a><br>
-copyright © 2009–2022 <a href="/pl/contact/">Chris Warrick</a><br><a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC
+copyright © 2009–2023 <a href="/pl/contact/">Chris Warrick</a><br><a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC
 BY-NC-SA</a>, unless stated otherwise</p>
             
         </footer>
