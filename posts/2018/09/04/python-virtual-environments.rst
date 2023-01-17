@@ -33,14 +33,12 @@ The best tool that can be used to create virtual environments is the
 the standard library since Python 3.3.
 
 ``venv`` is built into Python, and most users don’t need to install anything.
-However, Debian/Ubuntu users will need to run ``sudo apt-get install
-python3-venv`` to make it work (due to Debian not installing some components
+However, Debian/Ubuntu users will need to run ``sudo apt-get install python3-venv`` to make it work (due to Debian not installing some components
 that ``venv`` needs by default). [1]_
 
 The alternative (and original, and previously standard) virtual environment tool is `virtualenv
 <https://virtualenv.pypa.io/>`_. It works with Python 2.7, and has a couple
-extra fetures (that you generally won’t need). virtualenv can be installed with your system package manager, or ``pip
-install --user virtualenv``.
+extra fetures (that you generally won’t need). virtualenv can be installed with your system package manager, or ``pip install --user virtualenv``.
 
 Which one to use? Probably ``venv``. Both tools achieve the same goal in similar
 ways. And if one of them does not work, you can try the other and it might just
@@ -116,15 +114,17 @@ feature is handy though, and so here’s a way to do it without
         source "$WORKON_HOME/$1/bin/activate"
     }
 
-And for Windows PowerShell fans, here’s a ``workon.ps1`` script:
+And for PowerShell fans, here’s a ``workon.ps1`` script:
 
 .. code:: powershell
    :linenos:
 
     $WORKON_HOME = "$home\virtualenvs"
-    $venv = $args[0]
-    $cmd = "$WORKON_HOME\$venv\Scripts\activate.ps1"
-    & $cmd
+    & "$WORKON_HOME\$($args[0])\Scripts\activate.ps1"
+
+And for cmd.exe fans… you should switch to PowerShell, it’s a very nice and
+friendly shell (though perhaps requiring some effort to learn how to be
+productive with it).
 
 Use
 ===
@@ -206,8 +206,7 @@ after a Python upgrade, [4]_ so it might be handy to keep an up-to-date
 sense to put that in the repository).
 
 To manage those ``requirements.txt`` files in a more orgnized yet still simple
-way, you might be interested in `pip-tools
-<https://github.com/jazzband/pip-tools>`_
+way, you might be interested in `pip-tools <https://github.com/jazzband/pip-tools>`_.
 
 Frequently Asked Questions
 ==========================
