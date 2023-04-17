@@ -1,6 +1,7 @@
 .. title: How to improve Python packaging, or why fourteen tools are at least twelve too many
 .. slug: how-to-improve-python-packaging
 .. date: 2023-01-15 14:45:00+01:00
+.. updated: 2023-04-18 00:45:00+02:00
 .. tags: Python, pip, virtual environments, PyPA, packaging, PDM, CSharp, .NET, JavaScript, npm, Node.js
 .. category: Python
 .. description: A journey to the world of Python packaging, a visit to the competition, a hopeful look at the future, and highlights from a disappointing discussion.
@@ -674,6 +675,16 @@ Is this the perfect thing?
 
 Well, almost. There are two things that I have complaints about. The first one is the ``pdm --pep582`` hack, but hopefully, the PyPA gets its act together and gets it into Python core soon. However, another important problem is the lack of separation from system site-packages. Avid readers of footnotes [6]_ might have noticed I had to use a Docker container in my PDM experiments, because requests is very commonly found in system ``site-packages`` (especially when using system Pythons, which have requests because of some random package, or because it was unbundled from pip). [7]_ This can break things in ways you don’t expect, because you might end up importing and depending on system-wide things, or mixing system-wide and local packages (if you don’t install an extra requirement, but those packages are present system-wide, then you might end up using an extra you haven’t asked for). This is an important problem—a good solution would be to disable system site-packages if a ``__pypackages__`` directory is in use.
 
+The part where the Steering Council kills it
+--------------------------------------------
+
+In late March 2023, the Python Steering Council has announced `the rejection of PEP 582`__. The reasons cited in the SC decision cited the limitations of the PEP (the ``__pypackages__`` directory not always being enough, and the lack of specification on how it would behave in edge cases). Another argument is that it is possible to get ``__pypackages__`` via “one of the many existing customization mechanisms for ``sys.path``, like ``.pth`` files or a ``sitecustomize`` module” — things commonly considered hacks, not real solutions. While users certainly can do anything they want to the ``sys.path`` (often with tragic consequences), the point of having a common standard is to encourage tools to add support for it — if you use the aforementioned hacks, your IDE might end up not noticing the packages or considering them part of your code (trying to index them and search for things in them). Another reason cited for the rejection is the disagreement among the packaging community, which should not be surprising, especially in light of the next section.
+
+The PEP 582/``__pypackages__`` mechanism may become official one day, and finally make Python packaging approachable. That would probably require someone to step up and write a new PEP that would make more people happy. Or Python might be stuck with all these incompatible tools, and invent 10 more in the next few years. (PDM is still there, and it still supports ``__pypackages__``, even though its implementation isn’t exactly the same as suggested by the now-rejected PEP.) Python’s current trajectory, as demonstrated by this decision, and by many people still being forced to struggle with the needlessly complicated virtual environments, sounds an awful lot like `the classic Onion headline`__: ‘No Way to Prevent This,’ Says Only Programming Community Where This Regularly Happens.
+
+__ https://discuss.python.org/t/pep-582-python-local-packages-directory/963/430
+__ https://en.wikipedia.org/wiki/%27No_Way_to_Prevent_This,%27_Says_Only_Nation_Where_This_Regularly_Happens
+
 PyPA versus reality: packaging survey results and PyPA reaction
 ===============================================================
 
@@ -729,12 +740,13 @@ But here’s one more interesting thing: Discourse, the platform that the discus
 Summary
 =======
 
-Python packaging is a mess, and it always has been. There are tons of tools, mostly incompatible with each other, and no tool can solve *all* problems (especially no tool from the PyPA). PDM is really close to the ideal, since it can do away with the overhead of managing virtual environments—which is hopefully the future of Python packaging, or the 2010s of Node.js packaging. Perhaps in a few years, Python developers (and more importantly, Python learners!) will be able to just ``pip install`` (or ``pdm install``?) what they need, without worrying about some “virtual environment” thing, that is separate but not quite from a system Python, and that is not a virtual machine. Python needs less tools, not more.
+Python packaging is a mess, and it always has been. There are tons of tools, mostly incompatible with each other, and no tool can solve *all* problems (especially no tool from the PyPA). PDM is really close to the ideal, since it can do away with the overhead of managing virtual environments—which is hopefully the future of Python packaging, or the 2010s of Node.js packaging (although it is not going to be the 2023 of Python packaging, considering the Steering Council rejection). Perhaps in a few years, Python developers (and more importantly, Python learners!) will be able to just ``pip install`` (or ``pdm install``?) what they need, without worrying about some “virtual environment” thing, that is separate but not quite from a system Python, and that is not a virtual machine. Python needs less tools, not more.
 
-Furthermore, I consider that the PyPA must be destroyed. The strategy discussion highlights the fact that they are unable to make Python packaging work the way the users expect. The PyPA should focus on producing one good tool, and on getting PEP 582 into Python. A good way to achieve this would be to put its resources behind PDM. The issues with native code and binary wheels are important, but plain-Python workflows, or workflows with straightforward binary dependencies, are much more common, and need to be improved. This improvement needs to happen now.
+`Furthermore, I consider that the PyPA must be destroyed.`__ The strategy discussion highlights the fact that they are unable to make Python packaging work the way the users expect. The PyPA should focus on producing one good tool, and on getting PEP 582 into Python. A good way to achieve this would be to put its resources behind PDM. The issues with native code and binary wheels are important, but plain-Python workflows, or workflows with straightforward binary dependencies, are much more common, and need to be improved. This improvement needs to happen now.
 
 Discuss in the comments below, on `Hacker News`__, or on `Reddit`__.
 
+__ https://en.wikipedia.org/wiki/Carthago_delenda_est
 __ https://news.ycombinator.com/item?id=34390585
 __ https://www.reddit.com/r/Python/comments/10cnx5i/how_to_improve_python_packaging_or_why_fourteen/
 
@@ -749,3 +761,8 @@ Footnotes
 .. [6] Yes, that’s you!
 .. [7] Also, why is there no good HTTP client library in Python’s standard library? Is the “standard library is where packages go to die” argument still relevant, if requests had four releases in 2022, and urllib3 had six, and most of the changes were minor?
 .. [8] I have removed the “Other” option, and shifted all options ranked below it by one place, since we don’t know what the other thing was and how it related to the options presented (the free-form responses were removed from the public results spreadsheet to preserve the users’ anonymity). In the event a respondent left some of the options without a number, the blank options were not considered neither first nor last.
+
+Revision History
+================
+
+This post got amended in April 2023 with an update about the SC rejection of PEP 582 (in a new subsection and in the Summary section).
