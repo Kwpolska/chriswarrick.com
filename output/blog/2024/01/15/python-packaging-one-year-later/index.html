@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html class="limited-width larger-font" prefix="
+og: http://ogp.me/ns#
+" lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="Are there still fourteen tools, or are there even more? Has Python packaging improved in a year?">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Python Packaging, One Year Later: A Look Back at 2023 in Python Packaging | Chris Warrick</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.css" integrity="sha256-FqCzNnnyXl5HxHMdb+RQ/RV/X7fqfPcQYy+G2gFL3Xk=" crossorigin="anonymous">
+<!--#if expr="$HTTP_COOKIE=/colorScheme\=light/" --><link href="/assets/css/all.css?v=20230115" rel="stylesheet" type="text/css" id="kw-all-css">
+<script type="text/javascript">var colorScheme='light';var colorSchemesEnabled=true;</script><!--#else--><link href="/assets/css/all-dark.css?v=20230115" rel="stylesheet" type="text/css" id="kw-all-css">
+<script type="text/javascript">var colorScheme='dark';var colorSchemesEnabled=true;</script><!--#endif--><link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,700,700i%7CSource+Serif+Pro:600&amp;display=swap&amp;subset=latin-ext" rel="stylesheet">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+<meta name="theme-color" content="#00aadd">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS (en)" href="/rss.xml">
+<link rel="alternate" type="application/rss+xml" title="RSS (pl)" href="/pl/rss.xml">
+<link rel="canonical" href="https://chriswarrick.com/blog/2024/01/15/python-packaging-one-year-later/">
+<link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="16x16 32x32 48x48 64x64 128x128 256x256">
+<link rel="icon" type="image/png" href="/assets/img/logo512.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<!--[if lt IE 9]><script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]--><meta name="description" itemprop="description" content="Are there still fourteen tools, or are there even more? Has Python packaging improved in a year?">
+<meta name="author" content="Chris Warrick">
+<link rel="prev" href="/blog/2023/01/15/how-to-improve-python-packaging/" title="How to improve Python packaging, or why fourteen tools are at least twelve too many" type="text/html">
+<meta property="og:site_name" content="Chris Warrick">
+<meta property="og:title" content="Python Packaging, One Year Later: A Look Back at 2023 in Python Packag">
+<meta property="og:url" content="https://chriswarrick.com/blog/2024/01/15/python-packaging-one-year-later/">
+<meta property="og:description" content="Are there still fourteen tools, or are there even more? Has Python packaging improved in a year?">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2024-01-15T19:50:00+01:00">
+<meta property="article:tag" content="packaging">
+<meta property="article:tag" content="PDM">
+<meta property="article:tag" content="pip">
+<meta property="article:tag" content="PyPA">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="virtual environments">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:creator" content="@Kwpolska">
+<link rel="alternate" hreflang="pl" href="/pl/blog/2024/01/15/python-packaging-one-year-later/">
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-expand-md navbar-kw bg-dark static-top mb-4"><div class="container">
+<!-- This keeps the margins nice -->
+        <a class="navbar-brand" href="/">
+            <img src="/assets/img/logo.png" srcset="/assets/img/logo2x.png 2x" alt="Chris Warrick" id="logo"><span id="blog-title">Chris Warrick</span>
+        </a>
+        <div>
+        <button class="navbar-toggler mr-2" id="color-changer-mobile" type="button" aria-label="Change color scheme">
+            <span class="color-changer"></span>
+        </button>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-navbar">
+            <ul class="navbar-nav mr-auto">
+<li class="nav-item">
+<a href="/contact/" class="nav-link">Contact</a>
+                </li>
+<li class="nav-item">
+<a href="/projects/" class="nav-link">Projects</a>
+                </li>
+<li class="nav-item">
+<a href="/guides/" class="nav-link">Guides</a>
+                </li>
+<li class="nav-item">
+<a href="/blog/" class="nav-link">Archives</a>
+                </li>
+<li class="nav-item">
+<a href="/search/" class="nav-link">Search</a>
+
+                
+            </li>
+</ul>
+<ul class="navbar-nav navbar-right">
+<li>            </li>
+<li class="nav-item"><a href="/pl/" rel="alternate" hreflang="pl" class="nav-link">Polski</a></li>
+
+                
+                <li class="nav-item" id="color-changer-menu">
+<a href="#" class="nav-link" id="color-changer-btn">
+                <div class="color-changer"></div>
+                <span id="color-changer-text"><!--#if expr="$HTTP_COOKIE=/colorScheme\=light/" -->Dark Mode<!--#else -->Light Mode<!--#endif--></span>
+                </a>
+                </li>
+            </ul>
+</div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav><!-- End of Menubar --><div class="container" id="content" role="main">
+    <div class="body-content">
+        <!--Body content-->
+        
+        <div id="cookiebox"></div>
+<article class="post-text h-entry hentry postpage postbox" itemscope="itemscope" itemtype="http://schema.org/Article"><header class="page-header"><h1 class="p-name entry-title" itemprop="headline name">
+    <a href="/blog/2024/01/15/python-packaging-one-year-later/" class="u-url">Python Packaging, One Year Later: A Look Back at 2023 in Python Packaging</a>
+    </h1>
+
+    <div class="metadata">
+<a href="/blog/2024/01/15/python-packaging-one-year-later/" rel="bookmark" class="u-published"><time class="published dt-published" datetime="2024-01-15T19:50:00+01:00" itemprop="datePublished" title="15 January 2024 at 19:50">15 January 2024 at 19:50</time></a>
+        <ul itemprop="keywords" class="tags post-bubbles list-inline">
+<li class="category-bubble"><a href="/blog/tags/cat_python/" style="background-color: #ffd43b !important">Python</a></li>
+           <li><a class="tag p-category" href="/blog/tags/packaging/" rel="tag">packaging</a></li>
+           <li><a class="tag p-category" href="/blog/tags/pdm/" rel="tag">PDM</a></li>
+           <li><a class="tag p-category" href="/blog/tags/pip/" rel="tag">pip</a></li>
+           <li><a class="tag p-category" href="/blog/tags/pypa/" rel="tag">PyPA</a></li>
+           <li><a class="tag p-category" href="/blog/tags/python/" rel="tag">Python</a></li>
+           <li><a class="tag p-category" href="/blog/tags/virtual-environments/" rel="tag">virtual environments</a></li>
+        </ul>
+</div>
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div class="lead">
+<p>A year ago, I wrote about the sad state of Python packaging. The large number of tools in the space, the emphasis on writing vague standards instead of rallying around the One True Tool, and the complicated <code class="docutils literal">venv</code>-based ecosystem instead of a solution similar to <code class="docutils literal">node_modules</code>. What has changed in the past year? Has anything improved, is everything the same, or are things worse than they were before?</p>
+</div>
+</div>
+<section id="the-tools"><h2>The tools</h2>
+<p><a class="reference external" href="https://chriswarrick.com/blog/2023/01/15/how-to-improve-python-packaging/">The original post</a> listed a bunch of packaging tools, calling <em>fourteen tools at least twelve too many</em>. My idea with that was that most people would be happy with one tool that does everything, but the scientific-Python folks might have special requirements that would work best as a second tool.</p>
+<p>Out of the tools named in last year’s post, all of them still seem to be maintained. Except for Flit (zero new commits in the past 30 days) and virtualenv (only automated and semi-automated version bumps), the tools have recent commits, pull requests, and issues.</p>
+<p>All of those tools are still in use. <a class="reference external" href="https://framapiaf.org/@fcodvpt/111540079686191842">Françoise Conil analysed all PyPI packages</a> and checked their PEP 517 build backends: setuptools is the most popular (at 50k packages), Poetry is second at 41k, Hathling is third at 8.1k. Other tools to cross 500 users include Flit (4.4k), PDM (1.3k), Maturin (1.3k, build backend for Rust-based packages).</p>
+<p>There are some new tools, of course. Those that crossed my radar are <a class="reference external" href="https://github.com/njsmith/posy">Posy</a> and <a class="reference external" href="https://github.com/mitsuhiko/rye">Rye</a>. Posy is a project of Nathaniel J. Smith (of trio fame), Rye is a project of Armin Ronacher (of Flask fame). The vision for both of them is to manage Python interpreters and projects, but not have a custom build backend (instead using something like hatchling). Posy is built on top of PyBI (a format for distributing binaries of Python interpreters, proposed by Smith in draft <a class="reference external" href="https://peps.python.org/pep-0711/">PEP 711</a>), Rye uses Gregory Szorc’s pre-built Pythons. Rye seems to be fairly complete and usable, Posy is right now a PoC of the PyBI format, and only offers a REPL with pre-installed packages.</p>
+<p>Both Posy and Rye are written in Rust. On the one hand, it makes sense that the part that manages Python interpreters is not written in Python, because that would require a separate Python, not managed by Posy/Rye, to run those tools. But Rye also has its own pyproject.toml parser in Rust, and many of its commands are implemented mostly or largely using Rust (sometimes also calling one-off Python scripts; although the main tasks of creating venvs, installing packages, and working with lockfiles are handed off to <code class="docutils literal">venv</code>, <code class="docutils literal">pip</code>, and <code class="docutils literal"><span class="pre">pip-tools</span></code> respectively).</p>
+<p>Speaking of Rust and Python, there’s been another project in that vein that has grown a lot <a class="reference external" href="https://astral.sh/blog/announcing-astral-the-company-behind-ruff">(and gathered a lot of funding)</a> in the past year. That project is <a class="reference external" href="https://github.com/astral-sh/ruff">Ruff</a>, which is a linter and code formatter. Ruff formats Python code, and is written in Rust. This means it’s 10–100× faster than existing tools written in Python (according to Ruff’s own benchmarks). Fast is good, I guess, but what does this say about Python? Is the fact that package tools (which aren’t rocket science, maybe except for fast dependency solvers, and which often need access to Python internals to do their job) and code formatters (which require a deep understanding of Python syntax, and parsing Python sources to ASTs, something easy by the <code class="docutils literal">ast</code> Python module) are written in another language? Does this trend make Python a toy language (as it is also often considered <em>a glue language</em> for NumPy and friends)? Also, why should contributing to a tool important to many Python developers require learning Rust?</p>
+</section><section id="the-standards"><h2>The standards</h2>
+<p>Last time we looked at packaging standards, we focused on <a class="reference external" href="https://peps.python.org/pep-0582/">PEP 582</a>. It proposed the introduction of <code class="docutils literal">__pypackages__</code>, which would be a place for third-party packages to be installed to locally, on a per-project basis, without involving virtual environments, similarly to what <code class="docutils literal">node_modules</code> is for node. The PEP was ultimately <a class="reference external" href="https://discuss.python.org/t/pep-582-python-local-packages-directory/963/430">rejected</a> in March 2023. The PEP wasn’t perfect, and some of its choices were questionable or insufficient (such as not recursively searching for <code class="docutils literal">__pypackages__</code> in parent directories, or focusing on simple use-cases only). No new standards for something in that vein (with a better design) were proposed to this day.</p>
+<p>Another contentious topic is lock files. Lock files for packaging systems are useful for reproducible dependency installations. The lock file records all installed packages (i.e. includes transitive dependencies) and their versions. Lock files often include checksums (like sha512) of the installed packages, and they often support telling apart packages installed via different groups of dependencies (runtime, buildtime, optional, development, etc.).</p>
+<p>The classic way of achieving this goal are <code class="docutils literal">requirements.txt</code> files. They are specific to pip, and they only contain a list of packages, versions, and possibly checksums. Those files can be generated by <code class="docutils literal">pip freeze</code>, or the third-party <code class="docutils literal"><span class="pre">pip-compile</span></code> from <code class="docutils literal"><span class="pre">pip-tools</span></code>. <code class="docutils literal">pip freeze</code> is very basic, <code class="docutils literal"><span class="pre">pip-compile</span></code> can’t handle different groups of dependencies other than making multiple <code class="docutils literal">requirements.in</code> files, compiling them, and hoping there are no conflicts.</p>
+<p>Pipenv, Poetry, and PDM have their own lockfile implementations, incompatible with one another. Rye piggybacks on top of <code class="docutils literal"><span class="pre">pip-tools</span></code>. Hatch doesn’t have anything in core; they’re waiting for a standard implementation (there are some plugins though). <a class="reference external" href="https://peps.python.org/pep-0665/">PEP 665</a> was <a class="reference external" href="https://discuss.python.org/t/pep-665-take-2-a-file-format-to-list-python-dependencies-for-reproducibility-of-an-application/11736/140">rejected</a> in January 2022. Its author, Brett Cannon, <a class="reference external" href="https://snarky.ca/state-of-standardized-lock-files-for-python-august-2023/">is working on a PoC</a> of something that <em>might</em> become a standard (named <a class="reference external" href="https://github.com/brettcannon/mousebender">mousebender</a>).</p>
+<p>This is the danger of the working model adopted by the Python packaging world. Even for something as simple as lock files, there are at least four incompatible standards. An attempt at a specification was rejected due to “lukewarm reception”, even though there exist at least four implementations which are achieving roughly the same goals, and other ecosystems also went through this before.</p>
+<p>Another thing important to Python are extension modules. Extension modules are written in C, and they are usually used to interact with libraries written in other languages (and also sometimes for performance). Poetry, PDM, and Hatchling don’t really support building extension modules. Setuptools does; <a class="reference external" href="https://numpy.org/doc/stable/reference/distutils_status_migration.html">SciPy and NumPy migrated from their custom numpy.distutils to Meson</a>. The team behind the PyO3 Rust bindings for Python develops <a class="reference external" href="https://github.com/PyO3/maturin">Maturin</a>, which allows for building Rust-based extension modules — but it’s not useful if you’re working with C.</p>
+<p>There weren’t many packaging-related standards that were accepted in 2023. A standard worth mentioning is <a class="reference external" href="https://peps.python.org/pep-0668/">PEP 668</a>, which allows distributors to prevent <cite>pip</cite> from working (to avoid breaking distro-owned site packages) by adding an <code class="docutils literal"><span class="pre">EXTERNALLY-MANAGED</span></code> file. It was accepted in June 2022, but pip only implemented support for it in January 2023, and many distros already have enabled this feature in 2023. Preventing broken systems is a good thing.</p>
+<p>But some standards did make it through. Minor and small ones aside, the most prominent 2023 standard would be <a class="reference external" href="https://peps.python.org/pep-0723/">PEP 723</a>: inline script metadata. It allows to add a comment block at the top of the file, that specifies the dependencies and the minimum Python version in a way that can be consumed by tools. Is it super useful? I don’t think so; setting up a project with pyproject.toml would easily allow things to grow. If you’re sending something via a GitHub gist, just make a repo. If you’re sending something by e-mail, just tar the folder. That approach promotes messy programming without source control.</p>
+<section id="learning-curves-and-the-deception-of-simple"><h3>Learning curves and the deception of “simple”</h3>
+<p>Microsoft Word is simple, and a great beginner’s writing tool. You can make text bold with a single click. You can also make it blue in two clicks. But it’s easy to make an inconsistent mess. To make section headers, many users may just make the text bold and a bit bigger, without any consistency or semantics <a class="footnote-reference brackets" href="/blog/2024/01/15/python-packaging-one-year-later/#footnote-1" id="footnote-reference-1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>. Making a consistent document with semantic formatting is hard in Word. Adding <a class="reference external" href="https://www.techrepublic.com/article/how-to-create-multilevel-numbered-headings-in-word-2016/">section numbering</a> requires you to select a heading and turn it into a list. There’s also supposedly some magic involved, that magic doesn’t work for me, and I have to tell Word to update the heading style. Even if you try doing things nicely, Word will randomly break, mess up the styles, mix up styles and inline ad-hoc formatting, and your document may look differently on different computers.</p>
+<p>LaTeX is very confusing to a beginner, and has a massive learning curve. And you can certainly write <code class="docutils literal">\textbf{hello}</code> everywhere. But with some learning, you’ll be producing beautiful documents. You’ll define a <code class="docutils literal">\code{}</code> command that makes code monospace and adds a border today, but it might change the background and typeset in Comic Sans tomorrow if you so desire. You’ll use packages that can render code from external files with syntax highlighting. Heading numbering is on by default, but it can easily be disabled for a section. LaTeX can also automatically put new sections on new pages, for example. LaTeX was built for scientific publishing, so it has stellar support for maths and bibliographies, among other things.</p>
+<p>Let’s now talk about programming. Python is simple, and a great beginner’s programming language. You can write <em>hello world</em> in a single line of code. The syntax is simpler, there are no confusing leftovers from C (like the index-based <code class="docutils literal">for</code> loop) or machine-level code (like <code class="docutils literal">break</code> in <code class="docutils literal">switch</code>), no pointers in sight. You also don’t need to write classes at all; you don’t need to write a class only to put a <code class="docutils literal">public static void main(String[] args)</code> method there <a class="footnote-reference brackets" href="/blog/2024/01/15/python-packaging-one-year-later/#footnote-2" id="footnote-reference-2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>. You don’t need an IDE, you can just write code using any editor (even notepad.exe will do for the first day or so), you can save it as a .py  file and run it using <code class="docutils literal">python whatever.py</code>.</p>
+<p>Your code got more complicated? No worry, you can split it into multiple <code class="docutils literal">.py</code> files, use <code class="docutils literal">import name_of_other_file_without_py</code> and it will just work. Do you need more structure, grouping into folders perhaps? Well, forget about <code class="docutils literal">python whatever.py</code>, you must use <code class="docutils literal">python <span class="pre">-m</span> whatever</code>, and you must <code class="docutils literal">cd</code> to where your code is, or mess with <code class="docutils literal">PYTHONPATH</code>, or install your thing with <code class="docutils literal">pip</code>. This simple yet common action (grouping things into folders) has massively increased complexity.</p>
+<p>The standard library is not enough <a class="footnote-reference brackets" href="/blog/2024/01/15/python-packaging-one-year-later/#footnote-3" id="footnote-reference-3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a> and you need a third-party dependency? You find some tutorial that tells you to <code class="docutils literal">pip install</code>, but <code class="docutils literal">pip</code> will now tell you to use <code class="docutils literal">apt</code>. And <code class="docutils literal">apt</code> may work, but it may give you an ancient version that does not match the tutorial you’re reading. Or it may not have the package. Or the Internet will tell you not to use Python packages from <code class="docutils literal">apt</code>. So now you need to <a class="reference external" href="https://chriswarrick.com/blog/2018/09/04/python-virtual-environments/">learn about venvs</a> (which add more complexity, more things to remember; most tutorials teach activation, venvs are easy to mess up via basic operations like renaming a folder, and you may end up with a venv in git or your code in a venv). Or you need to pick one of the many one-stop-shop tools to manage things.</p>
+<p>In other ecosystems, an IDE is often a necessity, even for beginners. The IDE will force you into a project system (maybe not the best or most common one by default, but it will still be a coherent project system). Java will force you to make more than one file with the “1 public class = 1 file” rule, and it will be easy to do so, you won’t even need an <code class="docutils literal">import</code>.</p>
+<p>Do you want folders? In Java or C#, you just create a folder in the IDE, and create a class there. The new file may have a different <code class="docutils literal">package</code>/<code class="docutils literal">namespace</code>, but the IDE will help you to add the correct <code class="docutils literal">import</code>/<code class="docutils literal">using</code> to the codebase, and there is no risk of you using too many directories (including something like <code class="docutils literal">src</code>) or using too few (not making a top-level package for all your code) that will require correcting all imports. The disruption from adding a folder in Java or C# is minimal.</p>
+<p>The project system will also handle third-party packages without you needing to think about where they’re downloaded or what a virtual environment is and how to activate it from different contexts. A few clicks and you’re done. And if you don’t like IDEs? Living in the CLI is certainly possible in many ecosystems, they have reasonable CLI tools for common management tasks, as well as building and running your project.</p>
+<p>PEP 723 solves a very niche problem: dependency management for single-file programs. Improving life for one-off things and messy code was apparently more important to the packaging community than any other improvements for big projects.</p>
+<p>By the way, you could adapt this lesson to static and dynamic typing. Dynamic typing is easier to get started with and requires less typing, but compile-type checking can prevent many bugs — bugs that require higher test coverage to catch with dynamic typing. That’s why the JS world has TypeScript, that’s why mypy/pyright/typing has gained a lot of mindshare in the Python world.</p>
+</section></section><section id="the-future"><h2>The future…</h2>
+<p>Looking at the <a class="reference external" href="https://discuss.python.org/c/packaging/14">Python Packaging Discourse</a>, there were some discussions about ways to improve things.</p>
+<p>For example, this <a class="reference external" href="https://discuss.python.org/t/user-experience-with-porting-off-setup-py/37502">discussion about porting off setup.py</a> was started by Gregory Szorc, who had <a class="reference external" href="https://gregoryszorc.com/blog/2023/10/30/my-user-experience-porting-off-setup.py/">a long list of complaints</a>, pointing out the issues with the communication from the packaging world, and documentation mess (his post is worth a read, or at least a skim, because it’s long and full of packaging failures). There’s one page which recommends setuptools, another which has four options with Hatchling as a default, and another still promoting Pipenv. We’ve seen this a year ago, nothing changed in that regard. Some people tried finding solutions, some people shared their opinions… and then the Discourse moderator decided to protect his PyPA friends from having to read user feedback and locked the thread.</p>
+<p>Many other threads about visions were had, like the one about <a class="reference external" href="https://discuss.python.org/t/the-10-year-view-on-python-packaging-whats-yours/31834">10-year views</a> or about <a class="reference external" href="https://discuss.python.org/t/wanting-a-singular-packaging-tool-vision/21141">singular packaging tools</a>. The strategy discussions, based on the user survey, had <a class="reference external" href="https://discuss.python.org/t/python-packaging-strategy-discussion-part-2/23442">a second part</a> (the <a class="reference external" href="https://discuss.python.org/t/python-packaging-strategy-discussion-part-1/22420">first one</a> concluded in January 2023), but it saw less posts than the first one, and discussions did not continue (and there were <a class="reference external" href="https://discuss.python.org/t/structure-of-the-packaging-strategy-discussions/23478">discussions about how to hold the discussions</a>). There are plans to <a class="reference external" href="https://discuss.python.org/t/draft-update-to-python-packaging-governance/31608">create a packaging council</a> — design-by-committee at its finest.</p>
+<p>But all those discussions, even when not locked by an overzealous moderator, haven’t had any meaningful effect. The packaging ecosystem is still severely fragmented and confusing. <a class="reference external" href="https://packaging.python.org/en/latest/tutorials/">The PyPA docs and tutorials</a> still contradict each other. The PyPA-affiliated tools still have less features than the unaffiliated competition (even the upstart Rye has some form of lockfiles, unlike Hatch or Flit), and going by the PEP 517 build backend usage statistics, they are more popular than the modern PyPA tools. The authors of similar yet competing tools have not joined forces to produce the One True Packaging Tool.</p>
+<section id="is-looking-pretty-bleak"><h3>…is looking pretty bleak</h3>
+<p>On the other hand, if you look at the 2023 contribution graphs for most packaging tools, you might be worried about the state of the packaging ecosystem.</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/pypa/pip/graphs/contributors?from=2023-01-01&amp;to=2023-12-31&amp;type=c">Pip</a> has had a healthy mix of contributors and a lot of commits going into it.</p></li>
+<li><p><a class="reference external" href="https://github.com/pypa/pipenv/graphs/contributors?from=2023-01-01&amp;to=2023-12-31&amp;type=c">Pipenv</a> and <a class="reference external" href="https://github.com/pypa/setuptools/graphs/contributors?from=2023-01-01&amp;to=2023-12-31&amp;type=c">setuptools</a> have two lead committers, but still a healthy amount of commits.</p></li>
+<li><p><a class="reference external" href="https://github.com/pypa/hatch/graphs/contributors?from=2023-01-01&amp;to=2023-12-31&amp;type=c">Hatch</a>, however, is a <strong>one-man-show</strong>: Ofek Lev (the project founder) made 184 commits, the second place belongs to Dependabot with 6 commits, and the third-place contributor (who is a human) has five commits.  The bus factor of Hatch and Hatchling is 1.</p></li>
+</ul>
+<p>The non-PyPA tools aren’t doing much better:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/python-poetry/poetry/graphs/contributors?from=2023-01-01&amp;to=2023-12-31&amp;type=c">Poetry</a> has two top contributors, but at least there are four human contributors with a double-digit number of commits.</p></li>
+<li><p><a class="reference external" href="https://github.com/pdm-project/pdm/graphs/contributors?from=2023-01-01&amp;to=2023-12-31&amp;type=c">PDM</a> is a one-man-show, like Hatch.</p></li>
+<li><p><a class="reference external" href="https://github.com/mitsuhiko/rye/graphs/contributors?from=2023-04-23&amp;to=2023-12-31&amp;type=c">Rye</a> has one main contributor, and three with a double-digit number of commits; note it’s pretty new (started in late April 2023) and it’s not as popular as the others.</p></li>
+</ul></section></section><section id="conclusion"><h2>Conclusion</h2>
+<p>I understand the PyPA is a loose association of volunteers. It is sometimes said the name <em>Python Packaging Authority</em> was <a class="reference external" href="https://discuss.python.org/t/remove-the-authority-from-packaging/1993">originally a joke</a>. However, they are also the group that maintains all the packaging standards, so they <em>are</em> the authority when it comes to packaging. For example, <a class="reference external" href="https://peps.python.org/pep-0668/">PEP 668</a> starts with a warning block saying it’s a historical document, and <a class="reference external" href="https://packaging.python.org/en/latest/specifications/externally-managed-environments/">the up-to-date version of the specification is on PyPA’s site</a> (as well as a bunch of other <a class="reference external" href="https://packaging.python.org/en/latest/specifications/">packaging specs</a>).</p>
+<p><strong>The PyPA should shut down or merge some duplicate projects, and work with the community (including maintainers of non-PyPA projects) to build One True Packaging Tool.</strong> To make things easier. To avoid writing code that does largely the same thing 5 times. To make sure thousands of projects don’t depend on tools with a bus factor of 1 or 2. To turn packaging from a problem and an insurmountable obstacle to something that <em>just works™</em>, something that an average developer doesn’t need to think about.</p>
+<p>It’s not rocket science. Tons of languages, big and small, have a coherent packaging ecosystem (just read <a class="reference external" href="https://chriswarrick.com/blog/2023/01/15/how-to-improve-python-packaging/">last year’s post</a> for some examples of how simple it can be). Instead of focusing on specifications and governance, focus on producing one comprehensive, usable, user-friendly tool.</p>
+<p>Discuss below or <a class="reference external" href="https://news.ycombinator.com/item?id=39004600">on Hacker News</a>.</p>
+</section><section id="footnotes"><h2>Footnotes</h2>
+<aside class="footnote-list brackets"><aside class="footnote brackets" id="footnote-1" role="doc-footnote"><span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="/blog/2024/01/15/python-packaging-one-year-later/#footnote-reference-1">1</a><span class="fn-bracket">]</span></span>
+<p>Modern Word at least makes this easier, because the heading styles get top billing on the ribbon; they were hidden behind a completely non-obvious combo box that said <em>Normal</em> in Word 2003 and older.</p>
+</aside><aside class="footnote brackets" id="footnote-2" role="doc-footnote"><span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="/blog/2024/01/15/python-packaging-one-year-later/#footnote-reference-2">2</a><span class="fn-bracket">]</span></span>
+<p>C# 10 removed the requirement to make a class with a <code class="docutils literal">Main</code> method, it can pick up one file with top-level statements and make it the entrypoint.</p>
+</aside><aside class="footnote brackets" id="footnote-3" role="doc-footnote"><span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="/blog/2024/01/15/python-packaging-one-year-later/#footnote-reference-3">3</a><span class="fn-bracket">]</span></span>
+<p>The Python standard library gets a lot of praise. It <em>is</em> large compared to C, but nothing special compared to Java or C#. It is also full of low-quality libraries, like <code class="docutils literal">http.server</code> or <code class="docutils literal">urllib.request</code>, yet some people insist on only using the standard library. The standard library is also less stable and dependable (with constant deprecations and removals, and with new features requiring upgrading all of Python). All the “serious” use-cases, like web development or ML/AI/data science are impossible with just the standard library.</p>
+</aside></aside></section></article>
+</div>
+    <aside class="postpromonav"><nav><ul class="pager hidden-print">
+<li class="previous">
+                <a href="/blog/2023/01/15/how-to-improve-python-packaging/" rel="prev" title="How to improve Python packaging, or why fourteen tools are at least twelve too many">Previous post</a>
+            </li>
+        </ul></nav></aside><section class="comments"><div data-title="Python Packaging, One Year Later: A Look Back at 2023 in Python Packaging" id="isso-thread"></div>
+        <script src="https://isso.chriswarrick.com/js/embed.min.js" data-isso="https://isso.chriswarrick.com/" data-isso-lang="en" data-isso-require-author="true" data-isso-require-email="true" data-isso-gravatar="true" data-isso-avatar="false" data-isso-css="false" data-isso-vote="false" data-isso-reply-notifications="true"></script></section><!--End of body content--><nav id="footer-links"><div class="row">
+            <div class="col-sm-4">
+                <h6>Blog</h6>
+                <ul>
+<li class="nav-item">
+<a href="/blog/" class="nav-link">Archive</a>
+                        </li>
+<li class="nav-item">
+<a href="/blog/tags/" class="nav-link">Tags</a>
+                        </li>
+<li class="nav-item">
+<a href="/rss.xml" class="nav-link">RSS Feed</a>
+                        </li>
+<li class="nav-item">
+<a href="/search/" class="nav-link">Search</a>
+                </li>
+</ul>
+</div>
+            <div class="col-sm-4">
+                <h6>Projects and Work</h6>
+                <ul>
+<li class="nav-item">
+<a href="/projects/" class="nav-link">Projects</a>
+                        </li>
+<li class="nav-item">
+<a href="/guides/" class="nav-link">Guides</a>
+                        </li>
+<li class="nav-item">
+<a href="/kwbot/" class="nav-link">KwBot</a>
+                        </li>
+<li class="nav-item">
+<a href="/blog/tags/cat_python" class="nav-link">Posts about Python</a>
+                </li>
+</ul>
+</div>
+            <div class="col-sm-4">
+                <h6>Me</h6>
+                <ul>
+<li class="nav-item">
+<a href="/contact/" class="nav-link">Contact</a>
+                        </li>
+<li class="nav-item">
+<a href="/brand/" class="nav-link">Brand</a>
+                        </li>
+<li class="nav-item">
+<a href="https://twitter.com/Kwpolska" class="nav-link">Twitter</a>
+                        </li>
+<li class="nav-item">
+<a href="https://github.com/Kwpolska" class="nav-link">GitHub</a>
+                </li>
+</ul>
+</div>
+        </div></nav><footer id="footer"><p>this site uses cookies.<br>by using this site, you agree to our <a href="/privacy/">cookie and privacy policy</a>.</p>
+<p>
+powered by <strong><a href="https://getnikola.com/">Nikola</a></strong>, <a href="http://nginx.org/">nginx</a> and <a href="https://hetzner.cloud/?ref=Qy1lehF8PwzP">Hetzner Cloud</a><br>
+copyright © 2009–2024 <a href="/contact/">Chris Warrick</a><br><a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC
+BY-NC-SA</a>, unless stated otherwise</p>
+            
+        </footer>
+</div>
+
+
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script><script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.11.0/baguetteBox.min.js" integrity="sha256-yQGjQhFs3LtyiN5hhr3k9s9TWZOh/RzCkD3gwwCKlkg=" crossorigin="anonymous"></script><script src="/assets/js/all.js?v=20230115"></script><script>
+    baguetteBox.run('div#content', {
+        ignoreClass: 'islink',
+        captions: function(element) {
+            return element.getElementsByTagName('img')[0].alt;
+    }});
+    </script><!-- Matomo --><script>
+  var _paq = window._paq = window._paq || [];
+  /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="//matomo.chriswarrick.com/";
+    _paq.push(['setTrackerUrl', u+'matomo.php']);
+    _paq.push(['setSiteId', '1']);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script><!-- End Matomo Code -->
+</body>
+</html>
