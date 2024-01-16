@@ -19,7 +19,7 @@ __ https://chriswarrick.com/blog/2023/01/15/how-to-improve-python-packaging/
 
 Out of the tools named in last year’s post, all of them still seem to be maintained. Except for Flit (zero new commits in the past 30 days) and virtualenv (only automated and semi-automated version bumps), the tools have recent commits, pull requests, and issues.
 
-All of those tools are still in use. `Françoise Conil analysed all PyPI packages`__ and checked their PEP 517 build backends: setuptools is the most popular (at 50k packages), Poetry is second at 41k, Hathling is third at 8.1k. Other tools to cross 500 users include Flit (4.4k), PDM (1.3k), Maturin (1.3k, build backend for Rust-based packages).
+All of those tools are still in use. `Françoise Conil analysed all PyPI packages`__ and checked their PEP 517 build backends: setuptools is the most popular (at 50k packages), Poetry is second at 41k, Hatchling is third at 8.1k. Other tools to cross 500 users include Flit (4.4k), PDM (1.3k), Maturin (1.3k, build backend for Rust-based packages).
 
 __ https://framapiaf.org/@fcodvpt/111540079686191842
 
