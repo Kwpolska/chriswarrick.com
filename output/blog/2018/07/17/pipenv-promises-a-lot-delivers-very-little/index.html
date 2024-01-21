@@ -299,7 +299,7 @@ library has just reported a bug and attached a <code class="docutils literal">re
 reproduce the issue. I download that file to <code class="docutils literal">~/Downloads</code> on my filesystem.
 With plain old virtualenv, I can easily confirm the reproduction in a spare
 shell with:</p>
-<div class="code"><pre class="code shell"><a id="rest_code_2a476656ceba4a3c9fd1827341450576-1" name="rest_code_2a476656ceba4a3c9fd1827341450576-1" href="/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#rest_code_2a476656ceba4a3c9fd1827341450576-1"></a>$<span class="w"> </span>~/virtualenvs/foobar/bin/python<span class="w"> </span>~/Downloads/repro.py
+<div class="code"><pre class="code shell"><a id="rest_code_4aa025624676443c877fc94a0dbc429d-1" name="rest_code_4aa025624676443c877fc94a0dbc429d-1" href="/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#rest_code_4aa025624676443c877fc94a0dbc429d-1"></a>$<span class="w"> </span>~/virtualenvs/foobar/bin/python<span class="w"> </span>~/Downloads/repro.py
 </pre></div>
 <p>And then I can launch my fancy IDE to fix the bug.  I don’t have to <code class="docutils literal">cd</code> into
 the project. But with Pipenv, I can’t really do that.  If I put the virtualenv
@@ -307,23 +307,23 @@ in <code class="docutils literal">.venv</code> with the command line option, I c
 <code class="docutils literal"><span class="pre">~/git/foobar/.venv/bin/python</span> ~/Downloads/repro.py</code>. If I use the
 centralized directory + hashes thing, Tab completion becomes mandatory, if I
 haven’t memorized the hash.</p>
-<div class="code"><pre class="code shell"><a id="rest_code_f16cdbb0f8f948898a540f764813ae8a-1" name="rest_code_f16cdbb0f8f948898a540f764813ae8a-1" href="/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#rest_code_f16cdbb0f8f948898a540f764813ae8a-1"></a>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>~/git/foobar
-<a id="rest_code_f16cdbb0f8f948898a540f764813ae8a-2" name="rest_code_f16cdbb0f8f948898a540f764813ae8a-2" href="/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#rest_code_f16cdbb0f8f948898a540f764813ae8a-2"></a>$<span class="w"> </span>pipenv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>~/Downloads/repro.py
+<div class="code"><pre class="code shell"><a id="rest_code_77a9c49b336946d6a9f6aba90a1a5fc3-1" name="rest_code_77a9c49b336946d6a9f6aba90a1a5fc3-1" href="/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#rest_code_77a9c49b336946d6a9f6aba90a1a5fc3-1"></a>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>~/git/foobar
+<a id="rest_code_77a9c49b336946d6a9f6aba90a1a5fc3-2" name="rest_code_77a9c49b336946d6a9f6aba90a1a5fc3-2" href="/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#rest_code_77a9c49b336946d6a9f6aba90a1a5fc3-2"></a>$<span class="w"> </span>pipenv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>~/Downloads/repro.py
 </pre></div>
 <p>What if I had two <code class="docutils literal">.py</code> files, or <code class="docutils literal">repro.py</code> otherwise depended on being in
 the current working directory?</p>
-<div class="code"><pre class="code shell"><a id="rest_code_add3071809f54224b81b1f223d51c541-1" name="rest_code_add3071809f54224b81b1f223d51c541-1" href="/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#rest_code_add3071809f54224b81b1f223d51c541-1"></a>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>~/git/foobar
-<a id="rest_code_add3071809f54224b81b1f223d51c541-2" name="rest_code_add3071809f54224b81b1f223d51c541-2" href="/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#rest_code_add3071809f54224b81b1f223d51c541-2"></a>$<span class="w"> </span>pipenv<span class="w"> </span>shell
-<a id="rest_code_add3071809f54224b81b1f223d51c541-3" name="rest_code_add3071809f54224b81b1f223d51c541-3" href="/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#rest_code_add3071809f54224b81b1f223d51c541-3"></a><span class="o">(</span>foobar-Mwd1l2m9<span class="o">)</span>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>~/Downloads
-<a id="rest_code_add3071809f54224b81b1f223d51c541-4" name="rest_code_add3071809f54224b81b1f223d51c541-4" href="/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#rest_code_add3071809f54224b81b1f223d51c541-4"></a><span class="o">(</span>foobar-Mwd1l2m9<span class="o">)</span>$<span class="w"> </span>python<span class="w"> </span>repro.py
-<a id="rest_code_add3071809f54224b81b1f223d51c541-5" name="rest_code_add3071809f54224b81b1f223d51c541-5" href="/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#rest_code_add3071809f54224b81b1f223d51c541-5"></a><span class="o">(</span>foobar-Mwd1l2m9<span class="o">)</span>$<span class="w"> </span><span class="nb">exit</span><span class="w">  </span><span class="c1"># (not deactivate!)</span>
+<div class="code"><pre class="code shell"><a id="rest_code_c027dbc3afbb4b84a4c0e6ea35502514-1" name="rest_code_c027dbc3afbb4b84a4c0e6ea35502514-1" href="/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#rest_code_c027dbc3afbb4b84a4c0e6ea35502514-1"></a>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>~/git/foobar
+<a id="rest_code_c027dbc3afbb4b84a4c0e6ea35502514-2" name="rest_code_c027dbc3afbb4b84a4c0e6ea35502514-2" href="/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#rest_code_c027dbc3afbb4b84a4c0e6ea35502514-2"></a>$<span class="w"> </span>pipenv<span class="w"> </span>shell
+<a id="rest_code_c027dbc3afbb4b84a4c0e6ea35502514-3" name="rest_code_c027dbc3afbb4b84a4c0e6ea35502514-3" href="/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#rest_code_c027dbc3afbb4b84a4c0e6ea35502514-3"></a><span class="o">(</span>foobar-Mwd1l2m9<span class="o">)</span>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>~/Downloads
+<a id="rest_code_c027dbc3afbb4b84a4c0e6ea35502514-4" name="rest_code_c027dbc3afbb4b84a4c0e6ea35502514-4" href="/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#rest_code_c027dbc3afbb4b84a4c0e6ea35502514-4"></a><span class="o">(</span>foobar-Mwd1l2m9<span class="o">)</span>$<span class="w"> </span>python<span class="w"> </span>repro.py
+<a id="rest_code_c027dbc3afbb4b84a4c0e6ea35502514-5" name="rest_code_c027dbc3afbb4b84a4c0e6ea35502514-5" href="/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#rest_code_c027dbc3afbb4b84a4c0e6ea35502514-5"></a><span class="o">(</span>foobar-Mwd1l2m9<span class="o">)</span>$<span class="w"> </span><span class="nb">exit</span><span class="w">  </span><span class="c1"># (not deactivate!)</span>
 </pre></div>
 <p><strong>This is becoming ugly fairly quickly.</strong> Also, with virtualenvwrapper, I can
 do this:</p>
-<div class="code"><pre class="code shell"><a id="rest_code_8dd6f333c2694ce7860e74332fcd5ebc-1" name="rest_code_8dd6f333c2694ce7860e74332fcd5ebc-1" href="/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#rest_code_8dd6f333c2694ce7860e74332fcd5ebc-1"></a>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>~/Downloads
-<a id="rest_code_8dd6f333c2694ce7860e74332fcd5ebc-2" name="rest_code_8dd6f333c2694ce7860e74332fcd5ebc-2" href="/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#rest_code_8dd6f333c2694ce7860e74332fcd5ebc-2"></a>$<span class="w"> </span>workon<span class="w"> </span>foobar
-<a id="rest_code_8dd6f333c2694ce7860e74332fcd5ebc-3" name="rest_code_8dd6f333c2694ce7860e74332fcd5ebc-3" href="/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#rest_code_8dd6f333c2694ce7860e74332fcd5ebc-3"></a><span class="o">(</span>foobar<span class="o">)</span>$<span class="w"> </span>python<span class="w"> </span>repro.py
-<a id="rest_code_8dd6f333c2694ce7860e74332fcd5ebc-4" name="rest_code_8dd6f333c2694ce7860e74332fcd5ebc-4" href="/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#rest_code_8dd6f333c2694ce7860e74332fcd5ebc-4"></a><span class="o">(</span>foobar<span class="o">)</span>$<span class="w"> </span>deactivate
+<div class="code"><pre class="code shell"><a id="rest_code_4b5b2d63980748e2a46adb13e436f2cd-1" name="rest_code_4b5b2d63980748e2a46adb13e436f2cd-1" href="/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#rest_code_4b5b2d63980748e2a46adb13e436f2cd-1"></a>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>~/Downloads
+<a id="rest_code_4b5b2d63980748e2a46adb13e436f2cd-2" name="rest_code_4b5b2d63980748e2a46adb13e436f2cd-2" href="/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#rest_code_4b5b2d63980748e2a46adb13e436f2cd-2"></a>$<span class="w"> </span>workon<span class="w"> </span>foobar
+<a id="rest_code_4b5b2d63980748e2a46adb13e436f2cd-3" name="rest_code_4b5b2d63980748e2a46adb13e436f2cd-3" href="/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#rest_code_4b5b2d63980748e2a46adb13e436f2cd-3"></a><span class="o">(</span>foobar<span class="o">)</span>$<span class="w"> </span>python<span class="w"> </span>repro.py
+<a id="rest_code_4b5b2d63980748e2a46adb13e436f2cd-4" name="rest_code_4b5b2d63980748e2a46adb13e436f2cd-4" href="/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#rest_code_4b5b2d63980748e2a46adb13e436f2cd-4"></a><span class="o">(</span>foobar<span class="o">)</span>$<span class="w"> </span>deactivate
 </pre></div>
 <p>And let’s not forget that Pipenv doesn’t help me to write a <code class="docutils literal">setup.py</code>,
 distribute code, or manage releases.  It just manages dependencies.  And it
@@ -837,8 +837,6 @@ of installation speed. The speed is a noticeable issue with the tool. <code clas
 freeze</code> is good enough for this, even if there are no dependency classes
 (production vs development) and no hashes (which
 have minor benefits) <a class="footnote-reference brackets" href="/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/#footnote-2" id="footnote-reference-5" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a></p></li>
-<li><p>Hatch attempts to replace many packaging tools, but some of its practices and
-ideas can be questionable.</p></li>
 <li><p>Poetry supports the same niche Pipenv does, while also adding the ability to
 create packages and improving over many gripes of Pipenv. A notable issue is
 the use of a custom all-encompassing file format, which makes switching tools

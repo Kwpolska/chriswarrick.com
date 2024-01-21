@@ -574,8 +574,6 @@ Conclusion
   freeze`` is good enough for this, even if there are no dependency classes
   (production vs development) and no hashes (which
   have minor benefits) [2]_
-* Hatch attempts to replace many packaging tools, but some of its practices and
-  ideas can be questionable.
 * Poetry supports the same niche Pipenv does, while also adding the ability to
   create packages and improving over many gripes of Pipenv. A notable issue is
   the use of a custom all-encompassing file format, which makes switching tools
