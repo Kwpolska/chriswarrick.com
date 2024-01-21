@@ -583,6 +583,13 @@ Conclusion
   simpler, better experience.  Also of note, tools like virtualenvwrapper
   can manage virtualenvs better than the aforementioned new Python tools,
   because it is based on shell scripts (which can modify the enivironment).
+* Since 2018, the packaging scene deteriorated even more. See `How to improve
+  Python packaging, or why fourteen tools are at least twelve too many`__ (from
+  January 2023) and `Python Packaging, One Year Later: A Look Back at 2023 in
+  Python Packaging`__ (from January 2024).
+
+__ https://chriswarrick.com/blog/2023/01/15/how-to-improve-python-packaging/
+__ https://chriswarrick.com/blog/2024/01/15/python-packaging-one-year-later/
 
 .. [1] On a side note, the tutorial explains nothing. A prospective user only learns it’s similar to npm or bundler (what does that mean?), installs one package, and runs a ``.py`` file through ``pipenv run``.
 .. [2] Note that one can’t change the file on PyPI after uploading it, so this would only be protection against rogue PyPI admins or a MitM attack (in which case you’ve got bigger problems anyways). `Also, the feature is fairly broken. <https://github.com/nedbat/coveragepy/issues/679#issuecomment-406396761>`_
