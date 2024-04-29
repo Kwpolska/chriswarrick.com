@@ -144,6 +144,7 @@ NAVIGATION_ALT_LINKS = {
 
 POSTS = (
     ("posts/*.rst", "blog", "post.tmpl"),
+    ("posts/*.md", "blog", "post.tmpl"),
     # ("posts/*.ipynb", "blog", "post.tmpl"),
 )
 
