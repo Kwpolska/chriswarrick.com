@@ -2,6 +2,7 @@
 .. title: Distro Hopping, Server Edition
 .. slug: distro-hopping-server-edition
 .. date: 2025-11-09 19:00:00+01:00
+.. updated: 2025-11-23 18:30:00+01:00
 .. tags: Linux, Ubuntu, Fedora, Python, Docker, Django
 .. category: Linux
 .. description: I’ve recently migrated my VPS from Fedora to Ubuntu. Here’s a list of things that might be useful to keep in mind before, during, and after a migration of a server that hosts publicly accessible Web sites and applications, as well as other personal services, and how to get rid of the most annoying parts of Ubuntu.
@@ -79,6 +80,8 @@ Ubuntu ships with `ufw`, the “uncomplicated firewall”, in the default instal
 It turns out that Docker and ufw [don’t play together](https://docs.docker.com/engine/network/packet-filtering-firewalls/#docker-and-ufw). [Someone has built a set of rules that are supposed to fix it](https://github.com/chaifeng/ufw-docker?tab=readme-ov-file#solving-ufw-and-docker-issues), but that did not work for me.
 
 Docker [does integrate with firewalld](https://docs.docker.com/engine/network/packet-filtering-firewalls/#integration-with-firewalld), and Ubuntu has packages for it, so I just installed it, enabled the services that need to be publicly available and things were working again.
+
+*Update (2025-11-23):* The iptables integration was not very stable on my Ubuntu system, so I disabled the iptables integration and switched to [a simpler config in firewalld only](https://dev.to/soerenmetje/how-to-secure-a-docker-host-using-firewalld-2joo).
 
 # Kill the ads (and other nonsense too)
 
