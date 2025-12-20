@@ -4,6 +4,7 @@
 .. tags: LaTeX, GTD
 .. category: Personal
 .. description: My way to manage tasks.
+.. nocomments: true
 
 `Time management <http://en.wikipedia.org/wiki/Time_management>`_ is hard.
 The best way to do it is to have a task list, also known as a `to-do list

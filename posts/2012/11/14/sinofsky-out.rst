@@ -4,6 +4,7 @@
 .. tags: Windows, Windows 8, rant, review
 .. category: Windows
 .. description: Steven Sinofsky is out of Microsoft!
+.. nocomments: true
 
 Steven Sinofsky said goodbye to Microsoft on `Monday`_.  Who is he,
 may you ask?  The guy that provided us with entertainment for the last

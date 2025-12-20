@@ -3,6 +3,7 @@
 .. date: 2011-02-11 00:00:00
 .. tags: webmastering, tips
 .. description: A trick for hiding your mail address.
+.. nocomments: true
 
 Recently, `Aza Raskin`_ published a blog post about protecting your mail address
 with CSS. He uses some random CSS to make “randomness” look like

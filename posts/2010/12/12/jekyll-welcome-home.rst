@@ -3,6 +3,7 @@
 .. date: 2010-12-12 00:00:00
 .. tags: blog, jekyll
 .. description: The first post writen in Jekyll.
+.. nocomments: true
 
 Two posts for the price of one, right after the break.  What’s funny is, both
 are out of date, as this blog has went through `Hyde`_ and is currently powered

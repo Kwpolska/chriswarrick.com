@@ -3,6 +3,7 @@
 .. date: 2010-10-02 00:00:00
 .. tags: wordpress, blog
 .. description: A word or two about the language change.
+.. nocomments: true
 
 A giant update: The Kw’s Devel Site is now dead.
 

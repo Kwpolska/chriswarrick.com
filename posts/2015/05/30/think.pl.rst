@@ -6,6 +6,7 @@
 .. link: http://github.com/Kwpolska/think
 .. description: Mój nowy projekt: Terminal Think Music.
 .. type: text
+.. nocomments: true
 
 Czy uruchamiasz proces, który długo się wykonuje?  Czy chcesz wiedzieć, kiedy
 skończy pracę, gdy używasz innego Terminala/parzysz kawę?  Czy masz ulubioną

@@ -4,6 +4,7 @@
 .. tags: Windows 8, rant, review
 .. category: Windows
 .. description: 40 million, you say?  After a month?  HAH.
+.. nocomments: true
 
 I’ve been busy, but I now have time to write about it: in a bit over one month,
 Microsoft sold **40,000,000** licenses of Microsoft Windows.  That is a little

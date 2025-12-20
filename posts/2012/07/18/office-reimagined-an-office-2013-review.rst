@@ -4,6 +4,7 @@
 .. tags: Microsoft Office, Microsoft Office 15, Windows, Windows 8, rant, review
 .. category: Windows
 .. description: A review of Office 2013/Office 15.
+.. nocomments: true
 
 .. raw:: html
 

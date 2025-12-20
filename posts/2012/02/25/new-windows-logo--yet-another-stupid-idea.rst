@@ -4,6 +4,7 @@
 .. tags: rant, Windows, Windows 8
 .. category: Windows
 .. description: Microsoft goes apeshit once more, this time with the new Windows 8 logo.
+.. nocomments: true
 
 .. raw:: html
 

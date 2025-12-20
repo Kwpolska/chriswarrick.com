@@ -3,6 +3,7 @@
 .. date: 2010-11-03 00:00:00
 .. tags: wordpress, bitly
 .. description: A post about bit.ly Pro.
+.. nocomments: true
 
 I just became a bit.ly Pro user - here's some information about it.
 

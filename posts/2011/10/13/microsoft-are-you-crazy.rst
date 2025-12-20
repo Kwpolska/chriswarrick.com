@@ -4,6 +4,7 @@
 .. tags: Windows, rant, Windows 8
 .. category: Windows
 .. description: A rant about Windows 8.
+.. nocomments: true
 
 .. raw:: html
 

@@ -5,6 +5,7 @@
 .. category: Android
 .. description: Przygoda z Androidem czeka.
 .. type: text
+.. nocomments: true
 
 .. class:: android-adventure-logo-full
 

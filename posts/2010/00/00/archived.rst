@@ -3,6 +3,7 @@
 .. date: 2010-01-01 00:00:00
 .. tags: blog, wordpress
 .. description: Sorry, but I had to drop certain posts of 2010.
+.. nocomments: true
 
 Are you looking for posts from 2010?  Sorry, but some of them (specifically, the ones in Polish) are removed.
 

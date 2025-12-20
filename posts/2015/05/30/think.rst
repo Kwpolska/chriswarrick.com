@@ -6,6 +6,7 @@
 .. link: https://github.com/Kwpolska/think
 .. description: A new project of mine: Terminal Think Music.
 .. type: text
+.. nocomments: true
 
 Are you executing a process that takes a long time?  Do you want to know that it’s
 still working while you are in another terminal/making coffee?  Do you have a

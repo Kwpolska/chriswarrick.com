@@ -3,6 +3,7 @@
 .. date: 2011-01-22 00:00:00
 .. tags: webmastering, HTML5, blog
 .. description: A word or two about the transition to HTML5.
+.. nocomments: true
 
 .. raw:: html
 

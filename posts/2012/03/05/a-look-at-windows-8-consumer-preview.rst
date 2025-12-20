@@ -3,6 +3,7 @@
 .. date: 2012-03-05 00:00:00
 .. tags: Windows, rant, Windows 8, review
 .. description: A review of Windows 8 Consumer Preview.
+.. nocomments: true
 
 .. raw:: html
 

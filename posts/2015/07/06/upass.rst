@@ -6,6 +6,7 @@
 .. link: https://github.com/Kwpolska/upass
 .. description: Because pass is too hard.
 .. type: text
+.. nocomments: true
 
 `pass <http://www.passwordstore.org/>`_ is the standard Unix password manager.
 And I just wrote a slightly friendlier, clickier interface with urwid and

@@ -6,6 +6,7 @@
 .. link: https://github.com/Kwpolska/upass
 .. description: Bo pass jest za trudny.
 .. type: text
+.. nocomments: true
 
 `pass <http://www.passwordstore.org/>`_ to standardowy Uniksowy manager haseł.
 A ja właśnie stworzyłem odrobinę przyjaźniejszy, klikalniejszy interfejs przy

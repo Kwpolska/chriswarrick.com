@@ -4,6 +4,7 @@
 .. tags: Linux, shell, zsh
 .. category: Linux
 .. description: A word or two about Zsh.
+.. nocomments: true
 
 What’s the most important non-kernel piece of software in UNIX-like OSes? The shell. A good shell.
 

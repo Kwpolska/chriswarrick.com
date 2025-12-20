@@ -4,6 +4,7 @@
 .. tags: Python
 .. category: Python
 .. description: Python is Awesome.  Now, what is awesome in it?
+.. nocomments: true
 
 Via `Tarek Ziadé`_.  Right after the break.
 

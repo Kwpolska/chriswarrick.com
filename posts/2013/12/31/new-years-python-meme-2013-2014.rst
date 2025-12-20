@@ -4,6 +4,7 @@
 .. tags: Python, Nikola, programming
 .. category: Python
 .. description: Python is Awesome: Take Two.
+.. nocomments: true
 
 Via `Tarek Ziadé`_ (original meme, none this year…) and `Alex Clark`_.  Right after the break.
 

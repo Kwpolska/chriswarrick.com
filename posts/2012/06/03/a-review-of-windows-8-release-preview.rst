@@ -4,6 +4,7 @@
 .. tags: Windows, rant, Windows 8, review
 .. category: Windows
 .. description: Here we go again: yet another Windows 8 review, Release Preview this time.
+.. nocomments: true
 
 .. raw:: html
 

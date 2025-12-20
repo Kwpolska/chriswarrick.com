@@ -5,6 +5,7 @@
 .. category: Android
 .. description: An Adventure in Android awaits.
 .. type: text
+.. nocomments: true
 
 .. class:: android-adventure-logo-full
 

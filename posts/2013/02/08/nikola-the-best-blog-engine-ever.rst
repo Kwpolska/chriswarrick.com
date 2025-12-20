@@ -4,6 +4,7 @@
 .. tags: Nikola, blog, Python
 .. link:
 .. description: Nikola is the best blog engine ever!
+.. nocomments: true
 
 I recently found out about Nikola_ (through `Planet Python`_).  It is awesome,
 even better than Hyde.  Why?  Right after the break.

@@ -5,5 +5,6 @@
 .. description: Retired page.
 .. status: private
 .. updated: 2017-03-24 16:20:00+00:00
+.. nocomments: true
 
 A Jekyll tutorial used to be here. Now I’m using `Nikola <http://getnikola.com/>`_, so I took the guide down.

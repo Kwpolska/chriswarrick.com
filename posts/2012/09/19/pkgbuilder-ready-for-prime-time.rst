@@ -4,6 +4,7 @@
 .. tags: projects, Python, Linux
 .. tags: Python
 .. description: My AUR helper, PKGBUILDer, is ready for prime time.  A word about it is posted here.
+.. nocomments: true
 
 .. class:: pull-right
 .. image:: /blog-content/logos/pkgbuilder.png

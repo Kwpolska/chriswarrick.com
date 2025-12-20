@@ -5,6 +5,7 @@
 .. category: Android
 .. description: My little Android app.
 .. type: text
+.. nocomments: true
 
 .. class:: android-adventure-logo-robot
 

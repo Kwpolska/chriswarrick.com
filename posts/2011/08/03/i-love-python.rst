@@ -4,6 +4,7 @@
 .. tags: Python, programming, projects
 .. category: Python
 .. description: A word about Python.
+.. nocomments: true
 
 .. raw:: html
 
