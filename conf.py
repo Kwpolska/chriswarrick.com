@@ -374,7 +374,7 @@ LICENSE = """<a rel="license" href="https://creativecommons.org/licenses/by-nc-s
 CONTENT_FOOTER = {
     'en': """<p>this site uses cookies.<br>by using this site, you agree to our <a href="/privacy/">cookie and privacy policy</a>.</p><p>
 powered by <strong><a href="https://getnikola.com/">Nikola</a></strong>, <a href="http://nginx.org/">nginx</a> and <a href="https://hetzner.cloud/?ref=Qy1lehF8PwzP">Hetzner Cloud</a><br>
-copyright © 2009–2025 <a
+copyright © 2009–2026 <a
 href="/contact/">Chris Warrick</a><br> <a rel="license"
 href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC
 BY-NC-SA</a>, unless stated otherwise</p>""",
@@ -382,7 +382,7 @@ BY-NC-SA</a>, unless stated otherwise</p>""",
 korzystając z tej strony, akceptujesz naszą <a href="/pl/privacy/">politykę prywatności i ciasteczek</a>.
 </p><p>
 powered by <strong><a href="https://getnikola.com/">Nikola</a></strong>, <a href="http://nginx.org/">nginx</a> and <a href="https://hetzner.cloud/?ref=Qy1lehF8PwzP">Hetzner Cloud</a><br>
-copyright © 2009–2025 <a
+copyright © 2009–2026 <a
 href="/pl/contact/">Chris Warrick</a><br> <a rel="license"
 href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC
 BY-NC-SA</a>, unless stated otherwise</p>""",
