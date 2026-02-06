@@ -18,13 +18,15 @@ The following is a comprehensive guide on how to accomplish that, on multiple Li
 
 *Revision 8 (2022-02-20): works with Fedora 35, AlmaLinux 8, RockyLinux 8*
 
+*While this guide is still valid, in 2026 I switched to Docker and Gunicorn for my Python web app deployments. Check out `Deploying Python Web Applications with Docker`_ for more details.*
+
 .. TEASER_END
 
 .. |ci-status| image:: https://github.com/Kwpolska/ansible-nginx-uwsgi/workflows/CI%20in%20Docker%20for%20ansible-nginx-uwsgi%20%28pyweb%29/badge.svg
 
 CI status for the associated Ansible Playbook: |ci-status|
 
-For easy linking, I set up some aliases: https://go.chriswarrick.com/pyweb and https://go.chriswarrick.com/uwsgi-tut (powered by a Django web application, deployed with nginx and uWSGI!).
+For easy linking, I set up some aliases: https://go.chriswarrick.com/pyweb and https://go.chriswarrick.com/uwsgi-tut.
 
 .. class:: right-toc
 
@@ -49,7 +51,7 @@ Your server should also run a modern Linux-based operating system. This guide wa
 
 Debian 8 (jessie) 9 (stretch), Ubuntu 16.04 LTS, and Fedora 24 through 32 are not officially supported, even though they still probably work.
 
-What if you’re using **Docker**? The story is a bit complicated, and this guide does not apply, but do check the `Can I use Docker?`_ at the end of this post for some hints on how to approach it.
+What if you’re using **Docker**? This guide does not apply, you may want to read `Deploying Python Web Applications with Docker`_ instead.
 
 Users of other Linux distributions (and perhaps other Unix flavors) can also follow this tutorial. This guide assumes ``systemd`` as your init system; if you are not using systemd, you will have to get your own daemon files somewhere else. In places where the instructions are split three-way, try coming up with your own, reading documentation and config files; the Arch Linux instructions are probably the closest to upstream (but not always).  Unfortunately, all Linux distributions have their own ideas when it comes to running and managing nginx and uWSGI.
 
@@ -452,7 +454,9 @@ Regardless, many parts of this tutorial can be used with Docker, although with t
 
 The Docker images were designed to support running the Playbook and testing it. But the changes, setups and patches could be a good starting point if you wanted to make your own Docker containers that could run in production. You can take a look at `the Docker files for CI <https://github.com/Kwpolska/ansible-nginx-uwsgi/tree/master/ci>`_ The images support all 5 distros using their base images, but you could probably use Alpine images, or the ``python`` docker images; be careful not to mix Python versions in the latter case.
 
-That said, I still prefer to run without Docker, directly on the system.  Less resources wasted and less indirection.  Which is why this guide does it the traditional way.
+In 2026, I gave up on setting up Python applications with uWSGI using the system Python and virtual environments. I’ve switched all my deployments to Docker containers with Gunicorn as the application server. Nowadays, Docker is a much better choice, as not having to deal with system Python and system virtual environments makes deployments much easier. I wrote up my experiences and shared the configuration files in `Deploying Python Web Applications with Docker`_.
+
+.. _Deploying Python Web Applications with Docker: https://chriswarrick.com/blog/2026/02/06/deploying-python-web-applications-with-docker/
 
 .. [#] This reflink gives you €20 in credit (expires the next month). I earn €10 after you spend €10 of your own.
 
