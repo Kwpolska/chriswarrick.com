@@ -9,6 +9,7 @@
 .. guide_effect: your Python web app is up and running in Docker
 .. guide_platform: Linux
 .. guide_topic: Python web apps and Docker
+.. shortlink: pyweb-docker
 .. type: text
 -->
 
