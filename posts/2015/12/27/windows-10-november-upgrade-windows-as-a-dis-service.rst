@@ -30,8 +30,7 @@ with the display drivers, but other than that, it succeeded.
 Windows 10 claims to be *Windows as a Service*: a fast update cycle with
 new Windows builds released often. Now, Linux users are accustomed to this.
 Depending on your distribution, you get new versions somewhere between “every
-day” (rolling release: :doc:`Arch Linux <arch-linux-the-best-distro-ever>`,
-Gentoo, Debian sid), “every 6 months” (Ubuntu, Fedora), or some other time
+day” (rolling release: Arch Linux, Gentoo, Debian sid), “every 6 months” (Ubuntu, Fedora), or some other time
 scale.
 (Three months and two weeks passed between the two “general” builds of Windows 10.)
 And most of the time, the upgrades are fast and relatively painless.

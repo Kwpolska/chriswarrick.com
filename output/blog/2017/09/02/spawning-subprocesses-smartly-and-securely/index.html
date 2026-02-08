@@ -14,8 +14,7 @@ og: http://ogp.me/ns#
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
 <meta name="theme-color" content="#00aadd">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS (en)" href="/rss.xml">
-<link rel="alternate" type="application/rss+xml" title="RSS (pl)" href="/pl/rss.xml">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="/rss.xml">
 <link rel="canonical" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/">
 <link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="16x16 32x32 48x48 64x64 128x128 256x256">
 <link rel="icon" type="image/png" href="/assets/img/logo512.png">
@@ -23,7 +22,7 @@ og: http://ogp.me/ns#
 <!--[if lt IE 9]><script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]--><meta name="description" itemprop="description" content="How to spawn subprocesses securely? Do I need a subprocess?">
 <meta name="author" content="Chris Warrick">
 <link rel="prev" href="/blog/2017/08/03/gynvaels-mission-11-en-python-bytecode-reverse-engineering/" title="Gynvael’s Mission 11 (en): Python bytecode reverse-engineering" type="text/html">
-<link rel="next" href="/blog/2017/09/22/mobile-phone-woes-or-how-my-carrier-didnt-want-my-money/" title="Mobile phone woes, or how my carrier didn’t want my money" type="text/html">
+<link rel="next" href="/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/" title="Pipenv: promises a lot, delivers very little" type="text/html">
 <meta property="og:site_name" content="Chris Warrick">
 <meta property="og:title" content="Spawning subprocesses smartly and securely">
 <meta property="og:url" content="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/">
@@ -41,7 +40,6 @@ og: http://ogp.me/ns#
 <meta property="article:tag" content="Unix">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:creator" content="@Kwpolska">
-<link rel="alternate" hreflang="pl" href="/pl/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/">
 </head>
 <body>
 <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
@@ -82,11 +80,7 @@ og: http://ogp.me/ns#
             </li>
 </ul>
 <ul class="navbar-nav navbar-right">
-<li>            </li>
-<li class="nav-item"><a href="/pl/" rel="alternate" hreflang="pl" class="nav-link">Polski</a></li>
-
-                
-                <li class="nav-item" id="color-changer-menu">
+<li class="nav-item" id="color-changer-menu">
 <a href="#" class="nav-link" id="color-changer-btn">
                 <div class="color-changer"></div>
                 <span id="color-changer-text"><!--#if expr="$HTTP_COOKIE=/colorScheme\=light/" -->Dark Mode<!--#else -->Light Mode<!--#endif--></span>
@@ -109,16 +103,16 @@ og: http://ogp.me/ns#
     <div class="metadata">
 <a href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/" rel="bookmark" class="u-published"><time class="published dt-published" datetime="2017-09-02T20:40:00+02:00" itemprop="datePublished" title="02 September 2017 at 20:40">02 September 2017 at 20:40</time></a>
         <ul itemprop="keywords" class="tags post-bubbles list-inline">
-<li class="category-bubble"><a href="/blog/tags/cat_programming/" style="background-color: #ff5dd7 !important">Programming</a></li>
-           <li><a class="tag p-category" href="/blog/tags/best-practices/" rel="tag">best practices</a></li>
-           <li><a class="tag p-category" href="/blog/tags/c/" rel="tag">C</a></li>
-           <li><a class="tag p-category" href="/blog/tags/devel/" rel="tag">devel</a></li>
-           <li><a class="tag p-category" href="/blog/tags/guide/" rel="tag">guide</a></li>
-           <li><a class="tag p-category" href="/blog/tags/linux/" rel="tag">Linux</a></li>
-           <li><a class="tag p-category" href="/blog/tags/python/" rel="tag">Python</a></li>
-           <li><a class="tag p-category" href="/blog/tags/security/" rel="tag">security</a></li>
-           <li><a class="tag p-category" href="/blog/tags/subprocess/" rel="tag">subprocess</a></li>
-           <li><a class="tag p-category" href="/blog/tags/unix/" rel="tag">Unix</a></li>
+<li class="category-bubble"><a href="/blog%5Ctags/cat_programming/" style="background-color: #ff5dd7 !important">Programming</a></li>
+           <li><a class="tag p-category" href="/blog%5Ctags/best-practices/" rel="tag">best practices</a></li>
+           <li><a class="tag p-category" href="/blog%5Ctags/c/" rel="tag">C</a></li>
+           <li><a class="tag p-category" href="/blog%5Ctags/devel/" rel="tag">devel</a></li>
+           <li><a class="tag p-category" href="/blog%5Ctags/guide/" rel="tag">guide</a></li>
+           <li><a class="tag p-category" href="/blog%5Ctags/linux/" rel="tag">Linux</a></li>
+           <li><a class="tag p-category" href="/blog%5Ctags/python/" rel="tag">Python</a></li>
+           <li><a class="tag p-category" href="/blog%5Ctags/security/" rel="tag">security</a></li>
+           <li><a class="tag p-category" href="/blog%5Ctags/subprocess/" rel="tag">subprocess</a></li>
+           <li><a class="tag p-category" href="/blog%5Ctags/unix/" rel="tag">Unix</a></li>
         </ul>
 <span class="shortlink-bubble"><a href="https://go.chriswarrick.com/subprocess" title="Short link to this article (go.chriswarrick.com/subprocess)"><i class="fa fa-link"></i> subprocess</a></span>        
 <p class="guide-header">A <a href="/guides/">guide</a> about <span class="guide-topic">spawning subprocesses</span> for <span class="guide-platform">Unix/Linux (and partially Windows)</span></p>    </div>
@@ -193,51 +187,51 @@ arguments passed to the process, or</p></li>
 manpage for <code class="docutils literal">system(3)</code> puts it,</p>
 <blockquote>
 <p>The <code class="docutils literal">system()</code> library function uses <code class="docutils literal">fork(2)</code> to create a child process that executes the shell command specified in command using <code class="docutils literal">execl(3)</code> as follows:</p>
-<div class="code"><pre class="code c"><a id="rest_code_bd58fcdb1a8b480b98e1342ff6d44410-1" name="rest_code_bd58fcdb1a8b480b98e1342ff6d44410-1" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_bd58fcdb1a8b480b98e1342ff6d44410-1"></a><span class="n">execl</span><span class="p">(</span><span class="s">"/bin/sh"</span><span class="p">,</span><span class="w"> </span><span class="s">"sh"</span><span class="p">,</span><span class="w"> </span><span class="s">"-c"</span><span class="p">,</span><span class="w"> </span><span class="n">command</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<div class="code"><pre class="code c"><a id="rest_code_718708c2b22846599801032d5165f29a-1" name="rest_code_718708c2b22846599801032d5165f29a-1" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_718708c2b22846599801032d5165f29a-1"></a><span class="n">execl</span><span class="p">(</span><span class="s">"/bin/sh"</span><span class="p">,</span><span class="w"> </span><span class="s">"sh"</span><span class="p">,</span><span class="w"> </span><span class="s">"-c"</span><span class="p">,</span><span class="w"> </span><span class="n">command</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
 </pre></div>
 </blockquote>
 </li>
 </ul>
 <p>If you go through the shell, you pass one string argument, whereas <code class="docutils literal"><span class="pre">exec*()</span></code> demands you to specify arguments separately. Let’s write a sample program to print all the arguments it receives. I’ll do it in Python to get a more readable output.</p>
-<div class="code"><pre class="code python"><a id="rest_code_ab554287aa8640dab7824be7c8a27981-1" name="rest_code_ab554287aa8640dab7824be7c8a27981-1" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_ab554287aa8640dab7824be7c8a27981-1"></a><span class="ch">#!/usr/bin/env python3</span>
-<a id="rest_code_ab554287aa8640dab7824be7c8a27981-2" name="rest_code_ab554287aa8640dab7824be7c8a27981-2" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_ab554287aa8640dab7824be7c8a27981-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
-<a id="rest_code_ab554287aa8640dab7824be7c8a27981-3" name="rest_code_ab554287aa8640dab7824be7c8a27981-3" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_ab554287aa8640dab7824be7c8a27981-3"></a><span class="nb">print</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span>
+<div class="code"><pre class="code python"><a id="rest_code_af3b7e1229814e6cb42023be0b724a5f-1" name="rest_code_af3b7e1229814e6cb42023be0b724a5f-1" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_af3b7e1229814e6cb42023be0b724a5f-1"></a><span class="ch">#!/usr/bin/env python3</span>
+<a id="rest_code_af3b7e1229814e6cb42023be0b724a5f-2" name="rest_code_af3b7e1229814e6cb42023be0b724a5f-2" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_af3b7e1229814e6cb42023be0b724a5f-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<a id="rest_code_af3b7e1229814e6cb42023be0b724a5f-3" name="rest_code_af3b7e1229814e6cb42023be0b724a5f-3" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_af3b7e1229814e6cb42023be0b724a5f-3"></a><span class="nb">print</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span>
 </pre></div>
 <p>Let’s see what appears:</p>
-<div class="code"><pre class="code text"><a id="rest_code_1f27a2cad0cf426f8d31860298f63f0e-1" name="rest_code_1f27a2cad0cf426f8d31860298f63f0e-1" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_1f27a2cad0cf426f8d31860298f63f0e-1"></a>$ ./argv.py foo bar
-<a id="rest_code_1f27a2cad0cf426f8d31860298f63f0e-2" name="rest_code_1f27a2cad0cf426f8d31860298f63f0e-2" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_1f27a2cad0cf426f8d31860298f63f0e-2"></a>['./argv.py', 'foo', 'bar']
-<a id="rest_code_1f27a2cad0cf426f8d31860298f63f0e-3" name="rest_code_1f27a2cad0cf426f8d31860298f63f0e-3" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_1f27a2cad0cf426f8d31860298f63f0e-3"></a>$ ./argv.py 'foo bar'
-<a id="rest_code_1f27a2cad0cf426f8d31860298f63f0e-4" name="rest_code_1f27a2cad0cf426f8d31860298f63f0e-4" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_1f27a2cad0cf426f8d31860298f63f0e-4"></a>['./argv.py', 'foo bar']
-<a id="rest_code_1f27a2cad0cf426f8d31860298f63f0e-5" name="rest_code_1f27a2cad0cf426f8d31860298f63f0e-5" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_1f27a2cad0cf426f8d31860298f63f0e-5"></a>$ ./argv.py foo\ bar baz
-<a id="rest_code_1f27a2cad0cf426f8d31860298f63f0e-6" name="rest_code_1f27a2cad0cf426f8d31860298f63f0e-6" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_1f27a2cad0cf426f8d31860298f63f0e-6"></a>['./argv.py', 'foo bar', 'baz']
-<a id="rest_code_1f27a2cad0cf426f8d31860298f63f0e-7" name="rest_code_1f27a2cad0cf426f8d31860298f63f0e-7" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_1f27a2cad0cf426f8d31860298f63f0e-7"></a>
-<a id="rest_code_1f27a2cad0cf426f8d31860298f63f0e-8" name="rest_code_1f27a2cad0cf426f8d31860298f63f0e-8" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_1f27a2cad0cf426f8d31860298f63f0e-8"></a>$ ./argv.py $(date)
-<a id="rest_code_1f27a2cad0cf426f8d31860298f63f0e-9" name="rest_code_1f27a2cad0cf426f8d31860298f63f0e-9" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_1f27a2cad0cf426f8d31860298f63f0e-9"></a>['./argv.py', 'Sat', 'Sep', '2', '16:54:52', 'CEST', '2017']
-<a id="rest_code_1f27a2cad0cf426f8d31860298f63f0e-10" name="rest_code_1f27a2cad0cf426f8d31860298f63f0e-10" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_1f27a2cad0cf426f8d31860298f63f0e-10"></a>$ ./argv.py "$(date)"
-<a id="rest_code_1f27a2cad0cf426f8d31860298f63f0e-11" name="rest_code_1f27a2cad0cf426f8d31860298f63f0e-11" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_1f27a2cad0cf426f8d31860298f63f0e-11"></a>['./argv.py', 'Sat Sep  2 16:54:52 CEST 2017']
-<a id="rest_code_1f27a2cad0cf426f8d31860298f63f0e-12" name="rest_code_1f27a2cad0cf426f8d31860298f63f0e-12" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_1f27a2cad0cf426f8d31860298f63f0e-12"></a>
-<a id="rest_code_1f27a2cad0cf426f8d31860298f63f0e-13" name="rest_code_1f27a2cad0cf426f8d31860298f63f0e-13" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_1f27a2cad0cf426f8d31860298f63f0e-13"></a>$ ./argv.py /usr/*
-<a id="rest_code_1f27a2cad0cf426f8d31860298f63f0e-14" name="rest_code_1f27a2cad0cf426f8d31860298f63f0e-14" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_1f27a2cad0cf426f8d31860298f63f0e-14"></a>['./argv.py', '/usr/X11', '/usr/X11R6', '/usr/bin', '/usr/include', '/usr/lib', '/usr/libexec', '/usr/local', '/usr/sbin', '/usr/share', '/usr/standalone']
-<a id="rest_code_1f27a2cad0cf426f8d31860298f63f0e-15" name="rest_code_1f27a2cad0cf426f8d31860298f63f0e-15" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_1f27a2cad0cf426f8d31860298f63f0e-15"></a>$ ./argv.py "/usr/*"
-<a id="rest_code_1f27a2cad0cf426f8d31860298f63f0e-16" name="rest_code_1f27a2cad0cf426f8d31860298f63f0e-16" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_1f27a2cad0cf426f8d31860298f63f0e-16"></a>['./argv.py', '/usr/*']
-<a id="rest_code_1f27a2cad0cf426f8d31860298f63f0e-17" name="rest_code_1f27a2cad0cf426f8d31860298f63f0e-17" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_1f27a2cad0cf426f8d31860298f63f0e-17"></a>
-<a id="rest_code_1f27a2cad0cf426f8d31860298f63f0e-18" name="rest_code_1f27a2cad0cf426f8d31860298f63f0e-18" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_1f27a2cad0cf426f8d31860298f63f0e-18"></a>$ ./argv.py $EDITOR
-<a id="rest_code_1f27a2cad0cf426f8d31860298f63f0e-19" name="rest_code_1f27a2cad0cf426f8d31860298f63f0e-19" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_1f27a2cad0cf426f8d31860298f63f0e-19"></a>['./argv.py', 'nvim']
-<a id="rest_code_1f27a2cad0cf426f8d31860298f63f0e-20" name="rest_code_1f27a2cad0cf426f8d31860298f63f0e-20" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_1f27a2cad0cf426f8d31860298f63f0e-20"></a>
-<a id="rest_code_1f27a2cad0cf426f8d31860298f63f0e-21" name="rest_code_1f27a2cad0cf426f8d31860298f63f0e-21" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_1f27a2cad0cf426f8d31860298f63f0e-21"></a>$ $PWD/argv.py foo bar
-<a id="rest_code_1f27a2cad0cf426f8d31860298f63f0e-22" name="rest_code_1f27a2cad0cf426f8d31860298f63f0e-22" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_1f27a2cad0cf426f8d31860298f63f0e-22"></a>['/Users/kwpolska/Desktop/blog/subprocess/argv.py', 'foo', 'bar']
-<a id="rest_code_1f27a2cad0cf426f8d31860298f63f0e-23" name="rest_code_1f27a2cad0cf426f8d31860298f63f0e-23" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_1f27a2cad0cf426f8d31860298f63f0e-23"></a>$ ./argv.py a{b,c}d
-<a id="rest_code_1f27a2cad0cf426f8d31860298f63f0e-24" name="rest_code_1f27a2cad0cf426f8d31860298f63f0e-24" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_1f27a2cad0cf426f8d31860298f63f0e-24"></a>['./argv.py', 'abd', 'acd']
-<a id="rest_code_1f27a2cad0cf426f8d31860298f63f0e-25" name="rest_code_1f27a2cad0cf426f8d31860298f63f0e-25" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_1f27a2cad0cf426f8d31860298f63f0e-25"></a>
-<a id="rest_code_1f27a2cad0cf426f8d31860298f63f0e-26" name="rest_code_1f27a2cad0cf426f8d31860298f63f0e-26" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_1f27a2cad0cf426f8d31860298f63f0e-26"></a>$ python argv.py foo bar | cat
-<a id="rest_code_1f27a2cad0cf426f8d31860298f63f0e-27" name="rest_code_1f27a2cad0cf426f8d31860298f63f0e-27" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_1f27a2cad0cf426f8d31860298f63f0e-27"></a>['argv.py', 'foo', 'bar']
-<a id="rest_code_1f27a2cad0cf426f8d31860298f63f0e-28" name="rest_code_1f27a2cad0cf426f8d31860298f63f0e-28" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_1f27a2cad0cf426f8d31860298f63f0e-28"></a>$ python argv.py foo bar &gt; foo.txt
-<a id="rest_code_1f27a2cad0cf426f8d31860298f63f0e-29" name="rest_code_1f27a2cad0cf426f8d31860298f63f0e-29" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_1f27a2cad0cf426f8d31860298f63f0e-29"></a>$ cat foo.txt
-<a id="rest_code_1f27a2cad0cf426f8d31860298f63f0e-30" name="rest_code_1f27a2cad0cf426f8d31860298f63f0e-30" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_1f27a2cad0cf426f8d31860298f63f0e-30"></a>['argv.py', 'foo', 'bar']
-<a id="rest_code_1f27a2cad0cf426f8d31860298f63f0e-31" name="rest_code_1f27a2cad0cf426f8d31860298f63f0e-31" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_1f27a2cad0cf426f8d31860298f63f0e-31"></a>
-<a id="rest_code_1f27a2cad0cf426f8d31860298f63f0e-32" name="rest_code_1f27a2cad0cf426f8d31860298f63f0e-32" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_1f27a2cad0cf426f8d31860298f63f0e-32"></a>$ ./argv.py foo; ls /usr
-<a id="rest_code_1f27a2cad0cf426f8d31860298f63f0e-33" name="rest_code_1f27a2cad0cf426f8d31860298f63f0e-33" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_1f27a2cad0cf426f8d31860298f63f0e-33"></a>['./argv.py', 'foo']
-<a id="rest_code_1f27a2cad0cf426f8d31860298f63f0e-34" name="rest_code_1f27a2cad0cf426f8d31860298f63f0e-34" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_1f27a2cad0cf426f8d31860298f63f0e-34"></a>X11@        X11R6@      bin/        include/    lib/        libexec/    local/      sbin/       share/      standalone/
+<div class="code"><pre class="code text"><a id="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-1" name="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-1" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-1"></a>$ ./argv.py foo bar
+<a id="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-2" name="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-2" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-2"></a>['./argv.py', 'foo', 'bar']
+<a id="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-3" name="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-3" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-3"></a>$ ./argv.py 'foo bar'
+<a id="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-4" name="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-4" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-4"></a>['./argv.py', 'foo bar']
+<a id="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-5" name="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-5" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-5"></a>$ ./argv.py foo\ bar baz
+<a id="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-6" name="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-6" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-6"></a>['./argv.py', 'foo bar', 'baz']
+<a id="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-7" name="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-7" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-7"></a>
+<a id="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-8" name="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-8" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-8"></a>$ ./argv.py $(date)
+<a id="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-9" name="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-9" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-9"></a>['./argv.py', 'Sat', 'Sep', '2', '16:54:52', 'CEST', '2017']
+<a id="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-10" name="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-10" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-10"></a>$ ./argv.py "$(date)"
+<a id="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-11" name="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-11" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-11"></a>['./argv.py', 'Sat Sep  2 16:54:52 CEST 2017']
+<a id="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-12" name="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-12" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-12"></a>
+<a id="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-13" name="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-13" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-13"></a>$ ./argv.py /usr/*
+<a id="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-14" name="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-14" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-14"></a>['./argv.py', '/usr/X11', '/usr/X11R6', '/usr/bin', '/usr/include', '/usr/lib', '/usr/libexec', '/usr/local', '/usr/sbin', '/usr/share', '/usr/standalone']
+<a id="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-15" name="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-15" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-15"></a>$ ./argv.py "/usr/*"
+<a id="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-16" name="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-16" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-16"></a>['./argv.py', '/usr/*']
+<a id="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-17" name="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-17" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-17"></a>
+<a id="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-18" name="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-18" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-18"></a>$ ./argv.py $EDITOR
+<a id="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-19" name="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-19" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-19"></a>['./argv.py', 'nvim']
+<a id="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-20" name="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-20" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-20"></a>
+<a id="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-21" name="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-21" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-21"></a>$ $PWD/argv.py foo bar
+<a id="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-22" name="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-22" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-22"></a>['/Users/kwpolska/Desktop/blog/subprocess/argv.py', 'foo', 'bar']
+<a id="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-23" name="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-23" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-23"></a>$ ./argv.py a{b,c}d
+<a id="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-24" name="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-24" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-24"></a>['./argv.py', 'abd', 'acd']
+<a id="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-25" name="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-25" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-25"></a>
+<a id="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-26" name="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-26" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-26"></a>$ python argv.py foo bar | cat
+<a id="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-27" name="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-27" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-27"></a>['argv.py', 'foo', 'bar']
+<a id="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-28" name="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-28" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-28"></a>$ python argv.py foo bar &gt; foo.txt
+<a id="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-29" name="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-29" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-29"></a>$ cat foo.txt
+<a id="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-30" name="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-30" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-30"></a>['argv.py', 'foo', 'bar']
+<a id="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-31" name="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-31" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-31"></a>
+<a id="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-32" name="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-32" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-32"></a>$ ./argv.py foo; ls /usr
+<a id="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-33" name="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-33" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-33"></a>['./argv.py', 'foo']
+<a id="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-34" name="rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-34" href="/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_81417c78ddcc4a90a8cc2b57a19e91ad-34"></a>X11@        X11R6@      bin/        include/    lib/        libexec/    local/      sbin/       share/      standalone/
 </pre></div>
 <p>As you can see, the following things are handled by the shell (the process is unaware of this occurring):</p>
 <ul class="simple">
@@ -324,7 +318,7 @@ need to call it via the shell.</p>
                 <a href="/blog/2017/08/03/gynvaels-mission-11-en-python-bytecode-reverse-engineering/" rel="prev" title="Gynvael’s Mission 11 (en): Python bytecode reverse-engineering">Previous post</a>
             </li>
             <li class="next">
-                <a href="/blog/2017/09/22/mobile-phone-woes-or-how-my-carrier-didnt-want-my-money/" rel="next" title="Mobile phone woes, or how my carrier didn’t want my money">Next post</a>
+                <a href="/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/" rel="next" title="Pipenv: promises a lot, delivers very little">Next post</a>
             </li>
         </ul></nav></aside><section class="comments"><div data-title="Spawning subprocesses smartly and securely" id="isso-thread"></div>
         <script src="https://isso.chriswarrick.com/js/embed.min.js" data-isso="https://isso.chriswarrick.com/" data-isso-lang="en" data-isso-require-author="true" data-isso-require-email="true" data-isso-gravatar="true" data-isso-avatar="false" data-isso-css="false" data-isso-vote="false" data-isso-reply-notifications="true"></script></section><!--End of body content--><nav id="footer-links"><div class="row">

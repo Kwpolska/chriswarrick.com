@@ -48,7 +48,7 @@ FORCE_ISO8601 = True
 TRANSLATIONS = {
     DEFAULT_LANG: "",
     # Example for another language:
-    "pl": "./pl",
+    #"pl": "./pl",
 }
 
 TRANSLATIONS_PATTERN = '{path}.{lang}.{ext}'
