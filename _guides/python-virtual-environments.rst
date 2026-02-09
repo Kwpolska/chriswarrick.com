@@ -1,1 +1,0 @@
-../posts/2018/09/04/python-virtual-environments.rst

@@ -1,1 +1,0 @@
-../posts/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor.rst

@@ -1,141 +1,147 @@
-<?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chris Warrick (Posts about TypeScript)</title><link>https://chriswarrick.com/</link><description></description><atom:link href="https://chriswarrick.com/blog/tags/typescript.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Mon, 09 Feb 2026 21:57:02 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>When HTML is not enough: a tale of the &lt;datalist&gt; element</title><link>https://chriswarrick.com/blog/2020/02/09/when-html-is-not-enough-a-tale-of-the-datalist-element/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;p&gt;HTML 5.0 was finalized in 2014 (and its drafts were published even earlier), and with it came the &lt;code class="docutils literal"&gt;&amp;lt;datalist&amp;gt;&lt;/code&gt; element.  It’s
+<?xml version="1.0" encoding="utf-8"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Posts about TypeScript</title><link>https://chriswarrick.com/</link><atom:link href="https://chriswarrick.com/blog/tags/typescript.xml" rel="self" type="application/rss+xml" /><description>A rarely updated blog, mostly about programming.</description><lastBuildDate>Sun, 09 Feb 2020 15:30:00 GMT</lastBuildDate><generator>https://github.com/Kwpolska/YetAnotherBlogGenerator</generator><item><title>When HTML is not enough: a tale of the &lt;datalist&gt; element</title><dc:creator>Chris Warrick</dc:creator><link>https://chriswarrick.com/blog/2020/02/09/when-html-is-not-enough-a-tale-of-the-datalist-element/</link><pubDate>Sun, 09 Feb 2020 15:30:00 GMT</pubDate><guid>https://chriswarrick.com/blog/2020/02/09/when-html-is-not-enough-a-tale-of-the-datalist-element/</guid><description>
+HTML 5.0 was finalized in 2014 (and its drafts were published even earlier), and with it came the &amp;lt;datalist&amp;gt; element.  It’s
 2020, and even though it might look like a good replacement for custom
-autocomplete widgets, browser issues made me get rid of it.&lt;/p&gt;
-&lt;!-- TEASER_END --&gt;
-&lt;p&gt;I’ve built a web app to help me track my expenses. The app is written in Django,
-and &lt;a class="reference external" href="https://github.com/Kwpolska/django-expenses"&gt;it’s open source&lt;/a&gt;. One of
+autocomplete widgets, browser issues made me get rid of it.
+</description><content:encoded><![CDATA[
+<p>HTML 5.0 was finalized in 2014 (and its drafts were published even earlier), and with it came the <code class="docutils literal">&lt;datalist&gt;</code> element.  It’s
+2020, and even though it might look like a good replacement for custom
+autocomplete widgets, browser issues made me get rid of it.</p>
+
+
+
+<p>I’ve built a web app to help me track my expenses. The app is written in Django,
+and <a class="reference external" href="https://github.com/Kwpolska/django-expenses">it’s open source</a>. One of
 the goals was to have a simple codebase with limited external JS dependencies,
 as well as basic usability with JS disabled. This is partially to facilitate
-learning of standard DOM manipulation routines and TypeScript.&lt;/p&gt;
-&lt;p&gt;The JS/TS bits are called the &lt;em&gt;Scripting Enhancements&lt;/em&gt; to reflect their nature.
+learning of standard DOM manipulation routines and TypeScript.</p>
+<p>The JS/TS bits are called the <em>Scripting Enhancements</em> to reflect their nature.
 The biggest items are an interactive bill editor (a table with add/edit/remove
-operations, that submits its data as a regular HTML POST &lt;code class="docutils literal"&gt;&amp;lt;form&amp;gt;&lt;/code&gt;) and an
+operations, that submits its data as a regular HTML POST <code class="docutils literal">&lt;form&gt;</code>) and an
 autocomplete framework (used by the bill editor in an advanced way, and by
 other screens in the app with a more basic featureset). The autocomplete
 framework is exactly what you’d expect: point it at an input field and a URL,
 and keypresses lead to the URL being queried for previous values for this
-field, which are displayed as possible values to the user to save typing.&lt;/p&gt;
-&lt;section id="autocomplete-with-html-5-the-datalist-tag"&gt;
-&lt;h2&gt;Autocomplete with HTML 5: the &amp;lt;datalist&amp;gt; tag&lt;/h2&gt;
-&lt;p&gt;But how to display the options to the user? Most people would display a
-&lt;code class="docutils literal"&gt;position: absolute&lt;/code&gt; box with links/buttons, throw in some more logic around
+field, which are displayed as possible values to the user to save typing.</p>
+<section id="autocomplete-with-html-5-the-datalist-tag">
+<h1>Autocomplete with HTML 5: the &lt;datalist&gt; tag</h1>
+<p>But how to display the options to the user? Most people would display a
+<code class="docutils literal">position: absolute</code> box with links/buttons, throw in some more logic around
 the focus and blur events, and call it a day. There are tons of ready-made
 solutions that do all that for you, although most of them are terrible. But!
-HTML 5 introduced a &lt;code class="docutils literal"&gt;&amp;lt;datalist&amp;gt;&lt;/code&gt; tag. And it looks like everything you could
-need. You link a &lt;code class="docutils literal"&gt;&amp;lt;datalist&amp;gt;&lt;/code&gt; tag to an &lt;code class="docutils literal"&gt;&amp;lt;input&amp;gt;&lt;/code&gt; and it shows matching
+HTML 5 introduced a <code class="docutils literal">&lt;datalist&gt;</code> tag. And it looks like everything you could
+need. You link a <code class="docutils literal">&lt;datalist&gt;</code> tag to an <code class="docutils literal">&lt;input&gt;</code> and it shows matching
 options in an autocomplete-style box.  In fact, here’s a simple demo, in case
-your browser supports it:&lt;/p&gt;
-&lt;div class="card mb-3 text-center"&gt;
-    &lt;div class="card-body"&gt;
-        &lt;label for="dldemo" class="ml-1 mr-1"&gt;Favorite programming language:&lt;/label&gt;
-        &lt;input class="form-control d-inline-block ml-1 mr-1" style="width: auto" placeholder="Start typing…" list="dldemolist" id="dldemo"&gt;
-        &lt;datalist id="dldemolist"&gt;
-            &lt;option value="Swift"&gt;
-            &lt;/option&gt;&lt;option value="Rust"&gt;
-            &lt;/option&gt;&lt;option value="Ruby"&gt;
-            &lt;/option&gt;&lt;option value="Python"&gt;
-            &lt;/option&gt;&lt;option value="PHP"&gt;
-            &lt;/option&gt;&lt;option value="Kotlin"&gt;
-            &lt;/option&gt;&lt;option value="JavaScript"&gt;
-            &lt;/option&gt;&lt;option value="Java"&gt;
-            &lt;/option&gt;&lt;option value="Go"&gt;
-            &lt;/option&gt;&lt;option value="C++"&gt;
-            &lt;/option&gt;&lt;option value="C#"&gt;C Sharp&lt;/option&gt;
-            &lt;option value="C"&gt;
-        &lt;/option&gt;&lt;/datalist&gt;
-    &lt;/div&gt;
-    &lt;div class="card-footer"&gt;&lt;a href="https://chriswarrick.com/listings/datalist/datalist-demo.html.html"&gt;View demo source&lt;/a&gt;&lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;Now, here are a few takeaways from that demo:&lt;/p&gt;
-&lt;ol class="arabic simple"&gt;
-&lt;li&gt;&lt;p&gt;Options are displayed in the same order as in the &lt;code class="docutils literal"&gt;&amp;lt;datalist&amp;gt;&lt;/code&gt; tag in the
+your browser supports it:</p>
+<div class="card mb-3 text-center">
+    <div class="card-body">
+        <label for="dldemo" class="ml-1 mr-1">Favorite programming language:</label>
+        <input class="form-control d-inline-block ml-1 mr-1" style="width: auto" placeholder="Start typing…" list="dldemolist" id="dldemo">
+        <datalist id="dldemolist">
+            <option value="Swift">
+            <option value="Rust">
+            <option value="Ruby">
+            <option value="Python">
+            <option value="PHP">
+            <option value="Kotlin">
+            <option value="JavaScript">
+            <option value="Java">
+            <option value="Go">
+            <option value="C++">
+            <option value="C#">C Sharp</option>
+            <option value="C">
+        </option></datalist>
+    </div>
+    <div class="card-footer"><a href="https://chriswarrick.com/listings/datalist/datalist-demo.html.html">View demo source</a></div>
+</div><p>Now, here are a few takeaways from that demo:</p>
+<ol class="arabic simple">
+<li><p>Options are displayed in the same order as in the <code class="docutils literal">&lt;datalist&gt;</code> tag in the
 source, this list was sorted reverse-alphabetically in the source, and
-that’s how it appears in the source.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;The list is filtered case-insensitively based on user-input substrings. In
+that’s how it appears in the source.</p></li>
+<li><p>The list is filtered case-insensitively based on user-input substrings. In
 Chrome, Firefox and Safari, the substring can appear at any point in the
 string.  But in Edge (old Microsoft engine), it looks only at the beginning
-of the string.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Some browsers show an arrow on the field to show the entries, sometimes
-double-clicking opens the list.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;The entry for C# is as follows: &lt;code class="docutils literal"&gt;&amp;lt;option &lt;span class="pre"&gt;value="C#"&amp;gt;C&lt;/span&gt; &lt;span class="pre"&gt;Sharp&amp;lt;/option&amp;gt;&lt;/span&gt;&lt;/code&gt;.
-Chrome displays it on as &lt;span class="raw-html"&gt;“&lt;strong&gt;C#&lt;/strong&gt; &lt;small&gt;C
-Sharp&lt;/small&gt;”&lt;/span&gt; (on two lines), Safari shows only “C#”, Firefox and Edge
-show “C Sharp”. Selecting the option always inputs C#.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Mobile Safari does not expand the list by default, but displays some of the
+of the string.</p></li>
+<li><p>Some browsers show an arrow on the field to show the entries, sometimes
+double-clicking opens the list.</p></li>
+<li><p>The entry for C# is as follows: <code class="docutils literal">&lt;option <span class="pre">value=&quot;C#&quot;&gt;C</span> <span class="pre">Sharp&lt;/option&gt;</span></code>.
+Chrome displays it on as <span class="raw-html">“<strong>C#</strong> <small>C
+Sharp</small>”</span> (on two lines), Safari shows only “C#”, Firefox and Edge
+show “C Sharp”. Selecting the option always inputs C#.</p></li>
+<li><p>Mobile Safari does not expand the list by default, but displays some of the
 options above the keyboard (as typing predictions). You can click on the
-arrow to display all the options in a &lt;a class="reference external" href="https://developer.apple.com/design/human-interface-guidelines/ios/controls/pickers/"&gt;scrolling picker&lt;/a&gt;.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Chrome on Android displays it the same way as on desktop (drop-down list).&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;This demo uses static, hardcoded data. Doing that for the Expenses app would
+arrow to display all the options in a <a class="reference external" href="https://developer.apple.com/design/human-interface-guidelines/ios/controls/pickers/">scrolling picker</a>.</p></li>
+<li><p>Chrome on Android displays it the same way as on desktop (drop-down list).</p></li>
+</ol>
+<p>This demo uses static, hardcoded data. Doing that for the Expenses app would
 be terrible for performance — that would waste bandwidth, force the browser to
 parse a fairly long list, and it could easily overload the browser when it
-tries to expand the list. But wiring it up to a &lt;code class="docutils literal"&gt;fetch()&lt;/code&gt; call to a REST API
-should not be hard, and browsers work correctly when the datalist changes.&lt;/p&gt;
-&lt;/section&gt;
-&lt;section id="an-emoji-hack"&gt;
-&lt;h2&gt;An emoji hack&lt;/h2&gt;
-&lt;p&gt;One of the features I needed was to make the auto-complete fill out more than
-one field at once. Well, &lt;code class="docutils literal"&gt;&amp;lt;datalist&amp;gt;&lt;/code&gt; has no specific support for that. It only
+tries to expand the list. But wiring it up to a <code class="docutils literal">fetch()</code> call to a REST API
+should not be hard, and browsers work correctly when the datalist changes.</p>
+</section>
+<section id="an-emoji-hack">
+<h1>An emoji hack</h1>
+<p>One of the features I needed was to make the auto-complete fill out more than
+one field at once. Well, <code class="docutils literal">&lt;datalist&gt;</code> has no specific support for that. It only
 supports showing a list and putting the value in the input box it’s connected
-to. But choosing something from the list fires the usual &lt;code class="docutils literal"&gt;input&lt;/code&gt; event. I
+to. But choosing something from the list fires the usual <code class="docutils literal">input</code> event. I
 opted to do this: show every entry with a sparkles emoji (✨) in front, with the
 two other fields also inside this string, delimited by other emoji, and then
-catch the &lt;code class="docutils literal"&gt;input&lt;/code&gt; event.  If the field beigns with ✨, then use a regex to go
+catch the <code class="docutils literal">input</code> event.  If the field beigns with ✨, then use a regex to go
 from one emoji-delimited string to three, and place the correct strings in
-three input boxes (while also removing the sparkles from the first field).&lt;/p&gt;
-&lt;p&gt;Yes, it’s a hack. But it’s pretty okay appearance-wise, and it does work. It
+three input boxes (while also removing the sparkles from the first field).</p>
+<p>Yes, it’s a hack. But it’s pretty okay appearance-wise, and it does work. It
 wouldn’t have worked so well in Edge, but I didn’t even know about this
 behavior before writing this blog post, and the initial sparkles emoji could be
-dropped and I could still make it work.&lt;/p&gt;
-&lt;/section&gt;
-&lt;section id="works-on-mobile-yes-except"&gt;
-&lt;h2&gt;Works on mobile? Yes, except…&lt;/h2&gt;
-&lt;p&gt;I went on and deployed the &lt;code class="docutils literal"&gt;&amp;lt;datalist&amp;gt;&lt;/code&gt;-based autocomplete to my site. It
+dropped and I could still make it work.</p>
+</section>
+<section id="works-on-mobile-yes-except">
+<h1>Works on mobile? Yes, except…</h1>
+<p>I went on and deployed the <code class="docutils literal">&lt;datalist&gt;</code>-based autocomplete to my site. It
 looked good, worked fine. To use the thing on mobile, I’ve got a special
 launcher app. Its main reason for existence? I want a home screen icon, but
 Chrome only allows progressive web apps to do that (and that’s busywork I don’t
 feel like doing), and back then, Firefox (which has no such restrictions) did
-not support &lt;code class="docutils literal"&gt;&amp;lt;datalist&amp;gt;&lt;/code&gt; on Android.  The app is fairly simple, with a
+not support <code class="docutils literal">&lt;datalist&gt;</code> on Android.  The app is fairly simple, with a
 standard WebView widget and a slide-out navigation drawer, and a few other nice
-things, and it’s 120 SLOC of Kotlin.&lt;/p&gt;
-&lt;p&gt;But then, I bought a new phone, and with it, upgraded from Android 7 to 9. And
+things, and it’s 120 SLOC of Kotlin.</p>
+<p>But then, I bought a new phone, and with it, upgraded from Android 7 to 9. And
 I hit a bug in Chrome, which is still not fixed. The bug?
-&lt;a class="reference external" href="https://bugs.chromium.org/p/chromium/issues/detail?id=949555"&gt;HTML datalist doesn’t work on Android 8 or higher in WebView&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;Oh. We’ve got a bit of a problem. Firefox still didn’t seem to support
-&lt;code class="docutils literal"&gt;&amp;lt;datalist&amp;gt;&lt;/code&gt;. But there’s one more way to make an app show a webpage: Custom
+<a class="reference external" href="https://bugs.chromium.org/p/chromium/issues/detail?id=949555">HTML datalist doesn’t work on Android 8 or higher in WebView</a>.</p>
+<p>Oh. We’ve got a bit of a problem. Firefox still didn’t seem to support
+<code class="docutils literal">&lt;datalist&gt;</code>. But there’s one more way to make an app show a webpage: Custom
 Tabs. This is a feature you’ve probably seen around Android, and it’s somewhere
 in between. The app gets minimum control over the appearance of the toolbar,
 but the “real” web browser is responsible for rendering the page. Chrome in a
-Custom Tab supports &lt;code class="docutils literal"&gt;&amp;lt;datalist&amp;gt;&lt;/code&gt;. So I built a small app to do what I wanted.&lt;/p&gt;
-&lt;p&gt;There was just one minor thing to fix. My default browser on mobile is &lt;a class="reference external" href="https://support.mozilla.org/en-US/kb/focus"&gt;Firefox
-Focus&lt;/a&gt;. The main features of
+Custom Tab supports <code class="docutils literal">&lt;datalist&gt;</code>. So I built a small app to do what I wanted.</p>
+<p>There was just one minor thing to fix. My default browser on mobile is <a class="reference external" href="https://support.mozilla.org/en-US/kb/focus">Firefox
+Focus</a>. The main features of
 Focus are tracking protection, content blocking, and storing zero
 history and cookies (permanent incognito mode with one-click clearing). This is
 perfect for clicking random links, especially since I hate Chrome’s insistence
 on showing webpages you visited 5 years ago once when autocompleting URLs.
 (Chrome is my secondary browser on mobile; on desktop, I almost always have an
-incognito window open.)&lt;/p&gt;
-&lt;p&gt;Why is Focus relevant to this story? One, it (still) does not support the tag.
+incognito window open.)</p>
+<p>Why is Focus relevant to this story? One, it (still) does not support the tag.
 Two, the default browser is also the provider of the Custom Tabs. Which is
 great for my web-browsing habits, but won’t solve the problem.  Fortunately,
 it’s just a one-line change to send the intent directly to Chrome. The entire
-thing is less than 30 lines long. You can see the full &lt;a class="reference external" href="https://chriswarrick.com/listings/android-chrome-custom-tabs/CustomTabsActivity.java.html"&gt;CustomTabsActivity.java&lt;/a&gt; file, but the relevant bits are below.&lt;/p&gt;
-&lt;div class="code"&gt;&lt;table class="codetable"&gt;&lt;tr&gt;&lt;td class="linenos linenodiv"&gt;&lt;a href="https://chriswarrick.com/blog/2020/02/09/when-html-is-not-enough-a-tale-of-the-datalist-element/#rest_code_36013fc4d2e34639b0bc257cfcbc3c5b-1"&gt;&lt;code data-line-number="1"&gt;&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;code&gt;&lt;a id="rest_code_36013fc4d2e34639b0bc257cfcbc3c5b-1" name="rest_code_36013fc4d2e34639b0bc257cfcbc3c5b-1"&gt;&lt;/a&gt;&lt;span class="n"&gt;CustomTabsIntent&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="na"&gt;Builder&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;builder&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;new&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;CustomTabsIntent&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="na"&gt;Builder&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
-&lt;/code&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td class="linenos linenodiv"&gt;&lt;a href="https://chriswarrick.com/blog/2020/02/09/when-html-is-not-enough-a-tale-of-the-datalist-element/#rest_code_36013fc4d2e34639b0bc257cfcbc3c5b-2"&gt;&lt;code data-line-number="2"&gt;&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;code&gt;&lt;a id="rest_code_36013fc4d2e34639b0bc257cfcbc3c5b-2" name="rest_code_36013fc4d2e34639b0bc257cfcbc3c5b-2"&gt;&lt;/a&gt;&lt;span class="c1"&gt;// Optionally, configure appearance and buttons on toolbar.&lt;/span&gt;
-&lt;/code&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td class="linenos linenodiv"&gt;&lt;a href="https://chriswarrick.com/blog/2020/02/09/when-html-is-not-enough-a-tale-of-the-datalist-element/#rest_code_36013fc4d2e34639b0bc257cfcbc3c5b-3"&gt;&lt;code data-line-number="3"&gt;&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;code&gt;&lt;a id="rest_code_36013fc4d2e34639b0bc257cfcbc3c5b-3" name="rest_code_36013fc4d2e34639b0bc257cfcbc3c5b-3"&gt;&lt;/a&gt;&lt;span class="n"&gt;CustomTabsIntent&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;intent&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;builder&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="na"&gt;build&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
-&lt;/code&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td class="linenos linenodiv"&gt;&lt;a href="https://chriswarrick.com/blog/2020/02/09/when-html-is-not-enough-a-tale-of-the-datalist-element/#rest_code_36013fc4d2e34639b0bc257cfcbc3c5b-4"&gt;&lt;code data-line-number="4"&gt;&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;code&gt;&lt;a id="rest_code_36013fc4d2e34639b0bc257cfcbc3c5b-4" name="rest_code_36013fc4d2e34639b0bc257cfcbc3c5b-4"&gt;&lt;/a&gt;&lt;span class="c1"&gt;// Force browser to Chrome instead of system default.&lt;/span&gt;
-&lt;/code&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td class="linenos linenodiv"&gt;&lt;a href="https://chriswarrick.com/blog/2020/02/09/when-html-is-not-enough-a-tale-of-the-datalist-element/#rest_code_36013fc4d2e34639b0bc257cfcbc3c5b-5"&gt;&lt;code data-line-number="5"&gt;&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;code&gt;&lt;a id="rest_code_36013fc4d2e34639b0bc257cfcbc3c5b-5" name="rest_code_36013fc4d2e34639b0bc257cfcbc3c5b-5"&gt;&lt;/a&gt;&lt;span class="n"&gt;intent&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="na"&gt;intent&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="na"&gt;setPackage&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"com.android.chrome"&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;/code&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td class="linenos linenodiv"&gt;&lt;a href="https://chriswarrick.com/blog/2020/02/09/when-html-is-not-enough-a-tale-of-the-datalist-element/#rest_code_36013fc4d2e34639b0bc257cfcbc3c5b-6"&gt;&lt;code data-line-number="6"&gt;&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;code&gt;&lt;a id="rest_code_36013fc4d2e34639b0bc257cfcbc3c5b-6" name="rest_code_36013fc4d2e34639b0bc257cfcbc3c5b-6"&gt;&lt;/a&gt;&lt;span class="n"&gt;intent&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="na"&gt;launchUrl&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;this&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;Uri&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="na"&gt;parse&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"https://chriswarrick.com/"&lt;/span&gt;&lt;span class="p"&gt;));&lt;/span&gt;
-&lt;/code&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;&lt;p&gt;It seems to work well, the list is displayed, and it can be used to input
-stuff, the emoji hack works too.&lt;/p&gt;
-&lt;p&gt;There was one more bug with Chrome on Android. Typing a character sometimes led to
-it appearing twice: I typed &lt;em&gt;A&lt;/em&gt;, the hints appeared, then the text box started
-showing &lt;em&gt;AA&lt;/em&gt;, and my hints disappeared. I can’t reproduce it right now, but
-that also made the entire flow just annoying.&lt;/p&gt;
-&lt;/section&gt;
-&lt;section id="aftermath"&gt;
-&lt;h2&gt;Aftermath&lt;/h2&gt;
-&lt;p&gt;With all the browser bugs, support issues, and various glitches, I decided to
+thing is less than 30 lines long. You can see the full <a class="reference external" href="https://chriswarrick.com/listings/android-chrome-custom-tabs/CustomTabsActivity.java.html">CustomTabsActivity.java</a> file, but the relevant bits are below.</p>
+<div class="code"><table class="codetable"><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2020/02/09/when-html-is-not-enough-a-tale-of-the-datalist-element/#rest_code_bcfa6063001f4807a06ebb53b9d81b94-1"><code data-line-number="1"></code></a></td><td class="code"><code><a id="rest_code_bcfa6063001f4807a06ebb53b9d81b94-1" name="rest_code_bcfa6063001f4807a06ebb53b9d81b94-1"></a><span class="n">CustomTabsIntent</span><span class="p">.</span><span class="na">Builder</span><span class="w"> </span><span class="n">builder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">CustomTabsIntent</span><span class="p">.</span><span class="na">Builder</span><span class="p">();</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2020/02/09/when-html-is-not-enough-a-tale-of-the-datalist-element/#rest_code_bcfa6063001f4807a06ebb53b9d81b94-2"><code data-line-number="2"></code></a></td><td class="code"><code><a id="rest_code_bcfa6063001f4807a06ebb53b9d81b94-2" name="rest_code_bcfa6063001f4807a06ebb53b9d81b94-2"></a><span class="c1">// Optionally, configure appearance and buttons on toolbar.</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2020/02/09/when-html-is-not-enough-a-tale-of-the-datalist-element/#rest_code_bcfa6063001f4807a06ebb53b9d81b94-3"><code data-line-number="3"></code></a></td><td class="code"><code><a id="rest_code_bcfa6063001f4807a06ebb53b9d81b94-3" name="rest_code_bcfa6063001f4807a06ebb53b9d81b94-3"></a><span class="n">CustomTabsIntent</span><span class="w"> </span><span class="n">intent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">builder</span><span class="p">.</span><span class="na">build</span><span class="p">();</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2020/02/09/when-html-is-not-enough-a-tale-of-the-datalist-element/#rest_code_bcfa6063001f4807a06ebb53b9d81b94-4"><code data-line-number="4"></code></a></td><td class="code"><code><a id="rest_code_bcfa6063001f4807a06ebb53b9d81b94-4" name="rest_code_bcfa6063001f4807a06ebb53b9d81b94-4"></a><span class="c1">// Force browser to Chrome instead of system default.</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2020/02/09/when-html-is-not-enough-a-tale-of-the-datalist-element/#rest_code_bcfa6063001f4807a06ebb53b9d81b94-5"><code data-line-number="5"></code></a></td><td class="code"><code><a id="rest_code_bcfa6063001f4807a06ebb53b9d81b94-5" name="rest_code_bcfa6063001f4807a06ebb53b9d81b94-5"></a><span class="n">intent</span><span class="p">.</span><span class="na">intent</span><span class="p">.</span><span class="na">setPackage</span><span class="p">(</span><span class="s">&quot;com.android.chrome&quot;</span><span class="p">);</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2020/02/09/when-html-is-not-enough-a-tale-of-the-datalist-element/#rest_code_bcfa6063001f4807a06ebb53b9d81b94-6"><code data-line-number="6"></code></a></td><td class="code"><code><a id="rest_code_bcfa6063001f4807a06ebb53b9d81b94-6" name="rest_code_bcfa6063001f4807a06ebb53b9d81b94-6"></a><span class="n">intent</span><span class="p">.</span><span class="na">launchUrl</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">Uri</span><span class="p">.</span><span class="na">parse</span><span class="p">(</span><span class="s">&quot;https://chriswarrick.com/&quot;</span><span class="p">));</span>
+</code></td></tr></table></div><p>It seems to work well, the list is displayed, and it can be used to input
+stuff, the emoji hack works too.</p>
+<p>There was one more bug with Chrome on Android. Typing a character sometimes led to
+it appearing twice: I typed <em>A</em>, the hints appeared, then the text box started
+showing <em>AA</em>, and my hints disappeared. I can’t reproduce it right now, but
+that also made the entire flow just annoying.</p>
+</section>
+<section id="aftermath">
+<h1>Aftermath</h1>
+<p>With all the browser bugs, support issues, and various glitches, I decided to
 build an autocomplete widget of my own. I took the CSS from Bootstrap 4, and
 used Popper.js to do the positioning. It looks and works better, has keyboard
 support, and is definitely less hacky (the emoji is still there, because they
@@ -145,16 +151,17 @@ the autocomplete widgets out there, because they often fail when you hold the
 mouse a bit longer; also, it can reposition itself to the top if there’s more
 space. All that in just 198 SLOC of TypeScript. (I also discovered a bug in my
 code that made it work a bit worse, fixing it for the old implementation would
-still not fix the other issues.)&lt;/p&gt;
-&lt;p&gt;What’s the moral of the story? Even though HTML 5 has been a standard for many
+still not fix the other issues.)</p>
+<p>What’s the moral of the story? Even though HTML 5 has been a standard for many
 years, browser support for the new tags still seems to be an issue. And
 sometimes, it’s better to just put in the extra work and build a good UI on
-your own, instead of trusting the browser to do it right.&lt;/p&gt;
-&lt;p&gt;The same applies to other “new” HTML 5 form elements.  &lt;code class="docutils literal"&gt;&amp;lt;input &lt;span class="pre"&gt;type="date"&amp;gt;&lt;/span&gt;&lt;/code&gt;
+your own, instead of trusting the browser to do it right.</p>
+<p>The same applies to other “new” HTML 5 form elements.  <code class="docutils literal">&lt;input <span class="pre">type=&quot;date&quot;&gt;</span></code>
 is not supported in desktop Safari, and is fairly ugly in desktop Firefox and
 Chrome.  It displays the standard OS picker on mobile, which gets you a
-calendar on Android, but a &lt;a class="reference external" href="https://developer.apple.com/design/human-interface-guidelines/ios/controls/pickers/"&gt;scrolling picker&lt;/a&gt; on iOS.
-&lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;datetime-local&lt;/span&gt;&lt;/code&gt; is currently Chrome-only.  &lt;code class="docutils literal"&gt;month&lt;/code&gt; lets you click on a day
+calendar on Android, but a <a class="reference external" href="https://developer.apple.com/design/human-interface-guidelines/ios/controls/pickers/">scrolling picker</a> on iOS.
+<code class="docutils literal"><span class="pre">datetime-local</span></code> is currently Chrome-only.  <code class="docutils literal">month</code> lets you click on a day
 and end up with an entire month selected in Chrome.  A custom component with
-JavaScript would be far more consistent and often easier to use.&lt;/p&gt;
-&lt;/section&gt;</description><category>HTML</category><category>HTML5</category><category>JavaScript</category><category>TypeScript</category><category>web development</category><guid>https://chriswarrick.com/blog/2020/02/09/when-html-is-not-enough-a-tale-of-the-datalist-element/</guid><pubDate>Sun, 09 Feb 2020 15:30:00 GMT</pubDate></item></channel></rss>
+JavaScript would be far more consistent and often easier to use.</p>
+</section>
+]]></content:encoded><category>Internet</category><category>HTML</category><category>HTML5</category><category>JavaScript</category><category>TypeScript</category><category>web development</category></item></channel></rss>

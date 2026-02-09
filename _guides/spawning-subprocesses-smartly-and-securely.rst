@@ -1,1 +1,0 @@
-../posts/2017/09/02/spawning-subprocesses-smartly-and-securely.rst

@@ -1,25 +1,22 @@
-<!--
-.. title: Distro Hopping, Server Edition
-.. slug: distro-hopping-server-edition
-.. date: 2025-11-09 19:00:00+01:00
-.. updated: 2025-11-23 18:30:00+01:00
-.. tags: Linux, Ubuntu, Fedora, Python, Docker, Django
-.. category: Linux
-.. description: I’ve recently migrated my VPS from Fedora to Ubuntu. Here’s a list of things that might be useful to keep in mind before, during, and after a migration of a server that hosts publicly accessible Web sites and applications, as well as other personal services, and how to get rid of the most annoying parts of Ubuntu.
-.. type: text
--->
-
+---
+title: "Distro Hopping, Server Edition"
+published: "2025-11-09 19:00:00+01:00"
+updated: "2025-11-23 18:30:00+01:00"
+tags: ["Linux", "Ubuntu", "Fedora", "Python", "Docker", "Django"]
+category: "Linux"
+description: "I’ve recently migrated my VPS from Fedora to Ubuntu. Here’s a list of things that might be useful to keep in mind before, during, and after a migration of a server that hosts publicly accessible Web sites and applications, as well as other personal services, and how to get rid of the most annoying parts of Ubuntu."
+---
 I’ve recently migrated my VPS from Fedora to Ubuntu. Here’s a list of things that might be useful to keep in mind before, during, and after a migration of a server that hosts publicly accessible Web sites and applications, as well as other personal services, and how to get rid of the most annoying parts of Ubuntu.
 
 <!-- TEASER_END -->
 
-# Why switch?
+## Why switch?
 
 Fedora is a relatively popular distro, so it’s well supported by software vendors. Its packagers adopt a no-nonsense approach, making very little changes that deviate from the upstream.
 
 Ubuntu is not my favorite distro, far from it. While it is perhaps the most popular distro out there, its packages contain many more patches compared to Fedora, and Canonical (the company behind Ubuntu) are famous for betting on the wrong horse (Unity, upstart, Mir…). But one thing Ubuntu does well is stability. Fedora makes releases every 6 months, and those releases are supported for just 13 months, which means upgrading at least every year. Every upgrade may introduce incompatibilities, almost every upgrade requires recreating Python venvs. That gets boring fast, and it does not necessarily bring benefits. Granted, the Fedora system upgrade works quite well, and I upgraded through at least eight releases without a re-install, but I would still prefer to avoid it. That’s why I went with Ubuntu LTS, which is supported for five years, with a new release every two years, but which still comes with reasonably new software (and with many third-party repositories if something is missing or outdated).
 
-# Test your backups
+## Test your backups
 
 I have a backup “system” that’s a bunch of Bash scripts. After upgrading one of the services that is being backed up, the responsible script started crashing, and thus backups stopped working. Another thing that broke was e-mails from cron, so I didn’t know anything was wrong.
 
@@ -29,7 +26,7 @@ So, here’s a reminder not only to test your backups regularly, but also to mak
 
 Bonus cron tip: set `MAILFROM=` and `MAILTO=` in your crontab if your SMTP server does not like the values cron uses by default.
 
-# Think about IP address reassignment (or pray to the DNS gods)
+## Think about IP address reassignment (or pray to the DNS gods)
 
 A new VPS or cloud server probably means a new IP address. But if you get a new IP address, that might complicate the migration of your publicly accessible applications. If you’re proxying all your Web properties through Cloudflare or something similar, that’s probably not an issue. But if you have a raw A record somewhere, things can get complicated. DNS servers and operating systems do a lot of caching. The conventional wisdom is to wait 24 or even 48 hours after changing DNS values. This might be true if your TTL is set to a long value, but if your TTL is short, the only worry are DNS servers that ignore TTL values and cache records for longer. If you plan a migration, it’s good to check your TTL well in advance, and not worry too much about broken DNS servers.
 
@@ -37,7 +34,7 @@ But you might not need a new IP. Carefully review your cloud provider’s IP man
 
 If you’re not okay with any downtime, you would probably want to leverage the floating/elastic IP feature, or hope DNS propagates quickly enough.
 
-# Trim the fat
+## Trim the fat
 
 My VPS ran a lot of services I don’t need anymore, but never really got around to decommissioning. For example, I had a full Xfce install with VNC access (the VNC server was only running when needed). I haven’t actually used the desktop for ages, so I just dropped it.
 
@@ -57,13 +54,13 @@ action "relay" relay host smtp+tls://smtp@smtp.example.net:587 auth <secrets> ma
 match from any for any action "relay"
 ```
 
-# Dockerize everything…
+## Dockerize everything…
 
 My server runs a few different apps, some of which are exposed on the public Internet, while some do useful work in the background. The services I have set up most recently are containerized with the help of Docker. The only Docker-based service that was stateful (and did not just use folders mounted as volumes) was a MariaDB database. Migrating that is straightforward with a simple dump-and-restore.
 
 Of course, not everything on my server is in Docker. The public-facing nginx install isn’t, and neither is PostgreSQL (but that was also a quick dump-and-restore migration with some extra steps).
 
-# …especially Python
+## …especially Python
 
 But then, there are the Python apps. Python the language is cool (if a little slow), but the packaging story is a [total](https://chriswarrick.com/blog/2023/01/15/how-to-improve-python-packaging/) dumpster [fire](https://chriswarrick.com/blog/2024/01/15/python-packaging-one-year-later/).
 
@@ -73,7 +70,9 @@ Anyway, I have three Python apps. One of them is [Isso](https://isso-comments.de
 
 The other two apps are Django projects built by yours truly. They are not containerized, they exist in venvs created using the system Python. Moving venvs between machines is generally impossible, so I had to re-create them. Of course, I hit a deprecation, because the Python maintainers (especially in the packaging world) does not understand their responsibility as maintainers of the most popular programming language. This time, it was caused by [an old editable install with setuptools (using setup.py develop, not PEP 660)](https://github.com/pypa/pip/issues/11457), and installs with more recent pip/setuptools versions would not have this error… although [some people want to remove the fallback to setuptools if there is no pyproject.toml](https://discuss.python.org/t/do-we-want-to-keep-the-build-system-default-for-pyproject-toml/104759), so you need to stay up to date with the whims of the Python packaging industry if you want to use Python software.
 
-# Don’t bother with ufw
+**Update 2026-02-06:** [I migrated the two Django apps to Docker and wrote a post about it.](/blog/2026/02/06/deploying-python-web-applications-with-docker/)
+
+## Don’t bother with ufw
 
 Ubuntu ships with `ufw`, the “uncomplicated firewall”, in the default install. I was previously using `firewalld`, a Red Hat-adjacent project, but I decided to give ufw a try. Since if it’s part of the default install, it might be supported better by the system.
 
@@ -83,7 +82,7 @@ Docker [does integrate with firewalld](https://docs.docker.com/engine/network/pa
 
 *Update (2025-11-23):* The iptables integration was not very stable on my Ubuntu system, so I disabled the iptables integration and switched to [a simpler config in firewalld only](https://dev.to/soerenmetje/how-to-secure-a-docker-host-using-firewalld-2joo).
 
-# Kill the ads (and other nonsense too)
+## Kill the ads (and other nonsense too)
 
 Red Hat makes money by selling a stable OS with at least 10 years of support to enterprises, and their free offering is Fedora, with just 13 months of support; RHEL releases are branched off from Fedora. SUSE also sells SUSE Linux Enterprise and has openSUSE as the free offering (but the relationship between the paid and free version is more complicated).
 
@@ -100,13 +99,13 @@ Also, Ubuntu installs snap by default. Snap is a terrible idea. Luckily, there a
 sudo apt autoremove snapd lxd-installer
 ```
 
-# The cost of downgrading
+## The cost of downgrading
 
 Going from Fedora 42 (April 2025) to Ubuntu 24.04 (April 2024) means some software will be downgraded in the process. In general, this does not matter, as most software does not mind downgrades as much. One notable exception is WeeChat, the IRC client, whose config files are versioned, and Ubuntu’s version is not compatible with the one in Fedora. But here’s where Ubuntu’s popularity shines: [WeeChat has its own repositories for Debian and Ubuntu](https://weechat.org/download/debian/), so I could just get the latest version without building it myself or trying to steal packages from a newer version.
 
 Other than WeeChat, I haven’t experienced any other issues with software due to a downgrade. Some of it is luck (or not using new/advanced features), some of it is software caring about backwards compatibility.
 
-# Conclusion
+## Conclusion
 
 Was it worth it? Time will tell. Upgrading Fedora itself was not that hard, and I expect Ubuntu upgrades to be OK too — the annoying part was cleaning up and getting things to work after the upgrade, and the switch means I will have to do it only every 2-4 years instead of every 6-12 months.
 

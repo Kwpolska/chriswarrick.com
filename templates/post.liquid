@@ -1,0 +1,55 @@
+{% from 'helper' import renderPostHeader %}
+{% layout "base.liquid" %}
+
+<article class="post-text h-entry hentry postpage postbox" itemscope="itemscope" itemtype="http://schema.org/Article">
+  {{ renderPostHeader(Item, true) }}
+  <div class="e-content entry-content" itemprop="articleBody text">
+    {% if Item.Teaser %}
+      <div class="lead">
+        {{ Item.Teaser | raw }}
+      </div>
+    {% endif %}
+    {{ Item.Content | raw }}
+  </div>
+</article>
+
+{% if Item.Meta.Guide %}
+  <div class="card guide-footer">
+    <div class="card-header bg-primary border-primary"><h3>That’s all!</h3></div>
+    <div class="card-body">
+      Hopefully, the guide worked for you and {{ Item.Meta.Guide.Effect }}. If so, great! Otherwise, make sure you did everything as stated in this guide. If you are still stuck, ask for help in the comments.
+    </div>
+    <div class="card-footer"><a href="/guides/">Check out my other guides!</a></div>
+  </div>
+{% endif %}
+
+{% if PostNavigation.Previous != null or PostNavigation.Next != null %}
+  <aside class="postpromonav">
+    <nav>
+      <ul class="pager hidden-print">
+        {% if PostNavigation.Previous != null %}
+          <li class="previous">
+            <a href="{{ PostNavigation.Previous.Url }}" rel="prev"
+               title="{{ PostNavigation.Previous.Title }}">Previous post</a>
+          </li>
+        {% endif %}
+        {% if PostNavigation.Next != null %}
+          <li class="next">
+            <a href="{{ PostNavigation.Next.Url }}" rel="prev"
+               title="{{ PostNavigation.Next.Title }}">Next post</a>
+          </li>
+        {% endif %}
+      </ul>
+    </nav>
+  </aside>
+{% endif %}
+
+{% if Item.Meta.Comments %}
+  <section class="comments">
+    <div data-title="{{ Item.Title }}" id="isso-thread"></div>
+    <script src="https://isso.chriswarrick.com/js/embed.min.js" data-isso="https://isso.chriswarrick.com/"
+            data-isso-lang="en" data-isso-require-author="true" data-isso-require-email="true" data-isso-gravatar="true"
+            data-isso-avatar="false" data-isso-css="false" data-isso-vote="false"
+            data-isso-reply-notifications="true"></script>
+  </section>
+{% endif %}

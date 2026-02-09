@@ -1,161 +1,188 @@
 <!DOCTYPE html>
-<html class="limited-width larger-font" prefix="
-og: http://ogp.me/ns#
-" lang="en">
+<html class="limited-width larger-font" prefix="og: http://ogp.me/ns#" lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Setting up a Python development environment | Chris Warrick</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.css" integrity="sha256-FqCzNnnyXl5HxHMdb+RQ/RV/X7fqfPcQYy+G2gFL3Xk=" crossorigin="anonymous">
+  <meta charset="utf-8">
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Setting up a Python development environment | Chris Warrick</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.css"
+        integrity="sha256-FqCzNnnyXl5HxHMdb+RQ/RV/X7fqfPcQYy+G2gFL3Xk=" crossorigin="anonymous">
 <!--#if expr="$HTTP_COOKIE=/colorScheme\=light/" --><link href="/assets/css/all.css?v=20230115" rel="stylesheet" type="text/css" id="kw-all-css">
 <script type="text/javascript">var colorScheme='light';var colorSchemesEnabled=true;</script><!--#else--><link href="/assets/css/all-dark.css?v=20230115" rel="stylesheet" type="text/css" id="kw-all-css">
-<script type="text/javascript">var colorScheme='dark';var colorSchemesEnabled=true;</script><!--#endif--><link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,700,700i|Source+Serif+Pro:600&amp;display=swap&amp;subset=latin-ext" rel="stylesheet">
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
-<meta name="theme-color" content="#00aadd">
-<meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="/rss.xml">
-<link rel="canonical" href="https://chriswarrick.com/blog/2017/07/03/setting-up-a-python-development-environment/">
-<link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="16x16 32x32 48x48 64x64 128x128 256x256">
-<link rel="icon" type="image/png" href="/assets/img/logo512.png">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<!--[if lt IE 9]><script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]--><meta name="author" content="Chris Warrick">
-<link rel="prev" href="/blog/2017/06/24/apple-broke-the-display-menu-so-i-wrote-my-own/" title="Apple broke the display menu, so I wrote my own" type="text/html">
-<link rel="next" href="/blog/2017/08/03/gynvaels-mission-11-en-python-bytecode-reverse-engineering/" title="Gynvael’s Mission 11 (en): Python bytecode reverse-engineering" type="text/html">
-<meta property="og:site_name" content="Chris Warrick">
-<meta property="og:title" content="Setting up a Python development environment">
-<meta property="og:url" content="https://chriswarrick.com/blog/2017/07/03/setting-up-a-python-development-environment/">
-<meta property="og:description" content="Setting up Python is usually simple, but there are some places where newcomers
-(and experienced users) need to be careful. What versions are there? What’s the
-difference between Python, CPython, Anaco">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2017-07-03T12:40:00+02:00">
-<meta property="article:tag" content="best practices">
-<meta property="article:tag" content="devel">
-<meta property="article:tag" content="guide">
-<meta property="article:tag" content="Python">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:creator" content="@Kwpolska">
+<script type="text/javascript">var colorScheme='dark';var colorSchemesEnabled=true;</script><!--#endif-->
+  <link
+    href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,700,700i|Source+Serif+Pro:600&amp;display=swap&amp;subset=latin-ext"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css"
+        integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+  <meta name="theme-color" content="#00aadd">
+  <meta name="generator" content="Chris Warrick’s Yet Another Blog Generator">
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/rss.xml">
+  <link rel="canonical" href="https://chriswarrick.com/">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="16x16 32x32 48x48 64x64 128x128 256x256">
+  <link rel="icon" type="image/png" href="/assets/img/logo512.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="prev" href="/blog/2017/06/24/apple-broke-the-display-menu-so-i-wrote-my-own/" type="text/html">
+  <link rel="next" href="/blog/2017/08/03/gynvaels-mission-11-en-python-bytecode-reverse-engineering/" type="text/html">
+  
 </head>
 <body>
 <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
 
-<!-- Menubar -->
-
-<nav class="navbar navbar-expand-md navbar-kw bg-dark static-top mb-4"><div class="container">
-<!-- This keeps the margins nice -->
-        <a class="navbar-brand" href="/">
-            <img src="/assets/img/logo.png" srcset="/assets/img/logo2x.png 2x" alt="Chris Warrick" id="logo"><span id="blog-title">Chris Warrick</span>
-        </a>
-        <div>
-        <button class="navbar-toggler mr-2" id="color-changer-mobile" type="button" aria-label="Change color scheme">
-            <span class="color-changer"></span>
-        </button>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        </div>
-        <div class="collapse navbar-collapse" id="bs-navbar">
-            <ul class="navbar-nav mr-auto">
-<li class="nav-item">
-<a href="/contact/" class="nav-link">Contact</a>
-                </li>
-<li class="nav-item">
-<a href="/projects/" class="nav-link">Projects</a>
-                </li>
-<li class="nav-item">
-<a href="/guides/" class="nav-link">Guides</a>
-                </li>
-<li class="nav-item">
-<a href="/blog/" class="nav-link">Archives</a>
-                </li>
-<li class="nav-item">
-<a href="/search/" class="nav-link">Search</a>
-
-                
-            </li>
-</ul>
-<ul class="navbar-nav navbar-right">
-<li class="nav-item" id="color-changer-menu">
-<a href="#" class="nav-link" id="color-changer-btn">
-                <div class="color-changer"></div>
-                <span id="color-changer-text"><!--#if expr="$HTTP_COOKIE=/colorScheme\=light/" -->Dark Mode<!--#else -->Light Mode<!--#endif--></span>
-                </a>
-                </li>
-            </ul>
-</div>
-<!-- /.navbar-collapse -->
+<nav class="navbar navbar-expand-md navbar-kw bg-dark static-top mb-4">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <img src="/assets/img/logo.png" srcset="/assets/img/logo2x.png 2x" alt="Chris Warrick" id="logo"><span
+        id="blog-title">Chris Warrick</span>
+    </a>
+    <div>
+      <button class="navbar-toggler mr-2" id="color-changer-mobile" type="button" aria-label="Change color scheme">
+        <span class="color-changer"></span>
+      </button>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar"
+              aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
     </div>
-<!-- /.container -->
-</nav><!-- End of Menubar --><div class="container" id="content" role="main">
-    <div class="body-content">
-        <!--Body content-->
+    <div class="collapse navbar-collapse" id="bs-navbar">
+      <ul class="navbar-nav mr-auto">
         
-        <div id="cookiebox"></div>
-<article class="post-text h-entry hentry postpage postbox" itemscope="itemscope" itemtype="http://schema.org/Article"><header class="page-header"><h1 class="p-name entry-title" itemprop="headline name">
-    <a href="/blog/2017/07/03/setting-up-a-python-development-environment/" class="u-url">Setting up a Python development environment</a>
-    </h1>
+        
+          <li class="nav-item">
+            <a href="/contact/" class="nav-link">Contact</a>
+          </li>
+        
+        
+        
+          <li class="nav-item">
+            <a href="/projects/" class="nav-link">Projects</a>
+          </li>
+        
+        
+        
+          <li class="nav-item">
+            <a href="/guides/" class="nav-link">Guides</a>
+          </li>
+        
+        
+        
+          <li class="nav-item">
+            <a href="/blog/" class="nav-link">Archives</a>
+          </li>
+        
+        
+        
+          <li class="nav-item">
+            <a href="/blog/tags/" class="nav-link">Tags</a>
+          </li>
+        
+        
+      </ul>
+      <ul class="navbar-nav navbar-right">
+        <li class="nav-item" id="color-changer-menu">
+          <a href="#" class="nav-link" id="color-changer-btn">
+            <div class="color-changer"></div>
+            <span id="color-changer-text">Light Mode</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<div class="container" id="content" role="main">
+  <div class="body-content">
+    <div id="cookiebox"></div>
+    
 
-    <div class="metadata">
-<a href="/blog/2017/07/03/setting-up-a-python-development-environment/" rel="bookmark" class="u-published"><time class="published dt-published" datetime="2017-07-03T12:40:00+02:00" itemprop="datePublished" title="03 July 2017 at 12:40">03 July 2017 at 12:40</time><time class="updated dt-updated" datetime="2018-09-21T16:20:00+02:00" title="updated 21 September 2018 at 16:20"> (updated 21 September 2018 at 16:20)</time></a>
-        <ul itemprop="keywords" class="tags post-bubbles list-inline">
-<li class="category-bubble"><a href="/blog/tags/cat_python/" style="background-color: #ffd43b !important">Python</a></li>
-           <li><a class="tag p-category" href="/blog/tags/best-practices/" rel="tag">best practices</a></li>
-           <li><a class="tag p-category" href="/blog/tags/devel/" rel="tag">devel</a></li>
-           <li><a class="tag p-category" href="/blog/tags/guide/" rel="tag">guide</a></li>
-           <li><a class="tag p-category" href="/blog/tags/python/" rel="tag">Python</a></li>
-        </ul>
-<span class="shortlink-bubble"><a href="https://go.chriswarrick.com/pysetup" title="Short link to this article (go.chriswarrick.com/pysetup)"><i class="fa fa-link"></i> pysetup</a></span>        
-<p class="guide-header">A <a href="/guides/">guide</a> about <span class="guide-topic">Python</span> for <span class="guide-platform">Windows, macOS, Linux</span></p>    </div>
-    </header><div class="e-content entry-content" itemprop="articleBody text">
-    <div class="lead">
+
+<article class="post-text h-entry hentry postpage postbox" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+<header class="page-header">
+  <h1 class="p-name entry-title" itemprop="headline name">
+    <a href="/blog/2017/07/03/setting-up-a-python-development-environment/" class="u-url">Setting up a Python development environment</a>
+  </h1>
+
+  <div class="metadata">
+    <a href="/blog/2017/07/03/setting-up-a-python-development-environment/" rel="bookmark" class="u-published">
+      <time class="published dt-published" datetime="2017-07-03T12:40:00.0000000&#x2B;02:00" itemprop="datePublished" title="03 July 2017 12:40">03 July 2017 12:40</time>
+    
+      <time class="updated dt-updated" datetime="2018-09-21T16:20:00.0000000&#x2B;02:00" title="updated 21 September 2018 16:20"> (updated 21 September 2018 16:20)</time>
+    
+    </a>
+    <ul itemprop="keywords" class="tags post-bubbles list-inline">
+      <li class="category-bubble"><a href="/blog/tags/cat_python" style="background-color: #dca900 !important">Python</a></li>
+      
+        <li><a class="tag p-category" href="/blog/tags/best-practices" rel="tag">best practices</a></li>
+      
+        <li><a class="tag p-category" href="/blog/tags/devel" rel="tag">devel</a></li>
+      
+        <li><a class="tag p-category" href="/blog/tags/guide" rel="tag">guide</a></li>
+      
+        <li><a class="tag p-category" href="/blog/tags/guide" rel="tag">guide</a></li>
+      
+        <li><a class="tag p-category" href="/blog/tags/python" rel="tag">Python</a></li>
+      
+    </ul>
+    <span class="shortlink-bubble"><a href="https://go.chriswarrick.com/pysetup" title="Short link to this article (go.chriswarrick.com/pysetup)"><i class="fa fa-link"></i> pysetup</a></span>
+    <p class="guide-header">A <a href="/guides/">guide</a> about <span class="guide-topic">Python</span> for <span class="guide-platform">Windows, macOS, Linux</span></p>
+  </div>
+</header>
+
+  <div class="e-content entry-content" itemprop="articleBody text">
+    
+      <div class="lead">
+        
 <p>Setting up Python is usually simple, but there are some places where newcomers
 (and experienced users) need to be careful. What versions are there? What’s the
 difference between Python, CPython, Anaconda, PyPy? Those and many other
 questions may stump new developers, or people wanting to use Python.</p>
-</div>
-</div>
+
+      </div>
+    
+    
 <p>Note: this guide is opinionated.</p>
-<nav class="contents right-toc" id="contents" role="doc-toc"><p class="topic-title"><a class="reference internal" href="/blog/2017/07/03/setting-up-a-python-development-environment/#top">Contents</a></p>
+<nav class="contents right-toc" id="contents" role="doc-toc">
+<p class="topic-title"><a class="reference internal" href="#top">Contents</a></p>
 <ul class="simple">
-<li>
-<p><a class="reference internal" href="/blog/2017/07/03/setting-up-a-python-development-environment/#glossary-and-questions" id="toc-entry-1">Glossary and questions</a></p>
+<li><p><a class="reference internal" href="#glossary-and-questions" id="toc-entry-1">Glossary and questions</a></p>
 <ul>
-<li><p><a class="reference internal" href="/blog/2017/07/03/setting-up-a-python-development-environment/#python-versions-2-vs-3" id="toc-entry-2">Python versions: 2 vs 3</a></p></li>
-<li><p><a class="reference internal" href="/blog/2017/07/03/setting-up-a-python-development-environment/#can-i-run-multiple-pythons-on-the-same-machine" id="toc-entry-3">Can I run multiple Pythons on the same machine?</a></p></li>
-<li><p><a class="reference internal" href="/blog/2017/07/03/setting-up-a-python-development-environment/#implementations" id="toc-entry-4">Implementations</a></p></li>
-<li><p><a class="reference internal" href="/blog/2017/07/03/setting-up-a-python-development-environment/#distributions" id="toc-entry-5">Distributions</a></p></li>
-<li><p><a class="reference internal" href="/blog/2017/07/03/setting-up-a-python-development-environment/#can-i-make-exe-files-from-python-programs" id="toc-entry-6">Can I make .exe files from Python programs?</a></p></li>
-<li><p><a class="reference internal" href="/blog/2017/07/03/setting-up-a-python-development-environment/#where-to-learn-python-where-to-get-help" id="toc-entry-7">Where to learn Python? Where to get help?</a></p></li>
+<li><p><a class="reference internal" href="#python-versions-2-vs-3" id="toc-entry-2">Python versions: 2 vs 3</a></p></li>
+<li><p><a class="reference internal" href="#can-i-run-multiple-pythons-on-the-same-machine" id="toc-entry-3">Can I run multiple Pythons on the same machine?</a></p></li>
+<li><p><a class="reference internal" href="#implementations" id="toc-entry-4">Implementations</a></p></li>
+<li><p><a class="reference internal" href="#distributions" id="toc-entry-5">Distributions</a></p></li>
+<li><p><a class="reference internal" href="#can-i-make-exe-files-from-python-programs" id="toc-entry-6">Can I make .exe files from Python programs?</a></p></li>
+<li><p><a class="reference internal" href="#where-to-learn-python-where-to-get-help" id="toc-entry-7">Where to learn Python? Where to get help?</a></p></li>
 </ul>
 </li>
-<li>
-<p><a class="reference internal" href="/blog/2017/07/03/setting-up-a-python-development-environment/#installing-python" id="toc-entry-8">Installing Python</a></p>
+<li><p><a class="reference internal" href="#installing-python" id="toc-entry-8">Installing Python</a></p>
 <ul>
-<li><p><a class="reference internal" href="/blog/2017/07/03/setting-up-a-python-development-environment/#windows" id="toc-entry-9">Windows</a></p></li>
-<li><p><a class="reference internal" href="/blog/2017/07/03/setting-up-a-python-development-environment/#macos" id="toc-entry-10">macOS</a></p></li>
-<li><p><a class="reference internal" href="/blog/2017/07/03/setting-up-a-python-development-environment/#linux-and-other-unix-like-oses" id="toc-entry-11">Linux (and other Unix-like OSes)</a></p></li>
+<li><p><a class="reference internal" href="#windows" id="toc-entry-9">Windows</a></p></li>
+<li><p><a class="reference internal" href="#macos" id="toc-entry-10">macOS</a></p></li>
+<li><p><a class="reference internal" href="#linux-and-other-unix-like-oses" id="toc-entry-11">Linux (and other Unix-like OSes)</a></p></li>
 </ul>
 </li>
-<li>
-<p><a class="reference internal" href="/blog/2017/07/03/setting-up-a-python-development-environment/#installing-packages" id="toc-entry-12">Installing packages</a></p>
+<li><p><a class="reference internal" href="#installing-packages" id="toc-entry-12">Installing packages</a></p>
 <ul>
-<li><p><a class="reference internal" href="/blog/2017/07/03/setting-up-a-python-development-environment/#user-installs" id="toc-entry-13">User installs</a></p></li>
-<li>
-<p><a class="reference internal" href="/blog/2017/07/03/setting-up-a-python-development-environment/#virtual-environments" id="toc-entry-14">Virtual environments</a></p>
+<li><p><a class="reference internal" href="#user-installs" id="toc-entry-13">User installs</a></p></li>
+<li><p><a class="reference internal" href="#virtual-environments" id="toc-entry-14">Virtual environments</a></p>
 <ul>
-<li><p><a class="reference internal" href="/blog/2017/07/03/setting-up-a-python-development-environment/#tools-and-management" id="toc-entry-15">Tools and management</a></p></li>
-<li><p><a class="reference internal" href="/blog/2017/07/03/setting-up-a-python-development-environment/#installation-and-usage" id="toc-entry-16">Installation and usage</a></p></li>
-<li><p><a class="reference internal" href="/blog/2017/07/03/setting-up-a-python-development-environment/#upgrading-and-moving" id="toc-entry-17">Upgrading and moving</a></p></li>
+<li><p><a class="reference internal" href="#tools-and-management" id="toc-entry-15">Tools and management</a></p></li>
+<li><p><a class="reference internal" href="#installation-and-usage" id="toc-entry-16">Installation and usage</a></p></li>
+<li><p><a class="reference internal" href="#upgrading-and-moving" id="toc-entry-17">Upgrading and moving</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="/blog/2017/07/03/setting-up-a-python-development-environment/#packages-with-c-extensions-binary" id="toc-entry-18">Packages with C extensions (binary)</a></p></li>
-<li><p><a class="reference internal" href="/blog/2017/07/03/setting-up-a-python-development-environment/#other-stuff" id="toc-entry-19">Other stuff</a></p></li>
+<li><p><a class="reference internal" href="#packages-with-c-extensions-binary" id="toc-entry-18">Packages with C extensions (binary)</a></p></li>
+<li><p><a class="reference internal" href="#other-stuff" id="toc-entry-19">Other stuff</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="/blog/2017/07/03/setting-up-a-python-development-environment/#editors-and-ides" id="toc-entry-20">Editors and IDEs</a></p></li>
-<li><p><a class="reference internal" href="/blog/2017/07/03/setting-up-a-python-development-environment/#update-history" id="toc-entry-21">Update history</a></p></li>
-</ul></nav><section id="glossary-and-questions"><h2><a class="toc-backref" href="/blog/2017/07/03/setting-up-a-python-development-environment/#toc-entry-1" role="doc-backlink">Glossary and questions</a></h2>
-<section id="python-versions-2-vs-3"><h3><a class="toc-backref" href="/blog/2017/07/03/setting-up-a-python-development-environment/#toc-entry-2" role="doc-backlink">Python versions: 2 vs 3</a></h3>
+<li><p><a class="reference internal" href="#editors-and-ides" id="toc-entry-20">Editors and IDEs</a></p></li>
+<li><p><a class="reference internal" href="#update-history" id="toc-entry-21">Update history</a></p></li>
+</ul>
+</nav>
+<section id="glossary-and-questions">
+<h1><a class="toc-backref" href="#toc-entry-1" role="doc-backlink">Glossary and questions</a></h1>
+<section id="python-versions-2-vs-3">
+<h2><a class="toc-backref" href="#toc-entry-2" role="doc-backlink">Python versions: 2 vs 3</a></h2>
 <p>The Python community has undergone sort of a <em>schism</em> in recent years. Python
 3, released in 2008, broke backwards compatibility: deprecated some bad
 constructs and libraries (eg. <code class="docutils literal">raw_input()</code> became <code class="docutils literal">input()</code> and the
@@ -172,7 +199,9 @@ you can easily write code that is compatible with Python 2 and 3 at the same
 time, using the same codebase (most libraries out there do that).</p>
 <p>Python 2 will go EOL and lose official support and updates in 2020.</p>
 <p>Read more: <a class="reference external" href="https://wiki.python.org/moin/Python2orPython3">Python 2 or Python 3 on Python Wiki</a></p>
-</section><section id="can-i-run-multiple-pythons-on-the-same-machine"><h3><a class="toc-backref" href="/blog/2017/07/03/setting-up-a-python-development-environment/#toc-entry-3" role="doc-backlink">Can I run multiple Pythons on the same machine?</a></h3>
+</section>
+<section id="can-i-run-multiple-pythons-on-the-same-machine">
+<h2><a class="toc-backref" href="#toc-entry-3" role="doc-backlink">Can I run multiple Pythons on the same machine?</a></h2>
 <p>Yes. Note that multiple Python interpreters are completely separate: they have
 their own pip and packages, and you can’t run Python 2 code in a Python 3
 interpreter. You need to specify which interpreter to use when installing
@@ -180,7 +209,9 @@ packages and running some scripts (eg. <code class="docutils literal">pip2</code
 <p>It’s best to limit yourself to the latest Python 2 and 3 versions. Python is
 backwards-compatible within the major release, so Python 2.7 runs code
 written with older 2.x versions in mind.</p>
-</section><section id="implementations"><h3><a class="toc-backref" href="/blog/2017/07/03/setting-up-a-python-development-environment/#toc-entry-4" role="doc-backlink">Implementations</a></h3>
+</section>
+<section id="implementations">
+<h2><a class="toc-backref" href="#toc-entry-4" role="doc-backlink">Implementations</a></h2>
 <p>A programming language is an abstract construct. To run code written in that
 language, an interpreter or compiler needs to be written. In Python’s case,
 there’s a plethora of implementations. Some of them are:</p>
@@ -198,7 +229,9 @@ extension libraries that use CFFI.</p></li>
 well as other JVM languages.</p></li>
 </ul>
 <p>Read more: <a class="reference external" href="https://wiki.python.org/moin/PythonImplementations">Python Implementations on Python Wiki</a></p>
-</section><section id="distributions"><h3><a class="toc-backref" href="/blog/2017/07/03/setting-up-a-python-development-environment/#toc-entry-5" role="doc-backlink">Distributions</a></h3>
+</section>
+<section id="distributions">
+<h2><a class="toc-backref" href="#toc-entry-5" role="doc-backlink">Distributions</a></h2>
 <p>There are also Python (CPython) distributions. They ship the CPython
 interpreter and add some extra packages/features.  They are maintained by other
 communities or corporate entities.</p>
@@ -216,13 +249,17 @@ making the installation as simple as <code class="docutils literal">pip install 
 nothing special about Anaconda.</p></li>
 </ul>
 <p>Read more: <a class="reference external" href="https://wiki.python.org/moin/PythonDistributions">Python distributions on Python Wiki</a></p>
-</section><section id="can-i-make-exe-files-from-python-programs"><h3><a class="toc-backref" href="/blog/2017/07/03/setting-up-a-python-development-environment/#toc-entry-6" role="doc-backlink">Can I make .exe files from Python programs?</a></h3>
+</section>
+<section id="can-i-make-exe-files-from-python-programs">
+<h2><a class="toc-backref" href="#toc-entry-6" role="doc-backlink">Can I make .exe files from Python programs?</a></h2>
 <p>Yes, you can. There are tools for this — <a class="reference external" href="http://www.pyinstaller.org/">PyInstaller</a> is the best one. Note that you usually need to
 run it on the destination operating system. And remember that “compiling” to
 exe files like that <strong>is not</strong> a security measure — your source code is still
 easily recoverable. (It’s not a security measure in other languages either,
 even if getting source code back might be more expensive/tricky in those.)</p>
-</section><section id="where-to-learn-python-where-to-get-help"><h3><a class="toc-backref" href="/blog/2017/07/03/setting-up-a-python-development-environment/#toc-entry-7" role="doc-backlink">Where to learn Python? Where to get help?</a></h3>
+</section>
+<section id="where-to-learn-python-where-to-get-help">
+<h2><a class="toc-backref" href="#toc-entry-7" role="doc-backlink">Where to learn Python? Where to get help?</a></h2>
 <p>The choice of learning material is important. If you get a bad book, it might
 discourage you from learning (because it’s boring), or may teach you
 bad/outdated practices.</p>
@@ -232,17 +269,21 @@ programming, I recommend <a class="reference external" href="http://greenteapres
 with Python</a>.  They teach Python 3, and
 (mostly) best practices.</p>
 <p>If you need help, try <code class="docutils literal">#python</code> on freenode IRC, the <a class="reference external" href="https://mail.python.org/mailman/listinfo/tutor">Tutor</a> or <a class="reference external" href="https://mail.python.org/mailman/listinfo/python-list">Python-list</a> mailing lists, or a bunch of other communities. (I’m a regular on <code class="docutils literal">#python</code>)</p>
-</section></section><section id="installing-python"><h2><a class="toc-backref" href="/blog/2017/07/03/setting-up-a-python-development-environment/#toc-entry-8" role="doc-backlink">Installing Python</a></h2>
+</section>
+</section>
+<section id="installing-python">
+<h1><a class="toc-backref" href="#toc-entry-8" role="doc-backlink">Installing Python</a></h1>
 <p>This guide will focus on installing CPython 2.7 and 3.x (latest), using the standard
 distribution. This choice is satisfactory for most people. Third-party
 distributions, while handy in some cases, are not needed for most. (See
-<a class="reference internal" href="/blog/2017/07/03/setting-up-a-python-development-environment/#distributions">Distributions</a> for arguments)</p>
+<a class="reference internal" href="#distributions">Distributions</a> for arguments)</p>
 <p>Throughout this guide, I’ll refer to the Python interpreter executable as
 <code class="docutils literal">python</code>. The exact name depends on your system and desired version. On most
 OSes, <code class="docutils literal">python</code> is Python 2 and <code class="docutils literal">python3</code> is 3; <code class="docutils literal">python2</code> should also
 exist.  On Arch Linux, <code class="docutils literal">python</code> is Python 3. On Windows, use the <code class="docutils literal">py</code>
 launcher.</p>
-<section id="windows"><h3><a class="toc-backref" href="/blog/2017/07/03/setting-up-a-python-development-environment/#toc-entry-9" role="doc-backlink">Windows</a></h3>
+<section id="windows">
+<h2><a class="toc-backref" href="#toc-entry-9" role="doc-backlink">Windows</a></h2>
 <p>Download the installer(s): <a class="reference external" href="https://www.python.org/downloads/">https://www.python.org/downloads/</a></p>
 <p>Those installers come with <code class="docutils literal">pip</code>, and modern Python 3.x versions come with
 the <code class="docutils literal">py</code> launcher.  You can use that launcher to pick a specific Python
@@ -257,7 +298,9 @@ version, eg.:</p>
 <p>The 32-bit versions are more versatile. Most packages support both (the only
 exception I’m aware of is Tensorflow, which only allows 64-bit Python 3.5 as of
 now).</p>
-</section><section id="macos"><h3><a class="toc-backref" href="/blog/2017/07/03/setting-up-a-python-development-environment/#toc-entry-10" role="doc-backlink">macOS</a></h3>
+</section>
+<section id="macos">
+<h2><a class="toc-backref" href="#toc-entry-10" role="doc-backlink">macOS</a></h2>
 <p>macOS ships with Python 2.7.10 (as of macOS Sierra). It’s not the latest
 version; it’s good enough for most people, but I still recommend installing
 your own (the system Python doesn’t include <code class="docutils literal">pip</code>, for example). You can
@@ -276,7 +319,9 @@ a new one and just use the existing one.</p>
 <li><p>You should now have <code class="docutils literal">python</code>, <code class="docutils literal">python3</code>, <code class="docutils literal">pip</code> and <code class="docutils literal">pip3</code>.</p></li>
 </ol>
 <p>To update Homebrew and Python, run <code class="docutils literal">brew update</code>.</p>
-</section><section id="linux-and-other-unix-like-oses"><h3><a class="toc-backref" href="/blog/2017/07/03/setting-up-a-python-development-environment/#toc-entry-11" role="doc-backlink">Linux (and other Unix-like OSes)</a></h3>
+</section>
+<section id="linux-and-other-unix-like-oses">
+<h2><a class="toc-backref" href="#toc-entry-11" role="doc-backlink">Linux (and other Unix-like OSes)</a></h2>
 <p>On Linux, there usually are good enough packages in your OS repositories. You
 should be able to install the appropriate package for Python (2 and/or 3).
 Most (if not all) distributions require Python — <strong>do not</strong> remove the
@@ -302,7 +347,10 @@ take a while.)</p></li>
 </ol>
 <p>Remember: compiling Python should be considered a <strong>last resort</strong>, unless you
 have very specific Python version requirements.</p>
-</section></section><section id="installing-packages"><h2><a class="toc-backref" href="/blog/2017/07/03/setting-up-a-python-development-environment/#toc-entry-12" role="doc-backlink">Installing packages</a></h2>
+</section>
+</section>
+<section id="installing-packages">
+<h1><a class="toc-backref" href="#toc-entry-12" role="doc-backlink">Installing packages</a></h1>
 <p>To install third-party packages, you should use pip, the Python package
 manager. If you’re using Windows or macOS (from Homebrew), pip is included with
 your copy of Python.  If you’re on Linux and installed Python from a system
@@ -329,7 +377,8 @@ good; in other cases they’re terribly outdated or they lack important
 components, making package managers angry and sick of supporting a 2-year-old
 version. (Especially since most bugs are closed with “we’ve fixed that long
 ago”)</p>
-<section id="user-installs"><h3><a class="toc-backref" href="/blog/2017/07/03/setting-up-a-python-development-environment/#toc-entry-13" role="doc-backlink">User installs</a></h3>
+<section id="user-installs">
+<h2><a class="toc-backref" href="#toc-entry-13" role="doc-backlink">User installs</a></h2>
 <p>At a small scale, you can install packages with pip for a single user.  Use
 <code class="docutils literal">pip install <span class="pre">--user</span> PACKAGE</code> to do this. If your package installs <a class="reference external" href="https://chriswarrick.com/blog/2014/09/15/python-apps-the-right-way-entry_points-and-scripts/">scripts</a>,
 they will be installed to <code class="docutils literal"><span class="pre">~/.local/bin</span></code> on Linux, and
@@ -339,7 +388,9 @@ they will be installed to <code class="docutils literal"><span class="pre">~/.lo
 however, use cases for putting some packages user-wide — if you don’t work on
 projects, but instead are doing one-off research projects, those are better
 suited by user-wide installs.</p>
-</section><section id="virtual-environments"><h3><a class="toc-backref" href="/blog/2017/07/03/setting-up-a-python-development-environment/#toc-entry-14" role="doc-backlink">Virtual environments</a></h3>
+</section>
+<section id="virtual-environments">
+<h2><a class="toc-backref" href="#toc-entry-14" role="doc-backlink">Virtual environments</a></h2>
 <p class="lead">I wrote a newer, more detailed post about virtualenvs: <a class="reference external" href="https://chriswarrick.com/blog/2018/09/04/python-virtual-environments/">Python Virtual
 Environments in Five Minutes</a></p>
 <p>Virtual environments are the best way to install and manage Python packages.
@@ -352,7 +403,8 @@ virtual environments</p></li>
 <li><p>Lightweight (an empty virtualenv is about 10 MB)</p></li>
 <li><p>Simple to re-create in any place (<code class="docutils literal">pip freeze &gt; requirements.txt</code> → <code class="docutils literal">pip install <span class="pre">-r</span> requirements.txt</code>)</p></li>
 </ul>
-<section id="tools-and-management"><h4><a class="toc-backref" href="/blog/2017/07/03/setting-up-a-python-development-environment/#toc-entry-15" role="doc-backlink">Tools and management</a></h4>
+<section id="tools-and-management">
+<h3><a class="toc-backref" href="#toc-entry-15" role="doc-backlink">Tools and management</a></h3>
 <p>There are two tools to facilitate creation of virtual environments: the older
 <a class="reference external" href="https://virtualenv.pypa.io/en/stable/">virtualenv</a> project, and the newer
 <code class="docutils literal">venv</code> module. The <code class="docutils literal">venv</code> module is shipped with Python 3.x; some
@@ -368,7 +420,9 @@ installed with <code class="docutils literal">pip</code> so they can be recreate
 <p>I also use the <code class="docutils literal">virtualenvwrapper</code> plugin for Oh My Zsh, which also
 activates virtualenvs with the same name as a git repo, or the environment
 named by a <code class="docutils literal">.venv</code> file.</p>
-</section><section id="installation-and-usage"><h4><a class="toc-backref" href="/blog/2017/07/03/setting-up-a-python-development-environment/#toc-entry-16" role="doc-backlink">Installation and usage</a></h4>
+</section>
+<section id="installation-and-usage">
+<h3><a class="toc-backref" href="#toc-entry-16" role="doc-backlink">Installation and usage</a></h3>
 <p>To install virtualenv user-wide, use <code class="docutils literal">pip install <span class="pre">--user</span> virtualenv</code>. You can
 then use it with <code class="docutils literal">python <span class="pre">-m</span> virtualenv DIRECTORY</code>. You may pass extra
 options, eg. interpreter to use (<code class="docutils literal"><span class="pre">-p</span> python3</code>). Sometimes you need to install
@@ -390,7 +444,9 @@ is your best bet in that case. If you are working inside shell scripts, do not
 activate virtualenvs.  I’m not a fan of the subshell option, because it
 complicates stuff if you work on multiple projects, and requires tracking usage
 manually.</p>
-</section><section id="upgrading-and-moving"><h4><a class="toc-backref" href="/blog/2017/07/03/setting-up-a-python-development-environment/#toc-entry-17" role="doc-backlink">Upgrading and moving</a></h4>
+</section>
+<section id="upgrading-and-moving">
+<h3><a class="toc-backref" href="#toc-entry-17" role="doc-backlink">Upgrading and moving</a></h3>
 <p>Upgrading the system Python may make your virtualenvs unusable.
 For patch version upgrades, you can just update symlinks (see <a class="reference external" href="https://github.com/Kwpolska/scripts/blob/master/fix-venvs.sh">fix-venvs.sh</a>).
 However, if the minor version changes, it’s best to re-create the virtualenv
@@ -399,7 +455,10 @@ However, if the minor version changes, it’s best to re-create the virtualenv
 virtualenvs. You need to use <code class="docutils literal">pip freeze &gt; requirements.txt</code>, create a new
 virtualenv, and run <code class="docutils literal">pip install <span class="pre">-r</span> requirements.txt</code> (you can then delete
 the old environment with a simple <code class="docutils literal">rm <span class="pre">-rf</span></code>)</p>
-</section></section><section id="packages-with-c-extensions-binary"><h3><a class="toc-backref" href="/blog/2017/07/03/setting-up-a-python-development-environment/#toc-entry-18" role="doc-backlink">Packages with C extensions (binary)</a></h3>
+</section>
+</section>
+<section id="packages-with-c-extensions-binary">
+<h2><a class="toc-backref" href="#toc-entry-18" role="doc-backlink">Packages with C extensions (binary)</a></h2>
 <p>The situation improved drastically in the past year or so. Nowadays, almost
 all packages have a pre-compiled package available in PyPI. Those packages work
 for Windows, macOS, and Linux. There are packages for some of the most
@@ -416,13 +475,18 @@ package — for example, <code class="docutils literal"><span class="pre">python
 <code class="docutils literal"><span class="pre">python-devel</span></code> or <code class="docutils literal"><span class="pre">python3-devel</span></code> on RHEL/Fedora. The package you’re trying
 to install might have other dependencies that you need to install (the
 <code class="docutils literal"><span class="pre">-dev(el)</span></code> part is important, too)</p>
-</section><section id="other-stuff"><h3><a class="toc-backref" href="/blog/2017/07/03/setting-up-a-python-development-environment/#toc-entry-19" role="doc-backlink">Other stuff</a></h3>
+</section>
+<section id="other-stuff">
+<h2><a class="toc-backref" href="#toc-entry-19" role="doc-backlink">Other stuff</a></h2>
 <p>If you’re working on a project, use <code class="docutils literal">pip install <span class="pre">-e</span> .</code> inside the project
 directory to install the package in your environment in development (editable)
 mode. This loads code directly from your repository — you don’t need to
 re-install on every change; you might need to re-install when your version
 number changes.</p>
-</section></section><section id="editors-and-ides"><h2><a class="toc-backref" href="/blog/2017/07/03/setting-up-a-python-development-environment/#toc-entry-20" role="doc-backlink">Editors and IDEs</a></h2>
+</section>
+</section>
+<section id="editors-and-ides">
+<h1><a class="toc-backref" href="#toc-entry-20" role="doc-backlink">Editors and IDEs</a></h1>
 <p>Another important thing a developer should take care of is the choice of an
 editor. This is an important decision, and is the reason for many holy wars in
 the programmer community.</p>
@@ -459,120 +523,168 @@ included with Python. It lacks some of the most basic things — it doesn’t ev
 have an option to show line numbers. Not to mention its ugliness. Also, don’t
 use Notepad and TextEdit. Those are too simple, and Notepad has encoding
 issues.</p>
-</section><section id="update-history"><h2><a class="toc-backref" href="/blog/2017/07/03/setting-up-a-python-development-environment/#toc-entry-21" role="doc-backlink">Update history</a></h2>
+</section>
+<section id="update-history">
+<h1><a class="toc-backref" href="#toc-entry-21" role="doc-backlink">Update history</a></h1>
 <dl class="simple">
 <dt>2018-09-21</dt>
-<dd>
-<p>Link to python-virtual-environments post.</p>
+<dd><p>Link to python-virtual-environments post.</p>
 </dd>
 <dt>2017-07-19</dt>
-<dd>
-<p>Better description of problems caused by using sudo pip.</p>
+<dd><p>Better description of problems caused by using sudo pip.</p>
 </dd>
 <dt>2017-07-10</dt>
-<dd>
-<p>Added notes about not removing built-in Pythons.</p>
+<dd><p>Added notes about not removing built-in Pythons.</p>
 </dd>
 <dt>2017-07-07</dt>
-<dd>
-<p>Spelling fixes and updates to the virtualenv usage section.</p>
+<dd><p>Spelling fixes and updates to the virtualenv usage section.</p>
 </dd>
-</dl></section></article>
-</div>
-    <aside class="postpromonav"><div class="card guide-footer">
-  <div class="card-header bg-primary border-primary"><h3>That’s all!</h3></div>
-  <div class="card-body">
-    Hopefully, the guide worked for you and you can use Python and create something awesome. If so, great! Otherwise, make sure you did everything as stated in this guide. If you are still stuck, ask for help in the comments.
+</dl>
+</section>
+
   </div>
-  <div class="card-footer"><a href="/guides/">Check out my other guides!</a></div>
-</div>
-    <nav><ul class="pager hidden-print">
-<li class="previous">
-                <a href="/blog/2017/06/24/apple-broke-the-display-menu-so-i-wrote-my-own/" rel="prev" title="Apple broke the display menu, so I wrote my own">Previous post</a>
-            </li>
-            <li class="next">
-                <a href="/blog/2017/08/03/gynvaels-mission-11-en-python-bytecode-reverse-engineering/" rel="next" title="Gynvael’s Mission 11 (en): Python bytecode reverse-engineering">Next post</a>
-            </li>
-        </ul></nav></aside><section class="comments"><div data-title="Setting up a Python development environment" id="isso-thread"></div>
-        <script src="https://isso.chriswarrick.com/js/embed.min.js" data-isso="https://isso.chriswarrick.com/" data-isso-lang="en" data-isso-require-author="true" data-isso-require-email="true" data-isso-gravatar="true" data-isso-avatar="false" data-isso-css="false" data-isso-vote="false" data-isso-reply-notifications="true"></script></section><!--End of body content--><nav id="footer-links"><div class="row">
-            <div class="col-sm-4">
-                <h6>Blog</h6>
-                <ul>
-<li class="nav-item">
-<a href="/blog/" class="nav-link">Archive</a>
-                        </li>
-<li class="nav-item">
-<a href="/blog/tags/" class="nav-link">Tags</a>
-                        </li>
-<li class="nav-item">
-<a href="/rss.xml" class="nav-link">RSS Feed</a>
-                        </li>
-<li class="nav-item">
-<a href="/search/" class="nav-link">Search</a>
-                </li>
-</ul>
-</div>
-            <div class="col-sm-4">
-                <h6>Projects and Work</h6>
-                <ul>
-<li class="nav-item">
-<a href="/projects/" class="nav-link">Projects</a>
-                        </li>
-<li class="nav-item">
-<a href="/guides/" class="nav-link">Guides</a>
-                        </li>
-<li class="nav-item">
-<a href="/kwbot/" class="nav-link">KwBot</a>
-                        </li>
-<li class="nav-item">
-<a href="/blog/tags/cat_python" class="nav-link">Posts about Python</a>
-                </li>
-</ul>
-</div>
-            <div class="col-sm-4">
-                <h6>Me</h6>
-                <ul>
-<li class="nav-item">
-<a href="/contact/" class="nav-link">Contact</a>
-                        </li>
-<li class="nav-item">
-<a href="/brand/" class="nav-link">Brand</a>
-                        </li>
-<li class="nav-item">
-<a href="https://twitter.com/Kwpolska" class="nav-link">Twitter</a>
-                        </li>
-<li class="nav-item">
-<a href="https://github.com/Kwpolska" class="nav-link">GitHub</a>
-                </li>
-</ul>
-</div>
-        </div></nav><footer id="footer"><p>this site uses cookies.<br>by using this site, you agree to our <a href="/privacy/">cookie and privacy policy</a>.</p>
-<p>
-powered by <strong><a href="https://getnikola.com/">Nikola</a></strong>, <a href="http://nginx.org/">nginx</a> and <a href="https://hetzner.cloud/?ref=Qy1lehF8PwzP">Hetzner Cloud</a><br>
-copyright © 2009–2026 <a href="/contact/">Chris Warrick</a><br><a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC
-BY-NC-SA</a>, unless stated otherwise</p>
-            
-        </footer>
-</div>
+</article>
 
 
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script><script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.11.0/baguetteBox.min.js" integrity="sha256-yQGjQhFs3LtyiN5hhr3k9s9TWZOh/RzCkD3gwwCKlkg=" crossorigin="anonymous"></script><script src="/assets/js/all.js?v=20230115"></script><script>
-    baguetteBox.run('div#content', {
-        ignoreClass: 'islink',
-        captions: function(element) {
-            return element.getElementsByTagName('img')[0].alt;
-    }});
-    </script><!-- Matomo --><script>
+  <div class="card guide-footer">
+    <div class="card-header bg-primary border-primary"><h3>That’s all!</h3></div>
+    <div class="card-body">
+      Hopefully, the guide worked for you and you can use Python and create something awesome. If so, great! Otherwise, make sure you did everything as stated in this guide. If you are still stuck, ask for help in the comments.
+    </div>
+    <div class="card-footer"><a href="/guides/">Check out my other guides!</a></div>
+  </div>
+
+
+
+  <aside class="postpromonav">
+    <nav>
+      <ul class="pager hidden-print">
+        
+          <li class="previous">
+            <a href="/blog/2017/06/24/apple-broke-the-display-menu-so-i-wrote-my-own/" rel="prev"
+               title="Apple broke the display menu, so I wrote my own">Previous post</a>
+          </li>
+        
+        
+          <li class="next">
+            <a href="/blog/2017/08/03/gynvaels-mission-11-en-python-bytecode-reverse-engineering/" rel="prev"
+               title="Gynvael&#x2019;s Mission 11 (en): Python bytecode reverse-engineering">Next post</a>
+          </li>
+        
+      </ul>
+    </nav>
+  </aside>
+
+
+
+  <section class="comments">
+    <div data-title="Setting up a Python development environment" id="isso-thread"></div>
+    <script src="https://isso.chriswarrick.com/js/embed.min.js" data-isso="https://isso.chriswarrick.com/"
+            data-isso-lang="en" data-isso-require-author="true" data-isso-require-email="true" data-isso-gravatar="true"
+            data-isso-avatar="false" data-isso-css="false" data-isso-vote="false"
+            data-isso-reply-notifications="true"></script>
+  </section>
+
+
+
+    <script src="https://isso.chriswarrick.com/js/count.min.js" data-isso="https://isso.chriswarrick.com/"
+            data-isso-lang="en"></script>
+    <nav id="footer-links">
+      <div class="row">
+        <div class="col-sm-4">
+          <h6>Blog</h6>
+          <ul>
+            <li class="nav-item">
+              <a href="/blog/" class="nav-link">Archives</a>
+            </li>
+            <li class="nav-item">
+              <a href="/blog/tags/" class="nav-link">Tags</a>
+            </li>
+            <li class="nav-item">
+              <a href="/listings/" class="nav-link">Listings</a>
+            </li>
+            <li class="nav-item">
+              <a href="/rss.xml" class="nav-link">RSS Feed</a>
+            </li>
+          </ul>
+        </div>
+        <div class="col-sm-4">
+          <h6>Projects and Work</h6>
+          <ul>
+            <li class="nav-item">
+              <a href="/projects/" class="nav-link">Projects</a>
+            </li>
+            <li class="nav-item">
+              <a href="/guides/" class="nav-link">Guides</a>
+            </li>
+            <li class="nav-item">
+              <a href="/kwbot/" class="nav-link">KwBot</a>
+            </li>
+            <li class="nav-item">
+              <a href="/blog/tags/cat_python" class="nav-link">Posts about Python</a>
+            </li>
+          </ul>
+        </div>
+        <div class="col-sm-4">
+          <h6>Me</h6>
+          <ul>
+            <li class="nav-item">
+              <a href="/contact/" class="nav-link">Contact</a>
+            </li>
+            <li class="nav-item">
+              <a href="/brand/" class="nav-link">Brand</a>
+            </li>
+            <li class="nav-item">
+              <a href="https://twitter.com/Kwpolska" class="nav-link">Twitter</a>
+            </li>
+            <li class="nav-item">
+              <a href="https://github.com/Kwpolska" class="nav-link">GitHub</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <footer id="footer">
+      <p>this site uses cookies.<br>by using this site, you agree to our <a href="/privacy/">cookie and privacy policy</a>.</p>
+<p>powered by <strong><a href="https://github.com/Kwpolska/YetAnotherBlogGenerator">Yet Another Blog Generator</a></strong>,
+  <a href="https://nginx.org/">nginx</a>
+  and <a href="https://hetzner.cloud/?ref=Qy1lehF8PwzP">Hetzner Cloud</a><br>
+  copyright © 2009–2026 <a href="/contact/">Chris Warrick</a><br>
+  license: <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA</a>, unless stated otherwise</p>
+    </footer>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.11.0/baguetteBox.min.js"
+        integrity="sha256-yQGjQhFs3LtyiN5hhr3k9s9TWZOh/RzCkD3gwwCKlkg=" crossorigin="anonymous"></script>
+<script src="/assets/js/all.js?v=20230115"></script>
+<script>
+  baguetteBox.run('div#content', {
+    ignoreClass: 'islink',
+    captions: function (element) {
+      return element.getElementsByTagName('img')[0].alt;
+    }
+  });
+</script><!-- Matomo -->
+<script>
   var _paq = window._paq = window._paq || [];
   /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
   _paq.push(['trackPageView']);
   _paq.push(['enableLinkTracking']);
-  (function() {
-    var u="//matomo.chriswarrick.com/";
-    _paq.push(['setTrackerUrl', u+'matomo.php']);
+  (function () {
+    var u = "//matomo.chriswarrick.com/";
+    _paq.push(['setTrackerUrl', u + 'matomo.php']);
     _paq.push(['setSiteId', '1']);
-    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-    g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+    var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+    g.async = true;
+    g.src = u + 'matomo.js';
+    s.parentNode.insertBefore(g, s);
   })();
 </script><!-- End Matomo Code -->
 </body>

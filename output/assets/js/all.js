@@ -41,9 +41,9 @@ function onLoaded() {
     document.querySelector("#color-changer-text").innerText = csText;
     if (document.cookie.indexOf('kw_cookies=2') == -1) {
         if (document.querySelector('html').lang == 'pl') {
-            document.querySelector("#cookiebox").innerHtml = '<div class="alert alert-primary fade show" role="alert" id="cookiealert">Ta strona używa ciasteczek. <a href="/pl/privacy/" class="alert-link">Dowiedz się więcej.</a> <button type="button" class="close" data-dismiss="alert">&times; Rozumiem</button></div>';
+            document.querySelector("#cookiebox").innerHTML = '<div class="alert alert-primary fade show" role="alert" id="cookiealert">Ta strona używa ciasteczek. <a href="/pl/privacy/" class="alert-link">Dowiedz się więcej.</a> <button type="button" class="close" data-dismiss="alert">&times; Rozumiem</button></div>';
         } else {
-            document.querySelector("#cookiebox").innerHtml = '<div class="alert alert-primary fade show" role="alert" id="cookiealert">This site uses cookies. <a href="/privacy/" class="alert-link">Read more.</a> <button type="button" class="close" data-dismiss="alert">&times; Got it</button></div>';
+            document.querySelector("#cookiebox").innerHTML = '<div class="alert alert-primary fade show" role="alert" id="cookiealert">This site uses cookies. <a href="/privacy/" class="alert-link">Read more.</a> <button type="button" class="close" data-dismiss="alert">&times; Got it</button></div>';
         }
     }
 
@@ -63,7 +63,6 @@ function onLoaded() {
 }
 
 document.addEventListener('DOMContentLoaded', onLoaded, false);
-
 /*!
  * baguetteBox.js
  * @author  feimosi

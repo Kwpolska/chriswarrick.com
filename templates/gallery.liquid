@@ -1,0 +1,72 @@
+{% layout "base.liquid" %}
+
+{% section head %}
+<style type="text/css">
+  #gallery_container {
+    position: relative;
+  }
+  .image-block {
+    position: absolute;
+  }
+</style>
+{% endsection %}
+
+<header class="page-header"><h1 class="p-name entry-title" itemprop="headline name">
+    {{ Item.Title }}
+  </h1>
+</header>
+
+<div id="gallery_container"></div>
+<noscript>
+  <ul class="thumbnails">
+    {% for image in item.RichItemData.Images %}
+    <li>
+      <a href="{{ image.FileName }}" class="thumbnail image-reference" title="{{ image.Description }}">
+        <img src="{{ image.ThumbnailName }}" alt="{{ image.Description }}"></a>
+    </li>
+    {% endfor %}
+  </ul>
+</noscript>
+
+<script src="/assets/js/justified-layout.min.js"></script>
+<script>
+  var jsonContent = {{ item.RichItemData.Images | json | raw }};
+
+  function renderGallery() {
+    var container = document.getElementById("gallery_container");
+    container.innerHTML = '';
+    var layoutGeometry = require('justified-layout')(jsonContent, {
+      "containerWidth": container.offsetWidth,
+      "targetRowHeight": 200*.6,
+      "boxSpacing": 5});
+    container.style.height = layoutGeometry.containerHeight + 'px';
+    var boxes = layoutGeometry.boxes;
+    for (var i = 0; i < boxes.length; i++) {
+      var img = document.createElement("img");
+      img.setAttribute('src', jsonContent[i].thumbnailName);
+      img.setAttribute('alt', jsonContent[i].description);
+      img.style.width = boxes[i].width + 'px';
+      img.style.height = boxes[i].height + 'px';
+      link = document.createElement("a");
+      link.setAttribute('href', jsonContent[i].fileName);
+      link.setAttribute('class', 'image-reference');
+      div = document.createElement("div");
+      div.setAttribute('class', 'image-block');
+      div.setAttribute('title', jsonContent[i].description);
+      div.setAttribute('data-toggle', "tooltip")
+      div.style.width = boxes[i].width + 'px';
+      div.style.height = boxes[i].height + 'px';
+      div.style.top = boxes[i].top + 'px';
+      div.style.left = boxes[i].left + 'px';
+      link.append(img);
+      div.append(link);
+      container.append(div);
+    }
+    baguetteBox.run('#gallery_container', {
+      captions: function(element) {
+        return element.getElementsByTagName('img')[0].alt;
+      }});
+  }
+  renderGallery();
+  window.addEventListener('resize', renderGallery);
+</script>

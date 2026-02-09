@@ -1,246 +1,293 @@
 <!DOCTYPE html>
-<html class="limited-width larger-font" prefix="
-og: http://ogp.me/ns#
-" lang="en">
+<html class="limited-width larger-font" prefix="og: http://ogp.me/ns#" lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="description" content="I wrote an app in C# and I liked it.">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Writing a Console App in C# for Fun and Profit | Chris Warrick</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.css" integrity="sha256-FqCzNnnyXl5HxHMdb+RQ/RV/X7fqfPcQYy+G2gFL3Xk=" crossorigin="anonymous">
+  <meta charset="utf-8">
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Writing a Console App in C# for Fun and Profit | Chris Warrick</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.css"
+        integrity="sha256-FqCzNnnyXl5HxHMdb+RQ/RV/X7fqfPcQYy+G2gFL3Xk=" crossorigin="anonymous">
 <!--#if expr="$HTTP_COOKIE=/colorScheme\=light/" --><link href="/assets/css/all.css?v=20230115" rel="stylesheet" type="text/css" id="kw-all-css">
 <script type="text/javascript">var colorScheme='light';var colorSchemesEnabled=true;</script><!--#else--><link href="/assets/css/all-dark.css?v=20230115" rel="stylesheet" type="text/css" id="kw-all-css">
-<script type="text/javascript">var colorScheme='dark';var colorSchemesEnabled=true;</script><!--#endif--><link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,700,700i|Source+Serif+Pro:600&amp;display=swap&amp;subset=latin-ext" rel="stylesheet">
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
-<meta name="theme-color" content="#00aadd">
-<meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="/rss.xml">
-<link rel="canonical" href="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/">
-<link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="16x16 32x32 48x48 64x64 128x128 256x256">
-<link rel="icon" type="image/png" href="/assets/img/logo512.png">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<!--[if lt IE 9]><script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]--><meta name="description" itemprop="description" content="I wrote an app in C# and I liked it.">
-<meta name="author" content="Chris Warrick">
-<link rel="prev" href="/blog/2021/01/31/enabling-virtualization-support-in-boot-camp-with-refind/" title="Enabling Virtualization Support in Boot Camp with rEFInd" type="text/html">
-<link rel="next" href="/blog/2023/01/15/how-to-improve-python-packaging/" title="How to improve Python packaging, or why fourteen tools are at least twelve too many" type="text/html">
-<meta property="og:site_name" content="Chris Warrick">
-<meta property="og:title" content="Writing a Console App in C# for Fun and Profit">
-<meta property="og:url" content="https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/">
-<meta property="og:description" content="I wrote an app in C# and I liked it.">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2022-09-19T22:35:00+02:00">
-<meta property="article:tag" content=".NET">
-<meta property="article:tag" content="CSharp">
-<meta property="article:tag" content="programming">
-<meta property="article:tag" content="web development">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:creator" content="@Kwpolska">
+<script type="text/javascript">var colorScheme='dark';var colorSchemesEnabled=true;</script><!--#endif-->
+  <link
+    href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,700,700i|Source+Serif+Pro:600&amp;display=swap&amp;subset=latin-ext"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css"
+        integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+  <meta name="theme-color" content="#00aadd">
+  <meta name="generator" content="Chris Warrick’s Yet Another Blog Generator">
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/rss.xml">
+  <link rel="canonical" href="https://chriswarrick.com/">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="16x16 32x32 48x48 64x64 128x128 256x256">
+  <link rel="icon" type="image/png" href="/assets/img/logo512.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="prev" href="/blog/2021/01/31/enabling-virtualization-support-in-boot-camp-with-refind/" type="text/html">
+  <link rel="next" href="/blog/2023/01/15/how-to-improve-python-packaging/" type="text/html">
+  
 </head>
 <body>
 <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
 
-<!-- Menubar -->
-
-<nav class="navbar navbar-expand-md navbar-kw bg-dark static-top mb-4"><div class="container">
-<!-- This keeps the margins nice -->
-        <a class="navbar-brand" href="/">
-            <img src="/assets/img/logo.png" srcset="/assets/img/logo2x.png 2x" alt="Chris Warrick" id="logo"><span id="blog-title">Chris Warrick</span>
-        </a>
-        <div>
-        <button class="navbar-toggler mr-2" id="color-changer-mobile" type="button" aria-label="Change color scheme">
-            <span class="color-changer"></span>
-        </button>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        </div>
-        <div class="collapse navbar-collapse" id="bs-navbar">
-            <ul class="navbar-nav mr-auto">
-<li class="nav-item">
-<a href="/contact/" class="nav-link">Contact</a>
-                </li>
-<li class="nav-item">
-<a href="/projects/" class="nav-link">Projects</a>
-                </li>
-<li class="nav-item">
-<a href="/guides/" class="nav-link">Guides</a>
-                </li>
-<li class="nav-item">
-<a href="/blog/" class="nav-link">Archives</a>
-                </li>
-<li class="nav-item">
-<a href="/search/" class="nav-link">Search</a>
-
-                
-            </li>
-</ul>
-<ul class="navbar-nav navbar-right">
-<li class="nav-item" id="color-changer-menu">
-<a href="#" class="nav-link" id="color-changer-btn">
-                <div class="color-changer"></div>
-                <span id="color-changer-text"><!--#if expr="$HTTP_COOKIE=/colorScheme\=light/" -->Dark Mode<!--#else -->Light Mode<!--#endif--></span>
-                </a>
-                </li>
-            </ul>
-</div>
-<!-- /.navbar-collapse -->
+<nav class="navbar navbar-expand-md navbar-kw bg-dark static-top mb-4">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <img src="/assets/img/logo.png" srcset="/assets/img/logo2x.png 2x" alt="Chris Warrick" id="logo"><span
+        id="blog-title">Chris Warrick</span>
+    </a>
+    <div>
+      <button class="navbar-toggler mr-2" id="color-changer-mobile" type="button" aria-label="Change color scheme">
+        <span class="color-changer"></span>
+      </button>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar"
+              aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
     </div>
-<!-- /.container -->
-</nav><!-- End of Menubar --><div class="container" id="content" role="main">
-    <div class="body-content">
-        <!--Body content-->
+    <div class="collapse navbar-collapse" id="bs-navbar">
+      <ul class="navbar-nav mr-auto">
         
-        <div id="cookiebox"></div>
-<article class="post-text h-entry hentry postpage postbox" itemscope="itemscope" itemtype="http://schema.org/Article"><header class="page-header"><h1 class="p-name entry-title" itemprop="headline name">
-    <a href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/" class="u-url">Writing a Console App in C# for Fun and Profit</a>
-    </h1>
+        
+          <li class="nav-item">
+            <a href="/contact/" class="nav-link">Contact</a>
+          </li>
+        
+        
+        
+          <li class="nav-item">
+            <a href="/projects/" class="nav-link">Projects</a>
+          </li>
+        
+        
+        
+          <li class="nav-item">
+            <a href="/guides/" class="nav-link">Guides</a>
+          </li>
+        
+        
+        
+          <li class="nav-item">
+            <a href="/blog/" class="nav-link">Archives</a>
+          </li>
+        
+        
+        
+          <li class="nav-item">
+            <a href="/blog/tags/" class="nav-link">Tags</a>
+          </li>
+        
+        
+      </ul>
+      <ul class="navbar-nav navbar-right">
+        <li class="nav-item" id="color-changer-menu">
+          <a href="#" class="nav-link" id="color-changer-btn">
+            <div class="color-changer"></div>
+            <span id="color-changer-text">Light Mode</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<div class="container" id="content" role="main">
+  <div class="body-content">
+    <div id="cookiebox"></div>
+    
 
-    <div class="metadata">
-<a href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/" rel="bookmark" class="u-published"><time class="published dt-published" datetime="2022-09-19T22:35:00+02:00" itemprop="datePublished" title="19 September 2022 at 22:35">19 September 2022 at 22:35</time></a>
-        <ul itemprop="keywords" class="tags post-bubbles list-inline">
-<li class="category-bubble"><a href="/blog/tags/cat_programming/" style="background-color: #ff5dd7 !important">Programming</a></li>
-           <li><a class="tag p-category" href="/blog/tags/net/" rel="tag">.NET</a></li>
-           <li><a class="tag p-category" href="/blog/tags/csharp/" rel="tag">CSharp</a></li>
-           <li><a class="tag p-category" href="/blog/tags/programming/" rel="tag">programming</a></li>
-           <li><a class="tag p-category" href="/blog/tags/web-development/" rel="tag">web development</a></li>
-        </ul>
-</div>
-    </header><div class="e-content entry-content" itemprop="articleBody text">
-    <div class="lead">
+
+<article class="post-text h-entry hentry postpage postbox" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+<header class="page-header">
+  <h1 class="p-name entry-title" itemprop="headline name">
+    <a href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/" class="u-url">Writing a Console App in C# for Fun and Profit</a>
+  </h1>
+
+  <div class="metadata">
+    <a href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/" rel="bookmark" class="u-published">
+      <time class="published dt-published" datetime="2022-09-19T22:35:00.0000000&#x2B;02:00" itemprop="datePublished" title="19 September 2022 22:35">19 September 2022 22:35</time>
+    
+    </a>
+    <ul itemprop="keywords" class="tags post-bubbles list-inline">
+      <li class="category-bubble"><a href="/blog/tags/cat_programming" style="background-color: #ff5dd7 !important">Programming</a></li>
+      
+        <li><a class="tag p-category" href="/blog/tags/dotnet" rel="tag">.NET</a></li>
+      
+        <li><a class="tag p-category" href="/blog/tags/csharp" rel="tag">C#</a></li>
+      
+        <li><a class="tag p-category" href="/blog/tags/programming" rel="tag">programming</a></li>
+      
+        <li><a class="tag p-category" href="/blog/tags/web-development" rel="tag">web development</a></li>
+      
+    </ul>
+    
+    
+  </div>
+</header>
+
+  <div class="e-content entry-content" itemprop="articleBody text">
+    
+      <div class="lead">
+        
 <p>I recently wrote a simple console app in C#. This post tells you more about the language, the .NET ecosystem, and why you should write your next app in it.</p>
-</div>
-</div>
-<section id="what-is-the-app"><h2>What is the app?</h2>
+
+      </div>
+    
+    
+<section id="what-is-the-app">
+<h1>What is the app?</h1>
 <p>The app is called Gitco.NET. It’s basically a rewrite of a previous Ruby script. It shows a console menu with Git branches, allowing things like filtering and toggling the display of remote branches. Simple, but quite convenient for working with Git in a terminal. I rewrote it in C# for better Windows compatibility — but the new version works on Linux and macOS equally well, can be distributed as a single executable, and is also unit-tested.</p>
-</section><section id="what-is-c"><h2>What is C#?</h2>
+</section>
+<section id="what-is-c">
+<h1>What is C#?</h1>
 <p>C# is a modern, high-level language designed by Microsoft in 2000, heavily inspired by (and competing with) Java.</p>
-<section id="the-obligatory-hello-world-program"><h3>The obligatory hello world program</h3>
-<div class="code"><pre class="code csharp"><a id="rest_code_9d4ed2c745e9494fb3b50cd6cc9f7bd8-1" name="rest_code_9d4ed2c745e9494fb3b50cd6cc9f7bd8-1" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_9d4ed2c745e9494fb3b50cd6cc9f7bd8-1"></a><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">"Hello, world!"</span><span class="p">);</span>
+<section id="the-obligatory-hello-world-program">
+<h2>The obligatory hello world program</h2>
+<div class="code"><pre class="code csharp"><a id="rest_code_1c3ea5cfc3ca48d7a0e8d89503eb0ef0-1" name="rest_code_1c3ea5cfc3ca48d7a0e8d89503eb0ef0-1" href="#rest_code_1c3ea5cfc3ca48d7a0e8d89503eb0ef0-1"></a><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&quot;Hello, world!&quot;</span><span class="p">);</span>
 </pre></div>
 <p>Just one line is enough. This program requires C# 10 and .NET 6, the latest versions of the language and the framework (and the implicit usings feature enabled).</p>
-</section><section id="the-slightly-less-cool-version-of-the-hello-world-program"><h3>The slightly less cool version of the hello world program</h3>
-<div class="code"><pre class="code csharp"><a id="rest_code_88a1c9aad6d746c99ff8a7d6396c1842-1" name="rest_code_88a1c9aad6d746c99ff8a7d6396c1842-1" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_88a1c9aad6d746c99ff8a7d6396c1842-1"></a><span class="k">using</span><span class="w"> </span><span class="nn">System</span><span class="p">;</span>
-<a id="rest_code_88a1c9aad6d746c99ff8a7d6396c1842-2" name="rest_code_88a1c9aad6d746c99ff8a7d6396c1842-2" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_88a1c9aad6d746c99ff8a7d6396c1842-2"></a>
-<a id="rest_code_88a1c9aad6d746c99ff8a7d6396c1842-3" name="rest_code_88a1c9aad6d746c99ff8a7d6396c1842-3" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_88a1c9aad6d746c99ff8a7d6396c1842-3"></a><span class="k">class</span><span class="w"> </span><span class="nc">Program</span>
-<a id="rest_code_88a1c9aad6d746c99ff8a7d6396c1842-4" name="rest_code_88a1c9aad6d746c99ff8a7d6396c1842-4" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_88a1c9aad6d746c99ff8a7d6396c1842-4"></a><span class="p">{</span>
-<a id="rest_code_88a1c9aad6d746c99ff8a7d6396c1842-5" name="rest_code_88a1c9aad6d746c99ff8a7d6396c1842-5" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_88a1c9aad6d746c99ff8a7d6396c1842-5"></a><span class="w">  </span><span class="k">static</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">Main</span><span class="p">(</span><span class="kt">string</span><span class="p">[]</span><span class="w"> </span><span class="n">args</span><span class="p">)</span>
-<a id="rest_code_88a1c9aad6d746c99ff8a7d6396c1842-6" name="rest_code_88a1c9aad6d746c99ff8a7d6396c1842-6" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_88a1c9aad6d746c99ff8a7d6396c1842-6"></a><span class="w">  </span><span class="p">{</span>
-<a id="rest_code_88a1c9aad6d746c99ff8a7d6396c1842-7" name="rest_code_88a1c9aad6d746c99ff8a7d6396c1842-7" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_88a1c9aad6d746c99ff8a7d6396c1842-7"></a><span class="w">    </span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">"Hello, world!"</span><span class="p">);</span>
-<a id="rest_code_88a1c9aad6d746c99ff8a7d6396c1842-8" name="rest_code_88a1c9aad6d746c99ff8a7d6396c1842-8" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_88a1c9aad6d746c99ff8a7d6396c1842-8"></a><span class="w">  </span><span class="p">}</span>
-<a id="rest_code_88a1c9aad6d746c99ff8a7d6396c1842-9" name="rest_code_88a1c9aad6d746c99ff8a7d6396c1842-9" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_88a1c9aad6d746c99ff8a7d6396c1842-9"></a><span class="p">}</span>
+</section>
+<section id="the-slightly-less-cool-version-of-the-hello-world-program">
+<h2>The slightly less cool version of the hello world program</h2>
+<div class="code"><pre class="code csharp"><a id="rest_code_571d56923a92460eb9ae1a7ce09e3cea-1" name="rest_code_571d56923a92460eb9ae1a7ce09e3cea-1" href="#rest_code_571d56923a92460eb9ae1a7ce09e3cea-1"></a><span class="k">using</span><span class="w"> </span><span class="nn">System</span><span class="p">;</span>
+<a id="rest_code_571d56923a92460eb9ae1a7ce09e3cea-2" name="rest_code_571d56923a92460eb9ae1a7ce09e3cea-2" href="#rest_code_571d56923a92460eb9ae1a7ce09e3cea-2"></a>
+<a id="rest_code_571d56923a92460eb9ae1a7ce09e3cea-3" name="rest_code_571d56923a92460eb9ae1a7ce09e3cea-3" href="#rest_code_571d56923a92460eb9ae1a7ce09e3cea-3"></a><span class="k">class</span><span class="w"> </span><span class="nc">Program</span>
+<a id="rest_code_571d56923a92460eb9ae1a7ce09e3cea-4" name="rest_code_571d56923a92460eb9ae1a7ce09e3cea-4" href="#rest_code_571d56923a92460eb9ae1a7ce09e3cea-4"></a><span class="p">{</span>
+<a id="rest_code_571d56923a92460eb9ae1a7ce09e3cea-5" name="rest_code_571d56923a92460eb9ae1a7ce09e3cea-5" href="#rest_code_571d56923a92460eb9ae1a7ce09e3cea-5"></a><span class="w">  </span><span class="k">static</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">Main</span><span class="p">(</span><span class="kt">string</span><span class="p">[]</span><span class="w"> </span><span class="n">args</span><span class="p">)</span>
+<a id="rest_code_571d56923a92460eb9ae1a7ce09e3cea-6" name="rest_code_571d56923a92460eb9ae1a7ce09e3cea-6" href="#rest_code_571d56923a92460eb9ae1a7ce09e3cea-6"></a><span class="w">  </span><span class="p">{</span>
+<a id="rest_code_571d56923a92460eb9ae1a7ce09e3cea-7" name="rest_code_571d56923a92460eb9ae1a7ce09e3cea-7" href="#rest_code_571d56923a92460eb9ae1a7ce09e3cea-7"></a><span class="w">    </span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&quot;Hello, world!&quot;</span><span class="p">);</span>
+<a id="rest_code_571d56923a92460eb9ae1a7ce09e3cea-8" name="rest_code_571d56923a92460eb9ae1a7ce09e3cea-8" href="#rest_code_571d56923a92460eb9ae1a7ce09e3cea-8"></a><span class="w">  </span><span class="p">}</span>
+<a id="rest_code_571d56923a92460eb9ae1a7ce09e3cea-9" name="rest_code_571d56923a92460eb9ae1a7ce09e3cea-9" href="#rest_code_571d56923a92460eb9ae1a7ce09e3cea-9"></a><span class="p">}</span>
 </pre></div>
-<p>We’ve got four lines of code (plus four lines of braces <a class="brackets" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#footnote-1" id="footnote-reference-1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> ). We can see the <code class="docutils literal">using</code> directive to import everything from the <code class="docutils literal">System</code> namespace, the definition of a <code class="docutils literal">class</code>, a <code class="docutils literal">Main</code> method, and a call to <code class="docutils literal">Console.WriteLine</code>.</p>
+<p>We’ve got four lines of code (plus four lines of braces <a class="brackets" href="#footnote-1" id="footnote-reference-1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> ). We can see the <code class="docutils literal">using</code> directive to import everything from the <code class="docutils literal">System</code> namespace, the definition of a <code class="docutils literal">class</code>, a <code class="docutils literal">Main</code> method, and a call to <code class="docutils literal">Console.WriteLine</code>.</p>
 <p>We’ll talk more about C# later, highlighting some of the cooler things seen in Gitco.NET.</p>
-</section></section><section id="what-is-net"><h2>What is .NET?</h2>
+</section>
+</section>
+<section id="what-is-net">
+<h1>What is .NET?</h1>
 <p>The term “.NET” had quite a lot of meanings over the past two decades. Microsoft accounts were once called .NET Passport, and Windows Server 2003 was almost called “Windows Server .NET 2003”. Another thing called .NET was the .NET Framework. .NET Framework is a heavily integrated component of Windows, and it’s basically what was used to run C# (and F#, and VB.NET) — it includes the virtual machine (CLR, Core Language Runtime), a lot of libraries (Framework Class Library), and a lot of Windows-specific things (such as COM, Windows Forms, WPF).</p>
 <p>Microsoft’s .NET Framework is proprietary and tied to Windows. An open-source, independent re-implementation of .NET is Mono. At one point, some GNOME apps were written in Mono and Gtk#. Mono was also used in Xamarin, which can be used to write Android and iOS apps in C#.</p>
 <p>But then came out .NET Core, which is Microsoft’s open-source .NET with a new runtime (CoreCLR), new set of libraries (CoreFX), and multi-platform compatibility (Linux and macOS). After a few years, .NET Core got renamed to .NET (around the time it had pretty good feature parity with the classic .NET Framework). With the new .NET, you can build console apps, web apps (using ASP.NET Core, which is a pretty cool framework), mobile apps (soon using MAUI), and desktop apps (there are a few options).</p>
-</section><section id="gitco-net-code-tour"><h2>Gitco.NET code tour</h2>
+</section>
+<section id="gitco-net-code-tour">
+<h1>Gitco.NET code tour</h1>
 <p>Let’s go on a little tour of the more interesting parts of the code.</p>
-<section id="snippet-1"><h3>Snippet 1</h3>
-<div class="code"><pre class="code csharp"><a id="rest_code_6ae51747f791440094022dbfa3de2a51-1" name="rest_code_6ae51747f791440094022dbfa3de2a51-1" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_6ae51747f791440094022dbfa3de2a51-1"></a><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Branch</span><span class="o">&gt;</span><span class="w"> </span><span class="n">ExtractBranchListFromGitOutput</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">gitOutput</span><span class="p">)</span>
-<a id="rest_code_6ae51747f791440094022dbfa3de2a51-2" name="rest_code_6ae51747f791440094022dbfa3de2a51-2" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_6ae51747f791440094022dbfa3de2a51-2"></a><span class="w">  </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">gitOutput</span>
-<a id="rest_code_6ae51747f791440094022dbfa3de2a51-3" name="rest_code_6ae51747f791440094022dbfa3de2a51-3" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_6ae51747f791440094022dbfa3de2a51-3"></a><span class="w">    </span><span class="p">.</span><span class="n">TrimEnd</span><span class="p">()</span>
-<a id="rest_code_6ae51747f791440094022dbfa3de2a51-4" name="rest_code_6ae51747f791440094022dbfa3de2a51-4" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_6ae51747f791440094022dbfa3de2a51-4"></a><span class="w">    </span><span class="p">.</span><span class="n">ReplaceLineEndings</span><span class="p">(</span><span class="s">"\n"</span><span class="p">)</span>
-<a id="rest_code_6ae51747f791440094022dbfa3de2a51-5" name="rest_code_6ae51747f791440094022dbfa3de2a51-5" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_6ae51747f791440094022dbfa3de2a51-5"></a><span class="w">    </span><span class="p">.</span><span class="n">Split</span><span class="p">(</span><span class="sc">'\n'</span><span class="p">)</span>
-<a id="rest_code_6ae51747f791440094022dbfa3de2a51-6" name="rest_code_6ae51747f791440094022dbfa3de2a51-6" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_6ae51747f791440094022dbfa3de2a51-6"></a><span class="w">    </span><span class="p">.</span><span class="n">Select</span><span class="p">(</span><span class="n">branchLine</span><span class="w"> </span><span class="o">=&gt;</span>
-<a id="rest_code_6ae51747f791440094022dbfa3de2a51-7" name="rest_code_6ae51747f791440094022dbfa3de2a51-7" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_6ae51747f791440094022dbfa3de2a51-7"></a><span class="w">    </span><span class="p">{</span>
-<a id="rest_code_6ae51747f791440094022dbfa3de2a51-8" name="rest_code_6ae51747f791440094022dbfa3de2a51-8" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_6ae51747f791440094022dbfa3de2a51-8"></a><span class="w">      </span><span class="kt">var</span><span class="w"> </span><span class="n">isCurrent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">branchLine</span><span class="p">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="sc">'*'</span><span class="p">);</span>
-<a id="rest_code_6ae51747f791440094022dbfa3de2a51-9" name="rest_code_6ae51747f791440094022dbfa3de2a51-9" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_6ae51747f791440094022dbfa3de2a51-9"></a><span class="w">      </span><span class="kt">var</span><span class="w"> </span><span class="n">branch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">branchLine</span><span class="p">[</span><span class="mi">2</span><span class="p">..];</span>
-<a id="rest_code_6ae51747f791440094022dbfa3de2a51-10" name="rest_code_6ae51747f791440094022dbfa3de2a51-10" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_6ae51747f791440094022dbfa3de2a51-10"></a><span class="w">      </span><span class="kt">var</span><span class="w"> </span><span class="n">isRemote</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
-<a id="rest_code_6ae51747f791440094022dbfa3de2a51-11" name="rest_code_6ae51747f791440094022dbfa3de2a51-11" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_6ae51747f791440094022dbfa3de2a51-11"></a>
-<a id="rest_code_6ae51747f791440094022dbfa3de2a51-12" name="rest_code_6ae51747f791440094022dbfa3de2a51-12" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_6ae51747f791440094022dbfa3de2a51-12"></a><span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">branch</span><span class="p">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="n">remotePrefix</span><span class="p">))</span>
-<a id="rest_code_6ae51747f791440094022dbfa3de2a51-13" name="rest_code_6ae51747f791440094022dbfa3de2a51-13" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_6ae51747f791440094022dbfa3de2a51-13"></a><span class="w">      </span><span class="p">{</span>
-<a id="rest_code_6ae51747f791440094022dbfa3de2a51-14" name="rest_code_6ae51747f791440094022dbfa3de2a51-14" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_6ae51747f791440094022dbfa3de2a51-14"></a><span class="w">        </span><span class="n">isRemote</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
-<a id="rest_code_6ae51747f791440094022dbfa3de2a51-15" name="rest_code_6ae51747f791440094022dbfa3de2a51-15" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_6ae51747f791440094022dbfa3de2a51-15"></a><span class="w">        </span><span class="n">branch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span><span class="p">.</span><span class="n">Join</span><span class="p">(</span>
-<a id="rest_code_6ae51747f791440094022dbfa3de2a51-16" name="rest_code_6ae51747f791440094022dbfa3de2a51-16" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_6ae51747f791440094022dbfa3de2a51-16"></a><span class="w">          </span><span class="sc">'/'</span><span class="p">,</span>
-<a id="rest_code_6ae51747f791440094022dbfa3de2a51-17" name="rest_code_6ae51747f791440094022dbfa3de2a51-17" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_6ae51747f791440094022dbfa3de2a51-17"></a><span class="w">          </span><span class="n">branch</span><span class="p">.</span><span class="n">Split</span><span class="p">(</span><span class="s">" "</span><span class="p">).</span><span class="n">First</span><span class="p">().</span><span class="n">Split</span><span class="p">(</span><span class="s">"/"</span><span class="p">).</span><span class="n">Skip</span><span class="p">(</span><span class="mi">2</span><span class="p">));</span>
-<a id="rest_code_6ae51747f791440094022dbfa3de2a51-18" name="rest_code_6ae51747f791440094022dbfa3de2a51-18" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_6ae51747f791440094022dbfa3de2a51-18"></a><span class="w">      </span><span class="p">}</span>
-<a id="rest_code_6ae51747f791440094022dbfa3de2a51-19" name="rest_code_6ae51747f791440094022dbfa3de2a51-19" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_6ae51747f791440094022dbfa3de2a51-19"></a>
-<a id="rest_code_6ae51747f791440094022dbfa3de2a51-20" name="rest_code_6ae51747f791440094022dbfa3de2a51-20" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_6ae51747f791440094022dbfa3de2a51-20"></a><span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">Branch</span><span class="p">(</span><span class="n">branch</span><span class="p">,</span><span class="w"> </span><span class="n">isRemote</span><span class="p">,</span><span class="w"> </span><span class="n">isCurrent</span><span class="p">);</span>
-<a id="rest_code_6ae51747f791440094022dbfa3de2a51-21" name="rest_code_6ae51747f791440094022dbfa3de2a51-21" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_6ae51747f791440094022dbfa3de2a51-21"></a><span class="w">    </span><span class="p">})</span>
-<a id="rest_code_6ae51747f791440094022dbfa3de2a51-22" name="rest_code_6ae51747f791440094022dbfa3de2a51-22" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_6ae51747f791440094022dbfa3de2a51-22"></a><span class="w">    </span><span class="p">.</span><span class="n">OrderBy</span><span class="p">(</span><span class="n">b</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span>
-<a id="rest_code_6ae51747f791440094022dbfa3de2a51-23" name="rest_code_6ae51747f791440094022dbfa3de2a51-23" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_6ae51747f791440094022dbfa3de2a51-23"></a><span class="w">    </span><span class="p">.</span><span class="n">ThenBy</span><span class="p">(</span><span class="n">b</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">IsRemote</span><span class="p">)</span>
-<a id="rest_code_6ae51747f791440094022dbfa3de2a51-24" name="rest_code_6ae51747f791440094022dbfa3de2a51-24" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_6ae51747f791440094022dbfa3de2a51-24"></a><span class="w">    </span><span class="p">.</span><span class="n">DistinctBy</span><span class="p">(</span><span class="n">b</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span>
-<a id="rest_code_6ae51747f791440094022dbfa3de2a51-25" name="rest_code_6ae51747f791440094022dbfa3de2a51-25" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_6ae51747f791440094022dbfa3de2a51-25"></a><span class="w">    </span><span class="p">.</span><span class="n">ToList</span><span class="p">();</span>
+<section id="snippet-1">
+<h2>Snippet 1</h2>
+<div class="code"><pre class="code csharp"><a id="rest_code_c308c7ebd9924d0eb94e892197c52c65-1" name="rest_code_c308c7ebd9924d0eb94e892197c52c65-1" href="#rest_code_c308c7ebd9924d0eb94e892197c52c65-1"></a><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Branch</span><span class="o">&gt;</span><span class="w"> </span><span class="n">ExtractBranchListFromGitOutput</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">gitOutput</span><span class="p">)</span>
+<a id="rest_code_c308c7ebd9924d0eb94e892197c52c65-2" name="rest_code_c308c7ebd9924d0eb94e892197c52c65-2" href="#rest_code_c308c7ebd9924d0eb94e892197c52c65-2"></a><span class="w">  </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">gitOutput</span>
+<a id="rest_code_c308c7ebd9924d0eb94e892197c52c65-3" name="rest_code_c308c7ebd9924d0eb94e892197c52c65-3" href="#rest_code_c308c7ebd9924d0eb94e892197c52c65-3"></a><span class="w">    </span><span class="p">.</span><span class="n">TrimEnd</span><span class="p">()</span>
+<a id="rest_code_c308c7ebd9924d0eb94e892197c52c65-4" name="rest_code_c308c7ebd9924d0eb94e892197c52c65-4" href="#rest_code_c308c7ebd9924d0eb94e892197c52c65-4"></a><span class="w">    </span><span class="p">.</span><span class="n">ReplaceLineEndings</span><span class="p">(</span><span class="s">&quot;\n&quot;</span><span class="p">)</span>
+<a id="rest_code_c308c7ebd9924d0eb94e892197c52c65-5" name="rest_code_c308c7ebd9924d0eb94e892197c52c65-5" href="#rest_code_c308c7ebd9924d0eb94e892197c52c65-5"></a><span class="w">    </span><span class="p">.</span><span class="n">Split</span><span class="p">(</span><span class="sc">&#39;\n&#39;</span><span class="p">)</span>
+<a id="rest_code_c308c7ebd9924d0eb94e892197c52c65-6" name="rest_code_c308c7ebd9924d0eb94e892197c52c65-6" href="#rest_code_c308c7ebd9924d0eb94e892197c52c65-6"></a><span class="w">    </span><span class="p">.</span><span class="n">Select</span><span class="p">(</span><span class="n">branchLine</span><span class="w"> </span><span class="o">=&gt;</span>
+<a id="rest_code_c308c7ebd9924d0eb94e892197c52c65-7" name="rest_code_c308c7ebd9924d0eb94e892197c52c65-7" href="#rest_code_c308c7ebd9924d0eb94e892197c52c65-7"></a><span class="w">    </span><span class="p">{</span>
+<a id="rest_code_c308c7ebd9924d0eb94e892197c52c65-8" name="rest_code_c308c7ebd9924d0eb94e892197c52c65-8" href="#rest_code_c308c7ebd9924d0eb94e892197c52c65-8"></a><span class="w">      </span><span class="kt">var</span><span class="w"> </span><span class="n">isCurrent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">branchLine</span><span class="p">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="sc">&#39;*&#39;</span><span class="p">);</span>
+<a id="rest_code_c308c7ebd9924d0eb94e892197c52c65-9" name="rest_code_c308c7ebd9924d0eb94e892197c52c65-9" href="#rest_code_c308c7ebd9924d0eb94e892197c52c65-9"></a><span class="w">      </span><span class="kt">var</span><span class="w"> </span><span class="n">branch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">branchLine</span><span class="p">[</span><span class="mi">2</span><span class="p">..];</span>
+<a id="rest_code_c308c7ebd9924d0eb94e892197c52c65-10" name="rest_code_c308c7ebd9924d0eb94e892197c52c65-10" href="#rest_code_c308c7ebd9924d0eb94e892197c52c65-10"></a><span class="w">      </span><span class="kt">var</span><span class="w"> </span><span class="n">isRemote</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<a id="rest_code_c308c7ebd9924d0eb94e892197c52c65-11" name="rest_code_c308c7ebd9924d0eb94e892197c52c65-11" href="#rest_code_c308c7ebd9924d0eb94e892197c52c65-11"></a>
+<a id="rest_code_c308c7ebd9924d0eb94e892197c52c65-12" name="rest_code_c308c7ebd9924d0eb94e892197c52c65-12" href="#rest_code_c308c7ebd9924d0eb94e892197c52c65-12"></a><span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">branch</span><span class="p">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="n">remotePrefix</span><span class="p">))</span>
+<a id="rest_code_c308c7ebd9924d0eb94e892197c52c65-13" name="rest_code_c308c7ebd9924d0eb94e892197c52c65-13" href="#rest_code_c308c7ebd9924d0eb94e892197c52c65-13"></a><span class="w">      </span><span class="p">{</span>
+<a id="rest_code_c308c7ebd9924d0eb94e892197c52c65-14" name="rest_code_c308c7ebd9924d0eb94e892197c52c65-14" href="#rest_code_c308c7ebd9924d0eb94e892197c52c65-14"></a><span class="w">        </span><span class="n">isRemote</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<a id="rest_code_c308c7ebd9924d0eb94e892197c52c65-15" name="rest_code_c308c7ebd9924d0eb94e892197c52c65-15" href="#rest_code_c308c7ebd9924d0eb94e892197c52c65-15"></a><span class="w">        </span><span class="n">branch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span><span class="p">.</span><span class="n">Join</span><span class="p">(</span>
+<a id="rest_code_c308c7ebd9924d0eb94e892197c52c65-16" name="rest_code_c308c7ebd9924d0eb94e892197c52c65-16" href="#rest_code_c308c7ebd9924d0eb94e892197c52c65-16"></a><span class="w">          </span><span class="sc">&#39;/&#39;</span><span class="p">,</span>
+<a id="rest_code_c308c7ebd9924d0eb94e892197c52c65-17" name="rest_code_c308c7ebd9924d0eb94e892197c52c65-17" href="#rest_code_c308c7ebd9924d0eb94e892197c52c65-17"></a><span class="w">          </span><span class="n">branch</span><span class="p">.</span><span class="n">Split</span><span class="p">(</span><span class="s">&quot; &quot;</span><span class="p">).</span><span class="n">First</span><span class="p">().</span><span class="n">Split</span><span class="p">(</span><span class="s">&quot;/&quot;</span><span class="p">).</span><span class="n">Skip</span><span class="p">(</span><span class="mi">2</span><span class="p">));</span>
+<a id="rest_code_c308c7ebd9924d0eb94e892197c52c65-18" name="rest_code_c308c7ebd9924d0eb94e892197c52c65-18" href="#rest_code_c308c7ebd9924d0eb94e892197c52c65-18"></a><span class="w">      </span><span class="p">}</span>
+<a id="rest_code_c308c7ebd9924d0eb94e892197c52c65-19" name="rest_code_c308c7ebd9924d0eb94e892197c52c65-19" href="#rest_code_c308c7ebd9924d0eb94e892197c52c65-19"></a>
+<a id="rest_code_c308c7ebd9924d0eb94e892197c52c65-20" name="rest_code_c308c7ebd9924d0eb94e892197c52c65-20" href="#rest_code_c308c7ebd9924d0eb94e892197c52c65-20"></a><span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">Branch</span><span class="p">(</span><span class="n">branch</span><span class="p">,</span><span class="w"> </span><span class="n">isRemote</span><span class="p">,</span><span class="w"> </span><span class="n">isCurrent</span><span class="p">);</span>
+<a id="rest_code_c308c7ebd9924d0eb94e892197c52c65-21" name="rest_code_c308c7ebd9924d0eb94e892197c52c65-21" href="#rest_code_c308c7ebd9924d0eb94e892197c52c65-21"></a><span class="w">    </span><span class="p">})</span>
+<a id="rest_code_c308c7ebd9924d0eb94e892197c52c65-22" name="rest_code_c308c7ebd9924d0eb94e892197c52c65-22" href="#rest_code_c308c7ebd9924d0eb94e892197c52c65-22"></a><span class="w">    </span><span class="p">.</span><span class="n">OrderBy</span><span class="p">(</span><span class="n">b</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span>
+<a id="rest_code_c308c7ebd9924d0eb94e892197c52c65-23" name="rest_code_c308c7ebd9924d0eb94e892197c52c65-23" href="#rest_code_c308c7ebd9924d0eb94e892197c52c65-23"></a><span class="w">    </span><span class="p">.</span><span class="n">ThenBy</span><span class="p">(</span><span class="n">b</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">IsRemote</span><span class="p">)</span>
+<a id="rest_code_c308c7ebd9924d0eb94e892197c52c65-24" name="rest_code_c308c7ebd9924d0eb94e892197c52c65-24" href="#rest_code_c308c7ebd9924d0eb94e892197c52c65-24"></a><span class="w">    </span><span class="p">.</span><span class="n">DistinctBy</span><span class="p">(</span><span class="n">b</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span>
+<a id="rest_code_c308c7ebd9924d0eb94e892197c52c65-25" name="rest_code_c308c7ebd9924d0eb94e892197c52c65-25" href="#rest_code_c308c7ebd9924d0eb94e892197c52c65-25"></a><span class="w">    </span><span class="p">.</span><span class="n">ToList</span><span class="p">();</span>
 </pre></div>
 <p>This snippet defines a fairly standard pipeline that goes from <code class="docutils literal">git</code> output (a single string) to a list of parsed objects. This pipeline is a function (or a static method, to be more precise). This function uses expression-bodied members: since we can fit the entire pipeline in a single expression, we can skip the braces and the <code class="docutils literal">return</code> keyword, and instead use a more compact syntax with an arrow (<code class="docutils literal">=&gt;</code>). After some cleanups and sanitization of the string, we split the string by the <code class="docutils literal">\n</code> character, and the type of our pipeline changes from <code class="docutils literal">string</code> to <code class="docutils literal">string[]</code> (an array of strings). We then use five operations from the <code class="docutils literal">System.Linq</code> namespace. Those operations are extension methods for enumerables (<code class="docutils literal">IEnumerable&lt;T&gt;</code>) — adding <code class="docutils literal">using System.Linq;</code> at the top of your program adds those methods to any enumerables (including arrays, lists, dictionaries, sets…).</p>
-<p>The first operation is a <code class="docutils literal">Select</code>. LINQ methods are inspired by SQL; the more typical name for this one would be <code class="docutils literal">map</code>. (Similarly, <code class="docutils literal">Where</code> is LINQ’s name for <code class="docutils literal">filter</code>.) The logic inside <code class="docutils literal">Select</code> is written in a multi-line anonymous function (lambda), with braces (so there’s a <code class="docutils literal">return</code>) <a class="brackets" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#footnote-2" id="footnote-reference-2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>. Inside that anonymous function, there are a few niceties, such as <code class="docutils literal">var</code> (type inference for variables), slicing (<code class="docutils literal"><span class="pre">[2..]</span></code>), as well as some more LINQ in string manipulations (<code class="docutils literal">.First()</code> and <code class="docutils literal">.Skip(2)</code>, which do what they say on the tin).</p>
+<p>The first operation is a <code class="docutils literal">Select</code>. LINQ methods are inspired by SQL; the more typical name for this one would be <code class="docutils literal">map</code>. (Similarly, <code class="docutils literal">Where</code> is LINQ’s name for <code class="docutils literal">filter</code>.) The logic inside <code class="docutils literal">Select</code> is written in a multi-line anonymous function (lambda), with braces (so there’s a <code class="docutils literal">return</code>) <a class="brackets" href="#footnote-2" id="footnote-reference-2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>. Inside that anonymous function, there are a few niceties, such as <code class="docutils literal">var</code> (type inference for variables), slicing (<code class="docutils literal"><span class="pre">[2..]</span></code>), as well as some more LINQ in string manipulations (<code class="docutils literal">.First()</code> and <code class="docutils literal">.Skip(2)</code>, which do what they say on the tin).</p>
 <p>The next three operations are fairly straightforward sorting, and extracting unique values. Those use single-expression lambdas, which don’t use <code class="docutils literal">return</code>. The pipeline ends with converting <code class="docutils literal">IEnumerable&lt;Branch&gt;</code> (which appeared at the <code class="docutils literal">.Select()</code> stage) into a <code class="docutils literal">List&lt;Branch&gt;</code>.</p>
-</section><section id="snippet-2"><h3>Snippet 2</h3>
-<div class="code"><pre class="code csharp"><a id="rest_code_4eac4407d43f4f80b1c1a59e85f6e174-1" name="rest_code_4eac4407d43f4f80b1c1a59e85f6e174-1" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_4eac4407d43f4f80b1c1a59e85f6e174-1"></a><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">IEnumerable</span><span class="o">&lt;</span><span class="n">BranchDisplay</span><span class="o">&gt;</span><span class="w"> </span><span class="n">FilterAndNumberBranches</span><span class="p">(</span>
-<a id="rest_code_4eac4407d43f4f80b1c1a59e85f6e174-2" name="rest_code_4eac4407d43f4f80b1c1a59e85f6e174-2" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_4eac4407d43f4f80b1c1a59e85f6e174-2"></a><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Branch</span><span class="o">&gt;</span><span class="w"> </span><span class="n">branches</span><span class="p">,</span><span class="w"> </span><span class="kt">string?</span><span class="w"> </span><span class="n">filter</span><span class="p">)</span>
-<a id="rest_code_4eac4407d43f4f80b1c1a59e85f6e174-3" name="rest_code_4eac4407d43f4f80b1c1a59e85f6e174-3" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_4eac4407d43f4f80b1c1a59e85f6e174-3"></a><span class="p">{</span>
-<a id="rest_code_4eac4407d43f4f80b1c1a59e85f6e174-4" name="rest_code_4eac4407d43f4f80b1c1a59e85f6e174-4" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_4eac4407d43f4f80b1c1a59e85f6e174-4"></a><span class="w">  </span><span class="kt">var</span><span class="w"> </span><span class="n">branchWidth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">branches</span><span class="p">.</span><span class="n">Count</span>
-<a id="rest_code_4eac4407d43f4f80b1c1a59e85f6e174-5" name="rest_code_4eac4407d43f4f80b1c1a59e85f6e174-5" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_4eac4407d43f4f80b1c1a59e85f6e174-5"></a><span class="w">    </span><span class="p">.</span><span class="n">ToString</span><span class="p">(</span><span class="n">CultureInfo</span><span class="p">.</span><span class="n">InvariantCulture</span><span class="p">).</span><span class="n">Length</span><span class="p">;</span>
-<a id="rest_code_4eac4407d43f4f80b1c1a59e85f6e174-6" name="rest_code_4eac4407d43f4f80b1c1a59e85f6e174-6" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_4eac4407d43f4f80b1c1a59e85f6e174-6"></a><span class="w">  </span><span class="kt">var</span><span class="w"> </span><span class="n">numberFormatString</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">$"{{0,{branchWidth}}}. "</span><span class="p">;</span>
-<a id="rest_code_4eac4407d43f4f80b1c1a59e85f6e174-7" name="rest_code_4eac4407d43f4f80b1c1a59e85f6e174-7" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_4eac4407d43f4f80b1c1a59e85f6e174-7"></a>
-<a id="rest_code_4eac4407d43f4f80b1c1a59e85f6e174-8" name="rest_code_4eac4407d43f4f80b1c1a59e85f6e174-8" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_4eac4407d43f4f80b1c1a59e85f6e174-8"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">branches</span><span class="p">.</span><span class="n">Select</span><span class="p">(</span>
-<a id="rest_code_4eac4407d43f4f80b1c1a59e85f6e174-9" name="rest_code_4eac4407d43f4f80b1c1a59e85f6e174-9" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_4eac4407d43f4f80b1c1a59e85f6e174-9"></a><span class="w">    </span><span class="p">(</span><span class="n">branch</span><span class="p">,</span><span class="w"> </span><span class="n">index</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span>
-<a id="rest_code_4eac4407d43f4f80b1c1a59e85f6e174-10" name="rest_code_4eac4407d43f4f80b1c1a59e85f6e174-10" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_4eac4407d43f4f80b1c1a59e85f6e174-10"></a><span class="w">      </span><span class="k">new</span><span class="w"> </span><span class="nf">BranchDisplay</span><span class="p">(</span>
-<a id="rest_code_4eac4407d43f4f80b1c1a59e85f6e174-11" name="rest_code_4eac4407d43f4f80b1c1a59e85f6e174-11" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_4eac4407d43f4f80b1c1a59e85f6e174-11"></a><span class="w">        </span><span class="n">Number</span><span class="p">:</span><span class="w"> </span><span class="kt">string</span><span class="p">.</span><span class="n">Format</span><span class="p">(</span><span class="n">numberFormatString</span><span class="p">,</span><span class="w"> </span><span class="n">index</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">),</span>
-<a id="rest_code_4eac4407d43f4f80b1c1a59e85f6e174-12" name="rest_code_4eac4407d43f4f80b1c1a59e85f6e174-12" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_4eac4407d43f4f80b1c1a59e85f6e174-12"></a><span class="w">        </span><span class="n">BranchName</span><span class="p">:</span><span class="w"> </span><span class="n">branch</span><span class="p">.</span><span class="n">Name</span><span class="p">,</span>
-<a id="rest_code_4eac4407d43f4f80b1c1a59e85f6e174-13" name="rest_code_4eac4407d43f4f80b1c1a59e85f6e174-13" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_4eac4407d43f4f80b1c1a59e85f6e174-13"></a><span class="w">        </span><span class="n">IsRemote</span><span class="p">:</span><span class="w"> </span><span class="n">branch</span><span class="p">.</span><span class="n">IsRemote</span><span class="p">,</span>
-<a id="rest_code_4eac4407d43f4f80b1c1a59e85f6e174-14" name="rest_code_4eac4407d43f4f80b1c1a59e85f6e174-14" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_4eac4407d43f4f80b1c1a59e85f6e174-14"></a><span class="w">        </span><span class="n">IsCurrent</span><span class="p">:</span><span class="w"> </span><span class="n">branch</span><span class="p">.</span><span class="n">IsCurrent</span>
-<a id="rest_code_4eac4407d43f4f80b1c1a59e85f6e174-15" name="rest_code_4eac4407d43f4f80b1c1a59e85f6e174-15" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_4eac4407d43f4f80b1c1a59e85f6e174-15"></a><span class="w">      </span><span class="p">)</span>
-<a id="rest_code_4eac4407d43f4f80b1c1a59e85f6e174-16" name="rest_code_4eac4407d43f4f80b1c1a59e85f6e174-16" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_4eac4407d43f4f80b1c1a59e85f6e174-16"></a><span class="w">    </span><span class="p">).</span><span class="n">Where</span><span class="p">(</span><span class="n">branchDisplay</span><span class="w"> </span><span class="o">=&gt;</span>
-<a id="rest_code_4eac4407d43f4f80b1c1a59e85f6e174-17" name="rest_code_4eac4407d43f4f80b1c1a59e85f6e174-17" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_4eac4407d43f4f80b1c1a59e85f6e174-17"></a><span class="w">      </span><span class="n">filter</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="k">null</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">branchDisplay</span><span class="p">.</span><span class="n">BranchName</span><span class="p">.</span><span class="n">Contains</span><span class="p">(</span><span class="n">filter</span><span class="p">));</span>
-<a id="rest_code_4eac4407d43f4f80b1c1a59e85f6e174-18" name="rest_code_4eac4407d43f4f80b1c1a59e85f6e174-18" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_4eac4407d43f4f80b1c1a59e85f6e174-18"></a><span class="p">}</span>
+</section>
+<section id="snippet-2">
+<h2>Snippet 2</h2>
+<div class="code"><pre class="code csharp"><a id="rest_code_390cb327a66a4edcb2286cae95421dbc-1" name="rest_code_390cb327a66a4edcb2286cae95421dbc-1" href="#rest_code_390cb327a66a4edcb2286cae95421dbc-1"></a><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">IEnumerable</span><span class="o">&lt;</span><span class="n">BranchDisplay</span><span class="o">&gt;</span><span class="w"> </span><span class="n">FilterAndNumberBranches</span><span class="p">(</span>
+<a id="rest_code_390cb327a66a4edcb2286cae95421dbc-2" name="rest_code_390cb327a66a4edcb2286cae95421dbc-2" href="#rest_code_390cb327a66a4edcb2286cae95421dbc-2"></a><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Branch</span><span class="o">&gt;</span><span class="w"> </span><span class="n">branches</span><span class="p">,</span><span class="w"> </span><span class="kt">string?</span><span class="w"> </span><span class="n">filter</span><span class="p">)</span>
+<a id="rest_code_390cb327a66a4edcb2286cae95421dbc-3" name="rest_code_390cb327a66a4edcb2286cae95421dbc-3" href="#rest_code_390cb327a66a4edcb2286cae95421dbc-3"></a><span class="p">{</span>
+<a id="rest_code_390cb327a66a4edcb2286cae95421dbc-4" name="rest_code_390cb327a66a4edcb2286cae95421dbc-4" href="#rest_code_390cb327a66a4edcb2286cae95421dbc-4"></a><span class="w">  </span><span class="kt">var</span><span class="w"> </span><span class="n">branchWidth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">branches</span><span class="p">.</span><span class="n">Count</span>
+<a id="rest_code_390cb327a66a4edcb2286cae95421dbc-5" name="rest_code_390cb327a66a4edcb2286cae95421dbc-5" href="#rest_code_390cb327a66a4edcb2286cae95421dbc-5"></a><span class="w">    </span><span class="p">.</span><span class="n">ToString</span><span class="p">(</span><span class="n">CultureInfo</span><span class="p">.</span><span class="n">InvariantCulture</span><span class="p">).</span><span class="n">Length</span><span class="p">;</span>
+<a id="rest_code_390cb327a66a4edcb2286cae95421dbc-6" name="rest_code_390cb327a66a4edcb2286cae95421dbc-6" href="#rest_code_390cb327a66a4edcb2286cae95421dbc-6"></a><span class="w">  </span><span class="kt">var</span><span class="w"> </span><span class="n">numberFormatString</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">$&quot;{{0,{branchWidth}}}. &quot;</span><span class="p">;</span>
+<a id="rest_code_390cb327a66a4edcb2286cae95421dbc-7" name="rest_code_390cb327a66a4edcb2286cae95421dbc-7" href="#rest_code_390cb327a66a4edcb2286cae95421dbc-7"></a>
+<a id="rest_code_390cb327a66a4edcb2286cae95421dbc-8" name="rest_code_390cb327a66a4edcb2286cae95421dbc-8" href="#rest_code_390cb327a66a4edcb2286cae95421dbc-8"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">branches</span><span class="p">.</span><span class="n">Select</span><span class="p">(</span>
+<a id="rest_code_390cb327a66a4edcb2286cae95421dbc-9" name="rest_code_390cb327a66a4edcb2286cae95421dbc-9" href="#rest_code_390cb327a66a4edcb2286cae95421dbc-9"></a><span class="w">    </span><span class="p">(</span><span class="n">branch</span><span class="p">,</span><span class="w"> </span><span class="n">index</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span>
+<a id="rest_code_390cb327a66a4edcb2286cae95421dbc-10" name="rest_code_390cb327a66a4edcb2286cae95421dbc-10" href="#rest_code_390cb327a66a4edcb2286cae95421dbc-10"></a><span class="w">      </span><span class="k">new</span><span class="w"> </span><span class="nf">BranchDisplay</span><span class="p">(</span>
+<a id="rest_code_390cb327a66a4edcb2286cae95421dbc-11" name="rest_code_390cb327a66a4edcb2286cae95421dbc-11" href="#rest_code_390cb327a66a4edcb2286cae95421dbc-11"></a><span class="w">        </span><span class="n">Number</span><span class="p">:</span><span class="w"> </span><span class="kt">string</span><span class="p">.</span><span class="n">Format</span><span class="p">(</span><span class="n">numberFormatString</span><span class="p">,</span><span class="w"> </span><span class="n">index</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">),</span>
+<a id="rest_code_390cb327a66a4edcb2286cae95421dbc-12" name="rest_code_390cb327a66a4edcb2286cae95421dbc-12" href="#rest_code_390cb327a66a4edcb2286cae95421dbc-12"></a><span class="w">        </span><span class="n">BranchName</span><span class="p">:</span><span class="w"> </span><span class="n">branch</span><span class="p">.</span><span class="n">Name</span><span class="p">,</span>
+<a id="rest_code_390cb327a66a4edcb2286cae95421dbc-13" name="rest_code_390cb327a66a4edcb2286cae95421dbc-13" href="#rest_code_390cb327a66a4edcb2286cae95421dbc-13"></a><span class="w">        </span><span class="n">IsRemote</span><span class="p">:</span><span class="w"> </span><span class="n">branch</span><span class="p">.</span><span class="n">IsRemote</span><span class="p">,</span>
+<a id="rest_code_390cb327a66a4edcb2286cae95421dbc-14" name="rest_code_390cb327a66a4edcb2286cae95421dbc-14" href="#rest_code_390cb327a66a4edcb2286cae95421dbc-14"></a><span class="w">        </span><span class="n">IsCurrent</span><span class="p">:</span><span class="w"> </span><span class="n">branch</span><span class="p">.</span><span class="n">IsCurrent</span>
+<a id="rest_code_390cb327a66a4edcb2286cae95421dbc-15" name="rest_code_390cb327a66a4edcb2286cae95421dbc-15" href="#rest_code_390cb327a66a4edcb2286cae95421dbc-15"></a><span class="w">      </span><span class="p">)</span>
+<a id="rest_code_390cb327a66a4edcb2286cae95421dbc-16" name="rest_code_390cb327a66a4edcb2286cae95421dbc-16" href="#rest_code_390cb327a66a4edcb2286cae95421dbc-16"></a><span class="w">    </span><span class="p">).</span><span class="n">Where</span><span class="p">(</span><span class="n">branchDisplay</span><span class="w"> </span><span class="o">=&gt;</span>
+<a id="rest_code_390cb327a66a4edcb2286cae95421dbc-17" name="rest_code_390cb327a66a4edcb2286cae95421dbc-17" href="#rest_code_390cb327a66a4edcb2286cae95421dbc-17"></a><span class="w">      </span><span class="n">filter</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="k">null</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">branchDisplay</span><span class="p">.</span><span class="n">BranchName</span><span class="p">.</span><span class="n">Contains</span><span class="p">(</span><span class="n">filter</span><span class="p">));</span>
+<a id="rest_code_390cb327a66a4edcb2286cae95421dbc-18" name="rest_code_390cb327a66a4edcb2286cae95421dbc-18" href="#rest_code_390cb327a66a4edcb2286cae95421dbc-18"></a><span class="p">}</span>
 </pre></div>
-<p>This function adds numbers to the branch list, and then filters branches based on the user’s query. The first thing to notice is the second argument: <code class="docutils literal">string? filter</code>. C# has support for nullable types, which means the compiler warns you if you use a possibly null value somewhere it isn’t expected <a class="brackets" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#footnote-3" id="footnote-reference-3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>. <code class="docutils literal">numberFormatString</code> uses an interpolated string, in which <code class="docutils literal">{branchWidth}</code> will be replaced with the variable defined before. In the LINQ expression, you can see two interesting things: one is a two-argument lambda for <code class="docutils literal">Select</code>, and argument names, which can be optionally passed to functions and constructors for readability or to set parameters out of order.</p>
-</section><section id="snippet-3"><h3>Snippet 3</h3>
+<p>This function adds numbers to the branch list, and then filters branches based on the user’s query. The first thing to notice is the second argument: <code class="docutils literal">string? filter</code>. C# has support for nullable types, which means the compiler warns you if you use a possibly null value somewhere it isn’t expected <a class="brackets" href="#footnote-3" id="footnote-reference-3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>. <code class="docutils literal">numberFormatString</code> uses an interpolated string, in which <code class="docutils literal">{branchWidth}</code> will be replaced with the variable defined before. In the LINQ expression, you can see two interesting things: one is a two-argument lambda for <code class="docutils literal">Select</code>, and argument names, which can be optionally passed to functions and constructors for readability or to set parameters out of order.</p>
+</section>
+<section id="snippet-3">
+<h2>Snippet 3</h2>
 <p>How much boilerplate do you need to define an immutable data class with a constructor, value equality, and a string representation?</p>
 <p>Exactly zero:</p>
-<div class="code"><pre class="code csharp"><a id="rest_code_099762d7c6f748e4bec78b50ee379969-1" name="rest_code_099762d7c6f748e4bec78b50ee379969-1" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_099762d7c6f748e4bec78b50ee379969-1"></a><span class="k">public</span><span class="w"> </span><span class="k">record</span><span class="w"> </span><span class="nf">Branch</span><span class="p">(</span>
-<a id="rest_code_099762d7c6f748e4bec78b50ee379969-2" name="rest_code_099762d7c6f748e4bec78b50ee379969-2" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_099762d7c6f748e4bec78b50ee379969-2"></a><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">Name</span><span class="p">,</span>
-<a id="rest_code_099762d7c6f748e4bec78b50ee379969-3" name="rest_code_099762d7c6f748e4bec78b50ee379969-3" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_099762d7c6f748e4bec78b50ee379969-3"></a><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">IsRemote</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">,</span>
-<a id="rest_code_099762d7c6f748e4bec78b50ee379969-4" name="rest_code_099762d7c6f748e4bec78b50ee379969-4" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_099762d7c6f748e4bec78b50ee379969-4"></a><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">IsCurrent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">);</span>
-<a id="rest_code_099762d7c6f748e4bec78b50ee379969-5" name="rest_code_099762d7c6f748e4bec78b50ee379969-5" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_099762d7c6f748e4bec78b50ee379969-5"></a>
-<a id="rest_code_099762d7c6f748e4bec78b50ee379969-6" name="rest_code_099762d7c6f748e4bec78b50ee379969-6" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_099762d7c6f748e4bec78b50ee379969-6"></a><span class="k">public</span><span class="w"> </span><span class="k">record</span><span class="w"> </span><span class="nf">BranchDisplay</span><span class="p">(</span>
-<a id="rest_code_099762d7c6f748e4bec78b50ee379969-7" name="rest_code_099762d7c6f748e4bec78b50ee379969-7" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_099762d7c6f748e4bec78b50ee379969-7"></a><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">Number</span><span class="p">,</span>
-<a id="rest_code_099762d7c6f748e4bec78b50ee379969-8" name="rest_code_099762d7c6f748e4bec78b50ee379969-8" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_099762d7c6f748e4bec78b50ee379969-8"></a><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">BranchName</span><span class="p">,</span>
-<a id="rest_code_099762d7c6f748e4bec78b50ee379969-9" name="rest_code_099762d7c6f748e4bec78b50ee379969-9" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_099762d7c6f748e4bec78b50ee379969-9"></a><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">IsRemote</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">,</span>
-<a id="rest_code_099762d7c6f748e4bec78b50ee379969-10" name="rest_code_099762d7c6f748e4bec78b50ee379969-10" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_099762d7c6f748e4bec78b50ee379969-10"></a><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">IsCurrent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">);</span>
+<div class="code"><pre class="code csharp"><a id="rest_code_f4e830a38a2b43829677894c7c4094cd-1" name="rest_code_f4e830a38a2b43829677894c7c4094cd-1" href="#rest_code_f4e830a38a2b43829677894c7c4094cd-1"></a><span class="k">public</span><span class="w"> </span><span class="k">record</span><span class="w"> </span><span class="nf">Branch</span><span class="p">(</span>
+<a id="rest_code_f4e830a38a2b43829677894c7c4094cd-2" name="rest_code_f4e830a38a2b43829677894c7c4094cd-2" href="#rest_code_f4e830a38a2b43829677894c7c4094cd-2"></a><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">Name</span><span class="p">,</span>
+<a id="rest_code_f4e830a38a2b43829677894c7c4094cd-3" name="rest_code_f4e830a38a2b43829677894c7c4094cd-3" href="#rest_code_f4e830a38a2b43829677894c7c4094cd-3"></a><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">IsRemote</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">,</span>
+<a id="rest_code_f4e830a38a2b43829677894c7c4094cd-4" name="rest_code_f4e830a38a2b43829677894c7c4094cd-4" href="#rest_code_f4e830a38a2b43829677894c7c4094cd-4"></a><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">IsCurrent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">);</span>
+<a id="rest_code_f4e830a38a2b43829677894c7c4094cd-5" name="rest_code_f4e830a38a2b43829677894c7c4094cd-5" href="#rest_code_f4e830a38a2b43829677894c7c4094cd-5"></a>
+<a id="rest_code_f4e830a38a2b43829677894c7c4094cd-6" name="rest_code_f4e830a38a2b43829677894c7c4094cd-6" href="#rest_code_f4e830a38a2b43829677894c7c4094cd-6"></a><span class="k">public</span><span class="w"> </span><span class="k">record</span><span class="w"> </span><span class="nf">BranchDisplay</span><span class="p">(</span>
+<a id="rest_code_f4e830a38a2b43829677894c7c4094cd-7" name="rest_code_f4e830a38a2b43829677894c7c4094cd-7" href="#rest_code_f4e830a38a2b43829677894c7c4094cd-7"></a><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">Number</span><span class="p">,</span>
+<a id="rest_code_f4e830a38a2b43829677894c7c4094cd-8" name="rest_code_f4e830a38a2b43829677894c7c4094cd-8" href="#rest_code_f4e830a38a2b43829677894c7c4094cd-8"></a><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">BranchName</span><span class="p">,</span>
+<a id="rest_code_f4e830a38a2b43829677894c7c4094cd-9" name="rest_code_f4e830a38a2b43829677894c7c4094cd-9" href="#rest_code_f4e830a38a2b43829677894c7c4094cd-9"></a><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">IsRemote</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">,</span>
+<a id="rest_code_f4e830a38a2b43829677894c7c4094cd-10" name="rest_code_f4e830a38a2b43829677894c7c4094cd-10" href="#rest_code_f4e830a38a2b43829677894c7c4094cd-10"></a><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">IsCurrent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">);</span>
 </pre></div>
 <p>(If you want things to be mutable, you do need to write some more code. Still, all you need for encapsulated properties is <code class="docutils literal">int Foo { get; set; }</code>, which is miles better than having to write out getters and setters by hand, as you would do in Java.)</p>
-</section></section><section id="dependency-management"><h2>Dependency management</h2>
+</section>
+</section>
+<section id="dependency-management">
+<h1>Dependency management</h1>
 <p>Gitco.NET is a fairly simple thing, and it doesn’t need any third-party libraries, it can do its job with just the standard library.</p>
 <p>However, Gitco.NET has a test suite. .NET doesn’t ship with a unit testing framework. There are three popular options, I picked xUnit (which is the most popular). I created the test project with a template, and then added a reference to the main code (under test). I ended up with the following project file (<code class="docutils literal">gitco.NET.Tests.csproj</code>):</p>
-<div class="code"><pre class="code xml"><a id="rest_code_bf442eeeada947569b4c6ecebd8de0b3-1" name="rest_code_bf442eeeada947569b4c6ecebd8de0b3-1" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_bf442eeeada947569b4c6ecebd8de0b3-1"></a><span class="nt">&lt;Project</span><span class="w"> </span><span class="na">Sdk=</span><span class="s">"Microsoft.NET.Sdk"</span><span class="nt">&gt;</span>
-<a id="rest_code_bf442eeeada947569b4c6ecebd8de0b3-2" name="rest_code_bf442eeeada947569b4c6ecebd8de0b3-2" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_bf442eeeada947569b4c6ecebd8de0b3-2"></a>
-<a id="rest_code_bf442eeeada947569b4c6ecebd8de0b3-3" name="rest_code_bf442eeeada947569b4c6ecebd8de0b3-3" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_bf442eeeada947569b4c6ecebd8de0b3-3"></a><span class="w">  </span><span class="nt">&lt;PropertyGroup&gt;</span>
-<a id="rest_code_bf442eeeada947569b4c6ecebd8de0b3-4" name="rest_code_bf442eeeada947569b4c6ecebd8de0b3-4" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_bf442eeeada947569b4c6ecebd8de0b3-4"></a><span class="w">    </span><span class="nt">&lt;TargetFramework&gt;</span>net6.0<span class="nt">&lt;/TargetFramework&gt;</span>
-<a id="rest_code_bf442eeeada947569b4c6ecebd8de0b3-5" name="rest_code_bf442eeeada947569b4c6ecebd8de0b3-5" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_bf442eeeada947569b4c6ecebd8de0b3-5"></a><span class="w">    </span><span class="nt">&lt;ImplicitUsings&gt;</span>enable<span class="nt">&lt;/ImplicitUsings&gt;</span>
-<a id="rest_code_bf442eeeada947569b4c6ecebd8de0b3-6" name="rest_code_bf442eeeada947569b4c6ecebd8de0b3-6" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_bf442eeeada947569b4c6ecebd8de0b3-6"></a><span class="w">    </span><span class="nt">&lt;LangVersion&gt;</span>10.0<span class="nt">&lt;/LangVersion&gt;</span>
-<a id="rest_code_bf442eeeada947569b4c6ecebd8de0b3-7" name="rest_code_bf442eeeada947569b4c6ecebd8de0b3-7" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_bf442eeeada947569b4c6ecebd8de0b3-7"></a><span class="w">    </span><span class="nt">&lt;Nullable&gt;</span>enable<span class="nt">&lt;/Nullable&gt;</span>
-<a id="rest_code_bf442eeeada947569b4c6ecebd8de0b3-8" name="rest_code_bf442eeeada947569b4c6ecebd8de0b3-8" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_bf442eeeada947569b4c6ecebd8de0b3-8"></a><span class="w">    </span><span class="nt">&lt;IsPackable&gt;</span>false<span class="nt">&lt;/IsPackable&gt;</span>
-<a id="rest_code_bf442eeeada947569b4c6ecebd8de0b3-9" name="rest_code_bf442eeeada947569b4c6ecebd8de0b3-9" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_bf442eeeada947569b4c6ecebd8de0b3-9"></a><span class="w">  </span><span class="nt">&lt;/PropertyGroup&gt;</span>
-<a id="rest_code_bf442eeeada947569b4c6ecebd8de0b3-10" name="rest_code_bf442eeeada947569b4c6ecebd8de0b3-10" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_bf442eeeada947569b4c6ecebd8de0b3-10"></a>
-<a id="rest_code_bf442eeeada947569b4c6ecebd8de0b3-11" name="rest_code_bf442eeeada947569b4c6ecebd8de0b3-11" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_bf442eeeada947569b4c6ecebd8de0b3-11"></a><span class="w">  </span><span class="nt">&lt;ItemGroup&gt;</span>
-<a id="rest_code_bf442eeeada947569b4c6ecebd8de0b3-12" name="rest_code_bf442eeeada947569b4c6ecebd8de0b3-12" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_bf442eeeada947569b4c6ecebd8de0b3-12"></a><span class="w">    </span><span class="nt">&lt;PackageReference</span><span class="w"> </span><span class="na">Include=</span><span class="s">"Microsoft.NET.Test.Sdk"</span><span class="w"> </span><span class="na">Version=</span><span class="s">"17.1.0"</span><span class="w"> </span><span class="nt">/&gt;</span>
-<a id="rest_code_bf442eeeada947569b4c6ecebd8de0b3-13" name="rest_code_bf442eeeada947569b4c6ecebd8de0b3-13" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_bf442eeeada947569b4c6ecebd8de0b3-13"></a><span class="w">    </span><span class="nt">&lt;PackageReference</span><span class="w"> </span><span class="na">Include=</span><span class="s">"xunit"</span><span class="w"> </span><span class="na">Version=</span><span class="s">"2.4.1"</span><span class="w"> </span><span class="nt">/&gt;</span>
-<a id="rest_code_bf442eeeada947569b4c6ecebd8de0b3-14" name="rest_code_bf442eeeada947569b4c6ecebd8de0b3-14" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_bf442eeeada947569b4c6ecebd8de0b3-14"></a><span class="w">    </span><span class="nt">&lt;PackageReference</span><span class="w"> </span><span class="na">Include=</span><span class="s">"xunit.runner.visualstudio"</span><span class="w"> </span><span class="na">Version=</span><span class="s">"2.4.3"</span><span class="nt">&gt;</span>
-<a id="rest_code_bf442eeeada947569b4c6ecebd8de0b3-15" name="rest_code_bf442eeeada947569b4c6ecebd8de0b3-15" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_bf442eeeada947569b4c6ecebd8de0b3-15"></a><span class="w">      </span><span class="nt">&lt;IncludeAssets&gt;</span>runtime;<span class="w"> </span>build;<span class="w"> </span>native;<span class="w"> </span>contentfiles;<span class="w"> </span>analyzers;<span class="w"> </span>buildtransitive<span class="nt">&lt;/IncludeAssets&gt;</span>
-<a id="rest_code_bf442eeeada947569b4c6ecebd8de0b3-16" name="rest_code_bf442eeeada947569b4c6ecebd8de0b3-16" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_bf442eeeada947569b4c6ecebd8de0b3-16"></a><span class="w">      </span><span class="nt">&lt;PrivateAssets&gt;</span>all<span class="nt">&lt;/PrivateAssets&gt;</span>
-<a id="rest_code_bf442eeeada947569b4c6ecebd8de0b3-17" name="rest_code_bf442eeeada947569b4c6ecebd8de0b3-17" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_bf442eeeada947569b4c6ecebd8de0b3-17"></a><span class="w">    </span><span class="nt">&lt;/PackageReference&gt;</span>
-<a id="rest_code_bf442eeeada947569b4c6ecebd8de0b3-18" name="rest_code_bf442eeeada947569b4c6ecebd8de0b3-18" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_bf442eeeada947569b4c6ecebd8de0b3-18"></a><span class="w">    </span><span class="nt">&lt;PackageReference</span><span class="w"> </span><span class="na">Include=</span><span class="s">"coverlet.collector"</span><span class="w"> </span><span class="na">Version=</span><span class="s">"3.1.2"</span><span class="nt">&gt;</span>
-<a id="rest_code_bf442eeeada947569b4c6ecebd8de0b3-19" name="rest_code_bf442eeeada947569b4c6ecebd8de0b3-19" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_bf442eeeada947569b4c6ecebd8de0b3-19"></a><span class="w">      </span><span class="nt">&lt;IncludeAssets&gt;</span>runtime;<span class="w"> </span>build;<span class="w"> </span>native;<span class="w"> </span>contentfiles;<span class="w"> </span>analyzers;<span class="w"> </span>buildtransitive<span class="nt">&lt;/IncludeAssets&gt;</span>
-<a id="rest_code_bf442eeeada947569b4c6ecebd8de0b3-20" name="rest_code_bf442eeeada947569b4c6ecebd8de0b3-20" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_bf442eeeada947569b4c6ecebd8de0b3-20"></a><span class="w">      </span><span class="nt">&lt;PrivateAssets&gt;</span>all<span class="nt">&lt;/PrivateAssets&gt;</span>
-<a id="rest_code_bf442eeeada947569b4c6ecebd8de0b3-21" name="rest_code_bf442eeeada947569b4c6ecebd8de0b3-21" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_bf442eeeada947569b4c6ecebd8de0b3-21"></a><span class="w">    </span><span class="nt">&lt;/PackageReference&gt;</span>
-<a id="rest_code_bf442eeeada947569b4c6ecebd8de0b3-22" name="rest_code_bf442eeeada947569b4c6ecebd8de0b3-22" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_bf442eeeada947569b4c6ecebd8de0b3-22"></a><span class="w">  </span><span class="nt">&lt;/ItemGroup&gt;</span>
-<a id="rest_code_bf442eeeada947569b4c6ecebd8de0b3-23" name="rest_code_bf442eeeada947569b4c6ecebd8de0b3-23" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_bf442eeeada947569b4c6ecebd8de0b3-23"></a>
-<a id="rest_code_bf442eeeada947569b4c6ecebd8de0b3-24" name="rest_code_bf442eeeada947569b4c6ecebd8de0b3-24" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_bf442eeeada947569b4c6ecebd8de0b3-24"></a><span class="w">  </span><span class="nt">&lt;ItemGroup&gt;</span>
-<a id="rest_code_bf442eeeada947569b4c6ecebd8de0b3-25" name="rest_code_bf442eeeada947569b4c6ecebd8de0b3-25" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_bf442eeeada947569b4c6ecebd8de0b3-25"></a><span class="w">    </span><span class="nt">&lt;ProjectReference</span><span class="w"> </span><span class="na">Include=</span><span class="s">"..\gitco.NET\gitco.NET.csproj"</span><span class="w"> </span><span class="nt">/&gt;</span>
-<a id="rest_code_bf442eeeada947569b4c6ecebd8de0b3-26" name="rest_code_bf442eeeada947569b4c6ecebd8de0b3-26" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_bf442eeeada947569b4c6ecebd8de0b3-26"></a><span class="w">  </span><span class="nt">&lt;/ItemGroup&gt;</span>
-<a id="rest_code_bf442eeeada947569b4c6ecebd8de0b3-27" name="rest_code_bf442eeeada947569b4c6ecebd8de0b3-27" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_bf442eeeada947569b4c6ecebd8de0b3-27"></a>
-<a id="rest_code_bf442eeeada947569b4c6ecebd8de0b3-28" name="rest_code_bf442eeeada947569b4c6ecebd8de0b3-28" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#rest_code_bf442eeeada947569b4c6ecebd8de0b3-28"></a><span class="nt">&lt;/Project&gt;</span>
+<div class="code"><pre class="code xml"><a id="rest_code_3c2ae6d4077e4f6380698e2423682114-1" name="rest_code_3c2ae6d4077e4f6380698e2423682114-1" href="#rest_code_3c2ae6d4077e4f6380698e2423682114-1"></a><span class="nt">&lt;Project</span><span class="w"> </span><span class="na">Sdk=</span><span class="s">&quot;Microsoft.NET.Sdk&quot;</span><span class="nt">&gt;</span>
+<a id="rest_code_3c2ae6d4077e4f6380698e2423682114-2" name="rest_code_3c2ae6d4077e4f6380698e2423682114-2" href="#rest_code_3c2ae6d4077e4f6380698e2423682114-2"></a>
+<a id="rest_code_3c2ae6d4077e4f6380698e2423682114-3" name="rest_code_3c2ae6d4077e4f6380698e2423682114-3" href="#rest_code_3c2ae6d4077e4f6380698e2423682114-3"></a><span class="w">  </span><span class="nt">&lt;PropertyGroup&gt;</span>
+<a id="rest_code_3c2ae6d4077e4f6380698e2423682114-4" name="rest_code_3c2ae6d4077e4f6380698e2423682114-4" href="#rest_code_3c2ae6d4077e4f6380698e2423682114-4"></a><span class="w">    </span><span class="nt">&lt;TargetFramework&gt;</span>net6.0<span class="nt">&lt;/TargetFramework&gt;</span>
+<a id="rest_code_3c2ae6d4077e4f6380698e2423682114-5" name="rest_code_3c2ae6d4077e4f6380698e2423682114-5" href="#rest_code_3c2ae6d4077e4f6380698e2423682114-5"></a><span class="w">    </span><span class="nt">&lt;ImplicitUsings&gt;</span>enable<span class="nt">&lt;/ImplicitUsings&gt;</span>
+<a id="rest_code_3c2ae6d4077e4f6380698e2423682114-6" name="rest_code_3c2ae6d4077e4f6380698e2423682114-6" href="#rest_code_3c2ae6d4077e4f6380698e2423682114-6"></a><span class="w">    </span><span class="nt">&lt;LangVersion&gt;</span>10.0<span class="nt">&lt;/LangVersion&gt;</span>
+<a id="rest_code_3c2ae6d4077e4f6380698e2423682114-7" name="rest_code_3c2ae6d4077e4f6380698e2423682114-7" href="#rest_code_3c2ae6d4077e4f6380698e2423682114-7"></a><span class="w">    </span><span class="nt">&lt;Nullable&gt;</span>enable<span class="nt">&lt;/Nullable&gt;</span>
+<a id="rest_code_3c2ae6d4077e4f6380698e2423682114-8" name="rest_code_3c2ae6d4077e4f6380698e2423682114-8" href="#rest_code_3c2ae6d4077e4f6380698e2423682114-8"></a><span class="w">    </span><span class="nt">&lt;IsPackable&gt;</span>false<span class="nt">&lt;/IsPackable&gt;</span>
+<a id="rest_code_3c2ae6d4077e4f6380698e2423682114-9" name="rest_code_3c2ae6d4077e4f6380698e2423682114-9" href="#rest_code_3c2ae6d4077e4f6380698e2423682114-9"></a><span class="w">  </span><span class="nt">&lt;/PropertyGroup&gt;</span>
+<a id="rest_code_3c2ae6d4077e4f6380698e2423682114-10" name="rest_code_3c2ae6d4077e4f6380698e2423682114-10" href="#rest_code_3c2ae6d4077e4f6380698e2423682114-10"></a>
+<a id="rest_code_3c2ae6d4077e4f6380698e2423682114-11" name="rest_code_3c2ae6d4077e4f6380698e2423682114-11" href="#rest_code_3c2ae6d4077e4f6380698e2423682114-11"></a><span class="w">  </span><span class="nt">&lt;ItemGroup&gt;</span>
+<a id="rest_code_3c2ae6d4077e4f6380698e2423682114-12" name="rest_code_3c2ae6d4077e4f6380698e2423682114-12" href="#rest_code_3c2ae6d4077e4f6380698e2423682114-12"></a><span class="w">    </span><span class="nt">&lt;PackageReference</span><span class="w"> </span><span class="na">Include=</span><span class="s">&quot;Microsoft.NET.Test.Sdk&quot;</span><span class="w"> </span><span class="na">Version=</span><span class="s">&quot;17.1.0&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<a id="rest_code_3c2ae6d4077e4f6380698e2423682114-13" name="rest_code_3c2ae6d4077e4f6380698e2423682114-13" href="#rest_code_3c2ae6d4077e4f6380698e2423682114-13"></a><span class="w">    </span><span class="nt">&lt;PackageReference</span><span class="w"> </span><span class="na">Include=</span><span class="s">&quot;xunit&quot;</span><span class="w"> </span><span class="na">Version=</span><span class="s">&quot;2.4.1&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<a id="rest_code_3c2ae6d4077e4f6380698e2423682114-14" name="rest_code_3c2ae6d4077e4f6380698e2423682114-14" href="#rest_code_3c2ae6d4077e4f6380698e2423682114-14"></a><span class="w">    </span><span class="nt">&lt;PackageReference</span><span class="w"> </span><span class="na">Include=</span><span class="s">&quot;xunit.runner.visualstudio&quot;</span><span class="w"> </span><span class="na">Version=</span><span class="s">&quot;2.4.3&quot;</span><span class="nt">&gt;</span>
+<a id="rest_code_3c2ae6d4077e4f6380698e2423682114-15" name="rest_code_3c2ae6d4077e4f6380698e2423682114-15" href="#rest_code_3c2ae6d4077e4f6380698e2423682114-15"></a><span class="w">      </span><span class="nt">&lt;IncludeAssets&gt;</span>runtime;<span class="w"> </span>build;<span class="w"> </span>native;<span class="w"> </span>contentfiles;<span class="w"> </span>analyzers;<span class="w"> </span>buildtransitive<span class="nt">&lt;/IncludeAssets&gt;</span>
+<a id="rest_code_3c2ae6d4077e4f6380698e2423682114-16" name="rest_code_3c2ae6d4077e4f6380698e2423682114-16" href="#rest_code_3c2ae6d4077e4f6380698e2423682114-16"></a><span class="w">      </span><span class="nt">&lt;PrivateAssets&gt;</span>all<span class="nt">&lt;/PrivateAssets&gt;</span>
+<a id="rest_code_3c2ae6d4077e4f6380698e2423682114-17" name="rest_code_3c2ae6d4077e4f6380698e2423682114-17" href="#rest_code_3c2ae6d4077e4f6380698e2423682114-17"></a><span class="w">    </span><span class="nt">&lt;/PackageReference&gt;</span>
+<a id="rest_code_3c2ae6d4077e4f6380698e2423682114-18" name="rest_code_3c2ae6d4077e4f6380698e2423682114-18" href="#rest_code_3c2ae6d4077e4f6380698e2423682114-18"></a><span class="w">    </span><span class="nt">&lt;PackageReference</span><span class="w"> </span><span class="na">Include=</span><span class="s">&quot;coverlet.collector&quot;</span><span class="w"> </span><span class="na">Version=</span><span class="s">&quot;3.1.2&quot;</span><span class="nt">&gt;</span>
+<a id="rest_code_3c2ae6d4077e4f6380698e2423682114-19" name="rest_code_3c2ae6d4077e4f6380698e2423682114-19" href="#rest_code_3c2ae6d4077e4f6380698e2423682114-19"></a><span class="w">      </span><span class="nt">&lt;IncludeAssets&gt;</span>runtime;<span class="w"> </span>build;<span class="w"> </span>native;<span class="w"> </span>contentfiles;<span class="w"> </span>analyzers;<span class="w"> </span>buildtransitive<span class="nt">&lt;/IncludeAssets&gt;</span>
+<a id="rest_code_3c2ae6d4077e4f6380698e2423682114-20" name="rest_code_3c2ae6d4077e4f6380698e2423682114-20" href="#rest_code_3c2ae6d4077e4f6380698e2423682114-20"></a><span class="w">      </span><span class="nt">&lt;PrivateAssets&gt;</span>all<span class="nt">&lt;/PrivateAssets&gt;</span>
+<a id="rest_code_3c2ae6d4077e4f6380698e2423682114-21" name="rest_code_3c2ae6d4077e4f6380698e2423682114-21" href="#rest_code_3c2ae6d4077e4f6380698e2423682114-21"></a><span class="w">    </span><span class="nt">&lt;/PackageReference&gt;</span>
+<a id="rest_code_3c2ae6d4077e4f6380698e2423682114-22" name="rest_code_3c2ae6d4077e4f6380698e2423682114-22" href="#rest_code_3c2ae6d4077e4f6380698e2423682114-22"></a><span class="w">  </span><span class="nt">&lt;/ItemGroup&gt;</span>
+<a id="rest_code_3c2ae6d4077e4f6380698e2423682114-23" name="rest_code_3c2ae6d4077e4f6380698e2423682114-23" href="#rest_code_3c2ae6d4077e4f6380698e2423682114-23"></a>
+<a id="rest_code_3c2ae6d4077e4f6380698e2423682114-24" name="rest_code_3c2ae6d4077e4f6380698e2423682114-24" href="#rest_code_3c2ae6d4077e4f6380698e2423682114-24"></a><span class="w">  </span><span class="nt">&lt;ItemGroup&gt;</span>
+<a id="rest_code_3c2ae6d4077e4f6380698e2423682114-25" name="rest_code_3c2ae6d4077e4f6380698e2423682114-25" href="#rest_code_3c2ae6d4077e4f6380698e2423682114-25"></a><span class="w">    </span><span class="nt">&lt;ProjectReference</span><span class="w"> </span><span class="na">Include=</span><span class="s">&quot;..\gitco.NET\gitco.NET.csproj&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<a id="rest_code_3c2ae6d4077e4f6380698e2423682114-26" name="rest_code_3c2ae6d4077e4f6380698e2423682114-26" href="#rest_code_3c2ae6d4077e4f6380698e2423682114-26"></a><span class="w">  </span><span class="nt">&lt;/ItemGroup&gt;</span>
+<a id="rest_code_3c2ae6d4077e4f6380698e2423682114-27" name="rest_code_3c2ae6d4077e4f6380698e2423682114-27" href="#rest_code_3c2ae6d4077e4f6380698e2423682114-27"></a>
+<a id="rest_code_3c2ae6d4077e4f6380698e2423682114-28" name="rest_code_3c2ae6d4077e4f6380698e2423682114-28" href="#rest_code_3c2ae6d4077e4f6380698e2423682114-28"></a><span class="nt">&lt;/Project&gt;</span>
 </pre></div>
 <p>Yeah, it’s an XML file. But it’s pretty straightforward: there’s a <code class="docutils literal">&lt;PropertyGroup&gt;</code> with some project configuration, and two <code class="docutils literal">&lt;ItemGroup&gt;&gt;</code> tags. One of them has <code class="docutils literal">&lt;PackageReference&gt;</code> tags, which specify third-party dependencies to use. The other has a <code class="docutils literal">&lt;ProjectReference&gt;</code> to the main code, pointing at its <code class="docutils literal">.csproj</code> file. (Note that this split is arbitrary, you can have as many <code class="docutils literal">&lt;ItemGroup&gt;</code> tags as you want, you could have just one with both package and project references.)</p>
 <p>How does this work? Quite simply, and transparently to the developer. Building the project will lead to packages being <em>restored</em> (fetched from NuGet, or copied from the local NuGet cache). There are no “virtual environments” to manage, there aren’t 10 competing package managers. Visual Studio will also expect both projects to be part of one solution, which is something you’d likely do anyway for convenient access to both at the same time.</p>
-</section><section id="tooling"><h2>Tooling</h2>
-<section id="dotnet-cli"><h3>dotnet CLI</h3>
+</section>
+<section id="tooling">
+<h1>Tooling</h1>
+<section id="dotnet-cli">
+<h2>dotnet CLI</h2>
 <p>.NET has a CLI for performing typical build and project configuration tasks. You can <code class="docutils literal">dotnet build</code> a project, you can <code class="docutils literal">dotnet run</code> it, you can <code class="docutils literal">dotnet test</code> things, and you can <code class="docutils literal">dotnet publish</code>. The CLI figures out what to do, it restores the dependencies if needed, it handles the compilation of your code. If you type <code class="docutils literal">dotnet test</code> in a directory with your solution file (<code class="docutils literal">.sln</code>), it will restore dependencies, build the code, and then find tests and run them.</p>
-</section><section id="ide"><h3>IDE</h3>
+</section>
+<section id="ide">
+<h2>IDE</h2>
 <p>What IDE should you use? There are a few options:</p>
 <ul class="simple">
 <li><p><strong>Visual Studio Code.</strong> The quite advanced text editor supports pretty much any language. C# support works okay, with all the IDE features available, but in my experience, it can sometimes get confused (requiring a restart of the IDE). You will probably need to spend some more time with the <code class="docutils literal">dotnet</code> CLI than you would with the other options.</p></li>
@@ -248,10 +295,15 @@ og: http://ogp.me/ns#
 <li><p><strong>Visual Studio for Mac.</strong> A completely separate product, works reasonably well, same pricing as with the Windows version.</p></li>
 <li><p><strong>Visual Studio for Windows + ReSharper Ultimate.</strong> Adding this (paid) extension makes VS much smarter, although it can also affect performance negatively.</p></li>
 <li><p><strong>JetBrains Rider.</strong> This is an IDE based on the IntelliJ platform, with all the magic seen in ReSharper (as well as other JetBrains IDEs), but none of the performance issues and Visual Studio being Visual Studio (although if you do prefer VS behaviors and keyboard shortcuts, you can configure those as well). This is probably your best bet if you’re willing to invest some money (or your employer is).</p></li>
-</ul></section></section><section id="why-should-i-pick-it-over-x"><h2>Why should I pick it over X?</h2>
+</ul>
+</section>
+</section>
+<section id="why-should-i-pick-it-over-x">
+<h1>Why should I pick it over X?</h1>
 <p>Well, it depends. If this post has piqued your interest, perhaps install the SDK and write some small things to get a feel for the language and to see if it’s for you. (And note this post didn’t cover the Web stuff.)</p>
 <p>But here are a few things of note:</p>
-<section id="python"><h3>Python</h3>
+<section id="python">
+<h2>Python</h2>
 <ul class="simple">
 <li><p>C# is statically typed. Modern Python’s static typing (via things like mypy) is quite cool, but not all libraries and ecosystems have adopted it. Statically typed languages are safer, and allow IDEs to be smarter.</p></li>
 <li><p>C# has a better approach to functional programming. Python has ugly and single-expression lambdas (with a pointless <code class="docutils literal">lambda</code> keyword), C# has inline functions that can contain multiple statements.</p></li>
@@ -259,7 +311,10 @@ og: http://ogp.me/ns#
 <li><p>C# is trivial to compile to a single-file executable.</p></li>
 <li><p>C# is much faster than Python.</p></li>
 <li><p>~Nobody does machine learning and data science in C#, which is a plus in my book.</p></li>
-</ul></section><section id="java"><h3>Java</h3>
+</ul>
+</section>
+<section id="java">
+<h2>Java</h2>
 <ul class="simple">
 <li><p>C# has a lot more developer-quality-of-life features and less boilerplate. For example, Lists and Dictionaries can be accessed using brackets, and properties are accessible via dot notation instead of having to explicitly call getter and setter methods.</p></li>
 <li><p>C#’s generic are more flexible, as they aren’t erased on compilation.</p></li>
@@ -268,12 +323,17 @@ og: http://ogp.me/ns#
 <li><p>Web stuff: Spring is painful, Spring Boot doesn’t make it much better. ASP.NET Core is much nicer.</p></li>
 </ul>
 <p><em>Additional reading:</em> Wikipedia has a very nice and detailed <a class="reference external" href="https://en.wikipedia.org/wiki/Comparison_of_C_Sharp_and_Java">Comparison of C# and Java</a>.</p>
-</section><section id="also"><h3>Also…</h3>
+</section>
+<section id="also">
+<h2>Also…</h2>
 <ul class="simple">
 <li><p>C# is a high-level language with automated memory management, which is very convenient in many use-cases.</p></li>
 <li><p>C# has exceptions.</p></li>
 <li><p>There are quite a lot of jobs for C# developers, although not necessarily in Silicon Valley.</p></li>
-</ul></section><section id="but-on-the-other-hand"><h3>But on the other hand…</h3>
+</ul>
+</section>
+<section id="but-on-the-other-hand">
+<h2>But on the other hand…</h2>
 <ul class="simple">
 <li><p>C# can still sometimes feel a bit Windows-oriented.</p></li>
 <li><p>C# jobs tend to be enterprisey.</p></li>
@@ -285,102 +345,161 @@ og: http://ogp.me/ns#
 <li><p>And if you’re making web front-end stuff, TypeScript (or plain JavaScript) is still your best bet. C# has Blazor, but I’d prefer for web apps not to embed all of .NET via WebAssembly.</p></li>
 </ul>
 <p>But for console apps, Windows desktop, and web back-end services? <strong>Do give C# a try,</strong> it might just win you over. It is a pretty good language, but one that was held back by the Windows association for a long time. But now it’s part of a modern, multi-platform, developer-friendly ecosystem.</p>
-</section></section><section id="footnotes"><h2>Footnotes</h2>
-<aside class="footnote-list brackets"><aside class="footnote brackets" id="footnote-1" role="doc-footnote"><span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#footnote-reference-1">1</a><span class="fn-bracket">]</span></span>
+</section>
+</section>
+<section id="footnotes">
+<h1>Footnotes</h1>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="footnote-1" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#footnote-reference-1">1</a><span class="fn-bracket">]</span></span>
 <p>The code samples in this post are using the usual Microsoft code style with braces on separate lines, the usual Microsoft naming convention (PascalCase for ~everything, camelCase for local variable names), and 2-space indentation, which isn’t the usual Microsoft style.</p>
-</aside><aside class="footnote brackets" id="footnote-2" role="doc-footnote"><span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#footnote-reference-2">2</a><span class="fn-bracket">]</span></span>
+</aside>
+<aside class="footnote brackets" id="footnote-2" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#footnote-reference-2">2</a><span class="fn-bracket">]</span></span>
 <p>This could be moved to a separate static method. If that method was <code class="docutils literal">private static Branch ParseLineAsBranch(string branchLine)</code>, then the expression could be <code class="docutils literal">.Select(ParseLineAsBranch)</code>.</p>
-</aside><aside class="footnote brackets" id="footnote-3" role="doc-footnote"><span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/#footnote-reference-3">3</a><span class="fn-bracket">]</span></span>
+</aside>
+<aside class="footnote brackets" id="footnote-3" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#footnote-reference-3">3</a><span class="fn-bracket">]</span></span>
 <p>There’s some inconsistency and mixing when working with nullables: nullable objects (such as <code class="docutils literal">string?</code>) are accessible directly, whereas nullable value types (such as <code class="docutils literal">int?</code>) need to be accessed with <code class="docutils literal">.Value</code>, due to historical reasons and implementation details.</p>
-</aside></aside></section></article>
-</div>
-    <aside class="postpromonav"><nav><ul class="pager hidden-print">
-<li class="previous">
-                <a href="/blog/2021/01/31/enabling-virtualization-support-in-boot-camp-with-refind/" rel="prev" title="Enabling Virtualization Support in Boot Camp with rEFInd">Previous post</a>
-            </li>
-            <li class="next">
-                <a href="/blog/2023/01/15/how-to-improve-python-packaging/" rel="next" title="How to improve Python packaging, or why fourteen tools are at least twelve too many">Next post</a>
-            </li>
-        </ul></nav></aside><section class="comments"><div data-title="Writing a Console App in C# for Fun and Profit" id="isso-thread"></div>
-        <script src="https://isso.chriswarrick.com/js/embed.min.js" data-isso="https://isso.chriswarrick.com/" data-isso-lang="en" data-isso-require-author="true" data-isso-require-email="true" data-isso-gravatar="true" data-isso-avatar="false" data-isso-css="false" data-isso-vote="false" data-isso-reply-notifications="true"></script></section><!--End of body content--><nav id="footer-links"><div class="row">
-            <div class="col-sm-4">
-                <h6>Blog</h6>
-                <ul>
-<li class="nav-item">
-<a href="/blog/" class="nav-link">Archive</a>
-                        </li>
-<li class="nav-item">
-<a href="/blog/tags/" class="nav-link">Tags</a>
-                        </li>
-<li class="nav-item">
-<a href="/rss.xml" class="nav-link">RSS Feed</a>
-                        </li>
-<li class="nav-item">
-<a href="/search/" class="nav-link">Search</a>
-                </li>
-</ul>
-</div>
-            <div class="col-sm-4">
-                <h6>Projects and Work</h6>
-                <ul>
-<li class="nav-item">
-<a href="/projects/" class="nav-link">Projects</a>
-                        </li>
-<li class="nav-item">
-<a href="/guides/" class="nav-link">Guides</a>
-                        </li>
-<li class="nav-item">
-<a href="/kwbot/" class="nav-link">KwBot</a>
-                        </li>
-<li class="nav-item">
-<a href="/blog/tags/cat_python" class="nav-link">Posts about Python</a>
-                </li>
-</ul>
-</div>
-            <div class="col-sm-4">
-                <h6>Me</h6>
-                <ul>
-<li class="nav-item">
-<a href="/contact/" class="nav-link">Contact</a>
-                        </li>
-<li class="nav-item">
-<a href="/brand/" class="nav-link">Brand</a>
-                        </li>
-<li class="nav-item">
-<a href="https://twitter.com/Kwpolska" class="nav-link">Twitter</a>
-                        </li>
-<li class="nav-item">
-<a href="https://github.com/Kwpolska" class="nav-link">GitHub</a>
-                </li>
-</ul>
-</div>
-        </div></nav><footer id="footer"><p>this site uses cookies.<br>by using this site, you agree to our <a href="/privacy/">cookie and privacy policy</a>.</p>
-<p>
-powered by <strong><a href="https://getnikola.com/">Nikola</a></strong>, <a href="http://nginx.org/">nginx</a> and <a href="https://hetzner.cloud/?ref=Qy1lehF8PwzP">Hetzner Cloud</a><br>
-copyright © 2009–2026 <a href="/contact/">Chris Warrick</a><br><a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC
-BY-NC-SA</a>, unless stated otherwise</p>
-            
-        </footer>
-</div>
+</aside>
+</aside>
+</section>
+
+  </div>
+</article>
 
 
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script><script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.11.0/baguetteBox.min.js" integrity="sha256-yQGjQhFs3LtyiN5hhr3k9s9TWZOh/RzCkD3gwwCKlkg=" crossorigin="anonymous"></script><script src="/assets/js/all.js?v=20230115"></script><script>
-    baguetteBox.run('div#content', {
-        ignoreClass: 'islink',
-        captions: function(element) {
-            return element.getElementsByTagName('img')[0].alt;
-    }});
-    </script><!-- Matomo --><script>
+
+
+  <aside class="postpromonav">
+    <nav>
+      <ul class="pager hidden-print">
+        
+          <li class="previous">
+            <a href="/blog/2021/01/31/enabling-virtualization-support-in-boot-camp-with-refind/" rel="prev"
+               title="Enabling Virtualization Support in Boot Camp with rEFInd">Previous post</a>
+          </li>
+        
+        
+          <li class="next">
+            <a href="/blog/2023/01/15/how-to-improve-python-packaging/" rel="prev"
+               title="How to improve Python packaging, or why fourteen tools are at least twelve too many">Next post</a>
+          </li>
+        
+      </ul>
+    </nav>
+  </aside>
+
+
+
+  <section class="comments">
+    <div data-title="Writing a Console App in C# for Fun and Profit" id="isso-thread"></div>
+    <script src="https://isso.chriswarrick.com/js/embed.min.js" data-isso="https://isso.chriswarrick.com/"
+            data-isso-lang="en" data-isso-require-author="true" data-isso-require-email="true" data-isso-gravatar="true"
+            data-isso-avatar="false" data-isso-css="false" data-isso-vote="false"
+            data-isso-reply-notifications="true"></script>
+  </section>
+
+
+
+    <script src="https://isso.chriswarrick.com/js/count.min.js" data-isso="https://isso.chriswarrick.com/"
+            data-isso-lang="en"></script>
+    <nav id="footer-links">
+      <div class="row">
+        <div class="col-sm-4">
+          <h6>Blog</h6>
+          <ul>
+            <li class="nav-item">
+              <a href="/blog/" class="nav-link">Archives</a>
+            </li>
+            <li class="nav-item">
+              <a href="/blog/tags/" class="nav-link">Tags</a>
+            </li>
+            <li class="nav-item">
+              <a href="/listings/" class="nav-link">Listings</a>
+            </li>
+            <li class="nav-item">
+              <a href="/rss.xml" class="nav-link">RSS Feed</a>
+            </li>
+          </ul>
+        </div>
+        <div class="col-sm-4">
+          <h6>Projects and Work</h6>
+          <ul>
+            <li class="nav-item">
+              <a href="/projects/" class="nav-link">Projects</a>
+            </li>
+            <li class="nav-item">
+              <a href="/guides/" class="nav-link">Guides</a>
+            </li>
+            <li class="nav-item">
+              <a href="/kwbot/" class="nav-link">KwBot</a>
+            </li>
+            <li class="nav-item">
+              <a href="/blog/tags/cat_python" class="nav-link">Posts about Python</a>
+            </li>
+          </ul>
+        </div>
+        <div class="col-sm-4">
+          <h6>Me</h6>
+          <ul>
+            <li class="nav-item">
+              <a href="/contact/" class="nav-link">Contact</a>
+            </li>
+            <li class="nav-item">
+              <a href="/brand/" class="nav-link">Brand</a>
+            </li>
+            <li class="nav-item">
+              <a href="https://twitter.com/Kwpolska" class="nav-link">Twitter</a>
+            </li>
+            <li class="nav-item">
+              <a href="https://github.com/Kwpolska" class="nav-link">GitHub</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <footer id="footer">
+      <p>this site uses cookies.<br>by using this site, you agree to our <a href="/privacy/">cookie and privacy policy</a>.</p>
+<p>powered by <strong><a href="https://github.com/Kwpolska/YetAnotherBlogGenerator">Yet Another Blog Generator</a></strong>,
+  <a href="https://nginx.org/">nginx</a>
+  and <a href="https://hetzner.cloud/?ref=Qy1lehF8PwzP">Hetzner Cloud</a><br>
+  copyright © 2009–2026 <a href="/contact/">Chris Warrick</a><br>
+  license: <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA</a>, unless stated otherwise</p>
+    </footer>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.11.0/baguetteBox.min.js"
+        integrity="sha256-yQGjQhFs3LtyiN5hhr3k9s9TWZOh/RzCkD3gwwCKlkg=" crossorigin="anonymous"></script>
+<script src="/assets/js/all.js?v=20230115"></script>
+<script>
+  baguetteBox.run('div#content', {
+    ignoreClass: 'islink',
+    captions: function (element) {
+      return element.getElementsByTagName('img')[0].alt;
+    }
+  });
+</script><!-- Matomo -->
+<script>
   var _paq = window._paq = window._paq || [];
   /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
   _paq.push(['trackPageView']);
   _paq.push(['enableLinkTracking']);
-  (function() {
-    var u="//matomo.chriswarrick.com/";
-    _paq.push(['setTrackerUrl', u+'matomo.php']);
+  (function () {
+    var u = "//matomo.chriswarrick.com/";
+    _paq.push(['setTrackerUrl', u + 'matomo.php']);
     _paq.push(['setSiteId', '1']);
-    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-    g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+    var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+    g.async = true;
+    g.src = u + 'matomo.js';
+    s.parentNode.insertBefore(g, s);
   })();
 </script><!-- End Matomo Code -->
 </body>

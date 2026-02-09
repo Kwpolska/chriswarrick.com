@@ -1,188 +1,218 @@
 <!DOCTYPE html>
-<html class="limited-width larger-font" prefix="
-og: http://ogp.me/ns#
-" lang="en">
+<html class="limited-width larger-font" prefix="og: http://ogp.me/ns#" lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="description" content="A rant about the modern JS ecosystem.">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Modern Web Development: where you need 500 packages to build Bootstrap | Chris Warrick</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.css" integrity="sha256-FqCzNnnyXl5HxHMdb+RQ/RV/X7fqfPcQYy+G2gFL3Xk=" crossorigin="anonymous">
+  <meta charset="utf-8">
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Modern Web Development: where you need 500 packages to build Bootstrap | Chris Warrick</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.css"
+        integrity="sha256-FqCzNnnyXl5HxHMdb+RQ/RV/X7fqfPcQYy+G2gFL3Xk=" crossorigin="anonymous">
 <!--#if expr="$HTTP_COOKIE=/colorScheme\=light/" --><link href="/assets/css/all.css?v=20230115" rel="stylesheet" type="text/css" id="kw-all-css">
 <script type="text/javascript">var colorScheme='light';var colorSchemesEnabled=true;</script><!--#else--><link href="/assets/css/all-dark.css?v=20230115" rel="stylesheet" type="text/css" id="kw-all-css">
-<script type="text/javascript">var colorScheme='dark';var colorSchemesEnabled=true;</script><!--#endif--><link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,700,700i|Source+Serif+Pro:600&amp;display=swap&amp;subset=latin-ext" rel="stylesheet">
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
-<meta name="theme-color" content="#00aadd">
-<meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="/rss.xml">
-<link rel="canonical" href="https://chriswarrick.com/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/">
-<link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="16x16 32x32 48x48 64x64 128x128 256x256">
-<link rel="icon" type="image/png" href="/assets/img/logo512.png">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<!--[if lt IE 9]><script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]--><meta name="description" itemprop="description" content="A rant about the modern JS ecosystem.">
-<meta name="author" content="Chris Warrick">
-<link rel="prev" href="/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/" title="Python Hackery: merging signatures of two Python functions" type="text/html">
-<link rel="next" href="/blog/2020/02/09/when-html-is-not-enough-a-tale-of-the-datalist-element/" title="When HTML is not enough: a tale of the &lt;datalist&gt; element" type="text/html">
-<meta property="og:site_name" content="Chris Warrick">
-<meta property="og:title" content="Modern Web Development: where you need 500 packages to build Bootstrap">
-<meta property="og:url" content="https://chriswarrick.com/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/">
-<meta property="og:description" content="A rant about the modern JS ecosystem.">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2019-02-15T19:00:00+01:00">
-<meta property="article:tag" content="JavaScript">
-<meta property="article:tag" content="rant">
-<meta property="article:tag" content="web development">
-<meta property="article:tag" content="webmastering">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:creator" content="@Kwpolska">
+<script type="text/javascript">var colorScheme='dark';var colorSchemesEnabled=true;</script><!--#endif-->
+  <link
+    href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,700,700i|Source+Serif+Pro:600&amp;display=swap&amp;subset=latin-ext"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css"
+        integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+  <meta name="theme-color" content="#00aadd">
+  <meta name="generator" content="Chris Warrick’s Yet Another Blog Generator">
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/rss.xml">
+  <link rel="canonical" href="https://chriswarrick.com/">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="16x16 32x32 48x48 64x64 128x128 256x256">
+  <link rel="icon" type="image/png" href="/assets/img/logo512.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="prev" href="/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/" type="text/html">
+  <link rel="next" href="/blog/2020/02/09/when-html-is-not-enough-a-tale-of-the-datalist-element/" type="text/html">
+  
 </head>
 <body>
 <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
 
-<!-- Menubar -->
-
-<nav class="navbar navbar-expand-md navbar-kw bg-dark static-top mb-4"><div class="container">
-<!-- This keeps the margins nice -->
-        <a class="navbar-brand" href="/">
-            <img src="/assets/img/logo.png" srcset="/assets/img/logo2x.png 2x" alt="Chris Warrick" id="logo"><span id="blog-title">Chris Warrick</span>
-        </a>
-        <div>
-        <button class="navbar-toggler mr-2" id="color-changer-mobile" type="button" aria-label="Change color scheme">
-            <span class="color-changer"></span>
-        </button>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        </div>
-        <div class="collapse navbar-collapse" id="bs-navbar">
-            <ul class="navbar-nav mr-auto">
-<li class="nav-item">
-<a href="/contact/" class="nav-link">Contact</a>
-                </li>
-<li class="nav-item">
-<a href="/projects/" class="nav-link">Projects</a>
-                </li>
-<li class="nav-item">
-<a href="/guides/" class="nav-link">Guides</a>
-                </li>
-<li class="nav-item">
-<a href="/blog/" class="nav-link">Archives</a>
-                </li>
-<li class="nav-item">
-<a href="/search/" class="nav-link">Search</a>
-
-                
-            </li>
-</ul>
-<ul class="navbar-nav navbar-right">
-<li class="nav-item" id="color-changer-menu">
-<a href="#" class="nav-link" id="color-changer-btn">
-                <div class="color-changer"></div>
-                <span id="color-changer-text"><!--#if expr="$HTTP_COOKIE=/colorScheme\=light/" -->Dark Mode<!--#else -->Light Mode<!--#endif--></span>
-                </a>
-                </li>
-            </ul>
-</div>
-<!-- /.navbar-collapse -->
+<nav class="navbar navbar-expand-md navbar-kw bg-dark static-top mb-4">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <img src="/assets/img/logo.png" srcset="/assets/img/logo2x.png 2x" alt="Chris Warrick" id="logo"><span
+        id="blog-title">Chris Warrick</span>
+    </a>
+    <div>
+      <button class="navbar-toggler mr-2" id="color-changer-mobile" type="button" aria-label="Change color scheme">
+        <span class="color-changer"></span>
+      </button>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar"
+              aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
     </div>
-<!-- /.container -->
-</nav><!-- End of Menubar --><div class="container" id="content" role="main">
-    <div class="body-content">
-        <!--Body content-->
+    <div class="collapse navbar-collapse" id="bs-navbar">
+      <ul class="navbar-nav mr-auto">
         
-        <div id="cookiebox"></div>
-<article class="post-text h-entry hentry postpage postbox" itemscope="itemscope" itemtype="http://schema.org/Article"><header class="page-header"><h1 class="p-name entry-title" itemprop="headline name">
-    <a href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/" class="u-url">Modern Web Development: where you need 500 packages to build Bootstrap</a>
-    </h1>
+        
+          <li class="nav-item">
+            <a href="/contact/" class="nav-link">Contact</a>
+          </li>
+        
+        
+        
+          <li class="nav-item">
+            <a href="/projects/" class="nav-link">Projects</a>
+          </li>
+        
+        
+        
+          <li class="nav-item">
+            <a href="/guides/" class="nav-link">Guides</a>
+          </li>
+        
+        
+        
+          <li class="nav-item">
+            <a href="/blog/" class="nav-link">Archives</a>
+          </li>
+        
+        
+        
+          <li class="nav-item">
+            <a href="/blog/tags/" class="nav-link">Tags</a>
+          </li>
+        
+        
+      </ul>
+      <ul class="navbar-nav navbar-right">
+        <li class="nav-item" id="color-changer-menu">
+          <a href="#" class="nav-link" id="color-changer-btn">
+            <div class="color-changer"></div>
+            <span id="color-changer-text">Light Mode</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<div class="container" id="content" role="main">
+  <div class="body-content">
+    <div id="cookiebox"></div>
+    
 
-    <div class="metadata">
-<a href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/" rel="bookmark" class="u-published"><time class="published dt-published" datetime="2019-02-15T19:00:00+01:00" itemprop="datePublished" title="15 February 2019 at 19:00">15 February 2019 at 19:00</time></a>
-        <ul itemprop="keywords" class="tags post-bubbles list-inline">
-<li class="category-bubble"><a href="/blog/tags/cat_internet/" style="background-color: #bf81ff !important">Internet</a></li>
-           <li><a class="tag p-category" href="/blog/tags/javascript/" rel="tag">JavaScript</a></li>
-           <li><a class="tag p-category" href="/blog/tags/rant/" rel="tag">rant</a></li>
-           <li><a class="tag p-category" href="/blog/tags/web-development/" rel="tag">web development</a></li>
-           <li><a class="tag p-category" href="/blog/tags/webmastering/" rel="tag">webmastering</a></li>
-        </ul>
-</div>
-    </header><div class="e-content entry-content" itemprop="articleBody text">
-    <div class="lead">
+
+<article class="post-text h-entry hentry postpage postbox" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+<header class="page-header">
+  <h1 class="p-name entry-title" itemprop="headline name">
+    <a href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/" class="u-url">Modern Web Development: where you need 500 packages to build Bootstrap</a>
+  </h1>
+
+  <div class="metadata">
+    <a href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/" rel="bookmark" class="u-published">
+      <time class="published dt-published" datetime="2019-02-15T19:00:00.0000000&#x2B;01:00" itemprop="datePublished" title="15 February 2019 19:00">15 February 2019 19:00</time>
+    
+    </a>
+    <ul itemprop="keywords" class="tags post-bubbles list-inline">
+      <li class="category-bubble"><a href="/blog/tags/cat_internet" style="background-color: #bf81ff !important">Internet</a></li>
+      
+        <li><a class="tag p-category" href="/blog/tags/javascript" rel="tag">JavaScript</a></li>
+      
+        <li><a class="tag p-category" href="/blog/tags/rant" rel="tag">rant</a></li>
+      
+        <li><a class="tag p-category" href="/blog/tags/web-development" rel="tag">web development</a></li>
+      
+        <li><a class="tag p-category" href="/blog/tags/webmastering" rel="tag">webmastering</a></li>
+      
+    </ul>
+    
+    
+  </div>
+</header>
+
+  <div class="e-content entry-content" itemprop="articleBody text">
+    
+      <div class="lead">
+        
 <p>This humble blog is written by an old-school developer who sometimes does web stuff. An attempt to customize the Bootstrap CSS theme requires 50 MB of node_modules, over 500 packages, and comes with a bit of frustration at stupid tools and terrible documentation.</p>
-</div>
-</div>
+
+      </div>
+    
+    
 <p>You might notice that this website is based on Bootstrap. You might also notice it’s been heavily customized, especially if you’re browsing in the (currently default) Dark Mode. Back in Bootstrap v3 days, the task was accomplished by <a class="reference external" href="https://getbootstrap.com/docs/3.4/customize/">a simple online tool</a> that required no local installs. Bootstrap 4 changed the landscape: now you need to manually compile Sass. Moreover, Autoprefixer is required to make the CSS usable by web browsers.</p>
 <p>Now, when it comes to web development, I believe the old ways were better. Back when nobody thought to make a client-side-JS-based blog or pastebin, and only apps that needed interactivity were JS-first. Gmail is a good example of that, although they <em>still</em> offer a <a class="reference external" href="https://support.google.com/mail/answer/15049?hl=en">basic HTML view</a> and it works good — in fact, I suppose it might be less buggy than the JS-ladden version. (A lot of single-page apps like to randomly glitch out in my experience.)</p>
 <p>I still remember the days when all that one had to do is <code class="docutils literal">java <span class="pre">-jar</span> yuicompressor.jar style.css &gt; style.min.css</code>. Then Less and Sass became more popular — and that’s good. The ability to use variables and functions makes it possible to produce well-organized stylesheets. The idea of Autoprefixer is also fine, humans should not waste their time with browser-specific prefixes for experimental features, that can be neatly automated.</p>
 <p>But to use all these fancy tools, glue code is necessary. Autoprefixer is (mainly server-side) JS-only, Sass is currently Node or Dart, minifier tools are available in many languages.</p>
-<section id="attempt-0-no-js-stuff-no-node-modules"><h2>Attempt 0: no JS stuff, no node_modules</h2>
+<section id="attempt-0-no-js-stuff-no-node-modules">
+<h1>Attempt 0: no JS stuff, no node_modules</h1>
 <p>I installed a Sass compiler. There are web services like cssminifier.com that can be easily used with curl in a Bash script. Autoprefixer has a webpage that lets you use the service without installing it as well. The catch is, the code runs locally in your web browser. Automating a web browser requires some effort. I decided to leave this part un-automated. Here is the Bash script I hacked together (with some messages removed):</p>
-<div class="code"><pre class="code sh"><a id="rest_code_ed1570ae48414884a52c59a8f100890d-1" name="rest_code_ed1570ae48414884a52c59a8f100890d-1" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_ed1570ae48414884a52c59a8f100890d-1"></a>sass<span class="w"> </span>bootstrap-kw.scss<span class="w"> </span>&gt;<span class="w"> </span>bootstrap.noprefix.css
-<a id="rest_code_ed1570ae48414884a52c59a8f100890d-2" name="rest_code_ed1570ae48414884a52c59a8f100890d-2" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_ed1570ae48414884a52c59a8f100890d-2"></a>sass<span class="w"> </span>bootstrap-kw-dark.scss<span class="w"> </span>&gt;<span class="w"> </span>bootstrap-dark.noprefix.css
-<a id="rest_code_ed1570ae48414884a52c59a8f100890d-3" name="rest_code_ed1570ae48414884a52c59a8f100890d-3" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_ed1570ae48414884a52c59a8f100890d-3"></a>
-<a id="rest_code_ed1570ae48414884a52c59a8f100890d-4" name="rest_code_ed1570ae48414884a52c59a8f100890d-4" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_ed1570ae48414884a52c59a8f100890d-4"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"Go to https://autoprefixer.github.io/."</span>
-<a id="rest_code_ed1570ae48414884a52c59a8f100890d-5" name="rest_code_ed1570ae48414884a52c59a8f100890d-5" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_ed1570ae48414884a52c59a8f100890d-5"></a>
-<a id="rest_code_ed1570ae48414884a52c59a8f100890d-6" name="rest_code_ed1570ae48414884a52c59a8f100890d-6" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_ed1570ae48414884a52c59a8f100890d-6"></a>pbcopy<span class="w"> </span>&lt;<span class="w"> </span>bootstrap.noprefix.css
-<a id="rest_code_ed1570ae48414884a52c59a8f100890d-7" name="rest_code_ed1570ae48414884a52c59a8f100890d-7" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_ed1570ae48414884a52c59a8f100890d-7"></a><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">"(light) Paste the clipboard contents and copy the output, then press Enter."</span>
-<a id="rest_code_ed1570ae48414884a52c59a8f100890d-8" name="rest_code_ed1570ae48414884a52c59a8f100890d-8" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_ed1570ae48414884a52c59a8f100890d-8"></a><span class="nb">read</span><span class="w"> </span>temp
-<a id="rest_code_ed1570ae48414884a52c59a8f100890d-9" name="rest_code_ed1570ae48414884a52c59a8f100890d-9" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_ed1570ae48414884a52c59a8f100890d-9"></a>pbpaste<span class="w"> </span>&gt;<span class="w"> </span>assets/css/bootstrap.css
-<a id="rest_code_ed1570ae48414884a52c59a8f100890d-10" name="rest_code_ed1570ae48414884a52c59a8f100890d-10" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_ed1570ae48414884a52c59a8f100890d-10"></a>
-<a id="rest_code_ed1570ae48414884a52c59a8f100890d-11" name="rest_code_ed1570ae48414884a52c59a8f100890d-11" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_ed1570ae48414884a52c59a8f100890d-11"></a>sleep<span class="w"> </span><span class="m">1</span>
-<a id="rest_code_ed1570ae48414884a52c59a8f100890d-12" name="rest_code_ed1570ae48414884a52c59a8f100890d-12" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_ed1570ae48414884a52c59a8f100890d-12"></a>
-<a id="rest_code_ed1570ae48414884a52c59a8f100890d-13" name="rest_code_ed1570ae48414884a52c59a8f100890d-13" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_ed1570ae48414884a52c59a8f100890d-13"></a>pbcopy<span class="w"> </span>&lt;<span class="w"> </span>bootstrap-dark.noprefix.css
-<a id="rest_code_ed1570ae48414884a52c59a8f100890d-14" name="rest_code_ed1570ae48414884a52c59a8f100890d-14" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_ed1570ae48414884a52c59a8f100890d-14"></a><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">"( dark) Paste the clipboard contents and copy the output, then press Enter."</span>
-<a id="rest_code_ed1570ae48414884a52c59a8f100890d-15" name="rest_code_ed1570ae48414884a52c59a8f100890d-15" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_ed1570ae48414884a52c59a8f100890d-15"></a><span class="nb">read</span><span class="w"> </span>temp
-<a id="rest_code_ed1570ae48414884a52c59a8f100890d-16" name="rest_code_ed1570ae48414884a52c59a8f100890d-16" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_ed1570ae48414884a52c59a8f100890d-16"></a>pbpaste<span class="w"> </span>&gt;<span class="w"> </span>assets/css/bootstrap-dark.css
-<a id="rest_code_ed1570ae48414884a52c59a8f100890d-17" name="rest_code_ed1570ae48414884a52c59a8f100890d-17" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_ed1570ae48414884a52c59a8f100890d-17"></a>
-<a id="rest_code_ed1570ae48414884a52c59a8f100890d-18" name="rest_code_ed1570ae48414884a52c59a8f100890d-18" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_ed1570ae48414884a52c59a8f100890d-18"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-s<span class="w"> </span>--data-urlencode<span class="w"> </span><span class="s1">'input@assets/css/bootstrap.css'</span><span class="w"> </span>https://cssminifier.com/raw<span class="w"> </span>&gt;<span class="w"> </span>assets/css/bootstrap.min.css
-<a id="rest_code_ed1570ae48414884a52c59a8f100890d-19" name="rest_code_ed1570ae48414884a52c59a8f100890d-19" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_ed1570ae48414884a52c59a8f100890d-19"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-s<span class="w"> </span>--data-urlencode<span class="w"> </span><span class="s1">'input@assets/css/bootstrap-dark.css'</span><span class="w"> </span>https://cssminifier.com/raw<span class="w"> </span>&gt;<span class="w"> </span>assets/css/bootstrap-dark.min.css
+<div class="code"><pre class="code sh"><a id="rest_code_dafa69619b654712819aa7d0fa12081f-1" name="rest_code_dafa69619b654712819aa7d0fa12081f-1" href="#rest_code_dafa69619b654712819aa7d0fa12081f-1"></a>sass<span class="w"> </span>bootstrap-kw.scss<span class="w"> </span>&gt;<span class="w"> </span>bootstrap.noprefix.css
+<a id="rest_code_dafa69619b654712819aa7d0fa12081f-2" name="rest_code_dafa69619b654712819aa7d0fa12081f-2" href="#rest_code_dafa69619b654712819aa7d0fa12081f-2"></a>sass<span class="w"> </span>bootstrap-kw-dark.scss<span class="w"> </span>&gt;<span class="w"> </span>bootstrap-dark.noprefix.css
+<a id="rest_code_dafa69619b654712819aa7d0fa12081f-3" name="rest_code_dafa69619b654712819aa7d0fa12081f-3" href="#rest_code_dafa69619b654712819aa7d0fa12081f-3"></a>
+<a id="rest_code_dafa69619b654712819aa7d0fa12081f-4" name="rest_code_dafa69619b654712819aa7d0fa12081f-4" href="#rest_code_dafa69619b654712819aa7d0fa12081f-4"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Go to https://autoprefixer.github.io/.&quot;</span>
+<a id="rest_code_dafa69619b654712819aa7d0fa12081f-5" name="rest_code_dafa69619b654712819aa7d0fa12081f-5" href="#rest_code_dafa69619b654712819aa7d0fa12081f-5"></a>
+<a id="rest_code_dafa69619b654712819aa7d0fa12081f-6" name="rest_code_dafa69619b654712819aa7d0fa12081f-6" href="#rest_code_dafa69619b654712819aa7d0fa12081f-6"></a>pbcopy<span class="w"> </span>&lt;<span class="w"> </span>bootstrap.noprefix.css
+<a id="rest_code_dafa69619b654712819aa7d0fa12081f-7" name="rest_code_dafa69619b654712819aa7d0fa12081f-7" href="#rest_code_dafa69619b654712819aa7d0fa12081f-7"></a><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;(light) Paste the clipboard contents and copy the output, then press Enter.&quot;</span>
+<a id="rest_code_dafa69619b654712819aa7d0fa12081f-8" name="rest_code_dafa69619b654712819aa7d0fa12081f-8" href="#rest_code_dafa69619b654712819aa7d0fa12081f-8"></a><span class="nb">read</span><span class="w"> </span>temp
+<a id="rest_code_dafa69619b654712819aa7d0fa12081f-9" name="rest_code_dafa69619b654712819aa7d0fa12081f-9" href="#rest_code_dafa69619b654712819aa7d0fa12081f-9"></a>pbpaste<span class="w"> </span>&gt;<span class="w"> </span>assets/css/bootstrap.css
+<a id="rest_code_dafa69619b654712819aa7d0fa12081f-10" name="rest_code_dafa69619b654712819aa7d0fa12081f-10" href="#rest_code_dafa69619b654712819aa7d0fa12081f-10"></a>
+<a id="rest_code_dafa69619b654712819aa7d0fa12081f-11" name="rest_code_dafa69619b654712819aa7d0fa12081f-11" href="#rest_code_dafa69619b654712819aa7d0fa12081f-11"></a>sleep<span class="w"> </span><span class="m">1</span>
+<a id="rest_code_dafa69619b654712819aa7d0fa12081f-12" name="rest_code_dafa69619b654712819aa7d0fa12081f-12" href="#rest_code_dafa69619b654712819aa7d0fa12081f-12"></a>
+<a id="rest_code_dafa69619b654712819aa7d0fa12081f-13" name="rest_code_dafa69619b654712819aa7d0fa12081f-13" href="#rest_code_dafa69619b654712819aa7d0fa12081f-13"></a>pbcopy<span class="w"> </span>&lt;<span class="w"> </span>bootstrap-dark.noprefix.css
+<a id="rest_code_dafa69619b654712819aa7d0fa12081f-14" name="rest_code_dafa69619b654712819aa7d0fa12081f-14" href="#rest_code_dafa69619b654712819aa7d0fa12081f-14"></a><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;( dark) Paste the clipboard contents and copy the output, then press Enter.&quot;</span>
+<a id="rest_code_dafa69619b654712819aa7d0fa12081f-15" name="rest_code_dafa69619b654712819aa7d0fa12081f-15" href="#rest_code_dafa69619b654712819aa7d0fa12081f-15"></a><span class="nb">read</span><span class="w"> </span>temp
+<a id="rest_code_dafa69619b654712819aa7d0fa12081f-16" name="rest_code_dafa69619b654712819aa7d0fa12081f-16" href="#rest_code_dafa69619b654712819aa7d0fa12081f-16"></a>pbpaste<span class="w"> </span>&gt;<span class="w"> </span>assets/css/bootstrap-dark.css
+<a id="rest_code_dafa69619b654712819aa7d0fa12081f-17" name="rest_code_dafa69619b654712819aa7d0fa12081f-17" href="#rest_code_dafa69619b654712819aa7d0fa12081f-17"></a>
+<a id="rest_code_dafa69619b654712819aa7d0fa12081f-18" name="rest_code_dafa69619b654712819aa7d0fa12081f-18" href="#rest_code_dafa69619b654712819aa7d0fa12081f-18"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-s<span class="w"> </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;input@assets/css/bootstrap.css&#39;</span><span class="w"> </span>https://cssminifier.com/raw<span class="w"> </span>&gt;<span class="w"> </span>assets/css/bootstrap.min.css
+<a id="rest_code_dafa69619b654712819aa7d0fa12081f-19" name="rest_code_dafa69619b654712819aa7d0fa12081f-19" href="#rest_code_dafa69619b654712819aa7d0fa12081f-19"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-s<span class="w"> </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;input@assets/css/bootstrap-dark.css&#39;</span><span class="w"> </span>https://cssminifier.com/raw<span class="w"> </span>&gt;<span class="w"> </span>assets/css/bootstrap-dark.min.css
 </pre></div>
 <p>The “manual copy” solution was inconvenient, but it worked.</p>
 <p>Well, most of the time Some lags/glitches with the clipboard meant that sometimes, files had the incorrect content. So, I wanted to fix it, and build it in a more modern, JS-y way. The way Bootstrap does it is a lot of shell commands (that run various Node tools). I don’t feel like building this pipeline with Bash, it would feel fragile. Let’s do it the JS way.</p>
-</section><section id="attempt-1-webpack"><h2>Attempt 1: webpack</h2>
+</section>
+<section id="attempt-1-webpack">
+<h1>Attempt 1: webpack</h1>
 <p>I’ve used webpack for <a class="reference external" href="https://github.com/Kwpolska/django-expenses/blob/master/ts/webpack.config.js">another project of mine</a>. It was okay, and it did the job (namely, compiling TypeScript into browser-usable JS).</p>
 <p>I wanted to give it a try for this one. I googled “webpack sass”. The first result was <a class="reference external" href="https://github.com/webpack-contrib/sass-loader">sass-loader</a>. The pipeline for it was:</p>
-<div class="code"><pre class="code javascript"><a id="rest_code_0cfa1edf90254f6c909a112a0e812b22-1" name="rest_code_0cfa1edf90254f6c909a112a0e812b22-1" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_0cfa1edf90254f6c909a112a0e812b22-1"></a><span class="s2">"style-loader"</span><span class="p">,</span><span class="w"> </span><span class="c1">// creates style nodes from JS strings</span>
-<a id="rest_code_0cfa1edf90254f6c909a112a0e812b22-2" name="rest_code_0cfa1edf90254f6c909a112a0e812b22-2" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_0cfa1edf90254f6c909a112a0e812b22-2"></a><span class="s2">"css-loader"</span><span class="p">,</span><span class="w"> </span><span class="c1">// translates CSS into CommonJS</span>
-<a id="rest_code_0cfa1edf90254f6c909a112a0e812b22-3" name="rest_code_0cfa1edf90254f6c909a112a0e812b22-3" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_0cfa1edf90254f6c909a112a0e812b22-3"></a><span class="s2">"sass-loader"</span><span class="w"> </span><span class="c1">// compiles Sass to CSS, using Node Sass by default</span>
+<div class="code"><pre class="code javascript"><a id="rest_code_7bad4f65d96d4c5187951f660174631c-1" name="rest_code_7bad4f65d96d4c5187951f660174631c-1" href="#rest_code_7bad4f65d96d4c5187951f660174631c-1"></a><span class="s2">&quot;style-loader&quot;</span><span class="p">,</span><span class="w"> </span><span class="c1">// creates style nodes from JS strings</span>
+<a id="rest_code_7bad4f65d96d4c5187951f660174631c-2" name="rest_code_7bad4f65d96d4c5187951f660174631c-2" href="#rest_code_7bad4f65d96d4c5187951f660174631c-2"></a><span class="s2">&quot;css-loader&quot;</span><span class="p">,</span><span class="w"> </span><span class="c1">// translates CSS into CommonJS</span>
+<a id="rest_code_7bad4f65d96d4c5187951f660174631c-3" name="rest_code_7bad4f65d96d4c5187951f660174631c-3" href="#rest_code_7bad4f65d96d4c5187951f660174631c-3"></a><span class="s2">&quot;sass-loader&quot;</span><span class="w"> </span><span class="c1">// compiles Sass to CSS, using Node Sass by default</span>
 </pre></div>
 <p>Let’s recap. Someone thought that the right way to do CSS is to use JS imports.</p>
-<p>Yes. <code class="docutils literal">import <span class="pre">"./style.css";</span></code> in a JS file. So that your fancy build tool knows about CSS.</p>
+<p>Yes. <code class="docutils literal">import <span class="pre">&quot;./style.css&quot;;</span></code> in a JS file. So that your fancy build tool knows about CSS.</p>
 <p>Webpack wasn’t the right tool for my project, but even if I had JS code there, <strong>WHY WOULD I MENTION STYLESHEETS IN MY JS CODE?!</strong> Webpack’s website also lists .jpg and .png assets, are they meant to be imported in JS as well? This is absurd.</p>
 <p>Going back to googling “webpack sass”… The next two results were Medium posts. The stupidity of Medium as a blog platform notwithstanding, one of the posts was from 2017, referring to webpack 2. The next post was a year older, a completely unreadable mess, and it was for webpack 4. That’s not helpful in any way.</p>
-</section><section id="attempt-2-gulp"><h2>Attempt 2: Gulp</h2>
+</section>
+<section id="attempt-2-gulp">
+<h1>Attempt 2: Gulp</h1>
 <p>Let’s try something else from the JS world: Gulp. Now, the tool is not terrible, but it still requires a lot of dependencies.</p>
 <p>The pipeline that was required for this task sounds very simple:</p>
 <blockquote>
 <p>bootstrap-kw{,-dark}.sass → Sass compiler → Autoprefixer → bootstrap{,-dark}.css → minify → bootstrap{,-dark}.min.css</p>
 </blockquote>
 <p>The Gulp version is fairly simple: (I based it on examples on Gulp’s website, and pages of all my dependencies).</p>
-<div class="code"><pre class="code javascript"><a id="rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-1" name="rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-1" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-1"></a><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">src</span><span class="p">,</span><span class="w"> </span><span class="nx">dest</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">'gulp'</span><span class="p">);</span>
-<a id="rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-2" name="rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-2" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-2"></a><span class="kd">const</span><span class="w"> </span><span class="nx">minifyCSS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">'gulp-csso'</span><span class="p">);</span>
-<a id="rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-3" name="rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-3" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-3"></a><span class="kd">const</span><span class="w"> </span><span class="nx">sass</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">'gulp-sass'</span><span class="p">);</span>
-<a id="rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-4" name="rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-4" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-4"></a><span class="kd">const</span><span class="w"> </span><span class="nx">postcss</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">'gulp-postcss'</span><span class="p">);</span>
-<a id="rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-5" name="rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-5" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-5"></a><span class="kd">const</span><span class="w"> </span><span class="nx">autoprefixer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">'autoprefixer'</span><span class="p">);</span>
-<a id="rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-6" name="rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-6" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-6"></a><span class="kd">const</span><span class="w"> </span><span class="nx">rename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">"gulp-rename"</span><span class="p">);</span>
-<a id="rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-7" name="rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-7" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-7"></a><span class="nx">sass</span><span class="p">.</span><span class="nx">compiler</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">'node-sass'</span><span class="p">);</span>
-<a id="rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-8" name="rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-8" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-8"></a>
-<a id="rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-9" name="rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-9" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-9"></a>
-<a id="rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-10" name="rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-10" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-10"></a><span class="kd">function</span><span class="w"> </span><span class="nx">css</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<a id="rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-11" name="rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-11" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-11"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">src</span><span class="p">(</span><span class="s1">'*.scss'</span><span class="p">)</span>
-<a id="rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-12" name="rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-12" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-12"></a><span class="w">        </span><span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">sass</span><span class="p">.</span><span class="nx">sync</span><span class="p">().</span><span class="nx">on</span><span class="p">(</span><span class="s1">'error'</span><span class="p">,</span><span class="w"> </span><span class="nx">sass</span><span class="p">.</span><span class="nx">logError</span><span class="p">))</span>
-<a id="rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-13" name="rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-13" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-13"></a><span class="w">        </span><span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">postcss</span><span class="p">([</span><span class="nx">autoprefixer</span><span class="p">()]))</span>
-<a id="rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-14" name="rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-14" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-14"></a><span class="w">        </span><span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">rename</span><span class="p">(</span><span class="kd">function</span><span class="w"> </span><span class="p">(</span><span class="nx">path</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<a id="rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-15" name="rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-15" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-15"></a><span class="w">            </span><span class="nx">path</span><span class="p">.</span><span class="nx">basename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">path</span><span class="p">.</span><span class="nx">basename</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="s2">"-kw"</span><span class="p">,</span><span class="w"> </span><span class="s2">""</span><span class="p">)</span>
-<a id="rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-16" name="rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-16" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-16"></a><span class="w">        </span><span class="p">}))</span>
-<a id="rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-17" name="rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-17" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-17"></a><span class="w">        </span><span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">dest</span><span class="p">(</span><span class="s1">'assets/css'</span><span class="p">))</span>
-<a id="rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-18" name="rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-18" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-18"></a><span class="w">        </span><span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">minifyCSS</span><span class="p">())</span>
-<a id="rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-19" name="rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-19" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-19"></a><span class="w">        </span><span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">rename</span><span class="p">(</span><span class="kd">function</span><span class="w"> </span><span class="p">(</span><span class="nx">path</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<a id="rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-20" name="rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-20" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-20"></a><span class="w">            </span><span class="nx">path</span><span class="p">.</span><span class="nx">basename</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="s2">".min"</span>
-<a id="rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-21" name="rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-21" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-21"></a><span class="w">        </span><span class="p">}))</span>
-<a id="rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-22" name="rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-22" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-22"></a><span class="w">        </span><span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">dest</span><span class="p">(</span><span class="s1">'assets/css'</span><span class="p">));</span>
-<a id="rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-23" name="rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-23" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-23"></a><span class="p">}</span>
-<a id="rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-24" name="rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-24" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-24"></a>
-<a id="rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-25" name="rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-25" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_2743ca7d77e54839ae5ea3c8ed3b7021-25"></a><span class="nx">exports</span><span class="p">.</span><span class="k">default</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">css</span><span class="p">;</span>
+<div class="code"><pre class="code javascript"><a id="rest_code_8d37d82eea6a4d9c81ae9635855db77c-1" name="rest_code_8d37d82eea6a4d9c81ae9635855db77c-1" href="#rest_code_8d37d82eea6a4d9c81ae9635855db77c-1"></a><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">src</span><span class="p">,</span><span class="w"> </span><span class="nx">dest</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;gulp&#39;</span><span class="p">);</span>
+<a id="rest_code_8d37d82eea6a4d9c81ae9635855db77c-2" name="rest_code_8d37d82eea6a4d9c81ae9635855db77c-2" href="#rest_code_8d37d82eea6a4d9c81ae9635855db77c-2"></a><span class="kd">const</span><span class="w"> </span><span class="nx">minifyCSS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;gulp-csso&#39;</span><span class="p">);</span>
+<a id="rest_code_8d37d82eea6a4d9c81ae9635855db77c-3" name="rest_code_8d37d82eea6a4d9c81ae9635855db77c-3" href="#rest_code_8d37d82eea6a4d9c81ae9635855db77c-3"></a><span class="kd">const</span><span class="w"> </span><span class="nx">sass</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;gulp-sass&#39;</span><span class="p">);</span>
+<a id="rest_code_8d37d82eea6a4d9c81ae9635855db77c-4" name="rest_code_8d37d82eea6a4d9c81ae9635855db77c-4" href="#rest_code_8d37d82eea6a4d9c81ae9635855db77c-4"></a><span class="kd">const</span><span class="w"> </span><span class="nx">postcss</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;gulp-postcss&#39;</span><span class="p">);</span>
+<a id="rest_code_8d37d82eea6a4d9c81ae9635855db77c-5" name="rest_code_8d37d82eea6a4d9c81ae9635855db77c-5" href="#rest_code_8d37d82eea6a4d9c81ae9635855db77c-5"></a><span class="kd">const</span><span class="w"> </span><span class="nx">autoprefixer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;autoprefixer&#39;</span><span class="p">);</span>
+<a id="rest_code_8d37d82eea6a4d9c81ae9635855db77c-6" name="rest_code_8d37d82eea6a4d9c81ae9635855db77c-6" href="#rest_code_8d37d82eea6a4d9c81ae9635855db77c-6"></a><span class="kd">const</span><span class="w"> </span><span class="nx">rename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;gulp-rename&quot;</span><span class="p">);</span>
+<a id="rest_code_8d37d82eea6a4d9c81ae9635855db77c-7" name="rest_code_8d37d82eea6a4d9c81ae9635855db77c-7" href="#rest_code_8d37d82eea6a4d9c81ae9635855db77c-7"></a><span class="nx">sass</span><span class="p">.</span><span class="nx">compiler</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;node-sass&#39;</span><span class="p">);</span>
+<a id="rest_code_8d37d82eea6a4d9c81ae9635855db77c-8" name="rest_code_8d37d82eea6a4d9c81ae9635855db77c-8" href="#rest_code_8d37d82eea6a4d9c81ae9635855db77c-8"></a>
+<a id="rest_code_8d37d82eea6a4d9c81ae9635855db77c-9" name="rest_code_8d37d82eea6a4d9c81ae9635855db77c-9" href="#rest_code_8d37d82eea6a4d9c81ae9635855db77c-9"></a>
+<a id="rest_code_8d37d82eea6a4d9c81ae9635855db77c-10" name="rest_code_8d37d82eea6a4d9c81ae9635855db77c-10" href="#rest_code_8d37d82eea6a4d9c81ae9635855db77c-10"></a><span class="kd">function</span><span class="w"> </span><span class="nx">css</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="rest_code_8d37d82eea6a4d9c81ae9635855db77c-11" name="rest_code_8d37d82eea6a4d9c81ae9635855db77c-11" href="#rest_code_8d37d82eea6a4d9c81ae9635855db77c-11"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">src</span><span class="p">(</span><span class="s1">&#39;*.scss&#39;</span><span class="p">)</span>
+<a id="rest_code_8d37d82eea6a4d9c81ae9635855db77c-12" name="rest_code_8d37d82eea6a4d9c81ae9635855db77c-12" href="#rest_code_8d37d82eea6a4d9c81ae9635855db77c-12"></a><span class="w">        </span><span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">sass</span><span class="p">.</span><span class="nx">sync</span><span class="p">().</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">sass</span><span class="p">.</span><span class="nx">logError</span><span class="p">))</span>
+<a id="rest_code_8d37d82eea6a4d9c81ae9635855db77c-13" name="rest_code_8d37d82eea6a4d9c81ae9635855db77c-13" href="#rest_code_8d37d82eea6a4d9c81ae9635855db77c-13"></a><span class="w">        </span><span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">postcss</span><span class="p">([</span><span class="nx">autoprefixer</span><span class="p">()]))</span>
+<a id="rest_code_8d37d82eea6a4d9c81ae9635855db77c-14" name="rest_code_8d37d82eea6a4d9c81ae9635855db77c-14" href="#rest_code_8d37d82eea6a4d9c81ae9635855db77c-14"></a><span class="w">        </span><span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">rename</span><span class="p">(</span><span class="kd">function</span><span class="w"> </span><span class="p">(</span><span class="nx">path</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="rest_code_8d37d82eea6a4d9c81ae9635855db77c-15" name="rest_code_8d37d82eea6a4d9c81ae9635855db77c-15" href="#rest_code_8d37d82eea6a4d9c81ae9635855db77c-15"></a><span class="w">            </span><span class="nx">path</span><span class="p">.</span><span class="nx">basename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">path</span><span class="p">.</span><span class="nx">basename</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="s2">&quot;-kw&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+<a id="rest_code_8d37d82eea6a4d9c81ae9635855db77c-16" name="rest_code_8d37d82eea6a4d9c81ae9635855db77c-16" href="#rest_code_8d37d82eea6a4d9c81ae9635855db77c-16"></a><span class="w">        </span><span class="p">}))</span>
+<a id="rest_code_8d37d82eea6a4d9c81ae9635855db77c-17" name="rest_code_8d37d82eea6a4d9c81ae9635855db77c-17" href="#rest_code_8d37d82eea6a4d9c81ae9635855db77c-17"></a><span class="w">        </span><span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">dest</span><span class="p">(</span><span class="s1">&#39;assets/css&#39;</span><span class="p">))</span>
+<a id="rest_code_8d37d82eea6a4d9c81ae9635855db77c-18" name="rest_code_8d37d82eea6a4d9c81ae9635855db77c-18" href="#rest_code_8d37d82eea6a4d9c81ae9635855db77c-18"></a><span class="w">        </span><span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">minifyCSS</span><span class="p">())</span>
+<a id="rest_code_8d37d82eea6a4d9c81ae9635855db77c-19" name="rest_code_8d37d82eea6a4d9c81ae9635855db77c-19" href="#rest_code_8d37d82eea6a4d9c81ae9635855db77c-19"></a><span class="w">        </span><span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">rename</span><span class="p">(</span><span class="kd">function</span><span class="w"> </span><span class="p">(</span><span class="nx">path</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="rest_code_8d37d82eea6a4d9c81ae9635855db77c-20" name="rest_code_8d37d82eea6a4d9c81ae9635855db77c-20" href="#rest_code_8d37d82eea6a4d9c81ae9635855db77c-20"></a><span class="w">            </span><span class="nx">path</span><span class="p">.</span><span class="nx">basename</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="s2">&quot;.min&quot;</span>
+<a id="rest_code_8d37d82eea6a4d9c81ae9635855db77c-21" name="rest_code_8d37d82eea6a4d9c81ae9635855db77c-21" href="#rest_code_8d37d82eea6a4d9c81ae9635855db77c-21"></a><span class="w">        </span><span class="p">}))</span>
+<a id="rest_code_8d37d82eea6a4d9c81ae9635855db77c-22" name="rest_code_8d37d82eea6a4d9c81ae9635855db77c-22" href="#rest_code_8d37d82eea6a4d9c81ae9635855db77c-22"></a><span class="w">        </span><span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">dest</span><span class="p">(</span><span class="s1">&#39;assets/css&#39;</span><span class="p">));</span>
+<a id="rest_code_8d37d82eea6a4d9c81ae9635855db77c-23" name="rest_code_8d37d82eea6a4d9c81ae9635855db77c-23" href="#rest_code_8d37d82eea6a4d9c81ae9635855db77c-23"></a><span class="p">}</span>
+<a id="rest_code_8d37d82eea6a4d9c81ae9635855db77c-24" name="rest_code_8d37d82eea6a4d9c81ae9635855db77c-24" href="#rest_code_8d37d82eea6a4d9c81ae9635855db77c-24"></a>
+<a id="rest_code_8d37d82eea6a4d9c81ae9635855db77c-25" name="rest_code_8d37d82eea6a4d9c81ae9635855db77c-25" href="#rest_code_8d37d82eea6a4d9c81ae9635855db77c-25"></a><span class="nx">exports</span><span class="p">.</span><span class="k">default</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">css</span><span class="p">;</span>
 </pre></div>
-</section><section id="a-node-modules-extravaganza"><h2>A node_modules extravaganza</h2>
+</section>
+<section id="a-node-modules-extravaganza">
+<h1>A node_modules extravaganza</h1>
 <p>Can you see all the <code class="docutils literal">require</code> lines at the top? Every one of them is a dependency of my build script. With the exception of <code class="docutils literal"><span class="pre">gulp-rename</span></code>, which IMO should be a built-in part of Gulp (it’s 45 lines of code and no external dependencies), the list is sensible.</p>
 <p>Well, I already mentioned the size of <code class="docutils literal">node_modules</code>: 51 MiB according to <code class="docutils literal">du</code> (size-on-disk measurement). How many packages are there?</p>
 <blockquote>
@@ -193,18 +223,21 @@ og: http://ogp.me/ns#
 <p>Whoa, when did that happen? Most of it comes from gulp/gulp-cli (384 packages), with node-sass taking the second place (177 packages). Some of those are shared between libraries, and a few more belong to the other requirements. And many of these dependencies are a disgrace to programming.</p>
 <p>After a full install of my <code class="docutils literal">package.json</code>, npm says <code class="docutils literal">added 545 packages from 331 contributors and audited 10500 packages in 22.458s</code>.  I’ve implicitly agreed to licenses imposed by 331 random people. All to build some simple CSS files out of SASS.</p>
 <p>Let’s go on a tour of <code class="docutils literal">node_modules</code> and see what we ended up with.</p>
-<section id="polyfills-reimplementations-oh-my"><h3>Polyfills, reimplementations, oh my!</h3>
+<section id="polyfills-reimplementations-oh-my">
+<h2>Polyfills, reimplementations, oh my!</h2>
 <p>Everything I’ve installed is meant to be used on top of Node.js. Node runs on top of the V8 engine, coming from Chrome. They’ve had almost-full ES2015 (ES6) support since April 2016. And yet, my node_modules is full of small polyfills.</p>
 <p>Let’s pick a random one and work back from it: <code class="docutils literal"><span class="pre">number-is-nan</span></code>.</p>
-<div class="code"><pre class="code javascript"><a id="rest_code_a37b03f9f4ad4d8abb0f716b94f8313a-1" name="rest_code_a37b03f9f4ad4d8abb0f716b94f8313a-1" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_a37b03f9f4ad4d8abb0f716b94f8313a-1"></a><span class="c1">// Copyright © Sindre Sorhus, MIT license</span>
-<a id="rest_code_a37b03f9f4ad4d8abb0f716b94f8313a-2" name="rest_code_a37b03f9f4ad4d8abb0f716b94f8313a-2" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_a37b03f9f4ad4d8abb0f716b94f8313a-2"></a><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Number</span><span class="p">.</span><span class="nb">isNaN</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="p">(</span><span class="nx">x</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<a id="rest_code_a37b03f9f4ad4d8abb0f716b94f8313a-3" name="rest_code_a37b03f9f4ad4d8abb0f716b94f8313a-3" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_a37b03f9f4ad4d8abb0f716b94f8313a-3"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">x</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="nx">x</span><span class="p">;</span>
-<a id="rest_code_a37b03f9f4ad4d8abb0f716b94f8313a-4" name="rest_code_a37b03f9f4ad4d8abb0f716b94f8313a-4" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_a37b03f9f4ad4d8abb0f716b94f8313a-4"></a><span class="p">};</span>
+<div class="code"><pre class="code javascript"><a id="rest_code_a2683c20074f46bb831a6d28854b02f1-1" name="rest_code_a2683c20074f46bb831a6d28854b02f1-1" href="#rest_code_a2683c20074f46bb831a6d28854b02f1-1"></a><span class="c1">// Copyright © Sindre Sorhus, MIT license</span>
+<a id="rest_code_a2683c20074f46bb831a6d28854b02f1-2" name="rest_code_a2683c20074f46bb831a6d28854b02f1-2" href="#rest_code_a2683c20074f46bb831a6d28854b02f1-2"></a><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Number</span><span class="p">.</span><span class="nb">isNaN</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="p">(</span><span class="nx">x</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="rest_code_a2683c20074f46bb831a6d28854b02f1-3" name="rest_code_a2683c20074f46bb831a6d28854b02f1-3" href="#rest_code_a2683c20074f46bb831a6d28854b02f1-3"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">x</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="nx">x</span><span class="p">;</span>
+<a id="rest_code_a2683c20074f46bb831a6d28854b02f1-4" name="rest_code_a2683c20074f46bb831a6d28854b02f1-4" href="#rest_code_a2683c20074f46bb831a6d28854b02f1-4"></a><span class="p">};</span>
 </pre></div>
 <p>That’s a one-liner that re-implements <code class="docutils literal">Number.isNaN</code> if it’s not available, which is, according to MDN, <a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/isNaN">a more robust version of the original, global
 isNaN()</a>. The original function coerced everything to Number before testing, which apparently wasn’t enough. That’s what you get for using a language designed in a week. The function was added to all sane browsers and Node around 2013, the polyfill was created in 2015.</p>
 <p>It was pulled in by <code class="docutils literal"><span class="pre">is-fullwidth-code-point</span></code> and <code class="docutils literal"><span class="pre">is-finite</span></code>, both by the same author. The latter one is especially interesting: it’s at version 1.0.2. Version 1.0.1improved the codebase from <code class="docutils literal">if (x) { return false; } return true</code> (via pull request), and version 1.0.2 replaced a manual <code class="docutils literal">val !== val</code> comparison with <code class="docutils literal"><span class="pre">number-is-nan</span></code>. <code class="docutils literal"><span class="pre">number-is-nan</span></code> has 7.5 million weekly downloads, <code class="docutils literal"><span class="pre">is-finite</span></code> has 6.7M. The build of <code class="docutils literal"><span class="pre">number-is-nan</span></code> <a class="reference external" href="https://travis-ci.org/sindresorhus/number-is-nan/builds/363709421">is currently failing.</a></p>
-</section><section id="fifty-shades-of-terminal"><h3>Fifty shades of terminal</h3>
+</section>
+<section id="fifty-shades-of-terminal">
+<h2>Fifty shades of terminal</h2>
 <p>Every Node-based CLI tool wants to be cool. And for that, they need colors.</p>
 <p>How does this work in Bash? You could use <code class="docutils literal">tput setaf XX</code>, but many people would just manually <code class="docutils literal">echo '\033[XXm'</code>, the codes are available <a class="reference external" href="https://en.wikipedia.org/wiki/ANSI_escape_code#3/4_bit">in Wikipedia</a> or elsewhere.</p>
 <p>How does this work in Python? There are a few libraries for this (and you can always do it manually), but the most popular one is <a class="reference external" href="https://pypi.org/project/colorama/">colorama</a>. That library can even handle Windows.</p>
@@ -220,215 +253,274 @@ isNaN()</a>. The original function coerced everything to Number before testing, 
 <li><p><code class="docutils literal"><span class="pre">ansi-red</span></code> and <code class="docutils literal"><span class="pre">ansi-cyan</span></code> are very similar libraries to <code class="docutils literal"><span class="pre">ansi-gray</span></code>. Is this a joke?!</p></li>
 </ul>
 <p>There are definitely other <code class="docutils literal"><span class="pre">ansi-$color</span></code> libraries, although they are not in my <code class="docutils literal">node_modules</code>. And probably other libraries for color support, but either they are not installed, or I haven’t managed to spot them in my <code class="docutils literal">npm list</code> output.</p>
-</section><section id="copyrighted-one-liners"><h3>Copyrighted one-liners</h3>
+</section>
+<section id="copyrighted-one-liners">
+<h2>Copyrighted one-liners</h2>
 <p>Another famous library by Jon Schlinkert is called <code class="docutils literal"><span class="pre">is-even</span></code>. Here is the complete code, verbatim:</p>
-<div class="code"><pre class="code javascript"><a id="rest_code_ef172f077c664fe98b0fab9d3968b8d9-1" name="rest_code_ef172f077c664fe98b0fab9d3968b8d9-1" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_ef172f077c664fe98b0fab9d3968b8d9-1"></a><span class="cm">/*!</span>
-<a id="rest_code_ef172f077c664fe98b0fab9d3968b8d9-2" name="rest_code_ef172f077c664fe98b0fab9d3968b8d9-2" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_ef172f077c664fe98b0fab9d3968b8d9-2"></a><span class="cm"> * is-even &lt;https://github.com/jonschlinkert/is-even&gt;</span>
-<a id="rest_code_ef172f077c664fe98b0fab9d3968b8d9-3" name="rest_code_ef172f077c664fe98b0fab9d3968b8d9-3" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_ef172f077c664fe98b0fab9d3968b8d9-3"></a><span class="cm"> *</span>
-<a id="rest_code_ef172f077c664fe98b0fab9d3968b8d9-4" name="rest_code_ef172f077c664fe98b0fab9d3968b8d9-4" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_ef172f077c664fe98b0fab9d3968b8d9-4"></a><span class="cm"> * Copyright (c) 2015, 2017, Jon Schlinkert.</span>
-<a id="rest_code_ef172f077c664fe98b0fab9d3968b8d9-5" name="rest_code_ef172f077c664fe98b0fab9d3968b8d9-5" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_ef172f077c664fe98b0fab9d3968b8d9-5"></a><span class="cm"> * Released under the MIT License.</span>
-<a id="rest_code_ef172f077c664fe98b0fab9d3968b8d9-6" name="rest_code_ef172f077c664fe98b0fab9d3968b8d9-6" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_ef172f077c664fe98b0fab9d3968b8d9-6"></a><span class="cm"> */</span>
-<a id="rest_code_ef172f077c664fe98b0fab9d3968b8d9-7" name="rest_code_ef172f077c664fe98b0fab9d3968b8d9-7" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_ef172f077c664fe98b0fab9d3968b8d9-7"></a>
-<a id="rest_code_ef172f077c664fe98b0fab9d3968b8d9-8" name="rest_code_ef172f077c664fe98b0fab9d3968b8d9-8" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_ef172f077c664fe98b0fab9d3968b8d9-8"></a><span class="s1">'use strict'</span><span class="p">;</span>
-<a id="rest_code_ef172f077c664fe98b0fab9d3968b8d9-9" name="rest_code_ef172f077c664fe98b0fab9d3968b8d9-9" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_ef172f077c664fe98b0fab9d3968b8d9-9"></a>
-<a id="rest_code_ef172f077c664fe98b0fab9d3968b8d9-10" name="rest_code_ef172f077c664fe98b0fab9d3968b8d9-10" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_ef172f077c664fe98b0fab9d3968b8d9-10"></a><span class="kd">var</span><span class="w"> </span><span class="nx">isOdd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">'is-odd'</span><span class="p">);</span>
-<a id="rest_code_ef172f077c664fe98b0fab9d3968b8d9-11" name="rest_code_ef172f077c664fe98b0fab9d3968b8d9-11" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_ef172f077c664fe98b0fab9d3968b8d9-11"></a>
-<a id="rest_code_ef172f077c664fe98b0fab9d3968b8d9-12" name="rest_code_ef172f077c664fe98b0fab9d3968b8d9-12" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_ef172f077c664fe98b0fab9d3968b8d9-12"></a><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">isEven</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<a id="rest_code_ef172f077c664fe98b0fab9d3968b8d9-13" name="rest_code_ef172f077c664fe98b0fab9d3968b8d9-13" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_ef172f077c664fe98b0fab9d3968b8d9-13"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="o">!</span><span class="nx">isOdd</span><span class="p">(</span><span class="nx">i</span><span class="p">);</span>
-<a id="rest_code_ef172f077c664fe98b0fab9d3968b8d9-14" name="rest_code_ef172f077c664fe98b0fab9d3968b8d9-14" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_ef172f077c664fe98b0fab9d3968b8d9-14"></a><span class="p">};</span>
+<div class="code"><pre class="code javascript"><a id="rest_code_378011c1be194c9890b6fd516663f9b0-1" name="rest_code_378011c1be194c9890b6fd516663f9b0-1" href="#rest_code_378011c1be194c9890b6fd516663f9b0-1"></a><span class="cm">/*!</span>
+<a id="rest_code_378011c1be194c9890b6fd516663f9b0-2" name="rest_code_378011c1be194c9890b6fd516663f9b0-2" href="#rest_code_378011c1be194c9890b6fd516663f9b0-2"></a><span class="cm"> * is-even &lt;https://github.com/jonschlinkert/is-even&gt;</span>
+<a id="rest_code_378011c1be194c9890b6fd516663f9b0-3" name="rest_code_378011c1be194c9890b6fd516663f9b0-3" href="#rest_code_378011c1be194c9890b6fd516663f9b0-3"></a><span class="cm"> *</span>
+<a id="rest_code_378011c1be194c9890b6fd516663f9b0-4" name="rest_code_378011c1be194c9890b6fd516663f9b0-4" href="#rest_code_378011c1be194c9890b6fd516663f9b0-4"></a><span class="cm"> * Copyright (c) 2015, 2017, Jon Schlinkert.</span>
+<a id="rest_code_378011c1be194c9890b6fd516663f9b0-5" name="rest_code_378011c1be194c9890b6fd516663f9b0-5" href="#rest_code_378011c1be194c9890b6fd516663f9b0-5"></a><span class="cm"> * Released under the MIT License.</span>
+<a id="rest_code_378011c1be194c9890b6fd516663f9b0-6" name="rest_code_378011c1be194c9890b6fd516663f9b0-6" href="#rest_code_378011c1be194c9890b6fd516663f9b0-6"></a><span class="cm"> */</span>
+<a id="rest_code_378011c1be194c9890b6fd516663f9b0-7" name="rest_code_378011c1be194c9890b6fd516663f9b0-7" href="#rest_code_378011c1be194c9890b6fd516663f9b0-7"></a>
+<a id="rest_code_378011c1be194c9890b6fd516663f9b0-8" name="rest_code_378011c1be194c9890b6fd516663f9b0-8" href="#rest_code_378011c1be194c9890b6fd516663f9b0-8"></a><span class="s1">&#39;use strict&#39;</span><span class="p">;</span>
+<a id="rest_code_378011c1be194c9890b6fd516663f9b0-9" name="rest_code_378011c1be194c9890b6fd516663f9b0-9" href="#rest_code_378011c1be194c9890b6fd516663f9b0-9"></a>
+<a id="rest_code_378011c1be194c9890b6fd516663f9b0-10" name="rest_code_378011c1be194c9890b6fd516663f9b0-10" href="#rest_code_378011c1be194c9890b6fd516663f9b0-10"></a><span class="kd">var</span><span class="w"> </span><span class="nx">isOdd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;is-odd&#39;</span><span class="p">);</span>
+<a id="rest_code_378011c1be194c9890b6fd516663f9b0-11" name="rest_code_378011c1be194c9890b6fd516663f9b0-11" href="#rest_code_378011c1be194c9890b6fd516663f9b0-11"></a>
+<a id="rest_code_378011c1be194c9890b6fd516663f9b0-12" name="rest_code_378011c1be194c9890b6fd516663f9b0-12" href="#rest_code_378011c1be194c9890b6fd516663f9b0-12"></a><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">isEven</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="rest_code_378011c1be194c9890b6fd516663f9b0-13" name="rest_code_378011c1be194c9890b6fd516663f9b0-13" href="#rest_code_378011c1be194c9890b6fd516663f9b0-13"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="o">!</span><span class="nx">isOdd</span><span class="p">(</span><span class="nx">i</span><span class="p">);</span>
+<a id="rest_code_378011c1be194c9890b6fd516663f9b0-14" name="rest_code_378011c1be194c9890b6fd516663f9b0-14" href="#rest_code_378011c1be194c9890b6fd516663f9b0-14"></a><span class="p">};</span>
 </pre></div>
 <p><code class="docutils literal"><span class="pre">is-odd</span></code> is slightly longer:</p>
-<div class="code"><pre class="code javascript"><a id="rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-1" name="rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-1" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-1"></a><span class="cm">/*!</span>
-<a id="rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-2" name="rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-2" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-2"></a><span class="cm"> * is-odd &lt;https://github.com/jonschlinkert/is-odd&gt;</span>
-<a id="rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-3" name="rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-3" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-3"></a><span class="cm"> *</span>
-<a id="rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-4" name="rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-4" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-4"></a><span class="cm"> * Copyright (c) 2015-2017, Jon Schlinkert.</span>
-<a id="rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-5" name="rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-5" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-5"></a><span class="cm"> * Released under the MIT License.</span>
-<a id="rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-6" name="rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-6" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-6"></a><span class="cm"> */</span>
-<a id="rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-7" name="rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-7" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-7"></a>
-<a id="rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-8" name="rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-8" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-8"></a><span class="s1">'use strict'</span><span class="p">;</span>
-<a id="rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-9" name="rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-9" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-9"></a>
-<a id="rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-10" name="rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-10" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-10"></a><span class="kd">const</span><span class="w"> </span><span class="nx">isNumber</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">'is-number'</span><span class="p">);</span>
-<a id="rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-11" name="rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-11" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-11"></a>
-<a id="rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-12" name="rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-12" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-12"></a><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">isOdd</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<a id="rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-13" name="rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-13" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-13"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Math</span><span class="p">.</span><span class="nx">abs</span><span class="p">(</span><span class="nx">value</span><span class="p">);</span>
-<a id="rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-14" name="rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-14" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-14"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">isNumber</span><span class="p">(</span><span class="nx">n</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
-<a id="rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-15" name="rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-15" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-15"></a><span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">TypeError</span><span class="p">(</span><span class="s1">'expected a number'</span><span class="p">);</span>
-<a id="rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-16" name="rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-16" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-16"></a><span class="w">  </span><span class="p">}</span>
-<a id="rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-17" name="rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-17" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-17"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nb">Number</span><span class="p">.</span><span class="nx">isInteger</span><span class="p">(</span><span class="nx">n</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
-<a id="rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-18" name="rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-18" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-18"></a><span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="s1">'expected an integer'</span><span class="p">);</span>
-<a id="rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-19" name="rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-19" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-19"></a><span class="w">  </span><span class="p">}</span>
-<a id="rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-20" name="rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-20" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-20"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nb">Number</span><span class="p">.</span><span class="nx">isSafeInteger</span><span class="p">(</span><span class="nx">n</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
-<a id="rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-21" name="rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-21" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-21"></a><span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="s1">'value exceeds maximum safe integer'</span><span class="p">);</span>
-<a id="rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-22" name="rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-22" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-22"></a><span class="w">  </span><span class="p">}</span>
-<a id="rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-23" name="rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-23" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-23"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="nx">n</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mf">2</span><span class="p">)</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="mf">1</span><span class="p">;</span>
-<a id="rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-24" name="rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-24" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_ec5aa098de6b46c9a5ff97da4ab3fd10-24"></a><span class="p">};</span>
+<div class="code"><pre class="code javascript"><a id="rest_code_ba74033fe5774b6a99b06073158aa6aa-1" name="rest_code_ba74033fe5774b6a99b06073158aa6aa-1" href="#rest_code_ba74033fe5774b6a99b06073158aa6aa-1"></a><span class="cm">/*!</span>
+<a id="rest_code_ba74033fe5774b6a99b06073158aa6aa-2" name="rest_code_ba74033fe5774b6a99b06073158aa6aa-2" href="#rest_code_ba74033fe5774b6a99b06073158aa6aa-2"></a><span class="cm"> * is-odd &lt;https://github.com/jonschlinkert/is-odd&gt;</span>
+<a id="rest_code_ba74033fe5774b6a99b06073158aa6aa-3" name="rest_code_ba74033fe5774b6a99b06073158aa6aa-3" href="#rest_code_ba74033fe5774b6a99b06073158aa6aa-3"></a><span class="cm"> *</span>
+<a id="rest_code_ba74033fe5774b6a99b06073158aa6aa-4" name="rest_code_ba74033fe5774b6a99b06073158aa6aa-4" href="#rest_code_ba74033fe5774b6a99b06073158aa6aa-4"></a><span class="cm"> * Copyright (c) 2015-2017, Jon Schlinkert.</span>
+<a id="rest_code_ba74033fe5774b6a99b06073158aa6aa-5" name="rest_code_ba74033fe5774b6a99b06073158aa6aa-5" href="#rest_code_ba74033fe5774b6a99b06073158aa6aa-5"></a><span class="cm"> * Released under the MIT License.</span>
+<a id="rest_code_ba74033fe5774b6a99b06073158aa6aa-6" name="rest_code_ba74033fe5774b6a99b06073158aa6aa-6" href="#rest_code_ba74033fe5774b6a99b06073158aa6aa-6"></a><span class="cm"> */</span>
+<a id="rest_code_ba74033fe5774b6a99b06073158aa6aa-7" name="rest_code_ba74033fe5774b6a99b06073158aa6aa-7" href="#rest_code_ba74033fe5774b6a99b06073158aa6aa-7"></a>
+<a id="rest_code_ba74033fe5774b6a99b06073158aa6aa-8" name="rest_code_ba74033fe5774b6a99b06073158aa6aa-8" href="#rest_code_ba74033fe5774b6a99b06073158aa6aa-8"></a><span class="s1">&#39;use strict&#39;</span><span class="p">;</span>
+<a id="rest_code_ba74033fe5774b6a99b06073158aa6aa-9" name="rest_code_ba74033fe5774b6a99b06073158aa6aa-9" href="#rest_code_ba74033fe5774b6a99b06073158aa6aa-9"></a>
+<a id="rest_code_ba74033fe5774b6a99b06073158aa6aa-10" name="rest_code_ba74033fe5774b6a99b06073158aa6aa-10" href="#rest_code_ba74033fe5774b6a99b06073158aa6aa-10"></a><span class="kd">const</span><span class="w"> </span><span class="nx">isNumber</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;is-number&#39;</span><span class="p">);</span>
+<a id="rest_code_ba74033fe5774b6a99b06073158aa6aa-11" name="rest_code_ba74033fe5774b6a99b06073158aa6aa-11" href="#rest_code_ba74033fe5774b6a99b06073158aa6aa-11"></a>
+<a id="rest_code_ba74033fe5774b6a99b06073158aa6aa-12" name="rest_code_ba74033fe5774b6a99b06073158aa6aa-12" href="#rest_code_ba74033fe5774b6a99b06073158aa6aa-12"></a><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">isOdd</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="rest_code_ba74033fe5774b6a99b06073158aa6aa-13" name="rest_code_ba74033fe5774b6a99b06073158aa6aa-13" href="#rest_code_ba74033fe5774b6a99b06073158aa6aa-13"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Math</span><span class="p">.</span><span class="nx">abs</span><span class="p">(</span><span class="nx">value</span><span class="p">);</span>
+<a id="rest_code_ba74033fe5774b6a99b06073158aa6aa-14" name="rest_code_ba74033fe5774b6a99b06073158aa6aa-14" href="#rest_code_ba74033fe5774b6a99b06073158aa6aa-14"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">isNumber</span><span class="p">(</span><span class="nx">n</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<a id="rest_code_ba74033fe5774b6a99b06073158aa6aa-15" name="rest_code_ba74033fe5774b6a99b06073158aa6aa-15" href="#rest_code_ba74033fe5774b6a99b06073158aa6aa-15"></a><span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;expected a number&#39;</span><span class="p">);</span>
+<a id="rest_code_ba74033fe5774b6a99b06073158aa6aa-16" name="rest_code_ba74033fe5774b6a99b06073158aa6aa-16" href="#rest_code_ba74033fe5774b6a99b06073158aa6aa-16"></a><span class="w">  </span><span class="p">}</span>
+<a id="rest_code_ba74033fe5774b6a99b06073158aa6aa-17" name="rest_code_ba74033fe5774b6a99b06073158aa6aa-17" href="#rest_code_ba74033fe5774b6a99b06073158aa6aa-17"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nb">Number</span><span class="p">.</span><span class="nx">isInteger</span><span class="p">(</span><span class="nx">n</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<a id="rest_code_ba74033fe5774b6a99b06073158aa6aa-18" name="rest_code_ba74033fe5774b6a99b06073158aa6aa-18" href="#rest_code_ba74033fe5774b6a99b06073158aa6aa-18"></a><span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="s1">&#39;expected an integer&#39;</span><span class="p">);</span>
+<a id="rest_code_ba74033fe5774b6a99b06073158aa6aa-19" name="rest_code_ba74033fe5774b6a99b06073158aa6aa-19" href="#rest_code_ba74033fe5774b6a99b06073158aa6aa-19"></a><span class="w">  </span><span class="p">}</span>
+<a id="rest_code_ba74033fe5774b6a99b06073158aa6aa-20" name="rest_code_ba74033fe5774b6a99b06073158aa6aa-20" href="#rest_code_ba74033fe5774b6a99b06073158aa6aa-20"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nb">Number</span><span class="p">.</span><span class="nx">isSafeInteger</span><span class="p">(</span><span class="nx">n</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<a id="rest_code_ba74033fe5774b6a99b06073158aa6aa-21" name="rest_code_ba74033fe5774b6a99b06073158aa6aa-21" href="#rest_code_ba74033fe5774b6a99b06073158aa6aa-21"></a><span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="s1">&#39;value exceeds maximum safe integer&#39;</span><span class="p">);</span>
+<a id="rest_code_ba74033fe5774b6a99b06073158aa6aa-22" name="rest_code_ba74033fe5774b6a99b06073158aa6aa-22" href="#rest_code_ba74033fe5774b6a99b06073158aa6aa-22"></a><span class="w">  </span><span class="p">}</span>
+<a id="rest_code_ba74033fe5774b6a99b06073158aa6aa-23" name="rest_code_ba74033fe5774b6a99b06073158aa6aa-23" href="#rest_code_ba74033fe5774b6a99b06073158aa6aa-23"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="nx">n</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mf">2</span><span class="p">)</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="mf">1</span><span class="p">;</span>
+<a id="rest_code_ba74033fe5774b6a99b06073158aa6aa-24" name="rest_code_ba74033fe5774b6a99b06073158aa6aa-24" href="#rest_code_ba74033fe5774b6a99b06073158aa6aa-24"></a><span class="p">};</span>
 </pre></div>
 <p><code class="docutils literal"><span class="pre">is-number</span></code> is another fun library; it says <code class="docutils literal">true</code> for strings of numbers, and <code class="docutils literal">false</code> for NaN (<code class="docutils literal">typeof NaN === 'number'</code>). <code class="docutils literal"><span class="pre">is-even</span></code> is used by, for example, <code class="docutils literal">even</code>, which calls <code class="docutils literal">Array.filter</code> with <code class="docutils literal"><span class="pre">is-even</span></code> as the argument. There’s also <code class="docutils literal">odd</code>, and for some reason, the two packages are separate.</p>
 <p>The checks found in <code class="docutils literal"><span class="pre">is-odd</span></code> make some more sense if you’re working with a dynamically-typed language where every number is a float (like JS). But you could release <code class="docutils literal"><span class="pre">check-odd</span></code>, which is 100x faster than <code class="docutils literal"><span class="pre">is-odd</span></code> (it assumes its input is correct), and exports <code class="docutils literal">function checkOdd(value) { return (value % 2) !== 0; }</code> <s>(Copyright © 2019, Chris Warrick. Licensed under the 4-clause BSD license.)</s> <i>(No, not really.)</i></p>
-</section><section id="this-product-includes-software-developed-by"><h3>This product includes software developed by…</h3>
+</section>
+<section id="this-product-includes-software-developed-by">
+<h2>This product includes software developed by…</h2>
 <p>Hold on a second, 4-clause BSD? That license contains the following clause:</p>
-<div class="code"><pre class="code text"><a id="rest_code_b1b0a6292b964e778a05cdcb5fe2e586-1" name="rest_code_b1b0a6292b964e778a05cdcb5fe2e586-1" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_b1b0a6292b964e778a05cdcb5fe2e586-1"></a>Redistribution and use in source and binary forms, with or without
-<a id="rest_code_b1b0a6292b964e778a05cdcb5fe2e586-2" name="rest_code_b1b0a6292b964e778a05cdcb5fe2e586-2" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_b1b0a6292b964e778a05cdcb5fe2e586-2"></a>modification, are permitted provided that the following conditions are met:
-<a id="rest_code_b1b0a6292b964e778a05cdcb5fe2e586-3" name="rest_code_b1b0a6292b964e778a05cdcb5fe2e586-3" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_b1b0a6292b964e778a05cdcb5fe2e586-3"></a>3. All advertising materials mentioning features or use of this software
-<a id="rest_code_b1b0a6292b964e778a05cdcb5fe2e586-4" name="rest_code_b1b0a6292b964e778a05cdcb5fe2e586-4" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_b1b0a6292b964e778a05cdcb5fe2e586-4"></a>   must display the following acknowledgement:
-<a id="rest_code_b1b0a6292b964e778a05cdcb5fe2e586-5" name="rest_code_b1b0a6292b964e778a05cdcb5fe2e586-5" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_b1b0a6292b964e778a05cdcb5fe2e586-5"></a>     This product includes software developed by the University of
-<a id="rest_code_b1b0a6292b964e778a05cdcb5fe2e586-6" name="rest_code_b1b0a6292b964e778a05cdcb5fe2e586-6" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_b1b0a6292b964e778a05cdcb5fe2e586-6"></a>     California, Berkeley and its contributors.
+<div class="code"><pre class="code text"><a id="rest_code_ea3ba871c1584ff2a5763cf5f0d2f996-1" name="rest_code_ea3ba871c1584ff2a5763cf5f0d2f996-1" href="#rest_code_ea3ba871c1584ff2a5763cf5f0d2f996-1"></a>Redistribution and use in source and binary forms, with or without
+<a id="rest_code_ea3ba871c1584ff2a5763cf5f0d2f996-2" name="rest_code_ea3ba871c1584ff2a5763cf5f0d2f996-2" href="#rest_code_ea3ba871c1584ff2a5763cf5f0d2f996-2"></a>modification, are permitted provided that the following conditions are met:
+<a id="rest_code_ea3ba871c1584ff2a5763cf5f0d2f996-3" name="rest_code_ea3ba871c1584ff2a5763cf5f0d2f996-3" href="#rest_code_ea3ba871c1584ff2a5763cf5f0d2f996-3"></a>3. All advertising materials mentioning features or use of this software
+<a id="rest_code_ea3ba871c1584ff2a5763cf5f0d2f996-4" name="rest_code_ea3ba871c1584ff2a5763cf5f0d2f996-4" href="#rest_code_ea3ba871c1584ff2a5763cf5f0d2f996-4"></a>   must display the following acknowledgement:
+<a id="rest_code_ea3ba871c1584ff2a5763cf5f0d2f996-5" name="rest_code_ea3ba871c1584ff2a5763cf5f0d2f996-5" href="#rest_code_ea3ba871c1584ff2a5763cf5f0d2f996-5"></a>     This product includes software developed by the University of
+<a id="rest_code_ea3ba871c1584ff2a5763cf5f0d2f996-6" name="rest_code_ea3ba871c1584ff2a5763cf5f0d2f996-6" href="#rest_code_ea3ba871c1584ff2a5763cf5f0d2f996-6"></a>     California, Berkeley and its contributors.
 </pre></div>
 <p>This clause was removed by UC Berkeley in 1999, but there is still old code that has clauses (with other names), and someone could create something with the old license. I actually found one such clause in my <code class="docutils literal">node_modules</code> (from <code class="docutils literal">bcrypt_pbkdf</code>). <a class="reference external" href="https://www.gnu.org/licenses/bsd.html">NetBSD had 75 different clauses</a> in 1997. It would be fun to see figures for the Node ecosystem… or more packages with equally problematic clauses.</p>
 <p>Most people aren’t aware of the licenses of their node dependencies. Going back to Colorama, I can quickly verify that Colorama has no dependencies, and itself uses the 3-clause BSD license. (That version of the license lacks the advertising clause and is considered GPL-compatible.) There is a helpful <code class="docutils literal"><span class="pre">license-checker</span></code> package that can tell you what licenses you have (based on the details provided in <code class="docutils literal">package.json</code>)</p>
-<div class="code"><pre class="code text"><a id="rest_code_207b4f39aa5749a8b719980078efc7ae-1" name="rest_code_207b4f39aa5749a8b719980078efc7ae-1" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_207b4f39aa5749a8b719980078efc7ae-1"></a>├─ MIT: 380
-<a id="rest_code_207b4f39aa5749a8b719980078efc7ae-2" name="rest_code_207b4f39aa5749a8b719980078efc7ae-2" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_207b4f39aa5749a8b719980078efc7ae-2"></a>├─ ISC: 64
-<a id="rest_code_207b4f39aa5749a8b719980078efc7ae-3" name="rest_code_207b4f39aa5749a8b719980078efc7ae-3" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_207b4f39aa5749a8b719980078efc7ae-3"></a>├─ Apache-2.0: 10
-<a id="rest_code_207b4f39aa5749a8b719980078efc7ae-4" name="rest_code_207b4f39aa5749a8b719980078efc7ae-4" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_207b4f39aa5749a8b719980078efc7ae-4"></a>├─ BSD-3-Clause: 10
-<a id="rest_code_207b4f39aa5749a8b719980078efc7ae-5" name="rest_code_207b4f39aa5749a8b719980078efc7ae-5" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_207b4f39aa5749a8b719980078efc7ae-5"></a>├─ BSD-2-Clause: 3
-<a id="rest_code_207b4f39aa5749a8b719980078efc7ae-6" name="rest_code_207b4f39aa5749a8b719980078efc7ae-6" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_207b4f39aa5749a8b719980078efc7ae-6"></a>├─ CC-BY-3.0: 2
-<a id="rest_code_207b4f39aa5749a8b719980078efc7ae-7" name="rest_code_207b4f39aa5749a8b719980078efc7ae-7" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_207b4f39aa5749a8b719980078efc7ae-7"></a>├─ BSD-3-Clause OR MIT: 1
-<a id="rest_code_207b4f39aa5749a8b719980078efc7ae-8" name="rest_code_207b4f39aa5749a8b719980078efc7ae-8" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_207b4f39aa5749a8b719980078efc7ae-8"></a>├─ MIT*: 1
-<a id="rest_code_207b4f39aa5749a8b719980078efc7ae-9" name="rest_code_207b4f39aa5749a8b719980078efc7ae-9" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_207b4f39aa5749a8b719980078efc7ae-9"></a>├─ (MIT OR Apache-2.0): 1
-<a id="rest_code_207b4f39aa5749a8b719980078efc7ae-10" name="rest_code_207b4f39aa5749a8b719980078efc7ae-10" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_207b4f39aa5749a8b719980078efc7ae-10"></a>├─ CC-BY-4.0: 1
-<a id="rest_code_207b4f39aa5749a8b719980078efc7ae-11" name="rest_code_207b4f39aa5749a8b719980078efc7ae-11" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_207b4f39aa5749a8b719980078efc7ae-11"></a>├─ AFLv2.1,BSD: 1
-<a id="rest_code_207b4f39aa5749a8b719980078efc7ae-12" name="rest_code_207b4f39aa5749a8b719980078efc7ae-12" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_207b4f39aa5749a8b719980078efc7ae-12"></a>├─ MPL-2.0: 1
-<a id="rest_code_207b4f39aa5749a8b719980078efc7ae-13" name="rest_code_207b4f39aa5749a8b719980078efc7ae-13" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_207b4f39aa5749a8b719980078efc7ae-13"></a>├─ (BSD-2-Clause OR MIT OR Apache-2.0): 1
-<a id="rest_code_207b4f39aa5749a8b719980078efc7ae-14" name="rest_code_207b4f39aa5749a8b719980078efc7ae-14" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_207b4f39aa5749a8b719980078efc7ae-14"></a>├─ CC0-1.0: 1
-<a id="rest_code_207b4f39aa5749a8b719980078efc7ae-15" name="rest_code_207b4f39aa5749a8b719980078efc7ae-15" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_207b4f39aa5749a8b719980078efc7ae-15"></a>└─ Unlicense: 1
+<div class="code"><pre class="code text"><a id="rest_code_dc998613f10743b79f3dcc648a0ef63b-1" name="rest_code_dc998613f10743b79f3dcc648a0ef63b-1" href="#rest_code_dc998613f10743b79f3dcc648a0ef63b-1"></a>├─ MIT: 380
+<a id="rest_code_dc998613f10743b79f3dcc648a0ef63b-2" name="rest_code_dc998613f10743b79f3dcc648a0ef63b-2" href="#rest_code_dc998613f10743b79f3dcc648a0ef63b-2"></a>├─ ISC: 64
+<a id="rest_code_dc998613f10743b79f3dcc648a0ef63b-3" name="rest_code_dc998613f10743b79f3dcc648a0ef63b-3" href="#rest_code_dc998613f10743b79f3dcc648a0ef63b-3"></a>├─ Apache-2.0: 10
+<a id="rest_code_dc998613f10743b79f3dcc648a0ef63b-4" name="rest_code_dc998613f10743b79f3dcc648a0ef63b-4" href="#rest_code_dc998613f10743b79f3dcc648a0ef63b-4"></a>├─ BSD-3-Clause: 10
+<a id="rest_code_dc998613f10743b79f3dcc648a0ef63b-5" name="rest_code_dc998613f10743b79f3dcc648a0ef63b-5" href="#rest_code_dc998613f10743b79f3dcc648a0ef63b-5"></a>├─ BSD-2-Clause: 3
+<a id="rest_code_dc998613f10743b79f3dcc648a0ef63b-6" name="rest_code_dc998613f10743b79f3dcc648a0ef63b-6" href="#rest_code_dc998613f10743b79f3dcc648a0ef63b-6"></a>├─ CC-BY-3.0: 2
+<a id="rest_code_dc998613f10743b79f3dcc648a0ef63b-7" name="rest_code_dc998613f10743b79f3dcc648a0ef63b-7" href="#rest_code_dc998613f10743b79f3dcc648a0ef63b-7"></a>├─ BSD-3-Clause OR MIT: 1
+<a id="rest_code_dc998613f10743b79f3dcc648a0ef63b-8" name="rest_code_dc998613f10743b79f3dcc648a0ef63b-8" href="#rest_code_dc998613f10743b79f3dcc648a0ef63b-8"></a>├─ MIT*: 1
+<a id="rest_code_dc998613f10743b79f3dcc648a0ef63b-9" name="rest_code_dc998613f10743b79f3dcc648a0ef63b-9" href="#rest_code_dc998613f10743b79f3dcc648a0ef63b-9"></a>├─ (MIT OR Apache-2.0): 1
+<a id="rest_code_dc998613f10743b79f3dcc648a0ef63b-10" name="rest_code_dc998613f10743b79f3dcc648a0ef63b-10" href="#rest_code_dc998613f10743b79f3dcc648a0ef63b-10"></a>├─ CC-BY-4.0: 1
+<a id="rest_code_dc998613f10743b79f3dcc648a0ef63b-11" name="rest_code_dc998613f10743b79f3dcc648a0ef63b-11" href="#rest_code_dc998613f10743b79f3dcc648a0ef63b-11"></a>├─ AFLv2.1,BSD: 1
+<a id="rest_code_dc998613f10743b79f3dcc648a0ef63b-12" name="rest_code_dc998613f10743b79f3dcc648a0ef63b-12" href="#rest_code_dc998613f10743b79f3dcc648a0ef63b-12"></a>├─ MPL-2.0: 1
+<a id="rest_code_dc998613f10743b79f3dcc648a0ef63b-13" name="rest_code_dc998613f10743b79f3dcc648a0ef63b-13" href="#rest_code_dc998613f10743b79f3dcc648a0ef63b-13"></a>├─ (BSD-2-Clause OR MIT OR Apache-2.0): 1
+<a id="rest_code_dc998613f10743b79f3dcc648a0ef63b-14" name="rest_code_dc998613f10743b79f3dcc648a0ef63b-14" href="#rest_code_dc998613f10743b79f3dcc648a0ef63b-14"></a>├─ CC0-1.0: 1
+<a id="rest_code_dc998613f10743b79f3dcc648a0ef63b-15" name="rest_code_dc998613f10743b79f3dcc648a0ef63b-15" href="#rest_code_dc998613f10743b79f3dcc648a0ef63b-15"></a>└─ Unlicense: 1
 </pre></div>
-</section></section><section id="attempt-2-back-to-bash"><h2>Attempt 2: back to Bash</h2>
+</section>
+</section>
+<section id="attempt-2-back-to-bash">
+<h1>Attempt 2: back to Bash</h1>
 <p>I decided to get rid of Gulp, it’s not necessary for this pipeline. I replaced
 it with Bash and <code class="docutils literal"><span class="pre">postcss-cli</span></code>. <code class="docutils literal"><span class="pre">node-sass</span></code> was replaced by <code class="docutils literal"><span class="pre">dart-sass</span></code>
 (a two-file binary distribution), and <code class="docutils literal">csso</code> was replaced by <code class="docutils literal">cssnano</code> (it
 works with postcss). Here is the resulting Bash file:</p>
-<div class="code"><pre class="code bash"><a id="rest_code_a9538623443149bba192eb855639e92d-1" name="rest_code_a9538623443149bba192eb855639e92d-1" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_a9538623443149bba192eb855639e92d-1"></a>sass<span class="w"> </span>bootstrap-kw.scss<span class="w"> </span><span class="p">|</span><span class="w"> </span>npx<span class="w"> </span>postcss<span class="w"> </span>--no-map<span class="w"> </span>--use<span class="w"> </span>autoprefixer<span class="w"> </span>-o<span class="w"> </span>assets/css/bootstrap.css
-<a id="rest_code_a9538623443149bba192eb855639e92d-2" name="rest_code_a9538623443149bba192eb855639e92d-2" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_a9538623443149bba192eb855639e92d-2"></a>sass<span class="w"> </span>bootstrap-kw-dark.scss<span class="w"> </span><span class="p">|</span><span class="w"> </span>npx<span class="w"> </span>postcss<span class="w"> </span>--no-map<span class="w"> </span>--use<span class="w"> </span>autoprefixer<span class="w"> </span>-o<span class="w"> </span>assets/css/bootstrap-dark.css
-<a id="rest_code_a9538623443149bba192eb855639e92d-3" name="rest_code_a9538623443149bba192eb855639e92d-3" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_a9538623443149bba192eb855639e92d-3"></a>npx<span class="w"> </span>postcss<span class="w"> </span>--no-map<span class="w"> </span>--use<span class="w"> </span>cssnano<span class="w"> </span>-o<span class="w"> </span>assets/css/bootstrap.min.css<span class="w"> </span>assets/css/bootstrap.css
-<a id="rest_code_a9538623443149bba192eb855639e92d-4" name="rest_code_a9538623443149bba192eb855639e92d-4" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_a9538623443149bba192eb855639e92d-4"></a>npx<span class="w"> </span>postcss<span class="w"> </span>--no-map<span class="w"> </span>--use<span class="w"> </span>cssnano<span class="w"> </span>-o<span class="w"> </span>assets/css/bootstrap-dark.min.css<span class="w"> </span>assets/css/bootstrap-dark.css
+<div class="code"><pre class="code bash"><a id="rest_code_e7da6ca3345d49c48ed269ba2c43c0f1-1" name="rest_code_e7da6ca3345d49c48ed269ba2c43c0f1-1" href="#rest_code_e7da6ca3345d49c48ed269ba2c43c0f1-1"></a>sass<span class="w"> </span>bootstrap-kw.scss<span class="w"> </span><span class="p">|</span><span class="w"> </span>npx<span class="w"> </span>postcss<span class="w"> </span>--no-map<span class="w"> </span>--use<span class="w"> </span>autoprefixer<span class="w"> </span>-o<span class="w"> </span>assets/css/bootstrap.css
+<a id="rest_code_e7da6ca3345d49c48ed269ba2c43c0f1-2" name="rest_code_e7da6ca3345d49c48ed269ba2c43c0f1-2" href="#rest_code_e7da6ca3345d49c48ed269ba2c43c0f1-2"></a>sass<span class="w"> </span>bootstrap-kw-dark.scss<span class="w"> </span><span class="p">|</span><span class="w"> </span>npx<span class="w"> </span>postcss<span class="w"> </span>--no-map<span class="w"> </span>--use<span class="w"> </span>autoprefixer<span class="w"> </span>-o<span class="w"> </span>assets/css/bootstrap-dark.css
+<a id="rest_code_e7da6ca3345d49c48ed269ba2c43c0f1-3" name="rest_code_e7da6ca3345d49c48ed269ba2c43c0f1-3" href="#rest_code_e7da6ca3345d49c48ed269ba2c43c0f1-3"></a>npx<span class="w"> </span>postcss<span class="w"> </span>--no-map<span class="w"> </span>--use<span class="w"> </span>cssnano<span class="w"> </span>-o<span class="w"> </span>assets/css/bootstrap.min.css<span class="w"> </span>assets/css/bootstrap.css
+<a id="rest_code_e7da6ca3345d49c48ed269ba2c43c0f1-4" name="rest_code_e7da6ca3345d49c48ed269ba2c43c0f1-4" href="#rest_code_e7da6ca3345d49c48ed269ba2c43c0f1-4"></a>npx<span class="w"> </span>postcss<span class="w"> </span>--no-map<span class="w"> </span>--use<span class="w"> </span>cssnano<span class="w"> </span>-o<span class="w"> </span>assets/css/bootstrap-dark.min.css<span class="w"> </span>assets/css/bootstrap-dark.css
 </pre></div>
 <p>The simplified dependency list cost me 37 MiB of disk space, and I’ve got 438
 packages from 232 contributors.</p>
-</section><section id="attempt-3-node-clis-are-unnecessary"><h2>Attempt 3: node CLIs are unnecessary</h2>
+</section>
+<section id="attempt-3-node-clis-are-unnecessary">
+<h1>Attempt 3: node CLIs are unnecessary</h1>
 <p>Let’s try something else: replace <code class="docutils literal">npx postcss</code> with a custom tool.</p>
-<div class="code"><pre class="code javascript"><a id="rest_code_b6ccfbdd864b40daa3919bdfee6154fe-1" name="rest_code_b6ccfbdd864b40daa3919bdfee6154fe-1" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_b6ccfbdd864b40daa3919bdfee6154fe-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">fs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">'fs'</span><span class="p">);</span>
-<a id="rest_code_b6ccfbdd864b40daa3919bdfee6154fe-2" name="rest_code_b6ccfbdd864b40daa3919bdfee6154fe-2" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_b6ccfbdd864b40daa3919bdfee6154fe-2"></a><span class="kd">const</span><span class="w"> </span><span class="nx">getStdin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">'get-stdin'</span><span class="p">);</span>
-<a id="rest_code_b6ccfbdd864b40daa3919bdfee6154fe-3" name="rest_code_b6ccfbdd864b40daa3919bdfee6154fe-3" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_b6ccfbdd864b40daa3919bdfee6154fe-3"></a>
-<a id="rest_code_b6ccfbdd864b40daa3919bdfee6154fe-4" name="rest_code_b6ccfbdd864b40daa3919bdfee6154fe-4" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_b6ccfbdd864b40daa3919bdfee6154fe-4"></a><span class="kd">const</span><span class="w"> </span><span class="nx">postcss</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">'postcss'</span><span class="p">);</span>
-<a id="rest_code_b6ccfbdd864b40daa3919bdfee6154fe-5" name="rest_code_b6ccfbdd864b40daa3919bdfee6154fe-5" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_b6ccfbdd864b40daa3919bdfee6154fe-5"></a><span class="kd">const</span><span class="w"> </span><span class="nx">autoprefixer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">'autoprefixer'</span><span class="p">);</span>
-<a id="rest_code_b6ccfbdd864b40daa3919bdfee6154fe-6" name="rest_code_b6ccfbdd864b40daa3919bdfee6154fe-6" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_b6ccfbdd864b40daa3919bdfee6154fe-6"></a><span class="kd">const</span><span class="w"> </span><span class="nx">cssnano</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">'cssnano'</span><span class="p">);</span>
-<a id="rest_code_b6ccfbdd864b40daa3919bdfee6154fe-7" name="rest_code_b6ccfbdd864b40daa3919bdfee6154fe-7" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_b6ccfbdd864b40daa3919bdfee6154fe-7"></a>
-<a id="rest_code_b6ccfbdd864b40daa3919bdfee6154fe-8" name="rest_code_b6ccfbdd864b40daa3919bdfee6154fe-8" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_b6ccfbdd864b40daa3919bdfee6154fe-8"></a><span class="kd">const</span><span class="w"> </span><span class="nx">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">argv</span><span class="p">[</span><span class="mf">2</span><span class="p">];</span>
-<a id="rest_code_b6ccfbdd864b40daa3919bdfee6154fe-9" name="rest_code_b6ccfbdd864b40daa3919bdfee6154fe-9" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_b6ccfbdd864b40daa3919bdfee6154fe-9"></a>
-<a id="rest_code_b6ccfbdd864b40daa3919bdfee6154fe-10" name="rest_code_b6ccfbdd864b40daa3919bdfee6154fe-10" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_b6ccfbdd864b40daa3919bdfee6154fe-10"></a><span class="nx">getStdin</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="nx">css</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<a id="rest_code_b6ccfbdd864b40daa3919bdfee6154fe-11" name="rest_code_b6ccfbdd864b40daa3919bdfee6154fe-11" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_b6ccfbdd864b40daa3919bdfee6154fe-11"></a><span class="w">    </span><span class="nx">postcss</span><span class="p">([</span><span class="nx">autoprefixer</span><span class="p">]).</span><span class="nx">process</span><span class="p">(</span><span class="nx">css</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="kr">from</span><span class="o">:</span><span class="w"> </span><span class="kc">undefined</span><span class="p">}).</span><span class="nx">then</span><span class="p">(</span><span class="nx">result1</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<a id="rest_code_b6ccfbdd864b40daa3919bdfee6154fe-12" name="rest_code_b6ccfbdd864b40daa3919bdfee6154fe-12" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_b6ccfbdd864b40daa3919bdfee6154fe-12"></a><span class="w">        </span><span class="nx">fs</span><span class="p">.</span><span class="nx">writeFileSync</span><span class="p">(</span><span class="sb">`assets/css/</span><span class="si">${</span><span class="nx">name</span><span class="si">}</span><span class="sb">.css`</span><span class="p">,</span><span class="w"> </span><span class="nx">result1</span><span class="p">.</span><span class="nx">css</span><span class="p">);</span>
-<a id="rest_code_b6ccfbdd864b40daa3919bdfee6154fe-13" name="rest_code_b6ccfbdd864b40daa3919bdfee6154fe-13" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_b6ccfbdd864b40daa3919bdfee6154fe-13"></a>
-<a id="rest_code_b6ccfbdd864b40daa3919bdfee6154fe-14" name="rest_code_b6ccfbdd864b40daa3919bdfee6154fe-14" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_b6ccfbdd864b40daa3919bdfee6154fe-14"></a><span class="w">        </span><span class="nx">postcss</span><span class="p">([</span><span class="nx">cssnano</span><span class="p">]).</span><span class="nx">process</span><span class="p">(</span><span class="nx">result1</span><span class="p">.</span><span class="nx">css</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="kr">from</span><span class="o">:</span><span class="w"> </span><span class="kc">undefined</span><span class="p">}).</span><span class="nx">then</span><span class="p">(</span><span class="nx">result2</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<a id="rest_code_b6ccfbdd864b40daa3919bdfee6154fe-15" name="rest_code_b6ccfbdd864b40daa3919bdfee6154fe-15" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_b6ccfbdd864b40daa3919bdfee6154fe-15"></a><span class="w">            </span><span class="nx">fs</span><span class="p">.</span><span class="nx">writeFileSync</span><span class="p">(</span><span class="sb">`assets/css/</span><span class="si">${</span><span class="nx">name</span><span class="si">}</span><span class="sb">.min.css`</span><span class="p">,</span><span class="w"> </span><span class="nx">result2</span><span class="p">.</span><span class="nx">css</span><span class="p">)</span>
-<a id="rest_code_b6ccfbdd864b40daa3919bdfee6154fe-16" name="rest_code_b6ccfbdd864b40daa3919bdfee6154fe-16" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_b6ccfbdd864b40daa3919bdfee6154fe-16"></a><span class="w">        </span><span class="p">});</span>
-<a id="rest_code_b6ccfbdd864b40daa3919bdfee6154fe-17" name="rest_code_b6ccfbdd864b40daa3919bdfee6154fe-17" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_b6ccfbdd864b40daa3919bdfee6154fe-17"></a><span class="w">    </span><span class="p">});</span>
-<a id="rest_code_b6ccfbdd864b40daa3919bdfee6154fe-18" name="rest_code_b6ccfbdd864b40daa3919bdfee6154fe-18" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_b6ccfbdd864b40daa3919bdfee6154fe-18"></a><span class="p">});</span>
+<div class="code"><pre class="code javascript"><a id="rest_code_fde41d35cf7f4c38b971971c3de749b3-1" name="rest_code_fde41d35cf7f4c38b971971c3de749b3-1" href="#rest_code_fde41d35cf7f4c38b971971c3de749b3-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">fs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;fs&#39;</span><span class="p">);</span>
+<a id="rest_code_fde41d35cf7f4c38b971971c3de749b3-2" name="rest_code_fde41d35cf7f4c38b971971c3de749b3-2" href="#rest_code_fde41d35cf7f4c38b971971c3de749b3-2"></a><span class="kd">const</span><span class="w"> </span><span class="nx">getStdin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;get-stdin&#39;</span><span class="p">);</span>
+<a id="rest_code_fde41d35cf7f4c38b971971c3de749b3-3" name="rest_code_fde41d35cf7f4c38b971971c3de749b3-3" href="#rest_code_fde41d35cf7f4c38b971971c3de749b3-3"></a>
+<a id="rest_code_fde41d35cf7f4c38b971971c3de749b3-4" name="rest_code_fde41d35cf7f4c38b971971c3de749b3-4" href="#rest_code_fde41d35cf7f4c38b971971c3de749b3-4"></a><span class="kd">const</span><span class="w"> </span><span class="nx">postcss</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;postcss&#39;</span><span class="p">);</span>
+<a id="rest_code_fde41d35cf7f4c38b971971c3de749b3-5" name="rest_code_fde41d35cf7f4c38b971971c3de749b3-5" href="#rest_code_fde41d35cf7f4c38b971971c3de749b3-5"></a><span class="kd">const</span><span class="w"> </span><span class="nx">autoprefixer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;autoprefixer&#39;</span><span class="p">);</span>
+<a id="rest_code_fde41d35cf7f4c38b971971c3de749b3-6" name="rest_code_fde41d35cf7f4c38b971971c3de749b3-6" href="#rest_code_fde41d35cf7f4c38b971971c3de749b3-6"></a><span class="kd">const</span><span class="w"> </span><span class="nx">cssnano</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;cssnano&#39;</span><span class="p">);</span>
+<a id="rest_code_fde41d35cf7f4c38b971971c3de749b3-7" name="rest_code_fde41d35cf7f4c38b971971c3de749b3-7" href="#rest_code_fde41d35cf7f4c38b971971c3de749b3-7"></a>
+<a id="rest_code_fde41d35cf7f4c38b971971c3de749b3-8" name="rest_code_fde41d35cf7f4c38b971971c3de749b3-8" href="#rest_code_fde41d35cf7f4c38b971971c3de749b3-8"></a><span class="kd">const</span><span class="w"> </span><span class="nx">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">argv</span><span class="p">[</span><span class="mf">2</span><span class="p">];</span>
+<a id="rest_code_fde41d35cf7f4c38b971971c3de749b3-9" name="rest_code_fde41d35cf7f4c38b971971c3de749b3-9" href="#rest_code_fde41d35cf7f4c38b971971c3de749b3-9"></a>
+<a id="rest_code_fde41d35cf7f4c38b971971c3de749b3-10" name="rest_code_fde41d35cf7f4c38b971971c3de749b3-10" href="#rest_code_fde41d35cf7f4c38b971971c3de749b3-10"></a><span class="nx">getStdin</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="nx">css</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="rest_code_fde41d35cf7f4c38b971971c3de749b3-11" name="rest_code_fde41d35cf7f4c38b971971c3de749b3-11" href="#rest_code_fde41d35cf7f4c38b971971c3de749b3-11"></a><span class="w">    </span><span class="nx">postcss</span><span class="p">([</span><span class="nx">autoprefixer</span><span class="p">]).</span><span class="nx">process</span><span class="p">(</span><span class="nx">css</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="kr">from</span><span class="o">:</span><span class="w"> </span><span class="kc">undefined</span><span class="p">}).</span><span class="nx">then</span><span class="p">(</span><span class="nx">result1</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="rest_code_fde41d35cf7f4c38b971971c3de749b3-12" name="rest_code_fde41d35cf7f4c38b971971c3de749b3-12" href="#rest_code_fde41d35cf7f4c38b971971c3de749b3-12"></a><span class="w">        </span><span class="nx">fs</span><span class="p">.</span><span class="nx">writeFileSync</span><span class="p">(</span><span class="sb">`assets/css/</span><span class="si">${</span><span class="nx">name</span><span class="si">}</span><span class="sb">.css`</span><span class="p">,</span><span class="w"> </span><span class="nx">result1</span><span class="p">.</span><span class="nx">css</span><span class="p">);</span>
+<a id="rest_code_fde41d35cf7f4c38b971971c3de749b3-13" name="rest_code_fde41d35cf7f4c38b971971c3de749b3-13" href="#rest_code_fde41d35cf7f4c38b971971c3de749b3-13"></a>
+<a id="rest_code_fde41d35cf7f4c38b971971c3de749b3-14" name="rest_code_fde41d35cf7f4c38b971971c3de749b3-14" href="#rest_code_fde41d35cf7f4c38b971971c3de749b3-14"></a><span class="w">        </span><span class="nx">postcss</span><span class="p">([</span><span class="nx">cssnano</span><span class="p">]).</span><span class="nx">process</span><span class="p">(</span><span class="nx">result1</span><span class="p">.</span><span class="nx">css</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="kr">from</span><span class="o">:</span><span class="w"> </span><span class="kc">undefined</span><span class="p">}).</span><span class="nx">then</span><span class="p">(</span><span class="nx">result2</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="rest_code_fde41d35cf7f4c38b971971c3de749b3-15" name="rest_code_fde41d35cf7f4c38b971971c3de749b3-15" href="#rest_code_fde41d35cf7f4c38b971971c3de749b3-15"></a><span class="w">            </span><span class="nx">fs</span><span class="p">.</span><span class="nx">writeFileSync</span><span class="p">(</span><span class="sb">`assets/css/</span><span class="si">${</span><span class="nx">name</span><span class="si">}</span><span class="sb">.min.css`</span><span class="p">,</span><span class="w"> </span><span class="nx">result2</span><span class="p">.</span><span class="nx">css</span><span class="p">)</span>
+<a id="rest_code_fde41d35cf7f4c38b971971c3de749b3-16" name="rest_code_fde41d35cf7f4c38b971971c3de749b3-16" href="#rest_code_fde41d35cf7f4c38b971971c3de749b3-16"></a><span class="w">        </span><span class="p">});</span>
+<a id="rest_code_fde41d35cf7f4c38b971971c3de749b3-17" name="rest_code_fde41d35cf7f4c38b971971c3de749b3-17" href="#rest_code_fde41d35cf7f4c38b971971c3de749b3-17"></a><span class="w">    </span><span class="p">});</span>
+<a id="rest_code_fde41d35cf7f4c38b971971c3de749b3-18" name="rest_code_fde41d35cf7f4c38b971971c3de749b3-18" href="#rest_code_fde41d35cf7f4c38b971971c3de749b3-18"></a><span class="p">});</span>
 </pre></div>
 <p>The bash script now pipes <code class="docutils literal">sass</code> output to <code class="docutils literal">node run_postcss.js <span class="pre">bootstrap(-dark)</span></code>.</p>
 <p>Doing this… cost me a new dependency. Its name is <code class="docutils literal"><span class="pre">get-stdin</span></code>. We’ve already met its author, Sindre Sorhus. While the library has its deficiencies <a class="reference external" href="https://github.com/sindresorhus/get-stdin/issues/21">(namely, it doesn’t support reading from TTY)</a>, it’s good enough. I could do it manually or use some other tricks, but since <code class="docutils literal"><span class="pre">get-stdin</span></code> does not pull in any other dependencies, I’m going to accept it. After cleaning up <code class="docutils literal">packages.json</code>, we end up with:</p>
-<div class="code"><pre class="code console"><a id="rest_code_36a86d1d48c24018940776617ae593bc-1" name="rest_code_36a86d1d48c24018940776617ae593bc-1" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_36a86d1d48c24018940776617ae593bc-1"></a><span class="gp">$ </span>npm<span class="w"> </span>install
-<a id="rest_code_36a86d1d48c24018940776617ae593bc-2" name="rest_code_36a86d1d48c24018940776617ae593bc-2" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_36a86d1d48c24018940776617ae593bc-2"></a><span class="go">added 144 packages from 119 contributors and audited 637 packages in 8.127s</span>
-<a id="rest_code_36a86d1d48c24018940776617ae593bc-3" name="rest_code_36a86d1d48c24018940776617ae593bc-3" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_36a86d1d48c24018940776617ae593bc-3"></a><span class="go">found 0 vulnerabilities</span>
-<a id="rest_code_36a86d1d48c24018940776617ae593bc-4" name="rest_code_36a86d1d48c24018940776617ae593bc-4" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_36a86d1d48c24018940776617ae593bc-4"></a><span class="gp">$ </span>du<span class="w"> </span>-hs<span class="w"> </span>node_modules
-<a id="rest_code_36a86d1d48c24018940776617ae593bc-5" name="rest_code_36a86d1d48c24018940776617ae593bc-5" href="/blog/2019/02/15/modern-web-development-where-you-need-500-packages-to-build-bootstrap/#rest_code_36a86d1d48c24018940776617ae593bc-5"></a><span class="go"> 21M    node_modules</span>
+<div class="code"><pre class="code console"><a id="rest_code_d17060d8dc0849a98c962270d526c071-1" name="rest_code_d17060d8dc0849a98c962270d526c071-1" href="#rest_code_d17060d8dc0849a98c962270d526c071-1"></a><span class="gp">$ </span>npm<span class="w"> </span>install
+<a id="rest_code_d17060d8dc0849a98c962270d526c071-2" name="rest_code_d17060d8dc0849a98c962270d526c071-2" href="#rest_code_d17060d8dc0849a98c962270d526c071-2"></a><span class="go">added 144 packages from 119 contributors and audited 637 packages in 8.127s</span>
+<a id="rest_code_d17060d8dc0849a98c962270d526c071-3" name="rest_code_d17060d8dc0849a98c962270d526c071-3" href="#rest_code_d17060d8dc0849a98c962270d526c071-3"></a><span class="go">found 0 vulnerabilities</span>
+<a id="rest_code_d17060d8dc0849a98c962270d526c071-4" name="rest_code_d17060d8dc0849a98c962270d526c071-4" href="#rest_code_d17060d8dc0849a98c962270d526c071-4"></a><span class="gp">$ </span>du<span class="w"> </span>-hs<span class="w"> </span>node_modules
+<a id="rest_code_d17060d8dc0849a98c962270d526c071-5" name="rest_code_d17060d8dc0849a98c962270d526c071-5" href="#rest_code_d17060d8dc0849a98c962270d526c071-5"></a><span class="go"> 21M    node_modules</span>
 </pre></div>
-</section><section id="conclusion"><h2>Conclusion</h2>
+</section>
+<section id="conclusion">
+<h1>Conclusion</h1>
 <p>The task at hand was very simple. So was the JS code (Gulp and custom) I had to write to implement it. But underneath, there was a mess of unknown, unaudited code, duplicated libraries, and libraries created effectively to bump people’s npm download stats. There were already incidents, like <code class="docutils literal"><span class="pre">left-pad</span></code> (the removal of which broke Babel), or <code class="docutils literal"><span class="pre">event-stream</span></code> (which was taken over and modified to steal cryptocurrencies). The modern web development ecosystem is a huge mess of dependencies and one-line packages. Some of them are necessary due to the lackluster JS standard library — but some are just useless. And some of these micro-packages would be better off as larger libraries.</p>
 <blockquote>
 <p>Sure, the package count went down from the original 545 to 144. But the original point still stands: too much useless stuff.</p>
 </blockquote>
 <p>PS. Five of the packages (in the “large” set) had a <code class="docutils literal">.DS_Store</code> file left over. I’m wondering if there are any other files that shouldn’t be shipped with packages, lurking in <code class="docutils literal">node_modules</code> directories all over the world…</p>
 <p>PPS. I’ve replaced Disqus with Isso, because it had too many advertisements. If you experience any issues with the comment system (after force-refreshing), e-mail me.</p>
-</section></article>
-</div>
-    <aside class="postpromonav"><nav><ul class="pager hidden-print">
-<li class="previous">
-                <a href="/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/" rel="prev" title="Python Hackery: merging signatures of two Python functions">Previous post</a>
-            </li>
-            <li class="next">
-                <a href="/blog/2020/02/09/when-html-is-not-enough-a-tale-of-the-datalist-element/" rel="next" title="When HTML is not enough: a tale of the &lt;datalist&gt; element">Next post</a>
-            </li>
-        </ul></nav></aside><section class="comments"><div data-title="Modern Web Development: where you need 500 packages to build Bootstrap" id="isso-thread"></div>
-        <script src="https://isso.chriswarrick.com/js/embed.min.js" data-isso="https://isso.chriswarrick.com/" data-isso-lang="en" data-isso-require-author="true" data-isso-require-email="true" data-isso-gravatar="true" data-isso-avatar="false" data-isso-css="false" data-isso-vote="false" data-isso-reply-notifications="true"></script></section><!--End of body content--><nav id="footer-links"><div class="row">
-            <div class="col-sm-4">
-                <h6>Blog</h6>
-                <ul>
-<li class="nav-item">
-<a href="/blog/" class="nav-link">Archive</a>
-                        </li>
-<li class="nav-item">
-<a href="/blog/tags/" class="nav-link">Tags</a>
-                        </li>
-<li class="nav-item">
-<a href="/rss.xml" class="nav-link">RSS Feed</a>
-                        </li>
-<li class="nav-item">
-<a href="/search/" class="nav-link">Search</a>
-                </li>
-</ul>
-</div>
-            <div class="col-sm-4">
-                <h6>Projects and Work</h6>
-                <ul>
-<li class="nav-item">
-<a href="/projects/" class="nav-link">Projects</a>
-                        </li>
-<li class="nav-item">
-<a href="/guides/" class="nav-link">Guides</a>
-                        </li>
-<li class="nav-item">
-<a href="/kwbot/" class="nav-link">KwBot</a>
-                        </li>
-<li class="nav-item">
-<a href="/blog/tags/cat_python" class="nav-link">Posts about Python</a>
-                </li>
-</ul>
-</div>
-            <div class="col-sm-4">
-                <h6>Me</h6>
-                <ul>
-<li class="nav-item">
-<a href="/contact/" class="nav-link">Contact</a>
-                        </li>
-<li class="nav-item">
-<a href="/brand/" class="nav-link">Brand</a>
-                        </li>
-<li class="nav-item">
-<a href="https://twitter.com/Kwpolska" class="nav-link">Twitter</a>
-                        </li>
-<li class="nav-item">
-<a href="https://github.com/Kwpolska" class="nav-link">GitHub</a>
-                </li>
-</ul>
-</div>
-        </div></nav><footer id="footer"><p>this site uses cookies.<br>by using this site, you agree to our <a href="/privacy/">cookie and privacy policy</a>.</p>
-<p>
-powered by <strong><a href="https://getnikola.com/">Nikola</a></strong>, <a href="http://nginx.org/">nginx</a> and <a href="https://hetzner.cloud/?ref=Qy1lehF8PwzP">Hetzner Cloud</a><br>
-copyright © 2009–2026 <a href="/contact/">Chris Warrick</a><br><a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC
-BY-NC-SA</a>, unless stated otherwise</p>
-            
-        </footer>
-</div>
+</section>
+
+  </div>
+</article>
 
 
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script><script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.11.0/baguetteBox.min.js" integrity="sha256-yQGjQhFs3LtyiN5hhr3k9s9TWZOh/RzCkD3gwwCKlkg=" crossorigin="anonymous"></script><script src="/assets/js/all.js?v=20230115"></script><script>
-    baguetteBox.run('div#content', {
-        ignoreClass: 'islink',
-        captions: function(element) {
-            return element.getElementsByTagName('img')[0].alt;
-    }});
-    </script><!-- Matomo --><script>
+
+
+  <aside class="postpromonav">
+    <nav>
+      <ul class="pager hidden-print">
+        
+          <li class="previous">
+            <a href="/blog/2018/09/20/python-hackery-merging-signatures-of-two-python-functions/" rel="prev"
+               title="Python Hackery: merging signatures of two Python functions">Previous post</a>
+          </li>
+        
+        
+          <li class="next">
+            <a href="/blog/2020/02/09/when-html-is-not-enough-a-tale-of-the-datalist-element/" rel="prev"
+               title="When HTML is not enough: a tale of the &lt;datalist&gt; element">Next post</a>
+          </li>
+        
+      </ul>
+    </nav>
+  </aside>
+
+
+
+  <section class="comments">
+    <div data-title="Modern Web Development: where you need 500 packages to build Bootstrap" id="isso-thread"></div>
+    <script src="https://isso.chriswarrick.com/js/embed.min.js" data-isso="https://isso.chriswarrick.com/"
+            data-isso-lang="en" data-isso-require-author="true" data-isso-require-email="true" data-isso-gravatar="true"
+            data-isso-avatar="false" data-isso-css="false" data-isso-vote="false"
+            data-isso-reply-notifications="true"></script>
+  </section>
+
+
+
+    <script src="https://isso.chriswarrick.com/js/count.min.js" data-isso="https://isso.chriswarrick.com/"
+            data-isso-lang="en"></script>
+    <nav id="footer-links">
+      <div class="row">
+        <div class="col-sm-4">
+          <h6>Blog</h6>
+          <ul>
+            <li class="nav-item">
+              <a href="/blog/" class="nav-link">Archives</a>
+            </li>
+            <li class="nav-item">
+              <a href="/blog/tags/" class="nav-link">Tags</a>
+            </li>
+            <li class="nav-item">
+              <a href="/listings/" class="nav-link">Listings</a>
+            </li>
+            <li class="nav-item">
+              <a href="/rss.xml" class="nav-link">RSS Feed</a>
+            </li>
+          </ul>
+        </div>
+        <div class="col-sm-4">
+          <h6>Projects and Work</h6>
+          <ul>
+            <li class="nav-item">
+              <a href="/projects/" class="nav-link">Projects</a>
+            </li>
+            <li class="nav-item">
+              <a href="/guides/" class="nav-link">Guides</a>
+            </li>
+            <li class="nav-item">
+              <a href="/kwbot/" class="nav-link">KwBot</a>
+            </li>
+            <li class="nav-item">
+              <a href="/blog/tags/cat_python" class="nav-link">Posts about Python</a>
+            </li>
+          </ul>
+        </div>
+        <div class="col-sm-4">
+          <h6>Me</h6>
+          <ul>
+            <li class="nav-item">
+              <a href="/contact/" class="nav-link">Contact</a>
+            </li>
+            <li class="nav-item">
+              <a href="/brand/" class="nav-link">Brand</a>
+            </li>
+            <li class="nav-item">
+              <a href="https://twitter.com/Kwpolska" class="nav-link">Twitter</a>
+            </li>
+            <li class="nav-item">
+              <a href="https://github.com/Kwpolska" class="nav-link">GitHub</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <footer id="footer">
+      <p>this site uses cookies.<br>by using this site, you agree to our <a href="/privacy/">cookie and privacy policy</a>.</p>
+<p>powered by <strong><a href="https://github.com/Kwpolska/YetAnotherBlogGenerator">Yet Another Blog Generator</a></strong>,
+  <a href="https://nginx.org/">nginx</a>
+  and <a href="https://hetzner.cloud/?ref=Qy1lehF8PwzP">Hetzner Cloud</a><br>
+  copyright © 2009–2026 <a href="/contact/">Chris Warrick</a><br>
+  license: <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA</a>, unless stated otherwise</p>
+    </footer>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.11.0/baguetteBox.min.js"
+        integrity="sha256-yQGjQhFs3LtyiN5hhr3k9s9TWZOh/RzCkD3gwwCKlkg=" crossorigin="anonymous"></script>
+<script src="/assets/js/all.js?v=20230115"></script>
+<script>
+  baguetteBox.run('div#content', {
+    ignoreClass: 'islink',
+    captions: function (element) {
+      return element.getElementsByTagName('img')[0].alt;
+    }
+  });
+</script><!-- Matomo -->
+<script>
   var _paq = window._paq = window._paq || [];
   /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
   _paq.push(['trackPageView']);
   _paq.push(['enableLinkTracking']);
-  (function() {
-    var u="//matomo.chriswarrick.com/";
-    _paq.push(['setTrackerUrl', u+'matomo.php']);
+  (function () {
+    var u = "//matomo.chriswarrick.com/";
+    _paq.push(['setTrackerUrl', u + 'matomo.php']);
     _paq.push(['setSiteId', '1']);
-    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-    g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+    var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+    g.async = true;
+    g.src = u + 'matomo.js';
+    s.parentNode.insertBefore(g, s);
   })();
 </script><!-- End Matomo Code -->
 </body>

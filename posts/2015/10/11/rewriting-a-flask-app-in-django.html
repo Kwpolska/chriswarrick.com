@@ -1,0 +1,89 @@
+---
+title: "Rewriting a Flask app in Django"
+published: "2015-10-11 17:24:43+02:00"
+tags: ["Python", "Internet", "Django", "Flask", "Nikola"]
+category: "Python"
+description: "I spent Saturday on rewriting a Flask app in Django."
+legacy: true
+---
+<p>I spent Saturday on rewriting a Flask app in Django.  The app in question was
+<a class="reference external" href="https://users.getnikola.com/">Nikola Users</a>, which is a very simple CRUD
+app.  And yet, the Flask code was a mess, full of bugs and vulnerabilities.
+Eight hours later, I had a fully functional Django app that did more and fixed
+all problems.</p>
+<!-- TEASER_END -->
+<section id="original-flask-app">
+<h1>Original Flask app</h1>
+<p>The original Flask app had a ton of problems.  In order to make it anywhere
+near useful, I would need to spend hours.  Here’s just a few of
+them:</p>
+<ul class="simple">
+<li><p>357 lines of spaghetti code (295 SLOC), all in one file</p></li>
+<li><p>No form data validation, no CSRF <a class="brackets" href="#footnote-1" id="footnote-reference-1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> protection (it did have XSS protection
+though)</p></li>
+<li><p>Login using Mozilla Persona, which requries JavaScript, is a bit kludgey, and
+feels desolate (and also had me store the admin e-mail list in code)</p></li>
+<li><p>Geopolitics issues: using country flags for languages</p></li>
+<li><p>A lot of things were implemented by hand</p></li>
+<li><p>SQLAlchemy is very verbose</p></li>
+<li><p>no DB migrations (makes enhancements harder)</p></li>
+<li><p>Languages implemented as a PostgreSQL integer array</p></li>
+<li><p>Adding a language required running a command-line script and <strong>restarting the
+app</strong> (languages were cached in Python dicts with no way to reload them from
+the database; that would require talking through uWSGI anyway because there
+were multiple processes involved)</p></li>
+<li><p>The templates were slightly hacky (the page title was set in each individual
+template and not in the view code); menus hacked together in HTML with no
+highlighting</p></li>
+<li><p>Python 2.7</p></li>
+</ul>
+</section>
+<section id="the-rewrite">
+<h1>The rewrite</h1>
+<p>I started the process by opening <a class="reference external" href="https://docs.djangoproject.com/en/">Django documentation</a>, with its wonderful
+<a class="reference external" href="https://docs.djangoproject.com/en/1.8/intro/tutorial01/">tutorial</a>.  Now, I have written a couple basic Django apps before, but
+the majority of them didn’t do much.  In other words, I didn’t have a lot of experience.  Especially with taking user input and relationships.  It took me about 8 hours to get feature parity, and more.</p>
+<p>Getting all the features was really simple.  For example, to get a many-to-many
+relationship for languages, I had to write just one line.</p>
+<div class="code"><pre class="code python"><a id="rest_code_ea0160f8c13f453b8c5b1d4887725fb8-1" name="rest_code_ea0160f8c13f453b8c5b1d4887725fb8-1" href="#rest_code_ea0160f8c13f453b8c5b1d4887725fb8-1"></a><span class="n">languages</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="n">Language</span><span class="p">)</span>
+</pre></div>
+<p>That’s it.  I didn’t have to run through complicated SQLAlchemy documentation,
+which provides a <a class="reference external" href="http://docs.sqlalchemy.org/en/rel_1_0/orm/basic_relationships.html#many-to-many">13-line solution</a> to the same problem.</p>
+<p>Django also simplified New Relic integration, as the browser JS can be implemented
+using Django template tags.</p>
+<p>Django is not without its problems, though.  I got a very cryptic traceback
+when I did this:</p>
+<div class="code"><pre class="code python"><a id="rest_code_c47a1c8a76894a0fb5173c04c7d6277b-1" name="rest_code_c47a1c8a76894a0fb5173c04c7d6277b-1" href="#rest_code_c47a1c8a76894a0fb5173c04c7d6277b-1"></a><span class="n">publish_email</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="s2">&quot;Publish e-mail&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<a id="rest_code_c47a1c8a76894a0fb5173c04c7d6277b-2" name="rest_code_c47a1c8a76894a0fb5173c04c7d6277b-2" href="#rest_code_c47a1c8a76894a0fb5173c04c7d6277b-2"></a><span class="ne">TypeError</span><span class="p">:</span> <span class="s2">&quot;BooleanField() got multiple values for argument &#39;required&#39;&quot;</span>
+</pre></div>
+<p>The real problem with this code?  I forgot the <code class="docutils literal">label=</code> keyword.  The
+problem is, the model API accepts this syntax — <code class="docutils literal">verbose_name</code> is the first
+argument.  (I am not actually using the labels though, I write my own form
+HTML)</p>
+<p>Still, the Django version is much cleaner.  And the best part of all?  There
+are no magic global objects (<code class="docutils literal">g</code>, <code class="docutils literal">session</code>, <code class="docutils literal">request</code>) and
+decorator-based views (which are a bit of syntax abuse IMO).</p>
+<p>In the end, I have:</p>
+<ul class="simple">
+<li><p>382 lines of code (297 SLOC) over 6 files — much cleaner, and with less long lines</p></li>
+<li><p>form data validation (via Django), CSRF and XSS protection</p></li>
+<li><p>Login using Django built-in authentication, without JavaScript</p></li>
+<li><p>Language codes (granted, I could’ve done that really easily back in Flask)</p></li>
+<li><p>Tried-and-true implementations of common patterns</p></li>
+<li><p>Django models are much more readable and friendly</p></li>
+<li><p>Django-provided DB migrations (generated automatically!)</p></li>
+<li><p>Languages implemented using Django many-to-many relationships</p></li>
+<li><p>Adding a language is possible from the Django built-in admin panel and is
+reflected immediately (no caching)</p></li>
+<li><p>Titles and menus in code</p></li>
+<li><p>Python 3</p></li>
+<li><p>New features: featured sites; show only a specified language — were really easy to add</p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="footnote-1" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#footnote-reference-1">1</a><span class="fn-bracket">]</span></span>
+<p>I had some <code class="docutils literal">CSRF_ENABLED</code> variable, but it did not seem to be actually
+used by anything.</p>
+</aside>
+</aside>
+</section>

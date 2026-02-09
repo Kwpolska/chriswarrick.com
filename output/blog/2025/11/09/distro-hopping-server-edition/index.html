@@ -1,266 +1,334 @@
 <!DOCTYPE html>
-<html class="limited-width larger-font" prefix="
-og: http://ogp.me/ns#
-" lang="en">
+<html class="limited-width larger-font" prefix="og: http://ogp.me/ns#" lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="description" content="I’ve recently migrated my VPS from Fedora to Ubuntu. Here’s a list of things that might be useful to keep in mind before, during, and after a migration of a server that hosts publicly accessible Web sites and applications, as well as other personal services, and how to get rid of the most annoying parts of Ubuntu.">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Distro Hopping, Server Edition | Chris Warrick</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.css" integrity="sha256-FqCzNnnyXl5HxHMdb+RQ/RV/X7fqfPcQYy+G2gFL3Xk=" crossorigin="anonymous">
+  <meta charset="utf-8">
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Distro Hopping, Server Edition | Chris Warrick</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.css"
+        integrity="sha256-FqCzNnnyXl5HxHMdb+RQ/RV/X7fqfPcQYy+G2gFL3Xk=" crossorigin="anonymous">
 <!--#if expr="$HTTP_COOKIE=/colorScheme\=light/" --><link href="/assets/css/all.css?v=20230115" rel="stylesheet" type="text/css" id="kw-all-css">
 <script type="text/javascript">var colorScheme='light';var colorSchemesEnabled=true;</script><!--#else--><link href="/assets/css/all-dark.css?v=20230115" rel="stylesheet" type="text/css" id="kw-all-css">
-<script type="text/javascript">var colorScheme='dark';var colorSchemesEnabled=true;</script><!--#endif--><link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,700,700i|Source+Serif+Pro:600&amp;display=swap&amp;subset=latin-ext" rel="stylesheet">
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
-<meta name="theme-color" content="#00aadd">
-<meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="/rss.xml">
-<link rel="canonical" href="https://chriswarrick.com/blog/2025/11/09/distro-hopping-server-edition/">
-<link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="16x16 32x32 48x48 64x64 128x128 256x256">
-<link rel="icon" type="image/png" href="/assets/img/logo512.png">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<!--[if lt IE 9]><script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]--><meta name="description" itemprop="description" content="I’ve recently migrated my VPS from Fedora to Ubuntu. Here’s a list of things that might be useful to keep in mind before, during, and after a migration of a server that hosts publicly accessible Web sites and applications, as well as other personal services, and how to get rid of the most annoying parts of Ubuntu.">
-<meta name="author" content="Chris Warrick">
-<link rel="prev" href="/blog/2024/04/29/powershell-the-object-oriented-shell-you-didnt-know-you-needed/" title="PowerShell: the object-oriented shell you didn’t know you needed" type="text/html">
-<link rel="next" href="/blog/2026/02/06/deploying-python-web-applications-with-docker/" title="Deploying Python Web Applications with Docker" type="text/html">
-<meta property="og:site_name" content="Chris Warrick">
-<meta property="og:title" content="Distro Hopping, Server Edition">
-<meta property="og:url" content="https://chriswarrick.com/blog/2025/11/09/distro-hopping-server-edition/">
-<meta property="og:description" content="I’ve recently migrated my VPS from Fedora to Ubuntu. Here’s a list of things that might be useful to keep in mind before, during, and after a migration of a server that hosts publicly accessible Web s">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2025-11-09T19:00:00+01:00">
-<meta property="article:tag" content="Django">
-<meta property="article:tag" content="Docker">
-<meta property="article:tag" content="Fedora">
-<meta property="article:tag" content="Linux">
-<meta property="article:tag" content="Python">
-<meta property="article:tag" content="Ubuntu">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:creator" content="@Kwpolska">
+<script type="text/javascript">var colorScheme='dark';var colorSchemesEnabled=true;</script><!--#endif-->
+  <link
+    href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,700,700i|Source+Serif+Pro:600&amp;display=swap&amp;subset=latin-ext"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css"
+        integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+  <meta name="theme-color" content="#00aadd">
+  <meta name="generator" content="Chris Warrick’s Yet Another Blog Generator">
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/rss.xml">
+  <link rel="canonical" href="https://chriswarrick.com/">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="16x16 32x32 48x48 64x64 128x128 256x256">
+  <link rel="icon" type="image/png" href="/assets/img/logo512.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="prev" href="/blog/2024/04/29/powershell-the-object-oriented-shell-you-didnt-know-you-needed/" type="text/html">
+  <link rel="next" href="/blog/2026/02/06/deploying-python-web-applications-with-docker/" type="text/html">
+  
 </head>
 <body>
 <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
 
-<!-- Menubar -->
-
-<nav class="navbar navbar-expand-md navbar-kw bg-dark static-top mb-4"><div class="container">
-<!-- This keeps the margins nice -->
-        <a class="navbar-brand" href="/">
-            <img src="/assets/img/logo.png" srcset="/assets/img/logo2x.png 2x" alt="Chris Warrick" id="logo"><span id="blog-title">Chris Warrick</span>
-        </a>
-        <div>
-        <button class="navbar-toggler mr-2" id="color-changer-mobile" type="button" aria-label="Change color scheme">
-            <span class="color-changer"></span>
-        </button>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        </div>
-        <div class="collapse navbar-collapse" id="bs-navbar">
-            <ul class="navbar-nav mr-auto">
-<li class="nav-item">
-<a href="/contact/" class="nav-link">Contact</a>
-                </li>
-<li class="nav-item">
-<a href="/projects/" class="nav-link">Projects</a>
-                </li>
-<li class="nav-item">
-<a href="/guides/" class="nav-link">Guides</a>
-                </li>
-<li class="nav-item">
-<a href="/blog/" class="nav-link">Archives</a>
-                </li>
-<li class="nav-item">
-<a href="/search/" class="nav-link">Search</a>
-
-                
-            </li>
-</ul>
-<ul class="navbar-nav navbar-right">
-<li class="nav-item" id="color-changer-menu">
-<a href="#" class="nav-link" id="color-changer-btn">
-                <div class="color-changer"></div>
-                <span id="color-changer-text"><!--#if expr="$HTTP_COOKIE=/colorScheme\=light/" -->Dark Mode<!--#else -->Light Mode<!--#endif--></span>
-                </a>
-                </li>
-            </ul>
-</div>
-<!-- /.navbar-collapse -->
+<nav class="navbar navbar-expand-md navbar-kw bg-dark static-top mb-4">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <img src="/assets/img/logo.png" srcset="/assets/img/logo2x.png 2x" alt="Chris Warrick" id="logo"><span
+        id="blog-title">Chris Warrick</span>
+    </a>
+    <div>
+      <button class="navbar-toggler mr-2" id="color-changer-mobile" type="button" aria-label="Change color scheme">
+        <span class="color-changer"></span>
+      </button>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar"
+              aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
     </div>
-<!-- /.container -->
-</nav><!-- End of Menubar --><div class="container" id="content" role="main">
-    <div class="body-content">
-        <!--Body content-->
+    <div class="collapse navbar-collapse" id="bs-navbar">
+      <ul class="navbar-nav mr-auto">
         
-        <div id="cookiebox"></div>
-<article class="post-text h-entry hentry postpage postbox" itemscope="itemscope" itemtype="http://schema.org/Article"><header class="page-header"><h1 class="p-name entry-title" itemprop="headline name">
+        
+          <li class="nav-item">
+            <a href="/contact/" class="nav-link">Contact</a>
+          </li>
+        
+        
+        
+          <li class="nav-item">
+            <a href="/projects/" class="nav-link">Projects</a>
+          </li>
+        
+        
+        
+          <li class="nav-item">
+            <a href="/guides/" class="nav-link">Guides</a>
+          </li>
+        
+        
+        
+          <li class="nav-item">
+            <a href="/blog/" class="nav-link">Archives</a>
+          </li>
+        
+        
+        
+          <li class="nav-item">
+            <a href="/blog/tags/" class="nav-link">Tags</a>
+          </li>
+        
+        
+      </ul>
+      <ul class="navbar-nav navbar-right">
+        <li class="nav-item" id="color-changer-menu">
+          <a href="#" class="nav-link" id="color-changer-btn">
+            <div class="color-changer"></div>
+            <span id="color-changer-text">Light Mode</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<div class="container" id="content" role="main">
+  <div class="body-content">
+    <div id="cookiebox"></div>
+    
+
+
+<article class="post-text h-entry hentry postpage postbox" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+<header class="page-header">
+  <h1 class="p-name entry-title" itemprop="headline name">
     <a href="/blog/2025/11/09/distro-hopping-server-edition/" class="u-url">Distro Hopping, Server Edition</a>
-    </h1>
+  </h1>
 
-    <div class="metadata">
-<a href="/blog/2025/11/09/distro-hopping-server-edition/" rel="bookmark" class="u-published"><time class="published dt-published" datetime="2025-11-09T19:00:00+01:00" itemprop="datePublished" title="09 November 2025 at 19:00">09 November 2025 at 19:00</time><time class="updated dt-updated" datetime="2025-11-23T18:30:00+01:00" title="updated 23 November 2025 at 18:30"> (updated 23 November 2025 at 18:30)</time></a>
-        <ul itemprop="keywords" class="tags post-bubbles list-inline">
-<li class="category-bubble"><a href="/blog/tags/cat_linux/" style="background-color: #ff62c3 !important">Linux</a></li>
-           <li><a class="tag p-category" href="/blog/tags/django/" rel="tag">Django</a></li>
-           <li><a class="tag p-category" href="/blog/tags/docker/" rel="tag">Docker</a></li>
-           <li><a class="tag p-category" href="/blog/tags/fedora/" rel="tag">Fedora</a></li>
-           <li><a class="tag p-category" href="/blog/tags/linux/" rel="tag">Linux</a></li>
-           <li><a class="tag p-category" href="/blog/tags/python/" rel="tag">Python</a></li>
-           <li><a class="tag p-category" href="/blog/tags/ubuntu/" rel="tag">Ubuntu</a></li>
-        </ul>
-</div>
-    </header><div class="e-content entry-content" itemprop="articleBody text">
-    <div class="lead">
-<p>I’ve recently migrated my VPS from Fedora to Ubuntu. Here’s a list of things that might be useful to keep in mind before, during, and after a migration of a server that hosts publicly accessible Web sites and applications, as well as other personal services, and how to get rid of the most annoying parts of Ubuntu.</p>
-</div>
-</div>
+  <div class="metadata">
+    <a href="/blog/2025/11/09/distro-hopping-server-edition/" rel="bookmark" class="u-published">
+      <time class="published dt-published" datetime="2025-11-09T19:00:00.0000000&#x2B;01:00" itemprop="datePublished" title="09 November 2025 19:00">09 November 2025 19:00</time>
+    
+      <time class="updated dt-updated" datetime="2025-11-23T18:30:00.0000000&#x2B;01:00" title="updated 23 November 2025 18:30"> (updated 23 November 2025 18:30)</time>
+    
+    </a>
+    <ul itemprop="keywords" class="tags post-bubbles list-inline">
+      <li class="category-bubble"><a href="/blog/tags/cat_linux" style="background-color: #ee8100 !important">Linux</a></li>
+      
+        <li><a class="tag p-category" href="/blog/tags/django" rel="tag">Django</a></li>
+      
+        <li><a class="tag p-category" href="/blog/tags/docker" rel="tag">Docker</a></li>
+      
+        <li><a class="tag p-category" href="/blog/tags/fedora" rel="tag">Fedora</a></li>
+      
+        <li><a class="tag p-category" href="/blog/tags/linux" rel="tag">Linux</a></li>
+      
+        <li><a class="tag p-category" href="/blog/tags/python" rel="tag">Python</a></li>
+      
+        <li><a class="tag p-category" href="/blog/tags/ubuntu" rel="tag">Ubuntu</a></li>
+      
+    </ul>
+    
+    
+  </div>
+</header>
 
-<h2>Why switch?</h2>
+  <div class="e-content entry-content" itemprop="articleBody text">
+    
+      <div class="lead">
+        <p>I’ve recently migrated my VPS from Fedora to Ubuntu. Here’s a list of things that might be useful to keep in mind before, during, and after a migration of a server that hosts publicly accessible Web sites and applications, as well as other personal services, and how to get rid of the most annoying parts of Ubuntu.</p>
+
+      </div>
+    
+    
+<h2 id="why-switch">Why switch?</h2>
 <p>Fedora is a relatively popular distro, so it’s well supported by software vendors. Its packagers adopt a no-nonsense approach, making very little changes that deviate from the upstream.</p>
 <p>Ubuntu is not my favorite distro, far from it. While it is perhaps the most popular distro out there, its packages contain many more patches compared to Fedora, and Canonical (the company behind Ubuntu) are famous for betting on the wrong horse (Unity, upstart, Mir…). But one thing Ubuntu does well is stability. Fedora makes releases every 6 months, and those releases are supported for just 13 months, which means upgrading at least every year. Every upgrade may introduce incompatibilities, almost every upgrade requires recreating Python venvs. That gets boring fast, and it does not necessarily bring benefits. Granted, the Fedora system upgrade works quite well, and I upgraded through at least eight releases without a re-install, but I would still prefer to avoid it. That’s why I went with Ubuntu LTS, which is supported for five years, with a new release every two years, but which still comes with reasonably new software (and with many third-party repositories if something is missing or outdated).</p>
-<h2>Test your backups</h2>
+<h2 id="test-your-backups">Test your backups</h2>
 <p>I have a backup “system” that’s a bunch of Bash scripts. After upgrading one of the services that is being backed up, the responsible script started crashing, and thus backups stopped working. Another thing that broke was e-mails from cron, so I didn’t know anything was wrong.</p>
 <p>While I do have full disk backups enabled at <a href="https://hetzner.cloud/?ref=Qy1lehF8PwzP">Hetzner</a> <em>(disclaimer: referral link)</em>, my custom backups are more fine-grained (e.g. important configuration files, database dumps, package lists), so they are quite useful in migrating between OSes.</p>
 <p>So, here’s a reminder not only to test your backups regularly, but also to make sure they are being created at all, and to make sure cron can send you logs somewhere you can see them.</p>
 <p>Bonus cron tip: set <code>MAILFROM=</code> and <code>MAILTO=</code> in your crontab if your SMTP server does not like the values cron uses by default.</p>
-<h2>Think about IP address reassignment (or pray to the DNS gods)</h2>
+<h2 id="think-about-ip-address-reassignment-or-pray-to-the-dns-gods">Think about IP address reassignment (or pray to the DNS gods)</h2>
 <p>A new VPS or cloud server probably means a new IP address. But if you get a new IP address, that might complicate the migration of your publicly accessible applications. If you’re proxying all your Web properties through Cloudflare or something similar, that’s probably not an issue. But if you have a raw A record somewhere, things can get complicated. DNS servers and operating systems do a lot of caching. The conventional wisdom is to wait 24 or even 48 hours after changing DNS values. This might be true if your TTL is set to a long value, but if your TTL is short, the only worry are DNS servers that ignore TTL values and cache records for longer. If you plan a migration, it’s good to check your TTL well in advance, and not worry too much about broken DNS servers.</p>
 <p>But you might not need a new IP. Carefully review your cloud provider’s IP management options before making any changes. Hetzner is more flexible than other hosts in this regard, as it is possible to <a href="https://docs.hetzner.com/cloud/servers/primary-ips/faq">move primary public IP addresses (not “floating” or “elastic” IPs) between servers</a>, as long as you’re okay with a few minutes’ downtime (you will need to shut down the source and destination servers).</p>
 <p>If you’re not okay with any downtime, you would probably want to leverage the floating/elastic IP feature, or hope DNS propagates quickly enough.</p>
-<h2>Trim the fat</h2>
+<h2 id="trim-the-fat">Trim the fat</h2>
 <p>My VPS ran a lot of services I don’t need anymore, but never really got around to decommissioning. For example, I had a full Xfce install with VNC access (the VNC server was only running when needed). I haven’t actually used the desktop for ages, so I just dropped it.</p>
 <p>I also had an OpenVPN setup. It was useful years ago, when mobile data allowances were much smaller and speeds much worse. These days, I don’t use public WiFi networks at all, unless I’m going abroad, and I just buy one month of <a href="https://mullvad.net/">Mullvad VPN</a> for €5 whenever that happens. So, add another service to the “do not migrate” list.</p>
 <p>One thing that I could not just remove was the e-mail server. Many years ago, I ran a reasonably functional e-mail server on my VPS. I’ve since then migrated to <a href="https://www.zoho.com/mail/">Zoho Mail</a> (which costs €10.80/year), in part due to IP reputation issues after changing hosting providers, and also to avoid having to fight spam. When I did that, I kept Postfix around, but as a local server for things like cron or Django to send e-mail with, and I configured it to send all e-mails via Zoho. But I did not really want to move over all the configuration, hoping that Ubuntu’s Postfix packages can work with my hacked together config from Fedora. So I replaced the server with <a href="https://www.opensmtpd.org/">OpenSMTPD</a> (from the OpenBSD project), and all the Postfix configuration files with just one short configuration file:</p>
-<div class="code"><pre class="code literal-block">table aliases file:/etc/aliases
-table secrets file:/etc/mail-secrets
-
-listen on localhost
-listen on 172.17.0.1 # Docker
-
-action "relay" relay host smtp+tls://smtp@smtp.example.net:587 auth &lt;secrets&gt; mail-from "@example.com"
-
-match from any for any action "relay"
-</pre></div>
-
-<h2>Dockerize everything…</h2>
+<div class="code"><table class="codetable"><tr><td class="linenos linenodiv"><a href="#code_2c8287178270f9e6d85ad33ec63ce4e8cfae3d0b-1"><code data-line-number="1"></code></a></td><td class="code"><code><a id="code_2c8287178270f9e6d85ad33ec63ce4e8cfae3d0b-1" name="code_2c8287178270f9e6d85ad33ec63ce4e8cfae3d0b-1"></a>table aliases file:/etc/aliases
+</code></td></tr><tr><td class="linenos linenodiv"><a href="#code_2c8287178270f9e6d85ad33ec63ce4e8cfae3d0b-2"><code data-line-number="2"></code></a></td><td class="code"><code><a id="code_2c8287178270f9e6d85ad33ec63ce4e8cfae3d0b-2" name="code_2c8287178270f9e6d85ad33ec63ce4e8cfae3d0b-2"></a>table secrets file:/etc/mail-secrets
+</code></td></tr><tr><td class="linenos linenodiv"><a href="#code_2c8287178270f9e6d85ad33ec63ce4e8cfae3d0b-3"><code data-line-number="3"></code></a></td><td class="code"><code><a id="code_2c8287178270f9e6d85ad33ec63ce4e8cfae3d0b-3" name="code_2c8287178270f9e6d85ad33ec63ce4e8cfae3d0b-3"></a>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="#code_2c8287178270f9e6d85ad33ec63ce4e8cfae3d0b-4"><code data-line-number="4"></code></a></td><td class="code"><code><a id="code_2c8287178270f9e6d85ad33ec63ce4e8cfae3d0b-4" name="code_2c8287178270f9e6d85ad33ec63ce4e8cfae3d0b-4"></a>listen on localhost
+</code></td></tr><tr><td class="linenos linenodiv"><a href="#code_2c8287178270f9e6d85ad33ec63ce4e8cfae3d0b-5"><code data-line-number="5"></code></a></td><td class="code"><code><a id="code_2c8287178270f9e6d85ad33ec63ce4e8cfae3d0b-5" name="code_2c8287178270f9e6d85ad33ec63ce4e8cfae3d0b-5"></a>listen on 172.17.0.1 # Docker
+</code></td></tr><tr><td class="linenos linenodiv"><a href="#code_2c8287178270f9e6d85ad33ec63ce4e8cfae3d0b-6"><code data-line-number="6"></code></a></td><td class="code"><code><a id="code_2c8287178270f9e6d85ad33ec63ce4e8cfae3d0b-6" name="code_2c8287178270f9e6d85ad33ec63ce4e8cfae3d0b-6"></a>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="#code_2c8287178270f9e6d85ad33ec63ce4e8cfae3d0b-7"><code data-line-number="7"></code></a></td><td class="code"><code><a id="code_2c8287178270f9e6d85ad33ec63ce4e8cfae3d0b-7" name="code_2c8287178270f9e6d85ad33ec63ce4e8cfae3d0b-7"></a>action &quot;relay&quot; relay host smtp+tls://smtp@smtp.example.net:587 auth &lt;secrets&gt; mail-from &quot;@example.com&quot;
+</code></td></tr><tr><td class="linenos linenodiv"><a href="#code_2c8287178270f9e6d85ad33ec63ce4e8cfae3d0b-8"><code data-line-number="8"></code></a></td><td class="code"><code><a id="code_2c8287178270f9e6d85ad33ec63ce4e8cfae3d0b-8" name="code_2c8287178270f9e6d85ad33ec63ce4e8cfae3d0b-8"></a>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="#code_2c8287178270f9e6d85ad33ec63ce4e8cfae3d0b-9"><code data-line-number="9"></code></a></td><td class="code"><code><a id="code_2c8287178270f9e6d85ad33ec63ce4e8cfae3d0b-9" name="code_2c8287178270f9e6d85ad33ec63ce4e8cfae3d0b-9"></a>match from any for any action &quot;relay&quot;
+</code></td></tr></table></div>
+<h2 id="dockerize-everything">Dockerize everything…</h2>
 <p>My server runs a few different apps, some of which are exposed on the public Internet, while some do useful work in the background. The services I have set up most recently are containerized with the help of Docker. The only Docker-based service that was stateful (and did not just use folders mounted as volumes) was a MariaDB database. Migrating that is straightforward with a simple dump-and-restore.</p>
 <p>Of course, not everything on my server is in Docker. The public-facing nginx install isn’t, and neither is PostgreSQL (but that was also a quick dump-and-restore migration with some extra steps).</p>
-<h2>…especially Python</h2>
+<h2 id="especially-python">…especially Python</h2>
 <p>But then, there are the Python apps. Python the language is cool (if a little slow), but the packaging story is a <a href="https://chriswarrick.com/blog/2023/01/15/how-to-improve-python-packaging/">total</a> dumpster <a href="https://chriswarrick.com/blog/2024/01/15/python-packaging-one-year-later/">fire</a>.</p>
 <p>By the way, here’s a quick recap of 2024/2025 in Python packaging: the most hyped Python package manager (<code>uv</code>) is written in Rust, which screams “Python is a toy language in which you can’t even write a tool as simple as a package manager”. (I know, dependency resolution is computationally expensive, so doing <em>that</em> in Rust makes sense, but everything else could easily be done in pure Python. And no, the package manager should not manage Python installs.) Of course, almost all the other contenders listed in my 2023 post are still being developed. On the standards front, the community finally produced a lockfile standard after years of discussions.</p>
 <p>Anyway, I have three Python apps. One of them is <a href="https://isso-comments.de/">Isso</a>, which is providing the comments box below this post. I used to run a modified version of Isso a long time ago, but I don’t need to anymore. I looked at the docs, and they offer <a href="https://isso-comments.de/docs/reference/installation/#using-docker">a pre-built Docker image</a>, which means I could just quickly deploy it on my server with Docker and skip the pain of managing Python environments.</p>
 <p>The other two apps are Django projects built by yours truly. They are not containerized, they exist in venvs created using the system Python. Moving venvs between machines is generally impossible, so I had to re-create them. Of course, I hit a deprecation, because the Python maintainers (especially in the packaging world) does not understand their responsibility as maintainers of the most popular programming language. This time, it was caused by <a href="https://github.com/pypa/pip/issues/11457">an old editable install with setuptools (using setup.py develop, not PEP 660)</a>, and installs with more recent pip/setuptools versions would not have this error… although <a href="https://discuss.python.org/t/do-we-want-to-keep-the-build-system-default-for-pyproject-toml/104759">some people want to remove the fallback to setuptools if there is no pyproject.toml</a>, so you need to stay up to date with the whims of the Python packaging industry if you want to use Python software.</p>
-<h2>Don’t bother with ufw</h2>
+<p><strong>Update 2026-02-06:</strong> <a href="/blog/2026/02/06/deploying-python-web-applications-with-docker/">I migrated the two Django apps to Docker and wrote a post about it.</a></p>
+<h2 id="dont-bother-with-ufw">Don’t bother with ufw</h2>
 <p>Ubuntu ships with <code>ufw</code>, the “uncomplicated firewall”, in the default install. I was previously using <code>firewalld</code>, a Red Hat-adjacent project, but I decided to give ufw a try. Since if it’s part of the default install, it might be supported better by the system.</p>
 <p>It turns out that Docker and ufw <a href="https://docs.docker.com/engine/network/packet-filtering-firewalls/#docker-and-ufw">don’t play together</a>. <a href="https://github.com/chaifeng/ufw-docker?tab=readme-ov-file#solving-ufw-and-docker-issues">Someone has built a set of rules that are supposed to fix it</a>, but that did not work for me.</p>
 <p>Docker <a href="https://docs.docker.com/engine/network/packet-filtering-firewalls/#integration-with-firewalld">does integrate with firewalld</a>, and Ubuntu has packages for it, so I just installed it, enabled the services that need to be publicly available and things were working again.</p>
 <p><em>Update (2025-11-23):</em> The iptables integration was not very stable on my Ubuntu system, so I disabled the iptables integration and switched to <a href="https://dev.to/soerenmetje/how-to-secure-a-docker-host-using-firewalld-2joo">a simpler config in firewalld only</a>.</p>
-<h2>Kill the ads (and other nonsense too)</h2>
+<h2 id="kill-the-ads-and-other-nonsense-too">Kill the ads (and other nonsense too)</h2>
 <p>Red Hat makes money by selling a stable OS with at least 10 years of support to enterprises, and their free offering is Fedora, with just 13 months of support; RHEL releases are branched off from Fedora. SUSE also sells SUSE Linux Enterprise and has openSUSE as the free offering (but the relationship between the paid and free version is more complicated).</p>
 <p>Ubuntu chose a different monetization strategy: the enterprise offering is the same OS as the free offering, but it gets extra packages and extra updates. The free OS advertises the paid services. It is fairly simple to get rid of them all:</p>
-<div class="code"><pre class="code literal-block">sudo apt autoremove ubuntu-pro-client
-sudo chmod -x /etc/update-motd.d/*
-</pre></div>
-
+<div class="code"><table class="codetable"><tr><td class="linenos linenodiv"><a href="#code_d6d147535086c167a244c002e28e50b972142e24-1"><code data-line-number="1"></code></a></td><td class="code"><code><a id="code_d6d147535086c167a244c002e28e50b972142e24-1" name="code_d6d147535086c167a244c002e28e50b972142e24-1"></a>sudo apt autoremove ubuntu-pro-client
+</code></td></tr><tr><td class="linenos linenodiv"><a href="#code_d6d147535086c167a244c002e28e50b972142e24-2"><code data-line-number="2"></code></a></td><td class="code"><code><a id="code_d6d147535086c167a244c002e28e50b972142e24-2" name="code_d6d147535086c167a244c002e28e50b972142e24-2"></a>sudo chmod -x /etc/update-motd.d/*
+</code></td></tr></table></div>
 <p>Also, Ubuntu installs snap by default. Snap is a terrible idea. Luckily, there are no snaps installed by default on a Server install, so we can just remove <code>snapd</code>. We’ll also remove <code>lxd-installer</code> to save ~25 kB of disk space, since the installer requires snap, and lxd is another unsuccessful Canonical project.</p>
-<div class="code"><pre class="code literal-block">sudo apt autoremove snapd lxd-installer
-</pre></div>
-
-<h2>The cost of downgrading</h2>
+<div class="code"><table class="codetable"><tr><td class="linenos linenodiv"><a href="#code_a2ddff7c7160bcede4c675680ff7cf82d9d7d69d-1"><code data-line-number="1"></code></a></td><td class="code"><code><a id="code_a2ddff7c7160bcede4c675680ff7cf82d9d7d69d-1" name="code_a2ddff7c7160bcede4c675680ff7cf82d9d7d69d-1"></a>sudo apt autoremove snapd lxd-installer
+</code></td></tr></table></div>
+<h2 id="the-cost-of-downgrading">The cost of downgrading</h2>
 <p>Going from Fedora 42 (April 2025) to Ubuntu 24.04 (April 2024) means some software will be downgraded in the process. In general, this does not matter, as most software does not mind downgrades as much. One notable exception is WeeChat, the IRC client, whose config files are versioned, and Ubuntu’s version is not compatible with the one in Fedora. But here’s where Ubuntu’s popularity shines: <a href="https://weechat.org/download/debian/">WeeChat has its own repositories for Debian and Ubuntu</a>, so I could just get the latest version without building it myself or trying to steal packages from a newer version.</p>
 <p>Other than WeeChat, I haven’t experienced any other issues with software due to a downgrade. Some of it is luck (or not using new/advanced features), some of it is software caring about backwards compatibility.</p>
-<h2>Conclusion</h2>
+<h2 id="conclusion">Conclusion</h2>
 <p>Was it worth it? Time will tell. Upgrading Fedora itself was not that hard, and I expect Ubuntu upgrades to be OK too — the annoying part was cleaning up and getting things to work after the upgrade, and the switch means I will have to do it only every 2-4 years instead of every 6-12 months.</p>
 <p>The switchover took a few hours, especially since I didn’t have much up-to-date documentation of what is actually installed and running, and there are always the minor details where distros differ that may require adjusting to. I think a migration like this is worth trying if rolling-release or frequently-released distros are too unstable for your needs.</p>
-    </article>
-</div>
-    <aside class="postpromonav"><nav><ul class="pager hidden-print">
-<li class="previous">
-                <a href="/blog/2024/04/29/powershell-the-object-oriented-shell-you-didnt-know-you-needed/" rel="prev" title="PowerShell: the object-oriented shell you didn’t know you needed">Previous post</a>
-            </li>
-            <li class="next">
-                <a href="/blog/2026/02/06/deploying-python-web-applications-with-docker/" rel="next" title="Deploying Python Web Applications with Docker">Next post</a>
-            </li>
-        </ul></nav></aside><section class="comments"><div data-title="Distro Hopping, Server Edition" id="isso-thread"></div>
-        <script src="https://isso.chriswarrick.com/js/embed.min.js" data-isso="https://isso.chriswarrick.com/" data-isso-lang="en" data-isso-require-author="true" data-isso-require-email="true" data-isso-gravatar="true" data-isso-avatar="false" data-isso-css="false" data-isso-vote="false" data-isso-reply-notifications="true"></script></section><!--End of body content--><nav id="footer-links"><div class="row">
-            <div class="col-sm-4">
-                <h6>Blog</h6>
-                <ul>
-<li class="nav-item">
-<a href="/blog/" class="nav-link">Archive</a>
-                        </li>
-<li class="nav-item">
-<a href="/blog/tags/" class="nav-link">Tags</a>
-                        </li>
-<li class="nav-item">
-<a href="/rss.xml" class="nav-link">RSS Feed</a>
-                        </li>
-<li class="nav-item">
-<a href="/search/" class="nav-link">Search</a>
-                </li>
-</ul>
-</div>
-            <div class="col-sm-4">
-                <h6>Projects and Work</h6>
-                <ul>
-<li class="nav-item">
-<a href="/projects/" class="nav-link">Projects</a>
-                        </li>
-<li class="nav-item">
-<a href="/guides/" class="nav-link">Guides</a>
-                        </li>
-<li class="nav-item">
-<a href="/kwbot/" class="nav-link">KwBot</a>
-                        </li>
-<li class="nav-item">
-<a href="/blog/tags/cat_python" class="nav-link">Posts about Python</a>
-                </li>
-</ul>
-</div>
-            <div class="col-sm-4">
-                <h6>Me</h6>
-                <ul>
-<li class="nav-item">
-<a href="/contact/" class="nav-link">Contact</a>
-                        </li>
-<li class="nav-item">
-<a href="/brand/" class="nav-link">Brand</a>
-                        </li>
-<li class="nav-item">
-<a href="https://twitter.com/Kwpolska" class="nav-link">Twitter</a>
-                        </li>
-<li class="nav-item">
-<a href="https://github.com/Kwpolska" class="nav-link">GitHub</a>
-                </li>
-</ul>
-</div>
-        </div></nav><footer id="footer"><p>this site uses cookies.<br>by using this site, you agree to our <a href="/privacy/">cookie and privacy policy</a>.</p>
-<p>
-powered by <strong><a href="https://getnikola.com/">Nikola</a></strong>, <a href="http://nginx.org/">nginx</a> and <a href="https://hetzner.cloud/?ref=Qy1lehF8PwzP">Hetzner Cloud</a><br>
-copyright © 2009–2026 <a href="/contact/">Chris Warrick</a><br><a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC
-BY-NC-SA</a>, unless stated otherwise</p>
-            
-        </footer>
-</div>
+
+  </div>
+</article>
 
 
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script><script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.11.0/baguetteBox.min.js" integrity="sha256-yQGjQhFs3LtyiN5hhr3k9s9TWZOh/RzCkD3gwwCKlkg=" crossorigin="anonymous"></script><script src="/assets/js/all.js?v=20230115"></script><script>
-    baguetteBox.run('div#content', {
-        ignoreClass: 'islink',
-        captions: function(element) {
-            return element.getElementsByTagName('img')[0].alt;
-    }});
-    </script><!-- Matomo --><script>
+
+
+  <aside class="postpromonav">
+    <nav>
+      <ul class="pager hidden-print">
+        
+          <li class="previous">
+            <a href="/blog/2024/04/29/powershell-the-object-oriented-shell-you-didnt-know-you-needed/" rel="prev"
+               title="PowerShell: the object-oriented shell you didn&#x2019;t know you needed">Previous post</a>
+          </li>
+        
+        
+          <li class="next">
+            <a href="/blog/2026/02/06/deploying-python-web-applications-with-docker/" rel="prev"
+               title="Deploying Python Web Applications with Docker">Next post</a>
+          </li>
+        
+      </ul>
+    </nav>
+  </aside>
+
+
+
+  <section class="comments">
+    <div data-title="Distro Hopping, Server Edition" id="isso-thread"></div>
+    <script src="https://isso.chriswarrick.com/js/embed.min.js" data-isso="https://isso.chriswarrick.com/"
+            data-isso-lang="en" data-isso-require-author="true" data-isso-require-email="true" data-isso-gravatar="true"
+            data-isso-avatar="false" data-isso-css="false" data-isso-vote="false"
+            data-isso-reply-notifications="true"></script>
+  </section>
+
+
+
+    <script src="https://isso.chriswarrick.com/js/count.min.js" data-isso="https://isso.chriswarrick.com/"
+            data-isso-lang="en"></script>
+    <nav id="footer-links">
+      <div class="row">
+        <div class="col-sm-4">
+          <h6>Blog</h6>
+          <ul>
+            <li class="nav-item">
+              <a href="/blog/" class="nav-link">Archives</a>
+            </li>
+            <li class="nav-item">
+              <a href="/blog/tags/" class="nav-link">Tags</a>
+            </li>
+            <li class="nav-item">
+              <a href="/listings/" class="nav-link">Listings</a>
+            </li>
+            <li class="nav-item">
+              <a href="/rss.xml" class="nav-link">RSS Feed</a>
+            </li>
+          </ul>
+        </div>
+        <div class="col-sm-4">
+          <h6>Projects and Work</h6>
+          <ul>
+            <li class="nav-item">
+              <a href="/projects/" class="nav-link">Projects</a>
+            </li>
+            <li class="nav-item">
+              <a href="/guides/" class="nav-link">Guides</a>
+            </li>
+            <li class="nav-item">
+              <a href="/kwbot/" class="nav-link">KwBot</a>
+            </li>
+            <li class="nav-item">
+              <a href="/blog/tags/cat_python" class="nav-link">Posts about Python</a>
+            </li>
+          </ul>
+        </div>
+        <div class="col-sm-4">
+          <h6>Me</h6>
+          <ul>
+            <li class="nav-item">
+              <a href="/contact/" class="nav-link">Contact</a>
+            </li>
+            <li class="nav-item">
+              <a href="/brand/" class="nav-link">Brand</a>
+            </li>
+            <li class="nav-item">
+              <a href="https://twitter.com/Kwpolska" class="nav-link">Twitter</a>
+            </li>
+            <li class="nav-item">
+              <a href="https://github.com/Kwpolska" class="nav-link">GitHub</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <footer id="footer">
+      <p>this site uses cookies.<br>by using this site, you agree to our <a href="/privacy/">cookie and privacy policy</a>.</p>
+<p>powered by <strong><a href="https://github.com/Kwpolska/YetAnotherBlogGenerator">Yet Another Blog Generator</a></strong>,
+  <a href="https://nginx.org/">nginx</a>
+  and <a href="https://hetzner.cloud/?ref=Qy1lehF8PwzP">Hetzner Cloud</a><br>
+  copyright © 2009–2026 <a href="/contact/">Chris Warrick</a><br>
+  license: <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA</a>, unless stated otherwise</p>
+    </footer>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.11.0/baguetteBox.min.js"
+        integrity="sha256-yQGjQhFs3LtyiN5hhr3k9s9TWZOh/RzCkD3gwwCKlkg=" crossorigin="anonymous"></script>
+<script src="/assets/js/all.js?v=20230115"></script>
+<script>
+  baguetteBox.run('div#content', {
+    ignoreClass: 'islink',
+    captions: function (element) {
+      return element.getElementsByTagName('img')[0].alt;
+    }
+  });
+</script><!-- Matomo -->
+<script>
   var _paq = window._paq = window._paq || [];
   /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
   _paq.push(['trackPageView']);
   _paq.push(['enableLinkTracking']);
-  (function() {
-    var u="//matomo.chriswarrick.com/";
-    _paq.push(['setTrackerUrl', u+'matomo.php']);
+  (function () {
+    var u = "//matomo.chriswarrick.com/";
+    _paq.push(['setTrackerUrl', u + 'matomo.php']);
     _paq.push(['setSiteId', '1']);
-    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-    g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+    var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+    g.async = true;
+    g.src = u + 'matomo.js';
+    s.parentNode.insertBefore(g, s);
   })();
 </script><!-- End Matomo Code -->
 </body>

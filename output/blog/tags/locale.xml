@@ -1,100 +1,107 @@
-<?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chris Warrick (Posts about locale)</title><link>https://chriswarrick.com/</link><description></description><atom:link href="https://chriswarrick.com/blog/tags/locale.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Mon, 09 Feb 2026 21:57:04 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Unix locales vs Unicode (‘ascii’ codec can’t encode character…)</title><link>https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;p&gt;You might get unusual errors about Unicode and inability to convert
+<?xml version="1.0" encoding="utf-8"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Posts about locale</title><link>https://chriswarrick.com/</link><atom:link href="https://chriswarrick.com/blog/tags/locale.xml" rel="self" type="application/rss+xml" /><description>A rarely updated blog, mostly about programming.</description><lastBuildDate>Sun, 18 Jun 2017 18:40:00 GMT</lastBuildDate><generator>https://github.com/Kwpolska/YetAnotherBlogGenerator</generator><item><title>Unix locales vs Unicode (‘ascii’ codec can’t encode character…)</title><dc:creator>Chris Warrick</dc:creator><link>https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/</link><pubDate>Sun, 18 Jun 2017 18:40:00 GMT</pubDate><guid>https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/</guid><description>
+You might get unusual errors about Unicode and inability to convert
 to ASCII. Programs might just crash at random. Those are often simple to fix —
-all you need is correct locale configuration.&lt;/p&gt;
-&lt;!-- TEASER_END --&gt;
-&lt;p class="lead"&gt;Has this ever happened to you?&lt;/p&gt;
-&lt;div class="code"&gt;&lt;pre class="code pytb"&gt;&lt;a id="rest_code_20137c0a1e4841c08c41125c365df2e1-1" name="rest_code_20137c0a1e4841c08c41125c365df2e1-1" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_20137c0a1e4841c08c41125c365df2e1-1"&gt;&lt;/a&gt;&lt;span class="gt"&gt;Traceback (most recent call last):&lt;/span&gt;
-&lt;a id="rest_code_20137c0a1e4841c08c41125c365df2e1-2" name="rest_code_20137c0a1e4841c08c41125c365df2e1-2" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_20137c0a1e4841c08c41125c365df2e1-2"&gt;&lt;/a&gt;  File &lt;span class="nb"&gt;"aogonek.py"&lt;/span&gt;, line &lt;span class="m"&gt;1&lt;/span&gt;, in &lt;span class="n"&gt;&amp;lt;module&amp;gt;&lt;/span&gt;
-&lt;a id="rest_code_20137c0a1e4841c08c41125c365df2e1-3" name="rest_code_20137c0a1e4841c08c41125c365df2e1-3" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_20137c0a1e4841c08c41125c365df2e1-3"&gt;&lt;/a&gt;&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;u&lt;/span&gt;&lt;span class="s1"&gt;'&lt;/span&gt;&lt;span class="se"&gt;\u0105&lt;/span&gt;&lt;span class="s1"&gt;'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a id="rest_code_20137c0a1e4841c08c41125c365df2e1-4" name="rest_code_20137c0a1e4841c08c41125c365df2e1-4" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_20137c0a1e4841c08c41125c365df2e1-4"&gt;&lt;/a&gt;&lt;span class="gr"&gt;UnicodeEncodeError&lt;/span&gt;: &lt;span class="n"&gt;'ascii' codec can't encode character '\u0105' in position 0: ordinal not in range(128)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;div class="code"&gt;&lt;pre class="code text"&gt;&lt;a id="rest_code_20b2673a9d5e4a0b8a222ab17cdde31d-1" name="rest_code_20b2673a9d5e4a0b8a222ab17cdde31d-1" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_20b2673a9d5e4a0b8a222ab17cdde31d-1"&gt;&lt;/a&gt;Nikola: Could not guess locale for language en, using locale C
-&lt;/pre&gt;&lt;/div&gt;
-&lt;div class="code"&gt;&lt;pre class="code text"&gt;&lt;a id="rest_code_e12ec0212593478c822ccb6ef7ee60b3-1" name="rest_code_e12ec0212593478c822ccb6ef7ee60b3-1" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_e12ec0212593478c822ccb6ef7ee60b3-1"&gt;&lt;/a&gt;Input: ą
-&lt;a id="rest_code_e12ec0212593478c822ccb6ef7ee60b3-2" name="rest_code_e12ec0212593478c822ccb6ef7ee60b3-2" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_e12ec0212593478c822ccb6ef7ee60b3-2"&gt;&lt;/a&gt;Desired ascii(): '\u0105'
-&lt;a id="rest_code_e12ec0212593478c822ccb6ef7ee60b3-3" name="rest_code_e12ec0212593478c822ccb6ef7ee60b3-3" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_e12ec0212593478c822ccb6ef7ee60b3-3"&gt;&lt;/a&gt;Real ascii(): '\udcc4\udc85'
-&lt;/pre&gt;&lt;/div&gt;
-&lt;div class="code"&gt;&lt;pre class="code text"&gt;&lt;a id="rest_code_9a0c33e97abc4865ac31b2370512d92a-1" name="rest_code_9a0c33e97abc4865ac31b2370512d92a-1" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_9a0c33e97abc4865ac31b2370512d92a-1"&gt;&lt;/a&gt;perl: warning: Setting locale failed.
-&lt;a id="rest_code_9a0c33e97abc4865ac31b2370512d92a-2" name="rest_code_9a0c33e97abc4865ac31b2370512d92a-2" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_9a0c33e97abc4865ac31b2370512d92a-2"&gt;&lt;/a&gt;perl: warning: Please check that your locale settings:
-&lt;a id="rest_code_9a0c33e97abc4865ac31b2370512d92a-3" name="rest_code_9a0c33e97abc4865ac31b2370512d92a-3" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_9a0c33e97abc4865ac31b2370512d92a-3"&gt;&lt;/a&gt;    [...]
-&lt;a id="rest_code_9a0c33e97abc4865ac31b2370512d92a-4" name="rest_code_9a0c33e97abc4865ac31b2370512d92a-4" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_9a0c33e97abc4865ac31b2370512d92a-4"&gt;&lt;/a&gt;    are supported and installed on your system.
-&lt;a id="rest_code_9a0c33e97abc4865ac31b2370512d92a-5" name="rest_code_9a0c33e97abc4865ac31b2370512d92a-5" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_9a0c33e97abc4865ac31b2370512d92a-5"&gt;&lt;/a&gt;perl: warning: Falling back to the standard locale ("C").
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p class="lead"&gt;All those errors have the same root cause: incorrect locale configuration.
-To fix them all, you need to generate the missing locales and set them.&lt;/p&gt;
-&lt;section id="check-currently-used-locale"&gt;
-&lt;h2&gt;Check currently used locale&lt;/h2&gt;
-&lt;p&gt;The &lt;code class="docutils literal"&gt;locale&lt;/code&gt; command (without arguments) should tell you which locales you’re
-currently using.  (The list might be shorter on your end)&lt;/p&gt;
-&lt;div class="code"&gt;&lt;pre class="code sh"&gt;&lt;a id="rest_code_e0fc2caf2e654403a8259af258ab44f1-1" name="rest_code_e0fc2caf2e654403a8259af258ab44f1-1" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_e0fc2caf2e654403a8259af258ab44f1-1"&gt;&lt;/a&gt;$&lt;span class="w"&gt; &lt;/span&gt;locale
-&lt;a id="rest_code_e0fc2caf2e654403a8259af258ab44f1-2" name="rest_code_e0fc2caf2e654403a8259af258ab44f1-2" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_e0fc2caf2e654403a8259af258ab44f1-2"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LANG&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a id="rest_code_e0fc2caf2e654403a8259af258ab44f1-3" name="rest_code_e0fc2caf2e654403a8259af258ab44f1-3" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_e0fc2caf2e654403a8259af258ab44f1-3"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_CTYPE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a id="rest_code_e0fc2caf2e654403a8259af258ab44f1-4" name="rest_code_e0fc2caf2e654403a8259af258ab44f1-4" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_e0fc2caf2e654403a8259af258ab44f1-4"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_NUMERIC&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a id="rest_code_e0fc2caf2e654403a8259af258ab44f1-5" name="rest_code_e0fc2caf2e654403a8259af258ab44f1-5" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_e0fc2caf2e654403a8259af258ab44f1-5"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_TIME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a id="rest_code_e0fc2caf2e654403a8259af258ab44f1-6" name="rest_code_e0fc2caf2e654403a8259af258ab44f1-6" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_e0fc2caf2e654403a8259af258ab44f1-6"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_COLLATE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a id="rest_code_e0fc2caf2e654403a8259af258ab44f1-7" name="rest_code_e0fc2caf2e654403a8259af258ab44f1-7" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_e0fc2caf2e654403a8259af258ab44f1-7"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_MONETARY&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a id="rest_code_e0fc2caf2e654403a8259af258ab44f1-8" name="rest_code_e0fc2caf2e654403a8259af258ab44f1-8" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_e0fc2caf2e654403a8259af258ab44f1-8"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_MESSAGES&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a id="rest_code_e0fc2caf2e654403a8259af258ab44f1-9" name="rest_code_e0fc2caf2e654403a8259af258ab44f1-9" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_e0fc2caf2e654403a8259af258ab44f1-9"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_PAPER&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a id="rest_code_e0fc2caf2e654403a8259af258ab44f1-10" name="rest_code_e0fc2caf2e654403a8259af258ab44f1-10" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_e0fc2caf2e654403a8259af258ab44f1-10"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_NAME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a id="rest_code_e0fc2caf2e654403a8259af258ab44f1-11" name="rest_code_e0fc2caf2e654403a8259af258ab44f1-11" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_e0fc2caf2e654403a8259af258ab44f1-11"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_ADDRESS&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a id="rest_code_e0fc2caf2e654403a8259af258ab44f1-12" name="rest_code_e0fc2caf2e654403a8259af258ab44f1-12" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_e0fc2caf2e654403a8259af258ab44f1-12"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_TELEPHONE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a id="rest_code_e0fc2caf2e654403a8259af258ab44f1-13" name="rest_code_e0fc2caf2e654403a8259af258ab44f1-13" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_e0fc2caf2e654403a8259af258ab44f1-13"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_MEASUREMENT&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a id="rest_code_e0fc2caf2e654403a8259af258ab44f1-14" name="rest_code_e0fc2caf2e654403a8259af258ab44f1-14" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_e0fc2caf2e654403a8259af258ab44f1-14"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_IDENTIFICATION&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a id="rest_code_e0fc2caf2e654403a8259af258ab44f1-15" name="rest_code_e0fc2caf2e654403a8259af258ab44f1-15" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_e0fc2caf2e654403a8259af258ab44f1-15"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_ALL&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;If any of those is set to &lt;code class="docutils literal"&gt;C&lt;/code&gt; or &lt;code class="docutils literal"&gt;POSIX&lt;/code&gt;, has a different encoding than
-&lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;UTF-8&lt;/span&gt;&lt;/code&gt; (sometimes spelled &lt;code class="docutils literal"&gt;utf8&lt;/code&gt;) is empty (with the exception of
-&lt;code class="docutils literal"&gt;LC_ALL&lt;/code&gt;), or if you see any errors, you need to reconfigure your locale.&lt;/p&gt;
-&lt;/section&gt;
-&lt;section id="check-locale-availability-and-install-missing-locales"&gt;
-&lt;h2&gt;Check locale availability and install missing locales&lt;/h2&gt;
-&lt;p&gt;The first thing you need to do is check locale availability. To do this, run
-&lt;code class="docutils literal"&gt;locale &lt;span class="pre"&gt;-a&lt;/span&gt;&lt;/code&gt;. This will produce a list of all installed locales.  You can use
-&lt;code class="docutils literal"&gt;grep&lt;/code&gt; to get a more reasonable list.&lt;/p&gt;
-&lt;div class="code"&gt;&lt;pre class="code text"&gt;&lt;a id="rest_code_cf44ab97313446dfa3f46d827dd5b3a4-1" name="rest_code_cf44ab97313446dfa3f46d827dd5b3a4-1" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_cf44ab97313446dfa3f46d827dd5b3a4-1"&gt;&lt;/a&gt;$ locale -a | grep -i utf
-&lt;a id="rest_code_cf44ab97313446dfa3f46d827dd5b3a4-2" name="rest_code_cf44ab97313446dfa3f46d827dd5b3a4-2" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_cf44ab97313446dfa3f46d827dd5b3a4-2"&gt;&lt;/a&gt;&amp;lt;lists all UTF-8 locales&amp;gt;
-&lt;a id="rest_code_cf44ab97313446dfa3f46d827dd5b3a4-3" name="rest_code_cf44ab97313446dfa3f46d827dd5b3a4-3" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_cf44ab97313446dfa3f46d827dd5b3a4-3"&gt;&lt;/a&gt;$ locale -a | grep -i utf | grep -i en_US
-&lt;a id="rest_code_cf44ab97313446dfa3f46d827dd5b3a4-4" name="rest_code_cf44ab97313446dfa3f46d827dd5b3a4-4" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_cf44ab97313446dfa3f46d827dd5b3a4-4"&gt;&lt;/a&gt;en_US.UTF-8
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;The best locale to use is the one for your language, with the UTF-8 encoding.
+all you need is correct locale configuration.
+</description><content:encoded><![CDATA[
+<p>You might get unusual errors about Unicode and inability to convert
+to ASCII. Programs might just crash at random. Those are often simple to fix —
+all you need is correct locale configuration.</p>
+
+
+
+<p class="lead">Has this ever happened to you?</p>
+<div class="code"><pre class="code pytb"><a id="rest_code_526327b4277f4a8497b67746e0a751b2-1" name="rest_code_526327b4277f4a8497b67746e0a751b2-1" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_526327b4277f4a8497b67746e0a751b2-1"></a><span class="gt">Traceback (most recent call last):</span>
+<a id="rest_code_526327b4277f4a8497b67746e0a751b2-2" name="rest_code_526327b4277f4a8497b67746e0a751b2-2" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_526327b4277f4a8497b67746e0a751b2-2"></a>  File <span class="nb">&quot;aogonek.py&quot;</span>, line <span class="m">1</span>, in <span class="n">&lt;module&gt;</span>
+<a id="rest_code_526327b4277f4a8497b67746e0a751b2-3" name="rest_code_526327b4277f4a8497b67746e0a751b2-3" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_526327b4277f4a8497b67746e0a751b2-3"></a><span class="w">    </span><span class="nb">print</span><span class="p">(</span><span class="sa">u</span><span class="s1">&#39;</span><span class="se">\u0105</span><span class="s1">&#39;</span><span class="p">)</span>
+<a id="rest_code_526327b4277f4a8497b67746e0a751b2-4" name="rest_code_526327b4277f4a8497b67746e0a751b2-4" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_526327b4277f4a8497b67746e0a751b2-4"></a><span class="gr">UnicodeEncodeError</span>: <span class="n">&#39;ascii&#39; codec can&#39;t encode character &#39;\u0105&#39; in position 0: ordinal not in range(128)</span>
+</pre></div>
+<div class="code"><pre class="code text"><a id="rest_code_ca5594fd2ef54ad38a77f0c5883c3188-1" name="rest_code_ca5594fd2ef54ad38a77f0c5883c3188-1" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_ca5594fd2ef54ad38a77f0c5883c3188-1"></a>Nikola: Could not guess locale for language en, using locale C
+</pre></div>
+<div class="code"><pre class="code text"><a id="rest_code_f5ea18fead964936bccf8b8666032087-1" name="rest_code_f5ea18fead964936bccf8b8666032087-1" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_f5ea18fead964936bccf8b8666032087-1"></a>Input: ą
+<a id="rest_code_f5ea18fead964936bccf8b8666032087-2" name="rest_code_f5ea18fead964936bccf8b8666032087-2" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_f5ea18fead964936bccf8b8666032087-2"></a>Desired ascii(): &#39;\u0105&#39;
+<a id="rest_code_f5ea18fead964936bccf8b8666032087-3" name="rest_code_f5ea18fead964936bccf8b8666032087-3" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_f5ea18fead964936bccf8b8666032087-3"></a>Real ascii(): &#39;\udcc4\udc85&#39;
+</pre></div>
+<div class="code"><pre class="code text"><a id="rest_code_73da6abf15b34ece9c498c4adc163917-1" name="rest_code_73da6abf15b34ece9c498c4adc163917-1" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_73da6abf15b34ece9c498c4adc163917-1"></a>perl: warning: Setting locale failed.
+<a id="rest_code_73da6abf15b34ece9c498c4adc163917-2" name="rest_code_73da6abf15b34ece9c498c4adc163917-2" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_73da6abf15b34ece9c498c4adc163917-2"></a>perl: warning: Please check that your locale settings:
+<a id="rest_code_73da6abf15b34ece9c498c4adc163917-3" name="rest_code_73da6abf15b34ece9c498c4adc163917-3" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_73da6abf15b34ece9c498c4adc163917-3"></a>    [...]
+<a id="rest_code_73da6abf15b34ece9c498c4adc163917-4" name="rest_code_73da6abf15b34ece9c498c4adc163917-4" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_73da6abf15b34ece9c498c4adc163917-4"></a>    are supported and installed on your system.
+<a id="rest_code_73da6abf15b34ece9c498c4adc163917-5" name="rest_code_73da6abf15b34ece9c498c4adc163917-5" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_73da6abf15b34ece9c498c4adc163917-5"></a>perl: warning: Falling back to the standard locale (&quot;C&quot;).
+</pre></div>
+<p class="lead">All those errors have the same root cause: incorrect locale configuration.
+To fix them all, you need to generate the missing locales and set them.</p>
+<section id="check-currently-used-locale">
+<h1>Check currently used locale</h1>
+<p>The <code class="docutils literal">locale</code> command (without arguments) should tell you which locales you’re
+currently using.  (The list might be shorter on your end)</p>
+<div class="code"><pre class="code sh"><a id="rest_code_45351c7f546a450b945adfb5fea5446d-1" name="rest_code_45351c7f546a450b945adfb5fea5446d-1" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_45351c7f546a450b945adfb5fea5446d-1"></a>$<span class="w"> </span>locale
+<a id="rest_code_45351c7f546a450b945adfb5fea5446d-2" name="rest_code_45351c7f546a450b945adfb5fea5446d-2" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_45351c7f546a450b945adfb5fea5446d-2"></a><span class="nv">LANG</span><span class="o">=</span><span class="s2">&quot;en_US.UTF-8&quot;</span>
+<a id="rest_code_45351c7f546a450b945adfb5fea5446d-3" name="rest_code_45351c7f546a450b945adfb5fea5446d-3" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_45351c7f546a450b945adfb5fea5446d-3"></a><span class="nv">LC_CTYPE</span><span class="o">=</span><span class="s2">&quot;en_US.UTF-8&quot;</span>
+<a id="rest_code_45351c7f546a450b945adfb5fea5446d-4" name="rest_code_45351c7f546a450b945adfb5fea5446d-4" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_45351c7f546a450b945adfb5fea5446d-4"></a><span class="nv">LC_NUMERIC</span><span class="o">=</span><span class="s2">&quot;en_US.UTF-8&quot;</span>
+<a id="rest_code_45351c7f546a450b945adfb5fea5446d-5" name="rest_code_45351c7f546a450b945adfb5fea5446d-5" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_45351c7f546a450b945adfb5fea5446d-5"></a><span class="nv">LC_TIME</span><span class="o">=</span><span class="s2">&quot;en_US.UTF-8&quot;</span>
+<a id="rest_code_45351c7f546a450b945adfb5fea5446d-6" name="rest_code_45351c7f546a450b945adfb5fea5446d-6" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_45351c7f546a450b945adfb5fea5446d-6"></a><span class="nv">LC_COLLATE</span><span class="o">=</span><span class="s2">&quot;en_US.UTF-8&quot;</span>
+<a id="rest_code_45351c7f546a450b945adfb5fea5446d-7" name="rest_code_45351c7f546a450b945adfb5fea5446d-7" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_45351c7f546a450b945adfb5fea5446d-7"></a><span class="nv">LC_MONETARY</span><span class="o">=</span><span class="s2">&quot;en_US.UTF-8&quot;</span>
+<a id="rest_code_45351c7f546a450b945adfb5fea5446d-8" name="rest_code_45351c7f546a450b945adfb5fea5446d-8" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_45351c7f546a450b945adfb5fea5446d-8"></a><span class="nv">LC_MESSAGES</span><span class="o">=</span><span class="s2">&quot;en_US.UTF-8&quot;</span>
+<a id="rest_code_45351c7f546a450b945adfb5fea5446d-9" name="rest_code_45351c7f546a450b945adfb5fea5446d-9" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_45351c7f546a450b945adfb5fea5446d-9"></a><span class="nv">LC_PAPER</span><span class="o">=</span><span class="s2">&quot;en_US.UTF-8&quot;</span>
+<a id="rest_code_45351c7f546a450b945adfb5fea5446d-10" name="rest_code_45351c7f546a450b945adfb5fea5446d-10" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_45351c7f546a450b945adfb5fea5446d-10"></a><span class="nv">LC_NAME</span><span class="o">=</span><span class="s2">&quot;en_US.UTF-8&quot;</span>
+<a id="rest_code_45351c7f546a450b945adfb5fea5446d-11" name="rest_code_45351c7f546a450b945adfb5fea5446d-11" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_45351c7f546a450b945adfb5fea5446d-11"></a><span class="nv">LC_ADDRESS</span><span class="o">=</span><span class="s2">&quot;en_US.UTF-8&quot;</span>
+<a id="rest_code_45351c7f546a450b945adfb5fea5446d-12" name="rest_code_45351c7f546a450b945adfb5fea5446d-12" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_45351c7f546a450b945adfb5fea5446d-12"></a><span class="nv">LC_TELEPHONE</span><span class="o">=</span><span class="s2">&quot;en_US.UTF-8&quot;</span>
+<a id="rest_code_45351c7f546a450b945adfb5fea5446d-13" name="rest_code_45351c7f546a450b945adfb5fea5446d-13" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_45351c7f546a450b945adfb5fea5446d-13"></a><span class="nv">LC_MEASUREMENT</span><span class="o">=</span><span class="s2">&quot;en_US.UTF-8&quot;</span>
+<a id="rest_code_45351c7f546a450b945adfb5fea5446d-14" name="rest_code_45351c7f546a450b945adfb5fea5446d-14" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_45351c7f546a450b945adfb5fea5446d-14"></a><span class="nv">LC_IDENTIFICATION</span><span class="o">=</span><span class="s2">&quot;en_US.UTF-8&quot;</span>
+<a id="rest_code_45351c7f546a450b945adfb5fea5446d-15" name="rest_code_45351c7f546a450b945adfb5fea5446d-15" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_45351c7f546a450b945adfb5fea5446d-15"></a><span class="nv">LC_ALL</span><span class="o">=</span>
+</pre></div>
+<p>If any of those is set to <code class="docutils literal">C</code> or <code class="docutils literal">POSIX</code>, has a different encoding than
+<code class="docutils literal"><span class="pre">UTF-8</span></code> (sometimes spelled <code class="docutils literal">utf8</code>) is empty (with the exception of
+<code class="docutils literal">LC_ALL</code>), or if you see any errors, you need to reconfigure your locale.</p>
+</section>
+<section id="check-locale-availability-and-install-missing-locales">
+<h1>Check locale availability and install missing locales</h1>
+<p>The first thing you need to do is check locale availability. To do this, run
+<code class="docutils literal">locale <span class="pre">-a</span></code>. This will produce a list of all installed locales.  You can use
+<code class="docutils literal">grep</code> to get a more reasonable list.</p>
+<div class="code"><pre class="code text"><a id="rest_code_704767d3e7724ac7b8d1176bc3b74b03-1" name="rest_code_704767d3e7724ac7b8d1176bc3b74b03-1" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_704767d3e7724ac7b8d1176bc3b74b03-1"></a>$ locale -a | grep -i utf
+<a id="rest_code_704767d3e7724ac7b8d1176bc3b74b03-2" name="rest_code_704767d3e7724ac7b8d1176bc3b74b03-2" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_704767d3e7724ac7b8d1176bc3b74b03-2"></a>&lt;lists all UTF-8 locales&gt;
+<a id="rest_code_704767d3e7724ac7b8d1176bc3b74b03-3" name="rest_code_704767d3e7724ac7b8d1176bc3b74b03-3" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_704767d3e7724ac7b8d1176bc3b74b03-3"></a>$ locale -a | grep -i utf | grep -i en_US
+<a id="rest_code_704767d3e7724ac7b8d1176bc3b74b03-4" name="rest_code_704767d3e7724ac7b8d1176bc3b74b03-4" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_704767d3e7724ac7b8d1176bc3b74b03-4"></a>en_US.UTF-8
+</pre></div>
+<p>The best locale to use is the one for your language, with the UTF-8 encoding.
 The locale will be used by some console apps for output. I’m going to use
-&lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;en_US.UTF-8&lt;/span&gt;&lt;/code&gt; in this guide.&lt;/p&gt;
-&lt;p&gt;If you can’t see any UTF-8 locales, or no appropriate locale setting for your
+<code class="docutils literal"><span class="pre">en_US.UTF-8</span></code> in this guide.</p>
+<p>If you can’t see any UTF-8 locales, or no appropriate locale setting for your
 language of choice, you might need to generate those. The required actions
-depend on your distro/OS.&lt;/p&gt;
-&lt;ul class="simple"&gt;
-&lt;li&gt;&lt;p&gt;Debian, Ubuntu, and derivatives: install &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;language-pack-en-base&lt;/span&gt;&lt;/code&gt;, run &lt;code class="docutils literal"&gt;sudo &lt;span class="pre"&gt;dpkg-reconfigure&lt;/span&gt; locales&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;RHEL, CentOS, Fedora: install &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;glibc-langpack-en&lt;/span&gt;&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Arch Linux: uncomment relevant entries in &lt;code class="docutils literal"&gt;/etc/locale.gen&lt;/code&gt; and run &lt;code class="docutils literal"&gt;sudo &lt;span class="pre"&gt;locale-gen&lt;/span&gt;&lt;/code&gt; &lt;a class="reference external" href="https://wiki.archlinux.org/index.php/Locale"&gt;(wiki)&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;For other OSes, refer to the documentation.&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;You need a UTF-8 locale to ensure compatibility with software. Avoid the &lt;code class="docutils literal"&gt;C&lt;/code&gt;
-and &lt;code class="docutils literal"&gt;POSIX&lt;/code&gt; locales (it’s ASCII) and locales with other encodings (those
-aren’t used by ~anyone these days)&lt;/p&gt;
-&lt;/section&gt;
-&lt;section id="configure-system-wide"&gt;
-&lt;h2&gt;Configure system-wide&lt;/h2&gt;
-&lt;p&gt;On some systems, you may be able to configure locale system-wide.  Check your
-system documentation for details. If your system has systemd, run&lt;/p&gt;
-&lt;div class="code"&gt;&lt;pre class="code text"&gt;&lt;a id="rest_code_3784c4d89818449ba0736958b9fa5e01-1" name="rest_code_3784c4d89818449ba0736958b9fa5e01-1" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_3784c4d89818449ba0736958b9fa5e01-1"&gt;&lt;/a&gt;sudo localectl set-locale LANG=en_US.UTF-8
-&lt;/pre&gt;&lt;/div&gt;
-&lt;/section&gt;
-&lt;section id="configure-for-a-single-user"&gt;
-&lt;h2&gt;Configure for a single user&lt;/h2&gt;
-&lt;p&gt;If your environment does not allow system-wide locale configuration (macOS,
+depend on your distro/OS.</p>
+<ul class="simple">
+<li><p>Debian, Ubuntu, and derivatives: install <code class="docutils literal"><span class="pre">language-pack-en-base</span></code>, run <code class="docutils literal">sudo <span class="pre">dpkg-reconfigure</span> locales</code></p></li>
+<li><p>RHEL, CentOS, Fedora: install <code class="docutils literal"><span class="pre">glibc-langpack-en</span></code></p></li>
+<li><p>Arch Linux: uncomment relevant entries in <code class="docutils literal">/etc/locale.gen</code> and run <code class="docutils literal">sudo <span class="pre">locale-gen</span></code> <a class="reference external" href="https://wiki.archlinux.org/index.php/Locale">(wiki)</a></p></li>
+<li><p>For other OSes, refer to the documentation.</p></li>
+</ul>
+<p>You need a UTF-8 locale to ensure compatibility with software. Avoid the <code class="docutils literal">C</code>
+and <code class="docutils literal">POSIX</code> locales (it’s ASCII) and locales with other encodings (those
+aren’t used by ~anyone these days)</p>
+</section>
+<section id="configure-system-wide">
+<h1>Configure system-wide</h1>
+<p>On some systems, you may be able to configure locale system-wide.  Check your
+system documentation for details. If your system has systemd, run</p>
+<div class="code"><pre class="code text"><a id="rest_code_8e2d3316c858497393bb3774f7ebe9d1-1" name="rest_code_8e2d3316c858497393bb3774f7ebe9d1-1" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_8e2d3316c858497393bb3774f7ebe9d1-1"></a>sudo localectl set-locale LANG=en_US.UTF-8
+</pre></div>
+</section>
+<section id="configure-for-a-single-user">
+<h1>Configure for a single user</h1>
+<p>If your environment does not allow system-wide locale configuration (macOS,
 shared server with generated but unconfigured locales), or if you want to
-ensure it’s always configured independently of system settings.&lt;/p&gt;
-&lt;p&gt;To do this, you need to edit the configuration file for your shell. If you’re
-using bash, it’s &lt;code class="docutils literal"&gt;.bashrc&lt;/code&gt; (or &lt;code class="docutils literal"&gt;.bash_profile&lt;/code&gt; on macOS). For zsh users,
-&lt;code class="docutils literal"&gt;.zshrc&lt;/code&gt;.  Add this line (or equivalent in your shell):&lt;/p&gt;
-&lt;div class="code"&gt;&lt;pre class="code sh"&gt;&lt;a id="rest_code_32ba8510c5014950bd8c3c8c16c10a89-1" name="rest_code_32ba8510c5014950bd8c3c8c16c10a89-1" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_32ba8510c5014950bd8c3c8c16c10a89-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;export&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;LANG&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;en_US.UTF-8&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;LC_ALL&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;en_US.UTF-8
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;That should be enough. Note that those settings don’t apply to programs
-not launched through a shell.&lt;/p&gt;
-&lt;hr class="docutils"&gt;
-&lt;p&gt;&lt;strong&gt;Python/Windows corner:&lt;/strong&gt; Python 3.7 will fix this on Unix by assuming UTF-8
+ensure it’s always configured independently of system settings.</p>
+<p>To do this, you need to edit the configuration file for your shell. If you’re
+using bash, it’s <code class="docutils literal">.bashrc</code> (or <code class="docutils literal">.bash_profile</code> on macOS). For zsh users,
+<code class="docutils literal">.zshrc</code>.  Add this line (or equivalent in your shell):</p>
+<div class="code"><pre class="code sh"><a id="rest_code_28348ddaf62c4af99190326623915503-1" name="rest_code_28348ddaf62c4af99190326623915503-1" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_28348ddaf62c4af99190326623915503-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">LANG</span><span class="o">=</span>en_US.UTF-8<span class="w"> </span><span class="nv">LC_ALL</span><span class="o">=</span>en_US.UTF-8
+</pre></div>
+<p>That should be enough. Note that those settings don’t apply to programs
+not launched through a shell.</p>
+<hr class="docutils">
+<p><strong>Python/Windows corner:</strong> Python 3.7 will fix this on Unix by assuming UTF-8
 if it encounters the C locale.  On Windows, Python 3.6 is using UTF-8
-interactively, but not when using shell redirections to files or pipes.&lt;/p&gt;
-&lt;p&gt;&lt;em&gt;This post was brought to you by ą — U+0105 LATIN SMALL LETTER A WITH OGONEK.&lt;/em&gt;&lt;/p&gt;
-&lt;/section&gt;</description><category>guide</category><category>locale</category><category>Python</category><category>Unicode</category><category>Unix</category><guid>https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/</guid><pubDate>Sun, 18 Jun 2017 18:40:00 GMT</pubDate></item></channel></rss>
+interactively, but not when using shell redirections to files or pipes.</p>
+<p><em>This post was brought to you by ą — U+0105 LATIN SMALL LETTER A WITH OGONEK.</em></p>
+</section>
+]]></content:encoded><category>Programming</category><category>guide</category><category>locale</category><category>Python</category><category>Unicode</category><category>Unix</category></item></channel></rss>

@@ -1,152 +1,185 @@
 <!DOCTYPE html>
-<html class="limited-width larger-font" prefix="
-og: http://ogp.me/ns#
-" lang="en">
+<html class="limited-width larger-font" prefix="og: http://ogp.me/ns#" lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="description" content="Four static site generators: which one is the fastest">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Static Site Generator Speed Test (Nikola, Pelican, Hexo, Octopress) | Chris Warrick</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.css" integrity="sha256-FqCzNnnyXl5HxHMdb+RQ/RV/X7fqfPcQYy+G2gFL3Xk=" crossorigin="anonymous">
+  <meta charset="utf-8">
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Static Site Generator Speed Test (Nikola, Pelican, Hexo, Octopress) | Chris Warrick</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.css"
+        integrity="sha256-FqCzNnnyXl5HxHMdb+RQ/RV/X7fqfPcQYy+G2gFL3Xk=" crossorigin="anonymous">
 <!--#if expr="$HTTP_COOKIE=/colorScheme\=light/" --><link href="/assets/css/all.css?v=20230115" rel="stylesheet" type="text/css" id="kw-all-css">
 <script type="text/javascript">var colorScheme='light';var colorSchemesEnabled=true;</script><!--#else--><link href="/assets/css/all-dark.css?v=20230115" rel="stylesheet" type="text/css" id="kw-all-css">
-<script type="text/javascript">var colorScheme='dark';var colorSchemesEnabled=true;</script><!--#endif--><link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,700,700i|Source+Serif+Pro:600&amp;display=swap&amp;subset=latin-ext" rel="stylesheet">
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
-<meta name="theme-color" content="#00aadd">
-<meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="/rss.xml">
-<link rel="canonical" href="https://chriswarrick.com/blog/2015/07/23/ssg-speed-test/">
-<link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="16x16 32x32 48x48 64x64 128x128 256x256">
-<link rel="icon" type="image/png" href="/assets/img/logo512.png">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<!--[if lt IE 9]><script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]--><meta name="description" itemprop="description" content="Four static site generators: which one is the fastest">
-<meta name="author" content="Chris Warrick">
-<link rel="prev" href="/blog/2015/07/06/upass/" title="New project: upass — console UI for pass" type="text/html">
-<link rel="next" href="/blog/2015/10/11/rewriting-a-flask-app-in-django/" title="Rewriting a Flask app in Django" type="text/html">
-<meta property="og:site_name" content="Chris Warrick">
-<meta property="og:title" content="Static Site Generator Speed Test (Nikola, Pelican, Hexo, Octopress)">
-<meta property="og:url" content="https://chriswarrick.com/blog/2015/07/23/ssg-speed-test/">
-<meta property="og:description" content="Four static site generators: which one is the fastest">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2015-07-23T17:10:00+02:00">
-<meta property="article:tag" content="blog">
-<meta property="article:tag" content="Hexo">
-<meta property="article:tag" content="jekyll">
-<meta property="article:tag" content="Nikola">
-<meta property="article:tag" content="Octopress">
-<meta property="article:tag" content="Pelican">
-<meta property="article:tag" content="Python">
-<meta property="article:tag" content="test">
-<meta property="article:tag" content="webmastering">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:creator" content="@Kwpolska">
+<script type="text/javascript">var colorScheme='dark';var colorSchemesEnabled=true;</script><!--#endif-->
+  <link
+    href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,700,700i|Source+Serif+Pro:600&amp;display=swap&amp;subset=latin-ext"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css"
+        integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+  <meta name="theme-color" content="#00aadd">
+  <meta name="generator" content="Chris Warrick’s Yet Another Blog Generator">
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/rss.xml">
+  <link rel="canonical" href="https://chriswarrick.com/">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="16x16 32x32 48x48 64x64 128x128 256x256">
+  <link rel="icon" type="image/png" href="/assets/img/logo512.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="prev" href="/blog/2015/07/06/upass/" type="text/html">
+  <link rel="next" href="/blog/2015/10/11/rewriting-a-flask-app-in-django/" type="text/html">
+  
 </head>
 <body>
 <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
 
-<!-- Menubar -->
-
-<nav class="navbar navbar-expand-md navbar-kw bg-dark static-top mb-4"><div class="container">
-<!-- This keeps the margins nice -->
-        <a class="navbar-brand" href="/">
-            <img src="/assets/img/logo.png" srcset="/assets/img/logo2x.png 2x" alt="Chris Warrick" id="logo"><span id="blog-title">Chris Warrick</span>
-        </a>
-        <div>
-        <button class="navbar-toggler mr-2" id="color-changer-mobile" type="button" aria-label="Change color scheme">
-            <span class="color-changer"></span>
-        </button>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        </div>
-        <div class="collapse navbar-collapse" id="bs-navbar">
-            <ul class="navbar-nav mr-auto">
-<li class="nav-item">
-<a href="/contact/" class="nav-link">Contact</a>
-                </li>
-<li class="nav-item">
-<a href="/projects/" class="nav-link">Projects</a>
-                </li>
-<li class="nav-item">
-<a href="/guides/" class="nav-link">Guides</a>
-                </li>
-<li class="nav-item">
-<a href="/blog/" class="nav-link">Archives</a>
-                </li>
-<li class="nav-item">
-<a href="/search/" class="nav-link">Search</a>
-
-                
-            </li>
-</ul>
-<ul class="navbar-nav navbar-right">
-<li class="nav-item" id="color-changer-menu">
-<a href="#" class="nav-link" id="color-changer-btn">
-                <div class="color-changer"></div>
-                <span id="color-changer-text"><!--#if expr="$HTTP_COOKIE=/colorScheme\=light/" -->Dark Mode<!--#else -->Light Mode<!--#endif--></span>
-                </a>
-                </li>
-            </ul>
-</div>
-<!-- /.navbar-collapse -->
+<nav class="navbar navbar-expand-md navbar-kw bg-dark static-top mb-4">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <img src="/assets/img/logo.png" srcset="/assets/img/logo2x.png 2x" alt="Chris Warrick" id="logo"><span
+        id="blog-title">Chris Warrick</span>
+    </a>
+    <div>
+      <button class="navbar-toggler mr-2" id="color-changer-mobile" type="button" aria-label="Change color scheme">
+        <span class="color-changer"></span>
+      </button>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar"
+              aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
     </div>
-<!-- /.container -->
-</nav><!-- End of Menubar --><div class="container" id="content" role="main">
-    <div class="body-content">
-        <!--Body content-->
+    <div class="collapse navbar-collapse" id="bs-navbar">
+      <ul class="navbar-nav mr-auto">
         
-        <div id="cookiebox"></div>
-<article class="post-text h-entry hentry postpage postbox" itemscope="itemscope" itemtype="http://schema.org/Article"><header class="page-header"><h1 class="p-name entry-title" itemprop="headline name">
-    <a href="/blog/2015/07/23/ssg-speed-test/" class="u-url">Static Site Generator Speed Test (Nikola, Pelican, Hexo, Octopress)</a>
-    </h1>
-
-    <div class="metadata">
-<a href="/blog/2015/07/23/ssg-speed-test/" rel="bookmark" class="u-published"><time class="published dt-published" datetime="2015-07-23T17:10:00+02:00" itemprop="datePublished" title="23 July 2015 at 17:10">23 July 2015 at 17:10</time></a>
-        <ul itemprop="keywords" class="tags post-bubbles list-inline">
-<li class="category-bubble"><a href="/blog/tags/cat_internet/" style="background-color: #bf81ff !important">Internet</a></li>
-           <li><a class="tag p-category" href="/blog/tags/blog/" rel="tag">blog</a></li>
-           <li><a class="tag p-category" href="/blog/tags/hexo/" rel="tag">Hexo</a></li>
-           <li><a class="tag p-category" href="/blog/tags/jekyll/" rel="tag">jekyll</a></li>
-           <li><a class="tag p-category" href="/blog/tags/nikola/" rel="tag">Nikola</a></li>
-           <li><a class="tag p-category" href="/blog/tags/octopress/" rel="tag">Octopress</a></li>
-           <li><a class="tag p-category" href="/blog/tags/pelican/" rel="tag">Pelican</a></li>
-           <li><a class="tag p-category" href="/blog/tags/python/" rel="tag">Python</a></li>
-           <li><a class="tag p-category" href="/blog/tags/test/" rel="tag">test</a></li>
-           <li><a class="tag p-category" href="/blog/tags/webmastering/" rel="tag">webmastering</a></li>
-        </ul>
-<span class="shortlink-bubble"><a href="https://go.chriswarrick.com/ssg-speed-test" title="Short link to this article (go.chriswarrick.com/ssg-speed-test)"><i class="fa fa-link"></i> ssg-speed-test</a></span>        
+        
+          <li class="nav-item">
+            <a href="/contact/" class="nav-link">Contact</a>
+          </li>
+        
+        
+        
+          <li class="nav-item">
+            <a href="/projects/" class="nav-link">Projects</a>
+          </li>
+        
+        
+        
+          <li class="nav-item">
+            <a href="/guides/" class="nav-link">Guides</a>
+          </li>
+        
+        
+        
+          <li class="nav-item">
+            <a href="/blog/" class="nav-link">Archives</a>
+          </li>
+        
+        
+        
+          <li class="nav-item">
+            <a href="/blog/tags/" class="nav-link">Tags</a>
+          </li>
+        
+        
+      </ul>
+      <ul class="navbar-nav navbar-right">
+        <li class="nav-item" id="color-changer-menu">
+          <a href="#" class="nav-link" id="color-changer-btn">
+            <div class="color-changer"></div>
+            <span id="color-changer-text">Light Mode</span>
+          </a>
+        </li>
+      </ul>
     </div>
-    </header><div class="e-content entry-content" itemprop="articleBody text">
-    <div class="lead">
+  </div>
+</nav>
+<div class="container" id="content" role="main">
+  <div class="body-content">
+    <div id="cookiebox"></div>
+    
+
+
+<article class="post-text h-entry hentry postpage postbox" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+<header class="page-header">
+  <h1 class="p-name entry-title" itemprop="headline name">
+    <a href="/blog/2015/07/23/ssg-speed-test/" class="u-url">Static Site Generator Speed Test (Nikola, Pelican, Hexo, Octopress)</a>
+  </h1>
+
+  <div class="metadata">
+    <a href="/blog/2015/07/23/ssg-speed-test/" rel="bookmark" class="u-published">
+      <time class="published dt-published" datetime="2015-07-23T17:10:00.0000000&#x2B;02:00" itemprop="datePublished" title="23 July 2015 17:10">23 July 2015 17:10</time>
+    
+    </a>
+    <ul itemprop="keywords" class="tags post-bubbles list-inline">
+      <li class="category-bubble"><a href="/blog/tags/cat_internet" style="background-color: #bf81ff !important">Internet</a></li>
+      
+        <li><a class="tag p-category" href="/blog/tags/blog" rel="tag">blog</a></li>
+      
+        <li><a class="tag p-category" href="/blog/tags/hexo" rel="tag">Hexo</a></li>
+      
+        <li><a class="tag p-category" href="/blog/tags/jekyll" rel="tag">jekyll</a></li>
+      
+        <li><a class="tag p-category" href="/blog/tags/nikola" rel="tag">Nikola</a></li>
+      
+        <li><a class="tag p-category" href="/blog/tags/octopress" rel="tag">Octopress</a></li>
+      
+        <li><a class="tag p-category" href="/blog/tags/pelican" rel="tag">Pelican</a></li>
+      
+        <li><a class="tag p-category" href="/blog/tags/python" rel="tag">Python</a></li>
+      
+        <li><a class="tag p-category" href="/blog/tags/test" rel="tag">test</a></li>
+      
+        <li><a class="tag p-category" href="/blog/tags/webmastering" rel="tag">webmastering</a></li>
+      
+    </ul>
+    <span class="shortlink-bubble"><a href="https://go.chriswarrick.com/ssg-speed-test" title="Short link to this article (go.chriswarrick.com/ssg-speed-test)"><i class="fa fa-link"></i> ssg-speed-test</a></span>
+    
+  </div>
+</header>
+
+  <div class="e-content entry-content" itemprop="articleBody text">
+    
+      <div class="lead">
+        
 <p>I tested the speed of four static site generators: Nikola, Pelican, Hexo and Octopress, in a clean environment.  Spoiler alert: Nikola won.</p>
 <p><em>Disclaimer:</em> author is a developer and user of Nikola.  The test environments used were the same for all four generators.</p>
-<section id="generators-tested"><h2>Generators tested<a href="#generators-tested" class="headerlink" title="Permalink to this heading">¶</a></h2>
+<section id="generators-tested">
+<h1>Generators tested</h1>
 <ul class="simple">
 <li><p><a class="reference external" href="https://getnikola.com/">Nikola</a> v7.6.1, by Roberto Alsina, Chris Warrick and contributors; Python; MIT license</p></li>
 <li><p><a class="reference external" href="http://blog.getpelican.com/">Pelican</a> v3.6.0, by Alexis Metaireau and contributors; Python; GNU AGPL license</p></li>
 <li><p><a class="reference external" href="https://hexo.io/">Hexo</a> v3.1.1, by Tommy Chen and contributors; Node.js; MIT license</p></li>
 <li><p><a class="reference external" href="http://octopress.org/">Octopress</a> v2.0, by Brandon Mathis and contributors; Ruby; MIT license (based on Jekyll)</p></li>
-</ul></section>
-</div>
-</div>
+</ul>
 
-<section id="setup"><h2>Setup</h2>
+      </div>
+    
+    
+</section>
+<section id="setup">
+<h1>Setup</h1>
 <p>Every site generator was set up in an identical <strong>clean</strong> environment, using Ubuntu 15.04, x64, as a 512 MB DigitalOcean VM with a 20 GB SSD drive. The machine was updated, an user account with passwordless sudo was created, and <code class="docutils literal"><span class="pre">build-essential</span></code> was installed. Tests were run by an automated installer and timer, written in Bash and C, respectively (custom; source code is available). Pre-compiled wheels for lxml and Pillow were used for Nikola testing, because lxml cannot be compiled with less than 1.5 GB of RAM; they were built with <code class="docutils literal">pip wheel lxml pillow</code> outside of the testing environment (on a local VM). The machine was reimaged after every test. Lists of installed Python/Ruby/Node packages are available in the GitHub repo (see below).</p>
-</section><section id="input"><h2>Input</h2>
+</section>
+<section id="input">
+<h1>Input</h1>
 <p>Every site generator was given the same set of 179 log files from #nikola on freenode. The raw logs contain 1209507 bytes (1.1 MiB) of plain text. The logs were processed into post files, which fit the format of each engine (reST or Markdown), containing mandatory metadata, an introductory paragraph and a code block (using <code class="docutils literal">::</code> for reST, four spaces for Markdown). One file had to be altered, because they contained the <code class="docutils literal">{{</code>  sequence, which was misinterpreted as internal templating by Hexo and Octopress — it was replaced by a harmless <code class="docutils literal">~~</code> sequence for all four generators.</p>
 <p>The generators used default config, with one exception: highlighting was disabled for Hexo. The highlighting would cause an unfair advantage (other generators did not automatically highlight the code boxes), and led to very high build times (see table 4 in comparison spreadsheet).</p>
-</section><section id="build"><h2>Build</h2>
+</section>
+<section id="build">
+<h1>Build</h1>
 <p>Sites were built a total of 110 times, in 10 cycles of 11 builds each. The first build of a cycle was a fresh build, the remaining 10 were rebuilds. Sites and cache files were removed after each cycle.</p>
-</section><section id="results"><h2>Results</h2>
+</section>
+<section id="results">
+<h1>Results</h1>
 <p>Because Nikola and Hexo use incremental rebuilds, the results were compared in two groups: 11 and 10 runs.</p>
-<section id="average-build-times-in-seconds"><h3>Average build times (in seconds)</h3>
+<section id="average-build-times-in-seconds">
+<h2>Average build times (in seconds)</h2>
 <table class="table table-bordered table-hover">
-<thead><tr>
+<thead>
+<tr>
 <th>#</th>
 <th>Generator</th>
 <th>Average of 11 runs</th>
 <th>Average of 10 runs</th>
-</tr></thead>
+</tr>
+</thead>
 <tbody>
 <tr>
 <th scope="row">1</th>
@@ -173,108 +206,168 @@ og: http://ogp.me/ns#
 <td>9.47550</td>
 </tr>
 </tbody>
-</table></section><section id="full-results"><h3>Full results</h3>
+</table></section>
+<section id="full-results">
+<h2>Full results</h2>
 <p class="lead">Full results are available in <a class="reference external" href="https://chriswarrick.com/pub/ssg-test-results.ods">ods format</a>.</p>
-</section><section id="raw-results-and-configuration"><h3>Raw results and configuration</h3>
+</section>
+<section id="raw-results-and-configuration">
+<h2>Raw results and configuration</h2>
 <p>Raw results (<code class="docutils literal">.csv</code> files from the test runner) and configuration is available in the <a class="reference external" href="https://github.com/Kwpolska/ssg-test">GitHub repo</a>. Log files and converted posts are not available publicly; however, they can be provided to interested parties (<a class="reference external" href="https://chriswarrick.com/contact/">contact me</a> to obtain them).</p>
-</section></section><section id="questions-and-answers"><h2>Questions and answers</h2>
-<section id="why-not-plain-jekyll"><h3>Why not plain Jekyll?</h3>
+</section>
+</section>
+<section id="questions-and-answers">
+<h1>Questions and answers</h1>
+<section id="why-not-plain-jekyll">
+<h2>Why not plain Jekyll?</h2>
 <p><strong>Plain Jekyll was disqualified</strong> on the basis of missing many features other generators have, leading to an unfair advantage. The aim of this test was to provide similar setups for each of the four generators. Jekyll generates a very basic site that lacks some elements; a Jekyll site does not have paginated indexes, (partial) post text on indexes, any sort of archives, etc. A Jekyll site contains only one CSS file, index.html, feed.xml, and the log posts. On the other hand, sites generated by Pelican, Nikola and Hexo contain more files, which makes the builds longer and the website experience richer (archives, JS, sitemaps, tag listings).</p>
 <p>On the basis of the above, <strong>Octopress</strong> was chosen to represent the Jekyll universe at large. Octopress sites have more assets, a sitemap, archives and category listings — making it comparable to the other four contenders. However, tests were performed for Jekyll. The average result from 11 builds was 2.22118, while the average result from 10 builds was 2.23903. The result would land Jekyll on the 1st place for 11 builds, and on the 2nd place for 10 builds.</p>
-</section><section id="why-not-myfavoritessg"><h3>Why not $MYFAVORITESSG?</h3>
+</section>
+<section id="why-not-myfavoritessg">
+<h2>Why not $MYFAVORITESSG?</h2>
 <p>I tested only four popular generators that were easy enough to set up. I could easily extend the set if I had time and friendly enough documentation to do so. I can add a SSG, provided that:</p>
 <ul class="simple">
 <li><p>it’s easy to configure</p></li>
-<li><p>it has a default config that provides a working site with a feature set comparable to other SSGs tested here (see <a class="reference internal" href="/blog/2015/07/23/ssg-speed-test/#why-not-plain-jekyll">Why not plain Jekyll?</a>)</p></li>
-</ul></section></section></article>
-</div>
-    <aside class="postpromonav"><nav><ul class="pager hidden-print">
-<li class="previous">
-                <a href="/blog/2015/07/06/upass/" rel="prev" title="New project: upass — console UI for pass">Previous post</a>
-            </li>
-            <li class="next">
-                <a href="/blog/2015/10/11/rewriting-a-flask-app-in-django/" rel="next" title="Rewriting a Flask app in Django">Next post</a>
-            </li>
-        </ul></nav></aside><section class="comments"><div data-title="Static Site Generator Speed Test (Nikola, Pelican, Hexo, Octopress)" id="isso-thread"></div>
-        <script src="https://isso.chriswarrick.com/js/embed.min.js" data-isso="https://isso.chriswarrick.com/" data-isso-lang="en" data-isso-require-author="true" data-isso-require-email="true" data-isso-gravatar="true" data-isso-avatar="false" data-isso-css="false" data-isso-vote="false" data-isso-reply-notifications="true"></script></section><!--End of body content--><nav id="footer-links"><div class="row">
-            <div class="col-sm-4">
-                <h6>Blog</h6>
-                <ul>
-<li class="nav-item">
-<a href="/blog/" class="nav-link">Archive</a>
-                        </li>
-<li class="nav-item">
-<a href="/blog/tags/" class="nav-link">Tags</a>
-                        </li>
-<li class="nav-item">
-<a href="/rss.xml" class="nav-link">RSS Feed</a>
-                        </li>
-<li class="nav-item">
-<a href="/search/" class="nav-link">Search</a>
-                </li>
+<li><p>it has a default config that provides a working site with a feature set comparable to other SSGs tested here (see <a class="reference internal" href="#why-not-plain-jekyll">Why not plain Jekyll?</a>)</p></li>
 </ul>
-</div>
-            <div class="col-sm-4">
-                <h6>Projects and Work</h6>
-                <ul>
-<li class="nav-item">
-<a href="/projects/" class="nav-link">Projects</a>
-                        </li>
-<li class="nav-item">
-<a href="/guides/" class="nav-link">Guides</a>
-                        </li>
-<li class="nav-item">
-<a href="/kwbot/" class="nav-link">KwBot</a>
-                        </li>
-<li class="nav-item">
-<a href="/blog/tags/cat_python" class="nav-link">Posts about Python</a>
-                </li>
-</ul>
-</div>
-            <div class="col-sm-4">
-                <h6>Me</h6>
-                <ul>
-<li class="nav-item">
-<a href="/contact/" class="nav-link">Contact</a>
-                        </li>
-<li class="nav-item">
-<a href="/brand/" class="nav-link">Brand</a>
-                        </li>
-<li class="nav-item">
-<a href="https://twitter.com/Kwpolska" class="nav-link">Twitter</a>
-                        </li>
-<li class="nav-item">
-<a href="https://github.com/Kwpolska" class="nav-link">GitHub</a>
-                </li>
-</ul>
-</div>
-        </div></nav><footer id="footer"><p>this site uses cookies.<br>by using this site, you agree to our <a href="/privacy/">cookie and privacy policy</a>.</p>
-<p>
-powered by <strong><a href="https://getnikola.com/">Nikola</a></strong>, <a href="http://nginx.org/">nginx</a> and <a href="https://hetzner.cloud/?ref=Qy1lehF8PwzP">Hetzner Cloud</a><br>
-copyright © 2009–2026 <a href="/contact/">Chris Warrick</a><br><a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC
-BY-NC-SA</a>, unless stated otherwise</p>
-            
-        </footer>
-</div>
+</section>
+</section>
+
+  </div>
+</article>
 
 
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script><script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.11.0/baguetteBox.min.js" integrity="sha256-yQGjQhFs3LtyiN5hhr3k9s9TWZOh/RzCkD3gwwCKlkg=" crossorigin="anonymous"></script><script src="/assets/js/all.js?v=20230115"></script><script>
-    baguetteBox.run('div#content', {
-        ignoreClass: 'islink',
-        captions: function(element) {
-            return element.getElementsByTagName('img')[0].alt;
-    }});
-    </script><!-- Matomo --><script>
+
+
+  <aside class="postpromonav">
+    <nav>
+      <ul class="pager hidden-print">
+        
+          <li class="previous">
+            <a href="/blog/2015/07/06/upass/" rel="prev"
+               title="New project: upass &#x2014; console UI for pass">Previous post</a>
+          </li>
+        
+        
+          <li class="next">
+            <a href="/blog/2015/10/11/rewriting-a-flask-app-in-django/" rel="prev"
+               title="Rewriting a Flask app in Django">Next post</a>
+          </li>
+        
+      </ul>
+    </nav>
+  </aside>
+
+
+
+  <section class="comments">
+    <div data-title="Static Site Generator Speed Test (Nikola, Pelican, Hexo, Octopress)" id="isso-thread"></div>
+    <script src="https://isso.chriswarrick.com/js/embed.min.js" data-isso="https://isso.chriswarrick.com/"
+            data-isso-lang="en" data-isso-require-author="true" data-isso-require-email="true" data-isso-gravatar="true"
+            data-isso-avatar="false" data-isso-css="false" data-isso-vote="false"
+            data-isso-reply-notifications="true"></script>
+  </section>
+
+
+
+    <script src="https://isso.chriswarrick.com/js/count.min.js" data-isso="https://isso.chriswarrick.com/"
+            data-isso-lang="en"></script>
+    <nav id="footer-links">
+      <div class="row">
+        <div class="col-sm-4">
+          <h6>Blog</h6>
+          <ul>
+            <li class="nav-item">
+              <a href="/blog/" class="nav-link">Archives</a>
+            </li>
+            <li class="nav-item">
+              <a href="/blog/tags/" class="nav-link">Tags</a>
+            </li>
+            <li class="nav-item">
+              <a href="/listings/" class="nav-link">Listings</a>
+            </li>
+            <li class="nav-item">
+              <a href="/rss.xml" class="nav-link">RSS Feed</a>
+            </li>
+          </ul>
+        </div>
+        <div class="col-sm-4">
+          <h6>Projects and Work</h6>
+          <ul>
+            <li class="nav-item">
+              <a href="/projects/" class="nav-link">Projects</a>
+            </li>
+            <li class="nav-item">
+              <a href="/guides/" class="nav-link">Guides</a>
+            </li>
+            <li class="nav-item">
+              <a href="/kwbot/" class="nav-link">KwBot</a>
+            </li>
+            <li class="nav-item">
+              <a href="/blog/tags/cat_python" class="nav-link">Posts about Python</a>
+            </li>
+          </ul>
+        </div>
+        <div class="col-sm-4">
+          <h6>Me</h6>
+          <ul>
+            <li class="nav-item">
+              <a href="/contact/" class="nav-link">Contact</a>
+            </li>
+            <li class="nav-item">
+              <a href="/brand/" class="nav-link">Brand</a>
+            </li>
+            <li class="nav-item">
+              <a href="https://twitter.com/Kwpolska" class="nav-link">Twitter</a>
+            </li>
+            <li class="nav-item">
+              <a href="https://github.com/Kwpolska" class="nav-link">GitHub</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <footer id="footer">
+      <p>this site uses cookies.<br>by using this site, you agree to our <a href="/privacy/">cookie and privacy policy</a>.</p>
+<p>powered by <strong><a href="https://github.com/Kwpolska/YetAnotherBlogGenerator">Yet Another Blog Generator</a></strong>,
+  <a href="https://nginx.org/">nginx</a>
+  and <a href="https://hetzner.cloud/?ref=Qy1lehF8PwzP">Hetzner Cloud</a><br>
+  copyright © 2009–2026 <a href="/contact/">Chris Warrick</a><br>
+  license: <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA</a>, unless stated otherwise</p>
+    </footer>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.11.0/baguetteBox.min.js"
+        integrity="sha256-yQGjQhFs3LtyiN5hhr3k9s9TWZOh/RzCkD3gwwCKlkg=" crossorigin="anonymous"></script>
+<script src="/assets/js/all.js?v=20230115"></script>
+<script>
+  baguetteBox.run('div#content', {
+    ignoreClass: 'islink',
+    captions: function (element) {
+      return element.getElementsByTagName('img')[0].alt;
+    }
+  });
+</script><!-- Matomo -->
+<script>
   var _paq = window._paq = window._paq || [];
   /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
   _paq.push(['trackPageView']);
   _paq.push(['enableLinkTracking']);
-  (function() {
-    var u="//matomo.chriswarrick.com/";
-    _paq.push(['setTrackerUrl', u+'matomo.php']);
+  (function () {
+    var u = "//matomo.chriswarrick.com/";
+    _paq.push(['setTrackerUrl', u + 'matomo.php']);
     _paq.push(['setSiteId', '1']);
-    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-    g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+    var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+    g.async = true;
+    g.src = u + 'matomo.js';
+    s.parentNode.insertBefore(g, s);
   })();
 </script><!-- End Matomo Code -->
 </body>

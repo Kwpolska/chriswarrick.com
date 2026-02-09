@@ -1,120 +1,143 @@
 <!DOCTYPE html>
-<html class="limited-width larger-font" prefix="
-og: http://ogp.me/ns#
-" lang="en">
+<html class="limited-width larger-font" prefix="og: http://ogp.me/ns#" lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="description" content="Getting virtuailzation working in Boot Camp thanks to rEFInd.">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Enabling Virtualization Support in Boot Camp with rEFInd | Chris Warrick</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.css" integrity="sha256-FqCzNnnyXl5HxHMdb+RQ/RV/X7fqfPcQYy+G2gFL3Xk=" crossorigin="anonymous">
+  <meta charset="utf-8">
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Enabling Virtualization Support in Boot Camp with rEFInd | Chris Warrick</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.css"
+        integrity="sha256-FqCzNnnyXl5HxHMdb+RQ/RV/X7fqfPcQYy+G2gFL3Xk=" crossorigin="anonymous">
 <!--#if expr="$HTTP_COOKIE=/colorScheme\=light/" --><link href="/assets/css/all.css?v=20230115" rel="stylesheet" type="text/css" id="kw-all-css">
 <script type="text/javascript">var colorScheme='light';var colorSchemesEnabled=true;</script><!--#else--><link href="/assets/css/all-dark.css?v=20230115" rel="stylesheet" type="text/css" id="kw-all-css">
-<script type="text/javascript">var colorScheme='dark';var colorSchemesEnabled=true;</script><!--#endif--><link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,700,700i|Source+Serif+Pro:600&amp;display=swap&amp;subset=latin-ext" rel="stylesheet">
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
-<meta name="theme-color" content="#00aadd">
-<meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="/rss.xml">
-<link rel="canonical" href="https://chriswarrick.com/blog/2021/01/31/enabling-virtualization-support-in-boot-camp-with-refind/">
-<link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="16x16 32x32 48x48 64x64 128x128 256x256">
-<link rel="icon" type="image/png" href="/assets/img/logo512.png">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<!--[if lt IE 9]><script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]--><meta name="description" itemprop="description" content="Getting virtuailzation working in Boot Camp thanks to rEFInd.">
-<meta name="author" content="Chris Warrick">
-<link rel="prev" href="/blog/2020/06/22/what-an-arm-mac-means-for-developers-and-windows-users/" title="What an ARM Mac means for developers and Windows users" type="text/html">
-<link rel="next" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/" title="Writing a Console App in C# for Fun and Profit" type="text/html">
-<meta property="og:site_name" content="Chris Warrick">
-<meta property="og:title" content="Enabling Virtualization Support in Boot Camp with rEFInd">
-<meta property="og:url" content="https://chriswarrick.com/blog/2021/01/31/enabling-virtualization-support-in-boot-camp-with-refind/">
-<meta property="og:description" content="Getting virtuailzation working in Boot Camp thanks to rEFInd.">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2021-01-31T00:30:00+01:00">
-<meta property="article:tag" content="Boot Camp">
-<meta property="article:tag" content="Mac">
-<meta property="article:tag" content="rEFInd">
-<meta property="article:tag" content="Virtualization">
-<meta property="article:tag" content="Windows">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:creator" content="@Kwpolska">
+<script type="text/javascript">var colorScheme='dark';var colorSchemesEnabled=true;</script><!--#endif-->
+  <link
+    href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,700,700i|Source+Serif+Pro:600&amp;display=swap&amp;subset=latin-ext"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css"
+        integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+  <meta name="theme-color" content="#00aadd">
+  <meta name="generator" content="Chris Warrick’s Yet Another Blog Generator">
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/rss.xml">
+  <link rel="canonical" href="https://chriswarrick.com/">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="16x16 32x32 48x48 64x64 128x128 256x256">
+  <link rel="icon" type="image/png" href="/assets/img/logo512.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="prev" href="/blog/2020/06/22/what-an-arm-mac-means-for-developers-and-windows-users/" type="text/html">
+  <link rel="next" href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/" type="text/html">
+  
 </head>
 <body>
 <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
 
-<!-- Menubar -->
-
-<nav class="navbar navbar-expand-md navbar-kw bg-dark static-top mb-4"><div class="container">
-<!-- This keeps the margins nice -->
-        <a class="navbar-brand" href="/">
-            <img src="/assets/img/logo.png" srcset="/assets/img/logo2x.png 2x" alt="Chris Warrick" id="logo"><span id="blog-title">Chris Warrick</span>
-        </a>
-        <div>
-        <button class="navbar-toggler mr-2" id="color-changer-mobile" type="button" aria-label="Change color scheme">
-            <span class="color-changer"></span>
-        </button>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        </div>
-        <div class="collapse navbar-collapse" id="bs-navbar">
-            <ul class="navbar-nav mr-auto">
-<li class="nav-item">
-<a href="/contact/" class="nav-link">Contact</a>
-                </li>
-<li class="nav-item">
-<a href="/projects/" class="nav-link">Projects</a>
-                </li>
-<li class="nav-item">
-<a href="/guides/" class="nav-link">Guides</a>
-                </li>
-<li class="nav-item">
-<a href="/blog/" class="nav-link">Archives</a>
-                </li>
-<li class="nav-item">
-<a href="/search/" class="nav-link">Search</a>
-
-                
-            </li>
-</ul>
-<ul class="navbar-nav navbar-right">
-<li class="nav-item" id="color-changer-menu">
-<a href="#" class="nav-link" id="color-changer-btn">
-                <div class="color-changer"></div>
-                <span id="color-changer-text"><!--#if expr="$HTTP_COOKIE=/colorScheme\=light/" -->Dark Mode<!--#else -->Light Mode<!--#endif--></span>
-                </a>
-                </li>
-            </ul>
-</div>
-<!-- /.navbar-collapse -->
+<nav class="navbar navbar-expand-md navbar-kw bg-dark static-top mb-4">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <img src="/assets/img/logo.png" srcset="/assets/img/logo2x.png 2x" alt="Chris Warrick" id="logo"><span
+        id="blog-title">Chris Warrick</span>
+    </a>
+    <div>
+      <button class="navbar-toggler mr-2" id="color-changer-mobile" type="button" aria-label="Change color scheme">
+        <span class="color-changer"></span>
+      </button>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar"
+              aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
     </div>
-<!-- /.container -->
-</nav><!-- End of Menubar --><div class="container" id="content" role="main">
-    <div class="body-content">
-        <!--Body content-->
+    <div class="collapse navbar-collapse" id="bs-navbar">
+      <ul class="navbar-nav mr-auto">
         
-        <div id="cookiebox"></div>
-<article class="post-text h-entry hentry postpage postbox" itemscope="itemscope" itemtype="http://schema.org/Article"><header class="page-header"><h1 class="p-name entry-title" itemprop="headline name">
-    <a href="/blog/2021/01/31/enabling-virtualization-support-in-boot-camp-with-refind/" class="u-url">Enabling Virtualization Support in Boot Camp with rEFInd</a>
-    </h1>
+        
+          <li class="nav-item">
+            <a href="/contact/" class="nav-link">Contact</a>
+          </li>
+        
+        
+        
+          <li class="nav-item">
+            <a href="/projects/" class="nav-link">Projects</a>
+          </li>
+        
+        
+        
+          <li class="nav-item">
+            <a href="/guides/" class="nav-link">Guides</a>
+          </li>
+        
+        
+        
+          <li class="nav-item">
+            <a href="/blog/" class="nav-link">Archives</a>
+          </li>
+        
+        
+        
+          <li class="nav-item">
+            <a href="/blog/tags/" class="nav-link">Tags</a>
+          </li>
+        
+        
+      </ul>
+      <ul class="navbar-nav navbar-right">
+        <li class="nav-item" id="color-changer-menu">
+          <a href="#" class="nav-link" id="color-changer-btn">
+            <div class="color-changer"></div>
+            <span id="color-changer-text">Light Mode</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<div class="container" id="content" role="main">
+  <div class="body-content">
+    <div id="cookiebox"></div>
+    
 
-    <div class="metadata">
-<a href="/blog/2021/01/31/enabling-virtualization-support-in-boot-camp-with-refind/" rel="bookmark" class="u-published"><time class="published dt-published" datetime="2021-01-31T00:30:00+01:00" itemprop="datePublished" title="31 January 2021 at 00:30">31 January 2021 at 00:30</time></a>
-        <ul itemprop="keywords" class="tags post-bubbles list-inline">
-<li class="category-bubble"><a href="/blog/tags/cat_apple/" style="background-color: #00b55f !important">Apple</a></li>
-           <li><a class="tag p-category" href="/blog/tags/boot-camp/" rel="tag">Boot Camp</a></li>
-           <li><a class="tag p-category" href="/blog/tags/mac/" rel="tag">Mac</a></li>
-           <li><a class="tag p-category" href="/blog/tags/refind/" rel="tag">rEFInd</a></li>
-           <li><a class="tag p-category" href="/blog/tags/virtualization/" rel="tag">Virtualization</a></li>
-           <li><a class="tag p-category" href="/blog/tags/windows/" rel="tag">Windows</a></li>
-        </ul>
-<p class="guide-header">A <a href="/guides/">guide</a> about <span class="guide-topic">virtualization in Boot Camp</span> for <span class="guide-platform">Intel Macs</span></p>    </div>
-    </header><div class="e-content entry-content" itemprop="articleBody text">
-    <div class="lead">
+
+<article class="post-text h-entry hentry postpage postbox" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+<header class="page-header">
+  <h1 class="p-name entry-title" itemprop="headline name">
+    <a href="/blog/2021/01/31/enabling-virtualization-support-in-boot-camp-with-refind/" class="u-url">Enabling Virtualization Support in Boot Camp with rEFInd</a>
+  </h1>
+
+  <div class="metadata">
+    <a href="/blog/2021/01/31/enabling-virtualization-support-in-boot-camp-with-refind/" rel="bookmark" class="u-published">
+      <time class="published dt-published" datetime="2021-01-31T00:30:00.0000000&#x2B;01:00" itemprop="datePublished" title="31 January 2021 00:30">31 January 2021 00:30</time>
+    
+    </a>
+    <ul itemprop="keywords" class="tags post-bubbles list-inline">
+      <li class="category-bubble"><a href="/blog/tags/cat_apple" style="background-color: #00b55f !important">Apple</a></li>
+      
+        <li><a class="tag p-category" href="/blog/tags/boot-camp" rel="tag">Boot Camp</a></li>
+      
+        <li><a class="tag p-category" href="/blog/tags/mac" rel="tag">Mac</a></li>
+      
+        <li><a class="tag p-category" href="/blog/tags/refind" rel="tag">rEFInd</a></li>
+      
+        <li><a class="tag p-category" href="/blog/tags/virtualization" rel="tag">Virtualization</a></li>
+      
+        <li><a class="tag p-category" href="/blog/tags/windows" rel="tag">Windows</a></li>
+      
+    </ul>
+    
+    <p class="guide-header">A <a href="/guides/">guide</a> about <span class="guide-topic">virtualization in Boot Camp</span> for <span class="guide-platform">Intel Macs</span></p>
+  </div>
+</header>
+
+  <div class="e-content entry-content" itemprop="articleBody text">
+    
+      <div class="lead">
+        
 <p>You installed Windows on an Intel Mac via Boot Camp, and want to use
 virtualization in it. But there’s an issue — hardware virtualization extensions
 are not available. Luckily, this can be worked around easily with the help of
 rEFInd, an alternate boot manager.</p>
-</div>
-</div>
+
+      </div>
+    
+    
 <p>Many software development workflows involve virtualization. WSL, Docker for
 Windows, and the Android Emulator are some examples of common
 virtualization-based tools. Then there are general virtualization
@@ -135,7 +158,8 @@ parts of the boot process. But first, let’s prepare our system for this.</p>
 <p class="lead"><strong>DISCLAIMER:</strong> Those steps may make your Mac fail to boot. I don’t take any
 responsibility whatsoever if that happens. Prepare for the worst — make
 backups, perhaps have install media ready, plan some downtime.</p>
-<section id="step-1-install-windows-in-boot-camp-the-usual-way"><h2>Step 1. Install Windows in Boot Camp the usual way</h2>
+<section id="step-1-install-windows-in-boot-camp-the-usual-way">
+<h1>Step 1. Install Windows in Boot Camp the usual way</h1>
 <p>The first thing you should do is install Windows 10 in Boot Camp, with
 the help of the Boot Camp Assistant. The Assistant will take some time
 to partition your drive and do other preparations (and show barely
@@ -144,14 +168,16 @@ already</a>).
 There are no special preparations for this, the standard process will
 work. If you already have Windows installed, you can go to the next
 step.</p>
-</section><section id="step-2-ensure-the-setup-is-stable"><h2>Step 2. Ensure the setup is stable</h2>
+</section>
+<section id="step-2-ensure-the-setup-is-stable">
+<h1>Step 2. Ensure the setup is stable</h1>
 <p>We’ll be making changes to how the machine boots, and as such, it’s
 good to have other things working correctly and in line with your
 expected configuration. Make sure that:</p>
 <ul class="simple">
 <li><p>Both macOS and Windows boot correctly</p></li>
 <li><p>You can change the OS you boot into by holding the Option key after
-pressing Power (requires disabling the firmware password <a class="brackets" href="/blog/2021/01/31/enabling-virtualization-support-in-boot-camp-with-refind/#footnote-1" id="footnote-reference-1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>)</p></li>
+pressing Power (requires disabling the firmware password <a class="brackets" href="#footnote-1" id="footnote-reference-1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>)</p></li>
 <li><p>Disk encryption (FileVault, BitLocker) is enabled (if you want that, of
 course) and fully configured (initial encryption is complete)</p></li>
 <li><p>Windows setup (including Boot Camp drivers) is complete</p></li>
@@ -164,7 +190,10 @@ that — pick your drive, click <em>Partition</em> and delete the partition,
 this will grow the macOS partition)</p></li>
 <li><p>System Integrity Protection is enabled (the procedure is a bit safer
 that way)</p></li>
-</ul></section><section id="step-3-create-a-partition-for-refind"><h2>Step 3. Create a partition for rEFInd</h2>
+</ul>
+</section>
+<section id="step-3-create-a-partition-for-refind">
+<h1>Step 3. Create a partition for rEFInd</h1>
 <p>First, back up your data before making changes to your hard drive
 layout. We’ll need to create a new partition for rEFInd to live on. This
 is the safest option — you could install it to the EFI System Partition (ESP),
@@ -194,9 +223,11 @@ faster.</p></li>
 Extended), you can proceed with the setup. Also, if you don’t want the
 partition to be visible in the Finder, run the following command (insert
 the correct volume path for your system):</p>
-<div class="code"><pre class="code text"><a id="rest_code_f24a3ff4bd4840748c646f4592dc3208-1" name="rest_code_f24a3ff4bd4840748c646f4592dc3208-1" href="/blog/2021/01/31/enabling-virtualization-support-in-boot-camp-with-refind/#rest_code_f24a3ff4bd4840748c646f4592dc3208-1"></a>sudo chflags hidden /Volumes/rEFInd
+<div class="code"><pre class="code text"><a id="rest_code_c10cbc8d5f0c4516bc298e5b3e0b15b5-1" name="rest_code_c10cbc8d5f0c4516bc298e5b3e0b15b5-1" href="#rest_code_c10cbc8d5f0c4516bc298e5b3e0b15b5-1"></a>sudo chflags hidden /Volumes/rEFInd
 </pre></div>
-</section><section id="step-4-configure-and-install-refind"><h2>Step 4. Configure and install rEFInd</h2>
+</section>
+<section id="step-4-configure-and-install-refind">
+<h1>Step 4. Configure and install rEFInd</h1>
 <p>To set ue rEFInd, you’ll need to boot into macOS. <a class="reference external" href="https://www.rodsbooks.com/refind/getting.html">Download
 rEFInd</a> from the
 author’s website — you want the file named <em>A binary zip file</em>. Extract
@@ -219,11 +250,11 @@ and check the <em>Device</em> field (for example, <code class="docutils literal"
 <p>Open a Terminal, <code class="docutils literal">cd</code> into the directory where rEFInd was extracted,
 and run the following command (replace <code class="docutils literal">disk9s9</code> with the device
 name on your system):</p>
-<div class="code"><pre class="code text"><a id="rest_code_5af4a4ab5f4c4c4f9f8245306d6270ac-1" name="rest_code_5af4a4ab5f4c4c4f9f8245306d6270ac-1" href="/blog/2021/01/31/enabling-virtualization-support-in-boot-camp-with-refind/#rest_code_5af4a4ab5f4c4c4f9f8245306d6270ac-1"></a>./refind-install --ownhfs disk9s9
+<div class="code"><pre class="code text"><a id="rest_code_d3a775e9f58d45929b57a28925faec5e-1" name="rest_code_d3a775e9f58d45929b57a28925faec5e-1" href="#rest_code_d3a775e9f58d45929b57a28925faec5e-1"></a>./refind-install --ownhfs disk9s9
 </pre></div>
 <p>This command will produce an error if you have SIP enabled — but this
 error is not important for us, the install will work without the change
-that SIP prevented. <a class="brackets" href="/blog/2021/01/31/enabling-virtualization-support-in-boot-camp-with-refind/#footnote-2" id="footnote-reference-2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a></p>
+that SIP prevented. <a class="brackets" href="#footnote-2" id="footnote-reference-2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a></p>
 <p>You can now shut down your Mac and use the Option key while starting up
 to choose the OS. You should see three options: Macintosh HD, EFI Boot,
 and Boot Camp. The EFI Boot option is rEFInd — pick that, boot into
@@ -246,114 +277,169 @@ You can set a custom background image, for example (<a class="reference external
 site</a> can help you figure out
 what options are available and what you can set them to).</p></li>
 </ul>
-<aside class="footnote-list brackets"><aside class="footnote brackets" id="footnote-1" role="doc-footnote"><span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="/blog/2021/01/31/enabling-virtualization-support-in-boot-camp-with-refind/#footnote-reference-1">1</a><span class="fn-bracket">]</span></span>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="footnote-1" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#footnote-reference-1">1</a><span class="fn-bracket">]</span></span>
 <p>If the firmware password is important to you, you can restore it after
 the setup is done — this will mean using rEFInd to boot both Windows and
 macOS, although I decided to remove the firmware password and boot
 into macOS from the Power+Option boot menu.</p>
-</aside><aside class="footnote brackets" id="footnote-2" role="doc-footnote"><span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="/blog/2021/01/31/enabling-virtualization-support-in-boot-camp-with-refind/#footnote-reference-2">2</a><span class="fn-bracket">]</span></span>
+</aside>
+<aside class="footnote brackets" id="footnote-2" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#footnote-reference-2">2</a><span class="fn-bracket">]</span></span>
 <p>The failing operation is marking the rEFInd partition bootable in the Mac
 sense, using the <code class="docutils literal">bless</code> command. However, the drive is considered
 bootable as an EFI-compliant boot volume (it has <code class="docutils literal">*.efi</code> files in specific
 places), and this is the boot method we’re using here. SIP aside, the
 <code class="docutils literal">bless</code> utility is a bit buggy, and we can use rEFInd without a blessed
 partition just fine.</p>
-</aside></aside></section></article>
-</div>
-    <aside class="postpromonav"><div class="card guide-footer">
-  <div class="card-header bg-primary border-primary"><h3>That’s all!</h3></div>
-  <div class="card-body">
-    Hopefully, the guide worked for you and you now can use Windows in Boot Camp with hardware virtualization support. If so, great! Otherwise, make sure you did everything as stated in this guide. If you are still stuck, ask for help in the comments.
+</aside>
+</aside>
+</section>
+
   </div>
-  <div class="card-footer"><a href="/guides/">Check out my other guides!</a></div>
-</div>
-    <nav><ul class="pager hidden-print">
-<li class="previous">
-                <a href="/blog/2020/06/22/what-an-arm-mac-means-for-developers-and-windows-users/" rel="prev" title="What an ARM Mac means for developers and Windows users">Previous post</a>
-            </li>
-            <li class="next">
-                <a href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/" rel="next" title="Writing a Console App in C# for Fun and Profit">Next post</a>
-            </li>
-        </ul></nav></aside><section class="comments"><div data-title="Enabling Virtualization Support in Boot Camp with rEFInd" id="isso-thread"></div>
-        <script src="https://isso.chriswarrick.com/js/embed.min.js" data-isso="https://isso.chriswarrick.com/" data-isso-lang="en" data-isso-require-author="true" data-isso-require-email="true" data-isso-gravatar="true" data-isso-avatar="false" data-isso-css="false" data-isso-vote="false" data-isso-reply-notifications="true"></script></section><!--End of body content--><nav id="footer-links"><div class="row">
-            <div class="col-sm-4">
-                <h6>Blog</h6>
-                <ul>
-<li class="nav-item">
-<a href="/blog/" class="nav-link">Archive</a>
-                        </li>
-<li class="nav-item">
-<a href="/blog/tags/" class="nav-link">Tags</a>
-                        </li>
-<li class="nav-item">
-<a href="/rss.xml" class="nav-link">RSS Feed</a>
-                        </li>
-<li class="nav-item">
-<a href="/search/" class="nav-link">Search</a>
-                </li>
-</ul>
-</div>
-            <div class="col-sm-4">
-                <h6>Projects and Work</h6>
-                <ul>
-<li class="nav-item">
-<a href="/projects/" class="nav-link">Projects</a>
-                        </li>
-<li class="nav-item">
-<a href="/guides/" class="nav-link">Guides</a>
-                        </li>
-<li class="nav-item">
-<a href="/kwbot/" class="nav-link">KwBot</a>
-                        </li>
-<li class="nav-item">
-<a href="/blog/tags/cat_python" class="nav-link">Posts about Python</a>
-                </li>
-</ul>
-</div>
-            <div class="col-sm-4">
-                <h6>Me</h6>
-                <ul>
-<li class="nav-item">
-<a href="/contact/" class="nav-link">Contact</a>
-                        </li>
-<li class="nav-item">
-<a href="/brand/" class="nav-link">Brand</a>
-                        </li>
-<li class="nav-item">
-<a href="https://twitter.com/Kwpolska" class="nav-link">Twitter</a>
-                        </li>
-<li class="nav-item">
-<a href="https://github.com/Kwpolska" class="nav-link">GitHub</a>
-                </li>
-</ul>
-</div>
-        </div></nav><footer id="footer"><p>this site uses cookies.<br>by using this site, you agree to our <a href="/privacy/">cookie and privacy policy</a>.</p>
-<p>
-powered by <strong><a href="https://getnikola.com/">Nikola</a></strong>, <a href="http://nginx.org/">nginx</a> and <a href="https://hetzner.cloud/?ref=Qy1lehF8PwzP">Hetzner Cloud</a><br>
-copyright © 2009–2026 <a href="/contact/">Chris Warrick</a><br><a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC
-BY-NC-SA</a>, unless stated otherwise</p>
-            
-        </footer>
-</div>
+</article>
 
 
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script><script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.11.0/baguetteBox.min.js" integrity="sha256-yQGjQhFs3LtyiN5hhr3k9s9TWZOh/RzCkD3gwwCKlkg=" crossorigin="anonymous"></script><script src="/assets/js/all.js?v=20230115"></script><script>
-    baguetteBox.run('div#content', {
-        ignoreClass: 'islink',
-        captions: function(element) {
-            return element.getElementsByTagName('img')[0].alt;
-    }});
-    </script><!-- Matomo --><script>
+  <div class="card guide-footer">
+    <div class="card-header bg-primary border-primary"><h3>That’s all!</h3></div>
+    <div class="card-body">
+      Hopefully, the guide worked for you and you now can use Windows in Boot Camp with hardware virtualization support. If so, great! Otherwise, make sure you did everything as stated in this guide. If you are still stuck, ask for help in the comments.
+    </div>
+    <div class="card-footer"><a href="/guides/">Check out my other guides!</a></div>
+  </div>
+
+
+
+  <aside class="postpromonav">
+    <nav>
+      <ul class="pager hidden-print">
+        
+          <li class="previous">
+            <a href="/blog/2020/06/22/what-an-arm-mac-means-for-developers-and-windows-users/" rel="prev"
+               title="What an ARM Mac means for developers and Windows users">Previous post</a>
+          </li>
+        
+        
+          <li class="next">
+            <a href="/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/" rel="prev"
+               title="Writing a Console App in C# for Fun and Profit">Next post</a>
+          </li>
+        
+      </ul>
+    </nav>
+  </aside>
+
+
+
+  <section class="comments">
+    <div data-title="Enabling Virtualization Support in Boot Camp with rEFInd" id="isso-thread"></div>
+    <script src="https://isso.chriswarrick.com/js/embed.min.js" data-isso="https://isso.chriswarrick.com/"
+            data-isso-lang="en" data-isso-require-author="true" data-isso-require-email="true" data-isso-gravatar="true"
+            data-isso-avatar="false" data-isso-css="false" data-isso-vote="false"
+            data-isso-reply-notifications="true"></script>
+  </section>
+
+
+
+    <script src="https://isso.chriswarrick.com/js/count.min.js" data-isso="https://isso.chriswarrick.com/"
+            data-isso-lang="en"></script>
+    <nav id="footer-links">
+      <div class="row">
+        <div class="col-sm-4">
+          <h6>Blog</h6>
+          <ul>
+            <li class="nav-item">
+              <a href="/blog/" class="nav-link">Archives</a>
+            </li>
+            <li class="nav-item">
+              <a href="/blog/tags/" class="nav-link">Tags</a>
+            </li>
+            <li class="nav-item">
+              <a href="/listings/" class="nav-link">Listings</a>
+            </li>
+            <li class="nav-item">
+              <a href="/rss.xml" class="nav-link">RSS Feed</a>
+            </li>
+          </ul>
+        </div>
+        <div class="col-sm-4">
+          <h6>Projects and Work</h6>
+          <ul>
+            <li class="nav-item">
+              <a href="/projects/" class="nav-link">Projects</a>
+            </li>
+            <li class="nav-item">
+              <a href="/guides/" class="nav-link">Guides</a>
+            </li>
+            <li class="nav-item">
+              <a href="/kwbot/" class="nav-link">KwBot</a>
+            </li>
+            <li class="nav-item">
+              <a href="/blog/tags/cat_python" class="nav-link">Posts about Python</a>
+            </li>
+          </ul>
+        </div>
+        <div class="col-sm-4">
+          <h6>Me</h6>
+          <ul>
+            <li class="nav-item">
+              <a href="/contact/" class="nav-link">Contact</a>
+            </li>
+            <li class="nav-item">
+              <a href="/brand/" class="nav-link">Brand</a>
+            </li>
+            <li class="nav-item">
+              <a href="https://twitter.com/Kwpolska" class="nav-link">Twitter</a>
+            </li>
+            <li class="nav-item">
+              <a href="https://github.com/Kwpolska" class="nav-link">GitHub</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <footer id="footer">
+      <p>this site uses cookies.<br>by using this site, you agree to our <a href="/privacy/">cookie and privacy policy</a>.</p>
+<p>powered by <strong><a href="https://github.com/Kwpolska/YetAnotherBlogGenerator">Yet Another Blog Generator</a></strong>,
+  <a href="https://nginx.org/">nginx</a>
+  and <a href="https://hetzner.cloud/?ref=Qy1lehF8PwzP">Hetzner Cloud</a><br>
+  copyright © 2009–2026 <a href="/contact/">Chris Warrick</a><br>
+  license: <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA</a>, unless stated otherwise</p>
+    </footer>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.11.0/baguetteBox.min.js"
+        integrity="sha256-yQGjQhFs3LtyiN5hhr3k9s9TWZOh/RzCkD3gwwCKlkg=" crossorigin="anonymous"></script>
+<script src="/assets/js/all.js?v=20230115"></script>
+<script>
+  baguetteBox.run('div#content', {
+    ignoreClass: 'islink',
+    captions: function (element) {
+      return element.getElementsByTagName('img')[0].alt;
+    }
+  });
+</script><!-- Matomo -->
+<script>
   var _paq = window._paq = window._paq || [];
   /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
   _paq.push(['trackPageView']);
   _paq.push(['enableLinkTracking']);
-  (function() {
-    var u="//matomo.chriswarrick.com/";
-    _paq.push(['setTrackerUrl', u+'matomo.php']);
+  (function () {
+    var u = "//matomo.chriswarrick.com/";
+    _paq.push(['setTrackerUrl', u + 'matomo.php']);
     _paq.push(['setSiteId', '1']);
-    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-    g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+    var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+    g.async = true;
+    g.src = u + 'matomo.js';
+    s.parentNode.insertBefore(g, s);
   })();
 </script><!-- End Matomo Code -->
 </body>

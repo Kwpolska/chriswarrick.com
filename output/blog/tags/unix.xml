@@ -1,299 +1,314 @@
-<?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chris Warrick (Posts about Unix)</title><link>https://chriswarrick.com/</link><description></description><atom:link href="https://chriswarrick.com/blog/tags/unix.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Mon, 09 Feb 2026 21:57:03 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Spawning subprocesses smartly and securely</title><link>https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;p&gt;As part of your code, you may be inclined to call a command to do
+<?xml version="1.0" encoding="utf-8"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Posts about Unix</title><link>https://chriswarrick.com/</link><atom:link href="https://chriswarrick.com/blog/tags/unix.xml" rel="self" type="application/rss+xml" /><description>A rarely updated blog, mostly about programming.</description><lastBuildDate>Sat, 02 Sep 2017 18:40:00 GMT</lastBuildDate><generator>https://github.com/Kwpolska/YetAnotherBlogGenerator</generator><item><title>Spawning subprocesses smartly and securely</title><dc:creator>Chris Warrick</dc:creator><link>https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/</link><pubDate>Sat, 02 Sep 2017 18:40:00 GMT</pubDate><guid>https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/</guid><description>
+As part of your code, you may be inclined to call a command to do
 something. But is it always a good idea? How to do it safely? What happens
-behind the scenes?&lt;/p&gt;
-&lt;!-- TEASER_END --&gt;
-&lt;p&gt;This article is written from a general perspective, with a Unix/C bias and a
+behind the scenes?
+</description><content:encoded><![CDATA[
+<p>As part of your code, you may be inclined to call a command to do
+something. But is it always a good idea? How to do it safely? What happens
+behind the scenes?</p>
+
+
+
+<p>This article is written from a general perspective, with a Unix/C bias and a
 very slight Python bias. The problems mentioned apply to all languages in most
-environments, including Windows.&lt;/p&gt;
-&lt;nav class="contents right-toc" id="contents" role="doc-toc"&gt;
-&lt;p class="topic-title"&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#top"&gt;Contents&lt;/a&gt;&lt;/p&gt;
-&lt;ul class="simple"&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#use-the-right-tool-for-the-job" id="toc-entry-1"&gt;Use the right tool for the job&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#dont-spawn-subprocesses-if-theres-an-alternative" id="toc-entry-2"&gt;Don’t spawn subprocesses if there’s an alternative&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#security-considerations-shells-spaces-and-command-injection" id="toc-entry-3"&gt;Security considerations: shells, spaces, and command injection&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#tl-dr-how-to-do-this-properly-in-your-language-of-choice" id="toc-entry-4"&gt;TL;DR: How to do this properly in your language of choice&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#the-part-where-i-pretend-i-know-something-about-windows" id="toc-entry-5"&gt;The part where I pretend I know something about Windows&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/nav&gt;
-&lt;section id="use-the-right-tool-for-the-job"&gt;
-&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#toc-entry-1" role="doc-backlink"&gt;Use the right tool for the job&lt;/a&gt;&lt;/h2&gt;
-&lt;p&gt;By calling another process, you introduce a third-party dependency.
+environments, including Windows.</p>
+<nav class="contents right-toc" id="contents" role="doc-toc">
+<p class="topic-title"><a class="reference internal" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#top">Contents</a></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#use-the-right-tool-for-the-job" id="toc-entry-1">Use the right tool for the job</a></p></li>
+<li><p><a class="reference internal" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#dont-spawn-subprocesses-if-theres-an-alternative" id="toc-entry-2">Don’t spawn subprocesses if there’s an alternative</a></p></li>
+<li><p><a class="reference internal" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#security-considerations-shells-spaces-and-command-injection" id="toc-entry-3">Security considerations: shells, spaces, and command injection</a></p></li>
+<li><p><a class="reference internal" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#tl-dr-how-to-do-this-properly-in-your-language-of-choice" id="toc-entry-4">TL;DR: How to do this properly in your language of choice</a></p></li>
+<li><p><a class="reference internal" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#the-part-where-i-pretend-i-know-something-about-windows" id="toc-entry-5">The part where I pretend I know something about Windows</a></p></li>
+</ul>
+</nav>
+<section id="use-the-right-tool-for-the-job">
+<h1><a class="toc-backref" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#toc-entry-1" role="doc-backlink">Use the right tool for the job</a></h1>
+<p>By calling another process, you introduce a third-party dependency.
 That dependency isn’t controlled by your code, and your code becomes more fragile.
-The problems include:&lt;/p&gt;
-&lt;ul class="simple"&gt;
-&lt;li&gt;&lt;p&gt;the program is not installed, or even available, for the user’s OS of choice&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;the program is not in the &lt;code class="docutils literal"&gt;$PATH&lt;/code&gt; your process gets&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;the hard-coded path is not correct on the end user’s system&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;the program is in a different version (eg. GNU vs. BSD, updates/patches),
-which means different option names or other behaviors&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;the program’s output is not what you expected due to user config (including
-locale)&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;error reporting is based on numeric exit codes, and the meaning of those
-differs between programs (&lt;em&gt;if&lt;/em&gt; they have meaning besides 0/1 in the first
-place)&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;On the other hand, if your code uses a lot of subprocesses, perhaps you should
+The problems include:</p>
+<ul class="simple">
+<li><p>the program is not installed, or even available, for the user’s OS of choice</p></li>
+<li><p>the program is not in the <code class="docutils literal">$PATH</code> your process gets</p></li>
+<li><p>the hard-coded path is not correct on the end user’s system</p></li>
+<li><p>the program is in a different version (eg. GNU vs. BSD, updates/patches),
+which means different option names or other behaviors</p></li>
+<li><p>the program’s output is not what you expected due to user config (including
+locale)</p></li>
+<li><p>error reporting is based on numeric exit codes, and the meaning of those
+differs between programs (<em>if</em> they have meaning besides 0/1 in the first
+place)</p></li>
+</ul>
+<p>On the other hand, if your code uses a lot of subprocesses, perhaps you should
 stay with Bash. You can do the harder parts with Python, Ruby, or some other
-language by calling them from within your Bash script.&lt;/p&gt;
-&lt;/section&gt;
-&lt;section id="dont-spawn-subprocesses-if-theres-an-alternative"&gt;
-&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#toc-entry-2" role="doc-backlink"&gt;Don’t spawn subprocesses if there’s an alternative&lt;/a&gt;&lt;/h2&gt;
-&lt;p&gt;Spawning a subprocess always incurs a (minor) &lt;a class="brackets" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#footnote-1" id="footnote-reference-1" role="doc-noteref"&gt;&lt;span class="fn-bracket"&gt;[&lt;/span&gt;1&lt;span class="fn-bracket"&gt;]&lt;/span&gt;&lt;/a&gt; performance hit minor
+language by calling them from within your Bash script.</p>
+</section>
+<section id="dont-spawn-subprocesses-if-theres-an-alternative">
+<h1><a class="toc-backref" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#toc-entry-2" role="doc-backlink">Don’t spawn subprocesses if there’s an alternative</a></h1>
+<p>Spawning a subprocess always incurs a (minor) <a class="brackets" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#footnote-1" id="footnote-reference-1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> performance hit minor
 compared to the alternatives. With that in mind, and the resiliency issues
 listed above, you should always try to find an alternative for the
-external command.&lt;/p&gt;
-&lt;p&gt;The simplest ones are the basic Unix utilities. Replace &lt;code class="docutils literal"&gt;grep&lt;/code&gt;, &lt;code class="docutils literal"&gt;sed&lt;/code&gt; and
-&lt;code class="docutils literal"&gt;awk&lt;/code&gt; with string operations and regular expressions. Filesystem utilities
-will have equivalents — for Python, in &lt;code class="docutils literal"&gt;os&lt;/code&gt; or &lt;code class="docutils literal"&gt;shutil&lt;/code&gt;. Your language of
-choice can also handle things like networking (don’t call &lt;code class="docutils literal"&gt;curl&lt;/code&gt;), file
-compression, working with date/time…&lt;/p&gt;
-&lt;p&gt;Similarly, you should check if there are packages available that already do
+external command.</p>
+<p>The simplest ones are the basic Unix utilities. Replace <code class="docutils literal">grep</code>, <code class="docutils literal">sed</code> and
+<code class="docutils literal">awk</code> with string operations and regular expressions. Filesystem utilities
+will have equivalents — for Python, in <code class="docutils literal">os</code> or <code class="docutils literal">shutil</code>. Your language of
+choice can also handle things like networking (don’t call <code class="docutils literal">curl</code>), file
+compression, working with date/time…</p>
+<p>Similarly, you should check if there are packages available that already do
 what you want — library bindings or re-implementations. And if there isn’t,
-perhaps you could help the world by writing one of those and sharing it?&lt;/p&gt;
-&lt;p&gt;One more important thing: if the program uses the same language as your code,
+perhaps you could help the world by writing one of those and sharing it?</p>
+<p>One more important thing: if the program uses the same language as your code,
 then you should try to import the code and run it from the same process instead
-of spawning a process, if this is feasible.&lt;/p&gt;
-&lt;/section&gt;
-&lt;section id="security-considerations-shells-spaces-and-command-injection"&gt;
-&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#toc-entry-3" role="doc-backlink"&gt;Security considerations: shells, spaces, and command injection&lt;/a&gt;&lt;/h2&gt;
-&lt;p&gt;We come to the most important part of this article: how to spawn subprocesses
+of spawning a process, if this is feasible.</p>
+</section>
+<section id="security-considerations-shells-spaces-and-command-injection">
+<h1><a class="toc-backref" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#toc-entry-3" role="doc-backlink">Security considerations: shells, spaces, and command injection</a></h1>
+<p>We come to the most important part of this article: how to spawn subprocesses
 without compromising your system. When you spawn a subprocess on a typical Unix
-system,  &lt;code class="docutils literal"&gt;fork()&lt;/code&gt; is called, and your process is copied. Many modern Unix
+system,  <code class="docutils literal">fork()</code> is called, and your process is copied. Many modern Unix
 systems have a copy-on-write implementation of that syscall, meaning that the
 operation does not result in copying all the memory of the host process over.
-Forking is (almost) immediately followed by calling &lt;code class="docutils literal"&gt;execve()&lt;/code&gt; (or a helper
-function from the exec family) &lt;a class="brackets" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#footnote-2" id="footnote-reference-2" role="doc-noteref"&gt;&lt;span class="fn-bracket"&gt;[&lt;/span&gt;2&lt;span class="fn-bracket"&gt;]&lt;/span&gt;&lt;/a&gt; in the child process — that function
-&lt;em&gt;transforms the calling process into a new process&lt;/em&gt; &lt;a class="brackets" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#footnote-3" id="footnote-reference-3" role="doc-noteref"&gt;&lt;span class="fn-bracket"&gt;[&lt;/span&gt;3&lt;span class="fn-bracket"&gt;]&lt;/span&gt;&lt;/a&gt;. This technique is
-called &lt;em&gt;fork-exec&lt;/em&gt; and is the typical way to spawn a new process on Unix. &lt;a class="brackets" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#footnote-4" id="footnote-reference-4" role="doc-noteref"&gt;&lt;span class="fn-bracket"&gt;[&lt;/span&gt;4&lt;span class="fn-bracket"&gt;]&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;There are two ways to access this API, from the C perspective:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;directly, by calling &lt;code class="docutils literal"&gt;fork()&lt;/code&gt; and &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;exec*()&lt;/span&gt;&lt;/code&gt; (or &lt;code class="docutils literal"&gt;posix_spawn()&lt;/code&gt;), and providing an array of
-arguments passed to the process, or&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;through the shell (&lt;code class="docutils literal"&gt;sh&lt;/code&gt;), usually by calling &lt;code class="docutils literal"&gt;system()&lt;/code&gt;. As Linux’s
-manpage for &lt;code class="docutils literal"&gt;system(3)&lt;/code&gt; puts it,&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;The &lt;code class="docutils literal"&gt;system()&lt;/code&gt; library function uses &lt;code class="docutils literal"&gt;fork(2)&lt;/code&gt; to create a child process that executes the shell command specified in command using &lt;code class="docutils literal"&gt;execl(3)&lt;/code&gt; as follows:&lt;/p&gt;
-&lt;div class="code"&gt;&lt;pre class="code c"&gt;&lt;a id="rest_code_b3c0144690924384a50c1428c8f06474-1" name="rest_code_b3c0144690924384a50c1428c8f06474-1" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_b3c0144690924384a50c1428c8f06474-1"&gt;&lt;/a&gt;&lt;span class="n"&gt;execl&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"/bin/sh"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s"&gt;"sh"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s"&gt;"-c"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;command&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;char&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;/blockquote&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;If you go through the shell, you pass one string argument, whereas &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;exec*()&lt;/span&gt;&lt;/code&gt; demands you to specify arguments separately. Let’s write a sample program to print all the arguments it receives. I’ll do it in Python to get a more readable output.&lt;/p&gt;
-&lt;div class="code"&gt;&lt;pre class="code python"&gt;&lt;a id="rest_code_62a9c94e792340c68f73217e11260f97-1" name="rest_code_62a9c94e792340c68f73217e11260f97-1" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_62a9c94e792340c68f73217e11260f97-1"&gt;&lt;/a&gt;&lt;span class="ch"&gt;#!/usr/bin/env python3&lt;/span&gt;
-&lt;a id="rest_code_62a9c94e792340c68f73217e11260f97-2" name="rest_code_62a9c94e792340c68f73217e11260f97-2" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_62a9c94e792340c68f73217e11260f97-2"&gt;&lt;/a&gt;&lt;span class="kn"&gt;import&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nn"&gt;sys&lt;/span&gt;
-&lt;a id="rest_code_62a9c94e792340c68f73217e11260f97-3" name="rest_code_62a9c94e792340c68f73217e11260f97-3" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_62a9c94e792340c68f73217e11260f97-3"&gt;&lt;/a&gt;&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Let’s see what appears:&lt;/p&gt;
-&lt;div class="code"&gt;&lt;pre class="code text"&gt;&lt;a id="rest_code_54ca1906d77a4be5b5770c0c949afacf-1" name="rest_code_54ca1906d77a4be5b5770c0c949afacf-1" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_54ca1906d77a4be5b5770c0c949afacf-1"&gt;&lt;/a&gt;$ ./argv.py foo bar
-&lt;a id="rest_code_54ca1906d77a4be5b5770c0c949afacf-2" name="rest_code_54ca1906d77a4be5b5770c0c949afacf-2" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_54ca1906d77a4be5b5770c0c949afacf-2"&gt;&lt;/a&gt;['./argv.py', 'foo', 'bar']
-&lt;a id="rest_code_54ca1906d77a4be5b5770c0c949afacf-3" name="rest_code_54ca1906d77a4be5b5770c0c949afacf-3" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_54ca1906d77a4be5b5770c0c949afacf-3"&gt;&lt;/a&gt;$ ./argv.py 'foo bar'
-&lt;a id="rest_code_54ca1906d77a4be5b5770c0c949afacf-4" name="rest_code_54ca1906d77a4be5b5770c0c949afacf-4" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_54ca1906d77a4be5b5770c0c949afacf-4"&gt;&lt;/a&gt;['./argv.py', 'foo bar']
-&lt;a id="rest_code_54ca1906d77a4be5b5770c0c949afacf-5" name="rest_code_54ca1906d77a4be5b5770c0c949afacf-5" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_54ca1906d77a4be5b5770c0c949afacf-5"&gt;&lt;/a&gt;$ ./argv.py foo\ bar baz
-&lt;a id="rest_code_54ca1906d77a4be5b5770c0c949afacf-6" name="rest_code_54ca1906d77a4be5b5770c0c949afacf-6" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_54ca1906d77a4be5b5770c0c949afacf-6"&gt;&lt;/a&gt;['./argv.py', 'foo bar', 'baz']
-&lt;a id="rest_code_54ca1906d77a4be5b5770c0c949afacf-7" name="rest_code_54ca1906d77a4be5b5770c0c949afacf-7" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_54ca1906d77a4be5b5770c0c949afacf-7"&gt;&lt;/a&gt;
-&lt;a id="rest_code_54ca1906d77a4be5b5770c0c949afacf-8" name="rest_code_54ca1906d77a4be5b5770c0c949afacf-8" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_54ca1906d77a4be5b5770c0c949afacf-8"&gt;&lt;/a&gt;$ ./argv.py $(date)
-&lt;a id="rest_code_54ca1906d77a4be5b5770c0c949afacf-9" name="rest_code_54ca1906d77a4be5b5770c0c949afacf-9" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_54ca1906d77a4be5b5770c0c949afacf-9"&gt;&lt;/a&gt;['./argv.py', 'Sat', 'Sep', '2', '16:54:52', 'CEST', '2017']
-&lt;a id="rest_code_54ca1906d77a4be5b5770c0c949afacf-10" name="rest_code_54ca1906d77a4be5b5770c0c949afacf-10" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_54ca1906d77a4be5b5770c0c949afacf-10"&gt;&lt;/a&gt;$ ./argv.py "$(date)"
-&lt;a id="rest_code_54ca1906d77a4be5b5770c0c949afacf-11" name="rest_code_54ca1906d77a4be5b5770c0c949afacf-11" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_54ca1906d77a4be5b5770c0c949afacf-11"&gt;&lt;/a&gt;['./argv.py', 'Sat Sep  2 16:54:52 CEST 2017']
-&lt;a id="rest_code_54ca1906d77a4be5b5770c0c949afacf-12" name="rest_code_54ca1906d77a4be5b5770c0c949afacf-12" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_54ca1906d77a4be5b5770c0c949afacf-12"&gt;&lt;/a&gt;
-&lt;a id="rest_code_54ca1906d77a4be5b5770c0c949afacf-13" name="rest_code_54ca1906d77a4be5b5770c0c949afacf-13" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_54ca1906d77a4be5b5770c0c949afacf-13"&gt;&lt;/a&gt;$ ./argv.py /usr/*
-&lt;a id="rest_code_54ca1906d77a4be5b5770c0c949afacf-14" name="rest_code_54ca1906d77a4be5b5770c0c949afacf-14" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_54ca1906d77a4be5b5770c0c949afacf-14"&gt;&lt;/a&gt;['./argv.py', '/usr/X11', '/usr/X11R6', '/usr/bin', '/usr/include', '/usr/lib', '/usr/libexec', '/usr/local', '/usr/sbin', '/usr/share', '/usr/standalone']
-&lt;a id="rest_code_54ca1906d77a4be5b5770c0c949afacf-15" name="rest_code_54ca1906d77a4be5b5770c0c949afacf-15" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_54ca1906d77a4be5b5770c0c949afacf-15"&gt;&lt;/a&gt;$ ./argv.py "/usr/*"
-&lt;a id="rest_code_54ca1906d77a4be5b5770c0c949afacf-16" name="rest_code_54ca1906d77a4be5b5770c0c949afacf-16" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_54ca1906d77a4be5b5770c0c949afacf-16"&gt;&lt;/a&gt;['./argv.py', '/usr/*']
-&lt;a id="rest_code_54ca1906d77a4be5b5770c0c949afacf-17" name="rest_code_54ca1906d77a4be5b5770c0c949afacf-17" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_54ca1906d77a4be5b5770c0c949afacf-17"&gt;&lt;/a&gt;
-&lt;a id="rest_code_54ca1906d77a4be5b5770c0c949afacf-18" name="rest_code_54ca1906d77a4be5b5770c0c949afacf-18" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_54ca1906d77a4be5b5770c0c949afacf-18"&gt;&lt;/a&gt;$ ./argv.py $EDITOR
-&lt;a id="rest_code_54ca1906d77a4be5b5770c0c949afacf-19" name="rest_code_54ca1906d77a4be5b5770c0c949afacf-19" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_54ca1906d77a4be5b5770c0c949afacf-19"&gt;&lt;/a&gt;['./argv.py', 'nvim']
-&lt;a id="rest_code_54ca1906d77a4be5b5770c0c949afacf-20" name="rest_code_54ca1906d77a4be5b5770c0c949afacf-20" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_54ca1906d77a4be5b5770c0c949afacf-20"&gt;&lt;/a&gt;
-&lt;a id="rest_code_54ca1906d77a4be5b5770c0c949afacf-21" name="rest_code_54ca1906d77a4be5b5770c0c949afacf-21" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_54ca1906d77a4be5b5770c0c949afacf-21"&gt;&lt;/a&gt;$ $PWD/argv.py foo bar
-&lt;a id="rest_code_54ca1906d77a4be5b5770c0c949afacf-22" name="rest_code_54ca1906d77a4be5b5770c0c949afacf-22" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_54ca1906d77a4be5b5770c0c949afacf-22"&gt;&lt;/a&gt;['/Users/kwpolska/Desktop/blog/subprocess/argv.py', 'foo', 'bar']
-&lt;a id="rest_code_54ca1906d77a4be5b5770c0c949afacf-23" name="rest_code_54ca1906d77a4be5b5770c0c949afacf-23" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_54ca1906d77a4be5b5770c0c949afacf-23"&gt;&lt;/a&gt;$ ./argv.py a{b,c}d
-&lt;a id="rest_code_54ca1906d77a4be5b5770c0c949afacf-24" name="rest_code_54ca1906d77a4be5b5770c0c949afacf-24" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_54ca1906d77a4be5b5770c0c949afacf-24"&gt;&lt;/a&gt;['./argv.py', 'abd', 'acd']
-&lt;a id="rest_code_54ca1906d77a4be5b5770c0c949afacf-25" name="rest_code_54ca1906d77a4be5b5770c0c949afacf-25" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_54ca1906d77a4be5b5770c0c949afacf-25"&gt;&lt;/a&gt;
-&lt;a id="rest_code_54ca1906d77a4be5b5770c0c949afacf-26" name="rest_code_54ca1906d77a4be5b5770c0c949afacf-26" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_54ca1906d77a4be5b5770c0c949afacf-26"&gt;&lt;/a&gt;$ python argv.py foo bar | cat
-&lt;a id="rest_code_54ca1906d77a4be5b5770c0c949afacf-27" name="rest_code_54ca1906d77a4be5b5770c0c949afacf-27" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_54ca1906d77a4be5b5770c0c949afacf-27"&gt;&lt;/a&gt;['argv.py', 'foo', 'bar']
-&lt;a id="rest_code_54ca1906d77a4be5b5770c0c949afacf-28" name="rest_code_54ca1906d77a4be5b5770c0c949afacf-28" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_54ca1906d77a4be5b5770c0c949afacf-28"&gt;&lt;/a&gt;$ python argv.py foo bar &amp;gt; foo.txt
-&lt;a id="rest_code_54ca1906d77a4be5b5770c0c949afacf-29" name="rest_code_54ca1906d77a4be5b5770c0c949afacf-29" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_54ca1906d77a4be5b5770c0c949afacf-29"&gt;&lt;/a&gt;$ cat foo.txt
-&lt;a id="rest_code_54ca1906d77a4be5b5770c0c949afacf-30" name="rest_code_54ca1906d77a4be5b5770c0c949afacf-30" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_54ca1906d77a4be5b5770c0c949afacf-30"&gt;&lt;/a&gt;['argv.py', 'foo', 'bar']
-&lt;a id="rest_code_54ca1906d77a4be5b5770c0c949afacf-31" name="rest_code_54ca1906d77a4be5b5770c0c949afacf-31" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_54ca1906d77a4be5b5770c0c949afacf-31"&gt;&lt;/a&gt;
-&lt;a id="rest_code_54ca1906d77a4be5b5770c0c949afacf-32" name="rest_code_54ca1906d77a4be5b5770c0c949afacf-32" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_54ca1906d77a4be5b5770c0c949afacf-32"&gt;&lt;/a&gt;$ ./argv.py foo; ls /usr
-&lt;a id="rest_code_54ca1906d77a4be5b5770c0c949afacf-33" name="rest_code_54ca1906d77a4be5b5770c0c949afacf-33" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_54ca1906d77a4be5b5770c0c949afacf-33"&gt;&lt;/a&gt;['./argv.py', 'foo']
-&lt;a id="rest_code_54ca1906d77a4be5b5770c0c949afacf-34" name="rest_code_54ca1906d77a4be5b5770c0c949afacf-34" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_54ca1906d77a4be5b5770c0c949afacf-34"&gt;&lt;/a&gt;X11@        X11R6@      bin/        include/    lib/        libexec/    local/      sbin/       share/      standalone/
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;As you can see, the following things are handled by the shell (the process is unaware of this occurring):&lt;/p&gt;
-&lt;ul class="simple"&gt;
-&lt;li&gt;&lt;p&gt;quotes and escapes&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;expanding expressions in braces&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;expanding variables&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;wildcards (glob, &lt;code class="docutils literal"&gt;*&lt;/code&gt;)&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;redirections and pipes (&lt;code class="docutils literal"&gt;&amp;gt; &amp;gt;&amp;gt; |&lt;/code&gt;)&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;command substitution (backticks or &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;$(…)&lt;/span&gt;&lt;/code&gt;)&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;running multiple commands on the same line (&lt;code class="docutils literal"&gt;; &amp;amp;&amp;amp; || &amp;amp;&lt;/code&gt;)&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;The list is full of potential vulnerabilities. If end users are in control of
+Forking is (almost) immediately followed by calling <code class="docutils literal">execve()</code> (or a helper
+function from the exec family) <a class="brackets" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#footnote-2" id="footnote-reference-2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a> in the child process — that function
+<em>transforms the calling process into a new process</em> <a class="brackets" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#footnote-3" id="footnote-reference-3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>. This technique is
+called <em>fork-exec</em> and is the typical way to spawn a new process on Unix. <a class="brackets" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#footnote-4" id="footnote-reference-4" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a></p>
+<p>There are two ways to access this API, from the C perspective:</p>
+<ul>
+<li><p>directly, by calling <code class="docutils literal">fork()</code> and <code class="docutils literal"><span class="pre">exec*()</span></code> (or <code class="docutils literal">posix_spawn()</code>), and providing an array of
+arguments passed to the process, or</p></li>
+<li><p>through the shell (<code class="docutils literal">sh</code>), usually by calling <code class="docutils literal">system()</code>. As Linux’s
+manpage for <code class="docutils literal">system(3)</code> puts it,</p>
+<blockquote>
+<p>The <code class="docutils literal">system()</code> library function uses <code class="docutils literal">fork(2)</code> to create a child process that executes the shell command specified in command using <code class="docutils literal">execl(3)</code> as follows:</p>
+<div class="code"><pre class="code c"><a id="rest_code_ba3def1e6d134f318af0424fea199c9a-1" name="rest_code_ba3def1e6d134f318af0424fea199c9a-1" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_ba3def1e6d134f318af0424fea199c9a-1"></a><span class="n">execl</span><span class="p">(</span><span class="s">&quot;/bin/sh&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;sh&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;-c&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">command</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+</pre></div>
+</blockquote>
+</li>
+</ul>
+<p>If you go through the shell, you pass one string argument, whereas <code class="docutils literal"><span class="pre">exec*()</span></code> demands you to specify arguments separately. Let’s write a sample program to print all the arguments it receives. I’ll do it in Python to get a more readable output.</p>
+<div class="code"><pre class="code python"><a id="rest_code_ce72efbf58624ae598862ad3319d5d48-1" name="rest_code_ce72efbf58624ae598862ad3319d5d48-1" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_ce72efbf58624ae598862ad3319d5d48-1"></a><span class="ch">#!/usr/bin/env python3</span>
+<a id="rest_code_ce72efbf58624ae598862ad3319d5d48-2" name="rest_code_ce72efbf58624ae598862ad3319d5d48-2" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_ce72efbf58624ae598862ad3319d5d48-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<a id="rest_code_ce72efbf58624ae598862ad3319d5d48-3" name="rest_code_ce72efbf58624ae598862ad3319d5d48-3" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_ce72efbf58624ae598862ad3319d5d48-3"></a><span class="nb">print</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span>
+</pre></div>
+<p>Let’s see what appears:</p>
+<div class="code"><pre class="code text"><a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-1" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-1" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-1"></a>$ ./argv.py foo bar
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-2" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-2" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-2"></a>[&#39;./argv.py&#39;, &#39;foo&#39;, &#39;bar&#39;]
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-3" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-3" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-3"></a>$ ./argv.py &#39;foo bar&#39;
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-4" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-4" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-4"></a>[&#39;./argv.py&#39;, &#39;foo bar&#39;]
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-5" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-5" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-5"></a>$ ./argv.py foo\ bar baz
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-6" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-6" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-6"></a>[&#39;./argv.py&#39;, &#39;foo bar&#39;, &#39;baz&#39;]
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-7" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-7" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-7"></a>
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-8" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-8" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-8"></a>$ ./argv.py $(date)
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-9" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-9" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-9"></a>[&#39;./argv.py&#39;, &#39;Sat&#39;, &#39;Sep&#39;, &#39;2&#39;, &#39;16:54:52&#39;, &#39;CEST&#39;, &#39;2017&#39;]
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-10" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-10" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-10"></a>$ ./argv.py &quot;$(date)&quot;
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-11" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-11" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-11"></a>[&#39;./argv.py&#39;, &#39;Sat Sep  2 16:54:52 CEST 2017&#39;]
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-12" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-12" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-12"></a>
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-13" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-13" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-13"></a>$ ./argv.py /usr/*
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-14" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-14" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-14"></a>[&#39;./argv.py&#39;, &#39;/usr/X11&#39;, &#39;/usr/X11R6&#39;, &#39;/usr/bin&#39;, &#39;/usr/include&#39;, &#39;/usr/lib&#39;, &#39;/usr/libexec&#39;, &#39;/usr/local&#39;, &#39;/usr/sbin&#39;, &#39;/usr/share&#39;, &#39;/usr/standalone&#39;]
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-15" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-15" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-15"></a>$ ./argv.py &quot;/usr/*&quot;
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-16" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-16" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-16"></a>[&#39;./argv.py&#39;, &#39;/usr/*&#39;]
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-17" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-17" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-17"></a>
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-18" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-18" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-18"></a>$ ./argv.py $EDITOR
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-19" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-19" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-19"></a>[&#39;./argv.py&#39;, &#39;nvim&#39;]
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-20" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-20" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-20"></a>
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-21" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-21" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-21"></a>$ $PWD/argv.py foo bar
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-22" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-22" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-22"></a>[&#39;/Users/kwpolska/Desktop/blog/subprocess/argv.py&#39;, &#39;foo&#39;, &#39;bar&#39;]
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-23" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-23" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-23"></a>$ ./argv.py a{b,c}d
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-24" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-24" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-24"></a>[&#39;./argv.py&#39;, &#39;abd&#39;, &#39;acd&#39;]
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-25" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-25" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-25"></a>
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-26" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-26" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-26"></a>$ python argv.py foo bar | cat
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-27" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-27" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-27"></a>[&#39;argv.py&#39;, &#39;foo&#39;, &#39;bar&#39;]
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-28" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-28" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-28"></a>$ python argv.py foo bar &gt; foo.txt
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-29" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-29" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-29"></a>$ cat foo.txt
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-30" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-30" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-30"></a>[&#39;argv.py&#39;, &#39;foo&#39;, &#39;bar&#39;]
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-31" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-31" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-31"></a>
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-32" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-32" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-32"></a>$ ./argv.py foo; ls /usr
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-33" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-33" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-33"></a>[&#39;./argv.py&#39;, &#39;foo&#39;]
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-34" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-34" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-34"></a>X11@        X11R6@      bin/        include/    lib/        libexec/    local/      sbin/       share/      standalone/
+</pre></div>
+<p>As you can see, the following things are handled by the shell (the process is unaware of this occurring):</p>
+<ul class="simple">
+<li><p>quotes and escapes</p></li>
+<li><p>expanding expressions in braces</p></li>
+<li><p>expanding variables</p></li>
+<li><p>wildcards (glob, <code class="docutils literal">*</code>)</p></li>
+<li><p>redirections and pipes (<code class="docutils literal">&gt; &gt;&gt; |</code>)</p></li>
+<li><p>command substitution (backticks or <code class="docutils literal"><span class="pre">$(…)</span></code>)</p></li>
+<li><p>running multiple commands on the same line (<code class="docutils literal">; &amp;&amp; || &amp;</code>)</p></li>
+</ul>
+<p>The list is full of potential vulnerabilities. If end users are in control of
 the arguments passed, and you go through the shell, they can
-&lt;strong&gt;execute arbitrary commands&lt;/strong&gt; or even &lt;strong&gt;get full shell access&lt;/strong&gt;. Even in other
-cases, you’ll have to &lt;em&gt;depend on the shell’s parsing&lt;/em&gt;, which introduces an
-unnecessary indirection.&lt;/p&gt;
-&lt;/section&gt;
-&lt;section id="tl-dr-how-to-do-this-properly-in-your-language-of-choice"&gt;
-&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#toc-entry-4" role="doc-backlink"&gt;TL;DR: How to do this properly in your language of choice&lt;/a&gt;&lt;/h2&gt;
-&lt;p&gt;To ensure spawning subprocess is done securely, &lt;strong&gt;do not use the shell in between&lt;/strong&gt;. If you need any of the operations I listed above as part of your command — wildcards, pipes, etc. — you will need to take care of them in your code; most languages have those features built-in.&lt;/p&gt;
-&lt;dl class="simple dl-horizontal"&gt;
-&lt;dt&gt;In C (Unix)&lt;/dt&gt;
-&lt;dd&gt;&lt;p&gt;Perform fork-exec by yourself, or use &lt;code class="docutils literal"&gt;posix_spawn()&lt;/code&gt;. This also lets you communicate with the process if you open a pipe and make it stdout of the child process. Never use &lt;code class="docutils literal"&gt;system()&lt;/code&gt;.&lt;/p&gt;
-&lt;/dd&gt;
-&lt;dt&gt;In Python&lt;/dt&gt;
-&lt;dd&gt;&lt;p&gt;Use the subprocess module. Always pass &lt;code class="docutils literal"&gt;shell=False&lt;/code&gt; and give it a &lt;em&gt;list&lt;/em&gt; of arguments. With asyncio, use &lt;code class="docutils literal"&gt;asyncio.create_subprocess_exec&lt;/code&gt; (and not &lt;code class="docutils literal"&gt;_shell&lt;/code&gt;), but note it takes &lt;code class="docutils literal"&gt;*args&lt;/code&gt; and not a list. Never use &lt;code class="docutils literal"&gt;os.system&lt;/code&gt; and &lt;code class="docutils literal"&gt;os.popen&lt;/code&gt;.&lt;/p&gt;
-&lt;/dd&gt;
-&lt;dt&gt;In Ruby&lt;/dt&gt;
-&lt;dd&gt;&lt;p&gt;Pass arrays to &lt;code class="docutils literal"&gt;IO.popen&lt;/code&gt;. Pass multiple arguments to &lt;code class="docutils literal"&gt;system()&lt;/code&gt; (&lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;system(["ls",&lt;/span&gt; &lt;span class="pre"&gt;"ls"])&lt;/span&gt;&lt;/code&gt; or &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;system("ls",&lt;/span&gt; &lt;span class="pre"&gt;"-l")&lt;/span&gt;&lt;/code&gt;). Never use &lt;code class="docutils literal"&gt;%x{command}&lt;/code&gt; or backticks.&lt;/p&gt;
-&lt;/dd&gt;
-&lt;dt&gt;In Java&lt;/dt&gt;
-&lt;dd&gt;&lt;p&gt;Pass arrays to &lt;code class="docutils literal"&gt;Runtime.exec&lt;/code&gt;. Pass multiple arguments or list to &lt;code class="docutils literal"&gt;ProcessBuilder&lt;/code&gt;.&lt;/p&gt;
-&lt;/dd&gt;
-&lt;dt&gt;In PHP&lt;/dt&gt;
-&lt;dd&gt;&lt;p&gt;All the standard methods go through the shell. Try &lt;code class="docutils literal"&gt;escapeshellcmd()&lt;/code&gt;, &lt;code class="docutils literal"&gt;escapeshellarg()&lt;/code&gt; — or better, switch to Python. Or anything, really.&lt;/p&gt;
-&lt;/dd&gt;
-&lt;dt&gt;In Go&lt;/dt&gt;
-&lt;dd&gt;&lt;p&gt;&lt;code class="docutils literal"&gt;os/exec&lt;/code&gt; and &lt;code class="docutils literal"&gt;os.StartProcess&lt;/code&gt; are safe.&lt;/p&gt;
-&lt;/dd&gt;
-&lt;dt&gt;In Node.js&lt;/dt&gt;
-&lt;dd&gt;&lt;p&gt;Use &lt;code class="docutils literal"&gt;child_process.execFile&lt;/code&gt; or &lt;code class="docutils literal"&gt;child_process.spawn&lt;/code&gt; with &lt;code class="docutils literal"&gt;shell&lt;/code&gt; set to false.&lt;/p&gt;
-&lt;/dd&gt;
-&lt;dt&gt;Elsewhere&lt;/dt&gt;
-&lt;dd&gt;&lt;p&gt;You should be able to specify multiple strings (using variadic arguments,
+<strong>execute arbitrary commands</strong> or even <strong>get full shell access</strong>. Even in other
+cases, you’ll have to <em>depend on the shell’s parsing</em>, which introduces an
+unnecessary indirection.</p>
+</section>
+<section id="tl-dr-how-to-do-this-properly-in-your-language-of-choice">
+<h1><a class="toc-backref" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#toc-entry-4" role="doc-backlink">TL;DR: How to do this properly in your language of choice</a></h1>
+<p>To ensure spawning subprocess is done securely, <strong>do not use the shell in between</strong>. If you need any of the operations I listed above as part of your command — wildcards, pipes, etc. — you will need to take care of them in your code; most languages have those features built-in.</p>
+<dl class="simple dl-horizontal">
+<dt>In C (Unix)</dt>
+<dd><p>Perform fork-exec by yourself, or use <code class="docutils literal">posix_spawn()</code>. This also lets you communicate with the process if you open a pipe and make it stdout of the child process. Never use <code class="docutils literal">system()</code>.</p>
+</dd>
+<dt>In Python</dt>
+<dd><p>Use the subprocess module. Always pass <code class="docutils literal">shell=False</code> and give it a <em>list</em> of arguments. With asyncio, use <code class="docutils literal">asyncio.create_subprocess_exec</code> (and not <code class="docutils literal">_shell</code>), but note it takes <code class="docutils literal">*args</code> and not a list. Never use <code class="docutils literal">os.system</code> and <code class="docutils literal">os.popen</code>.</p>
+</dd>
+<dt>In Ruby</dt>
+<dd><p>Pass arrays to <code class="docutils literal">IO.popen</code>. Pass multiple arguments to <code class="docutils literal">system()</code> (<code class="docutils literal"><span class="pre">system([&quot;ls&quot;,</span> <span class="pre">&quot;ls&quot;])</span></code> or <code class="docutils literal"><span class="pre">system(&quot;ls&quot;,</span> <span class="pre">&quot;-l&quot;)</span></code>). Never use <code class="docutils literal">%x{command}</code> or backticks.</p>
+</dd>
+<dt>In Java</dt>
+<dd><p>Pass arrays to <code class="docutils literal">Runtime.exec</code>. Pass multiple arguments or list to <code class="docutils literal">ProcessBuilder</code>.</p>
+</dd>
+<dt>In PHP</dt>
+<dd><p>All the standard methods go through the shell. Try <code class="docutils literal">escapeshellcmd()</code>, <code class="docutils literal">escapeshellarg()</code> — or better, switch to Python. Or anything, really.</p>
+</dd>
+<dt>In Go</dt>
+<dd><p><code class="docutils literal">os/exec</code> and <code class="docutils literal">os.StartProcess</code> are safe.</p>
+</dd>
+<dt>In Node.js</dt>
+<dd><p>Use <code class="docutils literal">child_process.execFile</code> or <code class="docutils literal">child_process.spawn</code> with <code class="docutils literal">shell</code> set to false.</p>
+</dd>
+<dt>Elsewhere</dt>
+<dd><p>You should be able to specify multiple strings (using variadic arguments,
 arrays, or otherwise standard data structures of your language of choice) as
 the command line. Otherwise, you might be running into something
-shell-related.&lt;/p&gt;
-&lt;/dd&gt;
-&lt;/dl&gt;
-&lt;/section&gt;
-&lt;section id="the-part-where-i-pretend-i-know-something-about-windows"&gt;
-&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#toc-entry-5" role="doc-backlink"&gt;The part where I pretend I know something about Windows&lt;/a&gt;&lt;/h2&gt;
-&lt;p&gt;On Windows, argument lists are always passed to processes as strings (Python
+shell-related.</p>
+</dd>
+</dl>
+</section>
+<section id="the-part-where-i-pretend-i-know-something-about-windows">
+<h1><a class="toc-backref" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#toc-entry-5" role="doc-backlink">The part where I pretend I know something about Windows</a></h1>
+<p>On Windows, argument lists are always passed to processes as strings (Python
 joins them semi-intelligently if it gets a list). Redirections and variables
 work in shell mode, but globs (asterisks) are always left for the called
-process to handle.&lt;/p&gt;
-&lt;p&gt;Some useful functions are implemented as shell built-ins — in that case, you
-need to call it via the shell.&lt;/p&gt;
-&lt;p&gt;Internals: There is no &lt;code class="docutils literal"&gt;fork()&lt;/code&gt; on Windows. Instead, &lt;code class="docutils literal"&gt;CreateProcess()&lt;/code&gt;,
-&lt;code class="docutils literal"&gt;ShellExecute()&lt;/code&gt;, or lower-level &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;spawn*()&lt;/span&gt;&lt;/code&gt; functions are used. &lt;code class="docutils literal"&gt;cmd.exe
-/c&lt;/code&gt; is called in shell calls.&lt;/p&gt;
-&lt;aside class="footnote-list brackets"&gt;
-&lt;aside class="footnote brackets" id="footnote-1" role="doc-footnote"&gt;
-&lt;span class="label"&gt;&lt;span class="fn-bracket"&gt;[&lt;/span&gt;&lt;a role="doc-backlink" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#footnote-reference-1"&gt;1&lt;/a&gt;&lt;span class="fn-bracket"&gt;]&lt;/span&gt;&lt;/span&gt;
-&lt;p&gt;Unless your operating system does not implement copy-on-write forking — in that case, you might even run out of memory if you use too much of it.&lt;/p&gt;
-&lt;/aside&gt;
-&lt;aside class="footnote brackets" id="footnote-2" role="doc-footnote"&gt;
-&lt;span class="label"&gt;&lt;span class="fn-bracket"&gt;[&lt;/span&gt;&lt;a role="doc-backlink" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#footnote-reference-2"&gt;2&lt;/a&gt;&lt;span class="fn-bracket"&gt;]&lt;/span&gt;&lt;/span&gt;
-&lt;p&gt;The function that does the real work is &lt;code class="docutils literal"&gt;execve()&lt;/code&gt;, which takes an exact path, an array of arguments, and takes environment variables as input. Other variants can also perform a &lt;code class="docutils literal"&gt;$PATH&lt;/code&gt; search, take argv as variadic arguments, and inherit environment from the current process. &lt;code class="docutils literal"&gt;execl()&lt;/code&gt; does the last two.&lt;/p&gt;
-&lt;/aside&gt;
-&lt;aside class="footnote brackets" id="footnote-3" role="doc-footnote"&gt;
-&lt;span class="label"&gt;&lt;span class="fn-bracket"&gt;[&lt;/span&gt;&lt;a role="doc-backlink" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#footnote-reference-3"&gt;3&lt;/a&gt;&lt;span class="fn-bracket"&gt;]&lt;/span&gt;&lt;/span&gt;
-&lt;p&gt;Quoted from &lt;code class="docutils literal"&gt;execve(2)&lt;/code&gt; &lt;a class="reference external" href="https://www.freebsd.org/cgi/man.cgi?query=execve&amp;amp;sektion=2"&gt;man page&lt;/a&gt; from FreeBSD.&lt;/p&gt;
-&lt;/aside&gt;
-&lt;aside class="footnote brackets" id="footnote-4" role="doc-footnote"&gt;
-&lt;span class="label"&gt;&lt;span class="fn-bracket"&gt;[&lt;/span&gt;&lt;a role="doc-backlink" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#footnote-reference-4"&gt;4&lt;/a&gt;&lt;span class="fn-bracket"&gt;]&lt;/span&gt;&lt;/span&gt;
-&lt;p&gt;An alternative is &lt;code class="docutils literal"&gt;posix_spawn()&lt;/code&gt;, but it usually does fork-exec, unless your platform does not support forking.&lt;/p&gt;
-&lt;/aside&gt;
-&lt;/aside&gt;
-&lt;/section&gt;</description><category>best practices</category><category>C</category><category>devel</category><category>guide</category><category>Linux</category><category>Python</category><category>security</category><category>subprocess</category><category>Unix</category><guid>https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/</guid><pubDate>Sat, 02 Sep 2017 18:40:00 GMT</pubDate></item><item><title>Unix locales vs Unicode (‘ascii’ codec can’t encode character…)</title><link>https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;p&gt;You might get unusual errors about Unicode and inability to convert
+process to handle.</p>
+<p>Some useful functions are implemented as shell built-ins — in that case, you
+need to call it via the shell.</p>
+<p>Internals: There is no <code class="docutils literal">fork()</code> on Windows. Instead, <code class="docutils literal">CreateProcess()</code>,
+<code class="docutils literal">ShellExecute()</code>, or lower-level <code class="docutils literal"><span class="pre">spawn*()</span></code> functions are used. <code class="docutils literal">cmd.exe
+/c</code> is called in shell calls.</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="footnote-1" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#footnote-reference-1">1</a><span class="fn-bracket">]</span></span>
+<p>Unless your operating system does not implement copy-on-write forking — in that case, you might even run out of memory if you use too much of it.</p>
+</aside>
+<aside class="footnote brackets" id="footnote-2" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#footnote-reference-2">2</a><span class="fn-bracket">]</span></span>
+<p>The function that does the real work is <code class="docutils literal">execve()</code>, which takes an exact path, an array of arguments, and takes environment variables as input. Other variants can also perform a <code class="docutils literal">$PATH</code> search, take argv as variadic arguments, and inherit environment from the current process. <code class="docutils literal">execl()</code> does the last two.</p>
+</aside>
+<aside class="footnote brackets" id="footnote-3" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#footnote-reference-3">3</a><span class="fn-bracket">]</span></span>
+<p>Quoted from <code class="docutils literal">execve(2)</code> <a class="reference external" href="https://www.freebsd.org/cgi/man.cgi?query=execve&amp;sektion=2">man page</a> from FreeBSD.</p>
+</aside>
+<aside class="footnote brackets" id="footnote-4" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="https://chriswarrick.com/blog/2017/09/02/spawning-subprocesses-smartly-and-securely/#footnote-reference-4">4</a><span class="fn-bracket">]</span></span>
+<p>An alternative is <code class="docutils literal">posix_spawn()</code>, but it usually does fork-exec, unless your platform does not support forking.</p>
+</aside>
+</aside>
+</section>
+]]></content:encoded><category>Programming</category><category>best practices</category><category>C</category><category>devel</category><category>guide</category><category>Linux</category><category>Python</category><category>security</category><category>subprocess</category><category>Unix</category></item><item><title>Unix locales vs Unicode (‘ascii’ codec can’t encode character…)</title><dc:creator>Chris Warrick</dc:creator><link>https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/</link><pubDate>Sun, 18 Jun 2017 18:40:00 GMT</pubDate><guid>https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/</guid><description>
+You might get unusual errors about Unicode and inability to convert
 to ASCII. Programs might just crash at random. Those are often simple to fix —
-all you need is correct locale configuration.&lt;/p&gt;
-&lt;!-- TEASER_END --&gt;
-&lt;p class="lead"&gt;Has this ever happened to you?&lt;/p&gt;
-&lt;div class="code"&gt;&lt;pre class="code pytb"&gt;&lt;a id="rest_code_20137c0a1e4841c08c41125c365df2e1-1" name="rest_code_20137c0a1e4841c08c41125c365df2e1-1" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_20137c0a1e4841c08c41125c365df2e1-1"&gt;&lt;/a&gt;&lt;span class="gt"&gt;Traceback (most recent call last):&lt;/span&gt;
-&lt;a id="rest_code_20137c0a1e4841c08c41125c365df2e1-2" name="rest_code_20137c0a1e4841c08c41125c365df2e1-2" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_20137c0a1e4841c08c41125c365df2e1-2"&gt;&lt;/a&gt;  File &lt;span class="nb"&gt;"aogonek.py"&lt;/span&gt;, line &lt;span class="m"&gt;1&lt;/span&gt;, in &lt;span class="n"&gt;&amp;lt;module&amp;gt;&lt;/span&gt;
-&lt;a id="rest_code_20137c0a1e4841c08c41125c365df2e1-3" name="rest_code_20137c0a1e4841c08c41125c365df2e1-3" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_20137c0a1e4841c08c41125c365df2e1-3"&gt;&lt;/a&gt;&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;u&lt;/span&gt;&lt;span class="s1"&gt;'&lt;/span&gt;&lt;span class="se"&gt;\u0105&lt;/span&gt;&lt;span class="s1"&gt;'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;a id="rest_code_20137c0a1e4841c08c41125c365df2e1-4" name="rest_code_20137c0a1e4841c08c41125c365df2e1-4" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_20137c0a1e4841c08c41125c365df2e1-4"&gt;&lt;/a&gt;&lt;span class="gr"&gt;UnicodeEncodeError&lt;/span&gt;: &lt;span class="n"&gt;'ascii' codec can't encode character '\u0105' in position 0: ordinal not in range(128)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;div class="code"&gt;&lt;pre class="code text"&gt;&lt;a id="rest_code_20b2673a9d5e4a0b8a222ab17cdde31d-1" name="rest_code_20b2673a9d5e4a0b8a222ab17cdde31d-1" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_20b2673a9d5e4a0b8a222ab17cdde31d-1"&gt;&lt;/a&gt;Nikola: Could not guess locale for language en, using locale C
-&lt;/pre&gt;&lt;/div&gt;
-&lt;div class="code"&gt;&lt;pre class="code text"&gt;&lt;a id="rest_code_e12ec0212593478c822ccb6ef7ee60b3-1" name="rest_code_e12ec0212593478c822ccb6ef7ee60b3-1" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_e12ec0212593478c822ccb6ef7ee60b3-1"&gt;&lt;/a&gt;Input: ą
-&lt;a id="rest_code_e12ec0212593478c822ccb6ef7ee60b3-2" name="rest_code_e12ec0212593478c822ccb6ef7ee60b3-2" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_e12ec0212593478c822ccb6ef7ee60b3-2"&gt;&lt;/a&gt;Desired ascii(): '\u0105'
-&lt;a id="rest_code_e12ec0212593478c822ccb6ef7ee60b3-3" name="rest_code_e12ec0212593478c822ccb6ef7ee60b3-3" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_e12ec0212593478c822ccb6ef7ee60b3-3"&gt;&lt;/a&gt;Real ascii(): '\udcc4\udc85'
-&lt;/pre&gt;&lt;/div&gt;
-&lt;div class="code"&gt;&lt;pre class="code text"&gt;&lt;a id="rest_code_9a0c33e97abc4865ac31b2370512d92a-1" name="rest_code_9a0c33e97abc4865ac31b2370512d92a-1" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_9a0c33e97abc4865ac31b2370512d92a-1"&gt;&lt;/a&gt;perl: warning: Setting locale failed.
-&lt;a id="rest_code_9a0c33e97abc4865ac31b2370512d92a-2" name="rest_code_9a0c33e97abc4865ac31b2370512d92a-2" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_9a0c33e97abc4865ac31b2370512d92a-2"&gt;&lt;/a&gt;perl: warning: Please check that your locale settings:
-&lt;a id="rest_code_9a0c33e97abc4865ac31b2370512d92a-3" name="rest_code_9a0c33e97abc4865ac31b2370512d92a-3" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_9a0c33e97abc4865ac31b2370512d92a-3"&gt;&lt;/a&gt;    [...]
-&lt;a id="rest_code_9a0c33e97abc4865ac31b2370512d92a-4" name="rest_code_9a0c33e97abc4865ac31b2370512d92a-4" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_9a0c33e97abc4865ac31b2370512d92a-4"&gt;&lt;/a&gt;    are supported and installed on your system.
-&lt;a id="rest_code_9a0c33e97abc4865ac31b2370512d92a-5" name="rest_code_9a0c33e97abc4865ac31b2370512d92a-5" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_9a0c33e97abc4865ac31b2370512d92a-5"&gt;&lt;/a&gt;perl: warning: Falling back to the standard locale ("C").
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p class="lead"&gt;All those errors have the same root cause: incorrect locale configuration.
-To fix them all, you need to generate the missing locales and set them.&lt;/p&gt;
-&lt;section id="check-currently-used-locale"&gt;
-&lt;h2&gt;Check currently used locale&lt;/h2&gt;
-&lt;p&gt;The &lt;code class="docutils literal"&gt;locale&lt;/code&gt; command (without arguments) should tell you which locales you’re
-currently using.  (The list might be shorter on your end)&lt;/p&gt;
-&lt;div class="code"&gt;&lt;pre class="code sh"&gt;&lt;a id="rest_code_e0fc2caf2e654403a8259af258ab44f1-1" name="rest_code_e0fc2caf2e654403a8259af258ab44f1-1" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_e0fc2caf2e654403a8259af258ab44f1-1"&gt;&lt;/a&gt;$&lt;span class="w"&gt; &lt;/span&gt;locale
-&lt;a id="rest_code_e0fc2caf2e654403a8259af258ab44f1-2" name="rest_code_e0fc2caf2e654403a8259af258ab44f1-2" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_e0fc2caf2e654403a8259af258ab44f1-2"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LANG&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a id="rest_code_e0fc2caf2e654403a8259af258ab44f1-3" name="rest_code_e0fc2caf2e654403a8259af258ab44f1-3" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_e0fc2caf2e654403a8259af258ab44f1-3"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_CTYPE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a id="rest_code_e0fc2caf2e654403a8259af258ab44f1-4" name="rest_code_e0fc2caf2e654403a8259af258ab44f1-4" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_e0fc2caf2e654403a8259af258ab44f1-4"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_NUMERIC&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a id="rest_code_e0fc2caf2e654403a8259af258ab44f1-5" name="rest_code_e0fc2caf2e654403a8259af258ab44f1-5" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_e0fc2caf2e654403a8259af258ab44f1-5"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_TIME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a id="rest_code_e0fc2caf2e654403a8259af258ab44f1-6" name="rest_code_e0fc2caf2e654403a8259af258ab44f1-6" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_e0fc2caf2e654403a8259af258ab44f1-6"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_COLLATE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a id="rest_code_e0fc2caf2e654403a8259af258ab44f1-7" name="rest_code_e0fc2caf2e654403a8259af258ab44f1-7" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_e0fc2caf2e654403a8259af258ab44f1-7"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_MONETARY&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a id="rest_code_e0fc2caf2e654403a8259af258ab44f1-8" name="rest_code_e0fc2caf2e654403a8259af258ab44f1-8" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_e0fc2caf2e654403a8259af258ab44f1-8"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_MESSAGES&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a id="rest_code_e0fc2caf2e654403a8259af258ab44f1-9" name="rest_code_e0fc2caf2e654403a8259af258ab44f1-9" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_e0fc2caf2e654403a8259af258ab44f1-9"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_PAPER&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a id="rest_code_e0fc2caf2e654403a8259af258ab44f1-10" name="rest_code_e0fc2caf2e654403a8259af258ab44f1-10" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_e0fc2caf2e654403a8259af258ab44f1-10"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_NAME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a id="rest_code_e0fc2caf2e654403a8259af258ab44f1-11" name="rest_code_e0fc2caf2e654403a8259af258ab44f1-11" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_e0fc2caf2e654403a8259af258ab44f1-11"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_ADDRESS&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a id="rest_code_e0fc2caf2e654403a8259af258ab44f1-12" name="rest_code_e0fc2caf2e654403a8259af258ab44f1-12" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_e0fc2caf2e654403a8259af258ab44f1-12"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_TELEPHONE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a id="rest_code_e0fc2caf2e654403a8259af258ab44f1-13" name="rest_code_e0fc2caf2e654403a8259af258ab44f1-13" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_e0fc2caf2e654403a8259af258ab44f1-13"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_MEASUREMENT&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a id="rest_code_e0fc2caf2e654403a8259af258ab44f1-14" name="rest_code_e0fc2caf2e654403a8259af258ab44f1-14" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_e0fc2caf2e654403a8259af258ab44f1-14"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_IDENTIFICATION&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"en_US.UTF-8"&lt;/span&gt;
-&lt;a id="rest_code_e0fc2caf2e654403a8259af258ab44f1-15" name="rest_code_e0fc2caf2e654403a8259af258ab44f1-15" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_e0fc2caf2e654403a8259af258ab44f1-15"&gt;&lt;/a&gt;&lt;span class="nv"&gt;LC_ALL&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;If any of those is set to &lt;code class="docutils literal"&gt;C&lt;/code&gt; or &lt;code class="docutils literal"&gt;POSIX&lt;/code&gt;, has a different encoding than
-&lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;UTF-8&lt;/span&gt;&lt;/code&gt; (sometimes spelled &lt;code class="docutils literal"&gt;utf8&lt;/code&gt;) is empty (with the exception of
-&lt;code class="docutils literal"&gt;LC_ALL&lt;/code&gt;), or if you see any errors, you need to reconfigure your locale.&lt;/p&gt;
-&lt;/section&gt;
-&lt;section id="check-locale-availability-and-install-missing-locales"&gt;
-&lt;h2&gt;Check locale availability and install missing locales&lt;/h2&gt;
-&lt;p&gt;The first thing you need to do is check locale availability. To do this, run
-&lt;code class="docutils literal"&gt;locale &lt;span class="pre"&gt;-a&lt;/span&gt;&lt;/code&gt;. This will produce a list of all installed locales.  You can use
-&lt;code class="docutils literal"&gt;grep&lt;/code&gt; to get a more reasonable list.&lt;/p&gt;
-&lt;div class="code"&gt;&lt;pre class="code text"&gt;&lt;a id="rest_code_cf44ab97313446dfa3f46d827dd5b3a4-1" name="rest_code_cf44ab97313446dfa3f46d827dd5b3a4-1" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_cf44ab97313446dfa3f46d827dd5b3a4-1"&gt;&lt;/a&gt;$ locale -a | grep -i utf
-&lt;a id="rest_code_cf44ab97313446dfa3f46d827dd5b3a4-2" name="rest_code_cf44ab97313446dfa3f46d827dd5b3a4-2" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_cf44ab97313446dfa3f46d827dd5b3a4-2"&gt;&lt;/a&gt;&amp;lt;lists all UTF-8 locales&amp;gt;
-&lt;a id="rest_code_cf44ab97313446dfa3f46d827dd5b3a4-3" name="rest_code_cf44ab97313446dfa3f46d827dd5b3a4-3" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_cf44ab97313446dfa3f46d827dd5b3a4-3"&gt;&lt;/a&gt;$ locale -a | grep -i utf | grep -i en_US
-&lt;a id="rest_code_cf44ab97313446dfa3f46d827dd5b3a4-4" name="rest_code_cf44ab97313446dfa3f46d827dd5b3a4-4" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_cf44ab97313446dfa3f46d827dd5b3a4-4"&gt;&lt;/a&gt;en_US.UTF-8
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;The best locale to use is the one for your language, with the UTF-8 encoding.
+all you need is correct locale configuration.
+</description><content:encoded><![CDATA[
+<p>You might get unusual errors about Unicode and inability to convert
+to ASCII. Programs might just crash at random. Those are often simple to fix —
+all you need is correct locale configuration.</p>
+
+
+
+<p class="lead">Has this ever happened to you?</p>
+<div class="code"><pre class="code pytb"><a id="rest_code_526327b4277f4a8497b67746e0a751b2-1" name="rest_code_526327b4277f4a8497b67746e0a751b2-1" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_526327b4277f4a8497b67746e0a751b2-1"></a><span class="gt">Traceback (most recent call last):</span>
+<a id="rest_code_526327b4277f4a8497b67746e0a751b2-2" name="rest_code_526327b4277f4a8497b67746e0a751b2-2" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_526327b4277f4a8497b67746e0a751b2-2"></a>  File <span class="nb">&quot;aogonek.py&quot;</span>, line <span class="m">1</span>, in <span class="n">&lt;module&gt;</span>
+<a id="rest_code_526327b4277f4a8497b67746e0a751b2-3" name="rest_code_526327b4277f4a8497b67746e0a751b2-3" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_526327b4277f4a8497b67746e0a751b2-3"></a><span class="w">    </span><span class="nb">print</span><span class="p">(</span><span class="sa">u</span><span class="s1">&#39;</span><span class="se">\u0105</span><span class="s1">&#39;</span><span class="p">)</span>
+<a id="rest_code_526327b4277f4a8497b67746e0a751b2-4" name="rest_code_526327b4277f4a8497b67746e0a751b2-4" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_526327b4277f4a8497b67746e0a751b2-4"></a><span class="gr">UnicodeEncodeError</span>: <span class="n">&#39;ascii&#39; codec can&#39;t encode character &#39;\u0105&#39; in position 0: ordinal not in range(128)</span>
+</pre></div>
+<div class="code"><pre class="code text"><a id="rest_code_ca5594fd2ef54ad38a77f0c5883c3188-1" name="rest_code_ca5594fd2ef54ad38a77f0c5883c3188-1" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_ca5594fd2ef54ad38a77f0c5883c3188-1"></a>Nikola: Could not guess locale for language en, using locale C
+</pre></div>
+<div class="code"><pre class="code text"><a id="rest_code_f5ea18fead964936bccf8b8666032087-1" name="rest_code_f5ea18fead964936bccf8b8666032087-1" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_f5ea18fead964936bccf8b8666032087-1"></a>Input: ą
+<a id="rest_code_f5ea18fead964936bccf8b8666032087-2" name="rest_code_f5ea18fead964936bccf8b8666032087-2" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_f5ea18fead964936bccf8b8666032087-2"></a>Desired ascii(): &#39;\u0105&#39;
+<a id="rest_code_f5ea18fead964936bccf8b8666032087-3" name="rest_code_f5ea18fead964936bccf8b8666032087-3" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_f5ea18fead964936bccf8b8666032087-3"></a>Real ascii(): &#39;\udcc4\udc85&#39;
+</pre></div>
+<div class="code"><pre class="code text"><a id="rest_code_73da6abf15b34ece9c498c4adc163917-1" name="rest_code_73da6abf15b34ece9c498c4adc163917-1" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_73da6abf15b34ece9c498c4adc163917-1"></a>perl: warning: Setting locale failed.
+<a id="rest_code_73da6abf15b34ece9c498c4adc163917-2" name="rest_code_73da6abf15b34ece9c498c4adc163917-2" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_73da6abf15b34ece9c498c4adc163917-2"></a>perl: warning: Please check that your locale settings:
+<a id="rest_code_73da6abf15b34ece9c498c4adc163917-3" name="rest_code_73da6abf15b34ece9c498c4adc163917-3" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_73da6abf15b34ece9c498c4adc163917-3"></a>    [...]
+<a id="rest_code_73da6abf15b34ece9c498c4adc163917-4" name="rest_code_73da6abf15b34ece9c498c4adc163917-4" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_73da6abf15b34ece9c498c4adc163917-4"></a>    are supported and installed on your system.
+<a id="rest_code_73da6abf15b34ece9c498c4adc163917-5" name="rest_code_73da6abf15b34ece9c498c4adc163917-5" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_73da6abf15b34ece9c498c4adc163917-5"></a>perl: warning: Falling back to the standard locale (&quot;C&quot;).
+</pre></div>
+<p class="lead">All those errors have the same root cause: incorrect locale configuration.
+To fix them all, you need to generate the missing locales and set them.</p>
+<section id="check-currently-used-locale">
+<h1>Check currently used locale</h1>
+<p>The <code class="docutils literal">locale</code> command (without arguments) should tell you which locales you’re
+currently using.  (The list might be shorter on your end)</p>
+<div class="code"><pre class="code sh"><a id="rest_code_45351c7f546a450b945adfb5fea5446d-1" name="rest_code_45351c7f546a450b945adfb5fea5446d-1" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_45351c7f546a450b945adfb5fea5446d-1"></a>$<span class="w"> </span>locale
+<a id="rest_code_45351c7f546a450b945adfb5fea5446d-2" name="rest_code_45351c7f546a450b945adfb5fea5446d-2" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_45351c7f546a450b945adfb5fea5446d-2"></a><span class="nv">LANG</span><span class="o">=</span><span class="s2">&quot;en_US.UTF-8&quot;</span>
+<a id="rest_code_45351c7f546a450b945adfb5fea5446d-3" name="rest_code_45351c7f546a450b945adfb5fea5446d-3" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_45351c7f546a450b945adfb5fea5446d-3"></a><span class="nv">LC_CTYPE</span><span class="o">=</span><span class="s2">&quot;en_US.UTF-8&quot;</span>
+<a id="rest_code_45351c7f546a450b945adfb5fea5446d-4" name="rest_code_45351c7f546a450b945adfb5fea5446d-4" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_45351c7f546a450b945adfb5fea5446d-4"></a><span class="nv">LC_NUMERIC</span><span class="o">=</span><span class="s2">&quot;en_US.UTF-8&quot;</span>
+<a id="rest_code_45351c7f546a450b945adfb5fea5446d-5" name="rest_code_45351c7f546a450b945adfb5fea5446d-5" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_45351c7f546a450b945adfb5fea5446d-5"></a><span class="nv">LC_TIME</span><span class="o">=</span><span class="s2">&quot;en_US.UTF-8&quot;</span>
+<a id="rest_code_45351c7f546a450b945adfb5fea5446d-6" name="rest_code_45351c7f546a450b945adfb5fea5446d-6" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_45351c7f546a450b945adfb5fea5446d-6"></a><span class="nv">LC_COLLATE</span><span class="o">=</span><span class="s2">&quot;en_US.UTF-8&quot;</span>
+<a id="rest_code_45351c7f546a450b945adfb5fea5446d-7" name="rest_code_45351c7f546a450b945adfb5fea5446d-7" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_45351c7f546a450b945adfb5fea5446d-7"></a><span class="nv">LC_MONETARY</span><span class="o">=</span><span class="s2">&quot;en_US.UTF-8&quot;</span>
+<a id="rest_code_45351c7f546a450b945adfb5fea5446d-8" name="rest_code_45351c7f546a450b945adfb5fea5446d-8" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_45351c7f546a450b945adfb5fea5446d-8"></a><span class="nv">LC_MESSAGES</span><span class="o">=</span><span class="s2">&quot;en_US.UTF-8&quot;</span>
+<a id="rest_code_45351c7f546a450b945adfb5fea5446d-9" name="rest_code_45351c7f546a450b945adfb5fea5446d-9" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_45351c7f546a450b945adfb5fea5446d-9"></a><span class="nv">LC_PAPER</span><span class="o">=</span><span class="s2">&quot;en_US.UTF-8&quot;</span>
+<a id="rest_code_45351c7f546a450b945adfb5fea5446d-10" name="rest_code_45351c7f546a450b945adfb5fea5446d-10" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_45351c7f546a450b945adfb5fea5446d-10"></a><span class="nv">LC_NAME</span><span class="o">=</span><span class="s2">&quot;en_US.UTF-8&quot;</span>
+<a id="rest_code_45351c7f546a450b945adfb5fea5446d-11" name="rest_code_45351c7f546a450b945adfb5fea5446d-11" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_45351c7f546a450b945adfb5fea5446d-11"></a><span class="nv">LC_ADDRESS</span><span class="o">=</span><span class="s2">&quot;en_US.UTF-8&quot;</span>
+<a id="rest_code_45351c7f546a450b945adfb5fea5446d-12" name="rest_code_45351c7f546a450b945adfb5fea5446d-12" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_45351c7f546a450b945adfb5fea5446d-12"></a><span class="nv">LC_TELEPHONE</span><span class="o">=</span><span class="s2">&quot;en_US.UTF-8&quot;</span>
+<a id="rest_code_45351c7f546a450b945adfb5fea5446d-13" name="rest_code_45351c7f546a450b945adfb5fea5446d-13" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_45351c7f546a450b945adfb5fea5446d-13"></a><span class="nv">LC_MEASUREMENT</span><span class="o">=</span><span class="s2">&quot;en_US.UTF-8&quot;</span>
+<a id="rest_code_45351c7f546a450b945adfb5fea5446d-14" name="rest_code_45351c7f546a450b945adfb5fea5446d-14" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_45351c7f546a450b945adfb5fea5446d-14"></a><span class="nv">LC_IDENTIFICATION</span><span class="o">=</span><span class="s2">&quot;en_US.UTF-8&quot;</span>
+<a id="rest_code_45351c7f546a450b945adfb5fea5446d-15" name="rest_code_45351c7f546a450b945adfb5fea5446d-15" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_45351c7f546a450b945adfb5fea5446d-15"></a><span class="nv">LC_ALL</span><span class="o">=</span>
+</pre></div>
+<p>If any of those is set to <code class="docutils literal">C</code> or <code class="docutils literal">POSIX</code>, has a different encoding than
+<code class="docutils literal"><span class="pre">UTF-8</span></code> (sometimes spelled <code class="docutils literal">utf8</code>) is empty (with the exception of
+<code class="docutils literal">LC_ALL</code>), or if you see any errors, you need to reconfigure your locale.</p>
+</section>
+<section id="check-locale-availability-and-install-missing-locales">
+<h1>Check locale availability and install missing locales</h1>
+<p>The first thing you need to do is check locale availability. To do this, run
+<code class="docutils literal">locale <span class="pre">-a</span></code>. This will produce a list of all installed locales.  You can use
+<code class="docutils literal">grep</code> to get a more reasonable list.</p>
+<div class="code"><pre class="code text"><a id="rest_code_704767d3e7724ac7b8d1176bc3b74b03-1" name="rest_code_704767d3e7724ac7b8d1176bc3b74b03-1" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_704767d3e7724ac7b8d1176bc3b74b03-1"></a>$ locale -a | grep -i utf
+<a id="rest_code_704767d3e7724ac7b8d1176bc3b74b03-2" name="rest_code_704767d3e7724ac7b8d1176bc3b74b03-2" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_704767d3e7724ac7b8d1176bc3b74b03-2"></a>&lt;lists all UTF-8 locales&gt;
+<a id="rest_code_704767d3e7724ac7b8d1176bc3b74b03-3" name="rest_code_704767d3e7724ac7b8d1176bc3b74b03-3" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_704767d3e7724ac7b8d1176bc3b74b03-3"></a>$ locale -a | grep -i utf | grep -i en_US
+<a id="rest_code_704767d3e7724ac7b8d1176bc3b74b03-4" name="rest_code_704767d3e7724ac7b8d1176bc3b74b03-4" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_704767d3e7724ac7b8d1176bc3b74b03-4"></a>en_US.UTF-8
+</pre></div>
+<p>The best locale to use is the one for your language, with the UTF-8 encoding.
 The locale will be used by some console apps for output. I’m going to use
-&lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;en_US.UTF-8&lt;/span&gt;&lt;/code&gt; in this guide.&lt;/p&gt;
-&lt;p&gt;If you can’t see any UTF-8 locales, or no appropriate locale setting for your
+<code class="docutils literal"><span class="pre">en_US.UTF-8</span></code> in this guide.</p>
+<p>If you can’t see any UTF-8 locales, or no appropriate locale setting for your
 language of choice, you might need to generate those. The required actions
-depend on your distro/OS.&lt;/p&gt;
-&lt;ul class="simple"&gt;
-&lt;li&gt;&lt;p&gt;Debian, Ubuntu, and derivatives: install &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;language-pack-en-base&lt;/span&gt;&lt;/code&gt;, run &lt;code class="docutils literal"&gt;sudo &lt;span class="pre"&gt;dpkg-reconfigure&lt;/span&gt; locales&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;RHEL, CentOS, Fedora: install &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;glibc-langpack-en&lt;/span&gt;&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Arch Linux: uncomment relevant entries in &lt;code class="docutils literal"&gt;/etc/locale.gen&lt;/code&gt; and run &lt;code class="docutils literal"&gt;sudo &lt;span class="pre"&gt;locale-gen&lt;/span&gt;&lt;/code&gt; &lt;a class="reference external" href="https://wiki.archlinux.org/index.php/Locale"&gt;(wiki)&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;For other OSes, refer to the documentation.&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;You need a UTF-8 locale to ensure compatibility with software. Avoid the &lt;code class="docutils literal"&gt;C&lt;/code&gt;
-and &lt;code class="docutils literal"&gt;POSIX&lt;/code&gt; locales (it’s ASCII) and locales with other encodings (those
-aren’t used by ~anyone these days)&lt;/p&gt;
-&lt;/section&gt;
-&lt;section id="configure-system-wide"&gt;
-&lt;h2&gt;Configure system-wide&lt;/h2&gt;
-&lt;p&gt;On some systems, you may be able to configure locale system-wide.  Check your
-system documentation for details. If your system has systemd, run&lt;/p&gt;
-&lt;div class="code"&gt;&lt;pre class="code text"&gt;&lt;a id="rest_code_3784c4d89818449ba0736958b9fa5e01-1" name="rest_code_3784c4d89818449ba0736958b9fa5e01-1" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_3784c4d89818449ba0736958b9fa5e01-1"&gt;&lt;/a&gt;sudo localectl set-locale LANG=en_US.UTF-8
-&lt;/pre&gt;&lt;/div&gt;
-&lt;/section&gt;
-&lt;section id="configure-for-a-single-user"&gt;
-&lt;h2&gt;Configure for a single user&lt;/h2&gt;
-&lt;p&gt;If your environment does not allow system-wide locale configuration (macOS,
+depend on your distro/OS.</p>
+<ul class="simple">
+<li><p>Debian, Ubuntu, and derivatives: install <code class="docutils literal"><span class="pre">language-pack-en-base</span></code>, run <code class="docutils literal">sudo <span class="pre">dpkg-reconfigure</span> locales</code></p></li>
+<li><p>RHEL, CentOS, Fedora: install <code class="docutils literal"><span class="pre">glibc-langpack-en</span></code></p></li>
+<li><p>Arch Linux: uncomment relevant entries in <code class="docutils literal">/etc/locale.gen</code> and run <code class="docutils literal">sudo <span class="pre">locale-gen</span></code> <a class="reference external" href="https://wiki.archlinux.org/index.php/Locale">(wiki)</a></p></li>
+<li><p>For other OSes, refer to the documentation.</p></li>
+</ul>
+<p>You need a UTF-8 locale to ensure compatibility with software. Avoid the <code class="docutils literal">C</code>
+and <code class="docutils literal">POSIX</code> locales (it’s ASCII) and locales with other encodings (those
+aren’t used by ~anyone these days)</p>
+</section>
+<section id="configure-system-wide">
+<h1>Configure system-wide</h1>
+<p>On some systems, you may be able to configure locale system-wide.  Check your
+system documentation for details. If your system has systemd, run</p>
+<div class="code"><pre class="code text"><a id="rest_code_8e2d3316c858497393bb3774f7ebe9d1-1" name="rest_code_8e2d3316c858497393bb3774f7ebe9d1-1" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_8e2d3316c858497393bb3774f7ebe9d1-1"></a>sudo localectl set-locale LANG=en_US.UTF-8
+</pre></div>
+</section>
+<section id="configure-for-a-single-user">
+<h1>Configure for a single user</h1>
+<p>If your environment does not allow system-wide locale configuration (macOS,
 shared server with generated but unconfigured locales), or if you want to
-ensure it’s always configured independently of system settings.&lt;/p&gt;
-&lt;p&gt;To do this, you need to edit the configuration file for your shell. If you’re
-using bash, it’s &lt;code class="docutils literal"&gt;.bashrc&lt;/code&gt; (or &lt;code class="docutils literal"&gt;.bash_profile&lt;/code&gt; on macOS). For zsh users,
-&lt;code class="docutils literal"&gt;.zshrc&lt;/code&gt;.  Add this line (or equivalent in your shell):&lt;/p&gt;
-&lt;div class="code"&gt;&lt;pre class="code sh"&gt;&lt;a id="rest_code_32ba8510c5014950bd8c3c8c16c10a89-1" name="rest_code_32ba8510c5014950bd8c3c8c16c10a89-1" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_32ba8510c5014950bd8c3c8c16c10a89-1"&gt;&lt;/a&gt;&lt;span class="nb"&gt;export&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;LANG&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;en_US.UTF-8&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;LC_ALL&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;en_US.UTF-8
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;That should be enough. Note that those settings don’t apply to programs
-not launched through a shell.&lt;/p&gt;
-&lt;hr class="docutils"&gt;
-&lt;p&gt;&lt;strong&gt;Python/Windows corner:&lt;/strong&gt; Python 3.7 will fix this on Unix by assuming UTF-8
+ensure it’s always configured independently of system settings.</p>
+<p>To do this, you need to edit the configuration file for your shell. If you’re
+using bash, it’s <code class="docutils literal">.bashrc</code> (or <code class="docutils literal">.bash_profile</code> on macOS). For zsh users,
+<code class="docutils literal">.zshrc</code>.  Add this line (or equivalent in your shell):</p>
+<div class="code"><pre class="code sh"><a id="rest_code_28348ddaf62c4af99190326623915503-1" name="rest_code_28348ddaf62c4af99190326623915503-1" href="https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/#rest_code_28348ddaf62c4af99190326623915503-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">LANG</span><span class="o">=</span>en_US.UTF-8<span class="w"> </span><span class="nv">LC_ALL</span><span class="o">=</span>en_US.UTF-8
+</pre></div>
+<p>That should be enough. Note that those settings don’t apply to programs
+not launched through a shell.</p>
+<hr class="docutils">
+<p><strong>Python/Windows corner:</strong> Python 3.7 will fix this on Unix by assuming UTF-8
 if it encounters the C locale.  On Windows, Python 3.6 is using UTF-8
-interactively, but not when using shell redirections to files or pipes.&lt;/p&gt;
-&lt;p&gt;&lt;em&gt;This post was brought to you by ą — U+0105 LATIN SMALL LETTER A WITH OGONEK.&lt;/em&gt;&lt;/p&gt;
-&lt;/section&gt;</description><category>guide</category><category>locale</category><category>Python</category><category>Unicode</category><category>Unix</category><guid>https://chriswarrick.com/blog/2017/06/18/unix-locales-vs-unicode/</guid><pubDate>Sun, 18 Jun 2017 18:40:00 GMT</pubDate></item></channel></rss>
+interactively, but not when using shell redirections to files or pipes.</p>
+<p><em>This post was brought to you by ą — U+0105 LATIN SMALL LETTER A WITH OGONEK.</em></p>
+</section>
+]]></content:encoded><category>Programming</category><category>guide</category><category>locale</category><category>Python</category><category>Unicode</category><category>Unix</category></item></channel></rss>

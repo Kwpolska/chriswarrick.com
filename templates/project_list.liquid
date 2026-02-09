@@ -1,0 +1,56 @@
+{% layout "base.liquid" %}
+<header class="page-header">
+  <h1>{{ title }}</h1>
+</header>
+
+{% if FeaturedProjects %}
+  <div id="project-carousel" class="carousel slide" data-ride="carousel">
+    <!-- Indicators -->
+    <ol class="carousel-indicators">
+      {% for p in FeaturedProjects %}
+        <li data-target="#project-carousel" data-slide-to="{{ forloop.index0 }}"
+          {% if forloop.index0 == 0 %}
+            class="active"
+          {% endif %}
+        ></li>
+      {% endfor %}
+    </ol>
+
+    <!-- Wrapper for slides -->
+    <div class="carousel-inner">
+      {% for p in FeaturedProjects %}
+        <div class="carousel-item
+{% if forloop.index0 == 0 %}
+active
+{% endif %}
+">
+          <a href="{{ p.Url }}">
+            <img class="d-block w-100" style="max-width: 100%" src="{{ p.Meta.Thumbnail }}" alt="{{ p.Title }}">
+          </a>
+          <div class="carousel-caption d-none d-md-block">
+            <h3>{{ p.Title }} {{ p.Meta.Project.DevStatus | projectDevStatus }}</h3>
+            <p>{{ p.Meta.Description }}</p>
+            <a href="{{ p.Url }}" class="btn btn-primary"><i class="fa fa-info-circle"></i> View details</a>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <a class="carousel-control-prev" href="#project-carousel" role="button" data-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="sr-only">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#project-carousel" role="button" data-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="sr-only">Next</span>
+    </a>
+  </div>
+{% endif %}
+
+<h2>All projects</h2>
+
+<ul class="project-list">
+  {% for p in Items %}
+    <li class="project project-sort-{{ p.Meta.Project.Sort }}"><a href="{{ p.Url }}">{{ p.Title }}</a> {{ p.Meta.Project.DevStatus | projectDevStatus }}</li>
+  {% endfor %}
+</ul>

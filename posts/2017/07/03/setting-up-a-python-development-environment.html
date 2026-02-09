@@ -1,0 +1,419 @@
+---
+title: "Setting up a Python development environment"
+published: "2017-07-03 12:40:00+02:00"
+tags: ["Python", "guide", "devel", "best practices", "guide"]
+category: "Python"
+guide: true
+guideEffect: "you can use Python and create something awesome"
+guidePlatform: "Windows, macOS, Linux"
+guideTopic: "Python"
+shortlink: "pysetup"
+updated: "2018-09-21 16:20:00+02:00"
+legacy: true
+---
+<p>Setting up Python is usually simple, but there are some places where newcomers
+(and experienced users) need to be careful. What versions are there? What’s the
+difference between Python, CPython, Anaconda, PyPy? Those and many other
+questions may stump new developers, or people wanting to use Python.</p>
+<!-- TEASER_END -->
+<p>Note: this guide is opinionated.</p>
+<nav class="contents right-toc" id="contents" role="doc-toc">
+<p class="topic-title"><a class="reference internal" href="#top">Contents</a></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#glossary-and-questions" id="toc-entry-1">Glossary and questions</a></p>
+<ul>
+<li><p><a class="reference internal" href="#python-versions-2-vs-3" id="toc-entry-2">Python versions: 2 vs 3</a></p></li>
+<li><p><a class="reference internal" href="#can-i-run-multiple-pythons-on-the-same-machine" id="toc-entry-3">Can I run multiple Pythons on the same machine?</a></p></li>
+<li><p><a class="reference internal" href="#implementations" id="toc-entry-4">Implementations</a></p></li>
+<li><p><a class="reference internal" href="#distributions" id="toc-entry-5">Distributions</a></p></li>
+<li><p><a class="reference internal" href="#can-i-make-exe-files-from-python-programs" id="toc-entry-6">Can I make .exe files from Python programs?</a></p></li>
+<li><p><a class="reference internal" href="#where-to-learn-python-where-to-get-help" id="toc-entry-7">Where to learn Python? Where to get help?</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#installing-python" id="toc-entry-8">Installing Python</a></p>
+<ul>
+<li><p><a class="reference internal" href="#windows" id="toc-entry-9">Windows</a></p></li>
+<li><p><a class="reference internal" href="#macos" id="toc-entry-10">macOS</a></p></li>
+<li><p><a class="reference internal" href="#linux-and-other-unix-like-oses" id="toc-entry-11">Linux (and other Unix-like OSes)</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#installing-packages" id="toc-entry-12">Installing packages</a></p>
+<ul>
+<li><p><a class="reference internal" href="#user-installs" id="toc-entry-13">User installs</a></p></li>
+<li><p><a class="reference internal" href="#virtual-environments" id="toc-entry-14">Virtual environments</a></p>
+<ul>
+<li><p><a class="reference internal" href="#tools-and-management" id="toc-entry-15">Tools and management</a></p></li>
+<li><p><a class="reference internal" href="#installation-and-usage" id="toc-entry-16">Installation and usage</a></p></li>
+<li><p><a class="reference internal" href="#upgrading-and-moving" id="toc-entry-17">Upgrading and moving</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#packages-with-c-extensions-binary" id="toc-entry-18">Packages with C extensions (binary)</a></p></li>
+<li><p><a class="reference internal" href="#other-stuff" id="toc-entry-19">Other stuff</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#editors-and-ides" id="toc-entry-20">Editors and IDEs</a></p></li>
+<li><p><a class="reference internal" href="#update-history" id="toc-entry-21">Update history</a></p></li>
+</ul>
+</nav>
+<section id="glossary-and-questions">
+<h1><a class="toc-backref" href="#toc-entry-1" role="doc-backlink">Glossary and questions</a></h1>
+<section id="python-versions-2-vs-3">
+<h2><a class="toc-backref" href="#toc-entry-2" role="doc-backlink">Python versions: 2 vs 3</a></h2>
+<p>The Python community has undergone sort of a <em>schism</em> in recent years. Python
+3, released in 2008, broke backwards compatibility: deprecated some bad
+constructs and libraries (eg. <code class="docutils literal">raw_input()</code> became <code class="docutils literal">input()</code> and the
+original Python 2 function that ran code input by users is gone; <code class="docutils literal">print()</code>
+became a function; many things that returned lists now are iterators — <code class="docutils literal">zip</code>,
+<code class="docutils literal">range</code>), and completely remodelled strings (which are now Unicode by
+default, and the interpreter behavior is stricter when the wrong type is used)</p>
+<p>For new code, you should use Python 3. <a class="reference external" href="https://python3wos.appspot.com/">Most popular packages support Python 3</a>, and many of them support both Pythons at
+the same time. The early bugs were ironed out in the first few point releases,
+some features that made porting easier were added (back).</p>
+<p>But what if you end up needing Python 2 later? No problem: you can learn the
+differences in a short time, and with the help of a few libraries (eg. <code class="docutils literal">six</code>)
+you can easily write code that is compatible with Python 2 and 3 at the same
+time, using the same codebase (most libraries out there do that).</p>
+<p>Python 2 will go EOL and lose official support and updates in 2020.</p>
+<p>Read more: <a class="reference external" href="https://wiki.python.org/moin/Python2orPython3">Python 2 or Python 3 on Python Wiki</a></p>
+</section>
+<section id="can-i-run-multiple-pythons-on-the-same-machine">
+<h2><a class="toc-backref" href="#toc-entry-3" role="doc-backlink">Can I run multiple Pythons on the same machine?</a></h2>
+<p>Yes. Note that multiple Python interpreters are completely separate: they have
+their own pip and packages, and you can’t run Python 2 code in a Python 3
+interpreter. You need to specify which interpreter to use when installing
+packages and running some scripts (eg. <code class="docutils literal">pip2</code>, <code class="docutils literal">pip3</code> or <code class="docutils literal">python3 <span class="pre">-m</span> pip</code>).</p>
+<p>It’s best to limit yourself to the latest Python 2 and 3 versions. Python is
+backwards-compatible within the major release, so Python 2.7 runs code
+written with older 2.x versions in mind.</p>
+</section>
+<section id="implementations">
+<h2><a class="toc-backref" href="#toc-entry-4" role="doc-backlink">Implementations</a></h2>
+<p>A programming language is an abstract construct. To run code written in that
+language, an interpreter or compiler needs to be written. In Python’s case,
+there’s a plethora of implementations. Some of them are:</p>
+<ul class="simple">
+<li><p><strong>CPython</strong> is the reference implementation. This is the implementation
+distributed on <a class="reference external" href="https://python.org/">https://python.org/</a> and as part of many operating systems.
+Most Python features are first implemented in CPython, and then they are
+ported to other implementations.  If you don’t know what to choose, use
+CPython.</p></li>
+<li><p><strong>PyPy</strong> is a fast implementation, written in a subset of Python. It’s compatible with
+Python 2.7 and 3.5 (beta support). It can run all pure Python code, and many
+extension libraries that use CFFI.</p></li>
+<li><p><strong>IronPython</strong> is a .NET CLR implementation. It can integrate with .NET code.</p></li>
+<li><p><strong>Jython</strong> is a Java JVM implementation. It can integrate with Java code, as
+well as other JVM languages.</p></li>
+</ul>
+<p>Read more: <a class="reference external" href="https://wiki.python.org/moin/PythonImplementations">Python Implementations on Python Wiki</a></p>
+</section>
+<section id="distributions">
+<h2><a class="toc-backref" href="#toc-entry-5" role="doc-backlink">Distributions</a></h2>
+<p>There are also Python (CPython) distributions. They ship the CPython
+interpreter and add some extra packages/features.  They are maintained by other
+communities or corporate entities.</p>
+<p>The most popular third-party distribution is <a class="reference external" href="https://www.continuum.io/downloads">Anaconda</a> from Continuum Analytics. It’s popular
+for data scientists, and includes over 100 packages, with extra pre-built
+binaries available from the <code class="docutils literal">conda</code> package manager.</p>
+<p>I personally recommend to avoid Anaconda:</p>
+<ul class="simple">
+<li><p>Most packages have binary wheels for Windows, macOS and Linux (yes, Linux!)
+making the installation as simple as <code class="docutils literal">pip install numpy</code>.</p></li>
+<li><p>You waste disk space for packages Anaconda installs that you won’t ever need.</p></li>
+<li><p>It’s provided by some random for-profit company.</p></li>
+<li><p>I’ve seen bugs that were not reproducible outside of Anaconda.</p></li>
+<li><p>You can still do data science using the official distribution. There’s
+nothing special about Anaconda.</p></li>
+</ul>
+<p>Read more: <a class="reference external" href="https://wiki.python.org/moin/PythonDistributions">Python distributions on Python Wiki</a></p>
+</section>
+<section id="can-i-make-exe-files-from-python-programs">
+<h2><a class="toc-backref" href="#toc-entry-6" role="doc-backlink">Can I make .exe files from Python programs?</a></h2>
+<p>Yes, you can. There are tools for this — <a class="reference external" href="http://www.pyinstaller.org/">PyInstaller</a> is the best one. Note that you usually need to
+run it on the destination operating system. And remember that “compiling” to
+exe files like that <strong>is not</strong> a security measure — your source code is still
+easily recoverable. (It’s not a security measure in other languages either,
+even if getting source code back might be more expensive/tricky in those.)</p>
+</section>
+<section id="where-to-learn-python-where-to-get-help">
+<h2><a class="toc-backref" href="#toc-entry-7" role="doc-backlink">Where to learn Python? Where to get help?</a></h2>
+<p>The choice of learning material is important. If you get a bad book, it might
+discourage you from learning (because it’s boring), or may teach you
+bad/outdated practices.</p>
+<p>If you can already program in another language, I recommend the <a class="reference external" href="https://docs.python.org/3/tutorial/">official
+Python tutorial</a>. For newcomers to
+programming, I recommend <a class="reference external" href="http://greenteapress.com/wp/think-python-2e/">Think Python</a> or <a class="reference external" href="https://automatetheboringstuff.com/">Automate the Boring Stuff
+with Python</a>.  They teach Python 3, and
+(mostly) best practices.</p>
+<p>If you need help, try <code class="docutils literal">#python</code> on freenode IRC, the <a class="reference external" href="https://mail.python.org/mailman/listinfo/tutor">Tutor</a> or <a class="reference external" href="https://mail.python.org/mailman/listinfo/python-list">Python-list</a> mailing lists, or a bunch of other communities. (I’m a regular on <code class="docutils literal">#python</code>)</p>
+</section>
+</section>
+<section id="installing-python">
+<h1><a class="toc-backref" href="#toc-entry-8" role="doc-backlink">Installing Python</a></h1>
+<p>This guide will focus on installing CPython 2.7 and 3.x (latest), using the standard
+distribution. This choice is satisfactory for most people. Third-party
+distributions, while handy in some cases, are not needed for most. (See
+<a class="reference internal" href="#distributions">Distributions</a> for arguments)</p>
+<p>Throughout this guide, I’ll refer to the Python interpreter executable as
+<code class="docutils literal">python</code>. The exact name depends on your system and desired version. On most
+OSes, <code class="docutils literal">python</code> is Python 2 and <code class="docutils literal">python3</code> is 3; <code class="docutils literal">python2</code> should also
+exist.  On Arch Linux, <code class="docutils literal">python</code> is Python 3. On Windows, use the <code class="docutils literal">py</code>
+launcher.</p>
+<section id="windows">
+<h2><a class="toc-backref" href="#toc-entry-9" role="doc-backlink">Windows</a></h2>
+<p>Download the installer(s): <a class="reference external" href="https://www.python.org/downloads/">https://www.python.org/downloads/</a></p>
+<p>Those installers come with <code class="docutils literal">pip</code>, and modern Python 3.x versions come with
+the <code class="docutils literal">py</code> launcher.  You can use that launcher to pick a specific Python
+version, eg.:</p>
+<ul class="simple">
+<li><p><code class="docutils literal">py <span class="pre">-3</span> <span class="pre">-m</span> pip install &lt;package&gt;</code></p></li>
+<li><p><code class="docutils literal">py <span class="pre">-2</span> somefile.py</code></p></li>
+<li><p><code class="docutils literal">py <span class="pre">-2.7</span></code></p></li>
+<li><p><code class="docutils literal">py</code> (default system version)</p></li>
+</ul>
+<p>It’s recommended for most use, and mandatory for upgrading pip.</p>
+<p>The 32-bit versions are more versatile. Most packages support both (the only
+exception I’m aware of is Tensorflow, which only allows 64-bit Python 3.5 as of
+now).</p>
+</section>
+<section id="macos">
+<h2><a class="toc-backref" href="#toc-entry-10" role="doc-backlink">macOS</a></h2>
+<p>macOS ships with Python 2.7.10 (as of macOS Sierra). It’s not the latest
+version; it’s good enough for most people, but I still recommend installing
+your own (the system Python doesn’t include <code class="docutils literal">pip</code>, for example). You can
+install the latest 2.7 version, as well as Python 3, using a package manager. I
+recommend Homebrew — it’s the most popular solution, and lets you install many
+other packages.</p>
+<p><strong>DO NOT</strong> use the python.org installers: they do not have uninstallers, so you
+will have outdated versions lying around after some time. There is no
+auto-update as well.  <strong>DO NOT</strong> attempt to remove the system-installed Python,
+this will only damage your system and you’ll need to reinstall.</p>
+<p>If you already have a package manager installed (MacPorts, Fink), don’t install
+a new one and just use the existing one.</p>
+<ol class="arabic simple">
+<li><p>Install <a class="reference external" href="https://brew.sh/">Homebrew</a>.</p></li>
+<li><p>Run <code class="docutils literal">brew install python python3</code>.</p></li>
+<li><p>You should now have <code class="docutils literal">python</code>, <code class="docutils literal">python3</code>, <code class="docutils literal">pip</code> and <code class="docutils literal">pip3</code>.</p></li>
+</ol>
+<p>To update Homebrew and Python, run <code class="docutils literal">brew update</code>.</p>
+</section>
+<section id="linux-and-other-unix-like-oses">
+<h2><a class="toc-backref" href="#toc-entry-11" role="doc-backlink">Linux (and other Unix-like OSes)</a></h2>
+<p>On Linux, there usually are good enough packages in your OS repositories. You
+should be able to install the appropriate package for Python (2 and/or 3).
+Most (if not all) distributions require Python — <strong>do not</strong> remove the
+pre-installed packages, and be careful not to overwrite them with something
+newer.</p>
+<p>If the version that ships with your distribution is too old, there are some
+options. There might be some repositories with better versions, eg. the
+<a class="reference external" href="https://launchpad.net/~fkrull/+archive/ubuntu/deadsnakes">deadsnakes PPA</a>
+for Ubuntu. Then there’s the other option of compiling Python. There
+are some tools to help with this, like <code class="docutils literal">pyenv</code> or <code class="docutils literal">pythonz</code> (they can also
+manage multiple Python versions), or you can do it manually.
+The instructions depend on your exact requirements, but here’s a summary:</p>
+<ol class="arabic simple">
+<li><p>Download the <a class="reference external" href="https://www.python.org/downloads/source/">source distribution from Python.org</a> and unpack it. Go into the unpacked source directory.</p></li>
+<li><p>Ensure you’ve got a functional C compiler and Python’s dependencies. You can
+usually use your system’s package manager to install the build dependencies
+of your system Python. Some dependencies are optional (eg. <code class="docutils literal">sqlite3</code>
+requires SQLite headers).</p></li>
+<li><p>Run <code class="docutils literal">./configure <span class="pre">--prefix=/opt/python3.6</span></code> and then <code class="docutils literal">make</code>. (You may add other options to both. It will
+take a while.)</p></li>
+<li><p>Run <code class="docutils literal">make altinstall</code> as root. Avoid <code class="docutils literal">make install</code>, as it can override
+<code class="docutils literal">python</code> executables.</p></li>
+</ol>
+<p>Remember: compiling Python should be considered a <strong>last resort</strong>, unless you
+have very specific Python version requirements.</p>
+</section>
+</section>
+<section id="installing-packages">
+<h1><a class="toc-backref" href="#toc-entry-12" role="doc-backlink">Installing packages</a></h1>
+<p>To install third-party packages, you should use pip, the Python package
+manager. If you’re using Windows or macOS (from Homebrew), pip is included with
+your copy of Python.  If you’re on Linux and installed Python from a system
+repository, install the correct system package (<code class="docutils literal"><span class="pre">python-pip</span></code>,
+<code class="docutils literal"><span class="pre">python3-pip</span></code>). If you compiled your own Python, pip is also included.</p>
+<p>To run pip, use <code class="docutils literal">py <span class="pre">-m</span> pip</code> (Windows), <code class="docutils literal">python <span class="pre">-m</span> pip</code> (other platforms),
+or the short <code class="docutils literal">pip</code>/<code class="docutils literal">pip3</code> commands.</p>
+<p><strong>NEVER use sudo pip.</strong> This can cause numerous problems:</p>
+<ul class="simple">
+<li><p>conflicts between packages installed by pip and your system package
+manager</p></li>
+<li><p>pip modifying system packages, leading to issues when updating them, or
+breaking dependencies</p></li>
+<li><p>no isolation between package versions, which is sometimes needed to satisfy
+dependencies</p></li>
+</ul>
+<p>Note that a package install is specific to the Python interpreter used to run
+<code class="docutils literal">pip</code>. Packages installed to a virtualenv are separate from system packages;
+packages installed for “global” Python 2.7 are separate from 3.6 packages.
+Virtual environments generally don’t use the system packages, unless
+specifically enabled during creation.</p>
+<p>Some distros have popular packages in their repositories. Sometimes they’re
+good; in other cases they’re terribly outdated or they lack important
+components, making package managers angry and sick of supporting a 2-year-old
+version. (Especially since most bugs are closed with “we’ve fixed that long
+ago”)</p>
+<section id="user-installs">
+<h2><a class="toc-backref" href="#toc-entry-13" role="doc-backlink">User installs</a></h2>
+<p>At a small scale, you can install packages with pip for a single user.  Use
+<code class="docutils literal">pip install <span class="pre">--user</span> PACKAGE</code> to do this. If your package installs <a class="reference external" href="https://chriswarrick.com/blog/2014/09/15/python-apps-the-right-way-entry_points-and-scripts/">scripts</a>,
+they will be installed to <code class="docutils literal"><span class="pre">~/.local/bin</span></code> on Linux, and
+<code class="docutils literal">~/Library/Python/X.Y/bin</code> on macOS (X.Y is Python version), or you can use
+<code class="docutils literal">python <span class="pre">-m</span></code> if the package supports it.</p>
+<p>For most people and projects, virtual environments are better. There are,
+however, use cases for putting some packages user-wide — if you don’t work on
+projects, but instead are doing one-off research projects, those are better
+suited by user-wide installs.</p>
+</section>
+<section id="virtual-environments">
+<h2><a class="toc-backref" href="#toc-entry-14" role="doc-backlink">Virtual environments</a></h2>
+<p class="lead">I wrote a newer, more detailed post about virtualenvs: <a class="reference external" href="https://chriswarrick.com/blog/2018/09/04/python-virtual-environments/">Python Virtual
+Environments in Five Minutes</a></p>
+<p>Virtual environments are the best way to install and manage Python packages.
+Advantages include:</p>
+<ul class="simple">
+<li><p>Isolation of projects and their requirements: if one app/package requires
+library version X, but another requires version Y, they can live in separate
+virtual environments</p></li>
+<li><p>Independent from system-wide packages</p></li>
+<li><p>Lightweight (an empty virtualenv is about 10 MB)</p></li>
+<li><p>Simple to re-create in any place (<code class="docutils literal">pip freeze &gt; requirements.txt</code> → <code class="docutils literal">pip install <span class="pre">-r</span> requirements.txt</code>)</p></li>
+</ul>
+<section id="tools-and-management">
+<h3><a class="toc-backref" href="#toc-entry-15" role="doc-backlink">Tools and management</a></h3>
+<p>There are two tools to facilitate creation of virtual environments: the older
+<a class="reference external" href="https://virtualenv.pypa.io/en/stable/">virtualenv</a> project, and the newer
+<code class="docutils literal">venv</code> module. The <code class="docutils literal">venv</code> module is shipped with Python 3.x; some
+distributions may put it in a separate package or remove it altogether. Use
+whichever works for you.  Virtualenv is compatible with more Python versions
+and cannot be broken by incompetent OS package maintainers (<code class="docutils literal">venv</code> requires
+an extra package on Debian).</p>
+<p>There are multiple schools of thought regarding virtualenv placement and
+content. Myself, I use <a class="reference external" href="https://virtualenvwrapper.readthedocs.io/en/latest/">virtualenvwrapper</a> to manage virtualenvs
+and put them in <code class="docutils literal">~/virtualenvs</code>. Other people put virtualenvs inside their
+git repositories (but they <em>must</em> be in <code class="docutils literal">.gitignore</code>) Virtualenvs should only contain packages
+installed with <code class="docutils literal">pip</code> so they can be recreated quickly.</p>
+<p>I also use the <code class="docutils literal">virtualenvwrapper</code> plugin for Oh My Zsh, which also
+activates virtualenvs with the same name as a git repo, or the environment
+named by a <code class="docutils literal">.venv</code> file.</p>
+</section>
+<section id="installation-and-usage">
+<h3><a class="toc-backref" href="#toc-entry-16" role="doc-backlink">Installation and usage</a></h3>
+<p>To install virtualenv user-wide, use <code class="docutils literal">pip install <span class="pre">--user</span> virtualenv</code>. You can
+then use it with <code class="docutils literal">python <span class="pre">-m</span> virtualenv DIRECTORY</code>. You may pass extra
+options, eg. interpreter to use (<code class="docutils literal"><span class="pre">-p</span> python3</code>). Sometimes you need to install
+virtualenv for every Python version; usually, one copy is enough.</p>
+<p>How to use them? This is a subject of heated debate in the Python community.</p>
+<ul class="simple">
+<li><p>Some people believe that activating (<code class="docutils literal">source bin/activate</code> on *nix;
+<code class="docutils literal">Scripts\activate</code> on Windows) is the right thing to do and simplifies work.</p></li>
+<li><p>Others think that you should use <code class="docutils literal">bin/python</code> (or other scripts in that
+directory) directly, as activation only changes <code class="docutils literal">$PATH</code> and some helper
+variables — those variables are not mandatory for operation, running
+the correct <code class="docutils literal">python</code> is.</p></li>
+<li><p>Others still think <a class="reference external" href="https://gist.github.com/datagrok/2199506">virtualenvs should be used in subshells</a>.</p></li>
+</ul>
+<p>In my opinion, if activating virtualenvs works in your environment, you should
+do it — it’s the most convenient option. There are, however, cases when
+activation fails, or is otherwise impossible — calling <code class="docutils literal">bin/python</code> directly
+is your best bet in that case. If you are working inside shell scripts, do not
+activate virtualenvs.  I’m not a fan of the subshell option, because it
+complicates stuff if you work on multiple projects, and requires tracking usage
+manually.</p>
+</section>
+<section id="upgrading-and-moving">
+<h3><a class="toc-backref" href="#toc-entry-17" role="doc-backlink">Upgrading and moving</a></h3>
+<p>Upgrading the system Python may make your virtualenvs unusable.
+For patch version upgrades, you can just update symlinks (see <a class="reference external" href="https://github.com/Kwpolska/scripts/blob/master/fix-venvs.sh">fix-venvs.sh</a>).
+However, if the minor version changes, it’s best to re-create the virtualenv
+(you need to create <code class="docutils literal">requirements.txt</code> ahead of time).</p>
+<p>You cannot move a virtualenv between directories/machines or rename
+virtualenvs. You need to use <code class="docutils literal">pip freeze &gt; requirements.txt</code>, create a new
+virtualenv, and run <code class="docutils literal">pip install <span class="pre">-r</span> requirements.txt</code> (you can then delete
+the old environment with a simple <code class="docutils literal">rm <span class="pre">-rf</span></code>)</p>
+</section>
+</section>
+<section id="packages-with-c-extensions-binary">
+<h2><a class="toc-backref" href="#toc-entry-18" role="doc-backlink">Packages with C extensions (binary)</a></h2>
+<p>The situation improved drastically in the past year or so. Nowadays, almost
+all packages have a pre-compiled package available in PyPI. Those packages work
+for Windows, macOS, and Linux. There are packages for some of the most
+common <em>offenders</em>, including Pillow, lxml, PyQt5, numpy… However, there might
+still be packages without wheels on PyPI.</p>
+<p>If there is no wheel for a package and you are on Windows, check out <a class="reference external" href="http://www.lfd.uci.edu/~gohlke/pythonlibs/">Christoph
+Gohlke’s unofficial binaries</a>.
+If you can’t find any wheels online, you would have to resort to compiling it
+manually — this requires installing Visual Studio (Visual C++) in a version
+that matches your Python, and it’s kind of a pain to do.</p>
+<p>If you are not on Windows, you must install a C compiler and toolchain.
+If you get a warning about missing <code class="docutils literal">Python.h</code>, install the appropriate development
+package — for example, <code class="docutils literal"><span class="pre">python-dev</span></code> or <code class="docutils literal"><span class="pre">python3-dev</span></code>) on Debian/Ubuntu,
+<code class="docutils literal"><span class="pre">python-devel</span></code> or <code class="docutils literal"><span class="pre">python3-devel</span></code> on RHEL/Fedora. The package you’re trying
+to install might have other dependencies that you need to install (the
+<code class="docutils literal"><span class="pre">-dev(el)</span></code> part is important, too)</p>
+</section>
+<section id="other-stuff">
+<h2><a class="toc-backref" href="#toc-entry-19" role="doc-backlink">Other stuff</a></h2>
+<p>If you’re working on a project, use <code class="docutils literal">pip install <span class="pre">-e</span> .</code> inside the project
+directory to install the package in your environment in development (editable)
+mode. This loads code directly from your repository — you don’t need to
+re-install on every change; you might need to re-install when your version
+number changes.</p>
+</section>
+</section>
+<section id="editors-and-ides">
+<h1><a class="toc-backref" href="#toc-entry-20" role="doc-backlink">Editors and IDEs</a></h1>
+<p>Another important thing a developer should take care of is the choice of an
+editor. This is an important decision, and is the reason for many holy wars in
+the programmer community.</p>
+<p>A good editor should have syntax highlighting for all languages you need to
+work with. It should also have features like visual block/multiple selections,
+sophisticated find-and-replace, file finding, code completion, and many more minor
+but helpful features.</p>
+<p>Then there’s the difference between IDEs and text editors. Text editors are
+simpler, whereas IDEs try to include many extra things not necessarily related
+to writing code. IDEs often use more resources, but you won’t notice it with a
+modern computer (especially with a SSD).</p>
+<p>The best IDE out there is <a class="reference external" href="https://www.jetbrains.com/pycharm/">PyCharm</a> from
+JetBrains. It has both a free Community and paid Professional edition. The
+JetBrains folks are experts at IDEs — they have fully-fledged tools for many
+languages. Their Python solution offers a plethora of options that aid
+programmers in their work.  Also, if you work with Java, or otherwise more than
+one IDEA-supported language, then install IntelliJ IDEA and the Python plugin
+(which has the same features as PyCharm).  Students can get <a class="reference external" href="https://www.jetbrains.com/student/">free
+Professional/Ultimate licenses for JetBrains products</a>.</p>
+<p>I also spend a lot of time in <a class="reference external" href="http://www.vim.org/">Vim</a> (<a class="reference external" href="https://neovim.io/">neovim</a>/<a class="reference external" href="http://vimr.org/">VimR</a> to be precise). Vim is the
+most powerful text editor out there, and with the right set of plugins it can
+beat IDEs at speed and productivity. Vim has a steep learning curve, but it’s
+worth it — you can do large changes with just a few keystrokes. Vim is
+considered so good that many IDEs (Visual Studio, IntelliJ IDEA/PyCharm) have
+Vim emulation plugins.</p>
+<p>Another option is <a class="reference external" href="https://code.visualstudio.com/">Visual Studio Code</a> — it’s
+a text editor, but can offer many IDE-like features with the right set of
+plugins. It’s Electron-based architecture, or effectively being based on top of
+Google’s Chromium, is unfortunate and can lead to terrible performance on
+lower-end machines, and on higher-end ones in some cases. (In my experience,
+it’s better than Atom.) You can also try <a class="reference external" href="https://www.sublimetext.com/">Sublime Text</a> ($80).</p>
+<p>But really, almost any editor will do. But please <strong>avoid</strong> IDLE, the editor
+included with Python. It lacks some of the most basic things — it doesn’t even
+have an option to show line numbers. Not to mention its ugliness. Also, don’t
+use Notepad and TextEdit. Those are too simple, and Notepad has encoding
+issues.</p>
+</section>
+<section id="update-history">
+<h1><a class="toc-backref" href="#toc-entry-21" role="doc-backlink">Update history</a></h1>
+<dl class="simple">
+<dt>2018-09-21</dt>
+<dd><p>Link to python-virtual-environments post.</p>
+</dd>
+<dt>2017-07-19</dt>
+<dd><p>Better description of problems caused by using sudo pip.</p>
+</dd>
+<dt>2017-07-10</dt>
+<dd><p>Added notes about not removing built-in Pythons.</p>
+</dd>
+<dt>2017-07-07</dt>
+<dd><p>Spelling fixes and updates to the virtualenv usage section.</p>
+</dd>
+</dl>
+</section>

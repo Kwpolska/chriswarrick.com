@@ -1,128 +1,152 @@
 <!DOCTYPE html>
-<html class="limited-width larger-font" prefix="
-og: http://ogp.me/ns#
-" lang="en">
+<html class="limited-width larger-font" prefix="og: http://ogp.me/ns#" lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="description" content="I spent Saturday on rewriting a Flask app in Django.">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Rewriting a Flask app in Django | Chris Warrick</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.css" integrity="sha256-FqCzNnnyXl5HxHMdb+RQ/RV/X7fqfPcQYy+G2gFL3Xk=" crossorigin="anonymous">
+  <meta charset="utf-8">
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rewriting a Flask app in Django | Chris Warrick</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.css"
+        integrity="sha256-FqCzNnnyXl5HxHMdb+RQ/RV/X7fqfPcQYy+G2gFL3Xk=" crossorigin="anonymous">
 <!--#if expr="$HTTP_COOKIE=/colorScheme\=light/" --><link href="/assets/css/all.css?v=20230115" rel="stylesheet" type="text/css" id="kw-all-css">
 <script type="text/javascript">var colorScheme='light';var colorSchemesEnabled=true;</script><!--#else--><link href="/assets/css/all-dark.css?v=20230115" rel="stylesheet" type="text/css" id="kw-all-css">
-<script type="text/javascript">var colorScheme='dark';var colorSchemesEnabled=true;</script><!--#endif--><link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,700,700i|Source+Serif+Pro:600&amp;display=swap&amp;subset=latin-ext" rel="stylesheet">
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
-<meta name="theme-color" content="#00aadd">
-<meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="/rss.xml">
-<link rel="canonical" href="https://chriswarrick.com/blog/2015/10/11/rewriting-a-flask-app-in-django/">
-<link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="16x16 32x32 48x48 64x64 128x128 256x256">
-<link rel="icon" type="image/png" href="/assets/img/logo512.png">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<!--[if lt IE 9]><script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]--><meta name="description" itemprop="description" content="I spent Saturday on rewriting a Flask app in Django.">
-<meta name="author" content="Chris Warrick">
-<link rel="prev" href="/blog/2015/07/23/ssg-speed-test/" title="Static Site Generator Speed Test (Nikola, Pelican, Hexo, Octopress)" type="text/html">
-<link rel="next" href="/blog/2015/12/27/windows-10-november-upgrade-windows-as-a-dis-service/" title="Windows 10 November Upgrade: Windows as a (Dis-)service" type="text/html">
-<meta property="og:site_name" content="Chris Warrick">
-<meta property="og:title" content="Rewriting a Flask app in Django">
-<meta property="og:url" content="https://chriswarrick.com/blog/2015/10/11/rewriting-a-flask-app-in-django/">
-<meta property="og:description" content="I spent Saturday on rewriting a Flask app in Django.">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2015-10-11T17:24:43+02:00">
-<meta property="article:tag" content="Django">
-<meta property="article:tag" content="Flask">
-<meta property="article:tag" content="Internet">
-<meta property="article:tag" content="Nikola">
-<meta property="article:tag" content="Python">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:creator" content="@Kwpolska">
+<script type="text/javascript">var colorScheme='dark';var colorSchemesEnabled=true;</script><!--#endif-->
+  <link
+    href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,700,700i|Source+Serif+Pro:600&amp;display=swap&amp;subset=latin-ext"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css"
+        integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+  <meta name="theme-color" content="#00aadd">
+  <meta name="generator" content="Chris Warrick’s Yet Another Blog Generator">
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/rss.xml">
+  <link rel="canonical" href="https://chriswarrick.com/">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="16x16 32x32 48x48 64x64 128x128 256x256">
+  <link rel="icon" type="image/png" href="/assets/img/logo512.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="prev" href="/blog/2015/07/23/ssg-speed-test/" type="text/html">
+  <link rel="next" href="/blog/2015/12/27/windows-10-november-upgrade-windows-as-a-dis-service/" type="text/html">
+  
 </head>
 <body>
 <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
 
-<!-- Menubar -->
-
-<nav class="navbar navbar-expand-md navbar-kw bg-dark static-top mb-4"><div class="container">
-<!-- This keeps the margins nice -->
-        <a class="navbar-brand" href="/">
-            <img src="/assets/img/logo.png" srcset="/assets/img/logo2x.png 2x" alt="Chris Warrick" id="logo"><span id="blog-title">Chris Warrick</span>
-        </a>
-        <div>
-        <button class="navbar-toggler mr-2" id="color-changer-mobile" type="button" aria-label="Change color scheme">
-            <span class="color-changer"></span>
-        </button>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        </div>
-        <div class="collapse navbar-collapse" id="bs-navbar">
-            <ul class="navbar-nav mr-auto">
-<li class="nav-item">
-<a href="/contact/" class="nav-link">Contact</a>
-                </li>
-<li class="nav-item">
-<a href="/projects/" class="nav-link">Projects</a>
-                </li>
-<li class="nav-item">
-<a href="/guides/" class="nav-link">Guides</a>
-                </li>
-<li class="nav-item">
-<a href="/blog/" class="nav-link">Archives</a>
-                </li>
-<li class="nav-item">
-<a href="/search/" class="nav-link">Search</a>
-
-                
-            </li>
-</ul>
-<ul class="navbar-nav navbar-right">
-<li class="nav-item" id="color-changer-menu">
-<a href="#" class="nav-link" id="color-changer-btn">
-                <div class="color-changer"></div>
-                <span id="color-changer-text"><!--#if expr="$HTTP_COOKIE=/colorScheme\=light/" -->Dark Mode<!--#else -->Light Mode<!--#endif--></span>
-                </a>
-                </li>
-            </ul>
-</div>
-<!-- /.navbar-collapse -->
+<nav class="navbar navbar-expand-md navbar-kw bg-dark static-top mb-4">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <img src="/assets/img/logo.png" srcset="/assets/img/logo2x.png 2x" alt="Chris Warrick" id="logo"><span
+        id="blog-title">Chris Warrick</span>
+    </a>
+    <div>
+      <button class="navbar-toggler mr-2" id="color-changer-mobile" type="button" aria-label="Change color scheme">
+        <span class="color-changer"></span>
+      </button>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar"
+              aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
     </div>
-<!-- /.container -->
-</nav><!-- End of Menubar --><div class="container" id="content" role="main">
-    <div class="body-content">
-        <!--Body content-->
+    <div class="collapse navbar-collapse" id="bs-navbar">
+      <ul class="navbar-nav mr-auto">
         
-        <div id="cookiebox"></div>
-<article class="post-text h-entry hentry postpage postbox" itemscope="itemscope" itemtype="http://schema.org/Article"><header class="page-header"><h1 class="p-name entry-title" itemprop="headline name">
-    <a href="/blog/2015/10/11/rewriting-a-flask-app-in-django/" class="u-url">Rewriting a Flask app in Django</a>
-    </h1>
+        
+          <li class="nav-item">
+            <a href="/contact/" class="nav-link">Contact</a>
+          </li>
+        
+        
+        
+          <li class="nav-item">
+            <a href="/projects/" class="nav-link">Projects</a>
+          </li>
+        
+        
+        
+          <li class="nav-item">
+            <a href="/guides/" class="nav-link">Guides</a>
+          </li>
+        
+        
+        
+          <li class="nav-item">
+            <a href="/blog/" class="nav-link">Archives</a>
+          </li>
+        
+        
+        
+          <li class="nav-item">
+            <a href="/blog/tags/" class="nav-link">Tags</a>
+          </li>
+        
+        
+      </ul>
+      <ul class="navbar-nav navbar-right">
+        <li class="nav-item" id="color-changer-menu">
+          <a href="#" class="nav-link" id="color-changer-btn">
+            <div class="color-changer"></div>
+            <span id="color-changer-text">Light Mode</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<div class="container" id="content" role="main">
+  <div class="body-content">
+    <div id="cookiebox"></div>
+    
 
-    <div class="metadata">
-<a href="/blog/2015/10/11/rewriting-a-flask-app-in-django/" rel="bookmark" class="u-published"><time class="published dt-published" datetime="2015-10-11T17:24:43+02:00" itemprop="datePublished" title="11 October 2015 at 17:24">11 October 2015 at 17:24</time></a>
-        <ul itemprop="keywords" class="tags post-bubbles list-inline">
-<li class="category-bubble"><a href="/blog/tags/cat_python/" style="background-color: #ffd43b !important">Python</a></li>
-           <li><a class="tag p-category" href="/blog/tags/django/" rel="tag">Django</a></li>
-           <li><a class="tag p-category" href="/blog/tags/flask/" rel="tag">Flask</a></li>
-           <li><a class="tag p-category" href="/blog/tags/internet/" rel="tag">Internet</a></li>
-           <li><a class="tag p-category" href="/blog/tags/nikola/" rel="tag">Nikola</a></li>
-           <li><a class="tag p-category" href="/blog/tags/python/" rel="tag">Python</a></li>
-        </ul>
-</div>
-    </header><div class="e-content entry-content" itemprop="articleBody text">
-    <div class="lead">
+
+<article class="post-text h-entry hentry postpage postbox" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+<header class="page-header">
+  <h1 class="p-name entry-title" itemprop="headline name">
+    <a href="/blog/2015/10/11/rewriting-a-flask-app-in-django/" class="u-url">Rewriting a Flask app in Django</a>
+  </h1>
+
+  <div class="metadata">
+    <a href="/blog/2015/10/11/rewriting-a-flask-app-in-django/" rel="bookmark" class="u-published">
+      <time class="published dt-published" datetime="2015-10-11T17:24:43.0000000&#x2B;02:00" itemprop="datePublished" title="11 October 2015 17:24">11 October 2015 17:24</time>
+    
+    </a>
+    <ul itemprop="keywords" class="tags post-bubbles list-inline">
+      <li class="category-bubble"><a href="/blog/tags/cat_python" style="background-color: #dca900 !important">Python</a></li>
+      
+        <li><a class="tag p-category" href="/blog/tags/django" rel="tag">Django</a></li>
+      
+        <li><a class="tag p-category" href="/blog/tags/flask" rel="tag">Flask</a></li>
+      
+        <li><a class="tag p-category" href="/blog/tags/internet" rel="tag">Internet</a></li>
+      
+        <li><a class="tag p-category" href="/blog/tags/nikola" rel="tag">Nikola</a></li>
+      
+        <li><a class="tag p-category" href="/blog/tags/python" rel="tag">Python</a></li>
+      
+    </ul>
+    
+    
+  </div>
+</header>
+
+  <div class="e-content entry-content" itemprop="articleBody text">
+    
+      <div class="lead">
+        
 <p>I spent Saturday on rewriting a Flask app in Django.  The app in question was
 <a class="reference external" href="https://users.getnikola.com/">Nikola Users</a>, which is a very simple CRUD
 app.  And yet, the Flask code was a mess, full of bugs and vulnerabilities.
 Eight hours later, I had a fully functional Django app that did more and fixed
 all problems.</p>
-</div>
-</div>
-<section id="original-flask-app"><h2>Original Flask app</h2>
+
+      </div>
+    
+    
+<section id="original-flask-app">
+<h1>Original Flask app</h1>
 <p>The original Flask app had a ton of problems.  In order to make it anywhere
 near useful, I would need to spend hours.  Here’s just a few of
 them:</p>
 <ul class="simple">
 <li><p>357 lines of spaghetti code (295 SLOC), all in one file</p></li>
-<li><p>No form data validation, no CSRF <a class="brackets" href="/blog/2015/10/11/rewriting-a-flask-app-in-django/#footnote-1" id="footnote-reference-1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> protection (it did have XSS protection
+<li><p>No form data validation, no CSRF <a class="brackets" href="#footnote-1" id="footnote-reference-1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> protection (it did have XSS protection
 though)</p></li>
 <li><p>Login using Mozilla Persona, which requries JavaScript, is a bit kludgey, and
 feels desolate (and also had me store the admin e-mail list in code)</p></li>
@@ -139,13 +163,16 @@ were multiple processes involved)</p></li>
 template and not in the view code); menus hacked together in HTML with no
 highlighting</p></li>
 <li><p>Python 2.7</p></li>
-</ul></section><section id="the-rewrite"><h2>The rewrite</h2>
+</ul>
+</section>
+<section id="the-rewrite">
+<h1>The rewrite</h1>
 <p>I started the process by opening <a class="reference external" href="https://docs.djangoproject.com/en/">Django documentation</a>, with its wonderful
 <a class="reference external" href="https://docs.djangoproject.com/en/1.8/intro/tutorial01/">tutorial</a>.  Now, I have written a couple basic Django apps before, but
 the majority of them didn’t do much.  In other words, I didn’t have a lot of experience.  Especially with taking user input and relationships.  It took me about 8 hours to get feature parity, and more.</p>
 <p>Getting all the features was really simple.  For example, to get a many-to-many
 relationship for languages, I had to write just one line.</p>
-<div class="code"><pre class="code python"><a id="rest_code_5c23020eb9c5421c92d012a33c27aaf6-1" name="rest_code_5c23020eb9c5421c92d012a33c27aaf6-1" href="/blog/2015/10/11/rewriting-a-flask-app-in-django/#rest_code_5c23020eb9c5421c92d012a33c27aaf6-1"></a><span class="n">languages</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="n">Language</span><span class="p">)</span>
+<div class="code"><pre class="code python"><a id="rest_code_ea0160f8c13f453b8c5b1d4887725fb8-1" name="rest_code_ea0160f8c13f453b8c5b1d4887725fb8-1" href="#rest_code_ea0160f8c13f453b8c5b1d4887725fb8-1"></a><span class="n">languages</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="n">Language</span><span class="p">)</span>
 </pre></div>
 <p>That’s it.  I didn’t have to run through complicated SQLAlchemy documentation,
 which provides a <a class="reference external" href="http://docs.sqlalchemy.org/en/rel_1_0/orm/basic_relationships.html#many-to-many">13-line solution</a> to the same problem.</p>
@@ -153,8 +180,8 @@ which provides a <a class="reference external" href="http://docs.sqlalchemy.org/
 using Django template tags.</p>
 <p>Django is not without its problems, though.  I got a very cryptic traceback
 when I did this:</p>
-<div class="code"><pre class="code python"><a id="rest_code_22de19c0c7924747af9b296f330d8c71-1" name="rest_code_22de19c0c7924747af9b296f330d8c71-1" href="/blog/2015/10/11/rewriting-a-flask-app-in-django/#rest_code_22de19c0c7924747af9b296f330d8c71-1"></a><span class="n">publish_email</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="s2">"Publish e-mail"</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<a id="rest_code_22de19c0c7924747af9b296f330d8c71-2" name="rest_code_22de19c0c7924747af9b296f330d8c71-2" href="/blog/2015/10/11/rewriting-a-flask-app-in-django/#rest_code_22de19c0c7924747af9b296f330d8c71-2"></a><span class="ne">TypeError</span><span class="p">:</span> <span class="s2">"BooleanField() got multiple values for argument 'required'"</span>
+<div class="code"><pre class="code python"><a id="rest_code_c47a1c8a76894a0fb5173c04c7d6277b-1" name="rest_code_c47a1c8a76894a0fb5173c04c7d6277b-1" href="#rest_code_c47a1c8a76894a0fb5173c04c7d6277b-1"></a><span class="n">publish_email</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="s2">&quot;Publish e-mail&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<a id="rest_code_c47a1c8a76894a0fb5173c04c7d6277b-2" name="rest_code_c47a1c8a76894a0fb5173c04c7d6277b-2" href="#rest_code_c47a1c8a76894a0fb5173c04c7d6277b-2"></a><span class="ne">TypeError</span><span class="p">:</span> <span class="s2">&quot;BooleanField() got multiple values for argument &#39;required&#39;&quot;</span>
 </pre></div>
 <p>The real problem with this code?  I forgot the <code class="docutils literal">label=</code> keyword.  The
 problem is, the model API accepts this syntax — <code class="docutils literal">verbose_name</code> is the first
@@ -179,98 +206,150 @@ reflected immediately (no caching)</p></li>
 <li><p>Python 3</p></li>
 <li><p>New features: featured sites; show only a specified language — were really easy to add</p></li>
 </ul>
-<aside class="footnote-list brackets"><aside class="footnote brackets" id="footnote-1" role="doc-footnote"><span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="/blog/2015/10/11/rewriting-a-flask-app-in-django/#footnote-reference-1">1</a><span class="fn-bracket">]</span></span>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="footnote-1" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#footnote-reference-1">1</a><span class="fn-bracket">]</span></span>
 <p>I had some <code class="docutils literal">CSRF_ENABLED</code> variable, but it did not seem to be actually
 used by anything.</p>
-</aside></aside></section></article>
-</div>
-    <aside class="postpromonav"><nav><ul class="pager hidden-print">
-<li class="previous">
-                <a href="/blog/2015/07/23/ssg-speed-test/" rel="prev" title="Static Site Generator Speed Test (Nikola, Pelican, Hexo, Octopress)">Previous post</a>
-            </li>
-            <li class="next">
-                <a href="/blog/2015/12/27/windows-10-november-upgrade-windows-as-a-dis-service/" rel="next" title="Windows 10 November Upgrade: Windows as a (Dis-)service">Next post</a>
-            </li>
-        </ul></nav></aside><section class="comments"><div data-title="Rewriting a Flask app in Django" id="isso-thread"></div>
-        <script src="https://isso.chriswarrick.com/js/embed.min.js" data-isso="https://isso.chriswarrick.com/" data-isso-lang="en" data-isso-require-author="true" data-isso-require-email="true" data-isso-gravatar="true" data-isso-avatar="false" data-isso-css="false" data-isso-vote="false" data-isso-reply-notifications="true"></script></section><!--End of body content--><nav id="footer-links"><div class="row">
-            <div class="col-sm-4">
-                <h6>Blog</h6>
-                <ul>
-<li class="nav-item">
-<a href="/blog/" class="nav-link">Archive</a>
-                        </li>
-<li class="nav-item">
-<a href="/blog/tags/" class="nav-link">Tags</a>
-                        </li>
-<li class="nav-item">
-<a href="/rss.xml" class="nav-link">RSS Feed</a>
-                        </li>
-<li class="nav-item">
-<a href="/search/" class="nav-link">Search</a>
-                </li>
-</ul>
-</div>
-            <div class="col-sm-4">
-                <h6>Projects and Work</h6>
-                <ul>
-<li class="nav-item">
-<a href="/projects/" class="nav-link">Projects</a>
-                        </li>
-<li class="nav-item">
-<a href="/guides/" class="nav-link">Guides</a>
-                        </li>
-<li class="nav-item">
-<a href="/kwbot/" class="nav-link">KwBot</a>
-                        </li>
-<li class="nav-item">
-<a href="/blog/tags/cat_python" class="nav-link">Posts about Python</a>
-                </li>
-</ul>
-</div>
-            <div class="col-sm-4">
-                <h6>Me</h6>
-                <ul>
-<li class="nav-item">
-<a href="/contact/" class="nav-link">Contact</a>
-                        </li>
-<li class="nav-item">
-<a href="/brand/" class="nav-link">Brand</a>
-                        </li>
-<li class="nav-item">
-<a href="https://twitter.com/Kwpolska" class="nav-link">Twitter</a>
-                        </li>
-<li class="nav-item">
-<a href="https://github.com/Kwpolska" class="nav-link">GitHub</a>
-                </li>
-</ul>
-</div>
-        </div></nav><footer id="footer"><p>this site uses cookies.<br>by using this site, you agree to our <a href="/privacy/">cookie and privacy policy</a>.</p>
-<p>
-powered by <strong><a href="https://getnikola.com/">Nikola</a></strong>, <a href="http://nginx.org/">nginx</a> and <a href="https://hetzner.cloud/?ref=Qy1lehF8PwzP">Hetzner Cloud</a><br>
-copyright © 2009–2026 <a href="/contact/">Chris Warrick</a><br><a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC
-BY-NC-SA</a>, unless stated otherwise</p>
-            
-        </footer>
-</div>
+</aside>
+</aside>
+</section>
+
+  </div>
+</article>
 
 
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script><script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.11.0/baguetteBox.min.js" integrity="sha256-yQGjQhFs3LtyiN5hhr3k9s9TWZOh/RzCkD3gwwCKlkg=" crossorigin="anonymous"></script><script src="/assets/js/all.js?v=20230115"></script><script>
-    baguetteBox.run('div#content', {
-        ignoreClass: 'islink',
-        captions: function(element) {
-            return element.getElementsByTagName('img')[0].alt;
-    }});
-    </script><!-- Matomo --><script>
+
+
+  <aside class="postpromonav">
+    <nav>
+      <ul class="pager hidden-print">
+        
+          <li class="previous">
+            <a href="/blog/2015/07/23/ssg-speed-test/" rel="prev"
+               title="Static Site Generator Speed Test (Nikola, Pelican, Hexo, Octopress)">Previous post</a>
+          </li>
+        
+        
+          <li class="next">
+            <a href="/blog/2015/12/27/windows-10-november-upgrade-windows-as-a-dis-service/" rel="prev"
+               title="Windows 10 November Upgrade: Windows as a (Dis-)service">Next post</a>
+          </li>
+        
+      </ul>
+    </nav>
+  </aside>
+
+
+
+  <section class="comments">
+    <div data-title="Rewriting a Flask app in Django" id="isso-thread"></div>
+    <script src="https://isso.chriswarrick.com/js/embed.min.js" data-isso="https://isso.chriswarrick.com/"
+            data-isso-lang="en" data-isso-require-author="true" data-isso-require-email="true" data-isso-gravatar="true"
+            data-isso-avatar="false" data-isso-css="false" data-isso-vote="false"
+            data-isso-reply-notifications="true"></script>
+  </section>
+
+
+
+    <script src="https://isso.chriswarrick.com/js/count.min.js" data-isso="https://isso.chriswarrick.com/"
+            data-isso-lang="en"></script>
+    <nav id="footer-links">
+      <div class="row">
+        <div class="col-sm-4">
+          <h6>Blog</h6>
+          <ul>
+            <li class="nav-item">
+              <a href="/blog/" class="nav-link">Archives</a>
+            </li>
+            <li class="nav-item">
+              <a href="/blog/tags/" class="nav-link">Tags</a>
+            </li>
+            <li class="nav-item">
+              <a href="/listings/" class="nav-link">Listings</a>
+            </li>
+            <li class="nav-item">
+              <a href="/rss.xml" class="nav-link">RSS Feed</a>
+            </li>
+          </ul>
+        </div>
+        <div class="col-sm-4">
+          <h6>Projects and Work</h6>
+          <ul>
+            <li class="nav-item">
+              <a href="/projects/" class="nav-link">Projects</a>
+            </li>
+            <li class="nav-item">
+              <a href="/guides/" class="nav-link">Guides</a>
+            </li>
+            <li class="nav-item">
+              <a href="/kwbot/" class="nav-link">KwBot</a>
+            </li>
+            <li class="nav-item">
+              <a href="/blog/tags/cat_python" class="nav-link">Posts about Python</a>
+            </li>
+          </ul>
+        </div>
+        <div class="col-sm-4">
+          <h6>Me</h6>
+          <ul>
+            <li class="nav-item">
+              <a href="/contact/" class="nav-link">Contact</a>
+            </li>
+            <li class="nav-item">
+              <a href="/brand/" class="nav-link">Brand</a>
+            </li>
+            <li class="nav-item">
+              <a href="https://twitter.com/Kwpolska" class="nav-link">Twitter</a>
+            </li>
+            <li class="nav-item">
+              <a href="https://github.com/Kwpolska" class="nav-link">GitHub</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <footer id="footer">
+      <p>this site uses cookies.<br>by using this site, you agree to our <a href="/privacy/">cookie and privacy policy</a>.</p>
+<p>powered by <strong><a href="https://github.com/Kwpolska/YetAnotherBlogGenerator">Yet Another Blog Generator</a></strong>,
+  <a href="https://nginx.org/">nginx</a>
+  and <a href="https://hetzner.cloud/?ref=Qy1lehF8PwzP">Hetzner Cloud</a><br>
+  copyright © 2009–2026 <a href="/contact/">Chris Warrick</a><br>
+  license: <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA</a>, unless stated otherwise</p>
+    </footer>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.11.0/baguetteBox.min.js"
+        integrity="sha256-yQGjQhFs3LtyiN5hhr3k9s9TWZOh/RzCkD3gwwCKlkg=" crossorigin="anonymous"></script>
+<script src="/assets/js/all.js?v=20230115"></script>
+<script>
+  baguetteBox.run('div#content', {
+    ignoreClass: 'islink',
+    captions: function (element) {
+      return element.getElementsByTagName('img')[0].alt;
+    }
+  });
+</script><!-- Matomo -->
+<script>
   var _paq = window._paq = window._paq || [];
   /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
   _paq.push(['trackPageView']);
   _paq.push(['enableLinkTracking']);
-  (function() {
-    var u="//matomo.chriswarrick.com/";
-    _paq.push(['setTrackerUrl', u+'matomo.php']);
+  (function () {
+    var u = "//matomo.chriswarrick.com/";
+    _paq.push(['setTrackerUrl', u + 'matomo.php']);
     _paq.push(['setSiteId', '1']);
-    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-    g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+    var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+    g.async = true;
+    g.src = u + 'matomo.js';
+    s.parentNode.insertBefore(g, s);
   })();
 </script><!-- End Matomo Code -->
 </body>

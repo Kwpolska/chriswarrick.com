@@ -1,10 +1,17 @@
-<?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="/assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chris Warrick (Posts about Apple)</title><link>https://chriswarrick.com/</link><description></description><atom:link href="https://chriswarrick.com/blog/tags/cat_apple.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Mon, 09 Feb 2026 21:57:05 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Enabling Virtualization Support in Boot Camp with rEFInd</title><link>https://chriswarrick.com/blog/2021/01/31/enabling-virtualization-support-in-boot-camp-with-refind/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;p&gt;You installed Windows on an Intel Mac via Boot Camp, and want to use
+<?xml version="1.0" encoding="utf-8"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Posts about Apple</title><link>https://chriswarrick.com/</link><atom:link href="https://chriswarrick.com/blog/tags/cat_apple.xml" rel="self" type="application/rss+xml" /><description>A rarely updated blog, mostly about programming.</description><lastBuildDate>Mon, 26 Sep 2022 17:45:00 GMT</lastBuildDate><generator>https://github.com/Kwpolska/YetAnotherBlogGenerator</generator><item><title>Enabling Virtualization Support in Boot Camp with rEFInd</title><dc:creator>Chris Warrick</dc:creator><link>https://chriswarrick.com/blog/2021/01/31/enabling-virtualization-support-in-boot-camp-with-refind/</link><pubDate>Sat, 30 Jan 2021 23:30:00 GMT</pubDate><guid>https://chriswarrick.com/blog/2021/01/31/enabling-virtualization-support-in-boot-camp-with-refind/</guid><description>
+You installed Windows on an Intel Mac via Boot Camp, and want to use
 virtualization in it. But there’s an issue — hardware virtualization extensions
 are not available. Luckily, this can be worked around easily with the help of
-rEFInd, an alternate boot manager.&lt;/p&gt;
-&lt;!-- TEASER_END --&gt;
-&lt;p&gt;Many software development workflows involve virtualization. WSL, Docker for
+rEFInd, an alternate boot manager.
+</description><content:encoded><![CDATA[
+<p>You installed Windows on an Intel Mac via Boot Camp, and want to use
+virtualization in it. But there’s an issue — hardware virtualization extensions
+are not available. Luckily, this can be worked around easily with the help of
+rEFInd, an alternate boot manager.</p>
+
+
+
+<p>Many software development workflows involve virtualization. WSL, Docker for
 Windows, and the Android Emulator are some examples of common
 virtualization-based tools. Then there are general virtualization
 tools/hypervisors, such as VMware Workstation, Hyper-V or VirtualBox. All these
@@ -16,203 +23,212 @@ be unconditionally enabled by the firmware. On a Mac, however, enabling VT-x is
 done by macOS, as part of the boot process. This means that Windows running in
 Boot Camp will start without virtualization, unless you want to boot into macOS
 first and then reboot into Windows. That setup isn’t quite ergonomic (and what
-if macOS refuses to shut down, as it often does for me?).&lt;/p&gt;
-&lt;p&gt;Instead, we’re going to use
-&lt;a class="reference external" href="https://www.rodsbooks.com/refind/"&gt;rEFInd&lt;/a&gt;, a boot manager for
+if macOS refuses to shut down, as it often does for me?).</p>
+<p>Instead, we’re going to use
+<a class="reference external" href="https://www.rodsbooks.com/refind/">rEFInd</a>, a boot manager for
 EFI-based systems that can boot into various OSes and also handle other
-parts of the boot process. But first, let’s prepare our system for this.&lt;/p&gt;
-&lt;p class="lead"&gt;&lt;strong&gt;DISCLAIMER:&lt;/strong&gt; Those steps may make your Mac fail to boot. I don’t take any
+parts of the boot process. But first, let’s prepare our system for this.</p>
+<p class="lead"><strong>DISCLAIMER:</strong> Those steps may make your Mac fail to boot. I don’t take any
 responsibility whatsoever if that happens. Prepare for the worst — make
-backups, perhaps have install media ready, plan some downtime.&lt;/p&gt;
-&lt;section id="step-1-install-windows-in-boot-camp-the-usual-way"&gt;
-&lt;h2&gt;Step 1. Install Windows in Boot Camp the usual way&lt;/h2&gt;
-&lt;p&gt;The first thing you should do is install Windows 10 in Boot Camp, with
+backups, perhaps have install media ready, plan some downtime.</p>
+<section id="step-1-install-windows-in-boot-camp-the-usual-way">
+<h1>Step 1. Install Windows in Boot Camp the usual way</h1>
+<p>The first thing you should do is install Windows 10 in Boot Camp, with
 the help of the Boot Camp Assistant. The Assistant will take some time
 to partition your drive and do other preparations (and show barely
-informative progress bars, but &lt;a class="reference external" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#an-open-letter-to-progress-bar-designers"&gt;I ranted about that Apple design “feature”
-already&lt;/a&gt;).
+informative progress bars, but <a class="reference external" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#an-open-letter-to-progress-bar-designers">I ranted about that Apple design “feature”
+already</a>).
 There are no special preparations for this, the standard process will
 work. If you already have Windows installed, you can go to the next
-step.&lt;/p&gt;
-&lt;/section&gt;
-&lt;section id="step-2-ensure-the-setup-is-stable"&gt;
-&lt;h2&gt;Step 2. Ensure the setup is stable&lt;/h2&gt;
-&lt;p&gt;We’ll be making changes to how the machine boots, and as such, it’s
+step.</p>
+</section>
+<section id="step-2-ensure-the-setup-is-stable">
+<h1>Step 2. Ensure the setup is stable</h1>
+<p>We’ll be making changes to how the machine boots, and as such, it’s
 good to have other things working correctly and in line with your
-expected configuration. Make sure that:&lt;/p&gt;
-&lt;ul class="simple"&gt;
-&lt;li&gt;&lt;p&gt;Both macOS and Windows boot correctly&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;You can change the OS you boot into by holding the Option key after
-pressing Power (requires disabling the firmware password &lt;a class="brackets" href="https://chriswarrick.com/blog/2021/01/31/enabling-virtualization-support-in-boot-camp-with-refind/#footnote-1" id="footnote-reference-1" role="doc-noteref"&gt;&lt;span class="fn-bracket"&gt;[&lt;/span&gt;1&lt;span class="fn-bracket"&gt;]&lt;/span&gt;&lt;/a&gt;)&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Disk encryption (FileVault, BitLocker) is enabled (if you want that, of
-course) and fully configured (initial encryption is complete)&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Windows setup (including Boot Camp drivers) is complete&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;The &lt;code class="docutils literal"&gt;OSXRESERVED&lt;/code&gt; partition that the Boot Camp Assistant created
+expected configuration. Make sure that:</p>
+<ul class="simple">
+<li><p>Both macOS and Windows boot correctly</p></li>
+<li><p>You can change the OS you boot into by holding the Option key after
+pressing Power (requires disabling the firmware password <a class="brackets" href="https://chriswarrick.com/blog/2021/01/31/enabling-virtualization-support-in-boot-camp-with-refind/#footnote-1" id="footnote-reference-1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>)</p></li>
+<li><p>Disk encryption (FileVault, BitLocker) is enabled (if you want that, of
+course) and fully configured (initial encryption is complete)</p></li>
+<li><p>Windows setup (including Boot Camp drivers) is complete</p></li>
+<li><p>The <code class="docutils literal">OSXRESERVED</code> partition that the Boot Camp Assistant created
 has been deleted (that should have happened when booting into macOS for the
 first time after installing Windows — complete with a slowly moving
 progress bar and no other information, as is usual for this OS — but
 if that didn’t happen, use Disk Utility in macOS or Recovery OS to do
-that — pick your drive, click &lt;em&gt;Partition&lt;/em&gt; and delete the partition,
-this will grow the macOS partition)&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;System Integrity Protection is enabled (the procedure is a bit safer
-that way)&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/section&gt;
-&lt;section id="step-3-create-a-partition-for-refind"&gt;
-&lt;h2&gt;Step 3. Create a partition for rEFInd&lt;/h2&gt;
-&lt;p&gt;First, back up your data before making changes to your hard drive
+that — pick your drive, click <em>Partition</em> and delete the partition,
+this will grow the macOS partition)</p></li>
+<li><p>System Integrity Protection is enabled (the procedure is a bit safer
+that way)</p></li>
+</ul>
+</section>
+<section id="step-3-create-a-partition-for-refind">
+<h1>Step 3. Create a partition for rEFInd</h1>
+<p>First, back up your data before making changes to your hard drive
 layout. We’ll need to create a new partition for rEFInd to live on. This
 is the safest option — you could install it to the EFI System Partition (ESP),
 but macOS might want to put its own stuff there, and it’s safer not to
-use it.&lt;/p&gt;
-&lt;p&gt;The rEFInd partition doesn’t need to be large (50 MB will be enough); it must use the HFS+ (Mac OS
-Extended) file system. To create it, you have three options:&lt;/p&gt;
-&lt;ul class="simple"&gt;
-&lt;li&gt;&lt;p&gt;From macOS, by shrinking the macOS partition: open Disk Utility,
+use it.</p>
+<p>The rEFInd partition doesn’t need to be large (50 MB will be enough); it must use the HFS+ (Mac OS
+Extended) file system. To create it, you have three options:</p>
+<ul class="simple">
+<li><p>From macOS, by shrinking the macOS partition: open Disk Utility,
 choose your drive, select Partition, add a new partition, set its
 size and file system (in that order!). This will take a few minutes
 (10-15, or possibly more), and you won’t be able to use your Mac
-during the resize.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;From Recovery OS, by shrinking the macOS partition: same steps apply,
-but it might be a bit safer than doing it from within macOS.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;From Windows, by shrinking the Windows partition: open Disk
-Management (press the Windows key and type &lt;em&gt;partition&lt;/em&gt;, or open
+during the resize.</p></li>
+<li><p>From Recovery OS, by shrinking the macOS partition: same steps apply,
+but it might be a bit safer than doing it from within macOS.</p></li>
+<li><p>From Windows, by shrinking the Windows partition: open Disk
+Management (press the Windows key and type <em>partition</em>, or open
 Computer Management from Administrative Tools), right click your
 Windows partition, select Shrink Volume. Enter the desired size and
 click Shrink. Then, right click the unallocated space and create a
 New Simple Volume. For now, choose FAT32 or exFAT; you’ll need to
-reformat it as HFS+ from within macOS later (&lt;em&gt;Erase&lt;/em&gt; in Disk Utility). This
+reformat it as HFS+ from within macOS later (<em>Erase</em> in Disk Utility). This
 will take a few seconds — and even if you include the time to reboot, it’s
-faster.&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;After you create the new partition and make sure it’s HFS+ (Mac OS
+faster.</p></li>
+</ul>
+<p>After you create the new partition and make sure it’s HFS+ (Mac OS
 Extended), you can proceed with the setup. Also, if you don’t want the
 partition to be visible in the Finder, run the following command (insert
-the correct volume path for your system):&lt;/p&gt;
-&lt;div class="code"&gt;&lt;pre class="code text"&gt;&lt;a id="rest_code_f24a3ff4bd4840748c646f4592dc3208-1" name="rest_code_f24a3ff4bd4840748c646f4592dc3208-1" href="https://chriswarrick.com/blog/2021/01/31/enabling-virtualization-support-in-boot-camp-with-refind/#rest_code_f24a3ff4bd4840748c646f4592dc3208-1"&gt;&lt;/a&gt;sudo chflags hidden /Volumes/rEFInd
-&lt;/pre&gt;&lt;/div&gt;
-&lt;/section&gt;
-&lt;section id="step-4-configure-and-install-refind"&gt;
-&lt;h2&gt;Step 4. Configure and install rEFInd&lt;/h2&gt;
-&lt;p&gt;To set ue rEFInd, you’ll need to boot into macOS. &lt;a class="reference external" href="https://www.rodsbooks.com/refind/getting.html"&gt;Download
-rEFInd&lt;/a&gt; from the
-author’s website — you want the file named &lt;em&gt;A binary zip file&lt;/em&gt;. Extract
-this archive anywhere on your system (&lt;code class="docutils literal"&gt;~/Downloads&lt;/code&gt; is fine).&lt;/p&gt;
-&lt;p&gt;First, you’ll need to change the configuration file
-&lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;refind/refind.conf-sample&lt;/span&gt;&lt;/code&gt;. Locate the setting named
-&lt;code class="docutils literal"&gt;enable_and_lock_vmx&lt;/code&gt;, uncomment it (remove the &lt;code class="docutils literal"&gt;#&lt;/code&gt; at the start
-of the line), and set its value to &lt;code class="docutils literal"&gt;true&lt;/code&gt;. You can also make other
-configuration changes — the default &lt;code class="docutils literal"&gt;timeout&lt;/code&gt; of 20 seconds is
-likely to be too much for your needs.&lt;/p&gt;
-&lt;p&gt;When your configuration file is ready, you can install rEFInd. You can
-use the &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;refind-install&lt;/span&gt;&lt;/code&gt; tool, or perform a manual install (check
-out the &lt;a class="reference external" href="https://www.rodsbooks.com/refind/installing.html"&gt;installation
-docs&lt;/a&gt; for more
-details).&lt;/p&gt;
-&lt;p&gt;Before installing, you’ll need to get the device name of your rEFInd
+the correct volume path for your system):</p>
+<div class="code"><pre class="code text"><a id="rest_code_c10cbc8d5f0c4516bc298e5b3e0b15b5-1" name="rest_code_c10cbc8d5f0c4516bc298e5b3e0b15b5-1" href="https://chriswarrick.com/blog/2021/01/31/enabling-virtualization-support-in-boot-camp-with-refind/#rest_code_c10cbc8d5f0c4516bc298e5b3e0b15b5-1"></a>sudo chflags hidden /Volumes/rEFInd
+</pre></div>
+</section>
+<section id="step-4-configure-and-install-refind">
+<h1>Step 4. Configure and install rEFInd</h1>
+<p>To set ue rEFInd, you’ll need to boot into macOS. <a class="reference external" href="https://www.rodsbooks.com/refind/getting.html">Download
+rEFInd</a> from the
+author’s website — you want the file named <em>A binary zip file</em>. Extract
+this archive anywhere on your system (<code class="docutils literal">~/Downloads</code> is fine).</p>
+<p>First, you’ll need to change the configuration file
+<code class="docutils literal"><span class="pre">refind/refind.conf-sample</span></code>. Locate the setting named
+<code class="docutils literal">enable_and_lock_vmx</code>, uncomment it (remove the <code class="docutils literal">#</code> at the start
+of the line), and set its value to <code class="docutils literal">true</code>. You can also make other
+configuration changes — the default <code class="docutils literal">timeout</code> of 20 seconds is
+likely to be too much for your needs.</p>
+<p>When your configuration file is ready, you can install rEFInd. You can
+use the <code class="docutils literal"><span class="pre">refind-install</span></code> tool, or perform a manual install (check
+out the <a class="reference external" href="https://www.rodsbooks.com/refind/installing.html">installation
+docs</a> for more
+details).</p>
+<p>Before installing, you’ll need to get the device name of your rEFInd
 partition. Open Disk Utility, select the partition from the left pane,
-and check the &lt;em&gt;Device&lt;/em&gt; field (for example, &lt;code class="docutils literal"&gt;disk9s9&lt;/code&gt; — it will be
-&lt;strong&gt;different&lt;/strong&gt; on your system, depending on your partition layout).&lt;/p&gt;
-&lt;p&gt;Open a Terminal, &lt;code class="docutils literal"&gt;cd&lt;/code&gt; into the directory where rEFInd was extracted,
-and run the following command (replace &lt;code class="docutils literal"&gt;disk9s9&lt;/code&gt; with the device
-name on your system):&lt;/p&gt;
-&lt;div class="code"&gt;&lt;pre class="code text"&gt;&lt;a id="rest_code_5af4a4ab5f4c4c4f9f8245306d6270ac-1" name="rest_code_5af4a4ab5f4c4c4f9f8245306d6270ac-1" href="https://chriswarrick.com/blog/2021/01/31/enabling-virtualization-support-in-boot-camp-with-refind/#rest_code_5af4a4ab5f4c4c4f9f8245306d6270ac-1"&gt;&lt;/a&gt;./refind-install --ownhfs disk9s9
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;This command will produce an error if you have SIP enabled — but this
+and check the <em>Device</em> field (for example, <code class="docutils literal">disk9s9</code> — it will be
+<strong>different</strong> on your system, depending on your partition layout).</p>
+<p>Open a Terminal, <code class="docutils literal">cd</code> into the directory where rEFInd was extracted,
+and run the following command (replace <code class="docutils literal">disk9s9</code> with the device
+name on your system):</p>
+<div class="code"><pre class="code text"><a id="rest_code_d3a775e9f58d45929b57a28925faec5e-1" name="rest_code_d3a775e9f58d45929b57a28925faec5e-1" href="https://chriswarrick.com/blog/2021/01/31/enabling-virtualization-support-in-boot-camp-with-refind/#rest_code_d3a775e9f58d45929b57a28925faec5e-1"></a>./refind-install --ownhfs disk9s9
+</pre></div>
+<p>This command will produce an error if you have SIP enabled — but this
 error is not important for us, the install will work without the change
-that SIP prevented. &lt;a class="brackets" href="https://chriswarrick.com/blog/2021/01/31/enabling-virtualization-support-in-boot-camp-with-refind/#footnote-2" id="footnote-reference-2" role="doc-noteref"&gt;&lt;span class="fn-bracket"&gt;[&lt;/span&gt;2&lt;span class="fn-bracket"&gt;]&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;You can now shut down your Mac and use the Option key while starting up
+that SIP prevented. <a class="brackets" href="https://chriswarrick.com/blog/2021/01/31/enabling-virtualization-support-in-boot-camp-with-refind/#footnote-2" id="footnote-reference-2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a></p>
+<p>You can now shut down your Mac and use the Option key while starting up
 to choose the OS. You should see three options: Macintosh HD, EFI Boot,
 and Boot Camp. The EFI Boot option is rEFInd — pick that, boot into
-Windows (Microsoft EFI boot), &lt;em&gt;et voilà&lt;/em&gt; — Windows can now run virtualization software.&lt;/p&gt;
-&lt;p&gt;There are a few more things that you can do now, depending on your OS
-preferences.&lt;/p&gt;
-&lt;ul class="simple"&gt;
-&lt;li&gt;&lt;p&gt;You can make rEFInd the default boot loader. Hold &lt;em&gt;Control&lt;/em&gt; on the
+Windows (Microsoft EFI boot), <em>et voilà</em> — Windows can now run virtualization software.</p>
+<p>There are a few more things that you can do now, depending on your OS
+preferences.</p>
+<ul class="simple">
+<li><p>You can make rEFInd the default boot loader. Hold <em>Control</em> on the
 Apple boot device selection screen and click the Power icon under the
-EFI Boot drive (&lt;a class="reference external" href="https://apple.stackexchange.com/a/73742"&gt;source for the
-tip&lt;/a&gt;).&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;You can use rEFInd to boot into macOS, although this might not work
+EFI Boot drive (<a class="reference external" href="https://apple.stackexchange.com/a/73742">source for the
+tip</a>).</p></li>
+<li><p>You can use rEFInd to boot into macOS, although this might not work
 with Big Sur according to the author (it seems to work for me, but
 YMMV). You can use the standard boot method for macOS (by defaulting
 to Macintosh HD, or by choosing it from the Power+Option picker) and
-rEFInd exclusively for Windows (and set your timeout to a low value).&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;You can modify rEFInd’s configuration — in this scenario, the config
-file is &lt;code class="docutils literal"&gt;/Volumes/rEFInd/System/Library/CoreServices/refind.conf&lt;/code&gt;.
-You can set a custom background image, for example (&lt;a class="reference external" href="https://www.rodsbooks.com/refind/"&gt;rEFInd’s
-site&lt;/a&gt; can help you figure out
-what options are available and what you can set them to).&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;aside class="footnote-list brackets"&gt;
-&lt;aside class="footnote brackets" id="footnote-1" role="doc-footnote"&gt;
-&lt;span class="label"&gt;&lt;span class="fn-bracket"&gt;[&lt;/span&gt;&lt;a role="doc-backlink" href="https://chriswarrick.com/blog/2021/01/31/enabling-virtualization-support-in-boot-camp-with-refind/#footnote-reference-1"&gt;1&lt;/a&gt;&lt;span class="fn-bracket"&gt;]&lt;/span&gt;&lt;/span&gt;
-&lt;p&gt;If the firmware password is important to you, you can restore it after
+rEFInd exclusively for Windows (and set your timeout to a low value).</p></li>
+<li><p>You can modify rEFInd’s configuration — in this scenario, the config
+file is <code class="docutils literal">/Volumes/rEFInd/System/Library/CoreServices/refind.conf</code>.
+You can set a custom background image, for example (<a class="reference external" href="https://www.rodsbooks.com/refind/">rEFInd’s
+site</a> can help you figure out
+what options are available and what you can set them to).</p></li>
+</ul>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="footnote-1" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="https://chriswarrick.com/blog/2021/01/31/enabling-virtualization-support-in-boot-camp-with-refind/#footnote-reference-1">1</a><span class="fn-bracket">]</span></span>
+<p>If the firmware password is important to you, you can restore it after
 the setup is done — this will mean using rEFInd to boot both Windows and
 macOS, although I decided to remove the firmware password and boot
-into macOS from the Power+Option boot menu.&lt;/p&gt;
-&lt;/aside&gt;
-&lt;aside class="footnote brackets" id="footnote-2" role="doc-footnote"&gt;
-&lt;span class="label"&gt;&lt;span class="fn-bracket"&gt;[&lt;/span&gt;&lt;a role="doc-backlink" href="https://chriswarrick.com/blog/2021/01/31/enabling-virtualization-support-in-boot-camp-with-refind/#footnote-reference-2"&gt;2&lt;/a&gt;&lt;span class="fn-bracket"&gt;]&lt;/span&gt;&lt;/span&gt;
-&lt;p&gt;The failing operation is marking the rEFInd partition bootable in the Mac
-sense, using the &lt;code class="docutils literal"&gt;bless&lt;/code&gt; command. However, the drive is considered
-bootable as an EFI-compliant boot volume (it has &lt;code class="docutils literal"&gt;*.efi&lt;/code&gt; files in specific
+into macOS from the Power+Option boot menu.</p>
+</aside>
+<aside class="footnote brackets" id="footnote-2" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="https://chriswarrick.com/blog/2021/01/31/enabling-virtualization-support-in-boot-camp-with-refind/#footnote-reference-2">2</a><span class="fn-bracket">]</span></span>
+<p>The failing operation is marking the rEFInd partition bootable in the Mac
+sense, using the <code class="docutils literal">bless</code> command. However, the drive is considered
+bootable as an EFI-compliant boot volume (it has <code class="docutils literal">*.efi</code> files in specific
 places), and this is the boot method we’re using here. SIP aside, the
-&lt;code class="docutils literal"&gt;bless&lt;/code&gt; utility is a bit buggy, and we can use rEFInd without a blessed
-partition just fine.&lt;/p&gt;
-&lt;/aside&gt;
-&lt;/aside&gt;
-&lt;/section&gt;</description><category>Boot Camp</category><category>Mac</category><category>rEFInd</category><category>Virtualization</category><category>Windows</category><guid>https://chriswarrick.com/blog/2021/01/31/enabling-virtualization-support-in-boot-camp-with-refind/</guid><pubDate>Sat, 30 Jan 2021 23:30:00 GMT</pubDate></item><item><title>What an ARM Mac means for developers and Windows users</title><link>https://chriswarrick.com/blog/2020/06/22/what-an-arm-mac-means-for-developers-and-windows-users/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;p&gt;The rumor mill was right this time, and Apple has just announced they will
+<code class="docutils literal">bless</code> utility is a bit buggy, and we can use rEFInd without a blessed
+partition just fine.</p>
+</aside>
+</aside>
+</section>
+]]></content:encoded><category>Apple</category><category>Boot Camp</category><category>Mac</category><category>rEFInd</category><category>Virtualization</category><category>Windows</category></item><item><title>What an ARM Mac means for developers and Windows users</title><dc:creator>Chris Warrick</dc:creator><link>https://chriswarrick.com/blog/2020/06/22/what-an-arm-mac-means-for-developers-and-windows-users/</link><pubDate>Mon, 22 Jun 2020 19:00:00 GMT</pubDate><guid>https://chriswarrick.com/blog/2020/06/22/what-an-arm-mac-means-for-developers-and-windows-users/</guid><description>
+The rumor mill was right this time, and Apple has just announced they will
 transition Macs to ARM processors. These news have some side effects for
 software developers, particularly those not working with the Apple ecosystem.
-And they also affect people who depend on both macOS and Windows.&lt;/p&gt;
-&lt;!-- TEASER_END --&gt;
-&lt;nav class="contents alert alert-primary" id="contents" role="doc-toc"&gt;
-&lt;p class="topic-title"&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2020/06/22/what-an-arm-mac-means-for-developers-and-windows-users/#top"&gt;Contents&lt;/a&gt;&lt;/p&gt;
-&lt;ul class="simple"&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2020/06/22/what-an-arm-mac-means-for-developers-and-windows-users/#how-will-it-work-out-in-apple-land" id="toc-entry-1"&gt;How will it work out in Apple land?&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2020/06/22/what-an-arm-mac-means-for-developers-and-windows-users/#who-needs-non-apple-operating-systems" id="toc-entry-2"&gt;Who needs non-Apple operating systems?&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2020/06/22/what-an-arm-mac-means-for-developers-and-windows-users/#is-virtualization-possible-on-arm" id="toc-entry-3"&gt;Is virtualization possible on ARM?&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2020/06/22/what-an-arm-mac-means-for-developers-and-windows-users/#can-we-emulate-x86-64-and-run-x86-64-windows-10" id="toc-entry-4"&gt;Can we emulate x86(_64) and run x86(_64) Windows 10?&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2020/06/22/what-an-arm-mac-means-for-developers-and-windows-users/#whats-next-for-people-who-rely-on-both-macos-and-windows" id="toc-entry-5"&gt;What’s next for people who rely on both macOS and Windows?&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2020/06/22/what-an-arm-mac-means-for-developers-and-windows-users/#post-m1-announcement-update-2020-11-14" id="toc-entry-6"&gt;Post-M1 announcement update (2020-11-14)&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/nav&gt;
-&lt;p&gt;In this post, I am not going to focus in the differences between x86_64 and ARM,
+And they also affect people who depend on both macOS and Windows.
+</description><content:encoded><![CDATA[
+<p>The rumor mill was right this time, and Apple has just announced they will
+transition Macs to ARM processors. These news have some side effects for
+software developers, particularly those not working with the Apple ecosystem.
+And they also affect people who depend on both macOS and Windows.</p>
+
+
+
+<nav class="contents alert alert-primary" id="contents" role="doc-toc">
+<p class="topic-title"><a class="reference internal" href="https://chriswarrick.com/blog/2020/06/22/what-an-arm-mac-means-for-developers-and-windows-users/#top">Contents</a></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="https://chriswarrick.com/blog/2020/06/22/what-an-arm-mac-means-for-developers-and-windows-users/#how-will-it-work-out-in-apple-land" id="toc-entry-1">How will it work out in Apple land?</a></p></li>
+<li><p><a class="reference internal" href="https://chriswarrick.com/blog/2020/06/22/what-an-arm-mac-means-for-developers-and-windows-users/#who-needs-non-apple-operating-systems" id="toc-entry-2">Who needs non-Apple operating systems?</a></p></li>
+<li><p><a class="reference internal" href="https://chriswarrick.com/blog/2020/06/22/what-an-arm-mac-means-for-developers-and-windows-users/#is-virtualization-possible-on-arm" id="toc-entry-3">Is virtualization possible on ARM?</a></p></li>
+<li><p><a class="reference internal" href="https://chriswarrick.com/blog/2020/06/22/what-an-arm-mac-means-for-developers-and-windows-users/#can-we-emulate-x86-64-and-run-x86-64-windows-10" id="toc-entry-4">Can we emulate x86(_64) and run x86(_64) Windows 10?</a></p></li>
+<li><p><a class="reference internal" href="https://chriswarrick.com/blog/2020/06/22/what-an-arm-mac-means-for-developers-and-windows-users/#whats-next-for-people-who-rely-on-both-macos-and-windows" id="toc-entry-5">What’s next for people who rely on both macOS and Windows?</a></p></li>
+<li><p><a class="reference internal" href="https://chriswarrick.com/blog/2020/06/22/what-an-arm-mac-means-for-developers-and-windows-users/#post-m1-announcement-update-2020-11-14" id="toc-entry-6">Post-M1 announcement update (2020-11-14)</a></p></li>
+</ul>
+</nav>
+<p>In this post, I am not going to focus in the differences between x86_64 and ARM,
 RISC and CISC, and all the benchmarks. Let’s assume that Apple manages to offer
 ARM-based CPUs that can match performance of most Intel processors in Apple’s
 lineup, and let’s even assume they can make an ARM Mac Pro. (A note on naming:
 Apple Silicon is the official name, but it sounds ugly. I’ll just call it ARM.
-For Intel, I’ll use either Intel or x86(_64).)&lt;/p&gt;
-&lt;p&gt;For many users, the transition will be more-or-less transparent. Sure, they’ll
+For Intel, I’ll use either Intel or x86(_64).)</p>
+<p>For many users, the transition will be more-or-less transparent. Sure, they’ll
 lose some apps, just like they probably did with Catalina (which dropped
 support for 32-bit Intel apps), or some apps will not be available/will be
 buggy in the first few months of the transition (though it will be easier than
-the PowerPC transition, because Apple uses little-endian byte order on ARM).&lt;/p&gt;
-&lt;section id="how-will-it-work-out-in-apple-land"&gt;
-&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/22/what-an-arm-mac-means-for-developers-and-windows-users/#toc-entry-1" role="doc-backlink"&gt;How will it work out in Apple land?&lt;/a&gt;&lt;/h2&gt;
-&lt;p&gt;For developers who work only on iOS apps, the transition also won’t mean much.
+the PowerPC transition, because Apple uses little-endian byte order on ARM).</p>
+<section id="how-will-it-work-out-in-apple-land">
+<h1><a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/22/what-an-arm-mac-means-for-developers-and-windows-users/#toc-entry-1" role="doc-backlink">How will it work out in Apple land?</a></h1>
+<p>For developers who work only on iOS apps, the transition also won’t mean much.
 Maybe a faster, more accurate Simulator. They’ll need to buy an ARM Mac sooner
 or later (within the next 5 years), because Apple requires them to use the
 latest Xcode version for App Store submissions, and Xcode supports at best the
 previous version of macOS.  But that has been Apple’s policy forever, and the
 Intel Macs will probably be within the usual deprecation range when that
-happens.&lt;/p&gt;
-&lt;p&gt;The requirements for macOS-only developers are pretty obvious, they will need
+happens.</p>
+<p>The requirements for macOS-only developers are pretty obvious, they will need
 to buy an ARM Mac on day one, so they can test their apps on the new platform.
 They will also need to work on ARM compatibility — although updating your app
 for the new OS is a yearly ritual in Apple land, so that’s also mostly
 business-as-usual (unless you do a lot of unportable low-level stuff in your
 code). There are some pro apps that tend to lag behind new Apple decrees (some
 might have been hit by Catalina), and users of those apps might prefer to stay
-with Intel for a little bit longer.&lt;/p&gt;
-&lt;p&gt;But then, we get to the requirements of developers who use Macs, but don’t work
+with Intel for a little bit longer.</p>
+<p>But then, we get to the requirements of developers who use Macs, but don’t work
 exclusively with the Apple platforms. This is a fairly large group, since many
 developers like Macs for the good hardware, Unix-based software, and the
-integration of both. And for some part, non-developers are affected too.&lt;/p&gt;
-&lt;/section&gt;
-&lt;section id="who-needs-non-apple-operating-systems"&gt;
-&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/22/what-an-arm-mac-means-for-developers-and-windows-users/#toc-entry-2" role="doc-backlink"&gt;Who needs non-Apple operating systems?&lt;/a&gt;&lt;/h2&gt;
-&lt;p&gt;The first group are people tied to Windows, somehow. Some of them might be
+integration of both. And for some part, non-developers are affected too.</p>
+</section>
+<section id="who-needs-non-apple-operating-systems">
+<h1><a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/22/what-an-arm-mac-means-for-developers-and-windows-users/#toc-entry-2" role="doc-backlink">Who needs non-Apple operating systems?</a></h1>
+<p>The first group are people tied to Windows, somehow. Some of them might be
 using Boot Camp to play games. Others might be using Boot Camp or
 virtualization software (Parallels Desktop, VMware Fusion, Oracle VM
 VirtualBox) to run Windows and Windows-specific apps — perhaps they need the
@@ -220,46 +236,46 @@ Windows version of Office, or various Windows-onlypro apps, or they need
 Windows to file their taxes, because their government does not care about
 non-Windows OSes. Or perhaps they’re web developers, and they need to test
 compatibility with the Windows versions of browsers, or the old Microsoft
-browsers (IE and pre-Chromium Edge).&lt;/p&gt;
-&lt;p&gt;The second group is software developers who need Linux. While macOS provides a
+browsers (IE and pre-Chromium Edge).</p>
+<p>The second group is software developers who need Linux. While macOS provides a
 very competent development environment, and many things can be run directly on
 macOS, some use-cases may require a Linux VM.  Perhaps the most notable case is
-Docker.&lt;/p&gt;
-&lt;p&gt;Docker is a solution for lightweight app containers, that can offer separation
+Docker.</p>
+<p>Docker is a solution for lightweight app containers, that can offer separation
 between apps, and that can simplify and standardize deployment. Docker itself
 is not a virtualization solution (at least in the traditional sense). Docker
 must run on top of Linux (there’s also Docker-on-Windows, but that’s another
 story). The Docker Desktop for Mac app runs a lightweight Linux VM, and runs
-containers in that VM. The virtualization solution &lt;a class="reference external" href="https://github.com/docker/for-mac"&gt;Docker for Mac uses&lt;/a&gt; is &lt;code class="docutils literal"&gt;Hypervisor.framework&lt;/code&gt;, which is
-part of macOS itself.&lt;/p&gt;
-&lt;p&gt;Who else needs virtualization? Android developers. The Android Emulator is also
+containers in that VM. The virtualization solution <a class="reference external" href="https://github.com/docker/for-mac">Docker for Mac uses</a> is <code class="docutils literal">Hypervisor.framework</code>, which is
+part of macOS itself.</p>
+<p>Who else needs virtualization? Android developers. The Android Emulator is also
 a virtual machine that runs the Android operating system. Android can run on
 different architectures, and so, a x86 system image is typically used for the
-Emulator.&lt;/p&gt;
-&lt;/section&gt;
-&lt;section id="is-virtualization-possible-on-arm"&gt;
-&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/22/what-an-arm-mac-means-for-developers-and-windows-users/#toc-entry-3" role="doc-backlink"&gt;Is virtualization possible on ARM?&lt;/a&gt;&lt;/h2&gt;
-&lt;p&gt;Yes, definitely. Apple has been testing it much earlier, since the
-aforementioned &lt;code class="docutils literal"&gt;Hypervisor.framework&lt;/code&gt; was found &lt;a class="reference external" href="https://twitter.com/never_released/status/1250533740557852674"&gt;on iOS in April&lt;/a&gt;.
+Emulator.</p>
+</section>
+<section id="is-virtualization-possible-on-arm">
+<h1><a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/22/what-an-arm-mac-means-for-developers-and-windows-users/#toc-entry-3" role="doc-backlink">Is virtualization possible on ARM?</a></h1>
+<p>Yes, definitely. Apple has been testing it much earlier, since the
+aforementioned <code class="docutils literal">Hypervisor.framework</code> was found <a class="reference external" href="https://twitter.com/never_released/status/1250533740557852674">on iOS in April</a>.
 And Apple announced virtualization support for ARM Macs during the keynote, and
 showed an example of a Linux VM. That VM was, of course, running an ARM64
-distribution of Linux.&lt;/p&gt;
-&lt;p&gt;But what can we use this for? Turns out, it’s complicated. The easiest thing
+distribution of Linux.</p>
+<p>But what can we use this for? Turns out, it’s complicated. The easiest thing
 from the few use-cases mentioned before is Android. Google just needs to get
-the Emulator working on ARM Macs and ship that to the devs.&lt;/p&gt;
-&lt;p&gt;What about Linux in general? Many mainstream distributions
+the Emulator working on ARM Macs and ship that to the devs.</p>
+<p>What about Linux in general? Many mainstream distributions
 support ARM64, so that’s not a problem in general. The support for a particular
 distro or software might be worse than on x86_64, but it’s generally not a
-problem for users.&lt;/p&gt;
-&lt;p&gt;But for Docker, there’s a problem. One of the many advantages of Docker is
+problem for users.</p>
+<p>But for Docker, there’s a problem. One of the many advantages of Docker is
 dev-prod parity. If you deploy your app with Docker to an x86_64 Linux server,
 you can also install Docker on an x86_64 Linux developer machine (or a Linux VM on an
-Intel Mac/Windows PC). Both the server and the dev machine can run &lt;strong&gt;the same&lt;/strong&gt;
+Intel Mac/Windows PC). Both the server and the dev machine can run <strong>the same</strong>
 image, the same code, the same configuration. That won’t happen if they are a
 different architecture. This means that you can end up with bugs happening
 because of different environments, and it’s also possible that some images you
-depend on are not available for both architectures.&lt;/p&gt;
-&lt;p&gt;And then we get to Windows. Windows also has an ARM version, but it’s currently
+depend on are not available for both architectures.</p>
+<p>And then we get to Windows. Windows also has an ARM version, but it’s currently
 available only with a new ARM device (you can’t buy it standalone). If
 Microsoft were to sell this, we’d have an issue with the software. Windows 10
 on ARM supports 32/64-bit ARM software, and can run 32-bit Intel (x86) software
@@ -269,34 +285,34 @@ better. While many developers don’t care about ARM and might not have builds
 for ARM available, most Windows software is available in both x86 and x86_64
 versions, or is exclusively 32-bit. But certain pro apps are x86_64 only, so if
 there is no ARM build of it, an ARM Windows PC currently cannot run it.
-(&lt;em&gt;Update:&lt;/em&gt; Microsoft announced &lt;a class="reference external" href="https://blogs.windows.com/windowsexperience/2020/09/30/now-more-essential-than-ever-the-role-of-the-windows-pc-has-changed/"&gt;x86_64 emulation on ARM&lt;/a&gt;,
-which means more software will work.)&lt;/p&gt;
-&lt;p&gt;And note that Microsoft knows about the transition, but we haven’t heard
-anything about Windows during the keynote…&lt;/p&gt;
-&lt;/section&gt;
-&lt;section id="can-we-emulate-x86-64-and-run-x86-64-windows-10"&gt;
-&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/22/what-an-arm-mac-means-for-developers-and-windows-users/#toc-entry-4" role="doc-backlink"&gt;Can we emulate x86(_64) and run x86(_64) Windows 10?&lt;/a&gt;&lt;/h2&gt;
-&lt;p&gt;Theoretically? Yes. Practically? No.&lt;/p&gt;
-&lt;p&gt;The issue with emulation is speed. There are a few x86 emulators available, and
+(<em>Update:</em> Microsoft announced <a class="reference external" href="https://blogs.windows.com/windowsexperience/2020/09/30/now-more-essential-than-ever-the-role-of-the-windows-pc-has-changed/">x86_64 emulation on ARM</a>,
+which means more software will work.)</p>
+<p>And note that Microsoft knows about the transition, but we haven’t heard
+anything about Windows during the keynote…</p>
+</section>
+<section id="can-we-emulate-x86-64-and-run-x86-64-windows-10">
+<h1><a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/22/what-an-arm-mac-means-for-developers-and-windows-users/#toc-entry-4" role="doc-backlink">Can we emulate x86(_64) and run x86(_64) Windows 10?</a></h1>
+<p>Theoretically? Yes. Practically? No.</p>
+<p>The issue with emulation is speed. There are a few x86 emulators available, and
 those emulators can be run on an ARM device just fine. You can find videos on
 YouTube (not a very reliable source of information, I know) in which people try
 to benchmark those, or try to run Windows using an emulator like that. And even
 with an ancient Windows version, the emulation is painfully slow. Windows 10
-would be basically unusable if you tried to emulate all of it.&lt;/p&gt;
-&lt;p&gt;How does the x86 emulation on Windows 10 for ARM work? You can watch &lt;a class="reference external" href="https://channel9.msdn.com/Events/Build/2017/P4171"&gt;the
-Channel 9 video about Windows 10 on ARM&lt;/a&gt; (around 6:00) for more
+would be basically unusable if you tried to emulate all of it.</p>
+<p>How does the x86 emulation on Windows 10 for ARM work? You can watch <a class="reference external" href="https://channel9.msdn.com/Events/Build/2017/P4171">the
+Channel 9 video about Windows 10 on ARM</a> (around 6:00) for more
 details. The trick is that system DLLs are using a hybrid x86/ARM64 library
 format, which means x86 code can call those DLLs at native speeds. This means
 that many apps run at near-native speed (depending on the ratio of custom code
 to system DLL calls). This technique cannot work for emulating the entire
 operating system. If Windows 10 on ARM was made available for ARM Macs, running
-x86 Windows apps would become feasible.&lt;/p&gt;
-&lt;p&gt;Rosetta probably uses similar technique. Most apps will be translated at
-install time, not at run time. But you can’t do that with an entire OS.&lt;/p&gt;
-&lt;/section&gt;
-&lt;section id="whats-next-for-people-who-rely-on-both-macos-and-windows"&gt;
-&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/22/what-an-arm-mac-means-for-developers-and-windows-users/#toc-entry-5" role="doc-backlink"&gt;What’s next for people who rely on both macOS and Windows?&lt;/a&gt;&lt;/h2&gt;
-&lt;p&gt;For a few more years, Intel Macs will still be supported by Apple (with new
+x86 Windows apps would become feasible.</p>
+<p>Rosetta probably uses similar technique. Most apps will be translated at
+install time, not at run time. But you can’t do that with an entire OS.</p>
+</section>
+<section id="whats-next-for-people-who-rely-on-both-macos-and-windows">
+<h1><a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/22/what-an-arm-mac-means-for-developers-and-windows-users/#toc-entry-5" role="doc-backlink">What’s next for people who rely on both macOS and Windows?</a></h1>
+<p>For a few more years, Intel Macs will still be supported by Apple (with new
 macOS versions) and by software vendors. But after that? Well, you’re stuck
 with two machines, at least until Windows on ARM becomes viable and runnable on
 Macs. Or you can start exploring alternatives to macOS software. If you’re one
@@ -305,271 +321,279 @@ switch to Linux — or perhaps Windows with Windows Subsystem for Linux? (The
 latter is becoming more usable with every Windows release, so keep an eye on
 that… I wrote this post in NeoVim in WSL2, with Windows Terminal supporting
 many advanced terminal features, and the transparent filesystem integration
-letting me access Windows files directly).&lt;/p&gt;
-&lt;/section&gt;
-&lt;section id="post-m1-announcement-update-2020-11-14"&gt;
-&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/22/what-an-arm-mac-means-for-developers-and-windows-users/#toc-entry-6" role="doc-backlink"&gt;Post-M1 announcement update (2020-11-14)&lt;/a&gt;&lt;/h2&gt;
-&lt;p&gt;Parallels have confirmed &lt;a class="reference external" href="https://www.parallels.com/blogs/parallels-desktop-apple-silicon-mac/"&gt;support for M1 Macs&lt;/a&gt; and
+letting me access Windows files directly).</p>
+</section>
+<section id="post-m1-announcement-update-2020-11-14">
+<h1><a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/22/what-an-arm-mac-means-for-developers-and-windows-users/#toc-entry-6" role="doc-backlink">Post-M1 announcement update (2020-11-14)</a></h1>
+<p>Parallels have confirmed <a class="reference external" href="https://www.parallels.com/blogs/parallels-desktop-apple-silicon-mac/">support for M1 Macs</a> and
 are offering a Technical Preview of their M1 virtualization product. This
 announcement’s mention of Windows 10 ARM supporting x86_64 apps has caused
 some tech writers to assume Parallels will support Windows 10 ARM on M1
-Macs. This is &lt;strong&gt;not&lt;/strong&gt; what the post says. Parallels is not, and cannot
+Macs. This is <strong>not</strong> what the post says. Parallels is not, and cannot
 announce support for that OS, because Windows 10 ARM is (still) available to
 ARM OEMs only to install on their devices — making an official announcement
 about this feature today would be admitting to doing something illegal/not
 allowed by the EULA. I’m pretty sure they are not working on support for
 Windows 10 ARM now and in the foreseeable future, until Microsoft opens up
 Windows 10 ARM to the public — their own legal issues aside, who would they sell
-the Windows support to?&lt;/p&gt;
-&lt;p&gt;In other news, &lt;a class="reference external" href="https://github.com/docker/for-mac/issues/4733"&gt;Docker is not ready yet&lt;/a&gt;.&lt;/p&gt;
-&lt;/section&gt;</description><category>Apple</category><category>ARM</category><category>devel</category><category>Mac</category><guid>https://chriswarrick.com/blog/2020/06/22/what-an-arm-mac-means-for-developers-and-windows-users/</guid><pubDate>Mon, 22 Jun 2020 19:00:00 GMT</pubDate></item><item><title>Reinstalling macOS: What To Try When All Else Fails</title><link>https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;p&gt;Recently, I reinstalled macOS on my device. Throughout the process, many
+the Windows support to?</p>
+<p>In other news, <a class="reference external" href="https://github.com/docker/for-mac/issues/4733">Docker is not ready yet</a>.</p>
+</section>
+]]></content:encoded><category>Apple</category><category>Apple</category><category>ARM</category><category>devel</category><category>Mac</category></item><item><title>Reinstalling macOS: What To Try When All Else Fails</title><dc:creator>Chris Warrick</dc:creator><link>https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/</link><pubDate>Wed, 03 Jun 2020 21:00:00 GMT</pubDate><guid>https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/</guid><description>
+Recently, I reinstalled macOS on my device. Throughout the process, many
 attempts failed miserably. But I now have some experience and assorted hints on
-what to try (as long as you’ve got an Intel Mac).&lt;/p&gt;
-&lt;!-- TEASER_END --&gt;
-&lt;p&gt;&lt;strong&gt;DISCLAIMER:&lt;/strong&gt; All information in this post is provided as-is, and some of it may
+what to try (as long as you’ve got an Intel Mac).
+</description><content:encoded><![CDATA[
+<p>Recently, I reinstalled macOS on my device. Throughout the process, many
+attempts failed miserably. But I now have some experience and assorted hints on
+what to try (as long as you’ve got an Intel Mac).</p>
+
+
+
+<p><strong>DISCLAIMER:</strong> All information in this post is provided as-is, and some of it may
 void your warranty. Neither Chris Warrick nor Apple will be responsible for any
-damage to your devices caused as a result of using information in this post.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; This blog post is written for Intel Macs, particularly those that can
+damage to your devices caused as a result of using information in this post.</p>
+<p><strong>Note:</strong> This blog post is written for Intel Macs, particularly those that can
 boot OS X El Capitan (or macOS Sierra, but that’s untested). If your Mac can’t, you’ll need to look for help
 elsewhere. If you’ve got an Apple Silicon Mac, you probably want to perform
-&lt;a class="reference external" href="https://support.apple.com/guide/apple-configurator-mac/revive-or-restore-a-mac-with-apple-silicon-apdd5f3c75ad/mac"&gt;a DFU restore&lt;/a&gt;
-(requires another Mac and a USB-C cable.)&lt;/p&gt;
-&lt;nav class="contents alert alert-primary" id="contents" role="doc-toc"&gt;
-&lt;p class="topic-title"&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#top"&gt;Contents&lt;/a&gt;&lt;/p&gt;
-&lt;ul class="simple"&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#making-install-media-with-el-capitan-with-access-only-to-recovery" id="toc-entry-1"&gt;Making install media with El Capitan (with access only to Recovery)&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#manually-installing-pkg-files" id="toc-entry-2"&gt;Manually installing .pkg files&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#making-install-media-out-of-partial-macos-installers-not-a-valid-os-installer-application" id="toc-entry-3"&gt;Making install media out of partial macOS installers (“not a valid OS installer application”)&lt;/a&gt;&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#a-from-the-el-capitan-download" id="toc-entry-4"&gt;a. From the El Capitan download&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#b-installer-from-recovery-app-store-any-macos-version" id="toc-entry-5"&gt;b. Installer from Recovery/App Store (any macOS version)&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#el-capitan-installer-cant-be-verified" id="toc-entry-6"&gt;El Capitan installer can’t be verified&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#bonus-tidbit-1-how-the-download-works" id="toc-entry-7"&gt;Bonus tidbit 1: how the download works&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#bonus-tidbit-2-using-terminal-from-setup-assistant" id="toc-entry-8"&gt;Bonus tidbit 2: using Terminal from Setup Assistant&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#bonus-tidbit-3-creating-an-image-of-the-install-media-might-not-work" id="toc-entry-9"&gt;Bonus tidbit 3: creating an image of the install media might not work&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#bonus-tidbit-4-dont-bother-restoring-a-time-machine-backup" id="toc-entry-10"&gt;Bonus tidbit 4: don’t bother restoring a Time Machine backup&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#an-open-letter-to-progress-bar-designers" id="toc-entry-11"&gt;An Open Letter to Progress Bar Designers&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a class="reference internal" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#in-the-end" id="toc-entry-12"&gt;In the end…&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/nav&gt;
-&lt;section id="making-install-media-with-el-capitan-with-access-only-to-recovery"&gt;
-&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#toc-entry-1" role="doc-backlink"&gt;Making install media with El Capitan (with access only to Recovery)&lt;/a&gt;&lt;/h2&gt;
-&lt;p&gt;The best, safest, least error-prone way to do an install is with a USB stick.
+<a class="reference external" href="https://support.apple.com/guide/apple-configurator-mac/revive-or-restore-a-mac-with-apple-silicon-apdd5f3c75ad/mac">a DFU restore</a>
+(requires another Mac and a USB-C cable.)</p>
+<nav class="contents alert alert-primary" id="contents" role="doc-toc">
+<p class="topic-title"><a class="reference internal" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#top">Contents</a></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#making-install-media-with-el-capitan-with-access-only-to-recovery" id="toc-entry-1">Making install media with El Capitan (with access only to Recovery)</a></p></li>
+<li><p><a class="reference internal" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#manually-installing-pkg-files" id="toc-entry-2">Manually installing .pkg files</a></p></li>
+<li><p><a class="reference internal" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#making-install-media-out-of-partial-macos-installers-not-a-valid-os-installer-application" id="toc-entry-3">Making install media out of partial macOS installers (“not a valid OS installer application”)</a></p>
+<ul>
+<li><p><a class="reference internal" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#a-from-the-el-capitan-download" id="toc-entry-4">a. From the El Capitan download</a></p></li>
+<li><p><a class="reference internal" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#b-installer-from-recovery-app-store-any-macos-version" id="toc-entry-5">b. Installer from Recovery/App Store (any macOS version)</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#el-capitan-installer-cant-be-verified" id="toc-entry-6">El Capitan installer can’t be verified</a></p></li>
+<li><p><a class="reference internal" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#bonus-tidbit-1-how-the-download-works" id="toc-entry-7">Bonus tidbit 1: how the download works</a></p></li>
+<li><p><a class="reference internal" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#bonus-tidbit-2-using-terminal-from-setup-assistant" id="toc-entry-8">Bonus tidbit 2: using Terminal from Setup Assistant</a></p></li>
+<li><p><a class="reference internal" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#bonus-tidbit-3-creating-an-image-of-the-install-media-might-not-work" id="toc-entry-9">Bonus tidbit 3: creating an image of the install media might not work</a></p></li>
+<li><p><a class="reference internal" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#bonus-tidbit-4-dont-bother-restoring-a-time-machine-backup" id="toc-entry-10">Bonus tidbit 4: don’t bother restoring a Time Machine backup</a></p></li>
+<li><p><a class="reference internal" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#an-open-letter-to-progress-bar-designers" id="toc-entry-11">An Open Letter to Progress Bar Designers</a></p></li>
+<li><p><a class="reference internal" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#in-the-end" id="toc-entry-12">In the end…</a></p></li>
+</ul>
+</nav>
+<section id="making-install-media-with-el-capitan-with-access-only-to-recovery">
+<h1><a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#toc-entry-1" role="doc-backlink">Making install media with El Capitan (with access only to Recovery)</a></h1>
+<p>The best, safest, least error-prone way to do an install is with a USB stick.
 Unfortunately, making a USB stick with the macOS installer on it is a nuisance.
 The expected way to produce macOS install media is to download the installer
-from App Store/Software Update, and run the &lt;code class="docutils literal"&gt;createinstallmedia&lt;/code&gt; command-line
+from App Store/Software Update, and run the <code class="docutils literal">createinstallmedia</code> command-line
 program included with that installer app. All is well, as long as macOS works.
 If it doesn’t, and Recovery can’t install it for you, that can be difficult to
-solve.&lt;/p&gt;
-&lt;p&gt;Apple does not make macOS images publicly available. That’s probably to make
+solve.</p>
+<p>Apple does not make macOS images publicly available. That’s probably to make
 Hackintoshing this little bit harder, but this also affects legitimate users.
 The only thing you can easily download from Apple is El Capitan. Apple offers
-&lt;a class="reference external" href="https://support.apple.com/en-us/HT206886"&gt;InstallMacOSX.dmg&lt;/a&gt; on their
-website.&lt;/p&gt;
-&lt;p&gt;There are also some other downloads available:&lt;/p&gt;
-&lt;ul class="simple"&gt;
-&lt;li&gt;&lt;p&gt;there’s a Sierra download, with a broken link, although it can be fixed by changing &lt;code class="docutils literal"&gt;&lt;span class="pre"&gt;updates-http&lt;/span&gt;&lt;/code&gt; to &lt;code class="docutils literal"&gt;updates&lt;/code&gt;: &lt;a class="reference external" href="https://updates.cdn-apple.com/2019/cert/061-39476-20191023-48f365f4-0015-4c41-9f44-39d3d2aca067/InstallOS.dmg"&gt;get Sierra installer&lt;/a&gt;.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;if you need something older than El Capitan, downloads are available as far
-back as Lion, although these might not have the &lt;code class="docutils literal"&gt;createinstallmedia&lt;/code&gt; tool
-required for this procedure.&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;This post assumes you’re working with El Capitan; a quick look though that file
-suggests the instructions in this post should work with Sierra as well.&lt;/p&gt;
-&lt;p&gt;If you take a look at the instructions, you will see that this is
-&lt;em&gt;not&lt;/em&gt; a bootable OS X image. This image has a &lt;code class="docutils literal"&gt;.pkg&lt;/code&gt; package. This package is
-expected to install &lt;code class="docutils literal"&gt;/Applications/Install OS X El Capitan.app&lt;/code&gt;. Well, we’re
-in recovery, we can’t install stuff. So, let’s do this the manual way.&lt;/p&gt;
-&lt;/section&gt;
-&lt;section id="manually-installing-pkg-files"&gt;
-&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#toc-entry-2" role="doc-backlink"&gt;Manually installing .pkg files&lt;/a&gt;&lt;/h2&gt;
-&lt;p&gt;Turns out the &lt;code class="docutils literal"&gt;.pkg&lt;/code&gt; format is just an archives all the way down, with all
-archives being different formats (at least three).&lt;/p&gt;
-&lt;aside class="float-md-right mt-md-0 sidebar"&gt;
-&lt;p class="sidebar-title"&gt;macOS flat package format&lt;/p&gt;
-&lt;p&gt;You can find more resources about the flat package format, &lt;a class="reference external" href="http://s.sudre.free.fr/Stuff/Ivanhoe/FLAT.html"&gt;one&lt;/a&gt; or &lt;a class="reference external" href="https://matthew-brett.github.io/docosx/flat_packages.html#payload_"&gt;two&lt;/a&gt;, although
-this was deduced from the &lt;code class="docutils literal"&gt;file&lt;/code&gt; command and The Unarchiver.&lt;/p&gt;
-&lt;/aside&gt;
-&lt;p&gt;The first archive is the &lt;code class="docutils literal"&gt;.pkg&lt;/code&gt; file itself. Those files are in &lt;a class="reference external" href="https://en.wikipedia.org/wiki/Xar_(archiver)"&gt;XAR format&lt;/a&gt;, which was invented by the
-OpenDarwin community. You can either extract it with &lt;code class="docutils literal"&gt;pkgutil &lt;span class="pre"&gt;--expand&lt;/span&gt;
-foo.pkg foo_files&lt;/code&gt; (the last argument is the destination directory, can be
-anything, will be created by &lt;code class="docutils literal"&gt;pkgutil&lt;/code&gt;) if you have access to that command (it’s
-available in Recovery OS), or you can try the &lt;code class="docutils literal"&gt;xar&lt;/code&gt; utility as &lt;code class="docutils literal"&gt;xar &lt;span class="pre"&gt;-xf&lt;/span&gt;
-foo.pkg&lt;/code&gt;. The structure produced by both tools is a bit different, but we can
-work with both.&lt;/p&gt;
-&lt;p&gt;The second archive-in-archive is the &lt;code class="docutils literal"&gt;Payload&lt;/code&gt;. It’s a gzipped cpio archive
+<a class="reference external" href="https://support.apple.com/en-us/HT206886">InstallMacOSX.dmg</a> on their
+website.</p>
+<p>There are also some other downloads available:</p>
+<ul class="simple">
+<li><p>there’s a Sierra download, with a broken link, although it can be fixed by changing <code class="docutils literal"><span class="pre">updates-http</span></code> to <code class="docutils literal">updates</code>: <a class="reference external" href="https://updates.cdn-apple.com/2019/cert/061-39476-20191023-48f365f4-0015-4c41-9f44-39d3d2aca067/InstallOS.dmg">get Sierra installer</a>.</p></li>
+<li><p>if you need something older than El Capitan, downloads are available as far
+back as Lion, although these might not have the <code class="docutils literal">createinstallmedia</code> tool
+required for this procedure.</p></li>
+</ul>
+<p>This post assumes you’re working with El Capitan; a quick look though that file
+suggests the instructions in this post should work with Sierra as well.</p>
+<p>If you take a look at the instructions, you will see that this is
+<em>not</em> a bootable OS X image. This image has a <code class="docutils literal">.pkg</code> package. This package is
+expected to install <code class="docutils literal">/Applications/Install OS X El Capitan.app</code>. Well, we’re
+in recovery, we can’t install stuff. So, let’s do this the manual way.</p>
+</section>
+<section id="manually-installing-pkg-files">
+<h1><a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#toc-entry-2" role="doc-backlink">Manually installing .pkg files</a></h1>
+<p>Turns out the <code class="docutils literal">.pkg</code> format is just an archives all the way down, with all
+archives being different formats (at least three).</p>
+<aside class="float-md-right mt-md-0 sidebar">
+<p class="sidebar-title">macOS flat package format</p>
+<p>You can find more resources about the flat package format, <a class="reference external" href="http://s.sudre.free.fr/Stuff/Ivanhoe/FLAT.html">one</a> or <a class="reference external" href="https://matthew-brett.github.io/docosx/flat_packages.html#payload_">two</a>, although
+this was deduced from the <code class="docutils literal">file</code> command and The Unarchiver.</p>
+</aside>
+<p>The first archive is the <code class="docutils literal">.pkg</code> file itself. Those files are in <a class="reference external" href="https://en.wikipedia.org/wiki/Xar_(archiver)">XAR format</a>, which was invented by the
+OpenDarwin community. You can either extract it with <code class="docutils literal">pkgutil <span class="pre">--expand</span>
+foo.pkg foo_files</code> (the last argument is the destination directory, can be
+anything, will be created by <code class="docutils literal">pkgutil</code>) if you have access to that command (it’s
+available in Recovery OS), or you can try the <code class="docutils literal">xar</code> utility as <code class="docutils literal">xar <span class="pre">-xf</span>
+foo.pkg</code>. The structure produced by both tools is a bit different, but we can
+work with both.</p>
+<p>The second archive-in-archive is the <code class="docutils literal">Payload</code>. It’s a gzipped cpio archive
 that contains the files installed by this package.  If you have BSD tar
-(default on macOS, easily installable on Linux), you can just do &lt;code class="docutils literal"&gt;tar &lt;span class="pre"&gt;-xvf&lt;/span&gt; Payload&lt;/code&gt;.
-Otherwise, you can use &lt;code class="docutils literal"&gt;gunzip &lt;span class="pre"&gt;-c&lt;/span&gt; Payload | cpio &lt;span class="pre"&gt;-i&lt;/span&gt;&lt;/code&gt; (or &lt;code class="docutils literal"&gt;gzcat&lt;/code&gt;). That
-will extract all the files the package has.&lt;/p&gt;
-&lt;p&gt;Another nested archive is the &lt;code class="docutils literal"&gt;Scripts&lt;/code&gt; archive, although note that
-&lt;code class="docutils literal"&gt;pkgutil&lt;/code&gt; will extract it automatically. If it’s not extracted, it’s actually
-&lt;code class="docutils literal"&gt;.cpio.gz&lt;/code&gt; again, with the same way to extract it.&lt;/p&gt;
-&lt;p&gt;(PS.  If you have &lt;code class="docutils literal"&gt;7z&lt;/code&gt; around (on Windows/Linux as well), you can just point
-it at all the compressed files mentioned in this paragraph.)&lt;/p&gt;
-&lt;/section&gt;
-&lt;section id="making-install-media-out-of-partial-macos-installers-not-a-valid-os-installer-application"&gt;
-&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#toc-entry-3" role="doc-backlink"&gt;Making install media out of partial macOS installers (“not a valid OS installer application”)&lt;/a&gt;&lt;/h2&gt;
-&lt;section id="a-from-the-el-capitan-download"&gt;
-&lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#toc-entry-4" role="doc-backlink"&gt;a. From the El Capitan download&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;Let’s expand the El Capitan package.&lt;/p&gt;
-&lt;div class="code"&gt;&lt;pre class="code console"&gt;&lt;a id="rest_code_286790e0b58a4db190820b3a4bd96eda-1" name="rest_code_286790e0b58a4db190820b3a4bd96eda-1" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_286790e0b58a4db190820b3a4bd96eda-1"&gt;&lt;/a&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;mount&lt;span class="w"&gt; &lt;/span&gt;the&lt;span class="w"&gt; &lt;/span&gt;DMG&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;in&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;Disk&lt;span class="w"&gt; &lt;/span&gt;Utility&lt;span class="o"&gt;)&lt;/span&gt;
-&lt;a id="rest_code_286790e0b58a4db190820b3a4bd96eda-2" name="rest_code_286790e0b58a4db190820b3a4bd96eda-2" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_286790e0b58a4db190820b3a4bd96eda-2"&gt;&lt;/a&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;cp&lt;span class="w"&gt; &lt;/span&gt;/Volumes/Install&lt;span class="se"&gt;\ &lt;/span&gt;OS&lt;span class="se"&gt;\ &lt;/span&gt;X/InstallMacOSX.pkg&lt;span class="w"&gt; &lt;/span&gt;/Volumes/Macintosh&lt;span class="se"&gt;\ &lt;/span&gt;HD/
-&lt;a id="rest_code_286790e0b58a4db190820b3a4bd96eda-3" name="rest_code_286790e0b58a4db190820b3a4bd96eda-3" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_286790e0b58a4db190820b3a4bd96eda-3"&gt;&lt;/a&gt;&lt;span class="go"&gt;     (Or copy it to some other volume you can write to; NOT the USB stick)&lt;/span&gt;
-&lt;a id="rest_code_286790e0b58a4db190820b3a4bd96eda-4" name="rest_code_286790e0b58a4db190820b3a4bd96eda-4" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_286790e0b58a4db190820b3a4bd96eda-4"&gt;&lt;/a&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;&lt;span class="nb"&gt;cd&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;/Volumes/Macintosh&lt;span class="se"&gt;\ &lt;/span&gt;HD/
-&lt;a id="rest_code_286790e0b58a4db190820b3a4bd96eda-5" name="rest_code_286790e0b58a4db190820b3a4bd96eda-5" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_286790e0b58a4db190820b3a4bd96eda-5"&gt;&lt;/a&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;pkgutil&lt;span class="w"&gt; &lt;/span&gt;--expand&lt;span class="w"&gt; &lt;/span&gt;InstallMacOSX.pkg&lt;span class="w"&gt; &lt;/span&gt;elcapitan
-&lt;a id="rest_code_286790e0b58a4db190820b3a4bd96eda-6" name="rest_code_286790e0b58a4db190820b3a4bd96eda-6" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_286790e0b58a4db190820b3a4bd96eda-6"&gt;&lt;/a&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;ls&lt;span class="w"&gt; &lt;/span&gt;-F&lt;span class="w"&gt; &lt;/span&gt;elcapitan
-&lt;a id="rest_code_286790e0b58a4db190820b3a4bd96eda-7" name="rest_code_286790e0b58a4db190820b3a4bd96eda-7" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_286790e0b58a4db190820b3a4bd96eda-7"&gt;&lt;/a&gt;&lt;span class="go"&gt;Distribution*       InstallMacOSX.pkg/ Resources/&lt;/span&gt;
-&lt;a id="rest_code_286790e0b58a4db190820b3a4bd96eda-8" name="rest_code_286790e0b58a4db190820b3a4bd96eda-8" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_286790e0b58a4db190820b3a4bd96eda-8"&gt;&lt;/a&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;&lt;span class="nb"&gt;cd&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;elcapitan/InstallMacOSX.pkg/
-&lt;a id="rest_code_286790e0b58a4db190820b3a4bd96eda-9" name="rest_code_286790e0b58a4db190820b3a4bd96eda-9" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_286790e0b58a4db190820b3a4bd96eda-9"&gt;&lt;/a&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;tar&lt;span class="w"&gt; &lt;/span&gt;-xvf&lt;span class="w"&gt; &lt;/span&gt;Payload
-&lt;a id="rest_code_286790e0b58a4db190820b3a4bd96eda-10" name="rest_code_286790e0b58a4db190820b3a4bd96eda-10" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_286790e0b58a4db190820b3a4bd96eda-10"&gt;&lt;/a&gt;&lt;span class="go"&gt;x .&lt;/span&gt;
-&lt;a id="rest_code_286790e0b58a4db190820b3a4bd96eda-11" name="rest_code_286790e0b58a4db190820b3a4bd96eda-11" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_286790e0b58a4db190820b3a4bd96eda-11"&gt;&lt;/a&gt;&lt;span class="go"&gt;x ./Install OS X El Capitan.app&lt;/span&gt;
-&lt;a id="rest_code_286790e0b58a4db190820b3a4bd96eda-12" name="rest_code_286790e0b58a4db190820b3a4bd96eda-12" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_286790e0b58a4db190820b3a4bd96eda-12"&gt;&lt;/a&gt;&lt;span class="go"&gt;x ./Install OS X El Capitan.app/Contents&lt;/span&gt;
-&lt;a id="rest_code_286790e0b58a4db190820b3a4bd96eda-13" name="rest_code_286790e0b58a4db190820b3a4bd96eda-13" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_286790e0b58a4db190820b3a4bd96eda-13"&gt;&lt;/a&gt;&lt;span class="go"&gt;…&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;We’ve got the installer app, which is what we need to create an install image.
-Great, let’s try it!&lt;/p&gt;
-&lt;div class="code"&gt;&lt;pre class="code console"&gt;&lt;a id="rest_code_95f82290f32f4d55a70749a42c1534cf-1" name="rest_code_95f82290f32f4d55a70749a42c1534cf-1" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_95f82290f32f4d55a70749a42c1534cf-1"&gt;&lt;/a&gt;&lt;span class="gp"&gt;# &lt;/span&gt;&lt;span class="s2"&gt;"Install OS X El Capitan.app/Contents/Resources/createinstallmedia"&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;--volume&lt;span class="w"&gt; &lt;/span&gt;/Volumes/MyBlankUSBDrive&lt;span class="w"&gt; &lt;/span&gt;--applicationpath&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;"Install OS X El Capitan.app"&lt;/span&gt;
-&lt;a id="rest_code_95f82290f32f4d55a70749a42c1534cf-2" name="rest_code_95f82290f32f4d55a70749a42c1534cf-2" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_95f82290f32f4d55a70749a42c1534cf-2"&gt;&lt;/a&gt;&lt;span class="go"&gt;Install OS X El Capitan.app does not appear to be a valid OS installer application.&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Oh, we’ve got a problem. Turns out there’s one more thing we need to take care
+(default on macOS, easily installable on Linux), you can just do <code class="docutils literal">tar <span class="pre">-xvf</span> Payload</code>.
+Otherwise, you can use <code class="docutils literal">gunzip <span class="pre">-c</span> Payload | cpio <span class="pre">-i</span></code> (or <code class="docutils literal">gzcat</code>). That
+will extract all the files the package has.</p>
+<p>Another nested archive is the <code class="docutils literal">Scripts</code> archive, although note that
+<code class="docutils literal">pkgutil</code> will extract it automatically. If it’s not extracted, it’s actually
+<code class="docutils literal">.cpio.gz</code> again, with the same way to extract it.</p>
+<p>(PS.  If you have <code class="docutils literal">7z</code> around (on Windows/Linux as well), you can just point
+it at all the compressed files mentioned in this paragraph.)</p>
+</section>
+<section id="making-install-media-out-of-partial-macos-installers-not-a-valid-os-installer-application">
+<h1><a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#toc-entry-3" role="doc-backlink">Making install media out of partial macOS installers (“not a valid OS installer application”)</a></h1>
+<section id="a-from-the-el-capitan-download">
+<h2><a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#toc-entry-4" role="doc-backlink">a. From the El Capitan download</a></h2>
+<p>Let’s expand the El Capitan package.</p>
+<div class="code"><pre class="code console"><a id="rest_code_a12b8e2380434f0097be4f820a042a57-1" name="rest_code_a12b8e2380434f0097be4f820a042a57-1" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_a12b8e2380434f0097be4f820a042a57-1"></a><span class="gp">$ </span><span class="o">(</span>mount<span class="w"> </span>the<span class="w"> </span>DMG<span class="w"> </span><span class="k">in</span><span class="w"> </span>Disk<span class="w"> </span>Utility<span class="o">)</span>
+<a id="rest_code_a12b8e2380434f0097be4f820a042a57-2" name="rest_code_a12b8e2380434f0097be4f820a042a57-2" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_a12b8e2380434f0097be4f820a042a57-2"></a><span class="gp">$ </span>cp<span class="w"> </span>/Volumes/Install<span class="se">\ </span>OS<span class="se">\ </span>X/InstallMacOSX.pkg<span class="w"> </span>/Volumes/Macintosh<span class="se">\ </span>HD/
+<a id="rest_code_a12b8e2380434f0097be4f820a042a57-3" name="rest_code_a12b8e2380434f0097be4f820a042a57-3" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_a12b8e2380434f0097be4f820a042a57-3"></a><span class="go">     (Or copy it to some other volume you can write to; NOT the USB stick)</span>
+<a id="rest_code_a12b8e2380434f0097be4f820a042a57-4" name="rest_code_a12b8e2380434f0097be4f820a042a57-4" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_a12b8e2380434f0097be4f820a042a57-4"></a><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>/Volumes/Macintosh<span class="se">\ </span>HD/
+<a id="rest_code_a12b8e2380434f0097be4f820a042a57-5" name="rest_code_a12b8e2380434f0097be4f820a042a57-5" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_a12b8e2380434f0097be4f820a042a57-5"></a><span class="gp">$ </span>pkgutil<span class="w"> </span>--expand<span class="w"> </span>InstallMacOSX.pkg<span class="w"> </span>elcapitan
+<a id="rest_code_a12b8e2380434f0097be4f820a042a57-6" name="rest_code_a12b8e2380434f0097be4f820a042a57-6" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_a12b8e2380434f0097be4f820a042a57-6"></a><span class="gp">$ </span>ls<span class="w"> </span>-F<span class="w"> </span>elcapitan
+<a id="rest_code_a12b8e2380434f0097be4f820a042a57-7" name="rest_code_a12b8e2380434f0097be4f820a042a57-7" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_a12b8e2380434f0097be4f820a042a57-7"></a><span class="go">Distribution*       InstallMacOSX.pkg/ Resources/</span>
+<a id="rest_code_a12b8e2380434f0097be4f820a042a57-8" name="rest_code_a12b8e2380434f0097be4f820a042a57-8" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_a12b8e2380434f0097be4f820a042a57-8"></a><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>elcapitan/InstallMacOSX.pkg/
+<a id="rest_code_a12b8e2380434f0097be4f820a042a57-9" name="rest_code_a12b8e2380434f0097be4f820a042a57-9" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_a12b8e2380434f0097be4f820a042a57-9"></a><span class="gp">$ </span>tar<span class="w"> </span>-xvf<span class="w"> </span>Payload
+<a id="rest_code_a12b8e2380434f0097be4f820a042a57-10" name="rest_code_a12b8e2380434f0097be4f820a042a57-10" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_a12b8e2380434f0097be4f820a042a57-10"></a><span class="go">x .</span>
+<a id="rest_code_a12b8e2380434f0097be4f820a042a57-11" name="rest_code_a12b8e2380434f0097be4f820a042a57-11" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_a12b8e2380434f0097be4f820a042a57-11"></a><span class="go">x ./Install OS X El Capitan.app</span>
+<a id="rest_code_a12b8e2380434f0097be4f820a042a57-12" name="rest_code_a12b8e2380434f0097be4f820a042a57-12" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_a12b8e2380434f0097be4f820a042a57-12"></a><span class="go">x ./Install OS X El Capitan.app/Contents</span>
+<a id="rest_code_a12b8e2380434f0097be4f820a042a57-13" name="rest_code_a12b8e2380434f0097be4f820a042a57-13" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_a12b8e2380434f0097be4f820a042a57-13"></a><span class="go">…</span>
+</pre></div>
+<p>We’ve got the installer app, which is what we need to create an install image.
+Great, let’s try it!</p>
+<div class="code"><pre class="code console"><a id="rest_code_dd7186a14dd947c1acd6377af6fa0a91-1" name="rest_code_dd7186a14dd947c1acd6377af6fa0a91-1" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_dd7186a14dd947c1acd6377af6fa0a91-1"></a><span class="gp"># </span><span class="s2">&quot;Install OS X El Capitan.app/Contents/Resources/createinstallmedia&quot;</span><span class="w"> </span>--volume<span class="w"> </span>/Volumes/MyBlankUSBDrive<span class="w"> </span>--applicationpath<span class="w"> </span><span class="s2">&quot;Install OS X El Capitan.app&quot;</span>
+<a id="rest_code_dd7186a14dd947c1acd6377af6fa0a91-2" name="rest_code_dd7186a14dd947c1acd6377af6fa0a91-2" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_dd7186a14dd947c1acd6377af6fa0a91-2"></a><span class="go">Install OS X El Capitan.app does not appear to be a valid OS installer application.</span>
+</pre></div>
+<p>Oh, we’ve got a problem. Turns out there’s one more thing we need to take care
 of, and it’s the scripts. MacOS packages have scripts, typically shell scripts,
 that are run at various stages in the install process. We can look at the
-&lt;code class="docutils literal"&gt;PackageInfo&lt;/code&gt; file, or just look in the &lt;code class="docutils literal"&gt;Scripts&lt;/code&gt; folder, to see that
-there’s an &lt;code class="docutils literal"&gt;link_package&lt;/code&gt; script we need to run. This script creates a
-&lt;code class="docutils literal"&gt;Contents/SharedSupport&lt;/code&gt; directory inside the installer app, and
-copies/hardlinks the &lt;code class="docutils literal"&gt;InstallESD.dmg&lt;/code&gt; file (which is the install formerly-DVD
-image) to that directory. Let’s try doing this on our own:&lt;/p&gt;
-&lt;div class="code"&gt;&lt;pre class="code console"&gt;&lt;a id="rest_code_77b2f445e0f04106a1c2df216d0a896d-1" name="rest_code_77b2f445e0f04106a1c2df216d0a896d-1" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_77b2f445e0f04106a1c2df216d0a896d-1"&gt;&lt;/a&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;mkdir&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;"Install OS X El Capitan.app/Contents/SharedSupport"&lt;/span&gt;
-&lt;a id="rest_code_77b2f445e0f04106a1c2df216d0a896d-2" name="rest_code_77b2f445e0f04106a1c2df216d0a896d-2" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_77b2f445e0f04106a1c2df216d0a896d-2"&gt;&lt;/a&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;mv&lt;span class="w"&gt; &lt;/span&gt;InstallESD.dmg&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;"Install OS X El Capitan.app/Contents/SharedSupport"&lt;/span&gt;
-&lt;a id="rest_code_77b2f445e0f04106a1c2df216d0a896d-3" name="rest_code_77b2f445e0f04106a1c2df216d0a896d-3" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_77b2f445e0f04106a1c2df216d0a896d-3"&gt;&lt;/a&gt;&lt;span class="gp"&gt;# &lt;/span&gt;&lt;span class="s2"&gt;"Install OS X El Capitan.app/Contents/Resources/createinstallmedia"&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;--volume&lt;span class="w"&gt; &lt;/span&gt;/Volumes/MyBlankUSBDrive&lt;span class="w"&gt; &lt;/span&gt;--applicationpath&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;"Install OS X El Capitan.app"&lt;/span&gt;
-&lt;a id="rest_code_77b2f445e0f04106a1c2df216d0a896d-4" name="rest_code_77b2f445e0f04106a1c2df216d0a896d-4" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_77b2f445e0f04106a1c2df216d0a896d-4"&gt;&lt;/a&gt;&lt;span class="go"&gt;Ready to start.&lt;/span&gt;
-&lt;a id="rest_code_77b2f445e0f04106a1c2df216d0a896d-5" name="rest_code_77b2f445e0f04106a1c2df216d0a896d-5" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_77b2f445e0f04106a1c2df216d0a896d-5"&gt;&lt;/a&gt;&lt;span class="go"&gt;To continue we need to erase the disk at /Volumes/MyBlankUSBDrive.&lt;/span&gt;
-&lt;a id="rest_code_77b2f445e0f04106a1c2df216d0a896d-6" name="rest_code_77b2f445e0f04106a1c2df216d0a896d-6" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_77b2f445e0f04106a1c2df216d0a896d-6"&gt;&lt;/a&gt;&lt;span class="go"&gt;If you wish to continue type (Y) then press return:&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;And it works! &lt;code class="docutils literal"&gt;createinstallmedia&lt;/code&gt; will now produce valid install media.&lt;/p&gt;
-&lt;/section&gt;
-&lt;section id="b-installer-from-recovery-app-store-any-macos-version"&gt;
-&lt;h3&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#toc-entry-5" role="doc-backlink"&gt;b. Installer from Recovery/App Store (any macOS version)&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;If you are in Recovery, you can find an Install app on the filesystem. If you
-try to run it, you will get the same error as in the previous paragraph:&lt;/p&gt;
-&lt;div class="code"&gt;&lt;pre class="code text"&gt;&lt;a id="rest_code_d0a9a638f73d4686ba77070b315c2b1d-1" name="rest_code_d0a9a638f73d4686ba77070b315c2b1d-1" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_d0a9a638f73d4686ba77070b315c2b1d-1"&gt;&lt;/a&gt;Install macOS Catalina.app does not appear to be a valid OS installer application.
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;This also happens with some older macOS versions, where you get a small
-&lt;code class="docutils literal"&gt;.app&lt;/code&gt; from the App Store, and that app does the actual download.&lt;/p&gt;
-&lt;p&gt;Whatever the issue was, we need to download the install files with the
+<code class="docutils literal">PackageInfo</code> file, or just look in the <code class="docutils literal">Scripts</code> folder, to see that
+there’s an <code class="docutils literal">link_package</code> script we need to run. This script creates a
+<code class="docutils literal">Contents/SharedSupport</code> directory inside the installer app, and
+copies/hardlinks the <code class="docutils literal">InstallESD.dmg</code> file (which is the install formerly-DVD
+image) to that directory. Let’s try doing this on our own:</p>
+<div class="code"><pre class="code console"><a id="rest_code_02681eda476540b2a277870eab700139-1" name="rest_code_02681eda476540b2a277870eab700139-1" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_02681eda476540b2a277870eab700139-1"></a><span class="gp">$ </span>mkdir<span class="w"> </span><span class="s2">&quot;Install OS X El Capitan.app/Contents/SharedSupport&quot;</span>
+<a id="rest_code_02681eda476540b2a277870eab700139-2" name="rest_code_02681eda476540b2a277870eab700139-2" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_02681eda476540b2a277870eab700139-2"></a><span class="gp">$ </span>mv<span class="w"> </span>InstallESD.dmg<span class="w"> </span><span class="s2">&quot;Install OS X El Capitan.app/Contents/SharedSupport&quot;</span>
+<a id="rest_code_02681eda476540b2a277870eab700139-3" name="rest_code_02681eda476540b2a277870eab700139-3" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_02681eda476540b2a277870eab700139-3"></a><span class="gp"># </span><span class="s2">&quot;Install OS X El Capitan.app/Contents/Resources/createinstallmedia&quot;</span><span class="w"> </span>--volume<span class="w"> </span>/Volumes/MyBlankUSBDrive<span class="w"> </span>--applicationpath<span class="w"> </span><span class="s2">&quot;Install OS X El Capitan.app&quot;</span>
+<a id="rest_code_02681eda476540b2a277870eab700139-4" name="rest_code_02681eda476540b2a277870eab700139-4" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_02681eda476540b2a277870eab700139-4"></a><span class="go">Ready to start.</span>
+<a id="rest_code_02681eda476540b2a277870eab700139-5" name="rest_code_02681eda476540b2a277870eab700139-5" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_02681eda476540b2a277870eab700139-5"></a><span class="go">To continue we need to erase the disk at /Volumes/MyBlankUSBDrive.</span>
+<a id="rest_code_02681eda476540b2a277870eab700139-6" name="rest_code_02681eda476540b2a277870eab700139-6" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_02681eda476540b2a277870eab700139-6"></a><span class="go">If you wish to continue type (Y) then press return:</span>
+</pre></div>
+<p>And it works! <code class="docutils literal">createinstallmedia</code> will now produce valid install media.</p>
+</section>
+<section id="b-installer-from-recovery-app-store-any-macos-version">
+<h2><a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#toc-entry-5" role="doc-backlink">b. Installer from Recovery/App Store (any macOS version)</a></h2>
+<p>If you are in Recovery, you can find an Install app on the filesystem. If you
+try to run it, you will get the same error as in the previous paragraph:</p>
+<div class="code"><pre class="code text"><a id="rest_code_0447ee55c787469fb1388d1fd77a288f-1" name="rest_code_0447ee55c787469fb1388d1fd77a288f-1" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_0447ee55c787469fb1388d1fd77a288f-1"></a>Install macOS Catalina.app does not appear to be a valid OS installer application.
+</pre></div>
+<p>This also happens with some older macOS versions, where you get a small
+<code class="docutils literal">.app</code> from the App Store, and that app does the actual download.</p>
+<p>Whatever the issue was, we need to download the install files with the
 installer. Open the installer and let it run until the download finishes. If
 the app asks you to reboot, quit it at this point. If it never asks, you can
 still find a way to get files out (after a failed install, they should not be
-removed).&lt;/p&gt;
-&lt;p&gt;The install files can be found in &lt;code class="docutils literal"&gt;/macOS Install Data&lt;/code&gt; on the destination
-volume. For older versions, you will just have &lt;code class="docutils literal"&gt;InstallESD.dmg&lt;/code&gt;, newer
+removed).</p>
+<p>The install files can be found in <code class="docutils literal">/macOS Install Data</code> on the destination
+volume. For older versions, you will just have <code class="docutils literal">InstallESD.dmg</code>, newer
 versions add more and more files, some of which are hardware-specific (and
-Catalina has &lt;code class="docutils literal"&gt;InstallESDDmg.pkg&lt;/code&gt;, because Apple loves nesting archives for no
-reason!). However many files you find, you can just:&lt;/p&gt;
-&lt;ol class="arabic simple"&gt;
-&lt;li&gt;&lt;p&gt;Copy &lt;code class="docutils literal"&gt;Install macOS Catalina.app&lt;/code&gt; to a read-write volume.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Copy the contents of &lt;code class="docutils literal"&gt;/Volumes/TARGET/macOS Install Data&lt;/code&gt; to &lt;code class="docutils literal"&gt;Install
-macOS Catalina.app/Content/SharedSupport&lt;/code&gt;. Make sure you account for hidden
+Catalina has <code class="docutils literal">InstallESDDmg.pkg</code>, because Apple loves nesting archives for no
+reason!). However many files you find, you can just:</p>
+<ol class="arabic simple">
+<li><p>Copy <code class="docutils literal">Install macOS Catalina.app</code> to a read-write volume.</p></li>
+<li><p>Copy the contents of <code class="docutils literal">/Volumes/TARGET/macOS Install Data</code> to <code class="docutils literal">Install
+macOS Catalina.app/Content/SharedSupport</code>. Make sure you account for hidden
 files, if any (copy the entire directory). If you did this correctly,
-&lt;code class="docutils literal"&gt;InstallESDDmg.pkg&lt;/code&gt; (or &lt;code class="docutils literal"&gt;InstallESD.dmg&lt;/code&gt; on older verisons) is in the &lt;code class="docutils literal"&gt;SharedSupport&lt;/code&gt;
-directory (not in a subdirectory).&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Run &lt;code class="docutils literal"&gt;createinstallmedia&lt;/code&gt;. It should now consider the installer valid. The
-available options differ slightly depending on the OS version.&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/section&gt;
-&lt;/section&gt;
-&lt;section id="el-capitan-installer-cant-be-verified"&gt;
-&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#toc-entry-6" role="doc-backlink"&gt;El Capitan installer can’t be verified&lt;/a&gt;&lt;/h2&gt;
-&lt;p&gt;If you get this error, it might be because Apple’s signing keys expired, or
+<code class="docutils literal">InstallESDDmg.pkg</code> (or <code class="docutils literal">InstallESD.dmg</code> on older verisons) is in the <code class="docutils literal">SharedSupport</code>
+directory (not in a subdirectory).</p></li>
+<li><p>Run <code class="docutils literal">createinstallmedia</code>. It should now consider the installer valid. The
+available options differ slightly depending on the OS version.</p></li>
+</ol>
+</section>
+</section>
+<section id="el-capitan-installer-cant-be-verified">
+<h1><a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#toc-entry-6" role="doc-backlink">El Capitan installer can’t be verified</a></h1>
+<p>If you get this error, it might be because Apple’s signing keys expired, or
 because of other date/time weirdness. Regardless, you can force an install if
-you are sure the installer is not damaged with this command &lt;a class="reference external" href="https://apple.stackexchange.com/questions/216730/this-copy-of-the-install-os-x-el-capitan-application-cant-be-verified-it-may-h"&gt;(source)&lt;/a&gt;:&lt;/p&gt;
-&lt;div class="code"&gt;&lt;pre class="code console"&gt;&lt;a id="rest_code_02fea043b0ad46c1a59f0bb533477faa-1" name="rest_code_02fea043b0ad46c1a59f0bb533477faa-1" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_02fea043b0ad46c1a59f0bb533477faa-1"&gt;&lt;/a&gt;&lt;span class="gp"&gt;# &lt;/span&gt;installer&lt;span class="w"&gt; &lt;/span&gt;-pkg&lt;span class="w"&gt;  &lt;/span&gt;/Volumes/Mac&lt;span class="se"&gt;\ &lt;/span&gt;OS&lt;span class="se"&gt;\ &lt;/span&gt;X&lt;span class="se"&gt;\ &lt;/span&gt;Install&lt;span class="se"&gt;\ &lt;/span&gt;DVD/Packages/OSInstall.mpkg&lt;span class="w"&gt; &lt;/span&gt;-target&lt;span class="w"&gt; &lt;/span&gt;/Volumes/&lt;span class="s2"&gt;"XXX"&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;/section&gt;
-&lt;section id="bonus-tidbit-1-how-the-download-works"&gt;
-&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#toc-entry-7" role="doc-backlink"&gt;Bonus tidbit 1: how the download works&lt;/a&gt;&lt;/h2&gt;
-&lt;p&gt;While messing with all the installer stuff, I found out a few
-interesting/worrying things about the download process.&lt;/p&gt;
-&lt;p&gt;The first one is that the macOS installer uses plain HTTP without encryption to
+you are sure the installer is not damaged with this command <a class="reference external" href="https://apple.stackexchange.com/questions/216730/this-copy-of-the-install-os-x-el-capitan-application-cant-be-verified-it-may-h">(source)</a>:</p>
+<div class="code"><pre class="code console"><a id="rest_code_e9c19fefd716419597578cd44c42b942-1" name="rest_code_e9c19fefd716419597578cd44c42b942-1" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#rest_code_e9c19fefd716419597578cd44c42b942-1"></a><span class="gp"># </span>installer<span class="w"> </span>-pkg<span class="w">  </span>/Volumes/Mac<span class="se">\ </span>OS<span class="se">\ </span>X<span class="se">\ </span>Install<span class="se">\ </span>DVD/Packages/OSInstall.mpkg<span class="w"> </span>-target<span class="w"> </span>/Volumes/<span class="s2">&quot;XXX&quot;</span>
+</pre></div>
+</section>
+<section id="bonus-tidbit-1-how-the-download-works">
+<h1><a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#toc-entry-7" role="doc-backlink">Bonus tidbit 1: how the download works</a></h1>
+<p>While messing with all the installer stuff, I found out a few
+interesting/worrying things about the download process.</p>
+<p>The first one is that the macOS installer uses plain HTTP without encryption to
 download files. That opens you to all the standard issues — an attacker can
 replace files you download, and the protocol doesn’t do anything to detect
 errors (the installer will verify files, but where do the checksums come
-from?).&lt;/p&gt;
-&lt;p&gt;The second one is how the download happens. You might have noticed it to be a
+from?).</p>
+<p>The second one is how the download happens. You might have noticed it to be a
 bit slower than usual traffic. The download happens in 10 MB chunks, using the
-&lt;code class="docutils literal"&gt;Range&lt;/code&gt; HTTP header. The installer asks for 10 MB, gets it, saves, asks for
+<code class="docutils literal">Range</code> HTTP header. The installer asks for 10 MB, gets it, saves, asks for
 another chunk. Repeat that over 800 times, and the overhead of the entire HTTP
 dance becomes noticeable. (I haven’t checked, but I hope the installer at least
-uses Keep-Alive. I wouldn’t be particularly surprised if it didn’t, though.)&lt;/p&gt;
-&lt;p&gt;But this raises another question. The servers clearly support partial downloads.
+uses Keep-Alive. I wouldn’t be particularly surprised if it didn’t, though.)</p>
+<p>But this raises another question. The servers clearly support partial downloads.
 And yet, if your network disconnects during the download, your download
 progress for that file is reset, and in Catalina, you can go from 8 GB back to
 500 MB if you’re particularly unlucky. The question is, why? This
 infrastructure should make it trivial to continue the download, perhaps
 discarding the most recent chunk if you’re concerned about that download of it
-being unsuccessful.&lt;/p&gt;
-&lt;/section&gt;
-&lt;section id="bonus-tidbit-2-using-terminal-from-setup-assistant"&gt;
-&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#toc-entry-8" role="doc-backlink"&gt;Bonus tidbit 2: using Terminal from Setup Assistant&lt;/a&gt;&lt;/h2&gt;
-&lt;p&gt;The first time you boot a Mac after a clean install, it starts the Setup
+being unsuccessful.</p>
+</section>
+<section id="bonus-tidbit-2-using-terminal-from-setup-assistant">
+<h1><a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#toc-entry-8" role="doc-backlink">Bonus tidbit 2: using Terminal from Setup Assistant</a></h1>
+<p>The first time you boot a Mac after a clean install, it starts the Setup
 Assistant. This app asks for basic OS settings (locale, date/time, user
-accounts), and also lets you restore user data from backups.&lt;/p&gt;
-&lt;p&gt;Sometimes, you might want to access the Terminal or Console from that screen.
-You can do that with Ctrl + Opt + Cmd + T and Ctrl + Opt + Cmd + C respectively &lt;a class="reference external" href="https://chris-collins.io/2018/03/15/Using-Terminal-At-macOS-Setup-Assistant/"&gt;(source)&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;How could that come in handy? For example, if you want to check if the backup
+accounts), and also lets you restore user data from backups.</p>
+<p>Sometimes, you might want to access the Terminal or Console from that screen.
+You can do that with Ctrl + Opt + Cmd + T and Ctrl + Opt + Cmd + C respectively <a class="reference external" href="https://chris-collins.io/2018/03/15/Using-Terminal-At-macOS-Setup-Assistant/">(source)</a>.</p>
+<p>How could that come in handy? For example, if you want to check if the backup
 drive still worked and if the process isn’t stuck (I wrote a test file and also
-checked &lt;code class="docutils literal"&gt;top&lt;/code&gt;).&lt;/p&gt;
-&lt;/section&gt;
-&lt;section id="bonus-tidbit-3-creating-an-image-of-the-install-media-might-not-work"&gt;
-&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#toc-entry-9" role="doc-backlink"&gt;Bonus tidbit 3: creating an image of the install media might not work&lt;/a&gt;&lt;/h2&gt;
-&lt;p&gt;A few months later, in December, I upgraded to Big Sur and then installed Windows 10
+checked <code class="docutils literal">top</code>).</p>
+</section>
+<section id="bonus-tidbit-3-creating-an-image-of-the-install-media-might-not-work">
+<h1><a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#toc-entry-9" role="doc-backlink">Bonus tidbit 3: creating an image of the install media might not work</a></h1>
+<p>A few months later, in December, I upgraded to Big Sur and then installed Windows 10
 alongside it in Boot Camp. I then did some more hacks, which led to
-two unbootable OSes.&lt;/p&gt;
-&lt;p&gt;As part of the upgrade, I had prepared install media and used it to install (so
-it wouldn’t fail, as it did last time), and made a &lt;code class="docutils literal"&gt;.dmg&lt;/code&gt; of it with Disk
+two unbootable OSes.</p>
+<p>As part of the upgrade, I had prepared install media and used it to install (so
+it wouldn’t fail, as it did last time), and made a <code class="docutils literal">.dmg</code> of it with Disk
 Utility. (Also, Apple won’t tell you this, but you need to give Disk Utility
-&lt;em&gt;Full Disk Access&lt;/em&gt; for disk imaging to work. Otherwise, you get a cryptic
+<em>Full Disk Access</em> for disk imaging to work. Otherwise, you get a cryptic
 error.) I erased the USB drive after installing, but hey, I could get it back.
 I booted into Internet Recovery and restored my image. Big Sur failed to boot
-and showed a &lt;a class="reference external" href="https://support.apple.com/en-us/HT210901"&gt;🚫 sign&lt;/a&gt;. I tried
+and showed a <a class="reference external" href="https://support.apple.com/en-us/HT210901">🚫 sign</a>. I tried
 restoring my Catalina image from the previous reinstall, and that didn’t work
 due to a size mismatch. I used a different USB drive than these months ago (I
 didn’t have that one with me at the moment), and apparently the one I used had
 a different size (both are marketed as 16 GB). The images could be mounted
-fine, and &lt;code class="docutils literal"&gt;createinstallmedia&lt;/code&gt; should have worked, likely producing a
-bootable drive.&lt;/p&gt;
-&lt;/section&gt;
-&lt;section id="bonus-tidbit-4-dont-bother-restoring-a-time-machine-backup"&gt;
-&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#toc-entry-10" role="doc-backlink"&gt;Bonus tidbit 4: don’t bother restoring a Time Machine backup&lt;/a&gt;&lt;/h2&gt;
-&lt;p&gt;Time Machine is Apple’s magical backup solution. Time Machine saves snapshots
+fine, and <code class="docutils literal">createinstallmedia</code> should have worked, likely producing a
+bootable drive.</p>
+</section>
+<section id="bonus-tidbit-4-dont-bother-restoring-a-time-machine-backup">
+<h1><a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#toc-entry-10" role="doc-backlink">Bonus tidbit 4: don’t bother restoring a Time Machine backup</a></h1>
+<p>Time Machine is Apple’s magical backup solution. Time Machine saves snapshots
 of your entire disk. It’s supposed to help restore files that were deleted or
-changed in an unwanted way, or help you restore a full macOS install.&lt;/p&gt;
-&lt;p&gt;Time Machine is great at file recovery, but none of my 3 system restore
+changed in an unwanted way, or help you restore a full macOS install.</p>
+<p>Time Machine is great at file recovery, but none of my 3 system restore
 attempts were successful. Attempt #1 was a full Time Machine System Restore,
 from Recovery, back in June. It failed partway through, it couldn’t read
 everything from the disk. There might have been underlying hardware issues with
-that failure, so I had another attempt.&lt;/p&gt;
-&lt;p&gt;Attempt #2 was a Migration Assistant restore, as part of the initial setup.
+that failure, so I had another attempt.</p>
+<p>Attempt #2 was a Migration Assistant restore, as part of the initial setup.
 This one succeeded, and things worked… except for one fairly important app.
 This app requires online activation with the vendor, and it wouldn’t reactivate
 after the install. Whatever the third-party vendor is doing didn’t like the
 reinstall. I tried to nuke all the things in ~/Library related to their
 software, and ran their nuke-everything uninstaller, but that didn’t work.
 I reinstalled from scratch and copied over my files, settings and apps from the
-Time Machine drive.&lt;/p&gt;
-&lt;p&gt;Attempt #3 involved the System Restore again, this time for the December
+Time Machine drive.</p>
+<p>Attempt #3 involved the System Restore again, this time for the December
 reinstall. The hardware issues were all fixed in the meantime, so I went for a
-Time Machine System Restore.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Issue #1:&lt;/strong&gt; Internet Recovery booted into Catalina. There was an issue on Apple’s
-side, &lt;a class="reference external" href="https://mjtsai.com/blog/2020/12/30/no-more-big-sur-internet-recovery/"&gt;Big Sur was unavailable in Internet Recovery in December&lt;/a&gt;. TM
+Time Machine System Restore.</p>
+<p><strong>Issue #1:</strong> Internet Recovery booted into Catalina. There was an issue on Apple’s
+side, <a class="reference external" href="https://mjtsai.com/blog/2020/12/30/no-more-big-sur-internet-recovery/">Big Sur was unavailable in Internet Recovery in December</a>. TM
 Recovery will not restore a backup created with a newer version of macOS than
 you’re booted into, so I was forced to restore a slightly older Catalina
 backup. (I spent most of my time in Windows during that weekend, so other than
 the need to upgrade macOS to Big Sur again, I didn’t really lose any data due
-to this.)&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Issue #2:&lt;/strong&gt; It wasted time computing an inaccurate size estimate. Before
+to this.)</p>
+<p><strong>Issue #2:</strong> It wasted time computing an inaccurate size estimate. Before
 restoring a backup, macOS first checks if it will fit on your drive. When it
 does that, an indeterminate progress bar is shown. macOS won’t tell you the
 result of that computation, but you can read the final value from the full
@@ -580,29 +604,29 @@ installed from the system image directly, or something like that, right? Of
 course, since the progress bar is based on the pre-computed size, it became
 indeterminate and I couldn’t tell when it would end. 98, 100, 110, 120, 121.2
 GB is where it ultimately ended. So, not only did it waste 20+ minutes
-computing a size, it was off by 25 GB.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Issue #3:&lt;/strong&gt; The restore didn’t work. The System Restore finished and claimed to
-have succeeded, but macOS wouldn’t boot. It showed an &lt;em&gt;Unrecoverable error&lt;/em&gt;,
-&lt;em&gt;SecurityAgent was unable to create requested mechanism&lt;/em&gt;. Most people who had a
+computing a size, it was off by 25 GB.</p>
+<p><strong>Issue #3:</strong> The restore didn’t work. The System Restore finished and claimed to
+have succeeded, but macOS wouldn’t boot. It showed an <em>Unrecoverable error</em>,
+<em>SecurityAgent was unable to create requested mechanism</em>. Most people who had a
 similar error had it caused by a botched TeamViewer uninstall; I didn’t have
 that installed, and it was referring to a different component. So, wipe and
-fresh reinstall it is.&lt;/p&gt;
-&lt;p&gt;I copied my stuff from the TM drive, and it was acting weird. Some apps failed
+fresh reinstall it is.</p>
+<p>I copied my stuff from the TM drive, and it was acting weird. Some apps failed
 to load their settings copied into Library, others started with a “Move to
 /Applications?” prompt (even though they were in that directory). For some
 reason, those files had some hidden attribute set on it. I worked around it by
-putting files in a &lt;code class="docutils literal"&gt;.zip&lt;/code&gt; archive with Keka, and then unzipping them;
-&lt;code class="docutils literal"&gt;xattr&lt;/code&gt; might also help. (The attribute was likely &lt;code class="docutils literal"&gt;com.apple.quarantine&lt;/code&gt;.)&lt;/p&gt;
-&lt;p&gt;After I got the Mac to work, I reinstalled Windows and set up rEFInd, and it
+putting files in a <code class="docutils literal">.zip</code> archive with Keka, and then unzipping them;
+<code class="docutils literal">xattr</code> might also help. (The attribute was likely <code class="docutils literal">com.apple.quarantine</code>.)</p>
+<p>After I got the Mac to work, I reinstalled Windows and set up rEFInd, and it
 now works fine. (I only use rEFInd because I want virtualization in Windows,
 and that doesn’t work unless you’re warm-rebooting from macOS. I don’t need
 anything more advanced than the Option key boot menu, but Apple made me use a
-third-party bootloader.)&lt;/p&gt;
-&lt;p&gt;&lt;em&gt;We now go back to the original post from June.&lt;/em&gt;&lt;/p&gt;
-&lt;/section&gt;
-&lt;section id="an-open-letter-to-progress-bar-designers"&gt;
-&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#toc-entry-11" role="doc-backlink"&gt;An Open Letter to Progress Bar Designers&lt;/a&gt;&lt;/h2&gt;
-&lt;p&gt;Dear Progress Bar Designers: can you please make your progress bars
+third-party bootloader.)</p>
+<p><em>We now go back to the original post from June.</em></p>
+</section>
+<section id="an-open-letter-to-progress-bar-designers">
+<h1><a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#toc-entry-11" role="doc-backlink">An Open Letter to Progress Bar Designers</a></h1>
+<p>Dear Progress Bar Designers: can you please make your progress bars
 functional? The macOS progress bar might look sleek at just 7 px (non-Retina)/6
 pt = 12 px (Retina) high, but at the same time, you’re looking at individual
 pixels if you need to know if it works or if it’s stuck. I have had to point my
@@ -615,31 +639,31 @@ it. For long-running processes, I wouldn’t mind progress bars that said
 only has a remaining time estimate and transfer speed, it should also show
 moved data/total size), but wouldn’t more things benefit from a clear
 indication of the progress? Yes, perhaps it looks less sleek, perhaps it
-requires more space for the bar.&lt;/p&gt;
-&lt;p&gt;Just compare: which is easier to parse? Which is more informative?&lt;/p&gt;
-&lt;div class="mb-3"&gt;
-&lt;div class="progress" style="height: 6.5px; border-radius: 6.5px;"&gt;
-  &lt;div class="progress-bar" role="progressbar" style="width: 42.42%;" aria-valuenow="42.42" aria-valuemin="0" aria-valuemax="100"&gt;&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;&lt;div class="mb-3"&gt;
-&lt;div class="progress" style="height: 20px; border-radius: 20px;"&gt;
-  &lt;div class="progress-bar" role="progressbar" style="width: 42.42%;" aria-valuenow="42.42" aria-valuemin="0" aria-valuemax="100"&gt;42%&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;&lt;div class="mb-3"&gt;
-&lt;div class="progress" style="height: 20px; border-radius: 20px;"&gt;
-  &lt;div class="progress-bar" role="progressbar" style="width: 42.42%;" aria-valuenow="42.42" aria-valuemin="0" aria-valuemax="100"&gt;42.4%&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;&lt;div class="mb-3"&gt;
-&lt;div class="progress" style="height: 20px; border-radius: 20px;"&gt;
-  &lt;div class="progress-bar" role="progressbar" style="width: 64.64%;" aria-valuenow="64.64" aria-valuemin="0" aria-valuemax="100"&gt;&lt;/div&gt;
-  &lt;div style="position: absolute; text-align: center; left: 0; right: 0; margin-top: 10px;"&gt;64.64% (6.7 GB/10 GB copied)&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;I’d honestly be happy enough with option 2, at least it can be read easily and
-you can remember the number instead of a vague position.&lt;/p&gt;
-&lt;/section&gt;
-&lt;section id="in-the-end"&gt;
-&lt;h2&gt;&lt;a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#toc-entry-12" role="doc-backlink"&gt;In the end…&lt;/a&gt;&lt;/h2&gt;
-&lt;p&gt;After all this, I managed to get macOS Catalina installed. After various
+requires more space for the bar.</p>
+<p>Just compare: which is easier to parse? Which is more informative?</p>
+<div class="mb-3">
+<div class="progress" style="height: 6.5px; border-radius: 6.5px;">
+  <div class="progress-bar" role="progressbar" style="width: 42.42%;" aria-valuenow="42.42" aria-valuemin="0" aria-valuemax="100"></div>
+</div>
+</div><div class="mb-3">
+<div class="progress" style="height: 20px; border-radius: 20px;">
+  <div class="progress-bar" role="progressbar" style="width: 42.42%;" aria-valuenow="42.42" aria-valuemin="0" aria-valuemax="100">42%</div>
+</div>
+</div><div class="mb-3">
+<div class="progress" style="height: 20px; border-radius: 20px;">
+  <div class="progress-bar" role="progressbar" style="width: 42.42%;" aria-valuenow="42.42" aria-valuemin="0" aria-valuemax="100">42.4%</div>
+</div>
+</div><div class="mb-3">
+<div class="progress" style="height: 20px; border-radius: 20px;">
+  <div class="progress-bar" role="progressbar" style="width: 64.64%;" aria-valuenow="64.64" aria-valuemin="0" aria-valuemax="100"></div>
+  <div style="position: absolute; text-align: center; left: 0; right: 0; margin-top: 10px;">64.64% (6.7 GB/10 GB copied)</div>
+</div>
+</div><p>I’d honestly be happy enough with option 2, at least it can be read easily and
+you can remember the number instead of a vague position.</p>
+</section>
+<section id="in-the-end">
+<h1><a class="toc-backref" href="https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/#toc-entry-12" role="doc-backlink">In the end…</a></h1>
+<p>After all this, I managed to get macOS Catalina installed. After various
 failures in built-in El Capitan recovery and Catalina Internet Recovery, I first
 installed El Capitan with this hack, then jumped to Mojave because I thought
 the new Software Update would help (it didn’t, same installer, same
@@ -652,154 +676,174 @@ work, even from Windows. The Hackintosh folks can just find someone with a
 working Mac and ask them to download from App Store and make install media, or
 find less legitimate sources, they probably don’t care as much. But if my own
 system crashes, I’d probably want to get working install media immediately,
-myself, and from Apple. Without all this mess.&lt;/p&gt;
-&lt;/section&gt;</description><category>Apple</category><category>install</category><category>Mac</category><category>macOS</category><guid>https://chriswarrick.com/blog/2020/06/03/reinstalling-macos-what-to-try-when-all-else-fails/</guid><pubDate>Wed, 03 Jun 2020 21:00:00 GMT</pubDate></item><item><title>Apple’s new pricing strategy: don't buy the 12″ MacBook</title><link>https://chriswarrick.com/blog/2017/06/08/apples-new-pricing-strategy-dont-buy-the-12-macbook/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;p&gt;On Monday, Apple announced some changes to its Mac lineup. All MacBooks (even
+myself, and from Apple. Without all this mess.</p>
+</section>
+]]></content:encoded><category>Apple</category><category>Apple</category><category>install</category><category>Mac</category><category>macOS</category></item><item><title>Apple’s new pricing strategy: don't buy the 12″ MacBook</title><dc:creator>Chris Warrick</dc:creator><link>https://chriswarrick.com/blog/2017/06/08/apples-new-pricing-strategy-dont-buy-the-12-macbook/</link><pubDate>Thu, 08 Jun 2017 17:35:00 GMT</pubDate><guid>https://chriswarrick.com/blog/2017/06/08/apples-new-pricing-strategy-dont-buy-the-12-macbook/</guid><description>
+On Monday, Apple announced some changes to its Mac lineup. All MacBooks (even
 the Air) got CPU upgrades, and the starting price of a MacBook Pro (13″, no
 Touch Bar) went down to US$1299. Which makes the 12-inch model effectively
-pointless.&lt;/p&gt;
-&lt;p&gt;A quick spec comparison reveals that the Pro comes with a much better CPU, GPU,
-screen, camera — the only drawback is the storage space.&lt;/p&gt;
-&lt;!-- TEASER_END --&gt;
-&lt;p&gt;If you look at the cheapest MacBook in each category, you end up with this:&lt;/p&gt;
-&lt;ul class="simple"&gt;
-&lt;li&gt;&lt;p&gt;13″ Air, $999&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;12″, &lt;strong&gt;$1299&lt;/strong&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;13″ Pro, &lt;strong&gt;$1299&lt;/strong&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;13″ Pro with Touch Bar, $1799&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;15″ Pro with Touch Bar, $1299&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;Yes, this is correct: a 12″ MacBook costs the same as a 13″ Pro. But is it really true? Let's compare the specs:&lt;/p&gt;
-&lt;table class="table table-striped"&gt;
-&lt;thead&gt;
-&lt;tr&gt;&lt;th class="head"&gt;&lt;p&gt;Device&lt;/p&gt;&lt;/th&gt;
-&lt;th class="head"&gt;&lt;p&gt;MacBook (12″)&lt;/p&gt;&lt;/th&gt;
-&lt;th class="head"&gt;&lt;p&gt;MacBook Pro (13″, no Touch Bar)&lt;/p&gt;&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;&lt;td&gt;&lt;p&gt;CPU&lt;/p&gt;&lt;/td&gt;
-&lt;td&gt;&lt;p&gt;Intel Core m3, 1.2 GHz&lt;/p&gt;&lt;/td&gt;
-&lt;td&gt;&lt;p&gt;Intel Core i5, 2.3 GHz ★&lt;/p&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;&lt;p&gt;Memory&lt;/p&gt;&lt;/td&gt;
-&lt;td&gt;&lt;p&gt;8 GB&lt;/p&gt;&lt;/td&gt;
-&lt;td&gt;&lt;p&gt;8 GB&lt;/p&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;&lt;p&gt;Storage&lt;/p&gt;&lt;/td&gt;
-&lt;td&gt;&lt;p&gt;256 GB ★&lt;/p&gt;&lt;/td&gt;
-&lt;td&gt;&lt;p&gt;128 GB&lt;/p&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;&lt;p&gt;Ports&lt;/p&gt;&lt;/td&gt;
-&lt;td&gt;&lt;p&gt;1 USB-C&lt;/p&gt;&lt;/td&gt;
-&lt;td&gt;&lt;p&gt;2 Thunderbolt 3 (USB-C) ★★&lt;/p&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;&lt;p&gt;Camera&lt;/p&gt;&lt;/td&gt;
-&lt;td&gt;&lt;p&gt;480p&lt;/p&gt;&lt;/td&gt;
-&lt;td&gt;&lt;p&gt;720p ★&lt;/p&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;&lt;p&gt;Screen size&lt;/p&gt;&lt;/td&gt;
-&lt;td&gt;&lt;p&gt;12″&lt;/p&gt;&lt;/td&gt;
-&lt;td&gt;&lt;p&gt;13″ ★&lt;/p&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;&lt;p&gt;External displays&lt;/p&gt;&lt;/td&gt;
-&lt;td&gt;&lt;p&gt;1×4K&lt;/p&gt;&lt;/td&gt;
-&lt;td&gt;&lt;p&gt;1×5K/2×4K/2×UHD ★&lt;/p&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;&lt;p&gt;GPU&lt;/p&gt;&lt;/td&gt;
-&lt;td&gt;&lt;p&gt;Intel HD Graphics 615&lt;/p&gt;&lt;/td&gt;
-&lt;td&gt;&lt;p&gt;Intel Iris Plus Graphics 640 ★&lt;/p&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;&lt;p&gt;Size (height×width×depth)&lt;/p&gt;&lt;/td&gt;
-&lt;td&gt;&lt;p&gt;0.35–1.31×28.05×19.65 cm&lt;/p&gt;&lt;/td&gt;
-&lt;td&gt;&lt;p&gt;1.49×30.41×21.24 cm&lt;/p&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;&lt;p&gt;Weight&lt;/p&gt;&lt;/td&gt;
-&lt;td&gt;&lt;p&gt;0.92 kg ★&lt;/p&gt;&lt;/td&gt;
-&lt;td&gt;&lt;p&gt;1.37 kg&lt;/p&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;&lt;p&gt;Available in Gold/Rose Gold&lt;/p&gt;&lt;/td&gt;
-&lt;td&gt;&lt;p&gt;yes&lt;/p&gt;&lt;/td&gt;
-&lt;td&gt;&lt;p&gt;no&lt;/p&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;p&gt;For $0 extra, you can get a device with a &lt;strong&gt;much&lt;/strong&gt; better CPU, 2 Thunderbolt 3 ports, a (slightly) larger screen, a better front-facing camera, support for larger/more displays. The “price” for this? Only less storage space, 0.45 kg (roughly 1 lb) of weight. And no gold color options.&lt;/p&gt;
-&lt;p&gt;To me, this screams “don’t buy the 12-inch thing” — you can get much more &lt;em&gt;computer&lt;/em&gt; for the same price. And the CPUs in those computers are pretty poor. Last year’s base model is beaten in &lt;a class="reference external" href="https://browser.primatelabs.com/mac-benchmarks"&gt;benchmarks&lt;/a&gt; by much older (and cheaper) machines, eg. 2014’s MacBook Air, 11″ base model in single-core benchmarks and upgraded 2015 Airs in multi-core benchmarks.&lt;/p&gt;
-&lt;p&gt;And even if you don’t care about the CPU, there are also other things, like the better camera, or two ports that support more devices. If you want a computer that lets you stay productive, and want a Mac, don’t even try buying the 12″ MacBook &lt;strong&gt;Abomination&lt;/strong&gt;.&lt;/p&gt;</description><category>Apple</category><category>Mac</category><category>MacBook</category><category>MacBook Pro</category><guid>https://chriswarrick.com/blog/2017/06/08/apples-new-pricing-strategy-dont-buy-the-12-macbook/</guid><pubDate>Thu, 08 Jun 2017 17:35:00 GMT</pubDate></item><item><title>5 months with a MacBook Pro: beautiful machine that just works</title><link>https://chriswarrick.com/blog/2016/12/28/5-months-with-a-macbook-pro-beautiful-machine-that-just-works/</link><dc:creator>Chris Warrick</dc:creator><description>&lt;p&gt;Five months ago, I decided to make the switch from my trusty old desktop
-computer, running Arch Linux, to a MacBook Pro. I picked the 2015 13" base
+pointless.
+A quick spec comparison reveals that the Pro comes with a much better CPU, GPU,
+screen, camera — the only drawback is the storage space.
+</description><content:encoded><![CDATA[
+<p>On Monday, Apple announced some changes to its Mac lineup. All MacBooks (even
+the Air) got CPU upgrades, and the starting price of a MacBook Pro (13″, no
+Touch Bar) went down to US$1299. Which makes the 12-inch model effectively
+pointless.</p>
+<p>A quick spec comparison reveals that the Pro comes with a much better CPU, GPU,
+screen, camera — the only drawback is the storage space.</p>
+
+
+
+<p>If you look at the cheapest MacBook in each category, you end up with this:</p>
+<ul class="simple">
+<li><p>13″ Air, $999</p></li>
+<li><p>12″, <strong>$1299</strong></p></li>
+<li><p>13″ Pro, <strong>$1299</strong></p></li>
+<li><p>13″ Pro with Touch Bar, $1799</p></li>
+<li><p>15″ Pro with Touch Bar, $1299</p></li>
+</ul>
+<p>Yes, this is correct: a 12″ MacBook costs the same as a 13″ Pro. But is it really true? Let's compare the specs:</p>
+<table class="table table-striped">
+<thead>
+<tr><th class="head"><p>Device</p></th>
+<th class="head"><p>MacBook (12″)</p></th>
+<th class="head"><p>MacBook Pro (13″, no Touch Bar)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr><td><p>CPU</p></td>
+<td><p>Intel Core m3, 1.2 GHz</p></td>
+<td><p>Intel Core i5, 2.3 GHz ★</p></td>
+</tr>
+<tr><td><p>Memory</p></td>
+<td><p>8 GB</p></td>
+<td><p>8 GB</p></td>
+</tr>
+<tr><td><p>Storage</p></td>
+<td><p>256 GB ★</p></td>
+<td><p>128 GB</p></td>
+</tr>
+<tr><td><p>Ports</p></td>
+<td><p>1 USB-C</p></td>
+<td><p>2 Thunderbolt 3 (USB-C) ★★</p></td>
+</tr>
+<tr><td><p>Camera</p></td>
+<td><p>480p</p></td>
+<td><p>720p ★</p></td>
+</tr>
+<tr><td><p>Screen size</p></td>
+<td><p>12″</p></td>
+<td><p>13″ ★</p></td>
+</tr>
+<tr><td><p>External displays</p></td>
+<td><p>1×4K</p></td>
+<td><p>1×5K/2×4K/2×UHD ★</p></td>
+</tr>
+<tr><td><p>GPU</p></td>
+<td><p>Intel HD Graphics 615</p></td>
+<td><p>Intel Iris Plus Graphics 640 ★</p></td>
+</tr>
+<tr><td><p>Size (height×width×depth)</p></td>
+<td><p>0.35–1.31×28.05×19.65 cm</p></td>
+<td><p>1.49×30.41×21.24 cm</p></td>
+</tr>
+<tr><td><p>Weight</p></td>
+<td><p>0.92 kg ★</p></td>
+<td><p>1.37 kg</p></td>
+</tr>
+<tr><td><p>Available in Gold/Rose Gold</p></td>
+<td><p>yes</p></td>
+<td><p>no</p></td>
+</tr>
+</tbody>
+</table>
+<p>For $0 extra, you can get a device with a <strong>much</strong> better CPU, 2 Thunderbolt 3 ports, a (slightly) larger screen, a better front-facing camera, support for larger/more displays. The “price” for this? Only less storage space, 0.45 kg (roughly 1 lb) of weight. And no gold color options.</p>
+<p>To me, this screams “don’t buy the 12-inch thing” — you can get much more <em>computer</em> for the same price. And the CPUs in those computers are pretty poor. Last year’s base model is beaten in <a class="reference external" href="https://browser.primatelabs.com/mac-benchmarks">benchmarks</a> by much older (and cheaper) machines, eg. 2014’s MacBook Air, 11″ base model in single-core benchmarks and upgraded 2015 Airs in multi-core benchmarks.</p>
+<p>And even if you don’t care about the CPU, there are also other things, like the better camera, or two ports that support more devices. If you want a computer that lets you stay productive, and want a Mac, don’t even try buying the 12″ MacBook <strong>Abomination</strong>.</p>
+]]></content:encoded><category>Apple</category><category>Apple</category><category>Mac</category><category>MacBook</category><category>MacBook Pro</category></item><item><title>5 months with a MacBook Pro: beautiful machine that just works</title><dc:creator>Chris Warrick</dc:creator><link>https://chriswarrick.com/blog/2016/12/28/5-months-with-a-macbook-pro-beautiful-machine-that-just-works/</link><pubDate>Tue, 27 Dec 2016 15:15:00 GMT</pubDate><guid>https://chriswarrick.com/blog/2016/12/28/5-months-with-a-macbook-pro-beautiful-machine-that-just-works/</guid><description>
+Five months ago, I decided to make the switch from my trusty old desktop
+computer, running Arch Linux, to a MacBook Pro. I picked the 2015 13&amp;quot; base
 model with an upgraded hard drive. The device is beautiful, and just works™,
-which is pretty important to me.&lt;/p&gt;
-&lt;!-- TEASER_END --&gt;
-&lt;section id="mac-as-a-unix-machine-nothing-beats-a-terminal"&gt;
-&lt;h2&gt;Mac as a UNIX® machine: nothing beats a terminal&lt;/h2&gt;
-&lt;p&gt;What are the first things you should set up on a Mac, as a programmer?
-&lt;a class="reference external" href="http://brew.sh/"&gt;Homebrew&lt;/a&gt; (and Homebrew Cask). That’s a package manager
+which is pretty important to me.
+</description><content:encoded><![CDATA[
+<p>Five months ago, I decided to make the switch from my trusty old desktop
+computer, running Arch Linux, to a MacBook Pro. I picked the 2015 13&quot; base
+model with an upgraded hard drive. The device is beautiful, and just works™,
+which is pretty important to me.</p>
+
+
+
+<section id="mac-as-a-unix-machine-nothing-beats-a-terminal">
+<h1>Mac as a UNIX® machine: nothing beats a terminal</h1>
+<p>What are the first things you should set up on a Mac, as a programmer?
+<a class="reference external" href="http://brew.sh/">Homebrew</a> (and Homebrew Cask). That’s a package manager
 that can install all software necessary to create an useful command-line
 environment, including Python, ffmpeg and sox for media needs, git, GCC (clang
 is wonderful, but I need plain old GCC sometimes), zsh, and a handful of other
-programs. And, of course, Vim.&lt;/p&gt;
-&lt;p&gt;And what Homebrew Cask can do for you? Install many GUI programs, without
-needing to mess with &lt;code class="docutils literal"&gt;.dmg&lt;/code&gt; installers or stuff.  Including web browsers, music
-players, or iTerm2.&lt;/p&gt;
-&lt;p&gt;Did I mention UNIX®, with the registered trademark sign (belongs to The Open
+programs. And, of course, Vim.</p>
+<p>And what Homebrew Cask can do for you? Install many GUI programs, without
+needing to mess with <code class="docutils literal">.dmg</code> installers or stuff.  Including web browsers, music
+players, or iTerm2.</p>
+<p>Did I mention UNIX®, with the registered trademark sign (belongs to The Open
 Group; used for informational purposes only)? macOS has a fancy certificate to
 prove it’s compliant with the relevant specifications. It runs the FreeBSD
 userland, which is what you expect from a typical *nix system. (Linux converts
-might get slightly annoyed at behavioral differences, for example &lt;code class="docutils literal"&gt;rm
-directory &lt;span class="pre"&gt;-rf&lt;/span&gt;&lt;/code&gt; will work on Linux with GNU coreutils, but won’t on
-macOS/FreeBSD)&lt;/p&gt;
-&lt;/section&gt;
-&lt;section id="the-gui-beautiful-fluid-friendly"&gt;
-&lt;h2&gt;The GUI: beautiful, fluid, friendly&lt;/h2&gt;
-&lt;p&gt;macOS is famous for its user interface. The macOS GUI is well thought out, even
+might get slightly annoyed at behavioral differences, for example <code class="docutils literal">rm
+directory <span class="pre">-rf</span></code> will work on Linux with GNU coreutils, but won’t on
+macOS/FreeBSD)</p>
+</section>
+<section id="the-gui-beautiful-fluid-friendly">
+<h1>The GUI: beautiful, fluid, friendly</h1>
+<p>macOS is famous for its user interface. The macOS GUI is well thought out, even
 though there are some idiosyncrasies a long-time Linux/Windows user might
 consider weird. For example, sorting folders before files is something natural
 for Windows, but on macOS, it’s a brand new option — added in macOS Sierra,
-which came out in September 2016.&lt;/p&gt;
-&lt;p&gt;That aside, the macOS user interface makes one coherent product. You can expect
+which came out in September 2016.</p>
+<p>That aside, the macOS user interface makes one coherent product. You can expect
 consistent behavior between apps, and that often extends to third-party
-software. Apple has a document, called &lt;a class="reference external" href="https://developer.apple.com/library/content/documentation/UserExperience/Conceptual/OSXHIGuidelines/index.html"&gt;Human Interface Guidelines&lt;/a&gt;, which
+software. Apple has a document, called <a class="reference external" href="https://developer.apple.com/library/content/documentation/UserExperience/Conceptual/OSXHIGuidelines/index.html">Human Interface Guidelines</a>, which
 describes how a macOS app should behave. While there are some documents like
 this one for Windows, you can see many apps ignoring what it says — including
 eg. built-in software, which cannot even decide on which font to use (bitmap MS
-Sans Serif vs vectorized Microsoft Sans Serif vs Segoe UI — what is going on?!)&lt;/p&gt;
-&lt;p&gt;While the interface is friendly and coherent, it can get a little worse
-when &lt;em&gt;foreign&lt;/em&gt; apps are involved — for example, Qt or wxWidgets apps can
+Sans Serif vs vectorized Microsoft Sans Serif vs Segoe UI — what is going on?!)</p>
+<p>While the interface is friendly and coherent, it can get a little worse
+when <em>foreign</em> apps are involved — for example, Qt or wxWidgets apps can
 sometimes differ in behavior, but that’s not noticeable. X11 apps are another
 story, but most of their developers are not aware that someone is running them
 on macOS. (Excluding the Inkscape developers, which have a Mac “app” that
-basically runs it in X11 and they do not even care…)&lt;/p&gt;
-&lt;/section&gt;
-&lt;section id="programming-old-habits-die-hard"&gt;
-&lt;h2&gt;Programming: old habits die hard&lt;/h2&gt;
-&lt;p&gt;Did I mention Vim? Well, I’m still using Vim and a terminal emulator to get a
+basically runs it in X11 and they do not even care…)</p>
+</section>
+<section id="programming-old-habits-die-hard">
+<h1>Programming: old habits die hard</h1>
+<p>Did I mention Vim? Well, I’m still using Vim and a terminal emulator to get a
 lot of coding work done. Why? Because they are still the best ways to be
-productive. I tried many &lt;em&gt;gooey&lt;/em&gt; solutions for coding, from the heavyweights
+productive. I tried many <em>gooey</em> solutions for coding, from the heavyweights
 (PyCharm, Visual Studio) to the laughable Atom editor (famous for being slow,
 and effectively a web browser) — and none of them was able to replace Vim and a
-Terminal. They are far too addictive.&lt;/p&gt;
-&lt;p&gt;That said, I sometimes use GitHub for Desktop, or other helper tools.
-Sometimes, they work well — key word here is &lt;em&gt;sometimes&lt;/em&gt;. Unlike Vim (or
-NeoVim, or a GUI: MacVim/VimR), which boosts my productivity by a lot.&lt;/p&gt;
-&lt;p&gt;Honorable mention goes to Automator and AppleScript. They are a superb
+Terminal. They are far too addictive.</p>
+<p>That said, I sometimes use GitHub for Desktop, or other helper tools.
+Sometimes, they work well — key word here is <em>sometimes</em>. Unlike Vim (or
+NeoVim, or a GUI: MacVim/VimR), which boosts my productivity by a lot.</p>
+<p>Honorable mention goes to Automator and AppleScript. They are a superb
 solution for automating common tasks in the GUI, something other OSes do not
 provide. With Automator, everyone can create a workflow to perform repetitive
-tasks faster. With AppleScript, you can get even more stuff done.&lt;/p&gt;
-&lt;/section&gt;
-&lt;section id="the-trackpad-addictive"&gt;
-&lt;h2&gt;The trackpad: addictive&lt;/h2&gt;
-&lt;p&gt;Apple is famous for their trackpads. Their newest generation of these devices
+tasks faster. With AppleScript, you can get even more stuff done.</p>
+</section>
+<section id="the-trackpad-addictive">
+<h1>The trackpad: addictive</h1>
+<p>Apple is famous for their trackpads. Their newest generation of these devices
 does not really move when you click it, it uses the Taptic Engine and [insert
-smart-sounding words here] to &lt;em&gt;simulate&lt;/em&gt; a click. It also supports Force Touch,
+smart-sounding words here] to <em>simulate</em> a click. It also supports Force Touch,
 for pressing down harder on something (eg. a word to reveal dictionary
-definitions), and haptic feedback for certain operations &lt;em&gt;(in Soviet Russia,
-trackpad clicks you!)&lt;/em&gt;&lt;/p&gt;
-&lt;p&gt;Those trackpads also provide intuitive gestures. Working with
+definitions), and haptic feedback for certain operations <em>(in Soviet Russia,
+trackpad clicks you!)</em></p>
+<p>Those trackpads also provide intuitive gestures. Working with
 full-screen windows or multiple desktops? Just swipe left/right to switch
 between them. Need to see all your windows? Swipe up with three fingers. Smooth
-zoom, scrolling and rotating can also be done with just the trackpad.&lt;/p&gt;
-&lt;p&gt;And recently I had to do some stuff on someone else’s Windows notebook. That
-notebook features a touchpad that does not &lt;em&gt;click&lt;/em&gt; — it has two buttons on the
+zoom, scrolling and rotating can also be done with just the trackpad.</p>
+<p>And recently I had to do some stuff on someone else’s Windows notebook. That
+notebook features a touchpad that does not <em>click</em> — it has two buttons on the
 bottom, and tap to click is enabled. I had to drag and drop some files between
 two windows. I tried doing it the way I got used on the MBP trackpad, which is
 basically the way you’d do it with a mouse: hover cursor above file, click the
@@ -807,33 +851,33 @@ trackpad, move mouse to other windows, and release. That doesn’t work on those
 non-clicky touchpads. A software developer failing at drag-and-drop must be a
 funny thing to see. That’s just how addictive the trackpad is. (Of course,
 Windows notebooks with clicky trackpads exist, but are not as popular as the
-tappy ones.)&lt;/p&gt;
-&lt;/section&gt;
-&lt;section id="walled-garden-how-can-you-not-love-our-products"&gt;
-&lt;h2&gt;Walled garden: how can you NOT love our products?&lt;/h2&gt;
-&lt;p&gt;Of course, there are some issues with living in an Apple walled garden. The
+tappy ones.)</p>
+</section>
+<section id="walled-garden-how-can-you-not-love-our-products">
+<h1>Walled garden: how can you NOT love our products?</h1>
+<p>Of course, there are some issues with living in an Apple walled garden. The
 main issue is: if you want to use something that is not an Apple product, good
 luck with that. Sure, you can use an Android phone, but you won’t get
 some of the nice Handoff features, and if you want to transfer files, have fun
 using a forgotten barely-working app from 2012. That phone also won’t be able
-to access your iCloud stuff, so put your data somewhere else.&lt;/p&gt;
-&lt;p&gt;Do you want to use an external hard drive, or a USB stick? With other operating
+to access your iCloud stuff, so put your data somewhere else.</p>
+<p>Do you want to use an external hard drive, or a USB stick? With other operating
 systems? Well, you might have an issue with the file system. You can choose
 between ExFAT, which is not popular but kinda does the job; FAT32, which has a
 4GB file size limit (virtual disk images are often larger than that), or NTFS,
 but for that you will need to pay a third-party company — and trust them not to
 do anything nefarious. Or use experimental built-in support, or an open-source
 project, both of which aren’t something one would normally trust with important
-data.&lt;/p&gt;
-&lt;p&gt;Speaking of external hard drives, here’s a hint: if you want to use a drive for
+data.</p>
+<p>Speaking of external hard drives, here’s a hint: if you want to use a drive for
 Time Machine (a wonderful, foolproof, one-click backup solution), and you want
 it encrypted, make sure it uses GPT and not MBR. I had to reformat my drive
 twice, and that’s not well documented (you need to click the help button,
-then go through 3 pages to find a mention of this).&lt;/p&gt;
-&lt;p&gt;Do you want to play some games? Well, there is basically no support for
+then go through 3 pages to find a mention of this).</p>
+<p>Do you want to play some games? Well, there is basically no support for
 gamepads, only some community beta drivers for the official PS3/Xbox 360 pads.
-Apple does not care.&lt;/p&gt;
-&lt;p&gt;And then we get to mouse issues. You see, even though the trackpad is awesome,
+Apple does not care.</p>
+<p>And then we get to mouse issues. You see, even though the trackpad is awesome,
 I also want to use a regular mouse. So I started with my old PC mouse, as a
 temporary solution. The mouse was a Logitech M560, which uses the wireless
 Unifying USB connector. It turns out the middle mouse button is supposed to be
@@ -843,19 +887,19 @@ Logitech believes this mouse is not worthy of a Mac, and so the mouse is not
 detected by their driver suite. I got rid of that mouse and replaced it with a
 Microsoft Sculpt Comfort Mouse. The mouse has a real middle button, which is
 activated by clicking the scroll wheel, and a Windows button on the side
-(generally useless on macOS).&lt;/p&gt;
-&lt;p&gt;Sadly, macOS insists on scrolling in a weird accelerated way, where the number
+(generally useless on macOS).</p>
+<p>Sadly, macOS insists on scrolling in a weird accelerated way, where the number
 of pixels scrolled grows over time — which means scrolling by one step means
 scrolling by 5 pixels, but the longer you scroll, the larger the scroll
-becomes.&lt;/p&gt;
-&lt;/section&gt;
-&lt;section id="the-future-im-worried"&gt;
-&lt;h2&gt;The future: I’m worried&lt;/h2&gt;
-&lt;p&gt;I made the decision to buy the MacBook Pro in the middle of rumor season, after
+becomes.</p>
+</section>
+<section id="the-future-im-worried">
+<h1>The future: I’m worried</h1>
+<p>I made the decision to buy the MacBook Pro in the middle of rumor season, after
 WWDC which left a lot of people disappointed. I decided that, if all the rumors
 about removed ports and touchy-feely screens were true, I would not want that
-device on my desk.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;And boy did Apple deliver!&lt;/strong&gt; The new MacBook Pro has only USB-C ports (and a
+device on my desk.</p>
+<p><strong>And boy did Apple deliver!</strong> The new MacBook Pro has only USB-C ports (and a
 headphone jack!), a gimmicky Touch Bar that only helps with emoji (the rest can
 be done with standard keyboard shortcuts, or on-screen toolbars — I thought
 that was a Pro machine, not a toy?), and a fingerprint reader (which I don’t
@@ -865,10 +909,11 @@ time, and runs an external HDMI display. With the cheaper model (worse CPU than
 2015; same price as 2015 with the same 256GB drive), I would have zero ports
 for any other external devices. And I often have some thing plugged in, in
 which case the only unoccupied ports are the Thunderbolt ports (which I don’t
-have any devices for).&lt;/p&gt;
-&lt;p&gt;So, I hope this 2015 model will live on for years, and hopefully when it fails,
+have any devices for).</p>
+<p>So, I hope this 2015 model will live on for years, and hopefully when it fails,
 Apple will have a more sensible machine out there. For now, I’ll keep my
-&lt;em&gt;MacBook Pro (Retina, 13-inch, Early 2015)&lt;/em&gt; and will be pretty happy with it.&lt;/p&gt;
-&lt;p&gt;With just only one exception: two kernel panics in nearly 5 months. A bit
-unstable, eh?&lt;/p&gt;
-&lt;/section&gt;</description><category>Apple</category><category>MacBook Pro</category><category>programming</category><category>review</category><guid>https://chriswarrick.com/blog/2016/12/28/5-months-with-a-macbook-pro-beautiful-machine-that-just-works/</guid><pubDate>Tue, 27 Dec 2016 15:15:00 GMT</pubDate></item></channel></rss>
+<em>MacBook Pro (Retina, 13-inch, Early 2015)</em> and will be pretty happy with it.</p>
+<p>With just only one exception: two kernel panics in nearly 5 months. A bit
+unstable, eh?</p>
+</section>
+]]></content:encoded><category>Apple</category><category>Apple</category><category>MacBook Pro</category><category>programming</category><category>review</category></item></channel></rss>

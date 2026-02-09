@@ -1,118 +1,146 @@
 <!DOCTYPE html>
-<html class="limited-width larger-font" prefix="
-og: http://ogp.me/ns#
-" lang="en">
+<html class="limited-width larger-font" prefix="og: http://ogp.me/ns#" lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="description" content="Windows 10 upgrades are painful.">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Windows 10 November Upgrade: Windows as a (Dis-)service | Chris Warrick</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.css" integrity="sha256-FqCzNnnyXl5HxHMdb+RQ/RV/X7fqfPcQYy+G2gFL3Xk=" crossorigin="anonymous">
+  <meta charset="utf-8">
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Windows 10 November Upgrade: Windows as a (Dis-)service | Chris Warrick</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.css"
+        integrity="sha256-FqCzNnnyXl5HxHMdb+RQ/RV/X7fqfPcQYy+G2gFL3Xk=" crossorigin="anonymous">
 <!--#if expr="$HTTP_COOKIE=/colorScheme\=light/" --><link href="/assets/css/all.css?v=20230115" rel="stylesheet" type="text/css" id="kw-all-css">
 <script type="text/javascript">var colorScheme='light';var colorSchemesEnabled=true;</script><!--#else--><link href="/assets/css/all-dark.css?v=20230115" rel="stylesheet" type="text/css" id="kw-all-css">
-<script type="text/javascript">var colorScheme='dark';var colorSchemesEnabled=true;</script><!--#endif--><link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,700,700i|Source+Serif+Pro:600&amp;display=swap&amp;subset=latin-ext" rel="stylesheet">
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
-<meta name="theme-color" content="#00aadd">
-<meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="/rss.xml">
-<link rel="canonical" href="https://chriswarrick.com/blog/2015/12/27/windows-10-november-upgrade-windows-as-a-dis-service/">
-<link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="16x16 32x32 48x48 64x64 128x128 256x256">
-<link rel="icon" type="image/png" href="/assets/img/logo512.png">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<!--[if lt IE 9]><script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]--><meta name="description" itemprop="description" content="Windows 10 upgrades are painful.">
-<meta name="author" content="Chris Warrick">
-<link rel="prev" href="/blog/2015/10/11/rewriting-a-flask-app-in-django/" title="Rewriting a Flask app in Django" type="text/html">
-<link rel="next" href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/" title="Deploying Python Web Applications with nginx and uWSGI Emperor" type="text/html">
-<meta property="og:site_name" content="Chris Warrick">
-<meta property="og:title" content="Windows 10 November Upgrade: Windows as a (Dis-)service">
-<meta property="og:url" content="https://chriswarrick.com/blog/2015/12/27/windows-10-november-upgrade-windows-as-a-dis-service/">
-<meta property="og:description" content="Windows 10 upgrades are painful.">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2015-12-27T12:15:00+01:00">
-<meta property="article:tag" content="rant">
-<meta property="article:tag" content="review">
-<meta property="article:tag" content="Windows">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:creator" content="@Kwpolska">
+<script type="text/javascript">var colorScheme='dark';var colorSchemesEnabled=true;</script><!--#endif-->
+  <link
+    href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,700,700i|Source+Serif+Pro:600&amp;display=swap&amp;subset=latin-ext"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css"
+        integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+  <meta name="theme-color" content="#00aadd">
+  <meta name="generator" content="Chris Warrick’s Yet Another Blog Generator">
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/rss.xml">
+  <link rel="canonical" href="https://chriswarrick.com/">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="16x16 32x32 48x48 64x64 128x128 256x256">
+  <link rel="icon" type="image/png" href="/assets/img/logo512.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="prev" href="/blog/2015/10/11/rewriting-a-flask-app-in-django/" type="text/html">
+  <link rel="next" href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/" type="text/html">
+  
 </head>
 <body>
 <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
 
-<!-- Menubar -->
-
-<nav class="navbar navbar-expand-md navbar-kw bg-dark static-top mb-4"><div class="container">
-<!-- This keeps the margins nice -->
-        <a class="navbar-brand" href="/">
-            <img src="/assets/img/logo.png" srcset="/assets/img/logo2x.png 2x" alt="Chris Warrick" id="logo"><span id="blog-title">Chris Warrick</span>
-        </a>
-        <div>
-        <button class="navbar-toggler mr-2" id="color-changer-mobile" type="button" aria-label="Change color scheme">
-            <span class="color-changer"></span>
-        </button>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        </div>
-        <div class="collapse navbar-collapse" id="bs-navbar">
-            <ul class="navbar-nav mr-auto">
-<li class="nav-item">
-<a href="/contact/" class="nav-link">Contact</a>
-                </li>
-<li class="nav-item">
-<a href="/projects/" class="nav-link">Projects</a>
-                </li>
-<li class="nav-item">
-<a href="/guides/" class="nav-link">Guides</a>
-                </li>
-<li class="nav-item">
-<a href="/blog/" class="nav-link">Archives</a>
-                </li>
-<li class="nav-item">
-<a href="/search/" class="nav-link">Search</a>
-
-                
-            </li>
-</ul>
-<ul class="navbar-nav navbar-right">
-<li class="nav-item" id="color-changer-menu">
-<a href="#" class="nav-link" id="color-changer-btn">
-                <div class="color-changer"></div>
-                <span id="color-changer-text"><!--#if expr="$HTTP_COOKIE=/colorScheme\=light/" -->Dark Mode<!--#else -->Light Mode<!--#endif--></span>
-                </a>
-                </li>
-            </ul>
-</div>
-<!-- /.navbar-collapse -->
+<nav class="navbar navbar-expand-md navbar-kw bg-dark static-top mb-4">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <img src="/assets/img/logo.png" srcset="/assets/img/logo2x.png 2x" alt="Chris Warrick" id="logo"><span
+        id="blog-title">Chris Warrick</span>
+    </a>
+    <div>
+      <button class="navbar-toggler mr-2" id="color-changer-mobile" type="button" aria-label="Change color scheme">
+        <span class="color-changer"></span>
+      </button>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar"
+              aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
     </div>
-<!-- /.container -->
-</nav><!-- End of Menubar --><div class="container" id="content" role="main">
-    <div class="body-content">
-        <!--Body content-->
+    <div class="collapse navbar-collapse" id="bs-navbar">
+      <ul class="navbar-nav mr-auto">
         
-        <div id="cookiebox"></div>
-<article class="post-text h-entry hentry postpage postbox" itemscope="itemscope" itemtype="http://schema.org/Article"><header class="page-header"><h1 class="p-name entry-title" itemprop="headline name">
-    <a href="/blog/2015/12/27/windows-10-november-upgrade-windows-as-a-dis-service/" class="u-url">Windows 10 November Upgrade: Windows as a (Dis-)service</a>
-    </h1>
+        
+          <li class="nav-item">
+            <a href="/contact/" class="nav-link">Contact</a>
+          </li>
+        
+        
+        
+          <li class="nav-item">
+            <a href="/projects/" class="nav-link">Projects</a>
+          </li>
+        
+        
+        
+          <li class="nav-item">
+            <a href="/guides/" class="nav-link">Guides</a>
+          </li>
+        
+        
+        
+          <li class="nav-item">
+            <a href="/blog/" class="nav-link">Archives</a>
+          </li>
+        
+        
+        
+          <li class="nav-item">
+            <a href="/blog/tags/" class="nav-link">Tags</a>
+          </li>
+        
+        
+      </ul>
+      <ul class="navbar-nav navbar-right">
+        <li class="nav-item" id="color-changer-menu">
+          <a href="#" class="nav-link" id="color-changer-btn">
+            <div class="color-changer"></div>
+            <span id="color-changer-text">Light Mode</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<div class="container" id="content" role="main">
+  <div class="body-content">
+    <div id="cookiebox"></div>
+    
 
-    <div class="metadata">
-<a href="/blog/2015/12/27/windows-10-november-upgrade-windows-as-a-dis-service/" rel="bookmark" class="u-published"><time class="published dt-published" datetime="2015-12-27T12:15:00+01:00" itemprop="datePublished" title="27 December 2015 at 12:15">27 December 2015 at 12:15</time></a>
-        <ul itemprop="keywords" class="tags post-bubbles list-inline">
-<li class="category-bubble"><a href="/blog/tags/cat_windows/" style="background-color: #00adef !important">Windows</a></li>
-           <li><a class="tag p-category" href="/blog/tags/rant/" rel="tag">rant</a></li>
-           <li><a class="tag p-category" href="/blog/tags/review/" rel="tag">review</a></li>
-           <li><a class="tag p-category" href="/blog/tags/windows/" rel="tag">Windows</a></li>
-        </ul>
-</div>
-    </header><div class="e-content entry-content" itemprop="articleBody text">
-    <div class="lead">
-<figure class="float-md-right" style="width: 20%"><a class="reference external image-reference" href="/images/Windows10-1511.png">
-<img alt="/images/Windows10-1511.thumbnail.png" src="/images/Windows10-1511.thumbnail.png"></a>
-<figcaption><p>The <em>About Windows</em> screen.</p>
-</figcaption></figure><p>I upgraded Windows 10 from the RTM version (build 10240, July 2015) to the
+
+<article class="post-text h-entry hentry postpage postbox" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+<header class="page-header">
+  <h1 class="p-name entry-title" itemprop="headline name">
+    <a href="/blog/2015/12/27/windows-10-november-upgrade-windows-as-a-dis-service/" class="u-url">Windows 10 November Upgrade: Windows as a (Dis-)service</a>
+  </h1>
+
+  <div class="metadata">
+    <a href="/blog/2015/12/27/windows-10-november-upgrade-windows-as-a-dis-service/" rel="bookmark" class="u-published">
+      <time class="published dt-published" datetime="2015-12-27T12:15:00.0000000&#x2B;01:00" itemprop="datePublished" title="27 December 2015 12:15">27 December 2015 12:15</time>
+    
+    </a>
+    <ul itemprop="keywords" class="tags post-bubbles list-inline">
+      <li class="category-bubble"><a href="/blog/tags/cat_windows" style="background-color: #0078d4 !important">Windows</a></li>
+      
+        <li><a class="tag p-category" href="/blog/tags/rant" rel="tag">rant</a></li>
+      
+        <li><a class="tag p-category" href="/blog/tags/review" rel="tag">review</a></li>
+      
+        <li><a class="tag p-category" href="/blog/tags/windows" rel="tag">Windows</a></li>
+      
+    </ul>
+    
+    
+  </div>
+</header>
+
+  <div class="e-content entry-content" itemprop="articleBody text">
+    
+      <div class="lead">
+        
+<figure class="float-md-right" style="width: 20%">
+<a class="reference external image-reference" href="/images/Windows10-1511.png">
+<img alt="/images/Windows10-1511.thumbnail.png" src="/images/Windows10-1511.thumbnail.png" />
+</a>
+<figcaption>
+<p>The <em>About Windows</em> screen.</p>
+</figcaption>
+</figure>
+<p>I upgraded Windows 10 from the RTM version (build 10240, July 2015) to the
 <em>November Upgrade</em> version (1511/build 10560). It took me a good two hours,
 multiple reboots, and a BSOD.</p>
-</div>
-</div>
+
+      </div>
+    
+    
 <p>I upgraded to Windows 10 (from Windows 10) back in August. The upgrade
 experience was okay. The main issue I had was that the error messages were a
 bit uninformative. There was one error, Windows 10 claimed it <em>couldn’t check
@@ -160,20 +188,20 @@ on the second boot, talking about <em>critical structure corruption in CI.dll</e
 I rebooted, but I first took a little detour to the Arch Linux USB stick I
 prepared before to get a sane bootloader back. I’ve done this before, and
 usually requires three commands.</p>
-<div class="code"><pre class="code console"><a id="rest_code_5589a2ab7d584dce8bae0dda49775e1c-1" name="rest_code_5589a2ab7d584dce8bae0dda49775e1c-1" href="/blog/2015/12/27/windows-10-november-upgrade-windows-as-a-dis-service/#rest_code_5589a2ab7d584dce8bae0dda49775e1c-1"></a><span class="gp"># </span>mount<span class="w"> </span>/dev/sda2<span class="w"> </span>/mnt
-<a id="rest_code_5589a2ab7d584dce8bae0dda49775e1c-2" name="rest_code_5589a2ab7d584dce8bae0dda49775e1c-2" href="/blog/2015/12/27/windows-10-november-upgrade-windows-as-a-dis-service/#rest_code_5589a2ab7d584dce8bae0dda49775e1c-2"></a><span class="go">Metadata kept in Windows cache, refused to mount.</span>
-<a id="rest_code_5589a2ab7d584dce8bae0dda49775e1c-3" name="rest_code_5589a2ab7d584dce8bae0dda49775e1c-3" href="/blog/2015/12/27/windows-10-november-upgrade-windows-as-a-dis-service/#rest_code_5589a2ab7d584dce8bae0dda49775e1c-3"></a><span class="go">Failed to mount '/dev/sda2': Operation not permitted</span>
-<a id="rest_code_5589a2ab7d584dce8bae0dda49775e1c-4" name="rest_code_5589a2ab7d584dce8bae0dda49775e1c-4" href="/blog/2015/12/27/windows-10-november-upgrade-windows-as-a-dis-service/#rest_code_5589a2ab7d584dce8bae0dda49775e1c-4"></a><span class="go">The NTFS partition is in an unsafe state. Please resume and shutdown</span>
-<a id="rest_code_5589a2ab7d584dce8bae0dda49775e1c-5" name="rest_code_5589a2ab7d584dce8bae0dda49775e1c-5" href="/blog/2015/12/27/windows-10-november-upgrade-windows-as-a-dis-service/#rest_code_5589a2ab7d584dce8bae0dda49775e1c-5"></a><span class="go">Windows fully (no hibernation or fast restarting), or mount the volume</span>
-<a id="rest_code_5589a2ab7d584dce8bae0dda49775e1c-6" name="rest_code_5589a2ab7d584dce8bae0dda49775e1c-6" href="/blog/2015/12/27/windows-10-november-upgrade-windows-as-a-dis-service/#rest_code_5589a2ab7d584dce8bae0dda49775e1c-6"></a><span class="go">read-only with the 'ro' mount option.</span>
+<div class="code"><pre class="code console"><a id="rest_code_fa94c0ac7abc4e0ea04f530945b05c35-1" name="rest_code_fa94c0ac7abc4e0ea04f530945b05c35-1" href="#rest_code_fa94c0ac7abc4e0ea04f530945b05c35-1"></a><span class="gp"># </span>mount<span class="w"> </span>/dev/sda2<span class="w"> </span>/mnt
+<a id="rest_code_fa94c0ac7abc4e0ea04f530945b05c35-2" name="rest_code_fa94c0ac7abc4e0ea04f530945b05c35-2" href="#rest_code_fa94c0ac7abc4e0ea04f530945b05c35-2"></a><span class="go">Metadata kept in Windows cache, refused to mount.</span>
+<a id="rest_code_fa94c0ac7abc4e0ea04f530945b05c35-3" name="rest_code_fa94c0ac7abc4e0ea04f530945b05c35-3" href="#rest_code_fa94c0ac7abc4e0ea04f530945b05c35-3"></a><span class="go">Failed to mount &#39;/dev/sda2&#39;: Operation not permitted</span>
+<a id="rest_code_fa94c0ac7abc4e0ea04f530945b05c35-4" name="rest_code_fa94c0ac7abc4e0ea04f530945b05c35-4" href="#rest_code_fa94c0ac7abc4e0ea04f530945b05c35-4"></a><span class="go">The NTFS partition is in an unsafe state. Please resume and shutdown</span>
+<a id="rest_code_fa94c0ac7abc4e0ea04f530945b05c35-5" name="rest_code_fa94c0ac7abc4e0ea04f530945b05c35-5" href="#rest_code_fa94c0ac7abc4e0ea04f530945b05c35-5"></a><span class="go">Windows fully (no hibernation or fast restarting), or mount the volume</span>
+<a id="rest_code_fa94c0ac7abc4e0ea04f530945b05c35-6" name="rest_code_fa94c0ac7abc4e0ea04f530945b05c35-6" href="#rest_code_fa94c0ac7abc4e0ea04f530945b05c35-6"></a><span class="go">read-only with the &#39;ro&#39; mount option.</span>
 </pre></div>
 <p>Wait, what?! I remember my hard drive layout, and <code class="docutils literal">/dev/sda2</code> is my Linux
 ext4 partition! I checked <code class="docutils literal">cfdisk</code>, and apparently I now have a <em>Hidden NTFS WinRE</em>, with Linux moved to <code class="docutils literal">/dev/sda3</code> and my extended partition moved to <code class="docutils literal">/dev/sda4</code> (what would happen if I already had four partitions?). This is typical Windows misbehaviour: <strong>not caring about other OSes that might be installed</strong>.</p>
 <p>I accepted this defeat, mounted <code class="docutils literal">/dev/sda3</code>, ran <code class="docutils literal"><span class="pre">arch-chroot</span> /mnt</code> and
 <code class="docutils literal"><span class="pre">syslinux-install_update</span> <span class="pre">-i</span> <span class="pre">-a</span> <span class="pre">-m</span></code> (I’m not a fan of GRUB 2, and I have a MBR
 drive layout). I should test this out by rebooting into Linux.</p>
-<div class="code"><pre class="code console"><a id="rest_code_520ee2767f4a461faf9579434b2549e1-1" name="rest_code_520ee2767f4a461faf9579434b2549e1-1" href="/blog/2015/12/27/windows-10-november-upgrade-windows-as-a-dis-service/#rest_code_520ee2767f4a461faf9579434b2549e1-1"></a><span class="go">Error getting authority: Error initializing authority: Could not connect: No such file or directory (g-io-error-quark, 1)</span>
-<a id="rest_code_520ee2767f4a461faf9579434b2549e1-2" name="rest_code_520ee2767f4a461faf9579434b2549e1-2" href="/blog/2015/12/27/windows-10-november-upgrade-windows-as-a-dis-service/#rest_code_520ee2767f4a461faf9579434b2549e1-2"></a><span class="go">Welcome to emergency mode!</span>
+<div class="code"><pre class="code console"><a id="rest_code_501f298e96904fbcacf4959713042dfe-1" name="rest_code_501f298e96904fbcacf4959713042dfe-1" href="#rest_code_501f298e96904fbcacf4959713042dfe-1"></a><span class="go">Error getting authority: Error initializing authority: Could not connect: No such file or directory (g-io-error-quark, 1)</span>
+<a id="rest_code_501f298e96904fbcacf4959713042dfe-2" name="rest_code_501f298e96904fbcacf4959713042dfe-2" href="#rest_code_501f298e96904fbcacf4959713042dfe-2"></a><span class="go">Welcome to emergency mode!</span>
 </pre></div>
 <p>systemd <strong>really</strong> values <code class="docutils literal">/etc/fstab</code>, and you can’t boot if any entry fails
 to mount, which was the case with the Windows drive in <code class="docutils literal">/dev/sda1</code> and my
@@ -200,95 +228,142 @@ investment without any financial gain from helping out a corporation. So,
 virtual machines? I have no idea how they cope.</p>
 <p>By the way, <code class="docutils literal">cmd.exe</code> and <code class="docutils literal">winver.exe</code> claims it’s <em>Copyright © 2016</em>. Previously, Windows copyright
 notices were outdated. Now, they’re in the future.</p>
-    </article>
-</div>
-    <aside class="postpromonav"><nav><ul class="pager hidden-print">
-<li class="previous">
-                <a href="/blog/2015/10/11/rewriting-a-flask-app-in-django/" rel="prev" title="Rewriting a Flask app in Django">Previous post</a>
-            </li>
-            <li class="next">
-                <a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/" rel="next" title="Deploying Python Web Applications with nginx and uWSGI Emperor">Next post</a>
-            </li>
-        </ul></nav></aside><section class="comments"><div data-title="Windows 10 November Upgrade: Windows as a (Dis-)service" id="isso-thread"></div>
-        <script src="https://isso.chriswarrick.com/js/embed.min.js" data-isso="https://isso.chriswarrick.com/" data-isso-lang="en" data-isso-require-author="true" data-isso-require-email="true" data-isso-gravatar="true" data-isso-avatar="false" data-isso-css="false" data-isso-vote="false" data-isso-reply-notifications="true"></script></section><!--End of body content--><nav id="footer-links"><div class="row">
-            <div class="col-sm-4">
-                <h6>Blog</h6>
-                <ul>
-<li class="nav-item">
-<a href="/blog/" class="nav-link">Archive</a>
-                        </li>
-<li class="nav-item">
-<a href="/blog/tags/" class="nav-link">Tags</a>
-                        </li>
-<li class="nav-item">
-<a href="/rss.xml" class="nav-link">RSS Feed</a>
-                        </li>
-<li class="nav-item">
-<a href="/search/" class="nav-link">Search</a>
-                </li>
-</ul>
-</div>
-            <div class="col-sm-4">
-                <h6>Projects and Work</h6>
-                <ul>
-<li class="nav-item">
-<a href="/projects/" class="nav-link">Projects</a>
-                        </li>
-<li class="nav-item">
-<a href="/guides/" class="nav-link">Guides</a>
-                        </li>
-<li class="nav-item">
-<a href="/kwbot/" class="nav-link">KwBot</a>
-                        </li>
-<li class="nav-item">
-<a href="/blog/tags/cat_python" class="nav-link">Posts about Python</a>
-                </li>
-</ul>
-</div>
-            <div class="col-sm-4">
-                <h6>Me</h6>
-                <ul>
-<li class="nav-item">
-<a href="/contact/" class="nav-link">Contact</a>
-                        </li>
-<li class="nav-item">
-<a href="/brand/" class="nav-link">Brand</a>
-                        </li>
-<li class="nav-item">
-<a href="https://twitter.com/Kwpolska" class="nav-link">Twitter</a>
-                        </li>
-<li class="nav-item">
-<a href="https://github.com/Kwpolska" class="nav-link">GitHub</a>
-                </li>
-</ul>
-</div>
-        </div></nav><footer id="footer"><p>this site uses cookies.<br>by using this site, you agree to our <a href="/privacy/">cookie and privacy policy</a>.</p>
-<p>
-powered by <strong><a href="https://getnikola.com/">Nikola</a></strong>, <a href="http://nginx.org/">nginx</a> and <a href="https://hetzner.cloud/?ref=Qy1lehF8PwzP">Hetzner Cloud</a><br>
-copyright © 2009–2026 <a href="/contact/">Chris Warrick</a><br><a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC
-BY-NC-SA</a>, unless stated otherwise</p>
-            
-        </footer>
-</div>
+
+  </div>
+</article>
 
 
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script><script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.11.0/baguetteBox.min.js" integrity="sha256-yQGjQhFs3LtyiN5hhr3k9s9TWZOh/RzCkD3gwwCKlkg=" crossorigin="anonymous"></script><script src="/assets/js/all.js?v=20230115"></script><script>
-    baguetteBox.run('div#content', {
-        ignoreClass: 'islink',
-        captions: function(element) {
-            return element.getElementsByTagName('img')[0].alt;
-    }});
-    </script><!-- Matomo --><script>
+
+
+  <aside class="postpromonav">
+    <nav>
+      <ul class="pager hidden-print">
+        
+          <li class="previous">
+            <a href="/blog/2015/10/11/rewriting-a-flask-app-in-django/" rel="prev"
+               title="Rewriting a Flask app in Django">Previous post</a>
+          </li>
+        
+        
+          <li class="next">
+            <a href="/blog/2016/02/10/deploying-python-web-apps-with-nginx-and-uwsgi-emperor/" rel="prev"
+               title="Deploying Python Web Applications with nginx and uWSGI Emperor">Next post</a>
+          </li>
+        
+      </ul>
+    </nav>
+  </aside>
+
+
+
+  <section class="comments">
+    <div data-title="Windows 10 November Upgrade: Windows as a (Dis-)service" id="isso-thread"></div>
+    <script src="https://isso.chriswarrick.com/js/embed.min.js" data-isso="https://isso.chriswarrick.com/"
+            data-isso-lang="en" data-isso-require-author="true" data-isso-require-email="true" data-isso-gravatar="true"
+            data-isso-avatar="false" data-isso-css="false" data-isso-vote="false"
+            data-isso-reply-notifications="true"></script>
+  </section>
+
+
+
+    <script src="https://isso.chriswarrick.com/js/count.min.js" data-isso="https://isso.chriswarrick.com/"
+            data-isso-lang="en"></script>
+    <nav id="footer-links">
+      <div class="row">
+        <div class="col-sm-4">
+          <h6>Blog</h6>
+          <ul>
+            <li class="nav-item">
+              <a href="/blog/" class="nav-link">Archives</a>
+            </li>
+            <li class="nav-item">
+              <a href="/blog/tags/" class="nav-link">Tags</a>
+            </li>
+            <li class="nav-item">
+              <a href="/listings/" class="nav-link">Listings</a>
+            </li>
+            <li class="nav-item">
+              <a href="/rss.xml" class="nav-link">RSS Feed</a>
+            </li>
+          </ul>
+        </div>
+        <div class="col-sm-4">
+          <h6>Projects and Work</h6>
+          <ul>
+            <li class="nav-item">
+              <a href="/projects/" class="nav-link">Projects</a>
+            </li>
+            <li class="nav-item">
+              <a href="/guides/" class="nav-link">Guides</a>
+            </li>
+            <li class="nav-item">
+              <a href="/kwbot/" class="nav-link">KwBot</a>
+            </li>
+            <li class="nav-item">
+              <a href="/blog/tags/cat_python" class="nav-link">Posts about Python</a>
+            </li>
+          </ul>
+        </div>
+        <div class="col-sm-4">
+          <h6>Me</h6>
+          <ul>
+            <li class="nav-item">
+              <a href="/contact/" class="nav-link">Contact</a>
+            </li>
+            <li class="nav-item">
+              <a href="/brand/" class="nav-link">Brand</a>
+            </li>
+            <li class="nav-item">
+              <a href="https://twitter.com/Kwpolska" class="nav-link">Twitter</a>
+            </li>
+            <li class="nav-item">
+              <a href="https://github.com/Kwpolska" class="nav-link">GitHub</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <footer id="footer">
+      <p>this site uses cookies.<br>by using this site, you agree to our <a href="/privacy/">cookie and privacy policy</a>.</p>
+<p>powered by <strong><a href="https://github.com/Kwpolska/YetAnotherBlogGenerator">Yet Another Blog Generator</a></strong>,
+  <a href="https://nginx.org/">nginx</a>
+  and <a href="https://hetzner.cloud/?ref=Qy1lehF8PwzP">Hetzner Cloud</a><br>
+  copyright © 2009–2026 <a href="/contact/">Chris Warrick</a><br>
+  license: <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA</a>, unless stated otherwise</p>
+    </footer>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.11.0/baguetteBox.min.js"
+        integrity="sha256-yQGjQhFs3LtyiN5hhr3k9s9TWZOh/RzCkD3gwwCKlkg=" crossorigin="anonymous"></script>
+<script src="/assets/js/all.js?v=20230115"></script>
+<script>
+  baguetteBox.run('div#content', {
+    ignoreClass: 'islink',
+    captions: function (element) {
+      return element.getElementsByTagName('img')[0].alt;
+    }
+  });
+</script><!-- Matomo -->
+<script>
   var _paq = window._paq = window._paq || [];
   /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
   _paq.push(['trackPageView']);
   _paq.push(['enableLinkTracking']);
-  (function() {
-    var u="//matomo.chriswarrick.com/";
-    _paq.push(['setTrackerUrl', u+'matomo.php']);
+  (function () {
+    var u = "//matomo.chriswarrick.com/";
+    _paq.push(['setTrackerUrl', u + 'matomo.php']);
     _paq.push(['setSiteId', '1']);
-    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-    g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+    var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+    g.async = true;
+    g.src = u + 'matomo.js';
+    s.parentNode.insertBefore(g, s);
   })();
 </script><!-- End Matomo Code -->
 </body>

@@ -1,0 +1,135 @@
+---
+title: "Adventures in Windows: Music Player Daemon"
+published: "2013-09-01 19:15:00+02:00"
+tags: ["Windows", "mpd", "guide"]
+category: "Windows"
+description: "A short how-to on installing MPD on Windows."
+guide: true
+guideEffect: "you can now play music the Unix way on Windows"
+guidePlatform: "Windows"
+guideTopic: "MPD"
+shortlink: "mpd-win"
+legacy: true
+---
+<p>Recently, I had to reinstall Windows.  One of the things I had to set up
+was MPD, the <a class="reference external" href="http://musicpd.org/">Music Player Daemon</a>.</p>
+<p>This is a short guide on how to do this.</p>
+<!-- TEASER_END -->
+<section id="step-1-get-mpd-and-mpc">
+<h1>Step 1: get MPD and MPC</h1>
+<p>Download <a class="reference external" href="http://musicpd.org/download/win32/">MPD</a> (<code class="docutils literal"><span class="pre">mpd-x.y.z-win32.zip</span></code>, replacing <code class="docutils literal">x.y.z</code> with whatever is the current available version of this file) and <a class="reference external" href="http://musicpd.org/download/mpc/">MPC</a> (<code class="docutils literal"><span class="pre">mpc-x.y-win32-zip</span></code>).  I suggest using
+<code class="docutils literal"><span class="pre">C:\mpd</span></code> as your base path.  This post assumes you actually used this
+value.</p>
+<p>Put everything from the <code class="docutils literal"><span class="pre">/mpd-x.y.z-win32/bin/</span></code> directory of the
+<code class="docutils literal"><span class="pre">mpd-x.y.z-win32.zip</span></code> archive into your base path (<code class="docutils literal"><span class="pre">C:\mpd</span></code>).  From
+the <code class="docutils literal"><span class="pre">mpc-x.y-win32.zip</span></code> archive, take <code class="docutils literal">mpc.exe</code> and
+<code class="docutils literal"><span class="pre">libmpdclient-2.dll</span></code> and put them there.</p>
+</section>
+<section id="step-1-5-optional-but-recommended-get-gmpc">
+<h1>Step 1.5 (optional, but recommended): get GMPC</h1>
+<p>If you want a nice, easy, graphical interface for MPD, you should install
+GMPC, the <a class="reference external" href="http://gmpclient.org/">Gnome Music Player Client</a>.  The installation is very
+straightforward, so I’ll leave the details out.</p>
+</section>
+<section id="step-2-create-a-config-file">
+<h1>Step 2: create a config file</h1>
+<p>You need to create a configuration file.  A sample one is included in
+<code class="docutils literal"><span class="pre">/mpd-x.y.z-win32/doc/mpdconf.sample</span></code>.  Use the <code class="docutils literal">winmm</code> output type.</p>
+<p><strong>Warning:</strong> Windows Notepad will not work, because it does not understand
+Unix-style line endings (<code class="docutils literal">\n</code> instead of <code class="docutils literal">\r\n</code>).</p>
+<p>For <code class="docutils literal">db_file</code> and <code class="docutils literal">log_file</code>, I recommend a file in <code class="docutils literal"><span class="pre">C:\mpd\data\</span></code>.
+I also recommend saving your config as <code class="docutils literal"><span class="pre">C:\mpd\data\mpd.conf</span></code> (in fact,
+this is yet another assumption we make in this guide)</p>
+<section id="multi-boot-corner-keep-parts-of-the-config-the-same">
+<h2>Multi Boot Corner: keep parts of the config the same</h2>
+<p>Because I have a dual-boot system, there are some directions for
+multi-boot users.</p>
+<p>Your <code class="docutils literal">music_directory</code>, <code class="docutils literal">playlist_directory</code> and <code class="docutils literal">state_file</code> <em>must</em> be the same on all the systems in your multi-boot environment.  It is recommended to use the same <code class="docutils literal">db_file</code>.</p>
+<p>Your audio outputs must have the same names.</p>
+</section>
+</section>
+<section id="step-3-test-your-configuration">
+<h1>Step 3: test your configuration</h1>
+<p>Open up two Command Prompt windows.  In the first one, run:</p>
+<pre class="literal-block">cd C:\mpd
+mpd data\mpd.conf</pre>
+<p>If you see this message:</p>
+<pre class="literal-block">Failed to load database: Failed to open database file &quot;&lt;name&gt;&quot;: No such file or directory</pre>
+<p>then you can ignore it.  If you see another message, fix whatever it
+states.  You may also use <code class="docutils literal"><span class="pre">--stdout</span></code> or <code class="docutils literal"><span class="pre">-v</span></code> to get more output
+messages.</p>
+<section id="multi-boot-path">
+<h2>Multi Boot path</h2>
+<p>If you followed the Multi Boot instructions correctly, you might be
+hearing music already.  If you do not, use your other Command Prompt window and
+run:</p>
+<pre class="literal-block">cd C:\mpd
+mpc play</pre>
+<p>If it outputs the name of a song, a <code class="docutils literal">[playing]</code> line, all is well (if you
+cannot hear music, unmute your audio).</p>
+<p>If you do not have a mpd database yet, use the <em>Single path</em>.</p>
+<p><strong>If MPD works, press Ctrl+C in the window where you ran ``mpd
+datampd.conf.``</strong></p>
+</section>
+<section id="single-path">
+<h2>Single path</h2>
+<p>In the other Command Prompt window, run:</p>
+<pre class="literal-block">cd C:\mpd
+mpc update
+mpc add &quot;FILENAME&quot;
+mpc play</pre>
+<p>(FILENAME should be a name of a file in your music library.  Make sure to
+keep the quotes.)</p>
+<p>And now you should hear music.  If you do not, try to unmute, then read
+the output of <code class="docutils literal">mpc</code> and try to fix it.</p>
+<p><strong>If MPD works, press Ctrl+C in the window where you ran ``mpd
+datampd.conf.``</strong></p>
+</section>
+</section>
+<section id="step-3-5-test-gmpc">
+<h1>Step 3.5: test GMPC</h1>
+<p>Start the Gnome Music Player Client.  Click <em>Forward</em>, <em>Connect</em>,
+<em>Forward</em>, <em>Close</em> and all should be well.</p>
+</section>
+<section id="step-4-create-a-windows-service">
+<h1>Step 4: create a Windows service</h1>
+<p>In order to run the daemon in the <em>daemon</em> mode, i.e. hidden, you need to
+perform some extra steps.  You cannot use Startup in the Start Menu, you
+also cannot use the Run registry keys (this results in an ugly Command Prompt
+window running all the time that you cannot close or hide in the tray).</p>
+<p>How to solve this problem?  Just run it as a Windows service.  That is
+very easy to do.</p>
+<p>Open a Command Prompt window as an administrator (right-click on <em>Command
+Prompt</em> in the Start Menu/on the Start Screen and choose <em>Run as administrator</em>).</p>
+<p>In that window, run one very easy command (make sure to copy-paste this
+exactly!):</p>
+<pre class="literal-block">sc create mpd binPath= &quot;c:\mpd\mpd.exe c:\mpd\data\mpd.conf&quot;</pre>
+<p>If it said:</p>
+<ul class="simple">
+<li><p><code class="docutils literal">[SC] CreateService SUCCESS</code>, congratulations — you are almost done!  Skip down to <em>Service configuration.</em></p></li>
+<li><p><code class="docutils literal">[SC] OpenSCManager FAILED 5: Access is denied.</code>, you need an
+<strong>Administrator</strong> Command Prompt.</p></li>
+<li><p>something else, check your spelling or Google the error.</p></li>
+</ul>
+<section id="service-configuration">
+<h2>Service configuration</h2>
+<p>That is the easiest part of this guide.</p>
+<p>Start the <em>Services</em> console.  You can get to it by typing
+<code class="docutils literal">services.msc</code> into the Start Menu/Screen search (<em>Run</em> for XP or
+older).</p>
+<p>In the tool, find the <code class="docutils literal">mpd</code> service.  Go to the <em>Log On</em> tab, choose
+<em>This account:</em> and enter your credentials there.  Hit <em>Apply</em> and go to
+the <em>General</em> tab, on which you should choose the <em>Startup type</em> to be
+<em>Automatic (Delayed Start)</em>.  Finish by pressing <em>Start</em>.  MPD should be
+running and configured properly.  You can now hit <em>OK</em> and close the
+<em>Services</em> window, along with the command prompts you have open.</p>
+<p><strong>Warning:</strong> if you change your Windows password, you need to change your
+password in the <em>Services</em> console as well!</p>
+</section>
+<section id="just-in-case-uninstalling-the-service">
+<h2>Just in case: uninstalling the service</h2>
+<p>First off, stop the service (in the Services console or through <code class="docutils literal">sc stop
+mpd</code> in an administrator command prompt).</p>
+<p>Then, run <code class="docutils literal">sc delete mpd</code>.</p>
+</section>
+</section>

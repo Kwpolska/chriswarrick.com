@@ -1,142 +1,163 @@
 <!DOCTYPE html>
-<html class="limited-width larger-font" prefix="
-og: http://ogp.me/ns#
-" lang="en">
+<html class="limited-width larger-font" prefix="og: http://ogp.me/ns#" lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Python Apps the Right Way: entry points and scripts | Chris Warrick</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.css" integrity="sha256-FqCzNnnyXl5HxHMdb+RQ/RV/X7fqfPcQYy+G2gFL3Xk=" crossorigin="anonymous">
+  <meta charset="utf-8">
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Python Apps the Right Way: entry points and scripts | Chris Warrick</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.css"
+        integrity="sha256-FqCzNnnyXl5HxHMdb+RQ/RV/X7fqfPcQYy+G2gFL3Xk=" crossorigin="anonymous">
 <!--#if expr="$HTTP_COOKIE=/colorScheme\=light/" --><link href="/assets/css/all.css?v=20230115" rel="stylesheet" type="text/css" id="kw-all-css">
 <script type="text/javascript">var colorScheme='light';var colorSchemesEnabled=true;</script><!--#else--><link href="/assets/css/all-dark.css?v=20230115" rel="stylesheet" type="text/css" id="kw-all-css">
-<script type="text/javascript">var colorScheme='dark';var colorSchemesEnabled=true;</script><!--#endif--><link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,700,700i|Source+Serif+Pro:600&amp;display=swap&amp;subset=latin-ext" rel="stylesheet">
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
-<meta name="theme-color" content="#00aadd">
-<meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="/rss.xml">
-<link rel="canonical" href="https://chriswarrick.com/blog/2014/09/15/python-apps-the-right-way-entry_points-and-scripts/">
-<link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="16x16 32x32 48x48 64x64 128x128 256x256">
-<link rel="icon" type="image/png" href="/assets/img/logo512.png">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<!--[if lt IE 9]><script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]--><meta name="author" content="Chris Warrick">
-<link rel="prev" href="/blog/2013/11/16/managing-tasks/" title="Managing Tasks, Chris’ Way" type="text/html">
-<link rel="next" href="/blog/2014/10/13/revamping-my-projects-page-with-nikola/" title="Revamping My Projects Page with Nikola" type="text/html">
-<meta property="og:site_name" content="Chris Warrick">
-<meta property="og:title" content="Python Apps the Right Way: entry points and scripts">
-<meta property="og:url" content="https://chriswarrick.com/blog/2014/09/15/python-apps-the-right-way-entry_points-and-scripts/">
-<meta property="og:description" content="There are multiple ways to write an app in Python.  However, not all of them
-provide your users with the best experience.
-One of the problems some people encounter is writing launch scripts.  The
-best">
-<meta property="og:type" content="article">
-<meta property="article:published_time" content="2014-09-15T18:00:00+02:00">
-<meta property="article:tag" content="best practices">
-<meta property="article:tag" content="devel">
-<meta property="article:tag" content="guide">
-<meta property="article:tag" content="Python">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:creator" content="@Kwpolska">
+<script type="text/javascript">var colorScheme='dark';var colorSchemesEnabled=true;</script><!--#endif-->
+  <link
+    href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,700,700i|Source+Serif+Pro:600&amp;display=swap&amp;subset=latin-ext"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css"
+        integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+  <meta name="theme-color" content="#00aadd">
+  <meta name="generator" content="Chris Warrick’s Yet Another Blog Generator">
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/rss.xml">
+  <link rel="canonical" href="https://chriswarrick.com/">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="16x16 32x32 48x48 64x64 128x128 256x256">
+  <link rel="icon" type="image/png" href="/assets/img/logo512.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="prev" href="/blog/2013/11/16/managing-tasks/" type="text/html">
+  <link rel="next" href="/blog/2014/10/13/revamping-my-projects-page-with-nikola/" type="text/html">
+  
 </head>
 <body>
 <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
 
-<!-- Menubar -->
-
-<nav class="navbar navbar-expand-md navbar-kw bg-dark static-top mb-4"><div class="container">
-<!-- This keeps the margins nice -->
-        <a class="navbar-brand" href="/">
-            <img src="/assets/img/logo.png" srcset="/assets/img/logo2x.png 2x" alt="Chris Warrick" id="logo"><span id="blog-title">Chris Warrick</span>
-        </a>
-        <div>
-        <button class="navbar-toggler mr-2" id="color-changer-mobile" type="button" aria-label="Change color scheme">
-            <span class="color-changer"></span>
-        </button>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        </div>
-        <div class="collapse navbar-collapse" id="bs-navbar">
-            <ul class="navbar-nav mr-auto">
-<li class="nav-item">
-<a href="/contact/" class="nav-link">Contact</a>
-                </li>
-<li class="nav-item">
-<a href="/projects/" class="nav-link">Projects</a>
-                </li>
-<li class="nav-item">
-<a href="/guides/" class="nav-link">Guides</a>
-                </li>
-<li class="nav-item">
-<a href="/blog/" class="nav-link">Archives</a>
-                </li>
-<li class="nav-item">
-<a href="/search/" class="nav-link">Search</a>
-
-                
-            </li>
-</ul>
-<ul class="navbar-nav navbar-right">
-<li class="nav-item" id="color-changer-menu">
-<a href="#" class="nav-link" id="color-changer-btn">
-                <div class="color-changer"></div>
-                <span id="color-changer-text"><!--#if expr="$HTTP_COOKIE=/colorScheme\=light/" -->Dark Mode<!--#else -->Light Mode<!--#endif--></span>
-                </a>
-                </li>
-            </ul>
-</div>
-<!-- /.navbar-collapse -->
+<nav class="navbar navbar-expand-md navbar-kw bg-dark static-top mb-4">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <img src="/assets/img/logo.png" srcset="/assets/img/logo2x.png 2x" alt="Chris Warrick" id="logo"><span
+        id="blog-title">Chris Warrick</span>
+    </a>
+    <div>
+      <button class="navbar-toggler mr-2" id="color-changer-mobile" type="button" aria-label="Change color scheme">
+        <span class="color-changer"></span>
+      </button>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar"
+              aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
     </div>
-<!-- /.container -->
-</nav><!-- End of Menubar --><div class="container" id="content" role="main">
-    <div class="body-content">
-        <!--Body content-->
+    <div class="collapse navbar-collapse" id="bs-navbar">
+      <ul class="navbar-nav mr-auto">
         
-        <div id="cookiebox"></div>
-<article class="post-text h-entry hentry postpage postbox" itemscope="itemscope" itemtype="http://schema.org/Article"><header class="page-header"><h1 class="p-name entry-title" itemprop="headline name">
-    <a href="/blog/2014/09/15/python-apps-the-right-way-entry_points-and-scripts/" class="u-url">Python Apps the Right Way: entry points and scripts</a>
-    </h1>
+        
+          <li class="nav-item">
+            <a href="/contact/" class="nav-link">Contact</a>
+          </li>
+        
+        
+        
+          <li class="nav-item">
+            <a href="/projects/" class="nav-link">Projects</a>
+          </li>
+        
+        
+        
+          <li class="nav-item">
+            <a href="/guides/" class="nav-link">Guides</a>
+          </li>
+        
+        
+        
+          <li class="nav-item">
+            <a href="/blog/" class="nav-link">Archives</a>
+          </li>
+        
+        
+        
+          <li class="nav-item">
+            <a href="/blog/tags/" class="nav-link">Tags</a>
+          </li>
+        
+        
+      </ul>
+      <ul class="navbar-nav navbar-right">
+        <li class="nav-item" id="color-changer-menu">
+          <a href="#" class="nav-link" id="color-changer-btn">
+            <div class="color-changer"></div>
+            <span id="color-changer-text">Light Mode</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<div class="container" id="content" role="main">
+  <div class="body-content">
+    <div id="cookiebox"></div>
+    
 
-    <div class="metadata">
-<a href="/blog/2014/09/15/python-apps-the-right-way-entry_points-and-scripts/" rel="bookmark" class="u-published"><time class="published dt-published" datetime="2014-09-15T18:00:00+02:00" itemprop="datePublished" title="15 September 2014 at 18:00">15 September 2014 at 18:00</time><time class="updated dt-updated" datetime="2017-08-03T18:20:00+02:00" title="updated 03 August 2017 at 18:20"> (updated 03 August 2017 at 18:20)</time></a>
-        <ul itemprop="keywords" class="tags post-bubbles list-inline">
-<li class="category-bubble"><a href="/blog/tags/cat_python/" style="background-color: #ffd43b !important">Python</a></li>
-           <li><a class="tag p-category" href="/blog/tags/best-practices/" rel="tag">best practices</a></li>
-           <li><a class="tag p-category" href="/blog/tags/devel/" rel="tag">devel</a></li>
-           <li><a class="tag p-category" href="/blog/tags/guide/" rel="tag">guide</a></li>
-           <li><a class="tag p-category" href="/blog/tags/python/" rel="tag">Python</a></li>
-        </ul>
-<span class="shortlink-bubble"><a href="https://go.chriswarrick.com/entry_points" title="Short link to this article (go.chriswarrick.com/entry_points)"><i class="fa fa-link"></i> entry_points</a></span>        
-<p class="guide-header">A <a href="/guides/">guide</a> about <span class="guide-topic">Python</span> for <span class="guide-platform">any platform</span></p>    </div>
-    </header><div class="e-content entry-content" itemprop="articleBody text">
-    <div class="lead">
+
+<article class="post-text h-entry hentry postpage postbox" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+<header class="page-header">
+  <h1 class="p-name entry-title" itemprop="headline name">
+    <a href="/blog/2014/09/15/python-apps-the-right-way-entry_points-and-scripts/" class="u-url">Python Apps the Right Way: entry points and scripts</a>
+  </h1>
+
+  <div class="metadata">
+    <a href="/blog/2014/09/15/python-apps-the-right-way-entry_points-and-scripts/" rel="bookmark" class="u-published">
+      <time class="published dt-published" datetime="2014-09-15T18:00:00.0000000&#x2B;02:00" itemprop="datePublished" title="15 September 2014 18:00">15 September 2014 18:00</time>
+    
+      <time class="updated dt-updated" datetime="2017-08-03T18:20:00.0000000&#x2B;02:00" title="updated 03 August 2017 18:20"> (updated 03 August 2017 18:20)</time>
+    
+    </a>
+    <ul itemprop="keywords" class="tags post-bubbles list-inline">
+      <li class="category-bubble"><a href="/blog/tags/cat_python" style="background-color: #dca900 !important">Python</a></li>
+      
+        <li><a class="tag p-category" href="/blog/tags/best-practices" rel="tag">best practices</a></li>
+      
+        <li><a class="tag p-category" href="/blog/tags/devel" rel="tag">devel</a></li>
+      
+        <li><a class="tag p-category" href="/blog/tags/guide" rel="tag">guide</a></li>
+      
+        <li><a class="tag p-category" href="/blog/tags/python" rel="tag">Python</a></li>
+      
+    </ul>
+    <span class="shortlink-bubble"><a href="https://go.chriswarrick.com/entry_points" title="Short link to this article (go.chriswarrick.com/entry_points)"><i class="fa fa-link"></i> entry_points</a></span>
+    <p class="guide-header">A <a href="/guides/">guide</a> about <span class="guide-topic">Python</span> for <span class="guide-platform">any platform</span></p>
+  </div>
+</header>
+
+  <div class="e-content entry-content" itemprop="articleBody text">
+    
+      <div class="lead">
+        
 <p>There are multiple ways to write an app in Python.  However, not all of them
 provide your users with the best experience.</p>
 <p>One of the problems some people encounter is <em>writing launch scripts</em>.  The
 best way to handle this is the <em>Entry Points</em> mechanism of Setuptools, and a
 <code class="docutils literal">__main__.py</code> file.  It’s quite easy to implement.  If you’re interested,
 read on to learn more!</p>
-</div>
-</div>
-<section id="requirements-and-desired-results"><h2>Requirements and Desired Results</h2>
+
+      </div>
+    
+    
+<section id="requirements-and-desired-results">
+<h1>Requirements and Desired Results</h1>
 <p>You will need:</p>
 <ul>
 <li><p>a Python project</p></li>
 <li><p>a setup.py file using <a class="reference external" href="https://pypi.python.org/pypi/setuptools">setuptools</a></p></li>
-<li>
-<p>the following directory structure:</p>
+<li><p>the following directory structure:</p>
 <ul class="list-nobullets">
-<li>
+    <li>
     <a href="/listings/entry_points_project/"><i class="fa fa-folder-open"></i>
     entry_points_project/</a>
-    </li>
-<li>
+    <li>
         <ul class="list-nobullets">
-<li>
+        <li>
         <a href="/listings/entry_points_project/my_project/"><i class="fa fa-folder-open"></i> my_project/</a>
-            </li>
-<li>
+            <li>
             <ul class="list-nobullets">
-<li>
+                <li>
                 <a href="/listings/entry_points_project/my_project/__init__.py.html"><i class="fa fa-file"></i>
                 __init__.py</a>
                 </li>
@@ -145,14 +166,13 @@ read on to learn more!</p>
                 __main__.py</a>
                 </li>
             </ul>
-</li>
+            </li>
         <li>
         <a href="/listings/entry_points_project/setup.py.html"><i class="fa fa-file"></i> setup.py</a>
         </li>
         </ul>
-</li>
-    </ul>
-</li>
+    </li>
+    </ul></li>
 </ul>
 <p>(<code class="docutils literal">entry_points_project</code> is also where the README and other auxiliary files
 go, while <code class="docutils literal">my_project</code> contains all the Python code.)</p>
@@ -165,183 +185,68 @@ go, while <code class="docutils literal">my_project</code> contains all the Pyth
 the %PATH%, this will <strong>also work in Windows</strong>.</p>
  <div class="panel panel-info">
    <div class="panel-heading">
-     <h4 class="panel-title">Looking for a project template?</h4>
+     <h3 class="panel-title">Looking for a project template?</h3>
    </div>
    <div class="panel-body">
     If you want to create a well-structured project with release automation and
 some other goodies, check out my <a href="https://github.com/Kwpolska/python-project-template" style="font-weight: bold;">Python Project Template</a>.
    </div>
- </div></section><section id="step-1-create-a-main-py-file"><h2>Step 1: create a <code class="docutils literal">__main__.py</code> file</h2>
+ </div></section>
+<section id="step-1-create-a-main-py-file">
+<h1>Step 1: create a <code class="docutils literal">__main__.py</code> file</h1>
 <p>In order to implement the first desired result, you need to create a
 <code class="docutils literal">__main__.py</code> file in your package.  This file needs to contain a <code class="docutils literal">main()</code>
 function that takes no arguments, and also a special passage to determine code
 to run:</p>
-<p><a class="reference external" href="/listings/entry_points_project/my_project/__main__.py.html">entry_points_project/my_project/__main__.py</a>  <a class="reference external" href="/listings/entry_points_project/my_project/__main__.py">(Source)</a></p>
-<div class="code"><table class="codetable">
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2014/09/15/python-apps-the-right-way-entry_points-and-scripts/#rest_code_2f6308f3b2c04f75a384231bbd8878cf-1"><code data-line-number=" 1"></code></a></td>
-<td class="code"><code><a id="rest_code_2f6308f3b2c04f75a384231bbd8878cf-1" name="rest_code_2f6308f3b2c04f75a384231bbd8878cf-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
-</code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2014/09/15/python-apps-the-right-way-entry_points-and-scripts/#rest_code_2f6308f3b2c04f75a384231bbd8878cf-2"><code data-line-number=" 2"></code></a></td>
-<td class="code"><code><a id="rest_code_2f6308f3b2c04f75a384231bbd8878cf-2" name="rest_code_2f6308f3b2c04f75a384231bbd8878cf-2"></a>
-</code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2014/09/15/python-apps-the-right-way-entry_points-and-scripts/#rest_code_2f6308f3b2c04f75a384231bbd8878cf-3"><code data-line-number=" 3"></code></a></td>
-<td class="code"><code><a id="rest_code_2f6308f3b2c04f75a384231bbd8878cf-3" name="rest_code_2f6308f3b2c04f75a384231bbd8878cf-3"></a>
-</code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2014/09/15/python-apps-the-right-way-entry_points-and-scripts/#rest_code_2f6308f3b2c04f75a384231bbd8878cf-4"><code data-line-number=" 4"></code></a></td>
-<td class="code"><code><a id="rest_code_2f6308f3b2c04f75a384231bbd8878cf-4" name="rest_code_2f6308f3b2c04f75a384231bbd8878cf-4"></a><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-</code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2014/09/15/python-apps-the-right-way-entry_points-and-scripts/#rest_code_2f6308f3b2c04f75a384231bbd8878cf-5"><code data-line-number=" 5"></code></a></td>
-<td class="code"><code><a id="rest_code_2f6308f3b2c04f75a384231bbd8878cf-5" name="rest_code_2f6308f3b2c04f75a384231bbd8878cf-5"></a><span class="w">    </span><span class="sd">"""The main routine."""</span>
-</code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2014/09/15/python-apps-the-right-way-entry_points-and-scripts/#rest_code_2f6308f3b2c04f75a384231bbd8878cf-6"><code data-line-number=" 6"></code></a></td>
-<td class="code"><code><a id="rest_code_2f6308f3b2c04f75a384231bbd8878cf-6" name="rest_code_2f6308f3b2c04f75a384231bbd8878cf-6"></a>    <span class="k">if</span> <span class="n">args</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2014/09/15/python-apps-the-right-way-entry_points-and-scripts/#rest_code_2f6308f3b2c04f75a384231bbd8878cf-7"><code data-line-number=" 7"></code></a></td>
-<td class="code"><code><a id="rest_code_2f6308f3b2c04f75a384231bbd8878cf-7" name="rest_code_2f6308f3b2c04f75a384231bbd8878cf-7"></a>        <span class="n">args</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
-</code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2014/09/15/python-apps-the-right-way-entry_points-and-scripts/#rest_code_2f6308f3b2c04f75a384231bbd8878cf-8"><code data-line-number=" 8"></code></a></td>
-<td class="code"><code><a id="rest_code_2f6308f3b2c04f75a384231bbd8878cf-8" name="rest_code_2f6308f3b2c04f75a384231bbd8878cf-8"></a>
-</code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2014/09/15/python-apps-the-right-way-entry_points-and-scripts/#rest_code_2f6308f3b2c04f75a384231bbd8878cf-9"><code data-line-number=" 9"></code></a></td>
-<td class="code"><code><a id="rest_code_2f6308f3b2c04f75a384231bbd8878cf-9" name="rest_code_2f6308f3b2c04f75a384231bbd8878cf-9"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">"This is the main routine."</span><span class="p">)</span>
-</code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2014/09/15/python-apps-the-right-way-entry_points-and-scripts/#rest_code_2f6308f3b2c04f75a384231bbd8878cf-10"><code data-line-number="10"></code></a></td>
-<td class="code"><code><a id="rest_code_2f6308f3b2c04f75a384231bbd8878cf-10" name="rest_code_2f6308f3b2c04f75a384231bbd8878cf-10"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">"It should do something interesting."</span><span class="p">)</span>
-</code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2014/09/15/python-apps-the-right-way-entry_points-and-scripts/#rest_code_2f6308f3b2c04f75a384231bbd8878cf-11"><code data-line-number="11"></code></a></td>
-<td class="code"><code><a id="rest_code_2f6308f3b2c04f75a384231bbd8878cf-11" name="rest_code_2f6308f3b2c04f75a384231bbd8878cf-11"></a>
-</code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2014/09/15/python-apps-the-right-way-entry_points-and-scripts/#rest_code_2f6308f3b2c04f75a384231bbd8878cf-12"><code data-line-number="12"></code></a></td>
-<td class="code"><code><a id="rest_code_2f6308f3b2c04f75a384231bbd8878cf-12" name="rest_code_2f6308f3b2c04f75a384231bbd8878cf-12"></a>    <span class="c1"># Do argument parsing here (eg. with argparse) and anything else</span>
-</code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2014/09/15/python-apps-the-right-way-entry_points-and-scripts/#rest_code_2f6308f3b2c04f75a384231bbd8878cf-13"><code data-line-number="13"></code></a></td>
-<td class="code"><code><a id="rest_code_2f6308f3b2c04f75a384231bbd8878cf-13" name="rest_code_2f6308f3b2c04f75a384231bbd8878cf-13"></a>    <span class="c1"># you want your project to do. Return values are exit codes.</span>
-</code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2014/09/15/python-apps-the-right-way-entry_points-and-scripts/#rest_code_2f6308f3b2c04f75a384231bbd8878cf-14"><code data-line-number="14"></code></a></td>
-<td class="code"><code><a id="rest_code_2f6308f3b2c04f75a384231bbd8878cf-14" name="rest_code_2f6308f3b2c04f75a384231bbd8878cf-14"></a>
-</code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2014/09/15/python-apps-the-right-way-entry_points-and-scripts/#rest_code_2f6308f3b2c04f75a384231bbd8878cf-15"><code data-line-number="15"></code></a></td>
-<td class="code"><code><a id="rest_code_2f6308f3b2c04f75a384231bbd8878cf-15" name="rest_code_2f6308f3b2c04f75a384231bbd8878cf-15"></a>
-</code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2014/09/15/python-apps-the-right-way-entry_points-and-scripts/#rest_code_2f6308f3b2c04f75a384231bbd8878cf-16"><code data-line-number="16"></code></a></td>
-<td class="code"><code><a id="rest_code_2f6308f3b2c04f75a384231bbd8878cf-16" name="rest_code_2f6308f3b2c04f75a384231bbd8878cf-16"></a><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
-</code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2014/09/15/python-apps-the-right-way-entry_points-and-scripts/#rest_code_2f6308f3b2c04f75a384231bbd8878cf-17"><code data-line-number="17"></code></a></td>
-<td class="code"><code><a id="rest_code_2f6308f3b2c04f75a384231bbd8878cf-17" name="rest_code_2f6308f3b2c04f75a384231bbd8878cf-17"></a>    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
-</code></td>
-</tr>
-</table></div>
-<ol class="arabic simple">
-<li><p>The <code class="docutils literal">if __name__ == "__main__":</code> idiom, as <a class="reference external" href="https://docs.python.org/3/library/__main__.html">documented here</a>, is used to check whether
+<p><a class="reference external" href="link://listing/listings/entry_points_project/my_project/__main__.py">entry_points_project/my_project/__main__.py</a>  <a class="reference external" href="link://listing_source/listings/entry_points_project/my_project/__main__.py">(Source)</a></p>
+<div class="code"><table class="codetable"><tr><td class="linenos linenodiv"><a href="#rest_code_d0a7bdde7283412db1d179ad410001ec-1"><code data-line-number=" 1"></code></a></td><td class="code"><code><a id="rest_code_d0a7bdde7283412db1d179ad410001ec-1" name="rest_code_d0a7bdde7283412db1d179ad410001ec-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="#rest_code_d0a7bdde7283412db1d179ad410001ec-2"><code data-line-number=" 2"></code></a></td><td class="code"><code><a id="rest_code_d0a7bdde7283412db1d179ad410001ec-2" name="rest_code_d0a7bdde7283412db1d179ad410001ec-2"></a>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="#rest_code_d0a7bdde7283412db1d179ad410001ec-3"><code data-line-number=" 3"></code></a></td><td class="code"><code><a id="rest_code_d0a7bdde7283412db1d179ad410001ec-3" name="rest_code_d0a7bdde7283412db1d179ad410001ec-3"></a>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="#rest_code_d0a7bdde7283412db1d179ad410001ec-4"><code data-line-number=" 4"></code></a></td><td class="code"><code><a id="rest_code_d0a7bdde7283412db1d179ad410001ec-4" name="rest_code_d0a7bdde7283412db1d179ad410001ec-4"></a><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="#rest_code_d0a7bdde7283412db1d179ad410001ec-5"><code data-line-number=" 5"></code></a></td><td class="code"><code><a id="rest_code_d0a7bdde7283412db1d179ad410001ec-5" name="rest_code_d0a7bdde7283412db1d179ad410001ec-5"></a><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="sd">&quot;&quot;&quot;The main routine.&quot;&quot;&quot;</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="#rest_code_d0a7bdde7283412db1d179ad410001ec-6"><code data-line-number=" 6"></code></a></td><td class="code"><code><a id="rest_code_d0a7bdde7283412db1d179ad410001ec-6" name="rest_code_d0a7bdde7283412db1d179ad410001ec-6"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">if</span> <span class="n">args</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="#rest_code_d0a7bdde7283412db1d179ad410001ec-7"><code data-line-number=" 7"></code></a></td><td class="code"><code><a id="rest_code_d0a7bdde7283412db1d179ad410001ec-7" name="rest_code_d0a7bdde7283412db1d179ad410001ec-7"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">args</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="#rest_code_d0a7bdde7283412db1d179ad410001ec-8"><code data-line-number=" 8"></code></a></td><td class="code"><code><a id="rest_code_d0a7bdde7283412db1d179ad410001ec-8" name="rest_code_d0a7bdde7283412db1d179ad410001ec-8"></a>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="#rest_code_d0a7bdde7283412db1d179ad410001ec-9"><code data-line-number=" 9"></code></a></td><td class="code"><code><a id="rest_code_d0a7bdde7283412db1d179ad410001ec-9" name="rest_code_d0a7bdde7283412db1d179ad410001ec-9"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;This is the main routine.&quot;</span><span class="p">)</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="#rest_code_d0a7bdde7283412db1d179ad410001ec-10"><code data-line-number="10"></code></a></td><td class="code"><code><a id="rest_code_d0a7bdde7283412db1d179ad410001ec-10" name="rest_code_d0a7bdde7283412db1d179ad410001ec-10"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;It should do something interesting.&quot;</span><span class="p">)</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="#rest_code_d0a7bdde7283412db1d179ad410001ec-11"><code data-line-number="11"></code></a></td><td class="code"><code><a id="rest_code_d0a7bdde7283412db1d179ad410001ec-11" name="rest_code_d0a7bdde7283412db1d179ad410001ec-11"></a>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="#rest_code_d0a7bdde7283412db1d179ad410001ec-12"><code data-line-number="12"></code></a></td><td class="code"><code><a id="rest_code_d0a7bdde7283412db1d179ad410001ec-12" name="rest_code_d0a7bdde7283412db1d179ad410001ec-12"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="c1"># Do argument parsing here (eg. with argparse) and anything else</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="#rest_code_d0a7bdde7283412db1d179ad410001ec-13"><code data-line-number="13"></code></a></td><td class="code"><code><a id="rest_code_d0a7bdde7283412db1d179ad410001ec-13" name="rest_code_d0a7bdde7283412db1d179ad410001ec-13"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="c1"># you want your project to do. Return values are exit codes.</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="#rest_code_d0a7bdde7283412db1d179ad410001ec-14"><code data-line-number="14"></code></a></td><td class="code"><code><a id="rest_code_d0a7bdde7283412db1d179ad410001ec-14" name="rest_code_d0a7bdde7283412db1d179ad410001ec-14"></a>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="#rest_code_d0a7bdde7283412db1d179ad410001ec-15"><code data-line-number="15"></code></a></td><td class="code"><code><a id="rest_code_d0a7bdde7283412db1d179ad410001ec-15" name="rest_code_d0a7bdde7283412db1d179ad410001ec-15"></a>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="#rest_code_d0a7bdde7283412db1d179ad410001ec-16"><code data-line-number="16"></code></a></td><td class="code"><code><a id="rest_code_d0a7bdde7283412db1d179ad410001ec-16" name="rest_code_d0a7bdde7283412db1d179ad410001ec-16"></a><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="#rest_code_d0a7bdde7283412db1d179ad410001ec-17"><code data-line-number="17"></code></a></td><td class="code"><code><a id="rest_code_d0a7bdde7283412db1d179ad410001ec-17" name="rest_code_d0a7bdde7283412db1d179ad410001ec-17"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</code></td></tr></table></div><ol class="arabic simple">
+<li><p>The <code class="docutils literal">if __name__ == &quot;__main__&quot;:</code> idiom, as <a class="reference external" href="https://docs.python.org/3/library/__main__.html">documented here</a>, is used to check whether
 this is executed as the top-level file, or if it has been imported by someone
 else (in this case, executing the <code class="docutils literal">main()</code> function is not always intended).</p></li>
 <li><p>The <code class="docutils literal">main()</code> function must not take any arguments, because that’s how
 <code class="docutils literal">entry_points</code> executes things.</p></li>
-</ol></section><section id="step-2-adjust-setup-py-accordingly"><h2>Step 2: adjust <code class="docutils literal">setup.py</code> accordingly</h2>
+</ol>
+</section>
+<section id="step-2-adjust-setup-py-accordingly">
+<h1>Step 2: adjust <code class="docutils literal">setup.py</code> accordingly</h1>
 <p>This is the real deal: create the entry points in your <code class="docutils literal">setup.py</code> file.</p>
-<p><a class="reference external" href="/listings/entry_points_project/setup.py.html">entry_points_project/setup.py</a>  <a class="reference external" href="/listings/entry_points_project/setup.py">(Source)</a></p>
-<div class="code"><table class="codetable">
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2014/09/15/python-apps-the-right-way-entry_points-and-scripts/#rest_code_c4fcdcd002804a65a8a625c252958e00-1"><code data-line-number=" 1"></code></a></td>
-<td class="code"><code><a id="rest_code_c4fcdcd002804a65a8a625c252958e00-1" name="rest_code_c4fcdcd002804a65a8a625c252958e00-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">setuptools</span><span class="w"> </span><span class="kn">import</span> <span class="n">setup</span>
-</code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2014/09/15/python-apps-the-right-way-entry_points-and-scripts/#rest_code_c4fcdcd002804a65a8a625c252958e00-2"><code data-line-number=" 2"></code></a></td>
-<td class="code"><code><a id="rest_code_c4fcdcd002804a65a8a625c252958e00-2" name="rest_code_c4fcdcd002804a65a8a625c252958e00-2"></a>
-</code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2014/09/15/python-apps-the-right-way-entry_points-and-scripts/#rest_code_c4fcdcd002804a65a8a625c252958e00-3"><code data-line-number=" 3"></code></a></td>
-<td class="code"><code><a id="rest_code_c4fcdcd002804a65a8a625c252958e00-3" name="rest_code_c4fcdcd002804a65a8a625c252958e00-3"></a><span class="n">setup</span><span class="p">(</span>
-</code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2014/09/15/python-apps-the-right-way-entry_points-and-scripts/#rest_code_c4fcdcd002804a65a8a625c252958e00-4"><code data-line-number=" 4"></code></a></td>
-<td class="code"><code><a id="rest_code_c4fcdcd002804a65a8a625c252958e00-4" name="rest_code_c4fcdcd002804a65a8a625c252958e00-4"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"my_project"</span><span class="p">,</span>
-</code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2014/09/15/python-apps-the-right-way-entry_points-and-scripts/#rest_code_c4fcdcd002804a65a8a625c252958e00-5"><code data-line-number=" 5"></code></a></td>
-<td class="code"><code><a id="rest_code_c4fcdcd002804a65a8a625c252958e00-5" name="rest_code_c4fcdcd002804a65a8a625c252958e00-5"></a>    <span class="n">version</span><span class="o">=</span><span class="s2">"0.1.0"</span><span class="p">,</span>
-</code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2014/09/15/python-apps-the-right-way-entry_points-and-scripts/#rest_code_c4fcdcd002804a65a8a625c252958e00-6"><code data-line-number=" 6"></code></a></td>
-<td class="code"><code><a id="rest_code_c4fcdcd002804a65a8a625c252958e00-6" name="rest_code_c4fcdcd002804a65a8a625c252958e00-6"></a>    <span class="n">packages</span><span class="o">=</span><span class="p">[</span><span class="s2">"my_project"</span><span class="p">],</span>
-</code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2014/09/15/python-apps-the-right-way-entry_points-and-scripts/#rest_code_c4fcdcd002804a65a8a625c252958e00-7"><code data-line-number=" 7"></code></a></td>
-<td class="code"><code><a id="rest_code_c4fcdcd002804a65a8a625c252958e00-7" name="rest_code_c4fcdcd002804a65a8a625c252958e00-7"></a>    <span class="n">entry_points</span><span class="o">=</span><span class="p">{</span>
-</code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2014/09/15/python-apps-the-right-way-entry_points-and-scripts/#rest_code_c4fcdcd002804a65a8a625c252958e00-8"><code data-line-number=" 8"></code></a></td>
-<td class="code"><code><a id="rest_code_c4fcdcd002804a65a8a625c252958e00-8" name="rest_code_c4fcdcd002804a65a8a625c252958e00-8"></a>        <span class="s2">"console_scripts"</span><span class="p">:</span> <span class="p">[</span>
-</code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2014/09/15/python-apps-the-right-way-entry_points-and-scripts/#rest_code_c4fcdcd002804a65a8a625c252958e00-9"><code data-line-number=" 9"></code></a></td>
-<td class="code"><code><a id="rest_code_c4fcdcd002804a65a8a625c252958e00-9" name="rest_code_c4fcdcd002804a65a8a625c252958e00-9"></a>            <span class="s2">"my_project = my_project.__main__:main"</span>
-</code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2014/09/15/python-apps-the-right-way-entry_points-and-scripts/#rest_code_c4fcdcd002804a65a8a625c252958e00-10"><code data-line-number="10"></code></a></td>
-<td class="code"><code><a id="rest_code_c4fcdcd002804a65a8a625c252958e00-10" name="rest_code_c4fcdcd002804a65a8a625c252958e00-10"></a>        <span class="p">]</span>
-</code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2014/09/15/python-apps-the-right-way-entry_points-and-scripts/#rest_code_c4fcdcd002804a65a8a625c252958e00-11"><code data-line-number="11"></code></a></td>
-<td class="code"><code><a id="rest_code_c4fcdcd002804a65a8a625c252958e00-11" name="rest_code_c4fcdcd002804a65a8a625c252958e00-11"></a>    <span class="p">},</span>
-</code></td>
-</tr>
-<tr>
-<td class="linenos linenodiv"><a href="/blog/2014/09/15/python-apps-the-right-way-entry_points-and-scripts/#rest_code_c4fcdcd002804a65a8a625c252958e00-12"><code data-line-number="12"></code></a></td>
-<td class="code"><code><a id="rest_code_c4fcdcd002804a65a8a625c252958e00-12" name="rest_code_c4fcdcd002804a65a8a625c252958e00-12"></a><span class="p">)</span>
-</code></td>
-</tr>
-</table></div>
-<ol class="arabic simple">
+<p><a class="reference external" href="link://listing/listings/entry_points_project/setup.py">entry_points_project/setup.py</a>  <a class="reference external" href="link://listing_source/listings/entry_points_project/setup.py">(Source)</a></p>
+<div class="code"><table class="codetable"><tr><td class="linenos linenodiv"><a href="#rest_code_c3236443b6d14709bd22e3b2b15c29c3-1"><code data-line-number=" 1"></code></a></td><td class="code"><code><a id="rest_code_c3236443b6d14709bd22e3b2b15c29c3-1" name="rest_code_c3236443b6d14709bd22e3b2b15c29c3-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">setuptools</span><span class="w"> </span><span class="kn">import</span> <span class="n">setup</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="#rest_code_c3236443b6d14709bd22e3b2b15c29c3-2"><code data-line-number=" 2"></code></a></td><td class="code"><code><a id="rest_code_c3236443b6d14709bd22e3b2b15c29c3-2" name="rest_code_c3236443b6d14709bd22e3b2b15c29c3-2"></a>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="#rest_code_c3236443b6d14709bd22e3b2b15c29c3-3"><code data-line-number=" 3"></code></a></td><td class="code"><code><a id="rest_code_c3236443b6d14709bd22e3b2b15c29c3-3" name="rest_code_c3236443b6d14709bd22e3b2b15c29c3-3"></a><span class="n">setup</span><span class="p">(</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="#rest_code_c3236443b6d14709bd22e3b2b15c29c3-4"><code data-line-number=" 4"></code></a></td><td class="code"><code><a id="rest_code_c3236443b6d14709bd22e3b2b15c29c3-4" name="rest_code_c3236443b6d14709bd22e3b2b15c29c3-4"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">name</span><span class="o">=</span><span class="s2">&quot;my_project&quot;</span><span class="p">,</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="#rest_code_c3236443b6d14709bd22e3b2b15c29c3-5"><code data-line-number=" 5"></code></a></td><td class="code"><code><a id="rest_code_c3236443b6d14709bd22e3b2b15c29c3-5" name="rest_code_c3236443b6d14709bd22e3b2b15c29c3-5"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">version</span><span class="o">=</span><span class="s2">&quot;0.1.0&quot;</span><span class="p">,</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="#rest_code_c3236443b6d14709bd22e3b2b15c29c3-6"><code data-line-number=" 6"></code></a></td><td class="code"><code><a id="rest_code_c3236443b6d14709bd22e3b2b15c29c3-6" name="rest_code_c3236443b6d14709bd22e3b2b15c29c3-6"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">packages</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;my_project&quot;</span><span class="p">],</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="#rest_code_c3236443b6d14709bd22e3b2b15c29c3-7"><code data-line-number=" 7"></code></a></td><td class="code"><code><a id="rest_code_c3236443b6d14709bd22e3b2b15c29c3-7" name="rest_code_c3236443b6d14709bd22e3b2b15c29c3-7"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="n">entry_points</span><span class="o">=</span><span class="p">{</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="#rest_code_c3236443b6d14709bd22e3b2b15c29c3-8"><code data-line-number=" 8"></code></a></td><td class="code"><code><a id="rest_code_c3236443b6d14709bd22e3b2b15c29c3-8" name="rest_code_c3236443b6d14709bd22e3b2b15c29c3-8"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="s2">&quot;console_scripts&quot;</span><span class="p">:</span> <span class="p">[</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="#rest_code_c3236443b6d14709bd22e3b2b15c29c3-9"><code data-line-number=" 9"></code></a></td><td class="code"><code><a id="rest_code_c3236443b6d14709bd22e3b2b15c29c3-9" name="rest_code_c3236443b6d14709bd22e3b2b15c29c3-9"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="s2">&quot;my_project = my_project.__main__:main&quot;</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="#rest_code_c3236443b6d14709bd22e3b2b15c29c3-10"><code data-line-number="10"></code></a></td><td class="code"><code><a id="rest_code_c3236443b6d14709bd22e3b2b15c29c3-10" name="rest_code_c3236443b6d14709bd22e3b2b15c29c3-10"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="p">]</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="#rest_code_c3236443b6d14709bd22e3b2b15c29c3-11"><code data-line-number="11"></code></a></td><td class="code"><code><a id="rest_code_c3236443b6d14709bd22e3b2b15c29c3-11" name="rest_code_c3236443b6d14709bd22e3b2b15c29c3-11"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="p">},</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="#rest_code_c3236443b6d14709bd22e3b2b15c29c3-12"><code data-line-number="12"></code></a></td><td class="code"><code><a id="rest_code_c3236443b6d14709bd22e3b2b15c29c3-12" name="rest_code_c3236443b6d14709bd22e3b2b15c29c3-12"></a><span class="p">)</span>
+</code></td></tr></table></div><ol class="arabic simple">
 <li><p>You must use setuptools, otherwise this won’t work.</p></li>
 <li><p>The most important piece of code is the <code class="docutils literal">entry_points</code> declaration
 (unsurprisingly).</p></li>
 <li><p>The declaration reads</p></li>
 </ol>
-<div class="code"><pre class="code text"><a id="rest_code_20fdc8b717c741f9818fc7f84fa18db6-1" name="rest_code_20fdc8b717c741f9818fc7f84fa18db6-1" href="/blog/2014/09/15/python-apps-the-right-way-entry_points-and-scripts/#rest_code_20fdc8b717c741f9818fc7f84fa18db6-1"></a>"name_of_executable = module.with:function_to_execute"
+<div class="code"><pre class="code text"><a id="rest_code_a39bdd0254594347ad5e67fddd274e39-1" name="rest_code_a39bdd0254594347ad5e67fddd274e39-1" href="#rest_code_a39bdd0254594347ad5e67fddd274e39-1"></a>&quot;name_of_executable = module.with:function_to_execute&quot;
 </pre></div>
 <ol class="arabic simple" start="4">
 <li><p>If you are developing a GUI application (in Tkinter, PyQt/PySide,
@@ -356,102 +261,151 @@ attached)</p></li>
 <code class="docutils literal">console_scripts</code> <em>and</em> <code class="docutils literal">gui_scripts</code> in one setup file.</p></li>
 </ol>
 <p class="text-muted">All <a class="reference external" href="/listings/entry_points_project/">code samples</a> are freely reusable, but if you mention where you got them from, it’d be really nice.</p>
-</section></article>
-</div>
-    <aside class="postpromonav"><div class="card guide-footer">
-  <div class="card-header bg-primary border-primary"><h3>That’s all!</h3></div>
-  <div class="card-body">
-    Hopefully, the guide worked for you and your Python apps have good launch scripts for all platforms. If so, great! Otherwise, make sure you did everything as stated in this guide. If you are still stuck, ask for help in the comments.
+</section>
+
   </div>
-  <div class="card-footer"><a href="/guides/">Check out my other guides!</a></div>
-</div>
-    <nav><ul class="pager hidden-print">
-<li class="previous">
-                <a href="/blog/2013/11/16/managing-tasks/" rel="prev" title="Managing Tasks, Chris’ Way">Previous post</a>
-            </li>
-            <li class="next">
-                <a href="/blog/2014/10/13/revamping-my-projects-page-with-nikola/" rel="next" title="Revamping My Projects Page with Nikola">Next post</a>
-            </li>
-        </ul></nav></aside><section class="comments"><div data-title="Python Apps the Right Way: entry points and scripts" id="isso-thread"></div>
-        <script src="https://isso.chriswarrick.com/js/embed.min.js" data-isso="https://isso.chriswarrick.com/" data-isso-lang="en" data-isso-require-author="true" data-isso-require-email="true" data-isso-gravatar="true" data-isso-avatar="false" data-isso-css="false" data-isso-vote="false" data-isso-reply-notifications="true"></script></section><!--End of body content--><nav id="footer-links"><div class="row">
-            <div class="col-sm-4">
-                <h6>Blog</h6>
-                <ul>
-<li class="nav-item">
-<a href="/blog/" class="nav-link">Archive</a>
-                        </li>
-<li class="nav-item">
-<a href="/blog/tags/" class="nav-link">Tags</a>
-                        </li>
-<li class="nav-item">
-<a href="/rss.xml" class="nav-link">RSS Feed</a>
-                        </li>
-<li class="nav-item">
-<a href="/search/" class="nav-link">Search</a>
-                </li>
-</ul>
-</div>
-            <div class="col-sm-4">
-                <h6>Projects and Work</h6>
-                <ul>
-<li class="nav-item">
-<a href="/projects/" class="nav-link">Projects</a>
-                        </li>
-<li class="nav-item">
-<a href="/guides/" class="nav-link">Guides</a>
-                        </li>
-<li class="nav-item">
-<a href="/kwbot/" class="nav-link">KwBot</a>
-                        </li>
-<li class="nav-item">
-<a href="/blog/tags/cat_python" class="nav-link">Posts about Python</a>
-                </li>
-</ul>
-</div>
-            <div class="col-sm-4">
-                <h6>Me</h6>
-                <ul>
-<li class="nav-item">
-<a href="/contact/" class="nav-link">Contact</a>
-                        </li>
-<li class="nav-item">
-<a href="/brand/" class="nav-link">Brand</a>
-                        </li>
-<li class="nav-item">
-<a href="https://twitter.com/Kwpolska" class="nav-link">Twitter</a>
-                        </li>
-<li class="nav-item">
-<a href="https://github.com/Kwpolska" class="nav-link">GitHub</a>
-                </li>
-</ul>
-</div>
-        </div></nav><footer id="footer"><p>this site uses cookies.<br>by using this site, you agree to our <a href="/privacy/">cookie and privacy policy</a>.</p>
-<p>
-powered by <strong><a href="https://getnikola.com/">Nikola</a></strong>, <a href="http://nginx.org/">nginx</a> and <a href="https://hetzner.cloud/?ref=Qy1lehF8PwzP">Hetzner Cloud</a><br>
-copyright © 2009–2026 <a href="/contact/">Chris Warrick</a><br><a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC
-BY-NC-SA</a>, unless stated otherwise</p>
-            
-        </footer>
-</div>
+</article>
 
 
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script><script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.11.0/baguetteBox.min.js" integrity="sha256-yQGjQhFs3LtyiN5hhr3k9s9TWZOh/RzCkD3gwwCKlkg=" crossorigin="anonymous"></script><script src="/assets/js/all.js?v=20230115"></script><script>
-    baguetteBox.run('div#content', {
-        ignoreClass: 'islink',
-        captions: function(element) {
-            return element.getElementsByTagName('img')[0].alt;
-    }});
-    </script><!-- Matomo --><script>
+  <div class="card guide-footer">
+    <div class="card-header bg-primary border-primary"><h3>That’s all!</h3></div>
+    <div class="card-body">
+      Hopefully, the guide worked for you and your Python apps have good launch scripts for all platforms. If so, great! Otherwise, make sure you did everything as stated in this guide. If you are still stuck, ask for help in the comments.
+    </div>
+    <div class="card-footer"><a href="/guides/">Check out my other guides!</a></div>
+  </div>
+
+
+
+  <aside class="postpromonav">
+    <nav>
+      <ul class="pager hidden-print">
+        
+          <li class="previous">
+            <a href="/blog/2013/11/16/managing-tasks/" rel="prev"
+               title="Managing Tasks, Chris&#x2019; Way">Previous post</a>
+          </li>
+        
+        
+          <li class="next">
+            <a href="/blog/2014/10/13/revamping-my-projects-page-with-nikola/" rel="prev"
+               title="Revamping My Projects Page with Nikola">Next post</a>
+          </li>
+        
+      </ul>
+    </nav>
+  </aside>
+
+
+
+  <section class="comments">
+    <div data-title="Python Apps the Right Way: entry points and scripts" id="isso-thread"></div>
+    <script src="https://isso.chriswarrick.com/js/embed.min.js" data-isso="https://isso.chriswarrick.com/"
+            data-isso-lang="en" data-isso-require-author="true" data-isso-require-email="true" data-isso-gravatar="true"
+            data-isso-avatar="false" data-isso-css="false" data-isso-vote="false"
+            data-isso-reply-notifications="true"></script>
+  </section>
+
+
+
+    <script src="https://isso.chriswarrick.com/js/count.min.js" data-isso="https://isso.chriswarrick.com/"
+            data-isso-lang="en"></script>
+    <nav id="footer-links">
+      <div class="row">
+        <div class="col-sm-4">
+          <h6>Blog</h6>
+          <ul>
+            <li class="nav-item">
+              <a href="/blog/" class="nav-link">Archives</a>
+            </li>
+            <li class="nav-item">
+              <a href="/blog/tags/" class="nav-link">Tags</a>
+            </li>
+            <li class="nav-item">
+              <a href="/listings/" class="nav-link">Listings</a>
+            </li>
+            <li class="nav-item">
+              <a href="/rss.xml" class="nav-link">RSS Feed</a>
+            </li>
+          </ul>
+        </div>
+        <div class="col-sm-4">
+          <h6>Projects and Work</h6>
+          <ul>
+            <li class="nav-item">
+              <a href="/projects/" class="nav-link">Projects</a>
+            </li>
+            <li class="nav-item">
+              <a href="/guides/" class="nav-link">Guides</a>
+            </li>
+            <li class="nav-item">
+              <a href="/kwbot/" class="nav-link">KwBot</a>
+            </li>
+            <li class="nav-item">
+              <a href="/blog/tags/cat_python" class="nav-link">Posts about Python</a>
+            </li>
+          </ul>
+        </div>
+        <div class="col-sm-4">
+          <h6>Me</h6>
+          <ul>
+            <li class="nav-item">
+              <a href="/contact/" class="nav-link">Contact</a>
+            </li>
+            <li class="nav-item">
+              <a href="/brand/" class="nav-link">Brand</a>
+            </li>
+            <li class="nav-item">
+              <a href="https://twitter.com/Kwpolska" class="nav-link">Twitter</a>
+            </li>
+            <li class="nav-item">
+              <a href="https://github.com/Kwpolska" class="nav-link">GitHub</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <footer id="footer">
+      <p>this site uses cookies.<br>by using this site, you agree to our <a href="/privacy/">cookie and privacy policy</a>.</p>
+<p>powered by <strong><a href="https://github.com/Kwpolska/YetAnotherBlogGenerator">Yet Another Blog Generator</a></strong>,
+  <a href="https://nginx.org/">nginx</a>
+  and <a href="https://hetzner.cloud/?ref=Qy1lehF8PwzP">Hetzner Cloud</a><br>
+  copyright © 2009–2026 <a href="/contact/">Chris Warrick</a><br>
+  license: <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA</a>, unless stated otherwise</p>
+    </footer>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.11.0/baguetteBox.min.js"
+        integrity="sha256-yQGjQhFs3LtyiN5hhr3k9s9TWZOh/RzCkD3gwwCKlkg=" crossorigin="anonymous"></script>
+<script src="/assets/js/all.js?v=20230115"></script>
+<script>
+  baguetteBox.run('div#content', {
+    ignoreClass: 'islink',
+    captions: function (element) {
+      return element.getElementsByTagName('img')[0].alt;
+    }
+  });
+</script><!-- Matomo -->
+<script>
   var _paq = window._paq = window._paq || [];
   /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
   _paq.push(['trackPageView']);
   _paq.push(['enableLinkTracking']);
-  (function() {
-    var u="//matomo.chriswarrick.com/";
-    _paq.push(['setTrackerUrl', u+'matomo.php']);
+  (function () {
+    var u = "//matomo.chriswarrick.com/";
+    _paq.push(['setTrackerUrl', u + 'matomo.php']);
     _paq.push(['setSiteId', '1']);
-    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-    g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+    var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+    g.async = true;
+    g.src = u + 'matomo.js';
+    s.parentNode.insertBefore(g, s);
   })();
 </script><!-- End Matomo Code -->
 </body>

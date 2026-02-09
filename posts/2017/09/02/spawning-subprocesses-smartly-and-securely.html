@@ -1,0 +1,213 @@
+---
+title: "Spawning subprocesses smartly and securely"
+published: "2017-09-02 20:40:00+02:00"
+tags: ["Python", "C", "Unix", "Linux", "subprocess", "security", "devel", "best practices", "guide"]
+category: "Programming"
+description: "How to spawn subprocesses securely? Do I need a subprocess?"
+guide: true
+guideEffect: "you know when to spawn subprocesses and how to do it right"
+guidePlatform: "Unix/Linux (and partially Windows)"
+guideTopic: "spawning subprocesses"
+shortlink: "subprocess"
+legacy: true
+---
+<p>As part of your code, you may be inclined to call a command to do
+something. But is it always a good idea? How to do it safely? What happens
+behind the scenes?</p>
+<!-- TEASER_END -->
+<p>This article is written from a general perspective, with a Unix/C bias and a
+very slight Python bias. The problems mentioned apply to all languages in most
+environments, including Windows.</p>
+<nav class="contents right-toc" id="contents" role="doc-toc">
+<p class="topic-title"><a class="reference internal" href="#top">Contents</a></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#use-the-right-tool-for-the-job" id="toc-entry-1">Use the right tool for the job</a></p></li>
+<li><p><a class="reference internal" href="#dont-spawn-subprocesses-if-theres-an-alternative" id="toc-entry-2">Don’t spawn subprocesses if there’s an alternative</a></p></li>
+<li><p><a class="reference internal" href="#security-considerations-shells-spaces-and-command-injection" id="toc-entry-3">Security considerations: shells, spaces, and command injection</a></p></li>
+<li><p><a class="reference internal" href="#tl-dr-how-to-do-this-properly-in-your-language-of-choice" id="toc-entry-4">TL;DR: How to do this properly in your language of choice</a></p></li>
+<li><p><a class="reference internal" href="#the-part-where-i-pretend-i-know-something-about-windows" id="toc-entry-5">The part where I pretend I know something about Windows</a></p></li>
+</ul>
+</nav>
+<section id="use-the-right-tool-for-the-job">
+<h1><a class="toc-backref" href="#toc-entry-1" role="doc-backlink">Use the right tool for the job</a></h1>
+<p>By calling another process, you introduce a third-party dependency.
+That dependency isn’t controlled by your code, and your code becomes more fragile.
+The problems include:</p>
+<ul class="simple">
+<li><p>the program is not installed, or even available, for the user’s OS of choice</p></li>
+<li><p>the program is not in the <code class="docutils literal">$PATH</code> your process gets</p></li>
+<li><p>the hard-coded path is not correct on the end user’s system</p></li>
+<li><p>the program is in a different version (eg. GNU vs. BSD, updates/patches),
+which means different option names or other behaviors</p></li>
+<li><p>the program’s output is not what you expected due to user config (including
+locale)</p></li>
+<li><p>error reporting is based on numeric exit codes, and the meaning of those
+differs between programs (<em>if</em> they have meaning besides 0/1 in the first
+place)</p></li>
+</ul>
+<p>On the other hand, if your code uses a lot of subprocesses, perhaps you should
+stay with Bash. You can do the harder parts with Python, Ruby, or some other
+language by calling them from within your Bash script.</p>
+</section>
+<section id="dont-spawn-subprocesses-if-theres-an-alternative">
+<h1><a class="toc-backref" href="#toc-entry-2" role="doc-backlink">Don’t spawn subprocesses if there’s an alternative</a></h1>
+<p>Spawning a subprocess always incurs a (minor) <a class="brackets" href="#footnote-1" id="footnote-reference-1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> performance hit minor
+compared to the alternatives. With that in mind, and the resiliency issues
+listed above, you should always try to find an alternative for the
+external command.</p>
+<p>The simplest ones are the basic Unix utilities. Replace <code class="docutils literal">grep</code>, <code class="docutils literal">sed</code> and
+<code class="docutils literal">awk</code> with string operations and regular expressions. Filesystem utilities
+will have equivalents — for Python, in <code class="docutils literal">os</code> or <code class="docutils literal">shutil</code>. Your language of
+choice can also handle things like networking (don’t call <code class="docutils literal">curl</code>), file
+compression, working with date/time…</p>
+<p>Similarly, you should check if there are packages available that already do
+what you want — library bindings or re-implementations. And if there isn’t,
+perhaps you could help the world by writing one of those and sharing it?</p>
+<p>One more important thing: if the program uses the same language as your code,
+then you should try to import the code and run it from the same process instead
+of spawning a process, if this is feasible.</p>
+</section>
+<section id="security-considerations-shells-spaces-and-command-injection">
+<h1><a class="toc-backref" href="#toc-entry-3" role="doc-backlink">Security considerations: shells, spaces, and command injection</a></h1>
+<p>We come to the most important part of this article: how to spawn subprocesses
+without compromising your system. When you spawn a subprocess on a typical Unix
+system,  <code class="docutils literal">fork()</code> is called, and your process is copied. Many modern Unix
+systems have a copy-on-write implementation of that syscall, meaning that the
+operation does not result in copying all the memory of the host process over.
+Forking is (almost) immediately followed by calling <code class="docutils literal">execve()</code> (or a helper
+function from the exec family) <a class="brackets" href="#footnote-2" id="footnote-reference-2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a> in the child process — that function
+<em>transforms the calling process into a new process</em> <a class="brackets" href="#footnote-3" id="footnote-reference-3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>. This technique is
+called <em>fork-exec</em> and is the typical way to spawn a new process on Unix. <a class="brackets" href="#footnote-4" id="footnote-reference-4" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a></p>
+<p>There are two ways to access this API, from the C perspective:</p>
+<ul>
+<li><p>directly, by calling <code class="docutils literal">fork()</code> and <code class="docutils literal"><span class="pre">exec*()</span></code> (or <code class="docutils literal">posix_spawn()</code>), and providing an array of
+arguments passed to the process, or</p></li>
+<li><p>through the shell (<code class="docutils literal">sh</code>), usually by calling <code class="docutils literal">system()</code>. As Linux’s
+manpage for <code class="docutils literal">system(3)</code> puts it,</p>
+<blockquote>
+<p>The <code class="docutils literal">system()</code> library function uses <code class="docutils literal">fork(2)</code> to create a child process that executes the shell command specified in command using <code class="docutils literal">execl(3)</code> as follows:</p>
+<div class="code"><pre class="code c"><a id="rest_code_ba3def1e6d134f318af0424fea199c9a-1" name="rest_code_ba3def1e6d134f318af0424fea199c9a-1" href="#rest_code_ba3def1e6d134f318af0424fea199c9a-1"></a><span class="n">execl</span><span class="p">(</span><span class="s">&quot;/bin/sh&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;sh&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;-c&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">command</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+</pre></div>
+</blockquote>
+</li>
+</ul>
+<p>If you go through the shell, you pass one string argument, whereas <code class="docutils literal"><span class="pre">exec*()</span></code> demands you to specify arguments separately. Let’s write a sample program to print all the arguments it receives. I’ll do it in Python to get a more readable output.</p>
+<div class="code"><pre class="code python"><a id="rest_code_ce72efbf58624ae598862ad3319d5d48-1" name="rest_code_ce72efbf58624ae598862ad3319d5d48-1" href="#rest_code_ce72efbf58624ae598862ad3319d5d48-1"></a><span class="ch">#!/usr/bin/env python3</span>
+<a id="rest_code_ce72efbf58624ae598862ad3319d5d48-2" name="rest_code_ce72efbf58624ae598862ad3319d5d48-2" href="#rest_code_ce72efbf58624ae598862ad3319d5d48-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<a id="rest_code_ce72efbf58624ae598862ad3319d5d48-3" name="rest_code_ce72efbf58624ae598862ad3319d5d48-3" href="#rest_code_ce72efbf58624ae598862ad3319d5d48-3"></a><span class="nb">print</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span>
+</pre></div>
+<p>Let’s see what appears:</p>
+<div class="code"><pre class="code text"><a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-1" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-1" href="#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-1"></a>$ ./argv.py foo bar
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-2" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-2" href="#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-2"></a>[&#39;./argv.py&#39;, &#39;foo&#39;, &#39;bar&#39;]
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-3" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-3" href="#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-3"></a>$ ./argv.py &#39;foo bar&#39;
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-4" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-4" href="#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-4"></a>[&#39;./argv.py&#39;, &#39;foo bar&#39;]
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-5" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-5" href="#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-5"></a>$ ./argv.py foo\ bar baz
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-6" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-6" href="#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-6"></a>[&#39;./argv.py&#39;, &#39;foo bar&#39;, &#39;baz&#39;]
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-7" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-7" href="#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-7"></a>
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-8" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-8" href="#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-8"></a>$ ./argv.py $(date)
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-9" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-9" href="#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-9"></a>[&#39;./argv.py&#39;, &#39;Sat&#39;, &#39;Sep&#39;, &#39;2&#39;, &#39;16:54:52&#39;, &#39;CEST&#39;, &#39;2017&#39;]
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-10" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-10" href="#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-10"></a>$ ./argv.py &quot;$(date)&quot;
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-11" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-11" href="#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-11"></a>[&#39;./argv.py&#39;, &#39;Sat Sep  2 16:54:52 CEST 2017&#39;]
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-12" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-12" href="#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-12"></a>
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-13" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-13" href="#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-13"></a>$ ./argv.py /usr/*
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-14" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-14" href="#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-14"></a>[&#39;./argv.py&#39;, &#39;/usr/X11&#39;, &#39;/usr/X11R6&#39;, &#39;/usr/bin&#39;, &#39;/usr/include&#39;, &#39;/usr/lib&#39;, &#39;/usr/libexec&#39;, &#39;/usr/local&#39;, &#39;/usr/sbin&#39;, &#39;/usr/share&#39;, &#39;/usr/standalone&#39;]
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-15" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-15" href="#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-15"></a>$ ./argv.py &quot;/usr/*&quot;
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-16" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-16" href="#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-16"></a>[&#39;./argv.py&#39;, &#39;/usr/*&#39;]
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-17" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-17" href="#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-17"></a>
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-18" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-18" href="#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-18"></a>$ ./argv.py $EDITOR
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-19" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-19" href="#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-19"></a>[&#39;./argv.py&#39;, &#39;nvim&#39;]
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-20" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-20" href="#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-20"></a>
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-21" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-21" href="#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-21"></a>$ $PWD/argv.py foo bar
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-22" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-22" href="#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-22"></a>[&#39;/Users/kwpolska/Desktop/blog/subprocess/argv.py&#39;, &#39;foo&#39;, &#39;bar&#39;]
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-23" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-23" href="#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-23"></a>$ ./argv.py a{b,c}d
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-24" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-24" href="#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-24"></a>[&#39;./argv.py&#39;, &#39;abd&#39;, &#39;acd&#39;]
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-25" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-25" href="#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-25"></a>
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-26" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-26" href="#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-26"></a>$ python argv.py foo bar | cat
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-27" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-27" href="#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-27"></a>[&#39;argv.py&#39;, &#39;foo&#39;, &#39;bar&#39;]
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-28" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-28" href="#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-28"></a>$ python argv.py foo bar &gt; foo.txt
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-29" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-29" href="#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-29"></a>$ cat foo.txt
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-30" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-30" href="#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-30"></a>[&#39;argv.py&#39;, &#39;foo&#39;, &#39;bar&#39;]
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-31" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-31" href="#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-31"></a>
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-32" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-32" href="#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-32"></a>$ ./argv.py foo; ls /usr
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-33" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-33" href="#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-33"></a>[&#39;./argv.py&#39;, &#39;foo&#39;]
+<a id="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-34" name="rest_code_8db936d5a5784d2eba2d26845ebcc5c4-34" href="#rest_code_8db936d5a5784d2eba2d26845ebcc5c4-34"></a>X11@        X11R6@      bin/        include/    lib/        libexec/    local/      sbin/       share/      standalone/
+</pre></div>
+<p>As you can see, the following things are handled by the shell (the process is unaware of this occurring):</p>
+<ul class="simple">
+<li><p>quotes and escapes</p></li>
+<li><p>expanding expressions in braces</p></li>
+<li><p>expanding variables</p></li>
+<li><p>wildcards (glob, <code class="docutils literal">*</code>)</p></li>
+<li><p>redirections and pipes (<code class="docutils literal">&gt; &gt;&gt; |</code>)</p></li>
+<li><p>command substitution (backticks or <code class="docutils literal"><span class="pre">$(…)</span></code>)</p></li>
+<li><p>running multiple commands on the same line (<code class="docutils literal">; &amp;&amp; || &amp;</code>)</p></li>
+</ul>
+<p>The list is full of potential vulnerabilities. If end users are in control of
+the arguments passed, and you go through the shell, they can
+<strong>execute arbitrary commands</strong> or even <strong>get full shell access</strong>. Even in other
+cases, you’ll have to <em>depend on the shell’s parsing</em>, which introduces an
+unnecessary indirection.</p>
+</section>
+<section id="tl-dr-how-to-do-this-properly-in-your-language-of-choice">
+<h1><a class="toc-backref" href="#toc-entry-4" role="doc-backlink">TL;DR: How to do this properly in your language of choice</a></h1>
+<p>To ensure spawning subprocess is done securely, <strong>do not use the shell in between</strong>. If you need any of the operations I listed above as part of your command — wildcards, pipes, etc. — you will need to take care of them in your code; most languages have those features built-in.</p>
+<dl class="simple dl-horizontal">
+<dt>In C (Unix)</dt>
+<dd><p>Perform fork-exec by yourself, or use <code class="docutils literal">posix_spawn()</code>. This also lets you communicate with the process if you open a pipe and make it stdout of the child process. Never use <code class="docutils literal">system()</code>.</p>
+</dd>
+<dt>In Python</dt>
+<dd><p>Use the subprocess module. Always pass <code class="docutils literal">shell=False</code> and give it a <em>list</em> of arguments. With asyncio, use <code class="docutils literal">asyncio.create_subprocess_exec</code> (and not <code class="docutils literal">_shell</code>), but note it takes <code class="docutils literal">*args</code> and not a list. Never use <code class="docutils literal">os.system</code> and <code class="docutils literal">os.popen</code>.</p>
+</dd>
+<dt>In Ruby</dt>
+<dd><p>Pass arrays to <code class="docutils literal">IO.popen</code>. Pass multiple arguments to <code class="docutils literal">system()</code> (<code class="docutils literal"><span class="pre">system([&quot;ls&quot;,</span> <span class="pre">&quot;ls&quot;])</span></code> or <code class="docutils literal"><span class="pre">system(&quot;ls&quot;,</span> <span class="pre">&quot;-l&quot;)</span></code>). Never use <code class="docutils literal">%x{command}</code> or backticks.</p>
+</dd>
+<dt>In Java</dt>
+<dd><p>Pass arrays to <code class="docutils literal">Runtime.exec</code>. Pass multiple arguments or list to <code class="docutils literal">ProcessBuilder</code>.</p>
+</dd>
+<dt>In PHP</dt>
+<dd><p>All the standard methods go through the shell. Try <code class="docutils literal">escapeshellcmd()</code>, <code class="docutils literal">escapeshellarg()</code> — or better, switch to Python. Or anything, really.</p>
+</dd>
+<dt>In Go</dt>
+<dd><p><code class="docutils literal">os/exec</code> and <code class="docutils literal">os.StartProcess</code> are safe.</p>
+</dd>
+<dt>In Node.js</dt>
+<dd><p>Use <code class="docutils literal">child_process.execFile</code> or <code class="docutils literal">child_process.spawn</code> with <code class="docutils literal">shell</code> set to false.</p>
+</dd>
+<dt>Elsewhere</dt>
+<dd><p>You should be able to specify multiple strings (using variadic arguments,
+arrays, or otherwise standard data structures of your language of choice) as
+the command line. Otherwise, you might be running into something
+shell-related.</p>
+</dd>
+</dl>
+</section>
+<section id="the-part-where-i-pretend-i-know-something-about-windows">
+<h1><a class="toc-backref" href="#toc-entry-5" role="doc-backlink">The part where I pretend I know something about Windows</a></h1>
+<p>On Windows, argument lists are always passed to processes as strings (Python
+joins them semi-intelligently if it gets a list). Redirections and variables
+work in shell mode, but globs (asterisks) are always left for the called
+process to handle.</p>
+<p>Some useful functions are implemented as shell built-ins — in that case, you
+need to call it via the shell.</p>
+<p>Internals: There is no <code class="docutils literal">fork()</code> on Windows. Instead, <code class="docutils literal">CreateProcess()</code>,
+<code class="docutils literal">ShellExecute()</code>, or lower-level <code class="docutils literal"><span class="pre">spawn*()</span></code> functions are used. <code class="docutils literal">cmd.exe
+/c</code> is called in shell calls.</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="footnote-1" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#footnote-reference-1">1</a><span class="fn-bracket">]</span></span>
+<p>Unless your operating system does not implement copy-on-write forking — in that case, you might even run out of memory if you use too much of it.</p>
+</aside>
+<aside class="footnote brackets" id="footnote-2" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#footnote-reference-2">2</a><span class="fn-bracket">]</span></span>
+<p>The function that does the real work is <code class="docutils literal">execve()</code>, which takes an exact path, an array of arguments, and takes environment variables as input. Other variants can also perform a <code class="docutils literal">$PATH</code> search, take argv as variadic arguments, and inherit environment from the current process. <code class="docutils literal">execl()</code> does the last two.</p>
+</aside>
+<aside class="footnote brackets" id="footnote-3" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#footnote-reference-3">3</a><span class="fn-bracket">]</span></span>
+<p>Quoted from <code class="docutils literal">execve(2)</code> <a class="reference external" href="https://www.freebsd.org/cgi/man.cgi?query=execve&amp;sektion=2">man page</a> from FreeBSD.</p>
+</aside>
+<aside class="footnote brackets" id="footnote-4" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#footnote-reference-4">4</a><span class="fn-bracket">]</span></span>
+<p>An alternative is <code class="docutils literal">posix_spawn()</code>, but it usually does fork-exec, unless your platform does not support forking.</p>
+</aside>
+</aside>
+</section>

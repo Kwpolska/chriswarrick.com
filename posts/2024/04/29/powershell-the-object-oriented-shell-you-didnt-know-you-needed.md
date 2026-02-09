@@ -1,18 +1,19 @@
-<!--
-.. title: PowerShell: the object-oriented shell you didn’t know you needed
-.. slug: powershell-the-object-oriented-shell-you-didnt-know-you-needed
-.. date: 2024-04-29 18:45:00+02:00
-.. tags: .NET, PowerShell, CSharp, programming, Windows, zsh
-.. category: Programming
-.. description: Microsoft’s modern shell is much better than Unix sh.
-.. type: text
--->
-
+---
+title: "PowerShell: the object-oriented shell you didn’t know you needed"
+published: "2024-04-29 18:45:00+02:00"
+tags: [".NET", "PowerShell", "C#", "programming", "Windows", "zsh"]
+category: "C#/.NET"
+description: "Microsoft’s modern shell is much better than Unix sh."
+guide: true
+guideEffect: "your shell is now more powerful"
+guidePlatform: "Windows, Linux, macOS"
+guideTopic: "PowerShell"
+---
 PowerShell is an interactive shell and scripting language from Microsoft. It’s object-oriented — and that’s not just a buzzword, that’s a big difference to how the standard Unix shells work. And it is actually usable as an interactive shell.
 
 <!-- TEASER_END -->
 
-# Getting Started
+## Getting Started
 
 PowerShell is so nice, Microsoft made it twice.
 
@@ -27,7 +28,7 @@ All examples in this post should work in either version of PowerShell on any OS 
 
 Install the modern PowerShell: [Windows](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows?view=powershell-7.4), [Linux](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-linux?view=powershell-7.4), [macOS](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-linux?view=powershell-7.4).
 
-# Objects? In my shell?
+## Objects? In my shell?
 
 Let’s try getting a directory listing. This is Microsoft land, so let’s try the DOS command for a directory listing — that would be `dir`:
 
@@ -52,7 +53,7 @@ Now, let’s try to do something useful with this. Let’s get the total size of
 
 In a Unix shell, one option is `du -bc *.txt`. The arguments: `-b` (`--bytes`) gives the real byte size, and `-c` (`--summarize`) produces a total. The result is this:
 
-```
+```text
 7       foobar.txt
 14      helloworld.txt
 0       newfile.txt
@@ -129,9 +130,9 @@ We can iterate over all file objects, get their length (using `ForEach-Object` a
 
 You might have noticed I used `Get-ChildItem` instead of `dir` in the previous example. `Get-ChildItem` is the full name of the command (*cmdlet*). `dir` is one of its aliases, alongside `gci` and `ls` (Windows-only to avoid shadowing `/bin/ls`). Many common commands have aliases defined for easier typing and ease of use — `Copy-Item` can be written as `cp` (for compatibility with Unix), `copy` (for compatibility with MS-DOS), and `ci`. In our examples, we could also use `measure` for `Measure-Object` and `foreach` or `%` for `ForEach-Object`. Those aliases are a nice thing to have for interactive use, but for scripts, it’s best to use the full names for readability, and to avoid depending on the environment for those aliases.
 
-# More filesystem operations
+## More filesystem operations
 
-## Files per folder
+### Files per folder
 
 There’s a photo collection in a `Photos` folder, grouped into folders. The objective is to see how many `.jpg` files are in each folder. Here’s the PowerShell solution:
 
@@ -155,7 +156,7 @@ The above example works for one level of nesting. For more levels, given `Photos
 
 (All of the above examples work for a single folder as well. The latter two examples don’t work on Windows PowerShell.)
 
-## Duplicate finder
+### Duplicate finder
 
 Let’s build a simple tool to detect byte-for-byte duplicated files. `Get-FileHash` is a shell built-in. We can use `Group-Object` again, and `Where-Object` to filter only matching objects. Computing the hash of every file is quite inefficient, so we’ll group by the file length first, and then ensure the hashes match. This gives us a nice pipeline of 6 commands:
 
@@ -185,7 +186,7 @@ gci -Recurse -File |
   ? { $_.Count -gt 1 }
 ```
 
-# Serious Scripting: Software Bill of Materials
+## Serious Scripting: Software Bill of Materials
 
 Software Bills of Materials (SBOMs) and supply chain security are all the rage these days. The boss wants to have something like that, i.e. a CSV file with a list of packages and versions, and only the direct production dependencies. Sure, there exist standards like SPDX, but the boss does not like those pesky “standards”. The backend is written in C#, and the frontend is written in Node.js. Since we care only about the production dependencies, we can look at the `.csproj` and `package.json` files. For Node packages, we’ll also try to fetch the license name from the npm API (the API is a bit more complicated for NuGet, so we’ll keep it as a `TODO` in this example).
 
@@ -265,7 +266,7 @@ In the main body of the script, we look for the appropriate files (skipping thin
 
 Could it be done in a different language? Certainly, but PowerShell is really easy to integrate with CI, e.g. [GitHub Actions](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#example-running-a-command-using-powershell-core) or [Azure Pipelines](https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/powershell-v2?view=azure-pipelines). On Linux, you might be tempted to use Python — and you could get something done equally simply, as long as you don’t mind using the ugly `urllib.request` library, or alternatively ensuring `requests` is installed (and then you get into the hell that is Python package management).
 
-# Using .NET classes
+## Using .NET classes
 
 PowerShell is built on top of .NET. This isn’t just the implementation technology — PowerShell gives access to everything the .NET standard library offers. For example, the alternate ways to group photos in multiple subdirectories we’ve explored above involve a call to a static method of the .NET `System.IO.Path` class.
 
@@ -288,7 +289,7 @@ False
 
 It is also possible to load any .NET DLL into PowerShell (as long as it’s compatible with the .NET version PowerShell is built against) and use it as usual from C# (although possibly with slightly ugly syntax).
 
-# Sick Windows Tricks
+## Sick Windows Tricks
 
 Microsoft supposedly killed off Internet Explorer last year. Attempting to launch `iexplore.exe` will bring up Microsoft Edge. But you see, Internet Explorer is a crucial part of Windows, and has been so for over two decades. Software vendors have built software that depends on IE being there and being able to show web content. Some of them are using web views, but some of them prefer something else: COM.
 
@@ -312,7 +313,7 @@ $c = Get-Volume C
 "$(($c.SizeRemaining / $c.Size) * 100)%"
 ```
 
-# Getting out of PowerShell land
+## Getting out of PowerShell land
 
 As a shell, PowerShell can obviously launch subprocesses. Unlike something like Python, running a subprocess is as simple as running anything else. If you need to `git pull`, you just type that. Or you can make PowerShell interact with non-PowerShell commands, reading output and passing arguments:
 
@@ -351,7 +352,7 @@ if ($null -eq $changes) {
 
 I chose to compute untracked files with the help of standard .NET string manipulation methods, but there’s also a regex option. On a related note, there are three content check operators: `-match` uses regex, `-like` uses [wildcards](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_wildcards?view=powershell-7.4), and `-contains` checks collection membership.
 
-# Profile script
+## Profile script
 
 I use a fairly small profile script that adds some behaviours I’m used to from Unix, and to make Tab completion show a menu. Here are the most basic bits:
 
@@ -370,7 +371,7 @@ Set-PSReadLineOption -AddToHistoryHandler {
 
 Apart from that, I use a few aliases and a pretty prompt with the help of [oh-my-posh](https://ohmyposh.dev/).
 
-# The unusual and sometimes confusing parts
+## The unusual and sometimes confusing parts
 
 PowerShell can be verbose. Some of its syntax is a little quirky, compared to other languages, e.g. the equality and logic operators (for example, `-eq`, `-le`, `-and`). The aliases usually help with remembering commands, but they can’t always be depended on — `ls` is defined as an alias only on Windows, and Windows PowerShell aliases `wget` and `curl` to `Invoke-WebRequest`, even though all three have completely different command line arguments and outputs (this was removed in PowerShell).
 
@@ -382,12 +383,12 @@ There are two function call syntaxes. Calling a function/cmdlet uses the shell-s
 
 The escape character is the backtick. The backslash is the path separator in Windows, so making it an escape character would make everything painful on Windows. At least it makes it easy to write regex.
 
-# The ugliest part
+## The ugliest part
 
 The ugliest and the least intuitive part of PowerShell is the handling of single-element arrays. PowerShell *really* wants to unpack them to a scalar. The command `(Get-ChildItem).Length` will produce the number of files in the current directory — *unless* there is exactly one file, in which case it will produce the single file’s size in bytes. And if there are zero items, instead of an empty array, PowerShell produces `$null`. Sometimes, things will work out in the end (since many cmdlets are happy to get either as inputs), but sometimes, PowerShell must be asked to stop this madness and return an array: `@(Get-ChildItem).Length`.
 
 The previous example with `git status` leverages its `--null` argument to get zero-delimited data, so we expect either `$null` or a single string according to the rules. If we didn’t want to use `--null`, we would need to use `@(git status --porcelain)` to always get an array (but we would also need to remove quotes that `git` adds to paths that contain spaces).
 
-# Conclusion
+## Conclusion
 
 PowerShell is a fine interactive shell and scripting language. While it does have some warts, it is more powerful than your usual Unix shell, and its strongly-typed, object-oriented code beats *stringly-typed* `sh` spaghetti any day.

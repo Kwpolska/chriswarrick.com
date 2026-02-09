@@ -1,1 +1,0 @@
-../posts/2017/04/09/python-project-template-structure-and-automation.rst

@@ -1,0 +1,32 @@
+{% layout "base.liquid" %}
+
+<article itemtype="http://schema.org/Article">
+  <header class="page-header"><h1 class="p-name entry-title" itemprop="headline name">
+      Guides
+    </h1>
+  </header>
+  <div class="e-content entry-content" itemprop="articleBody text">
+    <p class="lead">This is a list of guides I wrote on this blog. They are setup guides for some
+      technologies, or ways to implement best programming practices.</p>
+
+    <p><em>Other educational content:</em> <a class="reference external" href="https://go.chriswarrick.com/ircfactoids/">a list of factoids I use in #python on Libera.Chat</a></p>
+
+    <ul class="post-list guide-post-list list-unstyled">
+      {% for Item in Items %}
+      <li class="post-list-item">
+        <a class="guide-title" href="{{ Item.Url }}">{{ Item.Title }}</a>
+        <ul class="list-unstyled mb-4">
+          <li class="topicline"><strong>Topic:</strong> {{ Item.Meta.Guide.Topic }}</li>
+          <li class="platformline"><strong>Platform:</strong> {{ Item.Meta.Guide.Platform }}</li>
+          <li class="dateline"><strong>Updated:</strong>
+            <time class="updated dt-updated" datetime="{{ Item.Meta.UpdatedOrPublished | format_date: "o" }}" title="Updated {{ Item.Meta.UpdatedOrPublished | format_date: "dd MMMM yyyy" }}">{{ Item.Meta.UpdatedOrPublished | format_date: "dd MMMM yyyy" }}</time>
+          </li>
+        </ul>
+        <div>
+          {{ Item.Teaser | raw }}
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</article>

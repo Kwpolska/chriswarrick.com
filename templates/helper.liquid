@@ -1,0 +1,59 @@
+{% macro renderPostHeader(post, isFullPostView) %}
+<header class="page-header">
+  <h1 class="p-name entry-title" itemprop="headline name">
+    <a href="{{ post.Url }}" class="u-url">{{ post.title }}</a>
+  </h1>
+
+  <div class="metadata">
+    <a href="{{ post.Url }}" rel="bookmark" class="u-published">
+      <time class="published dt-published" datetime="{{ post.Published | format_date: "O" }}" itemprop="datePublished" title="{{ post.Published | format_date: "dd MMMM yyyy HH:mm" }}">{{ post.Published | format_date: "dd MMMM yyyy HH:mm" }}</time>
+    {% if post.Updated != null %}
+      <time class="updated dt-updated" datetime="{{ post.Updated | format_date: "O" }}" title="updated {{ post.Updated | format_date: "dd MMMM yyyy HH:mm" }}"> (updated {{ post.Updated | format_date: "dd MMMM yyyy HH:mm" }})</time>
+    {% endif %}
+    </a>
+    <ul itemprop="keywords" class="tags post-bubbles list-inline">
+      <li class="category-bubble"><a href="{{ post.Meta.Category | link: "category" }}" style="background-color: {{ post.Meta.Category | categoryColor }} !important">{{ post.Meta.Category }}</a></li>
+      {% for tag in post.Meta.Tags %}
+        <li><a class="tag p-category" href="{{ tag | link: "tag" }}" rel="tag">{{ tag }}</a></li>
+      {% endfor %}
+    </ul>
+    {% if isFullPostView and post.Meta.ShortLink %}<span class="shortlink-bubble"><a href="https://go.chriswarrick.com/{{ post.Meta.ShortLink }}" title="Short link to this article (go.chriswarrick.com/{{ post.meta.ShortLink }})"><i class="fa fa-link"></i> {{ post.meta.ShortLink }}</a></span>{% endif %}
+    {% if post.meta.Guide %}<p class="guide-header">A <a href="/guides/">guide</a> about <span class="guide-topic">{{ post.Meta.Guide.Topic }}</span> for <span class="guide-platform">{{ post.Meta.Guide.Platform }}</span></p>{% endif %}
+  </div>
+</header>
+{% endmacro %}
+
+{% macro renderIndex(className) %}
+<div class="{{ className }}">
+  {% for post in items %}
+    <article class="h-entry post-text postbox">
+      {{ renderPostHeader(post, false) }}
+      <div class="p-summary entry-summary">
+        {{ post.Teaser | raw }}
+      </div>
+      <footer class="post-footer"><a href="{{ post.Url }}" class="morelink">Read more…</a></footer>
+    </article>
+  {% endfor %}
+</div>
+
+{% if PreviousUrl != null or NextUrl != null %}
+  <ul class="pager postindexpager clearfix">
+    {% if PreviousUrl != null %}
+      <li class="prev"><a href="{{ PreviousUrl }}" rel="prev">Newer posts</a></li>
+    {% endif %}
+    {% if NextUrl != null %}
+      <li class="next"><a href="{{ NextUrl }}" rel="next">Older posts</a></li>
+    {% endif %}
+  </ul>
+{% endif %}
+{% endmacro %}
+
+{% macro renderBreadcrumbs(breadcrumbs) %}
+<nav class="breadcrumbs">
+  <ul class="breadcrumb">
+    {% for link in breadcrumbs %}
+      <li class="breadcrumb-item"><a href="{{ link.Url }}">{{ link.Text }}</a></li>
+    {% endfor %}
+  </ul>
+</nav>
+{% endmacro %}
