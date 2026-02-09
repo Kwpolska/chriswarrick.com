@@ -7,11 +7,9 @@
 .. type: text
 
 I recently switched distros on my server, from Debian to Fedora, to use
-``systemd`` and keep it in line with my home `Arch Linux`_ system (which was
+``systemd`` and keep it in line with my home Arch Linux system (which was
 not reinstalled since 2010, by the way!)  Why is systemd so awesome?  Read
 on to find out.
-
-.. _Arch Linux: /blog/2011/01/06/arch-linux-the-best-distro-ever/
 
 .. TEASER_END
 
