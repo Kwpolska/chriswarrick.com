@@ -46,12 +46,14 @@
 <h2 id="kill-the-ads-and-other-nonsense-too">Kill the ads (and other nonsense too)</h2>
 <p>Red Hat makes money by selling a stable OS with at least 10 years of support to enterprises, and their free offering is Fedora, with just 13 months of support; RHEL releases are branched off from Fedora. SUSE also sells SUSE Linux Enterprise and has openSUSE as the free offering (but the relationship between the paid and free version is more complicated).</p>
 <p>Ubuntu chose a different monetization strategy: the enterprise offering is the same OS as the free offering, but it gets extra packages and extra updates. The free OS advertises the paid services. It is fairly simple to get rid of them all:</p>
-<div class="code"><table class="codetable"><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2025/11/09/distro-hopping-server-edition/#code_d6d147535086c167a244c002e28e50b972142e24-1"><code data-line-number="1"></code></a></td><td class="code"><code><a id="code_d6d147535086c167a244c002e28e50b972142e24-1" name="code_d6d147535086c167a244c002e28e50b972142e24-1"></a>sudo apt autoremove ubuntu-pro-client
-</code></td></tr><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2025/11/09/distro-hopping-server-edition/#code_d6d147535086c167a244c002e28e50b972142e24-2"><code data-line-number="2"></code></a></td><td class="code"><code><a id="code_d6d147535086c167a244c002e28e50b972142e24-2" name="code_d6d147535086c167a244c002e28e50b972142e24-2"></a>sudo chmod -x /etc/update-motd.d/*
-</code></td></tr></table></div>
+<div class="highlight"><pre><span></span>sudo apt autoremove ubuntu-pro-client
+sudo chmod -x /etc/update-motd.d/*
+</pre></div>
+
 <p>Also, Ubuntu installs snap by default. Snap is a terrible idea. Luckily, there are no snaps installed by default on a Server install, so we can just remove <code>snapd</code>. We’ll also remove <code>lxd-installer</code> to save ~25 kB of disk space, since the installer requires snap, and lxd is another unsuccessful Canonical project.</p>
-<div class="code"><table class="codetable"><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2025/11/09/distro-hopping-server-edition/#code_a2ddff7c7160bcede4c675680ff7cf82d9d7d69d-1"><code data-line-number="1"></code></a></td><td class="code"><code><a id="code_a2ddff7c7160bcede4c675680ff7cf82d9d7d69d-1" name="code_a2ddff7c7160bcede4c675680ff7cf82d9d7d69d-1"></a>sudo apt autoremove snapd lxd-installer
-</code></td></tr></table></div>
+<div class="highlight"><pre><span></span>sudo apt autoremove snapd lxd-installer
+</pre></div>
+
 <h2 id="the-cost-of-downgrading">The cost of downgrading</h2>
 <p>Going from Fedora 42 (April 2025) to Ubuntu 24.04 (April 2024) means some software will be downgraded in the process. In general, this does not matter, as most software does not mind downgrades as much. One notable exception is WeeChat, the IRC client, whose config files are versioned, and Ubuntu’s version is not compatible with the one in Fedora. But here’s where Ubuntu’s popularity shines: <a href="https://weechat.org/download/debian/">WeeChat has its own repositories for Debian and Ubuntu</a>, so I could just get the latest version without building it myself or trying to steal packages from a newer version.</p>
 <p>Other than WeeChat, I haven’t experienced any other issues with software due to a downgrade. Some of it is luck (or not using new/advanced features), some of it is software caring about backwards compatibility.</p>
