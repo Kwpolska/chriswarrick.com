@@ -4,17 +4,16 @@
 </header>
 
 {% if FeaturedProjects %}
-  <div id="project-carousel" class="carousel slide" data-ride="carousel">
-    <!-- Indicators -->
-    <ol class="carousel-indicators">
+  <div id="project-carousel" class="carousel slide">
+    <div class="carousel-indicators">
       {% for p in FeaturedProjects %}
-        <li data-target="#project-carousel" data-slide-to="{{ forloop.index0 }}"
+        <button type="button" data-bs-target="#project-carousel" data-bs-slide-to="{{ forloop.index0 }}"
           {% if forloop.index0 == 0 %}
-            class="active"
+            class="active" aria-current="true"
           {% endif %}
-        ></li>
+          aria-label="Slide {{ forloop.index }}"></button>
       {% endfor %}
-    </ol>
+    </div>
 
     <!-- Wrapper for slides -->
     <div class="carousel-inner">
@@ -30,20 +29,20 @@ active
           <div class="carousel-caption d-none d-md-block">
             <h3>{{ p.Title }} {{ p.Meta.Project.DevStatus | projectDevStatus }}</h3>
             <p>{{ p.Meta.Description }}</p>
-            <a href="{{ p.Url }}" class="btn btn-primary"><i class="fa fa-info-circle"></i> View details</a>
+            <a href="{{ p.Url }}" class="btn btn-primary"><i class="fa fa-info-circle"></i> Learn more</a>
           </div>
         </div>
       {% endfor %}
     </div>
 
-    <a class="carousel-control-prev" href="#project-carousel" role="button" data-slide="prev">
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-      <span class="sr-only">Previous</span>
-    </a>
-    <a class="carousel-control-next" href="#project-carousel" role="button" data-slide="next">
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-      <span class="sr-only">Next</span>
-    </a>
+    <button class="carousel-control-prev" type="button" data-bs-target="#project-carousel" data-bs-slide="prev">
+      <span aria-hidden="true">&lsaquo;</span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#project-carousel" data-bs-slide="next">
+      <span aria-hidden="true">&rsaquo;</span>
+      <span class="visually-hidden">Next</span>
+    </button>
   </div>
 {% endif %}
 

@@ -27,12 +27,12 @@ Configuration
 
 Create a file named `~/.config/think.conf` (or wherever your `XDG_CONFIG_HOME` is) with the following four lines:
 
-``ini
+```ini
 [Think]
 command = play
 file = /home/kwpolska/Dropbox/Media/Wielka Gra.mp3
 behavior = wait
-``
+```
 
 * `command` is the command of the player that will be executed.  You can use
   `play` (from `sox`) or any other fast CLI music player.

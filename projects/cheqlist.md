@@ -14,13 +14,14 @@ featured: true
 thumbnail: "/projects/_banners/cheqlist.png"
 ---
 
+<figure class="figure float-end">
+<a href="/projects/_banners/cheqlist.png"><img class="figure-img" alt="Cheqlist screenshot." src="/projects/_banners/cheqlist.thumbnail.png"></a>
+<figcaption class="figure-caption">Cheqlist screenshot.</figcaption>
+</figure>
+
 `cheqlist` is a simple check list application for Qt. It supports formatting,
 file input/output, and an undo stack.
 
-<figure>
-<a href="/projects/_banners/cheqlist.png"><img alt="Cheqlist screenshot." src="/projects/_banners/cheqlist.thumbnail.png"></a>
-<figcaption>Cheqlist screenshot.</figcaption>
-</figure>
-
-
 You can install `cheqlist` from [PyPI](https://pypi.org/project/cheqlist/) (with `pip install cheqlist`).
+
+<div class="clearfix"></div>

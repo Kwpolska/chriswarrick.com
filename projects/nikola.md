@@ -16,10 +16,16 @@ language: "Python"
 sort: 98
 ---
 
-<blockquote>
-<p>In goes content, out comes a website, ready to deploy.</p>
-<footer><cite>Nikola tagline</cite></footer>
-</blockquote>
+
+
+<figure>
+  <blockquote class="blockquote">
+    <p>In goes content, out comes a website, ready to deploy.</p>
+  </blockquote>
+  <figcaption class="blockquote-footer">
+    Nikola tagline
+  </figcaption>
+</figure>
 
 Nikola is a static site and blog generator, written in Python.  It can
 use Mako and Jinja2 templates, and input in many popular markup

@@ -11,13 +11,17 @@
       <time class="updated dt-updated" datetime="{{ post.Updated | format_date: "O" }}" title="updated {{ post.Updated | format_date: "dd MMMM yyyy HH:mm" }}"> (updated {{ post.Updated | format_date: "dd MMMM yyyy HH:mm" }})</time>
     {% endif %}
     </a>
-    <ul itemprop="keywords" class="tags post-bubbles list-inline">
-      <li class="category-bubble"><a href="{{ post.Meta.Category | link: "category" }}" style="background-color: {{ post.Meta.Category | categoryColor }} !important">{{ post.Meta.Category }}</a></li>
+    <ul itemprop="keywords" class="tags list-inline">
+      <li class="list-inline-item category-bubble">
+        <a class="tag p-category badge rounded-pill" style="background-color: {{ post.Meta.Category | categoryColor }} !important" href="{{ post.Meta.Category | link: "category" }}">{{ post.Meta.Category }}</a>
+        </li>
       {% for tag in post.Meta.Tags %}
-        <li><a class="tag p-category" href="{{ tag | link: "tag" }}" rel="tag">{{ tag }}</a></li>
+      <li class="list-inline-item">
+        <a class="tag p-category badge rounded-pill" href="{{ tag | link: "tag" }}" rel="tag">{{ tag }}</a>
+      </li>
       {% endfor %}
+      {% if isFullPostView and post.Meta.ShortLink %}<li class="list-inline-item"><a class="badge bg-primary-subtle text-primary-emphasis" href="https://go.chriswarrick.com/{{ post.Meta.ShortLink }}" title="Short link to this article (go.chriswarrick.com/{{ post.meta.ShortLink }})"><i class="fa fa-link"></i> {{ post.meta.ShortLink }}</a></li>{% endif %}
     </ul>
-    {% if isFullPostView and post.Meta.ShortLink %}<span class="shortlink-bubble"><a href="https://go.chriswarrick.com/{{ post.Meta.ShortLink }}" title="Short link to this article (go.chriswarrick.com/{{ post.meta.ShortLink }})"><i class="fa fa-link"></i> {{ post.meta.ShortLink }}</a></span>{% endif %}
     {% if post.meta.Guide %}<p class="guide-header">A <a href="/guides/">guide</a> about <span class="guide-topic">{{ post.Meta.Guide.Topic }}</span> for <span class="guide-platform">{{ post.Meta.Guide.Platform }}</span></p>{% endif %}
   </div>
 </header>
@@ -39,10 +43,10 @@
 {% if PreviousUrl != null or NextUrl != null %}
   <ul class="pager postindexpager clearfix">
     {% if PreviousUrl != null %}
-      <li class="prev"><a href="{{ PreviousUrl }}" rel="prev">Newer posts</a></li>
+      <li class="prev"><a href="{{ PreviousUrl }}" rel="prev" class="btn btn-outline-secondary">← Newer posts</a></li>
     {% endif %}
     {% if NextUrl != null %}
-      <li class="next"><a href="{{ NextUrl }}" rel="next">Older posts</a></li>
+      <li class="next"><a href="{{ NextUrl }}" rel="next" class="btn btn-outline-secondary">Older posts →</a></li>
     {% endif %}
   </ul>
 {% endif %}
