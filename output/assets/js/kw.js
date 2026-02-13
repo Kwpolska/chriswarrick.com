@@ -3,17 +3,23 @@
 
 function onLoaded() {
     if (document.cookie.indexOf('kw_cookies=2') == -1) {
-        if (document.querySelector('html').lang == 'pl') {
-            document.querySelector("#cookiebox").innerHTML = '<div class="alert alert-primary alert-dismissible fade show" role="alert" id="cookiealert">Ta strona używa ciasteczek. <a href="/pl/privacy/" class="alert-link">Dowiedz się więcej.</a> <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>';
-        } else {
-            document.querySelector("#cookiebox").innerHTML = '<div class="alert alert-primary alert-dismissible fade show" role="alert" id="cookiealert">This site uses cookies. <a href="/privacy/" class="alert-link">Read more.</a> <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>';
+        var cookiebox = document.querySelector("#cookiebox");
+        if (cookiebox != undefined) {
+            if (document.querySelector('html').lang == 'pl') {
+                cookiebox.innerHTML = '<div class="alert alert-primary alert-dismissible fade show" role="alert" id="cookiealert">Ta strona używa ciasteczek. <a href="/pl/privacy/" class="alert-link">Dowiedz się więcej.</a> <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>';
+            } else {
+                cookiebox.innerHTML = '<div class="alert alert-primary alert-dismissible fade show" role="alert" id="cookiealert">This site uses cookies. <a href="/privacy/" class="alert-link">Read more.</a> <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>';
+            }
+
+            var cookiealert = document.querySelector("#cookiealert");
+            if (cookiealert != undefined) {
+                cookiealert.addEventListener('closed.bs.alert', function () {
+                    // One second before the year 2038 bug.
+                    document.cookie = 'kw_cookies=2; expires=17-Jan-2038 03:14:07 GMT; path=/';
+                });
+            }
         }
     }
-
-    document.querySelector("#cookiealert").addEventListener('closed.bs.alert', function () {
-        // One second before the year 2038 bug.
-        document.cookie = 'kw_cookies=2; expires=17-Jan-2038 03:14:07 GMT; path=/';
-    });
 
     var sc = document.querySelector("#snackbar-container");
     if (sc !== null) {
