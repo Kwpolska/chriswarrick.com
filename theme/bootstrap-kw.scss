@@ -777,13 +777,16 @@ a.toc-standalone {
         }
     }
 
-    //html.limited-width body.article-page-with-toc .container {
-    //    width: TODO;
-    //}
+    html.limited-width body.article-page-with-toc {
+        --article-toc-gap: 2rem;
+        .container {
+            width: calc(#{$limited-width} + ((#{$limited-width} - var(--bs-gutter-x))/3) + var(--article-toc-gap));
+            max-width: calc(100vw - var(--bs-gutter-x));
+        }
+    }
 
     #article-with-toc {
         display: flex;
-        margin: 0 calc((100vw - 900px - var(--bs-gutter-x)) / -2);
         justify-content: center;
         align-items: start;
     }
@@ -798,7 +801,7 @@ a.toc-standalone {
     }
 
     #toc {
-        margin-left: 2rem;
+        margin-left: var(--article-toc-gap);
         margin-bottom: 2rem;
         overflow-y: auto;
         font-size: 16px;
@@ -812,7 +815,7 @@ a.toc-standalone {
         position: sticky;
         top: $contentMarginTop;
         max-height: calc(100vh - #{$contentMarginTop} - 1.5rem);
-        max-width: calc((900px - var(--bs-gutter-x)) / 3);
+        max-width: calc((#{$limited-width} - var(--bs-gutter-x)) / 3);
 
         &.offcanvas-xl .offcanvas-header {
             display: block !important;
@@ -827,8 +830,8 @@ a.toc-standalone {
 }
 
 @include media-breakpoint-up("xxl") {
-    #toc {
-        margin-left: 4rem;
+    html.limited-width body.article-page-with-toc {
+        --article-toc-gap: 4rem;
     }
 }
 
