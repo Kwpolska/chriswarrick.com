@@ -1,7 +1,7 @@
 {% macro renderPostHeader(post, isFullPostView) %}
 <header class="page-header">
   <h1 class="p-name entry-title" itemprop="headline name">
-    <a href="{{ post.Url }}" class="u-url">{{ post.title }}</a>
+    <a href="{{ post.Url }}" class="u-url">{% if post.Meta.HtmlTitle %}{{ post.Meta.HtmlTitle|raw }}{% else %}{{ post.Title }}{% endif %}</a>
   </h1>
 
   <div class="metadata">
@@ -20,7 +20,7 @@
         <a class="tag p-category badge rounded-pill" href="{{ tag | link: "tag" }}" rel="tag">{{ tag }}</a>
       </li>
       {% endfor %}
-      {% if isFullPostView and post.Meta.ShortLink %}<li class="list-inline-item"><a class="badge bg-primary-subtle text-primary-emphasis" href="https://go.chriswarrick.com/{{ post.Meta.ShortLink }}" title="Short link to this article (go.chriswarrick.com/{{ post.meta.ShortLink }})"><i class="fa fa-link"></i> {{ post.meta.ShortLink }}</a></li>{% endif %}
+      {% if isFullPostView and post.Meta.ShortLink %}<li class="list-inline-item"><a class="badge bg-primary-subtle text-primary-emphasis" href="https://go.chriswarrick.com/{{ post.Meta.ShortLink }}" title="Short link to this article (go.chriswarrick.com/{{ post.meta.ShortLink }})"><i class="bi bi-link-45deg"></i> {{ post.meta.ShortLink }}</a></li>{% endif %}
     </ul>
     {% if post.meta.Guide %}<p class="guide-header">A <a href="/guides/">guide</a> about <span class="guide-topic">{{ post.Meta.Guide.Topic }}</span> for <span class="guide-platform">{{ post.Meta.Guide.Platform }}</span></p>{% endif %}
   </div>
@@ -52,12 +52,24 @@
 {% endif %}
 {% endmacro %}
 
-{% macro renderBreadcrumbs(breadcrumbs) %}
-<nav class="breadcrumbs">
+{% macro renderBreadcrumbs(breadcrumbs, extraClasses) %}
+<nav class="breadcrumbs {{ extraClasses }}">
   <ul class="breadcrumb">
     {% for link in breadcrumbs %}
       <li class="breadcrumb-item"><a href="{{ link.Url }}">{{ link.Text }}</a></li>
     {% endfor %}
   </ul>
 </nav>
+{% endmacro %}
+
+{% macro renderTableOfContents(tableOfContents) %}
+<ul>
+  {% for item in tableOfContents %}
+    <li><a href="#{{ item.Anchor }}">{{ item.Title }}</a>
+    {% if item.Children %}
+      {{ renderTableOfContents(item.Children) }}
+    {% endif %}
+    </li>
+  {% endfor %}
+</ul>
 {% endmacro %}

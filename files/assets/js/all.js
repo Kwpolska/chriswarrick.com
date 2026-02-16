@@ -21,6 +21,17 @@ function onLoaded() {
         }
     }
 
+    var tocBtn = document.querySelector("#toc-btn");
+    if (tocBtn != undefined) {
+        var toc = document.querySelector("#toc");
+        var tocOffcanvas = new bootstrap.Offcanvas(toc);
+        tocBtn.addEventListener("click", function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            tocOffcanvas.toggle();
+        });
+    }
+
     var sc = document.querySelector("#snackbar-container");
     if (sc !== null) {
         setTimeout(function() { sc.classList.add("snackbar-container-hidden"); }, 5000);

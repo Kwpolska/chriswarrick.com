@@ -18,18 +18,8 @@ behind the scenes?</p>
 <p>This article is written from a general perspective, with a Unix/C bias and a
 very slight Python bias. The problems mentioned apply to all languages in most
 environments, including Windows.</p>
-<nav class="contents right-toc" id="contents" role="doc-toc">
-<p class="topic-title"><a class="reference internal" href="#top">Contents</a></p>
-<ul class="simple">
-<li><p><a class="reference internal" href="#use-the-right-tool-for-the-job" id="toc-entry-1">Use the right tool for the job</a></p></li>
-<li><p><a class="reference internal" href="#dont-spawn-subprocesses-if-theres-an-alternative" id="toc-entry-2">Don’t spawn subprocesses if there’s an alternative</a></p></li>
-<li><p><a class="reference internal" href="#security-considerations-shells-spaces-and-command-injection" id="toc-entry-3">Security considerations: shells, spaces, and command injection</a></p></li>
-<li><p><a class="reference internal" href="#tl-dr-how-to-do-this-properly-in-your-language-of-choice" id="toc-entry-4">TL;DR: How to do this properly in your language of choice</a></p></li>
-<li><p><a class="reference internal" href="#the-part-where-i-pretend-i-know-something-about-windows" id="toc-entry-5">The part where I pretend I know something about Windows</a></p></li>
-</ul>
-</nav>
 <section id="use-the-right-tool-for-the-job">
-<h1><a class="toc-backref" href="#toc-entry-1" role="doc-backlink">Use the right tool for the job</a></h1>
+<h1>Use the right tool for the job</h1>
 <p>By calling another process, you introduce a third-party dependency.
 That dependency isn’t controlled by your code, and your code becomes more fragile.
 The problems include:</p>
@@ -50,7 +40,7 @@ stay with Bash. You can do the harder parts with Python, Ruby, or some other
 language by calling them from within your Bash script.</p>
 </section>
 <section id="dont-spawn-subprocesses-if-theres-an-alternative">
-<h1><a class="toc-backref" href="#toc-entry-2" role="doc-backlink">Don’t spawn subprocesses if there’s an alternative</a></h1>
+<h1>Don’t spawn subprocesses if there’s an alternative</h1>
 <p>Spawning a subprocess always incurs a (minor) <a class="brackets" href="#footnote-1" id="footnote-reference-1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> performance hit minor
 compared to the alternatives. With that in mind, and the resiliency issues
 listed above, you should always try to find an alternative for the
@@ -68,7 +58,7 @@ then you should try to import the code and run it from the same process instead
 of spawning a process, if this is feasible.</p>
 </section>
 <section id="security-considerations-shells-spaces-and-command-injection">
-<h1><a class="toc-backref" href="#toc-entry-3" role="doc-backlink">Security considerations: shells, spaces, and command injection</a></h1>
+<h1>Security considerations: shells, spaces, and command injection</h1>
 <p>We come to the most important part of this article: how to spawn subprocesses
 without compromising your system. When you spawn a subprocess on a typical Unix
 system,  <code class="docutils literal">fork()</code> is called, and your process is copied. Many modern Unix
@@ -149,7 +139,7 @@ cases, you’ll have to <em>depend on the shell’s parsing</em>, which introduc
 unnecessary indirection.</p>
 </section>
 <section id="tl-dr-how-to-do-this-properly-in-your-language-of-choice">
-<h1><a class="toc-backref" href="#toc-entry-4" role="doc-backlink">TL;DR: How to do this properly in your language of choice</a></h1>
+<h1>TL;DR: How to do this properly in your language of choice</h1>
 <p>To ensure spawning subprocess is done securely, <strong>do not use the shell in between</strong>. If you need any of the operations I listed above as part of your command — wildcards, pipes, etc. — you will need to take care of them in your code; most languages have those features built-in.</p>
 <dl class="simple dl-horizontal">
 <dt>In C (Unix)</dt>
@@ -182,7 +172,7 @@ shell-related.</p>
 </dl>
 </section>
 <section id="the-part-where-i-pretend-i-know-something-about-windows">
-<h1><a class="toc-backref" href="#toc-entry-5" role="doc-backlink">The part where I pretend I know something about Windows</a></h1>
+<h1>The part where I pretend I know something about Windows</h1>
 <p>On Windows, argument lists are always passed to processes as strings (Python
 joins them semi-intelligently if it gets a list). Redirections and variables
 work in shell mode, but globs (asterisks) are always left for the called

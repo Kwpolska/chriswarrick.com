@@ -7,7 +7,7 @@ $link-color-dark: $primary;
 $enable-shadows: true;
 $color-mode-type: media-query;
 
-$font-family-monospace: Consolas, SFMono-Regular, Menlo, "DejaVu Sans Mono", monospace;
+$font-family-monospace: Consolas, "Cascadia Mono", SFMono-Regular, Menlo, "DejaVu Sans Mono", monospace;
 $font-family-sans-serif: "Source Sans 3", -apple-system, BlinkMacSystemFont, Roboto, "Segoe UI", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 $font-family-serif: "Source Serif 4", "Constantia", "Georgia", serif;
 
@@ -20,6 +20,8 @@ $lf-h6-font-size:                1rem;
 
 $title-hover-shadow-color: color.adjust($kwprimary, $lightness: -12.5%, $alpha: -0.4);
 $title-active-shadow-color: color.adjust($kwprimary, $lightness: -10%, $alpha: -0.2);
+$limited-width: 900px;
+$contentMarginTop: calc(50px + 1.5rem);
 
 :root {
     --bs-body-full-color: #000;
@@ -36,7 +38,7 @@ $title-active-shadow-color: color.adjust($kwprimary, $lightness: -10%, $alpha: -
 @import "isso";
 
 html.limited-width .container {
-    max-width: 900px;
+    max-width: $limited-width;
 }
 
 html.larger-font {
@@ -214,7 +216,7 @@ h1.short-title {
 
 article.postbox header h1 a,
 .page-header h1 {
-    font-weight: bold;
+    font-weight: 650;
 }
 
 .page-header a {
@@ -227,7 +229,7 @@ article.postbox header h1 a,
 
 .post-text .page-header h1 {
     font-family: $font-family-serif;
-    font-variant-numeric: oldstyle-nums;
+    font-variant-numeric: lining-nums;
 }
 
 .tags.full-list {
@@ -295,8 +297,9 @@ ul.tags {
     padding-top: 0;
 }
 
-.page-header a.u-url {
-    padding: 3px;
+.page-header h1.entry-title a.u-url {
+    display: block;
+    padding: 0;
     color: $kwprimary;
 }
 
@@ -417,6 +420,8 @@ code, tt.docutils {
 /* Guide list */
 .guide-post-list li a.guide-title {
     font-size: 1.75em;
+    font-family: $font-family-serif;
+    font-weight: 600;
 }
 
 .guide-post-list-meta .topicline:after, .guide-post-list-meta .platformline:after {
@@ -447,6 +452,16 @@ code, tt.docutils {
     content: "" !important;
 }
 
+@include media-breakpoint-up("md") {
+    .guide-post-list ul {
+        li.topicline, li.platformline, li.dateline {
+            strong {
+                display: inline-block;
+                width: 125px;
+            }
+        }
+    }
+}
 
 /* Header permalinks */
 a.toc-backref {
@@ -599,7 +614,13 @@ pre {
 .post-text .entry-content {
     h1, h2, h3, h4, h5, h6 {
         font-family: $font-family-serif;
-        font-variant-numeric: oldstyle-nums;
+        font-variant-numeric: lining-nums;
+    }
+}
+
+.content-markdown, .content-listing {
+    .codetable, .codetable code {
+        font-size: 16px;
     }
 }
 
@@ -675,9 +696,22 @@ div.code {
     margin-bottom: 1rem;
 }
 
+.breadcrumbs-attached {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
 .breadcrumbs .breadcrumb {
     padding: 0;
     margin: 0;
+}
+
+.breadcrumbs .breadcrumb .breadcrumb-item a {
+    text-decoration: none;
+}
+
+a.header-extra {
+    font-weight: 200;
 }
 
 .header-breadcrumb a {
@@ -688,6 +722,122 @@ div.code {
     content: " › ";
     color: var(--bs-body-full-color);
     font-weight: normal;
+}
+
+.content-markdown table:not(.codetable) {
+    @extend .table;
+    @extend .table-bordered;
+    @extend .table-hover;
+
+    thead tr th {
+        background-color: var(--bs-table-active-bg);
+    }
+}
+
+#toc-button {
+    text-align: right;
+}
+
+#toc-button button {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-top: 0;
+}
+
+
+a.toc-standalone {
+    display: none;
+}
+
+.toc-body {
+    a {
+        text-decoration: none;
+    }
+
+    ul {
+        padding-left: 1rem;
+        margin-bottom: 0;
+    }
+}
+
+@include media-breakpoint-up("xl") {
+    a.toc-standalone {
+        display: block;
+
+        span {
+            font-style: italic;
+        }
+
+        &:first-child {
+            margin-bottom: 0.5rem;
+        }
+
+        &:last-child {
+            margin-top: 0.5rem;
+        }
+    }
+
+    //html.limited-width body.article-page-with-toc .container {
+    //    width: TODO;
+    //}
+
+    #article-with-toc {
+        display: flex;
+        margin: 0 calc((100vw - 900px - var(--bs-gutter-x)) / -2);
+        justify-content: center;
+        align-items: start;
+    }
+
+    .article-with-toc-left {
+        width: calc(#{$limited-width} - var(--bs-gutter-x));
+        flex-shrink: 0;
+
+        .page-header h1.entry-title {
+            margin-top: 0;
+        }
+    }
+
+    #toc {
+        margin-left: 2rem;
+        margin-bottom: 2rem;
+        overflow-y: auto;
+        font-size: 16px;
+        border: 1px solid var(--bs-border-color);
+        border-radius: var(--bs-border-radius);
+        background: var(--bs-tertiary-bg) !important;
+        padding-top: 0;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        padding-bottom: 1rem;
+        position: sticky;
+        top: $contentMarginTop;
+        max-height: calc(100vh - #{$contentMarginTop} - 1.5rem);
+        max-width: calc((900px - var(--bs-gutter-x)) / 3);
+
+        &.offcanvas-xl .offcanvas-header {
+            display: block !important;
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        &.offcanvas-xl .offcanvas-header .btn-close {
+            display: none;
+        }
+    }
+}
+
+@include media-breakpoint-up("xxl") {
+    #toc {
+        margin-left: 4rem;
+    }
+}
+
+#content {
+    margin-top: $contentMarginTop;
+}
+
+section:target, h1:target, h2:target, h3:target, h4:target, h5:target, h6:target {
+    scroll-margin-top: 60px;
 }
 
 /* Print styles at the end to ensure they override other styles */

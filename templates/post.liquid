@@ -1,9 +1,21 @@
-{% from 'helper' import renderPostHeader %}
+{% from 'helper' import renderPostHeader, renderTableOfContents %}
 {% layout "base.liquid" %}
+
+{% section bodyclass %}{% if Item.Meta.ShowTableOfContents %}class="article-page-with-toc"{% endif %}{% endsection %}
+
+{% if Item.Meta.ShowTableOfContents %}
+<div id="article-with-toc">
+  <div class="article-with-toc-left">
+{% endif %}
 
 <article class="post-text h-entry hentry postpage postbox" itemscope="itemscope" itemtype="http://schema.org/Article">
   {{ renderPostHeader(Item, true) }}
-  <div class="e-content entry-content" itemprop="articleBody text">
+  <div class="d-xl-none" id="toc-button">
+    <button class="btn btn-outline-secondary" type="button" id="toc-btn" aria-controls="toc">
+      <i class="bi bi-list"></i> Table of Contents
+    </button>
+  </div>
+  <div class="e-content entry-content {{ Item.ContentTag }}" id="post-content" itemprop="articleBody text">
     {% if Item.Teaser %}
       <div class="lead">
         {{ Item.Teaser | raw }}
@@ -45,11 +57,32 @@
 {% endif %}
 
 {% if Item.Meta.Comments %}
-  <section class="comments">
+  <section class="comments" id="comments">
     <div data-title="{{ Item.Title }}" id="isso-thread"></div>
     <script src="https://isso.chriswarrick.com/js/embed.min.js" data-isso="https://isso.chriswarrick.com/"
             data-isso-lang="en" data-isso-require-author="true" data-isso-require-email="true" data-isso-gravatar="true"
             data-isso-avatar="false" data-isso-css="false" data-isso-vote="false"
             data-isso-reply-notifications="true"></script>
   </section>
+{% endif %}
+
+{% if Item.Meta.ShowTableOfContents %}
+</div>
+
+<div class="offcanvas-xl offcanvas-end article-with-toc-right" tabindex="-1" id="toc" aria-labelledby="toc-label" data-bs-scroll="true" data-bs-backdrop="false">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="toc-label">Table of Contents</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#toc" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body toc-body">
+    <div>
+    <a href="#" class="toc-standalone"><i class="bi bi-arrow-up"></i> <span>Scroll to Top</span></a>
+    {{ renderTableOfContents(Item.TableOfContents) }}
+{% if Item.Meta.Comments %}
+    <a href="#comments" class="toc-standalone"><i class="bi bi-chat-left-text"></i> <span>Comments</span></a>
+    </div>
+{% endif %}
+  </div>
+</div>
+</div>
 {% endif %}

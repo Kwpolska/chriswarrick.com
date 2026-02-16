@@ -9,6 +9,7 @@ guideEffect: "your Python web app is up and running in Docker"
 guidePlatform: "Linux"
 guideTopic: "Python web apps and Docker"
 shortlink: "pyweb-docker"
+showTableOfContents: true
 ---
 
 Ten years ago, almost to the day, I wrote a very long blog post titled [Deploying Python Web Applications with nginx and uWSGI Emperor][pyweb]. This week, I’ve migrated the Python web applications hosted on my VPS to Docker containers. Here are some reasons why, and all my Docker files to help you do this on your server.

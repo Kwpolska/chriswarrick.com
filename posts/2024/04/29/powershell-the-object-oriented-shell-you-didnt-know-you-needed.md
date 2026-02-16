@@ -8,6 +8,7 @@ guide: true
 guideEffect: "your shell is now more powerful"
 guidePlatform: "Windows, Linux, macOS"
 guideTopic: "PowerShell"
+showTableOfContents: true
 ---
 PowerShell is an interactive shell and scripting language from Microsoft. It’s object-oriented — and that’s not just a buzzword, that’s a big difference to how the standard Unix shells work. And it is actually usable as an interactive shell.
 
