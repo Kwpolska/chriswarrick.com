@@ -5,15 +5,14 @@
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Pipenv: promises a lot, delivers very little | Chris Warrick</title>
-  <link href="/assets/css/bootstrap-kw.css?v=CzzDMDZ2wZePwO3RJ5g39QZC64o" rel="stylesheet" type="text/css">
+  <link href="/assets/css/bootstrap-kw.css?v=ibPO8Pn4wx1mZAVpD8MFQo652AQ" rel="stylesheet" type="text/css">
   
   <link href="/assets/css/legacy.css?v=ptDCR0JfJHHcOxN9kdcIVN3wNw4" rel="stylesheet" type="text/css">
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200..900;1,200..900&family=Source+Serif+4:opsz,wght@8..60,200..900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css"
-        integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200..900;1,200..900&family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.css"
         integrity="sha256-FqCzNnnyXl5HxHMdb+RQ/RV/X7fqfPcQYy+G2gFL3Xk=" crossorigin="anonymous">
   <meta name="theme-color" content="#00aadd">
@@ -27,10 +26,10 @@
   <link rel="next" href="/blog/2018/09/04/python-virtual-environments/" type="text/html">
   
 </head>
-<body>
-<a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
+<body class="article-page-with-toc">
+<a href="#content" class="visually-hidden-focusable">Skip to main content</a>
 
-<nav class="navbar navbar-expand-md navbar-kw mb-4">
+<nav class="navbar navbar-expand-md navbar-kw fixed-top">
   <div class="container">
     <a class="navbar-brand" href="/">
       <img src="/assets/img/logo.png" srcset="/assets/img/logo2x.png 2x" alt="Chris Warrick" id="logo"><span
@@ -82,6 +81,13 @@
     
 
 
+
+
+
+<div id="article-with-toc">
+  <div class="article-with-toc-left">
+
+
 <article class="post-text h-entry hentry postpage postbox" itemscope="itemscope" itemtype="http://schema.org/Article">
   
 <header class="page-header">
@@ -113,13 +119,18 @@
         <a class="tag p-category badge rounded-pill" href="/blog/tags/python" rel="tag">Python</a>
       </li>
       
-      <li class="list-inline-item"><a class="badge bg-primary-subtle text-primary-emphasis" href="https://go.chriswarrick.com/pipenv" title="Short link to this article (go.chriswarrick.com/pipenv)"><i class="fa fa-link"></i> pipenv</a></li>
+      <li class="list-inline-item"><a class="badge bg-primary-subtle text-primary-emphasis" href="https://go.chriswarrick.com/pipenv" title="Short link to this article (go.chriswarrick.com/pipenv)"><i class="bi bi-link-45deg"></i> pipenv</a></li>
     </ul>
     
   </div>
 </header>
 
-  <div class="e-content entry-content" itemprop="articleBody text">
+  <div class="d-xl-none" id="toc-button">
+    <button class="btn btn-outline-secondary" type="button" id="toc-btn" aria-controls="toc">
+      <i class="bi bi-list"></i> Table of Contents
+    </button>
+  </div>
+  <div class="e-content entry-content content-legacy" id="post-content" itemprop="articleBody text">
     
       <div class="lead">
         
@@ -133,39 +144,8 @@ current state of Pipenv.)</p>
       </div>
     
     
-<nav class="contents alert alert-primary" id="contents" role="doc-toc">
-<p class="topic-title"><a class="reference internal" href="#top">Contents</a></p>
-<ul class="simple">
-<li><p><a class="reference internal" href="#a-2020-update-updated" id="toc-entry-1">A 2020 update (updated)</a></p></li>
-<li><p><a class="reference internal" href="#officially-recommended-tool-or-how-we-got-here" id="toc-entry-2">“Officially recommended tool”, or how we got here</a></p></li>
-<li><p><a class="reference internal" href="#what-pipenv-does" id="toc-entry-3">What pipenv does</a></p>
-<ul>
-<li><p><a class="reference internal" href="#application-dependencies" id="toc-entry-4">Application dependencies</a></p></li>
-<li><p><a class="reference internal" href="#running-scripts-badly" id="toc-entry-5">Running scripts (badly)</a></p></li>
-<li><p><a class="reference internal" href="#finishing-it-all-up" id="toc-entry-6">Finishing it all up</a></p></li>
-</ul>
-</li>
-<li><p><a class="reference internal" href="#what-pipenv-doesnt-do" id="toc-entry-7">What pipenv doesn’t do</a></p>
-<ul>
-<li><p><a class="reference internal" href="#setup-py-source-distributions-and-wheels" id="toc-entry-8">Setup.py, source distributions, and wheels</a></p></li>
-<li><p><a class="reference internal" href="#working-outside-of-the-project-root" id="toc-entry-9">Working outside of the project root</a></p></li>
-<li><p><a class="reference internal" href="#nikola" id="toc-entry-10">Nikola</a></p></li>
-</ul>
-</li>
-<li><p><a class="reference internal" href="#the-part-where-i-try-to-measure-times" id="toc-entry-11">The part where I try to measure times</a></p></li>
-<li><p><a class="reference internal" href="#alternative-tools" id="toc-entry-12">Alternative tools</a></p>
-<ul>
-<li><p><a class="reference internal" href="#pip-tools-locking-and-hashing-and-that-is-all" id="toc-entry-13">Pip-tools: locking and hashing, and that is all</a></p></li>
-<li><p><a class="reference internal" href="#poetry-better-but-still-not-convincing" id="toc-entry-14">Poetry: better, but still not convincing</a></p></li>
-</ul>
-</li>
-<li><p><a class="reference internal" href="#pip-is-here-to-stay" id="toc-entry-15">Pip is here to stay!</a></p></li>
-<li><p><a class="reference internal" href="#the-break-neck-pace-of-pipenv" id="toc-entry-16">The break-neck pace of Pipenv</a></p></li>
-<li><p><a class="reference internal" href="#conclusion" id="toc-entry-17">Conclusion</a></p></li>
-</ul>
-</nav>
 <section id="a-2020-update-updated">
-<h1><a class="toc-backref" href="#toc-entry-1" role="doc-backlink">A 2020 update (updated)</a></h1>
+<h1>A 2020 update (updated)</h1>
 <p>This blog post was written in 2018, and it’s still pretty accurate when it
 comes to the criticisms of Pipenv, but something else happened since then.</p>
 <p class="lead">No release was made between November 2018 and May 2020. Pipenv was effectively
@@ -204,7 +184,7 @@ you have. (If you don’t need to lock dependencies, <strong>pip + venv</strong>
 suffice.)</p>
 </section>
 <section id="officially-recommended-tool-or-how-we-got-here">
-<h1><a class="toc-backref" href="#toc-entry-2" role="doc-backlink">“Officially recommended tool”, or how we got here</a></h1>
+<h1>“Officially recommended tool”, or how we got here</h1>
 <blockquote>
 <p>“Pipenv — the officially recommended Python packaging tool from Python.org, free (as in freedom).”</p>
 </blockquote>
@@ -230,11 +210,11 @@ was the direct result of this Reddit thread. I recommend reading this thread in
 full.</p>
 </section>
 <section id="what-pipenv-does">
-<h1><a class="toc-backref" href="#toc-entry-3" role="doc-backlink">What pipenv does</a></h1>
+<h1>What pipenv does</h1>
 <p>We’ve already learned that Pipenv is used to <em>manage application dependencies</em>.
 Let’s learn what that term really means.</p>
 <section id="application-dependencies">
-<h2><a class="toc-backref" href="#toc-entry-4" role="doc-backlink">Application dependencies</a></h2>
+<h2>Application dependencies</h2>
 <p>Here is an example use case for Pipenv:
 I’m working on a website based on Django.  I create <code class="docutils literal">~/git/website</code> and run
 <code class="docutils literal">pipenv install Django</code> in that directory.  Pipenv:</p>
@@ -252,7 +232,7 @@ the longer waits in the timing test section later, we’ll see something that
 could easily discourage users from using a package.</p>
 </section>
 <section id="running-scripts-badly">
-<h2><a class="toc-backref" href="#toc-entry-5" role="doc-backlink">Running scripts (badly)</a></h2>
+<h2>Running scripts (badly)</h2>
 <p>But let’s continue with our workflow. <code class="docutils literal">pipenv run <span class="pre">django-admin</span> startproject
 foobanizer</code> is what I must use now, which is rather unwieldy to type, and
 requires running pipenv even for the smallest things. (The <code class="docutils literal">manage.py</code> script
@@ -276,7 +256,7 @@ manual activation using <code class="docutils literal">source $(pipenv <span cla
 into a neat alias), or shell wrappers (similar to what virtualenvwrapper does).</p>
 </section>
 <section id="finishing-it-all-up">
-<h2><a class="toc-backref" href="#toc-entry-6" role="doc-backlink">Finishing it all up</a></h2>
+<h2>Finishing it all up</h2>
 <p>Anyway, I want a blog on my site. I want to write them in Markdown syntax, so I
 run <code class="docutils literal">pipenv install Markdown</code>, and a few long seconds later, it’s added to
 both Pipfiles.  Another thing I can do is <code class="docutils literal">pipenv install <span class="pre">--dev</span> ipython</code> and
@@ -301,13 +281,13 @@ path anyway, since I can’t use <code class="docutils literal">pipenv run</code
 </section>
 </section>
 <section id="what-pipenv-doesnt-do">
-<h1><a class="toc-backref" href="#toc-entry-7" role="doc-backlink">What pipenv doesn’t do</a></h1>
+<h1>What pipenv doesn’t do</h1>
 <p>The workflow I mentioned above looks pretty reasonable, right? There are some
 deficiencies, but other than that, it seems to work well. The main issue with
 Pipenv is: <strong>it works with one workflow, and one workflow only.</strong> Try to do
 anything else, and you end up facing multiple obstacles.</p>
 <section id="setup-py-source-distributions-and-wheels">
-<h2><a class="toc-backref" href="#toc-entry-8" role="doc-backlink">Setup.py, source distributions, and wheels</a></h2>
+<h2>Setup.py, source distributions, and wheels</h2>
 <p>Pipenv only concerns itself with managing dependencies. <strong>It isn’t a packaging
 tool.</strong> If you want your thing up on PyPI, Pipenv won’t help you with anything.
 You still need to write a <code class="docutils literal">setup.py</code> with <code class="docutils literal">install_requires</code>, because the
@@ -321,7 +301,7 @@ own either. And <code class="docutils literal">pip freeze</code> is going to be 
 will be.</p>
 </section>
 <section id="working-outside-of-the-project-root">
-<h2><a class="toc-backref" href="#toc-entry-9" role="doc-backlink">Working outside of the project root</a></h2>
+<h2>Working outside of the project root</h2>
 <p>Another issue with Pipenv is the use of the working directory to select
 the virtual environment. <a class="brackets" href="#footnote-3" id="footnote-reference-3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a> Let’s say I’m a library author.  A user of my <code class="docutils literal">foobar</code>
 library has just reported a bug and attached a <code class="docutils literal">repro.py</code> file that lets me
@@ -359,7 +339,7 @@ distribute code, or manage releases.  It just manages dependencies.  And it
 does it pretty badly.</p>
 </section>
 <section id="nikola">
-<h2><a class="toc-backref" href="#toc-entry-10" role="doc-backlink">Nikola</a></h2>
+<h2>Nikola</h2>
 <p>I’m a co-maintainer of a static site generator, <a class="reference external" href="https://getnikola.com">Nikola</a>.  As part of this, I have the following places where
 I need to run Nikola:</p>
 <ul class="simple">
@@ -392,7 +372,7 @@ contributors.</p>
 </section>
 </section>
 <section id="the-part-where-i-try-to-measure-times">
-<h1><a class="toc-backref" href="#toc-entry-11" role="doc-backlink">The part where I try to measure times</a></h1>
+<h1>The part where I try to measure times</h1>
 <p>Pipenv is famous for being slow.  But how slow is it really?
 I put it to the test.  I used two test environments:</p>
 <ul class="simple">
@@ -694,14 +674,14 @@ method</p></th>
 </table>
 </section>
 <section id="alternative-tools">
-<h1><a class="toc-backref" href="#toc-entry-12" role="doc-backlink">Alternative tools</a></h1>
+<h1>Alternative tools</h1>
 <p>Python packaging is something with the state of which nobody seems to be
 satisfied. As such, there are many new contenders for the role of “best new
 packaging tool”.</p>
 <p>Two popular alternatives packaging tools are <a class="reference external" href="https://github.com/jazzband/pip-tools">pip-tools</a> (by Vincent Driessen
 and Jazzband) and <a class="reference external" href="https://github.com/sdispater/poetry">Poetry</a> (by Sébastien Eustace).</p>
 <section id="pip-tools-locking-and-hashing-and-that-is-all">
-<h2><a class="toc-backref" href="#toc-entry-13" role="doc-backlink">Pip-tools: locking and hashing, and that is all</a></h2>
+<h2>Pip-tools: locking and hashing, and that is all</h2>
 <p><strong>Pip-tools</strong> contains two tools. The first one is <code class="docutils literal"><span class="pre">pip-compile</span></code>. It locks
 dependencies in <code class="docutils literal">requirements.txt</code> files, and that’s all it does. It allows
 updating dependencies in the file based on what’s on PyPI. You can optionally
@@ -719,7 +699,7 @@ Poetry, you can install it into the virtualenvs that need it, and not
 system-wide.</p>
 </section>
 <section id="poetry-better-but-still-not-convincing">
-<h2><a class="toc-backref" href="#toc-entry-14" role="doc-backlink">Poetry: better, but still not convincing</a></h2>
+<h2>Poetry: better, but still not convincing</h2>
 <p><strong>Poetry</strong> is somewhere in between. Its main aim is close to Pipenv, but it
 also makes it possible to distribute things to PyPI. It tries really hard to
 hide that it uses Pip behind the scenes. Its README comes with an extensive
@@ -742,7 +722,7 @@ convinced by that tool either.</p>
 </section>
 </section>
 <section id="pip-is-here-to-stay">
-<h1><a class="toc-backref" href="#toc-entry-15" role="doc-backlink">Pip is here to stay!</a></h1>
+<h1>Pip is here to stay!</h1>
 <p>But in all the talk about new tools, we’re forgetting about the old ones, and
 they do their job well — so well in fact, that the new tools still need them
 under the covers.</p>
@@ -774,7 +754,7 @@ Python package manager (which is pre-installed on Windows and Mac), and other
 tools would require installation/bootstrapping first.</p>
 </section>
 <section id="the-break-neck-pace-of-pipenv">
-<h1><a class="toc-backref" href="#toc-entry-16" role="doc-backlink">The break-neck pace of Pipenv</a></h1>
+<h1>The break-neck pace of Pipenv</h1>
 <p>A good packaging tool is stable. In other words, it doesn’t change often, and
 it strives to support existing environments. It wouldn’t be fun to re-download
 everything on your system, because someone decided that <code class="docutils literal">/usr</code> is now called
@@ -832,7 +812,7 @@ when it comes to informing users what happened in each of the releases.</p>
 </ul>
 </section>
 <section id="conclusion">
-<h1><a class="toc-backref" href="#toc-entry-17" role="doc-backlink">Conclusion</a></h1>
+<h1>Conclusion</h1>
 <ul class="simple">
 <li><p>Pipenv, contrary to popular belief and (now removed) propaganda, is not an
 officially recommended tool of Python.org. It merely has a tutorial written
@@ -911,13 +891,208 @@ Python Packaging</a> (from January 2024).</p></li>
 
 
 
-  <section class="comments">
+  <section class="comments" id="comments">
     <div data-title="Pipenv: promises a lot, delivers very little" id="isso-thread"></div>
     <script src="https://isso.chriswarrick.com/js/embed.min.js" data-isso="https://isso.chriswarrick.com/"
             data-isso-lang="en" data-isso-require-author="true" data-isso-require-email="true" data-isso-gravatar="true"
             data-isso-avatar="false" data-isso-css="false" data-isso-vote="false"
             data-isso-reply-notifications="true"></script>
   </section>
+
+
+
+</div>
+
+<div class="offcanvas-xl offcanvas-end article-with-toc-right" tabindex="-1" id="toc" aria-labelledby="toc-label" data-bs-scroll="true" data-bs-backdrop="false">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="toc-label">Table of Contents</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#toc" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body toc-body">
+    <div>
+    <a href="#" class="toc-standalone"><i class="bi bi-arrow-up"></i> <span>Scroll to Top</span></a>
+    
+<ul>
+  
+    <li><a href="#a-2020-update-updated">A 2020 update (updated)</a>
+    
+      
+<ul>
+  
+</ul>
+
+    
+    </li>
+  
+    <li><a href="#officially-recommended-tool-or-how-we-got-here">&#x201C;Officially recommended tool&#x201D;, or how we got here</a>
+    
+      
+<ul>
+  
+</ul>
+
+    
+    </li>
+  
+    <li><a href="#what-pipenv-does">What pipenv does</a>
+    
+      
+<ul>
+  
+    <li><a href="#application-dependencies">Application dependencies</a>
+    
+      
+<ul>
+  
+</ul>
+
+    
+    </li>
+  
+    <li><a href="#running-scripts-badly">Running scripts (badly)</a>
+    
+      
+<ul>
+  
+</ul>
+
+    
+    </li>
+  
+    <li><a href="#finishing-it-all-up">Finishing it all up</a>
+    
+      
+<ul>
+  
+</ul>
+
+    
+    </li>
+  
+</ul>
+
+    
+    </li>
+  
+    <li><a href="#what-pipenv-doesnt-do">What pipenv doesn&#x2019;t do</a>
+    
+      
+<ul>
+  
+    <li><a href="#setup-py-source-distributions-and-wheels">Setup.py, source distributions, and wheels</a>
+    
+      
+<ul>
+  
+</ul>
+
+    
+    </li>
+  
+    <li><a href="#working-outside-of-the-project-root">Working outside of the project root</a>
+    
+      
+<ul>
+  
+</ul>
+
+    
+    </li>
+  
+    <li><a href="#nikola">Nikola</a>
+    
+      
+<ul>
+  
+</ul>
+
+    
+    </li>
+  
+</ul>
+
+    
+    </li>
+  
+    <li><a href="#the-part-where-i-try-to-measure-times">The part where I try to measure times</a>
+    
+      
+<ul>
+  
+</ul>
+
+    
+    </li>
+  
+    <li><a href="#alternative-tools">Alternative tools</a>
+    
+      
+<ul>
+  
+    <li><a href="#pip-tools-locking-and-hashing-and-that-is-all">Pip-tools: locking and hashing, and that is all</a>
+    
+      
+<ul>
+  
+</ul>
+
+    
+    </li>
+  
+    <li><a href="#poetry-better-but-still-not-convincing">Poetry: better, but still not convincing</a>
+    
+      
+<ul>
+  
+</ul>
+
+    
+    </li>
+  
+</ul>
+
+    
+    </li>
+  
+    <li><a href="#pip-is-here-to-stay">Pip is here to stay!</a>
+    
+      
+<ul>
+  
+</ul>
+
+    
+    </li>
+  
+    <li><a href="#the-break-neck-pace-of-pipenv">The break-neck pace of Pipenv</a>
+    
+      
+<ul>
+  
+</ul>
+
+    
+    </li>
+  
+    <li><a href="#conclusion">Conclusion</a>
+    
+      
+<ul>
+  
+</ul>
+
+    
+    </li>
+  
+</ul>
+
+
+    <a href="#comments" class="toc-standalone"><i class="bi bi-chat-left-text"></i> <span>Comments</span></a>
+    </div>
+
+  </div>
+</div>
+</div>
 
 
 
@@ -993,7 +1168,7 @@ Python Packaging</a> (from January 2024).</p></li>
         integrity="sha384-G/EV+4j2dNv+tEPo3++6LCgdCROaejBqfUeNjuKAiuXbjrxilcCdDz6ZAVfHWe1Y" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.11.0/baguetteBox.min.js"
         integrity="sha256-yQGjQhFs3LtyiN5hhr3k9s9TWZOh/RzCkD3gwwCKlkg=" crossorigin="anonymous"></script>
-<script src="/assets/js/all.js?v=qN7jEg2WKPhup2P4vntO078KgiE"></script>
+<script src="/assets/js/all.js?v=6qNL7Pj6uoMEtZKxqopOXb-a2TM"></script>
 <script>
   baguetteBox.run('div#content', {
     ignoreClass: 'islink',

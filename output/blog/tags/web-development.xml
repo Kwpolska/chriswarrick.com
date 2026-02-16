@@ -1,4 +1,213 @@
-<?xml version="1.0" encoding="utf-8"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Posts about web development</title><link>https://chriswarrick.com/</link><atom:link href="https://chriswarrick.com/blog/tags/web-development.xml" rel="self" type="application/rss+xml" /><description>A rarely updated blog, mostly about programming.</description><lastBuildDate>Mon, 19 Sep 2022 20:35:00 GMT</lastBuildDate><generator>https://github.com/Kwpolska/YetAnotherBlogGenerator</generator><item><title>Writing a Console App in C# for Fun and Profit</title><dc:creator>Chris Warrick</dc:creator><link>https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/</link><pubDate>Mon, 19 Sep 2022 20:35:00 GMT</pubDate><guid>https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/</guid><description>
+<?xml version="1.0" encoding="utf-8"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Posts about web development</title><link>https://chriswarrick.com/</link><atom:link href="https://chriswarrick.com/blog/tags/web-development.xml" rel="self" type="application/rss+xml" /><description>A rarely updated blog, mostly about programming.</description><lastBuildDate>Mon, 16 Feb 2026 21:15:00 GMT</lastBuildDate><generator>https://github.com/Kwpolska/YetAnotherBlogGenerator</generator><item><title>I Wrote YetAnotherBlogGenerator</title><dc:creator>Chris Warrick</dc:creator><link>https://chriswarrick.com/blog/2026/02/16/i-wrote-yet-another-blog-generator/</link><pubDate>Mon, 16 Feb 2026 21:15:00 GMT</pubDate><guid>https://chriswarrick.com/blog/2026/02/16/i-wrote-yet-another-blog-generator/</guid><description>Writing a static site generator is a developer rite of passage. For the past 13 years, this blog was generated using Nikola. This week, I finished implementing my own generator, the unoriginally named YetAnotherBlogGenerator.
+Why would I do that? Why would I use C# for it? And how fast is it? Continue reading to find out.
+</description><content:encoded><![CDATA[<p>Writing a static site generator is a developer rite of passage. For the past 13 years, this blog was generated using <a href="https://getnikola.com/">Nikola</a>. This week, I finished implementing my own generator, the unoriginally named <a href="https://github.com/Kwpolska/YetAnotherBlogGenerator">YetAnotherBlogGenerator</a>.</p>
+<p>Why would I do that? Why would I use C# for it? And how fast is it? Continue reading to find out.</p>
+
+
+
+<h2 id="ok-but-why">OK, but why?</h2>
+<p>You might have noticed I’m not happy with <a href="https://chriswarrick.com/blog/2023/01/15/how-to-improve-python-packaging/">the Python</a> <a href="https://chriswarrick.com/blog/2024/01/15/python-packaging-one-year-later">packaging ecosystem</a>. But the language itself is no longer fun for me to code in either. It is especially not fun to maintain projects in. <a href="https://discuss.python.org/t/revisiting-pep-505-none-aware-operators/74568/">Elementary quality-of-life features</a> get bogged down in months of discussions and design-by-committee. At the same time, there’s a new release every year, full of removed and deprecated features. A lot of churn, without much benefit. I just don’t feel like doing it anymore.</p>
+<p>Python is praised for being fast to develop in. That’s certainly true, but a good high-level statically-typed language can yield similar development speed with more correctness from day one. For example, I coded an entire table-of-contents-sidebar feature in one evening (and one more evening of CSS wrangling to make it look good). This feature extracts headers from either the Markdown AST or the HTML fragment. I could do it in Python, but I’d need to jump through hoops to get Python-Markdown to output headings with IDs. In C#, introspecting what a class can do is easier thanks to great IDE support and much less dynamic magic happening at runtime. There are also decompiler tools that make it easy to look under the hood and see what a library is doing.</p>
+<p>Writing a static site generator is also a learning experience. A competent SSG needs to ingest content in various formats (as nobody wants to write blog posts in HTML by hand) and generate HTML (usually from templates) and XML (which you could, in theory, do from templates, but since XML parsers are not at all lenient, you don’t want to). Image processing to generate thumbnails is needed too. And to generate correct RSS feeds, you need to parse HTML to rewrite links. The list of small-but-useful things goes on.</p>
+<h2 id="is-c.net-a-viable-technology-stack-for-a-static-site-generator">Is C#/.NET a viable technology stack for a static site generator?</h2>
+<p>C#/.NET is certainly not the most popular technology stack for static site generators. <a href="https://jamstack.org/generators/">JamStack.org</a> have gathered a list of 377 SSGs. <a href="https://chriswarrick.com/listings/yabg-intro/jamstack-org-generators.js.html">Grouping by language</a>, there are 154 generators written in JavaScript or TypeScript, 55 generators written in Python, and 28 written in <em>PHP</em> of all languages. C#/.NET is in sixth place with 13 (not including YABG; I’m probably not submitting it).</p>
+<p>However, it is a pretty good choice. Language-level support for concurrency with <code>async</code>/<code>await</code> (based on a thread pool) and JIT compilation help to make things fast. But it is still a high-level, object-oriented language where you don’t need to manually manage memory (hi Rustaceans!).</p>
+<p>The library ecosystem is solid too. There are plenty of good libraries for working with data serialization formats: <a href="https://joshclose.github.io/CsvHelper/">CsvHelper</a>, <a href="https://github.com/aaubry/YamlDotNet">YamlDotNet</a>, <a href="https://www.nuget.org/packages/Microsoft.Data.Sqlite/">Microsoft.Data.Sqlite</a>, and the built-in <a href="https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/overview">System.Text.Json</a> and <a href="https://learn.microsoft.com/en-us/dotnet/standard/linq/linq-xml-overview">System.Xml.Linq</a>. <a href="https://github.com/xoofx/markdig">Markdig</a> handles turning Markdown into HTML. <a href="https://github.com/sebastienros/fluid">Fluid</a> is an excellent templating library that implements the Liquid templating language. <a href="https://html-agility-pack.net/">HtmlAgilityPack</a> is solid for manipulating HTML, and <a href="https://github.com/dlemstra/Magick.NET">Magick.NET</a> wraps the ImageMagick library.</p>
+<div class="code"><table class="codetable"><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2026/02/16/i-wrote-yet-another-blog-generator/#code_40b21992ea7c1038c9310b71679b5d10743805d9-1"><code data-line-number=" 1"></code></a></td><td class="code"><code><a id="code_40b21992ea7c1038c9310b71679b5d10743805d9-1" name="code_40b21992ea7c1038c9310b71679b5d10743805d9-1"></a><span class="nt">&lt;PackageReference</span><span class="w"> </span><span class="na">Include=</span><span class="s">&quot;CsvHelper&quot;</span><span class="w"> </span><span class="na">Version=</span><span class="s">&quot;33.1.0&quot;</span><span class="nt">/&gt;</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2026/02/16/i-wrote-yet-another-blog-generator/#code_40b21992ea7c1038c9310b71679b5d10743805d9-2"><code data-line-number=" 2"></code></a></td><td class="code"><code><a id="code_40b21992ea7c1038c9310b71679b5d10743805d9-2" name="code_40b21992ea7c1038c9310b71679b5d10743805d9-2"></a><span class="nt">&lt;PackageReference</span><span class="w"> </span><span class="na">Include=</span><span class="s">&quot;Fluid.Core&quot;</span><span class="w"> </span><span class="na">Version=</span><span class="s">&quot;2.31.0&quot;</span><span class="nt">/&gt;</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2026/02/16/i-wrote-yet-another-blog-generator/#code_40b21992ea7c1038c9310b71679b5d10743805d9-3"><code data-line-number=" 3"></code></a></td><td class="code"><code><a id="code_40b21992ea7c1038c9310b71679b5d10743805d9-3" name="code_40b21992ea7c1038c9310b71679b5d10743805d9-3"></a><span class="nt">&lt;PackageReference</span><span class="w"> </span><span class="na">Include=</span><span class="s">&quot;Fluid.ViewEngine&quot;</span><span class="w"> </span><span class="na">Version=</span><span class="s">&quot;2.31.0&quot;</span><span class="nt">/&gt;</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2026/02/16/i-wrote-yet-another-blog-generator/#code_40b21992ea7c1038c9310b71679b5d10743805d9-4"><code data-line-number=" 4"></code></a></td><td class="code"><code><a id="code_40b21992ea7c1038c9310b71679b5d10743805d9-4" name="code_40b21992ea7c1038c9310b71679b5d10743805d9-4"></a><span class="nt">&lt;PackageReference</span><span class="w"> </span><span class="na">Include=</span><span class="s">&quot;HtmlAgilityPack&quot;</span><span class="w"> </span><span class="na">Version=</span><span class="s">&quot;1.12.4&quot;</span><span class="nt">/&gt;</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2026/02/16/i-wrote-yet-another-blog-generator/#code_40b21992ea7c1038c9310b71679b5d10743805d9-5"><code data-line-number=" 5"></code></a></td><td class="code"><code><a id="code_40b21992ea7c1038c9310b71679b5d10743805d9-5" name="code_40b21992ea7c1038c9310b71679b5d10743805d9-5"></a><span class="nt">&lt;PackageReference</span><span class="w"> </span><span class="na">Include=</span><span class="s">&quot;Magick.NET-Q8-AnyCPU&quot;</span><span class="w"> </span><span class="na">Version=</span><span class="s">&quot;14.10.2&quot;</span><span class="nt">/&gt;</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2026/02/16/i-wrote-yet-another-blog-generator/#code_40b21992ea7c1038c9310b71679b5d10743805d9-6"><code data-line-number=" 6"></code></a></td><td class="code"><code><a id="code_40b21992ea7c1038c9310b71679b5d10743805d9-6" name="code_40b21992ea7c1038c9310b71679b5d10743805d9-6"></a><span class="nt">&lt;PackageReference</span><span class="w"> </span><span class="na">Include=</span><span class="s">&quot;Markdig&quot;</span><span class="w"> </span><span class="na">Version=</span><span class="s">&quot;0.45.0&quot;</span><span class="nt">/&gt;</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2026/02/16/i-wrote-yet-another-blog-generator/#code_40b21992ea7c1038c9310b71679b5d10743805d9-7"><code data-line-number=" 7"></code></a></td><td class="code"><code><a id="code_40b21992ea7c1038c9310b71679b5d10743805d9-7" name="code_40b21992ea7c1038c9310b71679b5d10743805d9-7"></a><span class="nt">&lt;PackageReference</span><span class="w"> </span><span class="na">Include=</span><span class="s">&quot;Microsoft.Data.Sqlite&quot;</span><span class="w"> </span><span class="na">Version=</span><span class="s">&quot;10.0.3&quot;</span><span class="nt">/&gt;</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2026/02/16/i-wrote-yet-another-blog-generator/#code_40b21992ea7c1038c9310b71679b5d10743805d9-8"><code data-line-number=" 8"></code></a></td><td class="code"><code><a id="code_40b21992ea7c1038c9310b71679b5d10743805d9-8" name="code_40b21992ea7c1038c9310b71679b5d10743805d9-8"></a><span class="nt">&lt;PackageReference</span><span class="w"> </span><span class="na">Include=</span><span class="s">&quot;Microsoft.Extensions.FileProviders.Physical&quot;</span><span class="w"> </span><span class="na">Version=</span><span class="s">&quot;10.0.3&quot;</span><span class="nt">/&gt;</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2026/02/16/i-wrote-yet-another-blog-generator/#code_40b21992ea7c1038c9310b71679b5d10743805d9-9"><code data-line-number=" 9"></code></a></td><td class="code"><code><a id="code_40b21992ea7c1038c9310b71679b5d10743805d9-9" name="code_40b21992ea7c1038c9310b71679b5d10743805d9-9"></a><span class="nt">&lt;PackageReference</span><span class="w"> </span><span class="na">Include=</span><span class="s">&quot;Microsoft.Extensions.Logging.Console&quot;</span><span class="w"> </span><span class="na">Version=</span><span class="s">&quot;10.0.3&quot;</span><span class="nt">/&gt;</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2026/02/16/i-wrote-yet-another-blog-generator/#code_40b21992ea7c1038c9310b71679b5d10743805d9-10"><code data-line-number="10"></code></a></td><td class="code"><code><a id="code_40b21992ea7c1038c9310b71679b5d10743805d9-10" name="code_40b21992ea7c1038c9310b71679b5d10743805d9-10"></a><span class="nt">&lt;PackageReference</span><span class="w"> </span><span class="na">Include=</span><span class="s">&quot;YamlDotNet&quot;</span><span class="w"> </span><span class="na">Version=</span><span class="s">&quot;16.3.0&quot;</span><span class="nt">/&gt;</span>
+</code></td></tr></table></div>
+<p>There’s one major thing missing from the above list: code highlighting. <a href="https://www.nuget.org/packages?q=highlight">There are a few highlighting libraries on NuGet</a>, but I decided to stick with <a href="https://pygments.org/">Pygments</a>. I still need the Pygments stylesheets around since I’m not converting old reStructuredText posts to Markdown (I’m copying them as HTML directly from Nikola’s <code>cache</code>), so using Pygments for new content keeps things consistent. Staying with Pygments means I still maintain a bit of Python code, but much less: 230 LoC in <code>pygments_better_html</code> and 89 in <code>yabg_pygments_adapter</code>, with just one third-party dependency. Calling a subprocess while rendering listings is slow, but it’s a price worth paying.</p>
+<h3 id="paid-libraries-in-the.net-ecosystem">Paid libraries in the .NET ecosystem</h3>
+<p>All the above libraries are open source (MIT, Apache 2.0, BSD-2-Clause). However, one well-known issue of the .NET ecosystem is the number of packages that suddenly become commercial. This trend was started by <a href="https://dotnetfoundation.org/news-events/detail/update-on-imagesharp">ImageSharp</a>, a popular 2D image manipulation library. I could probably use it, since it’s licensed to open-source projects under Apache 2.0, but I’d rather not. I initially tried <a href="https://www.nuget.org/packages/SkiaSharp/">SkiaSharp</a>, but it has terrible image scaling algorithms, so I settled on <a href="https://www.nuget.org/packages/SkiaSharp">Magick.NET</a>.</p>
+<p>Open-source sustainability is hard, maybe impossible. But I don’t think transitioning from open-source to pay-for-commercial-use is the answer. In practice, many businesses just use the last free version or switch to a different library. I’d rather support open-source projects developed by volunteers in their spare time. They might not be perfect or always do exactly what I want, but I’m happy to contribute fixes and improve things for everyone. I will avoid proprietary or dual-licensed libraries, even for code that never leaves my computer. Some people complain when Microsoft creates a library that competes with a third-party open-source library (e.g. <a href="https://www.nuget.org/packages/Microsoft.AspNetCore.OpenApi">Microsoft.AspNetCore.OpenApi</a>, which was built to replace <a href="https://www.nuget.org/packages/Swashbuckle.AspNetCore">Swashbuckle.AspNetCore</a>), but I am okay with that, since libraries built or backed by large corporations (like Microsoft) tend to be better maintained.</p>
+<p>But at least sometimes <a href="https://www.jimmybogard.com/automapper-and-mediatr-commercial-editions-launch-today/">trash libraries take themselves out</a>.</p>
+<h2 id="is-it-fast">Is it fast?</h2>
+<p>One of the things that set Nikola apart from other Python static site generators is that it only rebuilds files that need to be rebuild. This does make Nikola fast when rebuilding things, but it comes at a cost: Nikola needs to track all dependencies very closely. Also, some features that are present in other SSGs are not easy to achieve in Nikola, because they would cause many pages to be rebuilt.</p>
+<p>YetAnotherBlogGenerator has almost no caching. The only thing currently cached is code listings, since they’re rendered using Pygments in a subprocess. Additionally, the image scaling service checks the file modification date to skip regenerating thumbnails if the source image hasn’t changed. And yet, even if it rewrites everything, YABG finishes faster than Nikola when the site is fully up-to-date (there is nothing to do).</p>
+<p>I ran some quick benchmarks comparing the performance of rendering the final Nikola version of this blog against the first YABG version (before the Bootstrap 5 redesign).</p>
+<h3 id="testing-methodology">Testing methodology</h3>
+<p>Here’s the testing setup:</p>
+<ul>
+<li>AWS EC2 instances
+<ul>
+<li>c7a.xlarge (4 vCPU, 8 GB RAM)</li>
+<li>30 GB io2 SSD (30000 IOPS)</li>
+<li>Total cost: $2.95 + tax for about an hour’s usage ($2.66 of which were storage costs)</li>
+</ul>
+</li>
+<li>Fedora 43 from official Fedora AMI
+<ul>
+<li>Python 3.14.2 (latest available in the repos)</li>
+<li>.NET SDK 10.0.102 / .NET 10.0.2 (latest available in the repos)</li>
+<li>setenforce 0, SELINUX=disabled</li>
+</ul>
+</li>
+<li>Windows Server 2025
+<ul>
+<li>Python 3.14.3 (latest available in winget)</li>
+<li>.NET SDK 10.0.103 / .NET 10.0.3 (latest available in winget)</li>
+<li>Windows Defender disabled</li>
+</ul>
+</li>
+</ul>
+<p>I ran three tests. Each test was run 11 times. The first attempt was discarded (as a warmup and to let me verify the log). The other ten attempts were averaged as the final result. I used PowerShell’s <code>Measure-Command</code> cmdlet for measurements.</p>
+<p>The tests were as follows:</p>
+<ol>
+<li><strong>Clean build (no cache, no output)</strong>
+<ul>
+<li>Removing <code>.doit.db</code>, <code>cache</code>, and <code>output</code> from the Nikola site, so that everything has to be rebuilt from scratch.</li>
+<li>Removing <code>.yabg_cache.sqlite3</code> and <code>output</code> from the YABG site, so that everything has to be reuilt from scratch, most notably the Pygments code listings have to be regenerated via a subprocess.</li>
+</ul>
+</li>
+<li><strong>Build with cache, but no output</strong>
+<ul>
+<li>Removing <code>output</code> from the Nikola site, so that posts rendered to HTML by docutils/Python-Markdown are cached, but the final HTML still need to be built.</li>
+<li>Removing <code>output</code> from the YABG site, so that the code listings rendered to HTML by Pygments are cached, but everything else needs to be built.</li>
+</ul>
+</li>
+<li><strong>Rebuild (cache and output intact)</strong>
+<ul>
+<li>Not removing anything from the Nikola site, so that there is nothing to do.</li>
+<li>Not removing anything from the YABG site. Things are still rebuilt, except for Pygments code listings and thumbnails.</li>
+</ul>
+</li>
+</ol>
+<p>For YetAnotherBlogGenerator, I tested two builds: one in Release mode (standard), and another in <a href="https://learn.microsoft.com/en-us/dotnet/core/deploying/ready-to-run">ReadyToRun mode</a>, trading build time and executable size for faster execution.</p>
+<p>All the scripts I used for setup and testing can be found in <a href="https://chriswarrick.com/listings/yabg-intro/speedtest/">listings</a>.</p>
+<h3 id="test-results">Test results</h3>
+<table>
+<thead>
+<tr>
+<th>Platform</th>
+<th>Build type</th>
+<th style="text-align: right;">Nikola</th>
+<th style="text-align: right;">YABG (ReadyToRun)</th>
+<th style="text-align: right;">YABG (Release)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Linux</strong></td>
+<td>Clean build (no cache, no output)</td>
+<td style="text-align: right;">6.438</td>
+<td style="text-align: right;">1.901</td>
+<td style="text-align: right;">2.178</td>
+</tr>
+<tr>
+<td><strong>Linux</strong></td>
+<td>Build with cache, but no output</td>
+<td style="text-align: right;">5.418</td>
+<td style="text-align: right;">0.980</td>
+<td style="text-align: right;">1.249</td>
+</tr>
+<tr>
+<td><strong>Linux</strong></td>
+<td>Rebuild (cache and output intact)</td>
+<td style="text-align: right;">0.997</td>
+<td style="text-align: right;">0.969</td>
+<td style="text-align: right;">1.248</td>
+</tr>
+<tr>
+<td><strong>Windows</strong></td>
+<td>Clean build (no cache, no output)</td>
+<td style="text-align: right;">9.103</td>
+<td style="text-align: right;">2.666</td>
+<td style="text-align: right;">2.941</td>
+</tr>
+<tr>
+<td><strong>Windows</strong></td>
+<td>Build with cache, but no output</td>
+<td style="text-align: right;">7.758</td>
+<td style="text-align: right;">1.051</td>
+<td style="text-align: right;">1.333</td>
+</tr>
+<tr>
+<td><strong>Windows</strong></td>
+<td>Rebuild (cache and output intact)</td>
+<td style="text-align: right;">1.562</td>
+<td style="text-align: right;">1.020</td>
+<td style="text-align: right;">1.297</td>
+</tr>
+</tbody>
+</table>
+<h2 id="design-details-and-highlights">Design details and highlights</h2>
+<p>Here are some fun tidbits from development.</p>
+<h3 id="everything-is-an-item">Everything is an item</h3>
+<p>In Nikola, there are several different entities that can generate HTML files. Posts and Pages are both <code>Post</code> objects. Listings and galleries each have their own task generators. There’s no <code>Listing</code> class, everything is handled within the listing plugin. Galleries can optionally have a <code>Post</code> object attached (though that <code>Post</code> is not picked up by the file scanner, and it is not part of the timeline). The listings and galleries task generators both have ways to build directory trees.</p>
+<p>In YABG, all of the above are <code>Item</code>s. Specifically, they start as <code>SourceItem</code>s and become <code>Item</code>s when rendered. For listings, the source is just the code and the rendered content is Pygments-generated HTML. For galleries, the source is a <a href="https://en.wikipedia.org/wiki/Tab-separated_values">TSV file</a> with a list of included gallery images (order, filenames, and descriptions), and the generated content comes from a meta field named <code>galleryIntroHtml</code>. Gallery objects have a <code>GalleryData</code> object attached to their <code>Item</code> object as <code>RichItemData</code>.</p>
+<p>This simplifies the final rendering pipeline design. Only four classes (actual classes, not temporary structures in some plugin) can render to HTML: <code>Item</code>, <code>ItemGroup</code> (tags, categories, yearly archives, gallery indexes), <code>DirectoryTreeGroup</code> (listings), and <code>LinkGroup</code> (archive and tag indexes). Each has a corresponding template model. Nikola’s sitemap generator recurses through the <code>output</code> directory to find files, but YABG can just use the lists of items and groups. The sitemap won’t include HTML files from the files folder, but I don’t need them there (though I could add them if needed).</p>
+<h3 id="windows-first-linux-in-zero-time">Windows first, Linux in zero time</h3>
+<p>I developed YABG entirely on Windows. This forced me to think about paths and URLs as separate concepts. I couldn’t use most <code>System.IO.Path</code> facilities for URLs, since they would produce backslashes. As a result, there are zero bugs where backslashes leak into output on Windows. Nikola has such bugs pop up occasionally; indeed, <a href="https://github.com/getnikola/nikola/commit/d8d94c047cdc1718700f0b5d00627722241be68d">I fixed one yesterday</a>.</p>
+<p>But when YABG was nearly complete, I ran it on Linux. And it just worked. No code changes needed. No output differences. (I had to add <code>SkiaSharp.NativeAssets.Linux</code> and <code>apt install libfontconfig1</code> since I was stilll using SkiaSharp at that point, but that’s no longer needed with Magick.NET.)</p>
+<p>Not everything is perfect, though. I added a <code>--watch</code> mode based on <code>FileSystemWatcher</code>, but it doesn’t work on Linux. I don’t <em>need</em> it there; I’d have to switch to polling to make it work.</p>
+<h3 id="dependency-injection-everywhere">Dependency injection everywhere</h3>
+<p>A good principle used in object-oriented development (though not very often in Python) is <strong>dependency injection</strong>.  I have several grouping services, all implementing either <code>IPostGrouper</code> or <code>IItemGrouper</code>. They’re registered in the DI container as implementations of those interfaces. The <code>GroupEngine</code> doesn’t need to know about specific group types, it just gets them from the container and passes the post and item arrays.</p>
+<div class="code"><table class="codetable"><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2026/02/16/i-wrote-yet-another-blog-generator/#code_c29b1ed1e30a3b34f36f210df79414927ba24273-1"><code data-line-number="1"></code></a></td><td class="code"><code><a id="code_c29b1ed1e30a3b34f36f210df79414927ba24273-1" name="code_c29b1ed1e30a3b34f36f210df79414927ba24273-1"></a><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="p">.</span><span class="n">AddScoped</span><span class="o">&lt;</span><span class="n">IPostGrouper</span><span class="p">,</span><span class="w"> </span><span class="n">ArchiveGrouper</span><span class="o">&gt;</span><span class="p">()</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2026/02/16/i-wrote-yet-another-blog-generator/#code_c29b1ed1e30a3b34f36f210df79414927ba24273-2"><code data-line-number="2"></code></a></td><td class="code"><code><a id="code_c29b1ed1e30a3b34f36f210df79414927ba24273-2" name="code_c29b1ed1e30a3b34f36f210df79414927ba24273-2"></a><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="p">.</span><span class="n">AddScoped</span><span class="o">&lt;</span><span class="n">IPostGrouper</span><span class="p">,</span><span class="w"> </span><span class="n">GuideGrouper</span><span class="o">&gt;</span><span class="p">()</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2026/02/16/i-wrote-yet-another-blog-generator/#code_c29b1ed1e30a3b34f36f210df79414927ba24273-3"><code data-line-number="3"></code></a></td><td class="code"><code><a id="code_c29b1ed1e30a3b34f36f210df79414927ba24273-3" name="code_c29b1ed1e30a3b34f36f210df79414927ba24273-3"></a><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="p">.</span><span class="n">AddScoped</span><span class="o">&lt;</span><span class="n">IPostGrouper</span><span class="p">,</span><span class="w"> </span><span class="n">IndexGrouper</span><span class="o">&gt;</span><span class="p">()</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2026/02/16/i-wrote-yet-another-blog-generator/#code_c29b1ed1e30a3b34f36f210df79414927ba24273-4"><code data-line-number="4"></code></a></td><td class="code"><code><a id="code_c29b1ed1e30a3b34f36f210df79414927ba24273-4" name="code_c29b1ed1e30a3b34f36f210df79414927ba24273-4"></a><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="p">.</span><span class="n">AddScoped</span><span class="o">&lt;</span><span class="n">IPostGrouper</span><span class="p">,</span><span class="w"> </span><span class="n">NavigationGrouper</span><span class="o">&gt;</span><span class="p">()</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2026/02/16/i-wrote-yet-another-blog-generator/#code_c29b1ed1e30a3b34f36f210df79414927ba24273-5"><code data-line-number="5"></code></a></td><td class="code"><code><a id="code_c29b1ed1e30a3b34f36f210df79414927ba24273-5" name="code_c29b1ed1e30a3b34f36f210df79414927ba24273-5"></a><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="p">.</span><span class="n">AddScoped</span><span class="o">&lt;</span><span class="n">IPostGrouper</span><span class="p">,</span><span class="w"> </span><span class="n">TagCategoryGrouper</span><span class="o">&gt;</span><span class="p">()</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2026/02/16/i-wrote-yet-another-blog-generator/#code_c29b1ed1e30a3b34f36f210df79414927ba24273-6"><code data-line-number="6"></code></a></td><td class="code"><code><a id="code_c29b1ed1e30a3b34f36f210df79414927ba24273-6" name="code_c29b1ed1e30a3b34f36f210df79414927ba24273-6"></a><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="p">.</span><span class="n">AddScoped</span><span class="o">&lt;</span><span class="n">IItemGrouper</span><span class="p">,</span><span class="w"> </span><span class="n">GalleryIndexGrouper</span><span class="o">&gt;</span><span class="p">()</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2026/02/16/i-wrote-yet-another-blog-generator/#code_c29b1ed1e30a3b34f36f210df79414927ba24273-7"><code data-line-number="7"></code></a></td><td class="code"><code><a id="code_c29b1ed1e30a3b34f36f210df79414927ba24273-7" name="code_c29b1ed1e30a3b34f36f210df79414927ba24273-7"></a><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="p">.</span><span class="n">AddScoped</span><span class="o">&lt;</span><span class="n">IItemGrouper</span><span class="p">,</span><span class="w"> </span><span class="n">ListingIndexGrouper</span><span class="o">&gt;</span><span class="p">()</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2026/02/16/i-wrote-yet-another-blog-generator/#code_c29b1ed1e30a3b34f36f210df79414927ba24273-8"><code data-line-number="8"></code></a></td><td class="code"><code><a id="code_c29b1ed1e30a3b34f36f210df79414927ba24273-8" name="code_c29b1ed1e30a3b34f36f210df79414927ba24273-8"></a><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="p">.</span><span class="n">AddScoped</span><span class="o">&lt;</span><span class="n">IItemGrouper</span><span class="p">,</span><span class="w"> </span><span class="n">ProjectGrouper</span><span class="o">&gt;</span><span class="p">()</span>
+</code></td></tr></table></div>
+<div class="code"><table class="codetable"><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2026/02/16/i-wrote-yet-another-blog-generator/#code_badc33d3269d7f0a3c6b6177683f5988ea9b2ab3-1"><code data-line-number=" 1"></code></a></td><td class="code"><code><a id="code_badc33d3269d7f0a3c6b6177683f5988ea9b2ab3-1" name="code_badc33d3269d7f0a3c6b6177683f5988ea9b2ab3-1"></a><span class="k">internal</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nf">GroupEngine</span><span class="p">(</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2026/02/16/i-wrote-yet-another-blog-generator/#code_badc33d3269d7f0a3c6b6177683f5988ea9b2ab3-2"><code data-line-number=" 2"></code></a></td><td class="code"><code><a id="code_badc33d3269d7f0a3c6b6177683f5988ea9b2ab3-2" name="code_badc33d3269d7f0a3c6b6177683f5988ea9b2ab3-2"></a><span class="w">&nbsp;&nbsp;</span><span class="n">IEnumerable</span><span class="o">&lt;</span><span class="n">IItemGrouper</span><span class="o">&gt;</span><span class="w"> </span><span class="n">itemGroupers</span><span class="p">,</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2026/02/16/i-wrote-yet-another-blog-generator/#code_badc33d3269d7f0a3c6b6177683f5988ea9b2ab3-3"><code data-line-number=" 3"></code></a></td><td class="code"><code><a id="code_badc33d3269d7f0a3c6b6177683f5988ea9b2ab3-3" name="code_badc33d3269d7f0a3c6b6177683f5988ea9b2ab3-3"></a><span class="w">&nbsp;&nbsp;</span><span class="n">IEnumerable</span><span class="o">&lt;</span><span class="n">IPostGrouper</span><span class="o">&gt;</span><span class="w"> </span><span class="n">postGroupers</span><span class="p">)</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2026/02/16/i-wrote-yet-another-blog-generator/#code_badc33d3269d7f0a3c6b6177683f5988ea9b2ab3-4"><code data-line-number=" 4"></code></a></td><td class="code"><code><a id="code_badc33d3269d7f0a3c6b6177683f5988ea9b2ab3-4" name="code_badc33d3269d7f0a3c6b6177683f5988ea9b2ab3-4"></a><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="p">:</span><span class="w"> </span><span class="n">IGroupEngine</span><span class="w"> </span><span class="p">{</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2026/02/16/i-wrote-yet-another-blog-generator/#code_badc33d3269d7f0a3c6b6177683f5988ea9b2ab3-5"><code data-line-number=" 5"></code></a></td><td class="code"><code><a id="code_badc33d3269d7f0a3c6b6177683f5988ea9b2ab3-5" name="code_badc33d3269d7f0a3c6b6177683f5988ea9b2ab3-5"></a><span class="w">&nbsp;&nbsp;</span><span class="k">public</span><span class="w"> </span><span class="n">IEnumerable</span><span class="o">&lt;</span><span class="n">IGroup</span><span class="o">&gt;</span><span class="w"> </span><span class="n">GenerateGroups</span><span class="p">(</span><span class="n">Item</span><span class="p">[]</span><span class="w"> </span><span class="n">items</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2026/02/16/i-wrote-yet-another-blog-generator/#code_badc33d3269d7f0a3c6b6177683f5988ea9b2ab3-6"><code data-line-number=" 6"></code></a></td><td class="code"><code><a id="code_badc33d3269d7f0a3c6b6177683f5988ea9b2ab3-6" name="code_badc33d3269d7f0a3c6b6177683f5988ea9b2ab3-6"></a><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="kt">var</span><span class="w"> </span><span class="n">sortedItems</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">items</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2026/02/16/i-wrote-yet-another-blog-generator/#code_badc33d3269d7f0a3c6b6177683f5988ea9b2ab3-7"><code data-line-number=" 7"></code></a></td><td class="code"><code><a id="code_badc33d3269d7f0a3c6b6177683f5988ea9b2ab3-7" name="code_badc33d3269d7f0a3c6b6177683f5988ea9b2ab3-7"></a><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="p">.</span><span class="n">OrderByDescending</span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">i</span><span class="p">.</span><span class="n">Published</span><span class="p">)</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2026/02/16/i-wrote-yet-another-blog-generator/#code_badc33d3269d7f0a3c6b6177683f5988ea9b2ab3-8"><code data-line-number=" 8"></code></a></td><td class="code"><code><a id="code_badc33d3269d7f0a3c6b6177683f5988ea9b2ab3-8" name="code_badc33d3269d7f0a3c6b6177683f5988ea9b2ab3-8"></a><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="p">.</span><span class="n">ThenBy</span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">i</span><span class="p">.</span><span class="n">SourcePath</span><span class="p">)</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2026/02/16/i-wrote-yet-another-blog-generator/#code_badc33d3269d7f0a3c6b6177683f5988ea9b2ab3-9"><code data-line-number=" 9"></code></a></td><td class="code"><code><a id="code_badc33d3269d7f0a3c6b6177683f5988ea9b2ab3-9" name="code_badc33d3269d7f0a3c6b6177683f5988ea9b2ab3-9"></a><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="p">.</span><span class="n">ToArray</span><span class="p">();</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2026/02/16/i-wrote-yet-another-blog-generator/#code_badc33d3269d7f0a3c6b6177683f5988ea9b2ab3-10"><code data-line-number="10"></code></a></td><td class="code"><code><a id="code_badc33d3269d7f0a3c6b6177683f5988ea9b2ab3-10" name="code_badc33d3269d7f0a3c6b6177683f5988ea9b2ab3-10"></a>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2026/02/16/i-wrote-yet-another-blog-generator/#code_badc33d3269d7f0a3c6b6177683f5988ea9b2ab3-11"><code data-line-number="11"></code></a></td><td class="code"><code><a id="code_badc33d3269d7f0a3c6b6177683f5988ea9b2ab3-11" name="code_badc33d3269d7f0a3c6b6177683f5988ea9b2ab3-11"></a><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="kt">var</span><span class="w"> </span><span class="n">sortedPosts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sortedItems</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2026/02/16/i-wrote-yet-another-blog-generator/#code_badc33d3269d7f0a3c6b6177683f5988ea9b2ab3-12"><code data-line-number="12"></code></a></td><td class="code"><code><a id="code_badc33d3269d7f0a3c6b6177683f5988ea9b2ab3-12" name="code_badc33d3269d7f0a3c6b6177683f5988ea9b2ab3-12"></a><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="p">.</span><span class="n">Where</span><span class="p">(</span><span class="n">item</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">item</span><span class="p">.</span><span class="n">Type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">ItemType</span><span class="p">.</span><span class="n">Post</span><span class="p">)</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2026/02/16/i-wrote-yet-another-blog-generator/#code_badc33d3269d7f0a3c6b6177683f5988ea9b2ab3-13"><code data-line-number="13"></code></a></td><td class="code"><code><a id="code_badc33d3269d7f0a3c6b6177683f5988ea9b2ab3-13" name="code_badc33d3269d7f0a3c6b6177683f5988ea9b2ab3-13"></a><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="p">.</span><span class="n">ToArray</span><span class="p">();</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2026/02/16/i-wrote-yet-another-blog-generator/#code_badc33d3269d7f0a3c6b6177683f5988ea9b2ab3-14"><code data-line-number="14"></code></a></td><td class="code"><code><a id="code_badc33d3269d7f0a3c6b6177683f5988ea9b2ab3-14" name="code_badc33d3269d7f0a3c6b6177683f5988ea9b2ab3-14"></a>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2026/02/16/i-wrote-yet-another-blog-generator/#code_badc33d3269d7f0a3c6b6177683f5988ea9b2ab3-15"><code data-line-number="15"></code></a></td><td class="code"><code><a id="code_badc33d3269d7f0a3c6b6177683f5988ea9b2ab3-15" name="code_badc33d3269d7f0a3c6b6177683f5988ea9b2ab3-15"></a><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="kt">var</span><span class="w"> </span><span class="n">itemGroups</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">itemGroupers</span><span class="p">.</span><span class="n">SelectMany</span><span class="p">(</span><span class="n">g</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">g</span><span class="p">.</span><span class="n">GroupItems</span><span class="p">(</span><span class="n">sortedItems</span><span class="p">));</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2026/02/16/i-wrote-yet-another-blog-generator/#code_badc33d3269d7f0a3c6b6177683f5988ea9b2ab3-16"><code data-line-number="16"></code></a></td><td class="code"><code><a id="code_badc33d3269d7f0a3c6b6177683f5988ea9b2ab3-16" name="code_badc33d3269d7f0a3c6b6177683f5988ea9b2ab3-16"></a><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="kt">var</span><span class="w"> </span><span class="n">postGroups</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">postGroupers</span><span class="p">.</span><span class="n">SelectMany</span><span class="p">(</span><span class="n">g</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">g</span><span class="p">.</span><span class="n">GroupPosts</span><span class="p">(</span><span class="n">sortedPosts</span><span class="p">));</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2026/02/16/i-wrote-yet-another-blog-generator/#code_badc33d3269d7f0a3c6b6177683f5988ea9b2ab3-17"><code data-line-number="17"></code></a></td><td class="code"><code><a id="code_badc33d3269d7f0a3c6b6177683f5988ea9b2ab3-17" name="code_badc33d3269d7f0a3c6b6177683f5988ea9b2ab3-17"></a><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="k">return</span><span class="w"> </span><span class="n">itemGroups</span><span class="p">.</span><span class="n">Concat</span><span class="p">(</span><span class="n">postGroups</span><span class="p">);</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2026/02/16/i-wrote-yet-another-blog-generator/#code_badc33d3269d7f0a3c6b6177683f5988ea9b2ab3-18"><code data-line-number="18"></code></a></td><td class="code"><code><a id="code_badc33d3269d7f0a3c6b6177683f5988ea9b2ab3-18" name="code_badc33d3269d7f0a3c6b6177683f5988ea9b2ab3-18"></a><span class="w">&nbsp;&nbsp;</span><span class="p">}</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2026/02/16/i-wrote-yet-another-blog-generator/#code_badc33d3269d7f0a3c6b6177683f5988ea9b2ab3-19"><code data-line-number="19"></code></a></td><td class="code"><code><a id="code_badc33d3269d7f0a3c6b6177683f5988ea9b2ab3-19" name="code_badc33d3269d7f0a3c6b6177683f5988ea9b2ab3-19"></a><span class="p">}</span>
+</code></td></tr></table></div>
+<p>The <code>ItemRenderEngine</code> has a slightly different challenge: it needs to pick the correct renderer for the post (Gallery, HTML, Listing, Markdown). The renderers are registered as keyed services. The render engine does not need to know anything about the specific renderer types, it just gets the renderer name from the <code>SourceItem</code>’s <code>ScanPattern</code> (so ultimately from the configuration file) and asks the DI container to provide it with the right implementation.</p>
+<div class="code"><table class="codetable"><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2026/02/16/i-wrote-yet-another-blog-generator/#code_b40867aeb78b11d9d5f25c39bec3682c19216014-1"><code data-line-number="1"></code></a></td><td class="code"><code><a id="code_b40867aeb78b11d9d5f25c39bec3682c19216014-1" name="code_b40867aeb78b11d9d5f25c39bec3682c19216014-1"></a><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="p">.</span><span class="n">AddKeyedScoped</span><span class="o">&lt;</span><span class="n">IItemRenderer</span><span class="p">,</span><span class="w"> </span><span class="n">GalleryItemRenderer</span><span class="o">&gt;</span><span class="p">(</span><span class="n">GalleryItemRenderer</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2026/02/16/i-wrote-yet-another-blog-generator/#code_b40867aeb78b11d9d5f25c39bec3682c19216014-2"><code data-line-number="2"></code></a></td><td class="code"><code><a id="code_b40867aeb78b11d9d5f25c39bec3682c19216014-2" name="code_b40867aeb78b11d9d5f25c39bec3682c19216014-2"></a><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="p">.</span><span class="n">AddKeyedScoped</span><span class="o">&lt;</span><span class="n">IItemRenderer</span><span class="p">,</span><span class="w"> </span><span class="n">HtmlItemRenderer</span><span class="o">&gt;</span><span class="p">(</span><span class="n">HtmlItemRenderer</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2026/02/16/i-wrote-yet-another-blog-generator/#code_b40867aeb78b11d9d5f25c39bec3682c19216014-3"><code data-line-number="3"></code></a></td><td class="code"><code><a id="code_b40867aeb78b11d9d5f25c39bec3682c19216014-3" name="code_b40867aeb78b11d9d5f25c39bec3682c19216014-3"></a><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="p">.</span><span class="n">AddKeyedScoped</span><span class="o">&lt;</span><span class="n">IItemRenderer</span><span class="p">,</span><span class="w"> </span><span class="n">ListingItemRenderer</span><span class="o">&gt;</span><span class="p">(</span><span class="n">ListingItemRenderer</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2026/02/16/i-wrote-yet-another-blog-generator/#code_b40867aeb78b11d9d5f25c39bec3682c19216014-4"><code data-line-number="4"></code></a></td><td class="code"><code><a id="code_b40867aeb78b11d9d5f25c39bec3682c19216014-4" name="code_b40867aeb78b11d9d5f25c39bec3682c19216014-4"></a><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="p">.</span><span class="n">AddKeyedScoped</span><span class="o">&lt;</span><span class="n">IItemRenderer</span><span class="p">,</span><span class="w"> </span><span class="n">MarkdownItemRenderer</span><span class="o">&gt;</span><span class="p">(</span><span class="n">MarkdownItemRenderer</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span>
+</code></td></tr></table></div>
+<div class="code"><table class="codetable"><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2026/02/16/i-wrote-yet-another-blog-generator/#code_10e51bbfc1002bc3932ecb96e587f1b3dad5958b-1"><code data-line-number=" 1"></code></a></td><td class="code"><code><a id="code_10e51bbfc1002bc3932ecb96e587f1b3dad5958b-1" name="code_10e51bbfc1002bc3932ecb96e587f1b3dad5958b-1"></a><span class="w">&nbsp;&nbsp;</span><span class="k">public</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">IEnumerable</span><span class="o">&lt;</span><span class="n">Item</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">Render</span><span class="p">(</span><span class="n">IEnumerable</span><span class="o">&lt;</span><span class="n">SourceItem</span><span class="o">&gt;</span><span class="w"> </span><span class="n">sourceItems</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2026/02/16/i-wrote-yet-another-blog-generator/#code_10e51bbfc1002bc3932ecb96e587f1b3dad5958b-2"><code data-line-number=" 2"></code></a></td><td class="code"><code><a id="code_10e51bbfc1002bc3932ecb96e587f1b3dad5958b-2" name="code_10e51bbfc1002bc3932ecb96e587f1b3dad5958b-2"></a><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="kt">var</span><span class="w"> </span><span class="n">renderTasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sourceItems</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2026/02/16/i-wrote-yet-another-blog-generator/#code_10e51bbfc1002bc3932ecb96e587f1b3dad5958b-3"><code data-line-number=" 3"></code></a></td><td class="code"><code><a id="code_10e51bbfc1002bc3932ecb96e587f1b3dad5958b-3" name="code_10e51bbfc1002bc3932ecb96e587f1b3dad5958b-3"></a><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="p">.</span><span class="n">GroupBy</span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">i</span><span class="p">.</span><span class="n">ScanPattern</span><span class="p">.</span><span class="n">RendererName</span><span class="p">)</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2026/02/16/i-wrote-yet-another-blog-generator/#code_10e51bbfc1002bc3932ecb96e587f1b3dad5958b-4"><code data-line-number=" 4"></code></a></td><td class="code"><code><a id="code_10e51bbfc1002bc3932ecb96e587f1b3dad5958b-4" name="code_10e51bbfc1002bc3932ecb96e587f1b3dad5958b-4"></a><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="p">.</span><span class="n">Select</span><span class="p">(</span><span class="k">group</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">{</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2026/02/16/i-wrote-yet-another-blog-generator/#code_10e51bbfc1002bc3932ecb96e587f1b3dad5958b-5"><code data-line-number=" 5"></code></a></td><td class="code"><code><a id="code_10e51bbfc1002bc3932ecb96e587f1b3dad5958b-5" name="code_10e51bbfc1002bc3932ecb96e587f1b3dad5958b-5"></a><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="kt">var</span><span class="w"> </span><span class="n">renderer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_keyedServiceProvider</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2026/02/16/i-wrote-yet-another-blog-generator/#code_10e51bbfc1002bc3932ecb96e587f1b3dad5958b-6"><code data-line-number=" 6"></code></a></td><td class="code"><code><a id="code_10e51bbfc1002bc3932ecb96e587f1b3dad5958b-6" name="code_10e51bbfc1002bc3932ecb96e587f1b3dad5958b-6"></a><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="p">.</span><span class="n">GetRequiredKeyedService</span><span class="o">&lt;</span><span class="n">IItemRenderer</span><span class="o">&gt;</span><span class="p">(</span><span class="k">group</span><span class="p">.</span><span class="n">Key</span><span class="p">);</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2026/02/16/i-wrote-yet-another-blog-generator/#code_10e51bbfc1002bc3932ecb96e587f1b3dad5958b-7"><code data-line-number=" 7"></code></a></td><td class="code"><code><a id="code_10e51bbfc1002bc3932ecb96e587f1b3dad5958b-7" name="code_10e51bbfc1002bc3932ecb96e587f1b3dad5958b-7"></a><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="k">return</span><span class="w"> </span><span class="n">renderer</span><span class="w"> </span><span class="k">switch</span><span class="w"> </span><span class="p">{</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2026/02/16/i-wrote-yet-another-blog-generator/#code_10e51bbfc1002bc3932ecb96e587f1b3dad5958b-8"><code data-line-number=" 8"></code></a></td><td class="code"><code><a id="code_10e51bbfc1002bc3932ecb96e587f1b3dad5958b-8" name="code_10e51bbfc1002bc3932ecb96e587f1b3dad5958b-8"></a><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="n">IBulkItemRenderer</span><span class="w"> </span><span class="n">bulkRenderer</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">bulkRenderer</span><span class="p">.</span><span class="n">RenderItems</span><span class="p">(</span><span class="k">group</span><span class="p">),</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2026/02/16/i-wrote-yet-another-blog-generator/#code_10e51bbfc1002bc3932ecb96e587f1b3dad5958b-9"><code data-line-number=" 9"></code></a></td><td class="code"><code><a id="code_10e51bbfc1002bc3932ecb96e587f1b3dad5958b-9" name="code_10e51bbfc1002bc3932ecb96e587f1b3dad5958b-9"></a><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="n">ISingleItemRenderer</span><span class="w"> </span><span class="n">singleRenderer</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">Task</span><span class="p">.</span><span class="n">WhenAll</span><span class="p">(</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2026/02/16/i-wrote-yet-another-blog-generator/#code_10e51bbfc1002bc3932ecb96e587f1b3dad5958b-10"><code data-line-number="10"></code></a></td><td class="code"><code><a id="code_10e51bbfc1002bc3932ecb96e587f1b3dad5958b-10" name="code_10e51bbfc1002bc3932ecb96e587f1b3dad5958b-10"></a><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="k">group</span><span class="p">.</span><span class="n">Select</span><span class="p">(</span><span class="n">singleRenderer</span><span class="p">.</span><span class="n">RenderItem</span><span class="p">)),</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2026/02/16/i-wrote-yet-another-blog-generator/#code_10e51bbfc1002bc3932ecb96e587f1b3dad5958b-11"><code data-line-number="11"></code></a></td><td class="code"><code><a id="code_10e51bbfc1002bc3932ecb96e587f1b3dad5958b-11" name="code_10e51bbfc1002bc3932ecb96e587f1b3dad5958b-11"></a><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="n">_</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">InvalidOperationException</span><span class="p">(</span><span class="s">&quot;Unexpected renderer type&quot;</span><span class="p">)</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2026/02/16/i-wrote-yet-another-blog-generator/#code_10e51bbfc1002bc3932ecb96e587f1b3dad5958b-12"><code data-line-number="12"></code></a></td><td class="code"><code><a id="code_10e51bbfc1002bc3932ecb96e587f1b3dad5958b-12" name="code_10e51bbfc1002bc3932ecb96e587f1b3dad5958b-12"></a><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="p">};</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2026/02/16/i-wrote-yet-another-blog-generator/#code_10e51bbfc1002bc3932ecb96e587f1b3dad5958b-13"><code data-line-number="13"></code></a></td><td class="code"><code><a id="code_10e51bbfc1002bc3932ecb96e587f1b3dad5958b-13" name="code_10e51bbfc1002bc3932ecb96e587f1b3dad5958b-13"></a><span class="w">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="p">});</span>
+</code></td></tr><tr><td class="linenos linenodiv"><a href="https://chriswarrick.com/blog/2026/02/16/i-wrote-yet-another-blog-generator/#code_10e51bbfc1002bc3932ecb96e587f1b3dad5958b-14"><code data-line-number="14"></code></a></td><td class="code"><code><a id="code_10e51bbfc1002bc3932ecb96e587f1b3dad5958b-14" name="code_10e51bbfc1002bc3932ecb96e587f1b3dad5958b-14"></a><span class="w">&nbsp;&nbsp;</span><span class="p">}</span>
+</code></td></tr></table></div>
+<p>In total, there are <strong>37</strong> specific service implementations registered (plus system services like <code>TimeProvider</code> and logging). Beyond these two examples, the main benefit is <strong>testability</strong>. I can write unit tests without dependencies on unrelated services, and without monkey-patching random names. (In Python, <code>unittest.mock</code> does both monkey-patching <em>and</em> mocking.)</p>
+<p>Okay, I haven’t written very many tests, but I could easily ask an LLM to do it.</p>
+<h3 id="immutable-data-structures-and-no-global-state">Immutable data structures and no global state</h3>
+<p>All classes are immutable. This helps in several ways. It’s easier to reason about state when <code>SourceItem</code> becomes <code>Item</code> during rendering, compared to a single class with a nullable <code>Content</code> property. Immutability also makes concurrency safer. But the biggest win is how easy it was to develop the <code>--watch</code> mode. Every service has <code>Scoped</code> lifetime, and main logic lives in <code>IMainEngine</code>. I can just create a new scope, get the engine, and run it without state leaking between executions. No subprocess launching, no state resetting — everything disappears when the scope is disposed.</p>
+<h2 id="can-anyone-use-it">Can anyone use it?</h2>
+<p>On one hand, it’s open source under the 3-clause BSD license and <a href="https://github.com/Kwpolska/YetAnotherBlogGenerator">available on GitHub</a>.</p>
+<p>On the other hand, it’s more of a source-available project. There are no docs, and it was designed specifically for this site (so some things are probably too hardcoded for your needs). In fact, this blog’s configuration and templates were directly hardcoded in the codebase until the day before launch. But I’m happy to answer questions and review pull requests!</p>
+]]></content:encoded><category>C#/.NET</category><category>.NET</category><category>C#</category><category>Nikola</category><category>Python</category><category>static site generators</category><category>web development</category><category>YetAnotherBlogGenerator</category></item><item><title>Writing a Console App in C# for Fun and Profit</title><dc:creator>Chris Warrick</dc:creator><link>https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/</link><pubDate>Mon, 19 Sep 2022 20:35:00 GMT</pubDate><guid>https://chriswarrick.com/blog/2022/09/19/writing-a-console-app-in-c-sharp-for-fun-and-profit/</guid><description>
 I recently wrote a simple console app in C#. This post tells you more about the language, the .NET ecosystem, and why you should write your next app in it.
 </description><content:encoded><![CDATA[
 <p>I recently wrote a simple console app in C#. This post tells you more about the language, the .NET ecosystem, and why you should write your next app in it.</p>
@@ -661,4 +870,165 @@ packages from 232 contributors.</p>
 <p>PS. Five of the packages (in the “large” set) had a <code class="docutils literal">.DS_Store</code> file left over. I’m wondering if there are any other files that shouldn’t be shipped with packages, lurking in <code class="docutils literal">node_modules</code> directories all over the world…</p>
 <p>PPS. I’ve replaced Disqus with Isso, because it had too many advertisements. If you experience any issues with the comment system (after force-refreshing), e-mail me.</p>
 </section>
-]]></content:encoded><category>Internet</category><category>JavaScript</category><category>rant</category><category>web development</category><category>webmastering</category></item></channel></rss>
+]]></content:encoded><category>Internet</category><category>JavaScript</category><category>rant</category><category>web development</category></item><item><title>Static Site Generator Speed Test (Nikola, Pelican, Hexo, Octopress)</title><dc:creator>Chris Warrick</dc:creator><link>https://chriswarrick.com/blog/2015/07/23/ssg-speed-test/</link><pubDate>Thu, 23 Jul 2015 15:10:00 GMT</pubDate><guid>https://chriswarrick.com/blog/2015/07/23/ssg-speed-test/</guid><description>
+I tested the speed of four static site generators: Nikola, Pelican, Hexo and Octopress, in a clean environment.  Spoiler alert: Nikola won.
+Disclaimer: author is a developer and user of Nikola.  The test environments used were the same for all four generators.
+
+Generators tested
+
+Nikola v7.6.1, by Roberto Alsina, Chris Warrick and contributors; Python; MIT license
+Pelican v3.6.0, by Alexis Metaireau and contributors; Python; GNU AGPL license
+Hexo v3.1.1, by Tommy Chen and contributors; Node.js; MIT license
+Octopress v2.0, by Brandon Mathis and contributors; Ruby; MIT license (based on Jekyll)
+
+</description><content:encoded><![CDATA[
+<p>I tested the speed of four static site generators: Nikola, Pelican, Hexo and Octopress, in a clean environment.  Spoiler alert: Nikola won.</p>
+<p><em>Disclaimer:</em> author is a developer and user of Nikola.  The test environments used were the same for all four generators.</p>
+<section id="generators-tested">
+<h1>Generators tested</h1>
+<ul class="simple">
+<li><p><a class="reference external" href="https://getnikola.com/">Nikola</a> v7.6.1, by Roberto Alsina, Chris Warrick and contributors; Python; MIT license</p></li>
+<li><p><a class="reference external" href="http://blog.getpelican.com/">Pelican</a> v3.6.0, by Alexis Metaireau and contributors; Python; GNU AGPL license</p></li>
+<li><p><a class="reference external" href="https://hexo.io/">Hexo</a> v3.1.1, by Tommy Chen and contributors; Node.js; MIT license</p></li>
+<li><p><a class="reference external" href="http://octopress.org/">Octopress</a> v2.0, by Brandon Mathis and contributors; Ruby; MIT license (based on Jekyll)</p></li>
+</ul>
+
+
+
+</section>
+<section id="setup">
+<h1>Setup</h1>
+<p>Every site generator was set up in an identical <strong>clean</strong> environment, using Ubuntu 15.04, x64, as a 512 MB DigitalOcean VM with a 20 GB SSD drive. The machine was updated, an user account with passwordless sudo was created, and <code class="docutils literal"><span class="pre">build-essential</span></code> was installed. Tests were run by an automated installer and timer, written in Bash and C, respectively (custom; source code is available). Pre-compiled wheels for lxml and Pillow were used for Nikola testing, because lxml cannot be compiled with less than 1.5 GB of RAM; they were built with <code class="docutils literal">pip wheel lxml pillow</code> outside of the testing environment (on a local VM). The machine was reimaged after every test. Lists of installed Python/Ruby/Node packages are available in the GitHub repo (see below).</p>
+</section>
+<section id="input">
+<h1>Input</h1>
+<p>Every site generator was given the same set of 179 log files from #nikola on freenode. The raw logs contain 1209507 bytes (1.1 MiB) of plain text. The logs were processed into post files, which fit the format of each engine (reST or Markdown), containing mandatory metadata, an introductory paragraph and a code block (using <code class="docutils literal">::</code> for reST, four spaces for Markdown). One file had to be altered, because they contained the <code class="docutils literal">{{</code>  sequence, which was misinterpreted as internal templating by Hexo and Octopress — it was replaced by a harmless <code class="docutils literal">~~</code> sequence for all four generators.</p>
+<p>The generators used default config, with one exception: highlighting was disabled for Hexo. The highlighting would cause an unfair advantage (other generators did not automatically highlight the code boxes), and led to very high build times (see table 4 in comparison spreadsheet).</p>
+</section>
+<section id="build">
+<h1>Build</h1>
+<p>Sites were built a total of 110 times, in 10 cycles of 11 builds each. The first build of a cycle was a fresh build, the remaining 10 were rebuilds. Sites and cache files were removed after each cycle.</p>
+</section>
+<section id="results">
+<h1>Results</h1>
+<p>Because Nikola and Hexo use incremental rebuilds, the results were compared in two groups: 11 and 10 runs.</p>
+<section id="average-build-times-in-seconds">
+<h2>Average build times (in seconds)</h2>
+<table class="table table-bordered table-hover">
+<thead>
+<tr>
+<th>#</th>
+<th>Generator</th>
+<th>Average of 11 runs</th>
+<th>Average of 10 runs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th scope="row">1</th>
+<td>Nikola</td>
+<td>2.38290</td>
+<td>2.06057</td>
+</tr>
+<tr>
+<th scope="row">2</th>
+<td>Pelican</td>
+<td>2.61924</td>
+<td>2.62352</td>
+</tr>
+<tr>
+<th scope="row">3</th>
+<td>Hexo</td>
+<td>6.27361</td>
+<td>6.21267</td>
+</tr>
+<tr>
+<th scope="row">4</th>
+<td>Octopress</td>
+<td>9.57618</td>
+<td>9.47550</td>
+</tr>
+</tbody>
+</table></section>
+<section id="full-results">
+<h2>Full results</h2>
+<p class="lead">Full results are available in <a class="reference external" href="https://chriswarrick.com/pub/ssg-test-results.ods">ods format</a>.</p>
+</section>
+<section id="raw-results-and-configuration">
+<h2>Raw results and configuration</h2>
+<p>Raw results (<code class="docutils literal">.csv</code> files from the test runner) and configuration is available in the <a class="reference external" href="https://github.com/Kwpolska/ssg-test">GitHub repo</a>. Log files and converted posts are not available publicly; however, they can be provided to interested parties (<a class="reference external" href="https://chriswarrick.com/contact/">contact me</a> to obtain them).</p>
+</section>
+</section>
+<section id="questions-and-answers">
+<h1>Questions and answers</h1>
+<section id="why-not-plain-jekyll">
+<h2>Why not plain Jekyll?</h2>
+<p><strong>Plain Jekyll was disqualified</strong> on the basis of missing many features other generators have, leading to an unfair advantage. The aim of this test was to provide similar setups for each of the four generators. Jekyll generates a very basic site that lacks some elements; a Jekyll site does not have paginated indexes, (partial) post text on indexes, any sort of archives, etc. A Jekyll site contains only one CSS file, index.html, feed.xml, and the log posts. On the other hand, sites generated by Pelican, Nikola and Hexo contain more files, which makes the builds longer and the website experience richer (archives, JS, sitemaps, tag listings).</p>
+<p>On the basis of the above, <strong>Octopress</strong> was chosen to represent the Jekyll universe at large. Octopress sites have more assets, a sitemap, archives and category listings — making it comparable to the other four contenders. However, tests were performed for Jekyll. The average result from 11 builds was 2.22118, while the average result from 10 builds was 2.23903. The result would land Jekyll on the 1st place for 11 builds, and on the 2nd place for 10 builds.</p>
+</section>
+<section id="why-not-myfavoritessg">
+<h2>Why not $MYFAVORITESSG?</h2>
+<p>I tested only four popular generators that were easy enough to set up. I could easily extend the set if I had time and friendly enough documentation to do so. I can add a SSG, provided that:</p>
+<ul class="simple">
+<li><p>it’s easy to configure</p></li>
+<li><p>it has a default config that provides a working site with a feature set comparable to other SSGs tested here (see <a class="reference internal" href="https://chriswarrick.com/blog/2015/07/23/ssg-speed-test/#why-not-plain-jekyll">Why not plain Jekyll?</a>)</p></li>
+</ul>
+</section>
+</section>
+]]></content:encoded><category>Internet</category><category>blog</category><category>Hexo</category><category>jekyll</category><category>Nikola</category><category>Octopress</category><category>Pelican</category><category>Python</category><category>static site generators</category><category>test</category><category>web development</category></item><item><title>Nikola — The Best Blog Engine Ever!</title><dc:creator>Chris Warrick</dc:creator><link>https://chriswarrick.com/blog/2013/02/08/nikola-the-best-blog-engine-ever/</link><pubDate>Fri, 08 Feb 2013 13:01:51 GMT</pubDate><guid>https://chriswarrick.com/blog/2013/02/08/nikola-the-best-blog-engine-ever/</guid><description>
+I recently found out about Nikola (through Planet Python).  It is awesome,
+even better than Hyde.  Why?  Right after the break.
+(2026 update: I eventually became a maintainer of Nikola. As of 2026, this blog is now powered by my very own YetAnotherBlogGenerator, written in C#.)
+</description><content:encoded><![CDATA[
+<p>I recently found out about <a class="reference external" href="http://getnikola.com/">Nikola</a> (through <a class="reference external" href="http://planet.python.org/">Planet Python</a>).  It is awesome,
+even better than Hyde.  Why?  Right after the break.</p>
+<p>(<strong>2026 update:</strong> I eventually became a maintainer of Nikola. As of 2026, this blog is now powered by my very own <a href="https://chriswarrick.com/blog/2026/02/16/i-wrote-yet-another-blog-generator/">YetAnotherBlogGenerator</a>, written in C#.)</p>
+
+
+
+<section id="why">
+<h1>Why?</h1>
+<ol class="arabic simple">
+<li><p>A lively community and an awesome lead developer, <a class="reference external" href="http://ralsina.com.ar/">Roberto Alsina</a>.</p></li>
+<li><p>Actively developed (last commit to Hyde was <strong>11 months ago</strong>).</p></li>
+<li><p>Easily extensible.</p></li>
+<li><p>Ships with the Bootstrap style, to which I planned to migrate (and I did)</p></li>
+<li><p>reStructuredText, Markdown, Textile, … input.</p></li>
+</ol>
+</section>
+<section id="how">
+<h1>How?</h1>
+<blockquote><p>After you have Nikola installed:</p>
+<dl class="simple">
+<dt>Create a site:</dt>
+<dd><p><code class="docutils literal">nikola init mysite</code></p>
+</dd>
+<dt>Create a post:</dt>
+<dd><p><code class="docutils literal">nikola new_post</code></p>
+</dd>
+<dt>Edit the post:</dt>
+<dd><p>The filename should be in the output of the previous command.</p>
+</dd>
+<dt>Build the site:</dt>
+<dd><p><code class="docutils literal">nikola build</code></p>
+</dd>
+<dt>Start the test server:</dt>
+<dd><p><code class="docutils literal">nikola serve</code></p>
+</dd>
+<dt>See the site:</dt>
+<dd><p><a class="reference external" href="http://127.0.0.1:8000/">http://127.0.0.1:8000</a></p>
+</dd>
+</dl>
+<p>That should get you going. If you want to know more, this manual will always be
+here for you.</p>
+<small><cite><a href="http://nikola.ralsina.com.ar/handbook.html">The Nikola
+Handbook</a> by Roberto Alsina</cite></small></blockquote><p>That’s how easy it is.   Nikola has many more useful features.</p>
+<p>And sure, I had to manually fix up all the posts because I decided to switch to
+RST, but that’s not a problem.</p>
+</section>
+<section id="plans-for-the-future">
+<h1>Plans for the future</h1>
+<p>I did transition the blog, but not everything is done yet.  I need to create a
+<strong>Contact form</strong> and a <strong>Project page</strong>.  Both should be done by Sunday.</p>
+</section>
+]]></content:encoded><category>blog</category><category>Nikola</category><category>Python</category><category>static site generators</category><category>web development</category></item></channel></rss>

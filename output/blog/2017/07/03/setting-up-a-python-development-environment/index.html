@@ -5,15 +5,14 @@
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Setting up a Python development environment | Chris Warrick</title>
-  <link href="/assets/css/bootstrap-kw.css?v=CzzDMDZ2wZePwO3RJ5g39QZC64o" rel="stylesheet" type="text/css">
+  <link href="/assets/css/bootstrap-kw.css?v=ibPO8Pn4wx1mZAVpD8MFQo652AQ" rel="stylesheet" type="text/css">
   
   <link href="/assets/css/legacy.css?v=ptDCR0JfJHHcOxN9kdcIVN3wNw4" rel="stylesheet" type="text/css">
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200..900;1,200..900&family=Source+Serif+4:opsz,wght@8..60,200..900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css"
-        integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200..900;1,200..900&family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.css"
         integrity="sha256-FqCzNnnyXl5HxHMdb+RQ/RV/X7fqfPcQYy+G2gFL3Xk=" crossorigin="anonymous">
   <meta name="theme-color" content="#00aadd">
@@ -27,10 +26,10 @@
   <link rel="next" href="/blog/2017/08/03/gynvaels-mission-11-en-python-bytecode-reverse-engineering/" type="text/html">
   
 </head>
-<body>
-<a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
+<body class="article-page-with-toc">
+<a href="#content" class="visually-hidden-focusable">Skip to main content</a>
 
-<nav class="navbar navbar-expand-md navbar-kw mb-4">
+<nav class="navbar navbar-expand-md navbar-kw fixed-top">
   <div class="container">
     <a class="navbar-brand" href="/">
       <img src="/assets/img/logo.png" srcset="/assets/img/logo2x.png 2x" alt="Chris Warrick" id="logo"><span
@@ -82,6 +81,13 @@
     
 
 
+
+
+
+<div id="article-with-toc">
+  <div class="article-with-toc-left">
+
+
 <article class="post-text h-entry hentry postpage postbox" itemscope="itemscope" itemtype="http://schema.org/Article">
   
 <header class="page-header">
@@ -121,13 +127,18 @@
         <a class="tag p-category badge rounded-pill" href="/blog/tags/python" rel="tag">Python</a>
       </li>
       
-      <li class="list-inline-item"><a class="badge bg-primary-subtle text-primary-emphasis" href="https://go.chriswarrick.com/pysetup" title="Short link to this article (go.chriswarrick.com/pysetup)"><i class="fa fa-link"></i> pysetup</a></li>
+      <li class="list-inline-item"><a class="badge bg-primary-subtle text-primary-emphasis" href="https://go.chriswarrick.com/pysetup" title="Short link to this article (go.chriswarrick.com/pysetup)"><i class="bi bi-link-45deg"></i> pysetup</a></li>
     </ul>
     <p class="guide-header">A <a href="/guides/">guide</a> about <span class="guide-topic">Python</span> for <span class="guide-platform">Windows, macOS, Linux</span></p>
   </div>
 </header>
 
-  <div class="e-content entry-content" itemprop="articleBody text">
+  <div class="d-xl-none" id="toc-button">
+    <button class="btn btn-outline-secondary" type="button" id="toc-btn" aria-controls="toc">
+      <i class="bi bi-list"></i> Table of Contents
+    </button>
+  </div>
+  <div class="e-content entry-content content-legacy" id="post-content" itemprop="articleBody text">
     
       <div class="lead">
         
@@ -140,48 +151,10 @@ questions may stump new developers, or people wanting to use Python.</p>
     
     
 <p>Note: this guide is opinionated.</p>
-<nav class="contents right-toc" id="contents" role="doc-toc">
-<p class="topic-title"><a class="reference internal" href="#top">Contents</a></p>
-<ul class="simple">
-<li><p><a class="reference internal" href="#glossary-and-questions" id="toc-entry-1">Glossary and questions</a></p>
-<ul>
-<li><p><a class="reference internal" href="#python-versions-2-vs-3" id="toc-entry-2">Python versions: 2 vs 3</a></p></li>
-<li><p><a class="reference internal" href="#can-i-run-multiple-pythons-on-the-same-machine" id="toc-entry-3">Can I run multiple Pythons on the same machine?</a></p></li>
-<li><p><a class="reference internal" href="#implementations" id="toc-entry-4">Implementations</a></p></li>
-<li><p><a class="reference internal" href="#distributions" id="toc-entry-5">Distributions</a></p></li>
-<li><p><a class="reference internal" href="#can-i-make-exe-files-from-python-programs" id="toc-entry-6">Can I make .exe files from Python programs?</a></p></li>
-<li><p><a class="reference internal" href="#where-to-learn-python-where-to-get-help" id="toc-entry-7">Where to learn Python? Where to get help?</a></p></li>
-</ul>
-</li>
-<li><p><a class="reference internal" href="#installing-python" id="toc-entry-8">Installing Python</a></p>
-<ul>
-<li><p><a class="reference internal" href="#windows" id="toc-entry-9">Windows</a></p></li>
-<li><p><a class="reference internal" href="#macos" id="toc-entry-10">macOS</a></p></li>
-<li><p><a class="reference internal" href="#linux-and-other-unix-like-oses" id="toc-entry-11">Linux (and other Unix-like OSes)</a></p></li>
-</ul>
-</li>
-<li><p><a class="reference internal" href="#installing-packages" id="toc-entry-12">Installing packages</a></p>
-<ul>
-<li><p><a class="reference internal" href="#user-installs" id="toc-entry-13">User installs</a></p></li>
-<li><p><a class="reference internal" href="#virtual-environments" id="toc-entry-14">Virtual environments</a></p>
-<ul>
-<li><p><a class="reference internal" href="#tools-and-management" id="toc-entry-15">Tools and management</a></p></li>
-<li><p><a class="reference internal" href="#installation-and-usage" id="toc-entry-16">Installation and usage</a></p></li>
-<li><p><a class="reference internal" href="#upgrading-and-moving" id="toc-entry-17">Upgrading and moving</a></p></li>
-</ul>
-</li>
-<li><p><a class="reference internal" href="#packages-with-c-extensions-binary" id="toc-entry-18">Packages with C extensions (binary)</a></p></li>
-<li><p><a class="reference internal" href="#other-stuff" id="toc-entry-19">Other stuff</a></p></li>
-</ul>
-</li>
-<li><p><a class="reference internal" href="#editors-and-ides" id="toc-entry-20">Editors and IDEs</a></p></li>
-<li><p><a class="reference internal" href="#update-history" id="toc-entry-21">Update history</a></p></li>
-</ul>
-</nav>
 <section id="glossary-and-questions">
-<h1><a class="toc-backref" href="#toc-entry-1" role="doc-backlink">Glossary and questions</a></h1>
+<h1>Glossary and questions</h1>
 <section id="python-versions-2-vs-3">
-<h2><a class="toc-backref" href="#toc-entry-2" role="doc-backlink">Python versions: 2 vs 3</a></h2>
+<h2>Python versions: 2 vs 3</h2>
 <p>The Python community has undergone sort of a <em>schism</em> in recent years. Python
 3, released in 2008, broke backwards compatibility: deprecated some bad
 constructs and libraries (eg. <code class="docutils literal">raw_input()</code> became <code class="docutils literal">input()</code> and the
@@ -200,7 +173,7 @@ time, using the same codebase (most libraries out there do that).</p>
 <p>Read more: <a class="reference external" href="https://wiki.python.org/moin/Python2orPython3">Python 2 or Python 3 on Python Wiki</a></p>
 </section>
 <section id="can-i-run-multiple-pythons-on-the-same-machine">
-<h2><a class="toc-backref" href="#toc-entry-3" role="doc-backlink">Can I run multiple Pythons on the same machine?</a></h2>
+<h2>Can I run multiple Pythons on the same machine?</h2>
 <p>Yes. Note that multiple Python interpreters are completely separate: they have
 their own pip and packages, and you can’t run Python 2 code in a Python 3
 interpreter. You need to specify which interpreter to use when installing
@@ -210,7 +183,7 @@ backwards-compatible within the major release, so Python 2.7 runs code
 written with older 2.x versions in mind.</p>
 </section>
 <section id="implementations">
-<h2><a class="toc-backref" href="#toc-entry-4" role="doc-backlink">Implementations</a></h2>
+<h2>Implementations</h2>
 <p>A programming language is an abstract construct. To run code written in that
 language, an interpreter or compiler needs to be written. In Python’s case,
 there’s a plethora of implementations. Some of them are:</p>
@@ -230,7 +203,7 @@ well as other JVM languages.</p></li>
 <p>Read more: <a class="reference external" href="https://wiki.python.org/moin/PythonImplementations">Python Implementations on Python Wiki</a></p>
 </section>
 <section id="distributions">
-<h2><a class="toc-backref" href="#toc-entry-5" role="doc-backlink">Distributions</a></h2>
+<h2>Distributions</h2>
 <p>There are also Python (CPython) distributions. They ship the CPython
 interpreter and add some extra packages/features.  They are maintained by other
 communities or corporate entities.</p>
@@ -250,7 +223,7 @@ nothing special about Anaconda.</p></li>
 <p>Read more: <a class="reference external" href="https://wiki.python.org/moin/PythonDistributions">Python distributions on Python Wiki</a></p>
 </section>
 <section id="can-i-make-exe-files-from-python-programs">
-<h2><a class="toc-backref" href="#toc-entry-6" role="doc-backlink">Can I make .exe files from Python programs?</a></h2>
+<h2>Can I make .exe files from Python programs?</h2>
 <p>Yes, you can. There are tools for this — <a class="reference external" href="http://www.pyinstaller.org/">PyInstaller</a> is the best one. Note that you usually need to
 run it on the destination operating system. And remember that “compiling” to
 exe files like that <strong>is not</strong> a security measure — your source code is still
@@ -258,7 +231,7 @@ easily recoverable. (It’s not a security measure in other languages either,
 even if getting source code back might be more expensive/tricky in those.)</p>
 </section>
 <section id="where-to-learn-python-where-to-get-help">
-<h2><a class="toc-backref" href="#toc-entry-7" role="doc-backlink">Where to learn Python? Where to get help?</a></h2>
+<h2>Where to learn Python? Where to get help?</h2>
 <p>The choice of learning material is important. If you get a bad book, it might
 discourage you from learning (because it’s boring), or may teach you
 bad/outdated practices.</p>
@@ -271,7 +244,7 @@ with Python</a>.  They teach Python 3, and
 </section>
 </section>
 <section id="installing-python">
-<h1><a class="toc-backref" href="#toc-entry-8" role="doc-backlink">Installing Python</a></h1>
+<h1>Installing Python</h1>
 <p>This guide will focus on installing CPython 2.7 and 3.x (latest), using the standard
 distribution. This choice is satisfactory for most people. Third-party
 distributions, while handy in some cases, are not needed for most. (See
@@ -282,7 +255,7 @@ OSes, <code class="docutils literal">python</code> is Python 2 and <code class="
 exist.  On Arch Linux, <code class="docutils literal">python</code> is Python 3. On Windows, use the <code class="docutils literal">py</code>
 launcher.</p>
 <section id="windows">
-<h2><a class="toc-backref" href="#toc-entry-9" role="doc-backlink">Windows</a></h2>
+<h2>Windows</h2>
 <p>Download the installer(s): <a class="reference external" href="https://www.python.org/downloads/">https://www.python.org/downloads/</a></p>
 <p>Those installers come with <code class="docutils literal">pip</code>, and modern Python 3.x versions come with
 the <code class="docutils literal">py</code> launcher.  You can use that launcher to pick a specific Python
@@ -299,7 +272,7 @@ exception I’m aware of is Tensorflow, which only allows 64-bit Python 3.5 as o
 now).</p>
 </section>
 <section id="macos">
-<h2><a class="toc-backref" href="#toc-entry-10" role="doc-backlink">macOS</a></h2>
+<h2>macOS</h2>
 <p>macOS ships with Python 2.7.10 (as of macOS Sierra). It’s not the latest
 version; it’s good enough for most people, but I still recommend installing
 your own (the system Python doesn’t include <code class="docutils literal">pip</code>, for example). You can
@@ -320,7 +293,7 @@ a new one and just use the existing one.</p>
 <p>To update Homebrew and Python, run <code class="docutils literal">brew update</code>.</p>
 </section>
 <section id="linux-and-other-unix-like-oses">
-<h2><a class="toc-backref" href="#toc-entry-11" role="doc-backlink">Linux (and other Unix-like OSes)</a></h2>
+<h2>Linux (and other Unix-like OSes)</h2>
 <p>On Linux, there usually are good enough packages in your OS repositories. You
 should be able to install the appropriate package for Python (2 and/or 3).
 Most (if not all) distributions require Python — <strong>do not</strong> remove the
@@ -349,7 +322,7 @@ have very specific Python version requirements.</p>
 </section>
 </section>
 <section id="installing-packages">
-<h1><a class="toc-backref" href="#toc-entry-12" role="doc-backlink">Installing packages</a></h1>
+<h1>Installing packages</h1>
 <p>To install third-party packages, you should use pip, the Python package
 manager. If you’re using Windows or macOS (from Homebrew), pip is included with
 your copy of Python.  If you’re on Linux and installed Python from a system
@@ -377,7 +350,7 @@ components, making package managers angry and sick of supporting a 2-year-old
 version. (Especially since most bugs are closed with “we’ve fixed that long
 ago”)</p>
 <section id="user-installs">
-<h2><a class="toc-backref" href="#toc-entry-13" role="doc-backlink">User installs</a></h2>
+<h2>User installs</h2>
 <p>At a small scale, you can install packages with pip for a single user.  Use
 <code class="docutils literal">pip install <span class="pre">--user</span> PACKAGE</code> to do this. If your package installs <a class="reference external" href="https://chriswarrick.com/blog/2014/09/15/python-apps-the-right-way-entry_points-and-scripts/">scripts</a>,
 they will be installed to <code class="docutils literal"><span class="pre">~/.local/bin</span></code> on Linux, and
@@ -389,7 +362,7 @@ projects, but instead are doing one-off research projects, those are better
 suited by user-wide installs.</p>
 </section>
 <section id="virtual-environments">
-<h2><a class="toc-backref" href="#toc-entry-14" role="doc-backlink">Virtual environments</a></h2>
+<h2>Virtual environments</h2>
 <p class="lead">I wrote a newer, more detailed post about virtualenvs: <a class="reference external" href="https://chriswarrick.com/blog/2018/09/04/python-virtual-environments/">Python Virtual
 Environments in Five Minutes</a></p>
 <p>Virtual environments are the best way to install and manage Python packages.
@@ -403,7 +376,7 @@ virtual environments</p></li>
 <li><p>Simple to re-create in any place (<code class="docutils literal">pip freeze &gt; requirements.txt</code> → <code class="docutils literal">pip install <span class="pre">-r</span> requirements.txt</code>)</p></li>
 </ul>
 <section id="tools-and-management">
-<h3><a class="toc-backref" href="#toc-entry-15" role="doc-backlink">Tools and management</a></h3>
+<h3>Tools and management</h3>
 <p>There are two tools to facilitate creation of virtual environments: the older
 <a class="reference external" href="https://virtualenv.pypa.io/en/stable/">virtualenv</a> project, and the newer
 <code class="docutils literal">venv</code> module. The <code class="docutils literal">venv</code> module is shipped with Python 3.x; some
@@ -421,7 +394,7 @@ activates virtualenvs with the same name as a git repo, or the environment
 named by a <code class="docutils literal">.venv</code> file.</p>
 </section>
 <section id="installation-and-usage">
-<h3><a class="toc-backref" href="#toc-entry-16" role="doc-backlink">Installation and usage</a></h3>
+<h3>Installation and usage</h3>
 <p>To install virtualenv user-wide, use <code class="docutils literal">pip install <span class="pre">--user</span> virtualenv</code>. You can
 then use it with <code class="docutils literal">python <span class="pre">-m</span> virtualenv DIRECTORY</code>. You may pass extra
 options, eg. interpreter to use (<code class="docutils literal"><span class="pre">-p</span> python3</code>). Sometimes you need to install
@@ -445,7 +418,7 @@ complicates stuff if you work on multiple projects, and requires tracking usage
 manually.</p>
 </section>
 <section id="upgrading-and-moving">
-<h3><a class="toc-backref" href="#toc-entry-17" role="doc-backlink">Upgrading and moving</a></h3>
+<h3>Upgrading and moving</h3>
 <p>Upgrading the system Python may make your virtualenvs unusable.
 For patch version upgrades, you can just update symlinks (see <a class="reference external" href="https://github.com/Kwpolska/scripts/blob/master/fix-venvs.sh">fix-venvs.sh</a>).
 However, if the minor version changes, it’s best to re-create the virtualenv
@@ -457,7 +430,7 @@ the old environment with a simple <code class="docutils literal">rm <span class=
 </section>
 </section>
 <section id="packages-with-c-extensions-binary">
-<h2><a class="toc-backref" href="#toc-entry-18" role="doc-backlink">Packages with C extensions (binary)</a></h2>
+<h2>Packages with C extensions (binary)</h2>
 <p>The situation improved drastically in the past year or so. Nowadays, almost
 all packages have a pre-compiled package available in PyPI. Those packages work
 for Windows, macOS, and Linux. There are packages for some of the most
@@ -476,7 +449,7 @@ to install might have other dependencies that you need to install (the
 <code class="docutils literal"><span class="pre">-dev(el)</span></code> part is important, too)</p>
 </section>
 <section id="other-stuff">
-<h2><a class="toc-backref" href="#toc-entry-19" role="doc-backlink">Other stuff</a></h2>
+<h2>Other stuff</h2>
 <p>If you’re working on a project, use <code class="docutils literal">pip install <span class="pre">-e</span> .</code> inside the project
 directory to install the package in your environment in development (editable)
 mode. This loads code directly from your repository — you don’t need to
@@ -485,7 +458,7 @@ number changes.</p>
 </section>
 </section>
 <section id="editors-and-ides">
-<h1><a class="toc-backref" href="#toc-entry-20" role="doc-backlink">Editors and IDEs</a></h1>
+<h1>Editors and IDEs</h1>
 <p>Another important thing a developer should take care of is the choice of an
 editor. This is an important decision, and is the reason for many holy wars in
 the programmer community.</p>
@@ -524,7 +497,7 @@ use Notepad and TextEdit. Those are too simple, and Notepad has encoding
 issues.</p>
 </section>
 <section id="update-history">
-<h1><a class="toc-backref" href="#toc-entry-21" role="doc-backlink">Update history</a></h1>
+<h1>Update history</h1>
 <dl class="simple">
 <dt>2018-09-21</dt>
 <dd><p>Link to python-virtual-environments post.</p>
@@ -576,13 +549,248 @@ issues.</p>
 
 
 
-  <section class="comments">
+  <section class="comments" id="comments">
     <div data-title="Setting up a Python development environment" id="isso-thread"></div>
     <script src="https://isso.chriswarrick.com/js/embed.min.js" data-isso="https://isso.chriswarrick.com/"
             data-isso-lang="en" data-isso-require-author="true" data-isso-require-email="true" data-isso-gravatar="true"
             data-isso-avatar="false" data-isso-css="false" data-isso-vote="false"
             data-isso-reply-notifications="true"></script>
   </section>
+
+
+
+</div>
+
+<div class="offcanvas-xl offcanvas-end article-with-toc-right" tabindex="-1" id="toc" aria-labelledby="toc-label" data-bs-scroll="true" data-bs-backdrop="false">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="toc-label">Table of Contents</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#toc" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body toc-body">
+    <div>
+    <a href="#" class="toc-standalone"><i class="bi bi-arrow-up"></i> <span>Scroll to Top</span></a>
+    
+<ul>
+  
+    <li><a href="#glossary-and-questions">Glossary and questions</a>
+    
+      
+<ul>
+  
+    <li><a href="#python-versions-2-vs-3">Python versions: 2 vs 3</a>
+    
+      
+<ul>
+  
+</ul>
+
+    
+    </li>
+  
+    <li><a href="#can-i-run-multiple-pythons-on-the-same-machine">Can I run multiple Pythons on the same machine?</a>
+    
+      
+<ul>
+  
+</ul>
+
+    
+    </li>
+  
+    <li><a href="#implementations">Implementations</a>
+    
+      
+<ul>
+  
+</ul>
+
+    
+    </li>
+  
+    <li><a href="#distributions">Distributions</a>
+    
+      
+<ul>
+  
+</ul>
+
+    
+    </li>
+  
+    <li><a href="#can-i-make-exe-files-from-python-programs">Can I make .exe files from Python programs?</a>
+    
+      
+<ul>
+  
+</ul>
+
+    
+    </li>
+  
+    <li><a href="#where-to-learn-python-where-to-get-help">Where to learn Python? Where to get help?</a>
+    
+      
+<ul>
+  
+</ul>
+
+    
+    </li>
+  
+</ul>
+
+    
+    </li>
+  
+    <li><a href="#installing-python">Installing Python</a>
+    
+      
+<ul>
+  
+    <li><a href="#windows">Windows</a>
+    
+      
+<ul>
+  
+</ul>
+
+    
+    </li>
+  
+    <li><a href="#macos">macOS</a>
+    
+      
+<ul>
+  
+</ul>
+
+    
+    </li>
+  
+    <li><a href="#linux-and-other-unix-like-oses">Linux (and other Unix-like OSes)</a>
+    
+      
+<ul>
+  
+</ul>
+
+    
+    </li>
+  
+</ul>
+
+    
+    </li>
+  
+    <li><a href="#installing-packages">Installing packages</a>
+    
+      
+<ul>
+  
+    <li><a href="#user-installs">User installs</a>
+    
+      
+<ul>
+  
+</ul>
+
+    
+    </li>
+  
+    <li><a href="#virtual-environments">Virtual environments</a>
+    
+      
+<ul>
+  
+    <li><a href="#tools-and-management">Tools and management</a>
+    
+      
+<ul>
+  
+</ul>
+
+    
+    </li>
+  
+    <li><a href="#installation-and-usage">Installation and usage</a>
+    
+      
+<ul>
+  
+</ul>
+
+    
+    </li>
+  
+    <li><a href="#upgrading-and-moving">Upgrading and moving</a>
+    
+      
+<ul>
+  
+</ul>
+
+    
+    </li>
+  
+</ul>
+
+    
+    </li>
+  
+    <li><a href="#packages-with-c-extensions-binary">Packages with C extensions (binary)</a>
+    
+      
+<ul>
+  
+</ul>
+
+    
+    </li>
+  
+    <li><a href="#other-stuff">Other stuff</a>
+    
+      
+<ul>
+  
+</ul>
+
+    
+    </li>
+  
+</ul>
+
+    
+    </li>
+  
+    <li><a href="#editors-and-ides">Editors and IDEs</a>
+    
+      
+<ul>
+  
+</ul>
+
+    
+    </li>
+  
+    <li><a href="#update-history">Update history</a>
+    
+      
+<ul>
+  
+</ul>
+
+    
+    </li>
+  
+</ul>
+
+
+    <a href="#comments" class="toc-standalone"><i class="bi bi-chat-left-text"></i> <span>Comments</span></a>
+    </div>
+
+  </div>
+</div>
+</div>
 
 
 
@@ -658,7 +866,7 @@ issues.</p>
         integrity="sha384-G/EV+4j2dNv+tEPo3++6LCgdCROaejBqfUeNjuKAiuXbjrxilcCdDz6ZAVfHWe1Y" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.11.0/baguetteBox.min.js"
         integrity="sha256-yQGjQhFs3LtyiN5hhr3k9s9TWZOh/RzCkD3gwwCKlkg=" crossorigin="anonymous"></script>
-<script src="/assets/js/all.js?v=qN7jEg2WKPhup2P4vntO078KgiE"></script>
+<script src="/assets/js/all.js?v=6qNL7Pj6uoMEtZKxqopOXb-a2TM"></script>
 <script>
   baguetteBox.run('div#content', {
     ignoreClass: 'islink',

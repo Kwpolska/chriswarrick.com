@@ -5,15 +5,14 @@
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Deploying Python Web Applications with nginx and uWSGI Emperor | Chris Warrick</title>
-  <link href="/assets/css/bootstrap-kw.css?v=CzzDMDZ2wZePwO3RJ5g39QZC64o" rel="stylesheet" type="text/css">
+  <link href="/assets/css/bootstrap-kw.css?v=ibPO8Pn4wx1mZAVpD8MFQo652AQ" rel="stylesheet" type="text/css">
   
   <link href="/assets/css/legacy.css?v=ptDCR0JfJHHcOxN9kdcIVN3wNw4" rel="stylesheet" type="text/css">
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200..900;1,200..900&family=Source+Serif+4:opsz,wght@8..60,200..900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css"
-        integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200..900;1,200..900&family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.css"
         integrity="sha256-FqCzNnnyXl5HxHMdb+RQ/RV/X7fqfPcQYy+G2gFL3Xk=" crossorigin="anonymous">
   <meta name="theme-color" content="#00aadd">
@@ -27,10 +26,10 @@
   <link rel="next" href="/blog/2016/05/27/code-writing-code-python-and-vim/" type="text/html">
   
 </head>
-<body>
-<a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
+<body class="article-page-with-toc">
+<a href="#content" class="visually-hidden-focusable">Skip to main content</a>
 
-<nav class="navbar navbar-expand-md navbar-kw mb-4">
+<nav class="navbar navbar-expand-md navbar-kw fixed-top">
   <div class="container">
     <a class="navbar-brand" href="/">
       <img src="/assets/img/logo.png" srcset="/assets/img/logo2x.png 2x" alt="Chris Warrick" id="logo"><span
@@ -80,6 +79,13 @@
   <div class="body-content">
     <div id="cookiebox"></div>
     
+
+
+
+
+
+<div id="article-with-toc">
+  <div class="article-with-toc-left">
 
 
 <article class="post-text h-entry hentry postpage postbox" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -145,13 +151,18 @@
         <a class="tag p-category badge rounded-pill" href="/blog/tags/uwsgi" rel="tag">uWSGI</a>
       </li>
       
-      <li class="list-inline-item"><a class="badge bg-primary-subtle text-primary-emphasis" href="https://go.chriswarrick.com/pyweb" title="Short link to this article (go.chriswarrick.com/pyweb)"><i class="fa fa-link"></i> pyweb</a></li>
+      <li class="list-inline-item"><a class="badge bg-primary-subtle text-primary-emphasis" href="https://go.chriswarrick.com/pyweb" title="Short link to this article (go.chriswarrick.com/pyweb)"><i class="bi bi-link-45deg"></i> pyweb</a></li>
     </ul>
     <p class="guide-header">A <a href="/guides/">guide</a> about <span class="guide-topic">Python, web apps</span> for <span class="guide-platform">Ubuntu, Debian, Fedora, CentOS, AlmaLinux, Rocky Linux, Arch Linux</span></p>
   </div>
 </header>
 
-  <div class="e-content entry-content" itemprop="articleBody text">
+  <div class="d-xl-none" id="toc-button">
+    <button class="btn btn-outline-secondary" type="button" id="toc-btn" aria-controls="toc">
+      <i class="bi bi-list"></i> Table of Contents
+    </button>
+  </div>
+  <div class="e-content entry-content content-legacy" id="post-content" itemprop="articleBody text">
     
       <div class="lead">
         
@@ -165,44 +176,8 @@
     
 <p>CI status for the associated Ansible Playbook: <img alt="ci-status" src="https://github.com/Kwpolska/ansible-nginx-uwsgi/workflows/CI%20in%20Docker%20for%20ansible-nginx-uwsgi%20%28pyweb%29/badge.svg" /></p>
 <p>For easy linking, I set up some aliases: <a class="reference external" href="https://go.chriswarrick.com/pyweb">https://go.chriswarrick.com/pyweb</a> and <a class="reference external" href="https://go.chriswarrick.com/uwsgi-tut">https://go.chriswarrick.com/uwsgi-tut</a>.</p>
-<nav class="contents right-toc" id="contents" role="doc-toc">
-<p class="topic-title"><a class="reference internal" href="#top">Contents</a></p>
-<ul class="simple">
-<li><p><a class="reference internal" href="#prerequisites" id="toc-entry-1">Prerequisites</a></p></li>
-<li><p><a class="reference internal" href="#automate-everything-ansible-playbook" id="toc-entry-2">Automate everything: Ansible Playbook</a></p>
-<ul>
-<li><p><a class="reference internal" href="#how-to-use" id="toc-entry-3">How to use</a></p></li>
-</ul>
-</li>
-<li><p><a class="reference internal" href="#the-manual-guide" id="toc-entry-4">The manual guide</a></p>
-<ul>
-<li><p><a class="reference internal" href="#getting-started" id="toc-entry-5">Getting started</a></p></li>
-<li><p><a class="reference internal" href="#preparing-your-application" id="toc-entry-6">Preparing your application</a></p></li>
-<li><p><a class="reference internal" href="#configuring-uwsgi-and-nginx" id="toc-entry-7">Configuring uWSGI and nginx</a></p>
-<ul>
-<li><p><a class="reference internal" href="#uwsgi-configuration" id="toc-entry-8">uWSGI configuration</a></p></li>
-<li><p><a class="reference internal" href="#nginx-configuration" id="toc-entry-9">nginx configuration</a></p></li>
-</ul>
-</li>
-<li><p><a class="reference internal" href="#service-setup" id="toc-entry-10">Service setup</a></p>
-<ul>
-<li><p><a class="reference internal" href="#for-arch-linux" id="toc-entry-11">For Arch Linux</a></p></li>
-<li><p><a class="reference internal" href="#for-fedora-centos-el8" id="toc-entry-12">For Fedora, CentOS, EL8</a></p></li>
-<li><p><a class="reference internal" href="#for-ubuntu-and-debian" id="toc-entry-13">For Ubuntu and Debian</a></p></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p><a class="reference internal" href="#end-result" id="toc-entry-14">End result</a></p>
-<ul>
-<li><p><a class="reference internal" href="#troubleshooting" id="toc-entry-15">Troubleshooting</a></p></li>
-</ul>
-</li>
-<li><p><a class="reference internal" href="#can-i-use-docker" id="toc-entry-16">Can I use Docker?</a></p></li>
-</ul>
-</nav>
 <section id="prerequisites">
-<h1><a class="toc-backref" href="#toc-entry-1" role="doc-backlink">Prerequisites</a></h1>
+<h1>Prerequisites</h1>
 <p>In order to deploy your web application, you need a server that gives you root and ssh access — in other words, a VPS (or a dedicated server, or a datacenter lease…). If you’re looking for a great VPS service for a low price, I recommend <a class="reference external" href="https://hetzner.cloud/?ref=Qy1lehF8PwzP">Hetzner Cloud</a> (reflink <a class="brackets" href="#footnote-1" id="footnote-reference-1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>), which offers a pretty good entry-level VPS for €3.49 + VAT / month (with higher plans available for equally good prices). If you want to play along at home, without buying a VPS, you can create a virtual machine on your own, or use Vagrant with a Vagrant box for Fedora 35 (<code class="docutils literal"><span class="pre">fedora/35-cloud-base</span></code>).</p>
 <p>Your server should also run a modern Linux-based operating system. This guide was written and tested on:</p>
 <ul class="simple">
@@ -220,10 +195,10 @@
 <p>nginx and uWSGI are considered best practices by most people. nginx is a fast, modern web server, with uWSGI support built in (without resorting to reverse proxying).  uWSGI is similarly aimed at speed.  The Emperor mode of uWSGI is recommended for init system integration by the uWSGI team, and it’s especially useful for multi-app deployments. (This guide is opinionated.)</p>
 </section>
 <section id="automate-everything-ansible-playbook">
-<h1><a class="toc-backref" href="#toc-entry-2" role="doc-backlink">Automate everything: Ansible Playbook</a></h1>
+<h1>Automate everything: Ansible Playbook</h1>
 <p class="lead">A <a class="reference external" href="https://github.com/Kwpolska/ansible-nginx-uwsgi">Playbook</a> that automates everything in this tutorial is available. <img alt="ci-status" src="https://github.com/Kwpolska/ansible-nginx-uwsgi/workflows/CI%20in%20Docker%20for%20ansible-nginx-uwsgi%20%28pyweb%29/badge.svg" /></p>
 <section id="how-to-use">
-<h2><a class="toc-backref" href="#toc-entry-3" role="doc-backlink">How to use</a></h2>
+<h2>How to use</h2>
 <ol class="arabic simple">
 <li><p>Install <a class="reference external" href="https://docs.ansible.com/ansible/intro_installation.html">Ansible</a> on your control computer (not necessarily the destination server).</p></li>
 <li><p>Clone the <a class="reference external" href="https://github.com/Kwpolska/ansible-nginx-uwsgi">Playbook</a> from GitHub.</p></li>
@@ -236,7 +211,7 @@
 </section>
 </section>
 <section id="the-manual-guide">
-<h1><a class="toc-backref" href="#toc-entry-4" role="doc-backlink">The manual guide</a></h1>
+<h1>The manual guide</h1>
 <p>Even though I personally recommend the Playbook as a much less error-prone way to set up your app, it might not be compatible with everyone’s system, or otherwise be the wrong solution. The original manual configuration guide is still maintained.</p>
 <p>Even if you are using the Playbook, you should still read this to find out what happens under the hood, and to find out about other caveats/required configuration changes.</p>
 <aside class="admonition note">
@@ -244,7 +219,7 @@
 <p>All the commands in this tutorial are meant to be run <strong>as root</strong> — run <code class="docutils literal">su</code> or <code class="docutils literal">sudo su</code> first to get an administrative shell. This tutorial assumes familiarity with basic Linux administration and command-line usage.</p>
 </aside>
 <section id="getting-started">
-<h2><a class="toc-backref" href="#toc-entry-5" role="doc-backlink">Getting started</a></h2>
+<h2>Getting started</h2>
 <p>Start by installing Python 3 (with venv), nginx and uWSGI. I recommend using your operating system’s packages. Make sure you are downloading the latest versions available for your OS (update the package cache first). For uWSGI, we need the <code class="docutils literal">logfile</code> and <code class="docutils literal">python3</code> plugins. (Arch Linux names the <code class="docutils literal">python3</code> plugin <code class="docutils literal">python</code>; the <code class="docutils literal">logfile</code> plugin may be built-in — check with your system repositories!). I’ll also install Git to clone the tutorial app, but it’s optional if your workflow does not involve Git.</p>
 <p><strong>Ubuntu, Debian:</strong></p>
 <div class="code"><pre class="code sh"><a id="rest_code_dc96945fddd249e3b571e60cd43c2440-1" name="rest_code_dc96945fddd249e3b571e60cd43c2440-1" href="#rest_code_dc96945fddd249e3b571e60cd43c2440-1"></a>apt<span class="w"> </span>install<span class="w"> </span>python3<span class="w"> </span>python3-venv<span class="w"> </span>uwsgi<span class="w"> </span>uwsgi-emperor<span class="w"> </span>uwsgi-plugin-python3<span class="w"> </span>nginx-full<span class="w"> </span>git
@@ -265,7 +240,7 @@
 </pre></div>
 </section>
 <section id="preparing-your-application">
-<h2><a class="toc-backref" href="#toc-entry-6" role="doc-backlink">Preparing your application</a></h2>
+<h2>Preparing your application</h2>
 <p>This tutorial will work for any web framework. I will use <a class="reference external" href="https://github.com/Kwpolska/flask-demo-app">a really basic Flask app</a> that has just one route (<code class="docutils literal">/</code>), a static <code class="docutils literal">hello.png</code> file and a <code class="docutils literal">favicon.ico</code> for demonstration purposes. The app is pretty basic, but all the usual advanced features (templates, user logins, database access, etc.) would work without any other web server-related config. Note that the app does not use <code class="docutils literal">app.run()</code>. While you could add it, it would be used for local development and debugging only, and would have to be prepended by <code class="docutils literal">if __name__ == '__main__':</code> (if it wasn’t, that server would run instead of uWSGI, which is bad)</p>
 <p>The app will be installed somewhere under the <code class="docutils literal">/srv</code> directory, which is a great place to store things like this. I’ll choose <code class="docutils literal">/srv/myapp</code> for this tutorial, but for real deployments, you should use something more distinguishable — the domain name is a great idea.</p>
 <p>If you don’t use Flask, this tutorial also has instructions for other web frameworks (Django, Pyramid, Bottle) in the configuration files; it should be adjustable to any other WSGI-compliant framework/script nevertheless.</p>
@@ -297,14 +272,14 @@
 </pre></div>
 </section>
 <section id="configuring-uwsgi-and-nginx">
-<h2><a class="toc-backref" href="#toc-entry-7" role="doc-backlink">Configuring uWSGI and nginx</a></h2>
+<h2>Configuring uWSGI and nginx</h2>
 <aside class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Parts of the configuration depend on your operating system. I tried to provide advice for Ubuntu, Debian, Fedora, CentOS, EL8, and Arch Linux. If you experience any issues, in particular with plugins, please consult the documentation.</p>
 </aside>
 <p>We need to write a configuration file for uWSGI and nginx.</p>
 <section id="uwsgi-configuration">
-<h3><a class="toc-backref" href="#toc-entry-8" role="doc-backlink">uWSGI configuration</a></h3>
+<h3>uWSGI configuration</h3>
 <p>Start with this, but read the notes below and change the values accordingly:</p>
 <div class="code"><table class="codetable"><tr><td class="linenos linenodiv"><a href="#rest_code_3dc7358e7e1040868406e431b3fa0248-1"><code data-line-number=" 1"></code></a></td><td class="code"><code><a id="rest_code_3dc7358e7e1040868406e431b3fa0248-1" name="rest_code_3dc7358e7e1040868406e431b3fa0248-1"></a><span class="k">[uwsgi]</span>
 </code></td></tr><tr><td class="linenos linenodiv"><a href="#rest_code_3dc7358e7e1040868406e431b3fa0248-2"><code data-line-number=" 2"></code></a></td><td class="code"><code><a id="rest_code_3dc7358e7e1040868406e431b3fa0248-2" name="rest_code_3dc7358e7e1040868406e431b3fa0248-2"></a><span class="na">socket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/srv/myapp/uwsgi.sock</span>
@@ -379,7 +354,7 @@
 <p>If you’re using <strong>Fedora</strong>, <strong>CentOS</strong>, or <strong>EL8</strong>, there are two configuration changes you need to make globally: in <code class="docutils literal">/etc/uwsgi.ini</code>, disable the <code class="docutils literal"><span class="pre">emperor-tyrant</span></code> option (which we don’t need, as it sets uid/gid for every process based on the owner of the related <code class="docutils literal">.ini</code> config file — we use one global setup) and set <code class="docutils literal">gid = nginx</code>.  We’ll need this so that nginx can talk to your socket.</p>
 </section>
 <section id="nginx-configuration">
-<h3><a class="toc-backref" href="#toc-entry-9" role="doc-backlink">nginx configuration</a></h3>
+<h3>nginx configuration</h3>
 <p>We need to configure our web server. Here’s a basic configuration that will get us started:</p>
 <p>Save this file as:</p>
 <ul class="simple">
@@ -417,10 +392,10 @@
 </section>
 </section>
 <section id="service-setup">
-<h2><a class="toc-backref" href="#toc-entry-10" role="doc-backlink">Service setup</a></h2>
+<h2>Service setup</h2>
 <p>After you’ve configured uWSGI and nginx, you need to enable and start the system services.</p>
 <section id="for-arch-linux">
-<h3><a class="toc-backref" href="#toc-entry-11" role="doc-backlink">For Arch Linux</a></h3>
+<h3>For Arch Linux</h3>
 <p>All you need is:</p>
 <div class="code"><pre class="code sh"><a id="rest_code_f4fee615da8f41d4811b829f880176d6-1" name="rest_code_f4fee615da8f41d4811b829f880176d6-1" href="#rest_code_f4fee615da8f41d4811b829f880176d6-1"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>nginx<span class="w"> </span>emperor.uwsgi
 <a id="rest_code_f4fee615da8f41d4811b829f880176d6-2" name="rest_code_f4fee615da8f41d4811b829f880176d6-2" href="#rest_code_f4fee615da8f41d4811b829f880176d6-2"></a>systemctl<span class="w"> </span>start<span class="w"> </span>nginx<span class="w"> </span>emperor.uwsgi
@@ -428,7 +403,7 @@
 <p>Verify the service is running with <code class="docutils literal">systemctl status emperor.uwsgi</code></p>
 </section>
 <section id="for-fedora-centos-el8">
-<h3><a class="toc-backref" href="#toc-entry-12" role="doc-backlink">For Fedora, CentOS, EL8</a></h3>
+<h3>For Fedora, CentOS, EL8</h3>
 <p>Make sure you followed the extra note about editing <code class="docutils literal">/etc/uwsgi.ini</code> earlier and run:</p>
 <div class="code"><pre class="code sh"><a id="rest_code_4a91378499014435877a7e9c80fb5673-1" name="rest_code_4a91378499014435877a7e9c80fb5673-1" href="#rest_code_4a91378499014435877a7e9c80fb5673-1"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>nginx<span class="w"> </span>uwsgi
 <a id="rest_code_4a91378499014435877a7e9c80fb5673-2" name="rest_code_4a91378499014435877a7e9c80fb5673-2" href="#rest_code_4a91378499014435877a7e9c80fb5673-2"></a>systemctl<span class="w"> </span>start<span class="w"> </span>nginx<span class="w"> </span>uwsgi
@@ -447,7 +422,7 @@ Download <a class="reference external" href="https://chriswarrick.com/pub/nginx-
 <p>Hopefully, this is enough (you can delete the file). In case it isn’t, please read SELinux documentation, check audit logs, and look into <code class="docutils literal">audit2allow</code>.</p>
 </section>
 <section id="for-ubuntu-and-debian">
-<h3><a class="toc-backref" href="#toc-entry-13" role="doc-backlink">For Ubuntu and Debian</a></h3>
+<h3>For Ubuntu and Debian</h3>
 <p>Ubuntu and Debian (still!) use LSB services for uWSGI. Because LSB services are awful, we’re going to set up our own systemd-based (native) service.</p>
 <p>Start by disabling the LSB service that comes with Ubuntu and Debian:</p>
 <div class="code"><pre class="code sh"><a id="rest_code_e3ea69a4dabd430fb3155f4d1d8ed983-1" name="rest_code_e3ea69a4dabd430fb3155f4d1d8ed983-1" href="#rest_code_e3ea69a4dabd430fb3155f4d1d8ed983-1"></a>systemctl<span class="w"> </span>stop<span class="w"> </span>uwsgi-emperor
@@ -468,7 +443,7 @@ the warning about no request plugin)</p>
 </section>
 </section>
 <section id="end-result">
-<h1><a class="toc-backref" href="#toc-entry-14" role="doc-backlink">End result</a></h1>
+<h1>End result</h1>
 <p>Your web service should now be running at <a class="reference external" href="http://localhost/">http://localhost/</a> (or wherever you set up server to listen).</p>
 <p>If you used the demo application, you should see something like this (complete with the favicon and image greeting):</p>
 <img alt="/images/nginx-uwsgi-demo.png" class="centered" src="/images/nginx-uwsgi-demo.png" />
@@ -478,7 +453,7 @@ the warning about no request plugin)</p>
 <a id="rest_code_a6f6d19b27a4438eaffbdd0c3b8add49-3" name="rest_code_a6f6d19b27a4438eaffbdd0c3b8add49-3" href="#rest_code_a6f6d19b27a4438eaffbdd0c3b8add49-3"></a>curl<span class="w"> </span>-I<span class="w"> </span>http://localhost/static/hello.png
 </pre></div>
 <section id="troubleshooting">
-<h2><a class="toc-backref" href="#toc-entry-15" role="doc-backlink">Troubleshooting</a></h2>
+<h2>Troubleshooting</h2>
 <p>Hopefully, everything works. If it doesn’t:</p>
 <ul class="simple">
 <li><p>Check your nginx, system (<code class="docutils literal">journalctl</code>, <code class="docutils literal">systemctl status SERVICE</code>) and uwsgi (<code class="docutils literal">/srv/myapp/uwsgi.log</code>) logs.</p></li>
@@ -495,7 +470,7 @@ the warning about no request plugin)</p>
 </section>
 </section>
 <section id="can-i-use-docker">
-<h1><a class="toc-backref" href="#toc-entry-16" role="doc-backlink">Can I use Docker?</a></h1>
+<h1>Can I use Docker?</h1>
 <p>This blog post is written for systems running standalone. But Docker is a bit special, in that it offers a limited subset of OS features this workflow expects. The main issue is with user accounts, which generally work weird in Docker, and I had issues with <code class="docutils literal">setuid</code>/<code class="docutils literal">setgid</code> as used by uWSGI. Another issue is the lack of systemd, which means that another part of the tutorial fails to apply.</p>
 <p>This tutorial uses uWSGI Emperor, which can run multiple sites at once, and offers other management features (such as seamless code restarts with <code class="docutils literal">touch /etc/uwsgi/vassals/myapp.ini</code>) that may not be useful or easy to use in a Docker environment. You’d probably also run uWSGI and nginx in separate containers in a typical Docker deployment.</p>
 <p>Regardless, many parts of this tutorial can be used with Docker, although with the aforementioned adjustments. I have done some work on this topic. This tutorial has an Ansible Playbook attached, and the tutorial/playbook are compatible with five Linux distros in multiple versions. How do I know that there were no unexpected bugs in an older version? I could grab a Vagrant image or set up a VM. I do that when I need specific testing, but doing it for each of the distros on each update would take at least half an hour, probably even more. Yeah, that needs automating. I decided to use GitHub Actions for the CI, which can run anything, as long as you provide a Dockerfile.</p>
@@ -544,13 +519,198 @@ the warning about no request plugin)</p>
 
 
 
-  <section class="comments">
+  <section class="comments" id="comments">
     <div data-title="Deploying Python Web Applications with nginx and uWSGI Emperor" id="isso-thread"></div>
     <script src="https://isso.chriswarrick.com/js/embed.min.js" data-isso="https://isso.chriswarrick.com/"
             data-isso-lang="en" data-isso-require-author="true" data-isso-require-email="true" data-isso-gravatar="true"
             data-isso-avatar="false" data-isso-css="false" data-isso-vote="false"
             data-isso-reply-notifications="true"></script>
   </section>
+
+
+
+</div>
+
+<div class="offcanvas-xl offcanvas-end article-with-toc-right" tabindex="-1" id="toc" aria-labelledby="toc-label" data-bs-scroll="true" data-bs-backdrop="false">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="toc-label">Table of Contents</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#toc" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body toc-body">
+    <div>
+    <a href="#" class="toc-standalone"><i class="bi bi-arrow-up"></i> <span>Scroll to Top</span></a>
+    
+<ul>
+  
+    <li><a href="#prerequisites">Prerequisites</a>
+    
+      
+<ul>
+  
+</ul>
+
+    
+    </li>
+  
+    <li><a href="#automate-everything-ansible-playbook">Automate everything: Ansible Playbook</a>
+    
+      
+<ul>
+  
+    <li><a href="#how-to-use">How to use</a>
+    
+      
+<ul>
+  
+</ul>
+
+    
+    </li>
+  
+</ul>
+
+    
+    </li>
+  
+    <li><a href="#the-manual-guide">The manual guide</a>
+    
+      
+<ul>
+  
+    <li><a href="#getting-started">Getting started</a>
+    
+      
+<ul>
+  
+</ul>
+
+    
+    </li>
+  
+    <li><a href="#preparing-your-application">Preparing your application</a>
+    
+      
+<ul>
+  
+</ul>
+
+    
+    </li>
+  
+    <li><a href="#configuring-uwsgi-and-nginx">Configuring uWSGI and nginx</a>
+    
+      
+<ul>
+  
+    <li><a href="#uwsgi-configuration">uWSGI configuration</a>
+    
+      
+<ul>
+  
+</ul>
+
+    
+    </li>
+  
+    <li><a href="#nginx-configuration">nginx configuration</a>
+    
+      
+<ul>
+  
+</ul>
+
+    
+    </li>
+  
+</ul>
+
+    
+    </li>
+  
+    <li><a href="#service-setup">Service setup</a>
+    
+      
+<ul>
+  
+    <li><a href="#for-arch-linux">For Arch Linux</a>
+    
+      
+<ul>
+  
+</ul>
+
+    
+    </li>
+  
+    <li><a href="#for-fedora-centos-el8">For Fedora, CentOS, EL8</a>
+    
+      
+<ul>
+  
+</ul>
+
+    
+    </li>
+  
+    <li><a href="#for-ubuntu-and-debian">For Ubuntu and Debian</a>
+    
+      
+<ul>
+  
+</ul>
+
+    
+    </li>
+  
+</ul>
+
+    
+    </li>
+  
+</ul>
+
+    
+    </li>
+  
+    <li><a href="#end-result">End result</a>
+    
+      
+<ul>
+  
+    <li><a href="#troubleshooting">Troubleshooting</a>
+    
+      
+<ul>
+  
+</ul>
+
+    
+    </li>
+  
+</ul>
+
+    
+    </li>
+  
+    <li><a href="#can-i-use-docker">Can I use Docker?</a>
+    
+      
+<ul>
+  
+</ul>
+
+    
+    </li>
+  
+</ul>
+
+
+    <a href="#comments" class="toc-standalone"><i class="bi bi-chat-left-text"></i> <span>Comments</span></a>
+    </div>
+
+  </div>
+</div>
+</div>
 
 
 
@@ -626,7 +786,7 @@ the warning about no request plugin)</p>
         integrity="sha384-G/EV+4j2dNv+tEPo3++6LCgdCROaejBqfUeNjuKAiuXbjrxilcCdDz6ZAVfHWe1Y" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.11.0/baguetteBox.min.js"
         integrity="sha256-yQGjQhFs3LtyiN5hhr3k9s9TWZOh/RzCkD3gwwCKlkg=" crossorigin="anonymous"></script>
-<script src="/assets/js/all.js?v=qN7jEg2WKPhup2P4vntO078KgiE"></script>
+<script src="/assets/js/all.js?v=6qNL7Pj6uoMEtZKxqopOXb-a2TM"></script>
 <script>
   baguetteBox.run('div#content', {
     ignoreClass: 'islink',

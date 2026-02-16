@@ -5,15 +5,14 @@
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Reinstalling macOS: What To Try When All Else Fails | Chris Warrick</title>
-  <link href="/assets/css/bootstrap-kw.css?v=CzzDMDZ2wZePwO3RJ5g39QZC64o" rel="stylesheet" type="text/css">
+  <link href="/assets/css/bootstrap-kw.css?v=ibPO8Pn4wx1mZAVpD8MFQo652AQ" rel="stylesheet" type="text/css">
   
   <link href="/assets/css/legacy.css?v=ptDCR0JfJHHcOxN9kdcIVN3wNw4" rel="stylesheet" type="text/css">
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200..900;1,200..900&family=Source+Serif+4:opsz,wght@8..60,200..900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css"
-        integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200..900;1,200..900&family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.css"
         integrity="sha256-FqCzNnnyXl5HxHMdb+RQ/RV/X7fqfPcQYy+G2gFL3Xk=" crossorigin="anonymous">
   <meta name="theme-color" content="#00aadd">
@@ -27,10 +26,10 @@
   <link rel="next" href="/blog/2020/06/22/what-an-arm-mac-means-for-developers-and-windows-users/" type="text/html">
   
 </head>
-<body>
-<a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
+<body class="article-page-with-toc">
+<a href="#content" class="visually-hidden-focusable">Skip to main content</a>
 
-<nav class="navbar navbar-expand-md navbar-kw mb-4">
+<nav class="navbar navbar-expand-md navbar-kw fixed-top">
   <div class="container">
     <a class="navbar-brand" href="/">
       <img src="/assets/img/logo.png" srcset="/assets/img/logo2x.png 2x" alt="Chris Warrick" id="logo"><span
@@ -82,6 +81,13 @@
     
 
 
+
+
+
+<div id="article-with-toc">
+  <div class="article-with-toc-left">
+
+
 <article class="post-text h-entry hentry postpage postbox" itemscope="itemscope" itemtype="http://schema.org/Article">
   
 <header class="page-header">
@@ -123,7 +129,12 @@
   </div>
 </header>
 
-  <div class="e-content entry-content" itemprop="articleBody text">
+  <div class="d-xl-none" id="toc-button">
+    <button class="btn btn-outline-secondary" type="button" id="toc-btn" aria-controls="toc">
+      <i class="bi bi-list"></i> Table of Contents
+    </button>
+  </div>
+  <div class="e-content entry-content content-legacy" id="post-content" itemprop="articleBody text">
     
       <div class="lead">
         
@@ -142,28 +153,8 @@ boot OS X El Capitan (or macOS Sierra, but that’s untested). If your Mac can�
 elsewhere. If you’ve got an Apple Silicon Mac, you probably want to perform
 <a class="reference external" href="https://support.apple.com/guide/apple-configurator-mac/revive-or-restore-a-mac-with-apple-silicon-apdd5f3c75ad/mac">a DFU restore</a>
 (requires another Mac and a USB-C cable.)</p>
-<nav class="contents alert alert-primary" id="contents" role="doc-toc">
-<p class="topic-title"><a class="reference internal" href="#top">Contents</a></p>
-<ul class="simple">
-<li><p><a class="reference internal" href="#making-install-media-with-el-capitan-with-access-only-to-recovery" id="toc-entry-1">Making install media with El Capitan (with access only to Recovery)</a></p></li>
-<li><p><a class="reference internal" href="#manually-installing-pkg-files" id="toc-entry-2">Manually installing .pkg files</a></p></li>
-<li><p><a class="reference internal" href="#making-install-media-out-of-partial-macos-installers-not-a-valid-os-installer-application" id="toc-entry-3">Making install media out of partial macOS installers (“not a valid OS installer application”)</a></p>
-<ul>
-<li><p><a class="reference internal" href="#a-from-the-el-capitan-download" id="toc-entry-4">a. From the El Capitan download</a></p></li>
-<li><p><a class="reference internal" href="#b-installer-from-recovery-app-store-any-macos-version" id="toc-entry-5">b. Installer from Recovery/App Store (any macOS version)</a></p></li>
-</ul>
-</li>
-<li><p><a class="reference internal" href="#el-capitan-installer-cant-be-verified" id="toc-entry-6">El Capitan installer can’t be verified</a></p></li>
-<li><p><a class="reference internal" href="#bonus-tidbit-1-how-the-download-works" id="toc-entry-7">Bonus tidbit 1: how the download works</a></p></li>
-<li><p><a class="reference internal" href="#bonus-tidbit-2-using-terminal-from-setup-assistant" id="toc-entry-8">Bonus tidbit 2: using Terminal from Setup Assistant</a></p></li>
-<li><p><a class="reference internal" href="#bonus-tidbit-3-creating-an-image-of-the-install-media-might-not-work" id="toc-entry-9">Bonus tidbit 3: creating an image of the install media might not work</a></p></li>
-<li><p><a class="reference internal" href="#bonus-tidbit-4-dont-bother-restoring-a-time-machine-backup" id="toc-entry-10">Bonus tidbit 4: don’t bother restoring a Time Machine backup</a></p></li>
-<li><p><a class="reference internal" href="#an-open-letter-to-progress-bar-designers" id="toc-entry-11">An Open Letter to Progress Bar Designers</a></p></li>
-<li><p><a class="reference internal" href="#in-the-end" id="toc-entry-12">In the end…</a></p></li>
-</ul>
-</nav>
 <section id="making-install-media-with-el-capitan-with-access-only-to-recovery">
-<h1><a class="toc-backref" href="#toc-entry-1" role="doc-backlink">Making install media with El Capitan (with access only to Recovery)</a></h1>
+<h1>Making install media with El Capitan (with access only to Recovery)</h1>
 <p>The best, safest, least error-prone way to do an install is with a USB stick.
 Unfortunately, making a USB stick with the macOS installer on it is a nuisance.
 The expected way to produce macOS install media is to download the installer
@@ -191,7 +182,7 @@ expected to install <code class="docutils literal">/Applications/Install OS X El
 in recovery, we can’t install stuff. So, let’s do this the manual way.</p>
 </section>
 <section id="manually-installing-pkg-files">
-<h1><a class="toc-backref" href="#toc-entry-2" role="doc-backlink">Manually installing .pkg files</a></h1>
+<h1>Manually installing .pkg files</h1>
 <p>Turns out the <code class="docutils literal">.pkg</code> format is just an archives all the way down, with all
 archives being different formats (at least three).</p>
 <aside class="float-md-right mt-md-0 sidebar">
@@ -218,9 +209,9 @@ will extract all the files the package has.</p>
 it at all the compressed files mentioned in this paragraph.)</p>
 </section>
 <section id="making-install-media-out-of-partial-macos-installers-not-a-valid-os-installer-application">
-<h1><a class="toc-backref" href="#toc-entry-3" role="doc-backlink">Making install media out of partial macOS installers (“not a valid OS installer application”)</a></h1>
+<h1>Making install media out of partial macOS installers (“not a valid OS installer application”)</h1>
 <section id="a-from-the-el-capitan-download">
-<h2><a class="toc-backref" href="#toc-entry-4" role="doc-backlink">a. From the El Capitan download</a></h2>
+<h2>a. From the El Capitan download</h2>
 <p>Let’s expand the El Capitan package.</p>
 <div class="code"><pre class="code console"><a id="rest_code_a12b8e2380434f0097be4f820a042a57-1" name="rest_code_a12b8e2380434f0097be4f820a042a57-1" href="#rest_code_a12b8e2380434f0097be4f820a042a57-1"></a><span class="gp">$ </span><span class="o">(</span>mount<span class="w"> </span>the<span class="w"> </span>DMG<span class="w"> </span><span class="k">in</span><span class="w"> </span>Disk<span class="w"> </span>Utility<span class="o">)</span>
 <a id="rest_code_a12b8e2380434f0097be4f820a042a57-2" name="rest_code_a12b8e2380434f0097be4f820a042a57-2" href="#rest_code_a12b8e2380434f0097be4f820a042a57-2"></a><span class="gp">$ </span>cp<span class="w"> </span>/Volumes/Install<span class="se">\ </span>OS<span class="se">\ </span>X/InstallMacOSX.pkg<span class="w"> </span>/Volumes/Macintosh<span class="se">\ </span>HD/
@@ -259,7 +250,7 @@ image) to that directory. Let’s try doing this on our own:</p>
 <p>And it works! <code class="docutils literal">createinstallmedia</code> will now produce valid install media.</p>
 </section>
 <section id="b-installer-from-recovery-app-store-any-macos-version">
-<h2><a class="toc-backref" href="#toc-entry-5" role="doc-backlink">b. Installer from Recovery/App Store (any macOS version)</a></h2>
+<h2>b. Installer from Recovery/App Store (any macOS version)</h2>
 <p>If you are in Recovery, you can find an Install app on the filesystem. If you
 try to run it, you will get the same error as in the previous paragraph:</p>
 <div class="code"><pre class="code text"><a id="rest_code_0447ee55c787469fb1388d1fd77a288f-1" name="rest_code_0447ee55c787469fb1388d1fd77a288f-1" href="#rest_code_0447ee55c787469fb1388d1fd77a288f-1"></a>Install macOS Catalina.app does not appear to be a valid OS installer application.
@@ -289,7 +280,7 @@ available options differ slightly depending on the OS version.</p></li>
 </section>
 </section>
 <section id="el-capitan-installer-cant-be-verified">
-<h1><a class="toc-backref" href="#toc-entry-6" role="doc-backlink">El Capitan installer can’t be verified</a></h1>
+<h1>El Capitan installer can’t be verified</h1>
 <p>If you get this error, it might be because Apple’s signing keys expired, or
 because of other date/time weirdness. Regardless, you can force an install if
 you are sure the installer is not damaged with this command <a class="reference external" href="https://apple.stackexchange.com/questions/216730/this-copy-of-the-install-os-x-el-capitan-application-cant-be-verified-it-may-h">(source)</a>:</p>
@@ -297,7 +288,7 @@ you are sure the installer is not damaged with this command <a class="reference 
 </pre></div>
 </section>
 <section id="bonus-tidbit-1-how-the-download-works">
-<h1><a class="toc-backref" href="#toc-entry-7" role="doc-backlink">Bonus tidbit 1: how the download works</a></h1>
+<h1>Bonus tidbit 1: how the download works</h1>
 <p>While messing with all the installer stuff, I found out a few
 interesting/worrying things about the download process.</p>
 <p>The first one is that the macOS installer uses plain HTTP without encryption to
@@ -320,7 +311,7 @@ discarding the most recent chunk if you’re concerned about that download of it
 being unsuccessful.</p>
 </section>
 <section id="bonus-tidbit-2-using-terminal-from-setup-assistant">
-<h1><a class="toc-backref" href="#toc-entry-8" role="doc-backlink">Bonus tidbit 2: using Terminal from Setup Assistant</a></h1>
+<h1>Bonus tidbit 2: using Terminal from Setup Assistant</h1>
 <p>The first time you boot a Mac after a clean install, it starts the Setup
 Assistant. This app asks for basic OS settings (locale, date/time, user
 accounts), and also lets you restore user data from backups.</p>
@@ -331,7 +322,7 @@ drive still worked and if the process isn’t stuck (I wrote a test file and als
 checked <code class="docutils literal">top</code>).</p>
 </section>
 <section id="bonus-tidbit-3-creating-an-image-of-the-install-media-might-not-work">
-<h1><a class="toc-backref" href="#toc-entry-9" role="doc-backlink">Bonus tidbit 3: creating an image of the install media might not work</a></h1>
+<h1>Bonus tidbit 3: creating an image of the install media might not work</h1>
 <p>A few months later, in December, I upgraded to Big Sur and then installed Windows 10
 alongside it in Boot Camp. I then did some more hacks, which led to
 two unbootable OSes.</p>
@@ -350,7 +341,7 @@ fine, and <code class="docutils literal">createinstallmedia</code> should have w
 bootable drive.</p>
 </section>
 <section id="bonus-tidbit-4-dont-bother-restoring-a-time-machine-backup">
-<h1><a class="toc-backref" href="#toc-entry-10" role="doc-backlink">Bonus tidbit 4: don’t bother restoring a Time Machine backup</a></h1>
+<h1>Bonus tidbit 4: don’t bother restoring a Time Machine backup</h1>
 <p>Time Machine is Apple’s magical backup solution. Time Machine saves snapshots
 of your entire disk. It’s supposed to help restore files that were deleted or
 changed in an unwanted way, or help you restore a full macOS install.</p>
@@ -409,7 +400,7 @@ third-party bootloader.)</p>
 <p><em>We now go back to the original post from June.</em></p>
 </section>
 <section id="an-open-letter-to-progress-bar-designers">
-<h1><a class="toc-backref" href="#toc-entry-11" role="doc-backlink">An Open Letter to Progress Bar Designers</a></h1>
+<h1>An Open Letter to Progress Bar Designers</h1>
 <p>Dear Progress Bar Designers: can you please make your progress bars
 functional? The macOS progress bar might look sleek at just 7 px (non-Retina)/6
 pt = 12 px (Retina) high, but at the same time, you’re looking at individual
@@ -446,7 +437,7 @@ requires more space for the bar.</p>
 you can remember the number instead of a vague position.</p>
 </section>
 <section id="in-the-end">
-<h1><a class="toc-backref" href="#toc-entry-12" role="doc-backlink">In the end…</a></h1>
+<h1>In the end…</h1>
 <p>After all this, I managed to get macOS Catalina installed. After various
 failures in built-in El Capitan recovery and Catalina Internet Recovery, I first
 installed El Capitan with this hack, then jumped to Mojave because I thought
@@ -490,13 +481,158 @@ myself, and from Apple. Without all this mess.</p>
 
 
 
-  <section class="comments">
+  <section class="comments" id="comments">
     <div data-title="Reinstalling macOS: What To Try When All Else Fails" id="isso-thread"></div>
     <script src="https://isso.chriswarrick.com/js/embed.min.js" data-isso="https://isso.chriswarrick.com/"
             data-isso-lang="en" data-isso-require-author="true" data-isso-require-email="true" data-isso-gravatar="true"
             data-isso-avatar="false" data-isso-css="false" data-isso-vote="false"
             data-isso-reply-notifications="true"></script>
   </section>
+
+
+
+</div>
+
+<div class="offcanvas-xl offcanvas-end article-with-toc-right" tabindex="-1" id="toc" aria-labelledby="toc-label" data-bs-scroll="true" data-bs-backdrop="false">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="toc-label">Table of Contents</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#toc" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body toc-body">
+    <div>
+    <a href="#" class="toc-standalone"><i class="bi bi-arrow-up"></i> <span>Scroll to Top</span></a>
+    
+<ul>
+  
+    <li><a href="#making-install-media-with-el-capitan-with-access-only-to-recovery">Making install media with El Capitan (with access only to Recovery)</a>
+    
+      
+<ul>
+  
+</ul>
+
+    
+    </li>
+  
+    <li><a href="#manually-installing-pkg-files">Manually installing .pkg files</a>
+    
+      
+<ul>
+  
+</ul>
+
+    
+    </li>
+  
+    <li><a href="#making-install-media-out-of-partial-macos-installers-not-a-valid-os-installer-application">Making install media out of partial macOS installers (&#x201C;not a valid OS installer application&#x201D;)</a>
+    
+      
+<ul>
+  
+    <li><a href="#a-from-the-el-capitan-download">a. From the El Capitan download</a>
+    
+      
+<ul>
+  
+</ul>
+
+    
+    </li>
+  
+    <li><a href="#b-installer-from-recovery-app-store-any-macos-version">b. Installer from Recovery/App Store (any macOS version)</a>
+    
+      
+<ul>
+  
+</ul>
+
+    
+    </li>
+  
+</ul>
+
+    
+    </li>
+  
+    <li><a href="#el-capitan-installer-cant-be-verified">El Capitan installer can&#x2019;t be verified</a>
+    
+      
+<ul>
+  
+</ul>
+
+    
+    </li>
+  
+    <li><a href="#bonus-tidbit-1-how-the-download-works">Bonus tidbit 1: how the download works</a>
+    
+      
+<ul>
+  
+</ul>
+
+    
+    </li>
+  
+    <li><a href="#bonus-tidbit-2-using-terminal-from-setup-assistant">Bonus tidbit 2: using Terminal from Setup Assistant</a>
+    
+      
+<ul>
+  
+</ul>
+
+    
+    </li>
+  
+    <li><a href="#bonus-tidbit-3-creating-an-image-of-the-install-media-might-not-work">Bonus tidbit 3: creating an image of the install media might not work</a>
+    
+      
+<ul>
+  
+</ul>
+
+    
+    </li>
+  
+    <li><a href="#bonus-tidbit-4-dont-bother-restoring-a-time-machine-backup">Bonus tidbit 4: don&#x2019;t bother restoring a Time Machine backup</a>
+    
+      
+<ul>
+  
+</ul>
+
+    
+    </li>
+  
+    <li><a href="#an-open-letter-to-progress-bar-designers">An Open Letter to Progress Bar Designers</a>
+    
+      
+<ul>
+  
+</ul>
+
+    
+    </li>
+  
+    <li><a href="#in-the-end">In the end&#x2026;</a>
+    
+      
+<ul>
+  
+</ul>
+
+    
+    </li>
+  
+</ul>
+
+
+    <a href="#comments" class="toc-standalone"><i class="bi bi-chat-left-text"></i> <span>Comments</span></a>
+    </div>
+
+  </div>
+</div>
+</div>
 
 
 
@@ -572,7 +708,7 @@ myself, and from Apple. Without all this mess.</p>
         integrity="sha384-G/EV+4j2dNv+tEPo3++6LCgdCROaejBqfUeNjuKAiuXbjrxilcCdDz6ZAVfHWe1Y" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.11.0/baguetteBox.min.js"
         integrity="sha256-yQGjQhFs3LtyiN5hhr3k9s9TWZOh/RzCkD3gwwCKlkg=" crossorigin="anonymous"></script>
-<script src="/assets/js/all.js?v=qN7jEg2WKPhup2P4vntO078KgiE"></script>
+<script src="/assets/js/all.js?v=6qNL7Pj6uoMEtZKxqopOXb-a2TM"></script>
 <script>
   baguetteBox.run('div#content', {
     ignoreClass: 'islink',

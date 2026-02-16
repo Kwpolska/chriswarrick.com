@@ -1,0 +1,5 @@
+Remove-Item -Recurse -Force '.venv'
+Remove-Item -Recurse -Force 'yabg-release'
+Remove-Item -Recurse -Force 'yabg-r2r'
+Remove-Item -Recurse -Force 'YetAnotherBlogGenerator/YetAnotherBlogGenerator/bin'
+Remove-Item -Recurse -Force 'YetAnotherBlogGenerator/YetAnotherBlogGenerator/obj'
