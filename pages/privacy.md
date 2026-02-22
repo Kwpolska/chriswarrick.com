@@ -28,7 +28,6 @@ We store the following information:
 * CloudFlare cookies, [for DDOS protection](https://support.cloudflare.com/hc/en-us/articles/200170156-What-does-the-Cloudflare-cfduid-cookie-do-)
 * [Isso](https://posativ.org/isso/) cookies and local storage data, if you write a comment
 * A cookie to denote privacy policy acknowledgement
-* A cookie to save the user’s preferred color scheme
 * Login cookies (`go.chriswarrick.com`)
 
 ### Blocking coookies
