@@ -78,7 +78,7 @@ This message shows that your installation appears to be working correctly.
 
 We need to tell the Docker CLI where to look for Docker. The easiest way to do this is to set the `DOCKER_HOST` environment variable. This might not be the cleanest way if you want to work with Windows containers or Docker Desktop, but you don’t, so we don’t need to bother with anything nicer.
 
-➡️ Press the Start key, type *environment variables* (or the equivalent phrase in your Windows language) and open the environment variables editor. Add an environment variable named `DOCKER_HOST` with the value `127.0.0.1:2375`.
+➡️ Press the Start key, type *environment variables* (or the equivalent phrase in your Windows language) and open the environment variables editor. Add an environment variable named `DOCKER_HOST` with the value `tcp://127.0.0.1:2375`.
 
 ➡️ Restart your Terminal. In one tab, run a WSL shell. In another, run PowerShell (or cmd):
 
