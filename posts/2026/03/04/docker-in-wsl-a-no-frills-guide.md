@@ -1,6 +1,7 @@
 ---
 title: "Docker In WSL: A No-Frills Guide"
 published: "2026-03-04 18:20:00+01:00"
+updated: "2026-03-06 20:00:00+01:00"
 tags: ["Docker", "Linux", "Windows", "WSL"]
 category: "Programming"
 description: "How to get Docker going in WSL?"
@@ -15,7 +16,7 @@ Docker is great, but how do you run Linux containers on Windows? In WSL, of cour
 
 (Also, Docker Desktop demands payment for enterprise use; if your company fits the enterprise criteria but cannot afford $16/developer/month, run.)
 
-*Console command conventions: `$` means Linux, `>` means Windows.<br>Path conventions: `/` means Linux, `\` means Windows.*
+*Console command conventions: `$` means Linux, `>` means Windows (PowerShell).<br>Path conventions: `/` means Linux, `\` means Windows.*
 
 ## Linux setup
 
@@ -87,6 +88,24 @@ We need to tell the Docker CLI where to look for Docker. The easiest way to do t
 
 Hello from Docker!
 This message shows that your installation appears to be working correctly.
+```
+
+## Optional: Docker Compose
+
+Docker Compose is a plugin for Docker CLI, and it not included in the Docker binary we’ve installed on Windows. It is quite easy to add it in if you want.
+
+➡️ Download the latest version of the [Docker Compose binary](https://github.com/docker/compose/releases/latest) (`docker-compose-windows-x86_64.exe`). Move it to `~\.docker\cli-plugins\docker-compose.exe`.
+
+```text
+> mkdir ~\.docker\cli-plugins
+> mv ~\Downloads\docker-compose-windows-x86_64.exe ~\.docker\cli-plugins\docker-compose.exe
+```
+
+Let’s test it out:
+
+```text
+> docker compose version
+Docker Compose version v5.1.0
 ```
 
 ## Optional: WSL VM management
